@@ -1,0 +1,174 @@
+--------------------------------------------------------------------------------
+-- Initial setup
+--------------------------------------------------------------------------------
+-- Define some conversion factors.
+tesla_to_ev = 5.788E-5
+kelvin_to_ev = 8.61735E-5
+
+-- Define the number of electrons, orbitals.
+nbosons = 0
+nfermions = 16
+
+nelectrons_2p = <nelectrons_2p>
+nelectrons_3d = <nelectrons_3d>
+
+down_2p = {0, 2, 4}
+up_2p   = {1, 3, 5}
+down_3d = {6, 8, 10, 12, 14}
+up_3d   = {7, 9, 11, 13, 15}
+
+--------------------------------------------------------------------------------
+-- Hamiltonian (Coulomb)
+--------------------------------------------------------------------------------
+F0_3d_3d_o = NewOperator('U', nfermions, up_3d, down_3d, {1, 0, 0})
+F2_3d_3d_o = NewOperator('U', nfermions, up_3d, down_3d, {0, 1, 0})
+F4_3d_3d_o = NewOperator('U', nfermions, up_3d, down_3d, {0, 0, 1})
+F0_2p_3d_o = NewOperator('U', nfermions, up_2p, down_2p, up_3d, down_3d, {1, 0}, {0, 0})
+F2_2p_3d_o = NewOperator('U', nfermions, up_2p, down_2p, up_3d, down_3d, {0, 1}, {0, 0})
+G1_2p_3d_o = NewOperator('U', nfermions, up_2p, down_2p, up_3d, down_3d, {0, 0}, {1, 0})
+G3_2p_3d_o = NewOperator('U', nfermions, up_2p, down_2p, up_3d, down_3d, {0, 0}, {0, 1})
+
+scaling_i  = <scaling_i>
+F0_3d_3d_i =   0.0
+F2_3d_3d_i = <F2(3d,3d)_i> * scaling_i
+F4_3d_3d_i = <F4(3d,3d)_i> * scaling_i
+
+scaling_f  = <scaling_f>
+F0_3d_3d_f =   0.0
+F2_3d_3d_f = <F2(3d,3d)_f> * scaling_f
+F4_3d_3d_f = <F4(3d,3d)_f> * scaling_f
+F0_2p_3d_f =   0.0
+F2_2p_3d_f = <F2(2p,3d)_f> * scaling_f
+G1_2p_3d_f = <G1(2p,3d)_f> * scaling_f
+G3_2p_3d_f = <G3(2p,3d)_f> * scaling_f
+
+H_coulomb_i = F0_3d_3d_i * F0_3d_3d_o +
+              F2_3d_3d_i * F2_3d_3d_o +
+              F4_3d_3d_i * F4_3d_3d_o
+
+H_coulomb_f = F0_3d_3d_f * F0_3d_3d_o +
+              F2_3d_3d_f * F2_3d_3d_o +
+              F4_3d_3d_f * F4_3d_3d_o +
+              F0_2p_3d_f * F0_2p_3d_o +
+              F2_2p_3d_f * F2_2p_3d_o +
+              G1_2p_3d_f * G1_2p_3d_o +
+              G3_2p_3d_f * G3_2p_3d_o
+
+--------------------------------------------------------------------------------
+-- Hamiltonian (spin-orbit coupling)
+--------------------------------------------------------------------------------
+ldots_3d_o = NewOperator('ldots', nfermions, up_3d, down_3d)
+ldots_2p_o = NewOperator('ldots', nfermions, up_2p, down_2p)
+
+zeta_3d_i = <zeta(3d)_i>
+zeta_3d_f = <zeta(3d)_f>
+zeta_2p_f = <zeta(2p)_f>
+
+H_soc_i = zeta_3d_i * ldots_3d_o
+H_soc_f = zeta_3d_f * ldots_3d_o + zeta_2p_f * ldots_2p_o
+
+--------------------------------------------------------------------------------
+-- Hamiltonian (crystal field)
+--------------------------------------------------------------------------------
+tenDq_i = <10Dq_i>
+tenDq_f = <10Dq_f>
+
+tenDq_o = NewOperator('CF', nfermions, up_3d, down_3d, PotentialExpandedOnClm('Oh', 2, {0.6, -0.4}))
+
+H_cf_i = tenDq_i * tenDq_o
+H_cf_f = tenDq_f * tenDq_o
+
+--------------------------------------------------------------------------------
+-- Magnetic field
+--------------------------------------------------------------------------------
+Sx_o    = NewOperator('Sx'   , nfermions, up_3d, down_3d)
+Sy_o    = NewOperator('Sy'   , nfermions, up_3d, down_3d)
+Sz_o    = NewOperator('Sz'   , nfermions, up_3d, down_3d)
+Ssqr_o  = NewOperator('Ssqr' , nfermions, up_3d, down_3d)
+Splus_o = NewOperator('Splus', nfermions, up_3d, down_3d)
+Smin_o  = NewOperator('Smin' , nfermions, up_3d, down_3d)
+
+Lx_o    = NewOperator('Lx'   , nfermions, up_3d, down_3d)
+Ly_o    = NewOperator('Ly'   , nfermions, up_3d, down_3d)
+Lz_o    = NewOperator('Lz'   , nfermions, up_3d, down_3d)
+Lsqr_o  = NewOperator('Lsqr' , nfermions, up_3d, down_3d)
+Lplus_o = NewOperator('Lplus', nfermions, up_3d, down_3d)
+Lmin_o  = NewOperator('Lmin' , nfermions, up_3d, down_3d)
+
+Jx_o    = NewOperator('Jx'   , nfermions, up_3d, down_3d)
+Jy_o    = NewOperator('Jy'   , nfermions, up_3d, down_3d)
+Jz_o    = NewOperator('Jz'   , nfermions, up_3d, down_3d)
+Jsqr_o  = NewOperator('Jsqr' , nfermions, up_3d, down_3d)
+Jplus_o = NewOperator('Jplus', nfermions, up_3d, down_3d)
+Jmin_o  = NewOperator('Jmin' , nfermions, up_3d, down_3d)
+
+Bx =  0.0 * tesla_to_ev
+By =  0.0 * tesla_to_ev
+Bz = 1e-4 * tesla_to_ev
+
+B = Bx * (2 * Sx_o + Lx_o) +
+    By * (2 * Sy_o + Ly_o) +
+    Bz * (2 * Sz_o + Lz_o)
+
+--------------------------------------------------------------------------------
+-- Hamiltonian (total)
+--------------------------------------------------------------------------------
+H_i = H_coulomb_i + H_soc_i + H_cf_i + B
+H_f = H_coulomb_f + H_soc_f + H_cf_f + B
+
+--------------------------------------------------------------------------------
+-- Calculate the spectra
+--------------------------------------------------------------------------------
+-- Define the temperature.
+T = 1e-4 * kelvin_to_ev
+
+-- Determine the number of possible states in the initial configuration.
+npsis = math.fact(10) / (math.fact(nelectrons_3d) * math.fact(10 - nelectrons_3d))
+
+restrictions = {nfermions, nbosons,
+    {'111111 0000000000', nelectrons_2p, nelectrons_2p},
+    {'000000 1111111111', nelectrons_3d, nelectrons_3d}}
+
+-- Calculate the wave functions.
+psis = Eigensystem(H_i, restrictions, npsis)
+
+-- Calculate the energy of the ground state.
+E_i = psis[1] * H_i * psis[1]
+
+-- Initialize the partition function, and the spectra.
+Z = 0
+spectrum_z = 0
+spectrum_r = 0
+spectrum_l = 0
+
+-- Define the operator for the describing the transition (dipole).
+t = math.sqrt(1/2);
+
+TXASx_o = NewOperator('CF', nfermions, up_3d, down_3d, up_2p, down_2p, {{1, -1, t}, {1, 1, -t}})
+TXASy_o = NewOperator('CF', nfermions, up_3d, down_3d, up_2p, down_2p, {{1, -1, t * I}, {1, 1, t * I}})
+TXASz_o = NewOperator('CF', nfermions, up_3d, down_3d, up_2p, down_2p, {{1, 0, 1}})
+
+TXASr_o =  t * (TXASx_o - TXASy_o * I)
+TXASl_o = -t * (TXASx_o + TXASy_o * I)
+
+for j = 1, npsis do
+
+    dZ = math.exp(-(psis[j] * H_i * psis[j] - E_i) / T)
+
+    if (dZ < 1e-8) then
+        break
+    end
+
+    Z = Z + dZ
+    spectrum_z = spectrum_z + CreateSpectra(H_f, TXASz_o, psis[j], {{'Emin', -20}, {'Emax', 20}, {'NE', 2048}, {'Gamma', 0.8}}) * dZ
+    spectrum_r = spectrum_r + CreateSpectra(H_f, TXASr_o, psis[j], {{'Emin', -20}, {'Emax', 20}, {'NE', 2048}, {'Gamma', 0.8}}) * dZ
+    spectrum_l = spectrum_l + CreateSpectra(H_f, TXASl_o, psis[j], {{'Emin', -20}, {'Emax', 20}, {'NE', 2048}, {'Gamma', 0.8}}) * dZ
+
+end
+
+spectrum_z = spectrum_z / Z
+spectrum_r = spectrum_r / Z
+spectrum_l = spectrum_l / Z
+
+spectrum = (spectrum_z + spectrum_l + spectrum_r) / 3
+spectrum.Print({{'file', 'spectrum.dat'}})
