@@ -1,12 +1,8 @@
 # coding: utf-8
 
 import os
-import re
 import sys
 import json
-import pprint
-import random
-import string
 import subprocess
 import collections
 import numpy as np
@@ -19,7 +15,7 @@ from matplotlib.backends.backend_qt5agg import (FigureCanvasQTAgg
         as FigureCanvas, NavigationToolbar2QT as NavigationToolBar)
 from matplotlib.figure import Figure
 
-from crispy.gui.treemodel import TreeNode, TreeModel, TreeView
+from crispy.gui.treemodel import TreeModel, TreeView
 
 
 class ToolBarComboBox(QComboBox):
