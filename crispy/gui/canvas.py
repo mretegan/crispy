@@ -7,8 +7,9 @@ import collections
 import numpy as np
 
 from PyQt5.QtCore import QItemSelectionModel, Qt
-from PyQt5.QtWidgets import (QComboBox, QDockWidget, QListView, QMainWindow,
-        QPushButton, QStatusBar, QVBoxLayout, QWidget)
+from PyQt5.QtWidgets import (
+    QComboBox, QDockWidget, QListView, QMainWindow, QPushButton, QStatusBar,
+    QVBoxLayout, QWidget)
 
 from crispy.gui.treemodel import TreeModel, TreeView
 from crispy.gui.spectrum import Spectrum
@@ -65,11 +66,11 @@ class MainWindow(QMainWindow):
         self.createToolBarSignals()
 
     def loadParameters(self):
-        parametersFile = os.path.join(os.getenv('CRISPY_ROOT'), 'data',
-                'parameters.json')
+        parametersFile = os.path.join(
+            os.getenv('CRISPY_ROOT'), 'data', 'parameters.json')
         with open(parametersFile) as jsonFile:
-            self.parameters = json.loads(jsonFile.read(),
-                object_pairs_hook=collections.OrderedDict)
+            self.parameters = json.loads(
+                jsonFile.read(), object_pairs_hook=collections.OrderedDict)
 
     def createToolBar(self):
         self.toolBar = self.addToolBar('User selections')
@@ -155,7 +156,7 @@ class MainWindow(QMainWindow):
         self.elementsComboBox.currentTextChanged.connect(self.updateElement)
         self.chargesComboBox.currentTextChanged.connect(self.updateCharge)
         self.experimentsComboBox.currentTextChanged.connect(
-                self.updateExperiment)
+            self.updateExperiment)
         self.edgesComboBox.currentTextChanged.connect(self.updateEdge)
         self.symmetriesComboBox.currentTextChanged.connect(self.updateSymmetry)
 
@@ -164,14 +165,14 @@ class MainWindow(QMainWindow):
         self.data = self.hamiltonianModel.getModelData()
 
         # Load the template file specific to the requested calculation.
-        templateFile = os.path.join(os.getenv('CRISPY_ROOT'), 'templates',
-                '{0:s}_{1:s}.template'.format(
-                    self.experiment.lower(), ''.join(self.shells.keys())))
+        templateFile = os.path.join(os.getenv(
+            'CRISPY_ROOT'), 'templates', '{0:s}_{1:s}.template'.format(
+                self.experiment.lower(), ''.join(self.shells.keys())))
         try:
             template = open(templateFile, 'r').read()
         except IOError:
             print('Template file not available for the requested calculation '
-                'type. Please select another edge.')
+                  'type. Please select another edge.')
             return
 
         for shellLabel, shellElectrons in self.shells.items():
@@ -186,15 +187,15 @@ class MainWindow(QMainWindow):
                     suffix = 'f'
                 for parameterLabel, parameterValue in stateParameters.items():
                     template = template.replace(
-                            '<{0:s}_{1:s}>'.format(parameterLabel, suffix),
-                            '{0:8.4f}'.format(float(parameterValue)))
+                        '<{0:s}_{1:s}>'.format(parameterLabel, suffix),
+                        '{0:8.4f}'.format(float(parameterValue)))
 
         # Write the input to file.
         inputFile = 'input.lua'
         with open(inputFile, 'w') as luaFile:
             luaFile.write(template)
 
-        # Run Quanty
+        # Run Quanty.
         quanty = Quanty()
         quanty.run(inputFile)
 
@@ -236,26 +237,26 @@ class MainWindow(QMainWindow):
 
     def updateHamiltonianData(self):
         self.states = (self.parameters[self.element]
-                [self.charge][self.experiment][self.edge]['states'])
+                       [self.charge][self.experiment][self.edge]['states'])
 
         self.shells = (self.parameters[self.element]
-                [self.charge][self.experiment][self.edge]['shells'])
+                       [self.charge][self.experiment][self.edge]['shells'])
 
-        hamiltonians = (['Coulomb', 'Spin-orbit coupling',
-            'Crystal field'])
+        hamiltonians = (['Coulomb', 'Spin-orbit coupling', 'Crystal field'])
 
         for hamiltonian in hamiltonians:
             self.data[hamiltonian] = collections.OrderedDict()
             for (stateLabel, stateConfiguration) in self.states.items():
                 stateLabel = '{0} state ({1})'.format(
-                        stateLabel.capitalize(), stateConfiguration)
+                    stateLabel.capitalize(), stateConfiguration)
                 if 'Crystal field' in hamiltonian:
                     stateParameters = (self.parameters[self.element]
-                            [self.charge][hamiltonian]
-                            [stateConfiguration][self.symmetry])
+                                       [self.charge][hamiltonian]
+                                       [stateConfiguration][self.symmetry])
                 else:
                     stateParameters = (self.parameters[self.element]
-                            [self.charge][hamiltonian][stateConfiguration])
+                                       [self.charge][hamiltonian]
+                                       [stateConfiguration])
                 self.data[hamiltonian][stateLabel] = stateParameters
 
         # Create the Hamiltonian model.
@@ -266,10 +267,10 @@ class MainWindow(QMainWindow):
         # Assign the Hamiltonian model to the Hamiltonian view.
         self.hamiltonianView.setModel(self.hamiltonianModel)
         self.hamiltonianView.selectionModel().setCurrentIndex(
-                self.hamiltonianModel.index(0, 0), QItemSelectionModel.Select)
+            self.hamiltonianModel.index(0, 0), QItemSelectionModel.Select)
         currentIndex = self.hamiltonianView.selectionModel().currentIndex()
         self.hamiltonianView.selectionModel().selectionChanged.connect(
-                self.selectedHamiltonianTermChanged)
+            self.selectedHamiltonianTermChanged)
 
         # Assign the Hamiltonian model to the parameters view, and set
         # some properties.
@@ -281,6 +282,7 @@ class MainWindow(QMainWindow):
     def keyPressEvent(self, press):
         if press.key() == Qt.Key_Escape:
             sys.exit()
+
 
 def main():
     pass
