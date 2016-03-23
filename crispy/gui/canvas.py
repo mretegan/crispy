@@ -10,11 +10,8 @@ from PyQt5.QtCore import QItemSelectionModel, Qt
 from PyQt5.QtWidgets import (QComboBox, QDockWidget, QListView, QMainWindow,
         QPushButton, QStatusBar, QVBoxLayout, QWidget)
 
-from matplotlib.backends.backend_qt5agg import (FigureCanvasQTAgg
-        as FigureCanvas, NavigationToolbar2QT as NavigationToolBar)
-from matplotlib.figure import Figure
-
 from crispy.gui.treemodel import TreeModel, TreeView
+from crispy.gui.spectrum import Spectrum
 from crispy.backends.quanty import Quanty
 
 
@@ -38,21 +35,21 @@ class ToolBarComboBox(QComboBox):
 
 class MainWindow(QMainWindow):
 
-    defaultAttributes = {'element': 'Ni',
-                         'charge': '2+',
-                         'experiment': 'XAS',
-                         'edge': 'L2,3',
-                         'symmetry': 'Oh',
-                         'parameters': None,
-                         'data': collections.OrderedDict()}
+    _defaults = {'element': 'Ni',
+                 'charge': '2+',
+                 'experiment': 'XAS',
+                 'edge': 'L2,3',
+                 'symmetry': 'Oh',
+                 'parameters': None,
+                 'data': collections.OrderedDict()}
 
     def __init__(self):
         super(MainWindow, self).__init__()
-        self.__dict__.update(self.defaultAttributes)
+        self.__dict__.update(self._defaults)
 
         self.loadParameters()
 
-        self.resize(920, 580)
+        self.resize(1060, 580)
 
         self.centralWidget = QWidget(self)
         self.setCentralWidget(self.centralWidget)
@@ -60,7 +57,8 @@ class MainWindow(QMainWindow):
         self.createToolBar()
         self.createHamiltonianWidget()
         self.createParametersWidget()
-        self.createPlotWidget()
+        self.createCentralWidget()
+        self.createResultsWidget()
         self.createStatusBar()
 
         self.updateHamiltonianData()
@@ -129,14 +127,9 @@ class MainWindow(QMainWindow):
         self.parametersDockWidget.setWidget(self.parametersView)
         self.addDockWidget(Qt.LeftDockWidgetArea, self.parametersDockWidget)
 
-    def createPlotWidget(self):
-        # Construct the figure, and assign it to the canvas.
-        self.fig = Figure(dpi=100)
-        self.fig.patch.set_alpha(0.0)
-        self.canvas = FigureCanvas(self.fig)
-
-        # Construct the toolbar.
-        # self.toolBar = NavigationToolBar(self.canvas, self)
+    def createCentralWidget(self):
+        # Construct the spectrum.
+        self.spectrum = Spectrum()
 
         # Construct the run button.
         self.runButton = QPushButton('Run')
@@ -145,10 +138,18 @@ class MainWindow(QMainWindow):
 
         # Set the layout.
         layout = QVBoxLayout(self.centralWidget)
-        # layout.addWidget(self.toolBar)
-        layout.addWidget(self.canvas)
+        layout.addWidget(self.spectrum.canvas)
         layout.addWidget(self.runButton)
         self.centralWidget.setLayout(layout)
+
+    def createResultsWidget(self):
+        self.resultsDockWidget = QDockWidget('Results', self)
+        self.resultsDockWidget.setFeatures(QDockWidget.DockWidgetMovable)
+
+        self.resultsView = TreeView()
+
+        self.resultsDockWidget.setWidget(self.resultsView)
+        self.addDockWidget(Qt.RightDockWidgetArea, self.resultsDockWidget)
 
     def createToolBarSignals(self):
         self.elementsComboBox.currentTextChanged.connect(self.updateElement)
@@ -197,22 +198,13 @@ class MainWindow(QMainWindow):
         quanty = Quanty()
         quanty.run(inputFile)
 
-        # Plot the calculated spectrum.
+        # Load the data to be plotted.
         x, y1, y2 = np.loadtxt('spectrum.dat', unpack=True, skiprows=11)
+        title = '{0:s} {1:s} simulation for {2:s}{3:s}'.format(
+                self.experiment, self.edge, self.element, self.charge)
 
-        self.fig.clear()
-        self.ax = self.fig.add_subplot(111)
-        self.ax.patch.set_alpha(0.0)
-
-        self.ax.plot(x, -y2, '-')
-        self.ax.grid(True)
-        self.ax.set_title(
-                '{0:s} {1:s} simulation for {2:s}{3:s}'.format(
-                self.experiment, self.edge, self.element, self.charge))
-        self.ax.set_xlabel('Energy (eV)')
-        self.ax.yaxis.set_ticklabels([])
-
-        self.canvas.draw()
+        # Plot the spectrum.
+        self.spectrum.plot(x, -y2, title)
 
     def selectedHamiltonianTermChanged(self):
         currentIndex = self.hamiltonianView.selectionModel().currentIndex()
