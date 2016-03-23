@@ -3,7 +3,6 @@
 import os
 import sys
 import json
-import subprocess
 import collections
 import numpy as np
 
@@ -16,6 +15,7 @@ from matplotlib.backends.backend_qt5agg import (FigureCanvasQTAgg
 from matplotlib.figure import Figure
 
 from crispy.gui.treemodel import TreeModel, TreeView
+from crispy.backends.quanty import Quanty
 
 
 class ToolBarComboBox(QComboBox):
@@ -189,15 +189,13 @@ class MainWindow(QMainWindow):
                             '{0:8.4f}'.format(float(parameterValue)))
 
         # Write the input to file.
-        inputFile = open('input.lua', 'w')
-        inputFile.write(template)
-        inputFile.close()
+        inputFile = 'input.lua'
+        with open(inputFile, 'w') as luaFile:
+            luaFile.write(template)
 
-        # Run Quanty.
-        try:
-            subprocess.check_output(['Quanty', 'input.lua'])
-        except subprocess.CalledProcessError:
-            return
+        # Run Quanty
+        quanty = Quanty()
+        quanty.run(inputFile)
 
         # Plot the calculated spectrum.
         x, y1, y2 = np.loadtxt('spectrum.dat', unpack=True, skiprows=11)
