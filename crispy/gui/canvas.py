@@ -230,8 +230,8 @@ class MainWindow(QMainWindow):
 
     def updateCharge(self):
         charges = self.parameters[self.element]
-        self.charge = self.chargesComboBox.currentText()
         self.chargesComboBox.updateItems(charges)
+        self.charge = self.chargesComboBox.currentText()
         self.updateExperiment()
 
     def updateExperiment(self):
@@ -240,8 +240,8 @@ class MainWindow(QMainWindow):
 
     def updateEdge(self):
         edges = self.parameters[self.element][self.charge][self.experiment]
-        self.edge = self.edgesComboBox.currentText()
         self.edgesComboBox.updateItems(edges)
+        self.edge = self.edgesComboBox.currentText()
         self.updateHamiltonianData()
 
     def updateSymmetry(self):
