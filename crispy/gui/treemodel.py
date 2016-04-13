@@ -1,7 +1,5 @@
 # coding: utf-8
 
-import sys
-import pprint
 import collections
 
 from PyQt5.QtCore import (Qt, QAbstractItemModel, QModelIndex, QVariant)

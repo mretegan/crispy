@@ -1,5 +1,6 @@
 # coding: utf-8
 
+import os
 import subprocess
 
 
@@ -9,10 +10,10 @@ class Quanty(object):
         pass
 
     @staticmethod
-    def run(inputFile='input.lua'):
+    def run(inputFile):
         try:
             subprocess.check_output(['Quanty', inputFile])
-        except subprocess.CalledProcessError:
-            return
+        except (FileNotFoundError, subprocess.CalledProcessError) as err:
+            print(err)
 
 

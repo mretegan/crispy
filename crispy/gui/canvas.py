@@ -1,10 +1,11 @@
 # coding: utf-8
 
+import collections
+import json
+import numpy as np
 import os
 import sys
-import json
-import collections
-import numpy as np
+import string
 
 from PyQt5.QtCore import QItemSelectionModel, Qt
 from PyQt5.QtWidgets import (
@@ -13,7 +14,7 @@ from PyQt5.QtWidgets import (
 
 from crispy.gui.treemodel import TreeModel, TreeView
 from crispy.gui.spectrum import Spectrum
-from crispy.backends.quanty import Quanty
+from crispy.backends.quanty.quanty import Quanty
 
 
 class ToolBarComboBox(QComboBox):
@@ -50,7 +51,7 @@ class MainWindow(QMainWindow):
 
         self.loadParameters()
 
-        self.resize(1060, 580)
+        self.resize(1260, 680)
 
         self.centralWidget = QWidget(self)
         self.setCentralWidget(self.centralWidget)
@@ -164,19 +165,22 @@ class MainWindow(QMainWindow):
         # Get the most recent data from the model.
         self.data = self.hamiltonianModel.getModelData()
 
+        self.backend = 'quanty'
         # Load the template file specific to the requested calculation.
-        templateFile = os.path.join(os.getenv(
-            'CRISPY_ROOT'), 'templates', '{0:s}_{1:s}.template'.format(
-                self.experiment.lower(), ''.join(self.shells.keys())))
+        templateFile = os.path.join(
+                os.getenv('CRISPY_ROOT'), 'backends', self.backend,
+                'templates', 'crystal_field', self.symmetry.lower(),
+                self.experiment.lower(), ''.join(self.shells.keys()),
+                'template')
         try:
             template = open(templateFile, 'r').read()
         except IOError:
-            print('Template file not available for the requested calculation '
-                  'type. Please select another edge.')
+            print('Template file not available for the requested'
+                  'calculation type.')
             return
 
         for shellLabel, shellElectrons in self.shells.items():
-            template = template.replace('<nelectrons_{0:s}>'.format(
+            template = template.replace('$NElectrons_{0:s}'.format(
                 shellLabel), str(shellElectrons))
 
         for hamiltonianLabel, hamiltonianTerms in self.data.items():
@@ -187,17 +191,19 @@ class MainWindow(QMainWindow):
                     suffix = 'f'
                 for parameterLabel, parameterValue in stateParameters.items():
                     template = template.replace(
-                        '<{0:s}_{1:s}>'.format(parameterLabel, suffix),
+                        '${0:s}_{1:s}'.format(parameterLabel, suffix),
                         '{0:8.4f}'.format(float(parameterValue)))
 
+        # Here something regarding the spectrum parameters.
+
         # Write the input to file.
-        inputFile = 'input.lua'
-        with open(inputFile, 'w') as luaFile:
-            luaFile.write(template)
+        inputFile = 'input.inp'
+        with open(inputFile, 'w') as f:
+            f.write(template)
 
         # Run Quanty.
-        quanty = Quanty()
-        quanty.run(inputFile)
+        backend = Quanty()
+        backend.run(inputFile)
 
         # Load the data to be plotted.
         x, y1, y2 = np.loadtxt('spectrum.dat', unpack=True, skiprows=11)
