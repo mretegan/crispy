@@ -242,7 +242,7 @@ class MainWindow(QMainWindow):
         self.shells = (self.parameters[self.element]
                        [self.charge][self.experiment][self.edge]['shells'])
 
-        hamiltonians = (['Coulomb', 'Spin-orbit coupling', 'Crystal field'])
+        hamiltonians = (['Coulomb', 'Spin-orbit coupling', 'Crystal field', 'Magnetic field'])
 
         for hamiltonian in hamiltonians:
             self.data[hamiltonian] = collections.OrderedDict()
