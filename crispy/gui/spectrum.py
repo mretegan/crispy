@@ -29,7 +29,8 @@ class Spectrum(object):
 
         self.ax.grid(True)
         self.ax.yaxis.set_ticklabels([])
-        self.ax.set_title(title)
+        if title:
+            self.ax.set_title(title)
         self.ax.set_xlabel('Energy (eV)')
         self.ax.patch.set_alpha(self.alpha)
 

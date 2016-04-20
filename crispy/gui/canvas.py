@@ -17,8 +17,13 @@ from crispy.gui.spectrum import Spectrum
 from crispy.backends.quanty.quanty import Quanty
 
 
-class ToolBarComboBox(QComboBox):
+class defaultdict(collections.defaultdict):
+    def __missing__(self, key):
+        value = self[key] = type(self)()
+        return value
 
+
+class ToolBarComboBox(QComboBox):
     def __init__(self, *args, fixedWidth=70, **kwargs):
         super(ToolBarComboBox, self).__init__(*args, **kwargs)
         self.setFixedWidth(fixedWidth)
@@ -168,10 +173,10 @@ class MainWindow(QMainWindow):
         self.backend = 'quanty'
         # Load the template file specific to the requested calculation.
         templateFile = os.path.join(
-                os.getenv('CRISPY_ROOT'), 'backends', self.backend,
-                'templates', 'crystal_field', self.symmetry.lower(),
-                self.experiment.lower(), ''.join(self.shells.keys()),
-                'template')
+            os.getenv('CRISPY_ROOT'), 'backends', self.backend, 'templates',
+            self.symmetry.lower(), self.experiment.lower(),
+            ''.join(self.shells.keys()), 'crystal_field', 'template')
+
         try:
             template = open(templateFile, 'r').read()
         except IOError:
@@ -206,12 +211,19 @@ class MainWindow(QMainWindow):
         backend.run(inputFile)
 
         # Load the data to be plotted.
-        x, y1, y2 = np.loadtxt('spectrum.dat', unpack=True, skiprows=11)
+        index = id(template)
+        spectrum = np.loadtxt('spectrum.dat', skiprows=5)
         title = '{0:s} {1:s} simulation for {2:s}{3:s}'.format(
-                self.experiment, self.edge, self.element, self.charge)
+            self.experiment, self.edge, self.element, self.charge)
+
+        # Store the simulation details.
+        self.results = defaultdict()
+        self.results[index]['title'] = title
+        self.results[index]['input'] = template
+        self.results[index]['spectrum'] = spectrum
 
         # Plot the spectrum.
-        self.spectrum.plot(x, -y2, title)
+        self.spectrum.plot(spectrum[:, 0], -spectrum[:, 2])
 
     def selectedHamiltonianTermChanged(self):
         currentIndex = self.hamiltonianView.selectionModel().currentIndex()
