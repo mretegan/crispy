@@ -50,7 +50,7 @@ class TreeNode(object):
         return len(self._data)
 
     def getItemData(self, column):
-        """Returns the data for a given column."""
+        """Return the data for a given column."""
         try:
             return self._data[column]
         except IndexError:
@@ -78,13 +78,13 @@ class TreeNode(object):
 
 
 class TreeModel(QAbstractItemModel):
-    """Class implementing a basic tree model. It subclasses
-    QAbstractItemModel and thus implements: index(), parent(),
-    rowCount(), columnCount(), and data().
+    """Class implementing a basic tree model. It subclasses QAbstractItemModel
+    and thus implements: index(), parent(), rowCount(), columnCount(), and
+    data().
 
     To enable editing, the class implements setData() and reimplements
-    flags() to ensure that an editable item is returned. headerData()
-    is also reimplemented to control the way the header is presented.
+    flags() to ensure that an editable item is returned. headerData() is also
+    reimplemented to control the way the header is presented.
     """
 
     def __init__(self, header, data, parent=None):
@@ -94,8 +94,8 @@ class TreeModel(QAbstractItemModel):
         self.setModelData(self._data)
 
     def index(self, row, column, parentIndex=None):
-        """Returns the index of the item in the model specified by the
-        given row, column and parent index.
+        """Return the index of the item in the model specified by the given
+        row, column and parent index.
 
         Parameters
         ----------
@@ -152,9 +152,9 @@ class TreeModel(QAbstractItemModel):
         return parentIndex
 
     def rowCount(self, parentIndex):
-        """Returns the number of rows under the given parent. When the
-        parentIndex is valid rowCount() is returning the number of
-        children of parent. For this it uses getNode() method to extract
+        """Return the number of rows under the given parent. When the
+        parentIndex is valid, rowCount() returns the number of
+        children of the parent. For this it uses getNode() method to extract
         the parentNode from the parentIndex, and calls the childCount()
         of the node to get number of children.
 
@@ -178,7 +178,7 @@ class TreeModel(QAbstractItemModel):
         return n
 
     def columnCount(self, parentIndex):
-        """Returns the number of columns.
+        """Return the number of columns.
 
         Parameters
         ----------
@@ -196,8 +196,7 @@ class TreeModel(QAbstractItemModel):
         return n
 
     def data(self, index, role):
-        """Returns the data stored under the given role for the item
-        referred to by index.column().
+        """Return role specific data for the item referred by index.column().
 
         Parameters
         ----------
@@ -211,7 +210,7 @@ class TreeModel(QAbstractItemModel):
         Returns
         -------
         data : QVariant
-            Data at the given index.
+            Role specific data at the given index.
         """
         if not index.isValid():
             return QVariant()
@@ -246,7 +245,7 @@ class TreeModel(QAbstractItemModel):
             return False
 
     def flags(self, index):
-        """Returns the active flags for the given index.
+        """Return the active flags for the given index.
 
         Parameters
         ----------
@@ -263,7 +262,7 @@ class TreeModel(QAbstractItemModel):
         return activeFlags
 
     def headerData(self, section, orientation, role):
-        """Returns the data for the given role and section in the header
+        """Return the data for the given role and section in the header
         with the specified orientation.
 
         Parameters
@@ -309,7 +308,7 @@ class TreeModel(QAbstractItemModel):
                     print('Invalid data sent to the model: {0}'.format(value))
 
     def _getModelData(self, data, parentNode=None):
-        """Returns the data contained in the model"""
+        """Return the data contained in the model"""
         if parentNode is None:
             parentNode = self._rootNode
 
