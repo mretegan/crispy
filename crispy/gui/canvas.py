@@ -7,11 +7,12 @@ import os
 import sys
 
 from PyQt5.QtCore import QItemSelectionModel, Qt
-from PyQt5.QtWidgets import (
+from PyQt5.QtWidgets import (QAbstractItemView,
     QComboBox, QDockWidget, QListView, QMainWindow, QPushButton, QStatusBar,
     QVBoxLayout, QWidget)
 
 from crispy.gui.treemodel import TreeModel, TreeView
+from crispy.gui.listmodel import ListModel
 from crispy.gui.spectrum import Spectrum
 from crispy.backends.quanty.quanty import Quanty
 
@@ -69,6 +70,7 @@ class MainWindow(QMainWindow):
 
         self.updateHamiltonianData()
         self.createToolBarSignals()
+        self.createSignals()
 
     def loadParameters(self):
         parametersFile = os.path.join(
@@ -152,7 +154,11 @@ class MainWindow(QMainWindow):
         self.resultsDockWidget = QDockWidget('Results', self)
         self.resultsDockWidget.setFeatures(QDockWidget.DockWidgetMovable)
 
-        self.resultsView = TreeView()
+        self.resultsModel = ListModel(list())
+
+        self.resultsView = QListView()
+        self.resultsView.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        self.resultsView.setModel(self.resultsModel)
 
         self.resultsDockWidget.setWidget(self.resultsView)
         self.addDockWidget(Qt.RightDockWidgetArea, self.resultsDockWidget)
@@ -212,23 +218,36 @@ class MainWindow(QMainWindow):
         backend.run(inputFile)
 
         # Load the data to be plotted.
-        index = id(template)
+        label = '{0:s}{1:s} | {2:s} | {3:s} | {4:s} | isotropic'.format(
+            self.element, self.charge, self.symmetry, self.experiment,
+            self.edge)
         spectrum = np.loadtxt('spectrum.dat', skiprows=5)
-        title = '{0:s} {1:s} simulation for {2:s}{3:s}'.format(
-            self.experiment, self.edge, self.element, self.charge)
-
-        # Store the simulation details.
-        self.results = defaultdict()
-        self.results[index]['title'] = title
-        self.results[index]['input'] = template
-        self.results[index]['spectrum'] = spectrum
 
         # Plot the spectrum.
-        self.spectrum.plot(spectrum[:, 0], -spectrum[:, 2])
+        self.spectrum.clear()
+        self.spectrum.plot(spectrum[:, 0], -spectrum[:, 2],label)
+
+        # Store the simulation details.
+        self.resultsModel.appendItem((label, spectrum, template))
+
+        # Remove generated files.
+        os.remove(inputFile)
+        os.remove('spectrum.dat')
 
     def selectedHamiltonianTermChanged(self):
         currentIndex = self.hamiltonianView.selectionModel().currentIndex()
         self.parametersView.setRootIndex(currentIndex)
+
+    def selectedResultsChanged(self):
+        selectedIndexes = self.resultsView.selectionModel().selectedIndexes()
+        self.spectrum.clear()
+        for index in selectedIndexes:
+            label, spectrum, _ = self.resultsModel.getIndexData(index)
+            self.spectrum.plot(spectrum[:, 0], -spectrum[:, 2], label)
+
+    def createSignals(self):
+        self.resultsView.selectionModel().selectionChanged.connect(
+            self.selectedResultsChanged)
 
     def updateElement(self):
         self.element = self.elementsComboBox.currentText()

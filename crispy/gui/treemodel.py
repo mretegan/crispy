@@ -219,8 +219,7 @@ class TreeModel(QAbstractItemModel):
         node = self.getNode(index)
 
         if role == Qt.DisplayRole or role == Qt.EditRole:
-            data = node.getItemData(index.column())
-            return data
+            return node.getItemData(index.column())
 
         if role == Qt.CheckStateRole:
             if node._parent == self._rootNode and index.column() == 0:

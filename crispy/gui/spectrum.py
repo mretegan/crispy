@@ -23,15 +23,19 @@ class Spectrum(object):
         self.fig.patch.set_alpha(self.alpha)
         self.canvas = FigureCanvas(self.fig)
 
-    def plot(self, x, y, title=None):
+    def clear(self):
+        if self.ax:
+            self.ax.cla()
+
+    def plot(self, x, y, label=None):
         self.ax = self.fig.add_subplot(1, 1, 1)
-        self.ax.plot(x, y, '-')
+        self.ax.plot(x, y, '-', label=label)
 
         self.ax.grid(True)
         self.ax.yaxis.set_ticklabels([])
-        if title:
-            self.ax.set_title(title)
         self.ax.set_xlabel('Energy (eV)')
+        self.ax.set_ylabel('Absorbtion crossection (a.u.)')
+        self.ax.legend(framealpha=self.alpha)
         self.ax.patch.set_alpha(self.alpha)
 
         self.canvas.draw()
