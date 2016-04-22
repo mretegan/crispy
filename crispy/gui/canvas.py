@@ -58,9 +58,6 @@ class MainWindow(QMainWindow):
 
         self.resize(1260, 680)
 
-        self.centralWidget = QWidget(self)
-        self.setCentralWidget(self.centralWidget)
-
         self.createToolBar()
         self.createHamiltonianWidget()
         self.createParametersWidget()
@@ -140,6 +137,8 @@ class MainWindow(QMainWindow):
         self.addDockWidget(Qt.LeftDockWidgetArea, self.parametersDockWidget)
 
     def createCentralWidget(self):
+        self.centralWidget = QWidget(self)
+
         # Construct the spectrum.
         self.spectrum = Spectrum()
 
@@ -153,6 +152,8 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.spectrum.canvas)
         layout.addWidget(self.runButton)
         self.centralWidget.setLayout(layout)
+
+        self.setCentralWidget(self.centralWidget)
 
     def createResultsWidget(self):
         self.resultsDockWidget = QDockWidget('Results', self)
