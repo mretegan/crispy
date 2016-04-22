@@ -69,8 +69,6 @@ class MainWindow(QMainWindow):
         self.createStatusBar()
 
         self.updateHamiltonianData()
-        self.createToolBarSignals()
-        self.createSignals()
 
     def loadParameters(self):
         parametersFile = os.path.join(
@@ -86,30 +84,36 @@ class MainWindow(QMainWindow):
         self.elementsComboBox = ToolBarComboBox()
         self.elementsComboBox.addItems(elements)
         self.elementsComboBox.setCurrentText(self.element)
+        self.elementsComboBox.currentTextChanged.connect(self.updateElement)
         self.toolBar.addWidget(self.elementsComboBox)
 
         charges = self.parameters[self.element]
         self.chargesComboBox = ToolBarComboBox()
         self.chargesComboBox.addItems(charges)
         self.chargesComboBox.setCurrentText(self.charge)
+        self.chargesComboBox.currentTextChanged.connect(self.updateCharge)
         self.toolBar.addWidget(self.chargesComboBox)
 
         symmetries = ['Oh']
         self.symmetriesComboBox = ToolBarComboBox()
         self.symmetriesComboBox.addItems(symmetries)
         self.symmetriesComboBox.setCurrentText(self.experiment)
+        self.symmetriesComboBox.currentTextChanged.connect(self.updateSymmetry)
         self.toolBar.addWidget(self.symmetriesComboBox)
 
         experiments = ['XAS']
         self.experimentsComboBox = ToolBarComboBox()
         self.experimentsComboBox.addItems(experiments)
         self.experimentsComboBox.setCurrentText(self.experiment)
+        self.experimentsComboBox.currentTextChanged.connect(
+            self.updateExperiment)
         self.toolBar.addWidget(self.experimentsComboBox)
 
         edges = self.parameters[self.element][self.charge][self.experiment]
         self.edgesComboBox = ToolBarComboBox()
         self.edgesComboBox.addItems(edges)
         self.edgesComboBox.setCurrentText(self.edge)
+        self.edgesComboBox.currentTextChanged.connect(self.updateEdge)
         self.toolBar.addWidget(self.edgesComboBox)
 
     def createStatusBar(self):
@@ -159,17 +163,11 @@ class MainWindow(QMainWindow):
         self.resultsView = QListView()
         self.resultsView.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.resultsView.setModel(self.resultsModel)
+        self.resultsView.selectionModel().selectionChanged.connect(
+            self.selectedResultsChanged)
 
         self.resultsDockWidget.setWidget(self.resultsView)
         self.addDockWidget(Qt.RightDockWidgetArea, self.resultsDockWidget)
-
-    def createToolBarSignals(self):
-        self.elementsComboBox.currentTextChanged.connect(self.updateElement)
-        self.chargesComboBox.currentTextChanged.connect(self.updateCharge)
-        self.experimentsComboBox.currentTextChanged.connect(
-            self.updateExperiment)
-        self.edgesComboBox.currentTextChanged.connect(self.updateEdge)
-        self.symmetriesComboBox.currentTextChanged.connect(self.updateSymmetry)
 
     def runCalculation(self):
         # Get the most recent data from the model.
@@ -244,10 +242,6 @@ class MainWindow(QMainWindow):
         for index in selectedIndexes:
             label, spectrum, _ = self.resultsModel.getIndexData(index)
             self.spectrum.plot(spectrum[:, 0], -spectrum[:, 2], label)
-
-    def createSignals(self):
-        self.resultsView.selectionModel().selectionChanged.connect(
-            self.selectedResultsChanged)
 
     def updateElement(self):
         self.element = self.elementsComboBox.currentText()
