@@ -16,4 +16,3 @@ class Quanty(object):
         except (FileNotFoundError, subprocess.CalledProcessError) as err:
             print(err)
 
-

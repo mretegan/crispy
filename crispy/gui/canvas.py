@@ -5,7 +5,6 @@ import json
 import numpy as np
 import os
 import sys
-import string
 
 from PyQt5.QtCore import QItemSelectionModel, Qt
 from PyQt5.QtWidgets import (
@@ -24,7 +23,7 @@ class defaultdict(collections.defaultdict):
 
 
 class ToolBarComboBox(QComboBox):
-    def __init__(self, *args, fixedWidth=70, **kwargs):
+    def __init__(self, fixedWidth=70, *args, **kwargs):
         super(ToolBarComboBox, self).__init__(*args, **kwargs)
         self.setFixedWidth(fixedWidth)
 
@@ -194,6 +193,8 @@ class MainWindow(QMainWindow):
                     suffix = 'i'
                 elif 'final' in stateLabel.lower():
                     suffix = 'f'
+                else:
+                    suffix = ''
                 for parameterLabel, parameterValue in stateParameters.items():
                     template = template.replace(
                         '${0:s}_{1:s}'.format(parameterLabel, suffix),
@@ -300,7 +301,6 @@ class MainWindow(QMainWindow):
     def keyPressEvent(self, press):
         if press.key() == Qt.Key_Escape:
             sys.exit()
-
 
 def main():
     pass
