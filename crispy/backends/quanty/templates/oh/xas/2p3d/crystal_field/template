@@ -123,6 +123,9 @@ InitialRestrictions = {NFermions, NBosons, {'111111 0000000000', NElectrons_2p, 
 
 -- Calculate the wave functions.
 psis = Eigensystem(H_i, InitialRestrictions, NPsis)
+if not (type(psis) == 'table') then
+    psis = {psis}
+end
 
 -- Calculate the energy of the ground state.
 E_i = psis[1] * H_i * psis[1]
