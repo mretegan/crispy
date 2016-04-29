@@ -7,20 +7,14 @@ import os
 import sys
 
 from PyQt5.QtCore import QItemSelectionModel, Qt
-from PyQt5.QtWidgets import (QAbstractItemView,
-    QComboBox, QDockWidget, QListView, QMainWindow, QPushButton, QStatusBar,
-    QVBoxLayout, QWidget)
+from PyQt5.QtWidgets import (
+    QAbstractItemView, QComboBox, QDockWidget, QListView, QMainWindow,
+    QPushButton, QStatusBar, QVBoxLayout, QWidget)
 
 from crispy.gui.treemodel import TreeModel, TreeView
 from crispy.gui.listmodel import ListModel
 from crispy.gui.spectrum import Spectrum
 from crispy.backends.quanty.quanty import Quanty
-
-
-class defaultdict(collections.defaultdict):
-    def __missing__(self, key):
-        value = self[key] = type(self)()
-        return value
 
 
 class ToolBarComboBox(QComboBox):
@@ -47,8 +41,7 @@ class MainWindow(QMainWindow):
                  'experiment': 'XAS',
                  'edge': 'L2,3',
                  'symmetry': 'Oh',
-                 'parameters': None,
-                 'data': collections.OrderedDict()}
+                 'hamiltonianModelData': collections.OrderedDict()}
 
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -60,19 +53,19 @@ class MainWindow(QMainWindow):
 
         self.createToolBar()
         self.createHamiltonianWidget()
-        self.createParametersWidget()
+        self.createHamiltonianParametersWidget()
         self.createCentralWidget()
         self.createResultsWidget()
         self.createStatusBar()
 
-        self.updateHamiltonianData()
+        self.updateHamiltonianModelData()
 
     def loadParameters(self):
-        parametersFile = os.path.join(
-            os.getenv('CRISPY_ROOT'), 'data', 'parameters.json')
-        with open(parametersFile) as jsonFile:
+        dataPath = os.path.join(os.getenv('CRISPY_ROOT'), 'data')
+
+        with open(os.path.join(dataPath, 'parameters.json')) as f:
             self.parameters = json.loads(
-                jsonFile.read(), object_pairs_hook=collections.OrderedDict)
+                f.read(), object_pairs_hook=collections.OrderedDict)
 
     def createToolBar(self):
         self.toolBar = self.addToolBar('User selections')
@@ -94,11 +87,12 @@ class MainWindow(QMainWindow):
         symmetries = ['Oh']
         self.symmetriesComboBox = ToolBarComboBox()
         self.symmetriesComboBox.addItems(symmetries)
-        self.symmetriesComboBox.setCurrentText(self.experiment)
+        self.symmetriesComboBox.setCurrentText(self.symmetry)
         self.symmetriesComboBox.currentTextChanged.connect(self.updateSymmetry)
         self.toolBar.addWidget(self.symmetriesComboBox)
 
-        experiments = ['XAS']
+        experiments = (self.parameters[self.element][self.charge]
+                                      ['experiments'])
         self.experimentsComboBox = ToolBarComboBox()
         self.experimentsComboBox.addItems(experiments)
         self.experimentsComboBox.setCurrentText(self.experiment)
@@ -106,7 +100,8 @@ class MainWindow(QMainWindow):
             self.updateExperiment)
         self.toolBar.addWidget(self.experimentsComboBox)
 
-        edges = self.parameters[self.element][self.charge][self.experiment]
+        edges = (self.parameters[self.element][self.charge]
+                                ['experiments'][self.experiment])
         self.edgesComboBox = ToolBarComboBox()
         self.edgesComboBox.addItems(edges)
         self.edgesComboBox.setCurrentText(self.edge)
@@ -127,14 +122,18 @@ class MainWindow(QMainWindow):
         self.hamiltonianDockWidget.setWidget(self.hamiltonianView)
         self.addDockWidget(Qt.LeftDockWidgetArea, self.hamiltonianDockWidget)
 
-    def createParametersWidget(self):
-        self.parametersDockWidget = QDockWidget('Parameters', self)
-        self.parametersDockWidget.setFeatures(QDockWidget.DockWidgetMovable)
+    def createHamiltonianParametersWidget(self):
+        self.hamiltonianParametersDockWidget = QDockWidget(
+            'Hamiltonian Parameters', self)
+        self.hamiltonianParametersDockWidget.setFeatures(
+            QDockWidget.DockWidgetMovable)
 
-        self.parametersView = TreeView()
+        self.hamiltonianParametersView = TreeView()
 
-        self.parametersDockWidget.setWidget(self.parametersView)
-        self.addDockWidget(Qt.LeftDockWidgetArea, self.parametersDockWidget)
+        self.hamiltonianParametersDockWidget.setWidget(
+            self.hamiltonianParametersView)
+        self.addDockWidget(Qt.LeftDockWidgetArea,
+                           self.hamiltonianParametersDockWidget)
 
     def createCentralWidget(self):
         self.centralWidget = QWidget(self)
@@ -172,14 +171,19 @@ class MainWindow(QMainWindow):
 
     def runCalculation(self):
         # Get the most recent data from the model.
-        self.data = self.hamiltonianModel.getModelData()
+        self.hamiltonianModelData = self.hamiltonianModel.getModelData()
 
         self.backend = 'quanty'
+
+        shells = (self.parameters[self.element][self.charge]
+                                 ['experiments'][self.experiment]
+                                 [self.edge]['shells'])
+
         # Load the template file specific to the requested calculation.
         templateFile = os.path.join(
             os.getenv('CRISPY_ROOT'), 'backends', self.backend, 'templates',
             self.symmetry.lower(), self.experiment.lower(),
-            ''.join(self.shells.keys()), 'crystal_field', 'template')
+            ''.join(shells.keys()), 'crystal_field', 'template')
 
         try:
             template = open(templateFile, 'r').read()
@@ -188,24 +192,25 @@ class MainWindow(QMainWindow):
                   'calculation type.')
             return
 
-        for shellLabel, shellElectrons in self.shells.items():
+        for shell in shells:
             template = template.replace('$NElectrons_{0:s}'.format(
-                shellLabel), str(shellElectrons))
+                shell), str(shells[shell]))
 
-        for hamiltonianLabel, hamiltonianTerms in self.data.items():
-            for stateLabel, stateParameters in hamiltonianTerms.items():
-                if 'initial' in stateLabel.lower():
+        hamiltonians = self.hamiltonianModelData
+        for hamiltonian in hamiltonians:
+            configurations = hamiltonians[hamiltonian]
+            for configuration in configurations:
+                if 'initial' in configuration.lower():
                     suffix = 'i'
-                elif 'final' in stateLabel.lower():
+                elif 'final' in configuration.lower():
                     suffix = 'f'
                 else:
                     suffix = ''
-                for parameterLabel, parameterValue in stateParameters.items():
+                parameters = configurations[configuration]
+                for parameter in parameters:
                     template = template.replace(
-                        '${0:s}_{1:s}'.format(parameterLabel, suffix),
-                        '{0:8.4f}'.format(float(parameterValue)))
-
-        # Here something regarding the spectrum parameters.
+                        '${0:s}_{1:s}'.format(parameter, suffix),
+                        '{0:8.4f}'.format(float(parameters[parameter])))
 
         # Write the input to file.
         inputFile = 'input.inp'
@@ -224,7 +229,7 @@ class MainWindow(QMainWindow):
 
         # Plot the spectrum.
         self.spectrum.clear()
-        self.spectrum.plot(spectrum[:, 0], -spectrum[:, 2],label)
+        self.spectrum.plot(spectrum[:, 0], -spectrum[:, 2], label)
 
         # Store the simulation details.
         self.resultsModel.appendItem((label, spectrum, template))
@@ -235,7 +240,7 @@ class MainWindow(QMainWindow):
 
     def selectedHamiltonianTermChanged(self):
         currentIndex = self.hamiltonianView.selectionModel().currentIndex()
-        self.parametersView.setRootIndex(currentIndex)
+        self.hamiltonianParametersView.setRootIndex(currentIndex)
 
     def selectedResultsChanged(self):
         selectedIndexes = self.resultsView.selectionModel().selectedIndexes()
@@ -254,48 +259,53 @@ class MainWindow(QMainWindow):
         self.charge = self.chargesComboBox.currentText()
         self.updateExperiment()
 
+    def updateSymmetry(self):
+        symmetries = ['Oh']
+        self.symmetriesComboBox.updateItems(symmetries)
+        self.symmetry = self.symmetriesComboBox.currentText()
+        self.updateHamiltonianModelData()
+
     def updateExperiment(self):
+        experiments = (self.parameters[self.element][self.charge]
+                                      ['experiments'])
+        self.experimentsComboBox.updateItems(experiments)
         self.experiment = self.experimentsComboBox.currentText()
         self.updateEdge()
 
     def updateEdge(self):
-        edges = self.parameters[self.element][self.charge][self.experiment]
+        edges = (self.parameters[self.element][self.charge]
+                                ['experiments'][self.experiment])
         self.edgesComboBox.updateItems(edges)
         self.edge = self.edgesComboBox.currentText()
-        self.updateHamiltonianData()
+        self.updateHamiltonianModelData()
 
-    def updateSymmetry(self):
-        self.symmetry = self.symmetriesComboBox.currentText()
-        self.updateHamiltonianData()
+    def updateHamiltonianModelData(self):
+        configurations = (self.parameters[self.element][self.charge]
+                                         ['experiments'][self.experiment]
+                                         [self.edge]['configurations'])
 
-    def updateHamiltonianData(self):
-        self.states = (self.parameters[self.element]
-                       [self.charge][self.experiment][self.edge]['states'])
-
-        self.shells = (self.parameters[self.element]
-                       [self.charge][self.experiment][self.edge]['shells'])
-
-        hamiltonians = (['Coulomb', 'Spin-orbit coupling', 'Crystal field', 'Magnetic field'])
+        hamiltonians = (self.parameters[self.element][self.charge]
+                                       ['hamiltonians'])
 
         for hamiltonian in hamiltonians:
-            self.data[hamiltonian] = collections.OrderedDict()
-            for (stateLabel, stateConfiguration) in self.states.items():
-                stateLabel = '{0} state ({1})'.format(
-                    stateLabel.capitalize(), stateConfiguration)
-                if 'Crystal field' in hamiltonian:
-                    stateParameters = (self.parameters[self.element]
-                                       [self.charge][hamiltonian]
-                                       [stateConfiguration][self.symmetry])
-                else:
-                    stateParameters = (self.parameters[self.element]
-                                       [self.charge][hamiltonian]
-                                       [stateConfiguration])
-                self.data[hamiltonian][stateLabel] = stateParameters
+            self.hamiltonianModelData[hamiltonian] = collections.OrderedDict()
+
+            if 'Crystal field' in hamiltonian:
+                parameters = hamiltonians[hamiltonian][self.symmetry]
+            else:
+                parameters = hamiltonians[hamiltonian]
+
+            for configuration in configurations:
+                label = '{0} conf. ({1})'.format(
+                    configuration.capitalize(), configurations[configuration])
+
+                self.hamiltonianModelData[hamiltonian][label] = (
+                    parameters[configurations[configuration]])
 
         # Create the Hamiltonian model.
         self.hamiltonianModel = TreeModel(
             header=['parameter', 'value', 'min', 'max'],
-            data=self.data)
+            data=self.hamiltonianModelData)
 
         # Assign the Hamiltonian model to the Hamiltonian view.
         self.hamiltonianView.setModel(self.hamiltonianModel)
@@ -305,16 +315,17 @@ class MainWindow(QMainWindow):
         self.hamiltonianView.selectionModel().selectionChanged.connect(
             self.selectedHamiltonianTermChanged)
 
-        # Assign the Hamiltonian model to the parameters view, and set
-        # some properties.
-        self.parametersView.setModel(self.hamiltonianModel)
-        self.parametersView.expandAll()
-        self.parametersView.resizeAllColumns()
-        self.parametersView.setRootIndex(currentIndex)
+        # Assign the Hamiltonian model to the Hamiltonian parameters view, and
+        # set some properties.
+        self.hamiltonianParametersView.setModel(self.hamiltonianModel)
+        self.hamiltonianParametersView.expandAll()
+        self.hamiltonianParametersView.resizeAllColumns()
+        self.hamiltonianParametersView.setRootIndex(currentIndex)
 
     def keyPressEvent(self, press):
         if press.key() == Qt.Key_Escape:
             sys.exit()
+
 
 def main():
     pass
