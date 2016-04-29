@@ -47,13 +47,14 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
         self.__dict__.update(self._defaults)
 
-        self.loadParameters()
-
         self.resize(1260, 680)
+
+        self.loadParameters()
 
         self.createToolBar()
         self.createHamiltonianWidget()
         self.createHamiltonianParametersWidget()
+        self.createExperimentWidget()
         self.createCentralWidget()
         self.createResultsWidget()
         self.createStatusBar()
@@ -134,6 +135,20 @@ class MainWindow(QMainWindow):
             self.hamiltonianParametersView)
         self.addDockWidget(Qt.LeftDockWidgetArea,
                            self.hamiltonianParametersDockWidget)
+
+    def createExperimentWidget(self):
+        self.experimentDockWidget = QDockWidget('Experiment', self)
+        self.experimentDockWidget.setFeatures(QDockWidget.DockWidgetMovable)
+
+        self.experimentView = QListView()
+
+        self.experimentDockWidget.setWidget(self.experimentView)
+        self.addDockWidget(Qt.LeftDockWidgetArea, self.experimentDockWidget)
+
+        # self.tabifyDockWidget(
+            # self.hamiltonianDockWidget, self.experimentDockWidget)
+        # self.setTabPosition(Qt.LeftDockWidgetArea, QTabWidget.South)
+        # self.hamiltonianDockWidget.raise_()
 
     def createCentralWidget(self):
         self.centralWidget = QWidget(self)
