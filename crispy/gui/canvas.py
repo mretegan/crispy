@@ -8,7 +8,7 @@ import sys
 
 from PyQt5.QtCore import QItemSelectionModel, Qt
 from PyQt5.QtWidgets import (
-    QAbstractItemView, QComboBox, QDockWidget, QListView, QMainWindow,
+    QAbstractItemView, QComboBox, QDockWidget, QDoubleSpinBox, QGridLayout, QLabel, QLineEdit, QListView, QMainWindow,
     QPushButton, QStatusBar, QVBoxLayout, QWidget)
 
 from crispy.gui.treemodel import TreeModel, TreeView
@@ -16,6 +16,13 @@ from crispy.gui.listmodel import ListModel
 from crispy.gui.spectrum import Spectrum
 from crispy.backends.quanty.quanty import Quanty
 
+
+class DoubleSpinBox(QDoubleSpinBox):
+    def __init__(self, *args):
+        super(DoubleSpinBox, self).__init__(*args)
+
+    def textFromValue(self, value):
+        return '{:8.3f}'.format(value)
 
 class ToolBarComboBox(QComboBox):
     def __init__(self, fixedWidth=70, *args, **kwargs):
@@ -140,9 +147,69 @@ class MainWindow(QMainWindow):
         self.experimentDockWidget = QDockWidget('Experiment', self)
         self.experimentDockWidget.setFeatures(QDockWidget.DockWidgetMovable)
 
-        self.experimentView = QListView()
+        widget = QWidget()
 
-        self.experimentDockWidget.setWidget(self.experimentView)
+        temperatureLabel = QLabel()
+        temperatureLabel.setText('Temperature (K):')
+
+        temperatureLineEdit = QLineEdit()
+        temperatureLineEdit.setText('1')
+        temperatureLineEdit.setMaximumWidth(40)
+        temperatureLineEdit.setAlignment(Qt.AlignRight)
+
+        magneticFieldLabel = QLabel()
+        magneticFieldLabel.setText('Magnetic field (T):')
+
+        magneticFieldXLineEdit = QLineEdit()
+        magneticFieldXLineEdit.setMaximumWidth(50)
+        magneticFieldXLineEdit.setText('0.0')
+        magneticFieldXLineEdit.setAlignment(Qt.AlignRight)
+
+        magneticFieldYLineEdit = QLineEdit()
+        magneticFieldYLineEdit.setMaximumWidth(50)
+        magneticFieldYLineEdit.setText('0.0')
+        magneticFieldYLineEdit.setAlignment(Qt.AlignRight)
+
+        magneticFieldZLineEdit = QLineEdit()
+        magneticFieldZLineEdit.setMaximumWidth(50)
+        magneticFieldZLineEdit.setText('1e-6')
+        magneticFieldZLineEdit.setAlignment(Qt.AlignRight)
+
+        broadeningGaussLabel = QLabel()
+        broadeningGaussLabel.setText('Gauss broadening (eV):')
+
+        broadeningGaussLineEdit = QLineEdit()
+        broadeningGaussLineEdit.setText('0.4')
+        broadeningGaussLineEdit.setMaximumWidth(50)
+        broadeningGaussLineEdit.setAlignment(Qt.AlignRight)
+
+        broadeningLorentzLabel = QLabel()
+        broadeningLorentzLabel.setText('Lorentz broadening (eV):')
+
+        broadeningLorentzLineEdit = QLineEdit()
+        broadeningLorentzLineEdit.setText('0.8')
+        broadeningLorentzLineEdit.setMaximumWidth(50)
+        broadeningLorentzLineEdit.setAlignment(Qt.AlignRight)
+
+        layout = QGridLayout()
+
+        layout.addWidget(temperatureLabel, 0, 0)
+        layout.addWidget(temperatureLineEdit, 0, 1)
+
+        layout.addWidget(magneticFieldLabel, 1, 0)
+        layout.addWidget(magneticFieldXLineEdit, 1, 1)
+        layout.addWidget(magneticFieldYLineEdit, 1, 2)
+        layout.addWidget(magneticFieldZLineEdit, 1, 3)
+
+        layout.addWidget(broadeningGaussLabel, 2, 0)
+        layout.addWidget(broadeningGaussLineEdit, 2, 1)
+
+        layout.addWidget(broadeningLorentzLabel, 3, 0)
+        layout.addWidget(broadeningLorentzLineEdit, 3, 1)
+
+        widget.setLayout(layout)
+
+        self.experimentDockWidget.setWidget(widget)
         self.addDockWidget(Qt.LeftDockWidgetArea, self.experimentDockWidget)
 
         # self.tabifyDockWidget(
