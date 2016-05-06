@@ -13,6 +13,7 @@ def main():
     from crispy.gui import canvas
 
     app = QApplication(sys.argv)
+    # app.setStyle('Windows')
 
     window = canvas.MainWindow()
     window.show()

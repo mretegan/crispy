@@ -9,7 +9,7 @@ import sys
 from PyQt5.QtCore import QItemSelectionModel, Qt
 from PyQt5.QtWidgets import (
     QAbstractItemView, QComboBox, QDockWidget, QDoubleSpinBox, QGridLayout, QLabel, QLineEdit, QListView, QMainWindow,
-    QPushButton, QStatusBar, QVBoxLayout, QWidget)
+    QPushButton, QStatusBar, QVBoxLayout, QWidget, QTabWidget, QFrame)
 
 from crispy.gui.treemodel import TreeModel, TreeView
 from crispy.gui.listmodel import ListModel
@@ -60,7 +60,6 @@ class MainWindow(QMainWindow):
 
         self.createToolBar()
         self.createHamiltonianWidget()
-        self.createHamiltonianParametersWidget()
         self.createExperimentWidget()
         self.createCentralWidget()
         self.createResultsWidget()
@@ -126,22 +125,17 @@ class MainWindow(QMainWindow):
         self.hamiltonianDockWidget.setFeatures(QDockWidget.DockWidgetMovable)
 
         self.hamiltonianView = QListView()
-
-        self.hamiltonianDockWidget.setWidget(self.hamiltonianView)
-        self.addDockWidget(Qt.LeftDockWidgetArea, self.hamiltonianDockWidget)
-
-    def createHamiltonianParametersWidget(self):
-        self.hamiltonianParametersDockWidget = QDockWidget(
-            'Hamiltonian Parameters', self)
-        self.hamiltonianParametersDockWidget.setFeatures(
-            QDockWidget.DockWidgetMovable)
-
         self.hamiltonianParametersView = TreeView()
 
-        self.hamiltonianParametersDockWidget.setWidget(
-            self.hamiltonianParametersView)
-        self.addDockWidget(Qt.LeftDockWidgetArea,
-                           self.hamiltonianParametersDockWidget)
+        layout = QVBoxLayout()
+        layout.addWidget(self.hamiltonianView)
+        layout.addWidget(self.hamiltonianParametersView)
+
+        widget = QWidget()
+        widget.setLayout(layout)
+
+        self.hamiltonianDockWidget.setWidget(widget)
+        self.addDockWidget(Qt.LeftDockWidgetArea, self.hamiltonianDockWidget)
 
     def createExperimentWidget(self):
         self.experimentDockWidget = QDockWidget('Experiment', self)
@@ -212,10 +206,10 @@ class MainWindow(QMainWindow):
         self.experimentDockWidget.setWidget(widget)
         self.addDockWidget(Qt.LeftDockWidgetArea, self.experimentDockWidget)
 
-        # self.tabifyDockWidget(
-            # self.hamiltonianDockWidget, self.experimentDockWidget)
-        # self.setTabPosition(Qt.LeftDockWidgetArea, QTabWidget.South)
-        # self.hamiltonianDockWidget.raise_()
+        self.tabifyDockWidget(
+            self.hamiltonianDockWidget, self.experimentDockWidget)
+        self.setTabPosition(Qt.LeftDockWidgetArea, QTabWidget.South)
+        self.hamiltonianDockWidget.raise_()
 
     def createCentralWidget(self):
         self.centralWidget = QWidget(self)
