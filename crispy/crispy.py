@@ -13,7 +13,11 @@ def main():
     from crispy.gui import canvas
 
     app = QApplication(sys.argv)
+    # app.setStyle('Fusion')
     # app.setStyle('Windows')
+
+    styleSheet = os.path.join(os.getenv('CRISPY_ROOT'), 'data', 'dark.qss')
+    app.setStyleSheet(open(styleSheet, 'r').read())
 
     window = canvas.MainWindow()
     window.show()
