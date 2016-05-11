@@ -8,8 +8,9 @@ import sys
 
 from PyQt5.QtCore import QItemSelectionModel, Qt
 from PyQt5.QtWidgets import (
-    QAbstractItemView, QComboBox, QDockWidget, QDoubleSpinBox, QGridLayout, QLabel, QLineEdit, QListView, QMainWindow,
-    QPushButton, QStatusBar, QVBoxLayout, QWidget, QTabWidget, QFrame)
+    QAbstractItemView, QComboBox, QDockWidget, QDoubleSpinBox, QLabel,
+    QListView, QMainWindow, QGroupBox, QPushButton, QStatusBar, QHBoxLayout,
+    QVBoxLayout, QTabWidget, QWidget)
 
 from crispy.gui.treemodel import TreeModel, TreeView
 from crispy.gui.listmodel import ListModel
@@ -123,6 +124,7 @@ class MainWindow(QMainWindow):
     def createHamiltonianWidget(self):
         self.hamiltonianDockWidget = QDockWidget('Hamiltonian', self)
         self.hamiltonianDockWidget.setFeatures(QDockWidget.DockWidgetMovable)
+        # self.hamiltonianDockWidget.setTitleBarWidget(QWidget())
 
         self.hamiltonianView = QListView()
         self.hamiltonianParametersView = TreeView()
@@ -140,66 +142,114 @@ class MainWindow(QMainWindow):
     def createExperimentWidget(self):
         self.experimentDockWidget = QDockWidget('Experiment', self)
         self.experimentDockWidget.setFeatures(QDockWidget.DockWidgetMovable)
+        # self.experimentDockWidget.setTitleBarWidget(QWidget())
 
         widget = QWidget()
 
+        # Temeperature
+        temperatureGroupBox = QGroupBox()
+        temperatureGroupBox.setTitle('Temperature (K)')
+
         temperatureLabel = QLabel()
-        temperatureLabel.setText('Temperature (K):')
+        temperatureLabel.setText('T')
 
-        temperatureLineEdit = QLineEdit()
-        temperatureLineEdit.setText('1')
-        temperatureLineEdit.setMaximumWidth(40)
-        temperatureLineEdit.setAlignment(Qt.AlignRight)
+        temperatureSpinBox = QDoubleSpinBox()
+        temperatureSpinBox.setValue(1.0)
+        temperatureSpinBox.setDecimals(4)
+        temperatureSpinBox.setAlignment(Qt.AlignRight)
 
-        magneticFieldLabel = QLabel()
-        magneticFieldLabel.setText('Magnetic field (T):')
+        layout = QHBoxLayout()
+        layout.addWidget(temperatureLabel)
+        layout.addWidget(temperatureSpinBox)
+        temperatureGroupBox.setLayout(layout)
 
-        magneticFieldXLineEdit = QLineEdit()
-        magneticFieldXLineEdit.setMaximumWidth(50)
-        magneticFieldXLineEdit.setText('0.0')
-        magneticFieldXLineEdit.setAlignment(Qt.AlignRight)
+        # Magnetic field
+        magneticFieldGroupBox = QGroupBox()
+        magneticFieldGroupBox.setTitle('Magnetic Field (T)')
 
-        magneticFieldYLineEdit = QLineEdit()
-        magneticFieldYLineEdit.setMaximumWidth(50)
-        magneticFieldYLineEdit.setText('0.0')
-        magneticFieldYLineEdit.setAlignment(Qt.AlignRight)
+        magneticFieldXLabel = QLabel()
+        magneticFieldXLabel.setText('Bx')
 
-        magneticFieldZLineEdit = QLineEdit()
-        magneticFieldZLineEdit.setMaximumWidth(50)
-        magneticFieldZLineEdit.setText('1e-6')
-        magneticFieldZLineEdit.setAlignment(Qt.AlignRight)
+        magneticFieldXSpinBox = QDoubleSpinBox()
+        magneticFieldXSpinBox.setValue(0.0)
+        magneticFieldXSpinBox.setDecimals(4)
+        magneticFieldXSpinBox.setAlignment(Qt.AlignRight)
 
-        broadeningGaussLabel = QLabel()
-        broadeningGaussLabel.setText('Gauss broadening (eV):')
+        layoutHorizontalX = QHBoxLayout()
+        layoutHorizontalX.addWidget(magneticFieldXLabel)
+        layoutHorizontalX.addWidget(magneticFieldXSpinBox)
 
-        broadeningGaussLineEdit = QLineEdit()
-        broadeningGaussLineEdit.setText('0.4')
-        broadeningGaussLineEdit.setMaximumWidth(50)
-        broadeningGaussLineEdit.setAlignment(Qt.AlignRight)
+        magneticFieldYLabel = QLabel()
+        magneticFieldYLabel.setText('By')
 
-        broadeningLorentzLabel = QLabel()
-        broadeningLorentzLabel.setText('Lorentz broadening (eV):')
+        magneticFieldYSpinBox = QDoubleSpinBox()
+        magneticFieldYSpinBox.setValue(0.0)
+        magneticFieldYSpinBox.setDecimals(4)
+        magneticFieldYSpinBox.setAlignment(Qt.AlignRight)
 
-        broadeningLorentzLineEdit = QLineEdit()
-        broadeningLorentzLineEdit.setText('0.8')
-        broadeningLorentzLineEdit.setMaximumWidth(50)
-        broadeningLorentzLineEdit.setAlignment(Qt.AlignRight)
+        layoutHorizontalY = QHBoxLayout()
+        layoutHorizontalY.addWidget(magneticFieldYLabel)
+        layoutHorizontalY.addWidget(magneticFieldYSpinBox)
 
-        layout = QGridLayout()
+        magneticFieldZLabel = QLabel()
+        magneticFieldZLabel.setText('Bz')
 
-        layout.addWidget(temperatureLabel, 0, 0)
-        layout.addWidget(temperatureLineEdit, 0, 1)
+        magneticFieldZSpinBox = QDoubleSpinBox()
+        magneticFieldZSpinBox.setValue(0.0)
+        magneticFieldZSpinBox.setDecimals(4)
+        magneticFieldZSpinBox.setAlignment(Qt.AlignRight)
 
-        layout.addWidget(magneticFieldLabel, 1, 0)
-        layout.addWidget(magneticFieldXLineEdit, 1, 1)
-        layout.addWidget(magneticFieldYLineEdit, 1, 2)
-        layout.addWidget(magneticFieldZLineEdit, 1, 3)
+        layoutHorizontalZ = QHBoxLayout()
+        layoutHorizontalZ.addWidget(magneticFieldZLabel)
+        layoutHorizontalZ.addWidget(magneticFieldZSpinBox)
 
-        layout.addWidget(broadeningGaussLabel, 2, 0)
-        layout.addWidget(broadeningGaussLineEdit, 2, 1)
+        layout = QVBoxLayout()
+        layout.addLayout(layoutHorizontalX)
+        layout.addLayout(layoutHorizontalY)
+        layout.addLayout(layoutHorizontalZ)
+        magneticFieldGroupBox.setLayout(layout)
 
-        layout.addWidget(broadeningLorentzLabel, 3, 0)
-        layout.addWidget(broadeningLorentzLineEdit, 3, 1)
+        # Broadening
+        broadeningGroupBox = QGroupBox()
+        broadeningGroupBox.setTitle('Broadening FWHM (eV)')
+
+        gaussianBroadeningLabel = QLabel()
+        gaussianBroadeningLabel.setText('Gaussian')
+
+        gaussianBroadeningSpinBox = QDoubleSpinBox()
+        gaussianBroadeningSpinBox.setValue(0.8)
+        gaussianBroadeningSpinBox.setSingleStep(0.1)
+        gaussianBroadeningSpinBox.setDecimals(2)
+        gaussianBroadeningSpinBox.setAlignment(Qt.AlignRight)
+
+        layoutHorizontalGaussian = QHBoxLayout()
+        layoutHorizontalGaussian.addWidget(gaussianBroadeningLabel)
+        layoutHorizontalGaussian.addWidget(gaussianBroadeningSpinBox)
+
+        lorentzianBroadeningLabel = QLabel()
+        lorentzianBroadeningLabel.setText('Lorentzian')
+
+        lorentzianBroadeningSpinBox = QDoubleSpinBox()
+        lorentzianBroadeningSpinBox.setValue(0.8)
+        lorentzianBroadeningSpinBox.setSingleStep(0.1)
+        lorentzianBroadeningSpinBox.setDecimals(2)
+        lorentzianBroadeningSpinBox.setAlignment(Qt.AlignRight)
+
+        layoutHorizontalLorentzian = QHBoxLayout()
+        layoutHorizontalLorentzian.addWidget(lorentzianBroadeningLabel)
+        layoutHorizontalLorentzian.addWidget(lorentzianBroadeningSpinBox)
+
+        layout = QVBoxLayout()
+        layout.addLayout(layoutHorizontalGaussian)
+        layout.addLayout(layoutHorizontalLorentzian)
+        broadeningGroupBox.setLayout(layout)
+
+        # Experiment
+        layout = QVBoxLayout()
+        layout.addWidget(temperatureGroupBox)
+        layout.addWidget(magneticFieldGroupBox)
+        layout.addWidget(broadeningGroupBox)
+        layout.addStretch(1)
 
         widget.setLayout(layout)
 
@@ -214,16 +264,16 @@ class MainWindow(QMainWindow):
     def createCentralWidget(self):
         self.centralWidget = QWidget(self)
 
-        # Construct the spectrum.
-        self.spectrum = Spectrum()
-
         # Construct the run button.
         self.runButton = QPushButton('Run')
         self.runButton.setFixedWidth(80)
         self.runButton.clicked.connect(self.runCalculation)
 
+        # Construct the spectrum.
+        self.spectrum = Spectrum()
+
         # Set the layout.
-        layout = QVBoxLayout(self.centralWidget)
+        layout = QVBoxLayout()
         layout.addWidget(self.spectrum.canvas)
         layout.addWidget(self.runButton)
         self.centralWidget.setLayout(layout)
@@ -372,7 +422,7 @@ class MainWindow(QMainWindow):
                 parameters = hamiltonians[hamiltonian]
 
             for configuration in configurations:
-                label = '{0} conf. ({1})'.format(
+                label = '{0} configuration ({1})'.format(
                     configuration.capitalize(), configurations[configuration])
 
                 self.hamiltonianModelData[hamiltonian][label] = (
