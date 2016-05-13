@@ -86,46 +86,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d0": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d1": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d1": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d1": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d1": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d1": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d0",
-                            "final": "1s1,3d1"
+                            "ground state": "3d0",
+                            "final state": "1s1,3d1"
                         },
                         "shells": {
                             "1s": 2,
@@ -134,8 +102,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d0",
-                            "final": "2s1,3d1"
+                            "ground state": "3d0",
+                            "final state": "2s1,3d1"
                         },
                         "shells": {
                             "2s": 2,
@@ -144,8 +112,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d0",
-                            "final": "2p5,3d1"
+                            "ground state": "3d0",
+                            "final state": "2p5,3d1"
                         },
                         "shells": {
                             "2p": 6,
@@ -154,8 +122,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d0",
-                            "final": "3s1,3d1"
+                            "ground state": "3d0",
+                            "final state": "3s1,3d1"
                         },
                         "shells": {
                             "3s": 2,
@@ -164,8 +132,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d0",
-                            "final": "3p5,3d1"
+                            "ground state": "3d0",
+                            "final state": "3p5,3d1"
                         },
                         "shells": {
                             "3p": 6,
@@ -263,46 +231,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d3": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d4": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d4": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d4": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d4": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d4": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d3",
-                            "final": "1s1,3d4"
+                            "ground state": "3d3",
+                            "final state": "1s1,3d4"
                         },
                         "shells": {
                             "1s": 2,
@@ -311,8 +247,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d3",
-                            "final": "2s1,3d4"
+                            "ground state": "3d3",
+                            "final state": "2s1,3d4"
                         },
                         "shells": {
                             "2s": 2,
@@ -321,8 +257,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d3",
-                            "final": "2p5,3d4"
+                            "ground state": "3d3",
+                            "final state": "2p5,3d4"
                         },
                         "shells": {
                             "2p": 6,
@@ -331,8 +267,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d3",
-                            "final": "3s1,3d4"
+                            "ground state": "3d3",
+                            "final state": "3s1,3d4"
                         },
                         "shells": {
                             "3s": 2,
@@ -341,8 +277,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d3",
-                            "final": "3p5,3d4"
+                            "ground state": "3d3",
+                            "final state": "3p5,3d4"
                         },
                         "shells": {
                             "3p": 6,
@@ -438,46 +374,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d2": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d3": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d3": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d3": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d3": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d3": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d2",
-                            "final": "1s1,3d3"
+                            "ground state": "3d2",
+                            "final state": "1s1,3d3"
                         },
                         "shells": {
                             "1s": 2,
@@ -486,8 +390,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d2",
-                            "final": "2s1,3d3"
+                            "ground state": "3d2",
+                            "final state": "2s1,3d3"
                         },
                         "shells": {
                             "2s": 2,
@@ -496,8 +400,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d2",
-                            "final": "2p5,3d3"
+                            "ground state": "3d2",
+                            "final state": "2p5,3d3"
                         },
                         "shells": {
                             "2p": 6,
@@ -506,8 +410,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d2",
-                            "final": "3s1,3d3"
+                            "ground state": "3d2",
+                            "final state": "3s1,3d3"
                         },
                         "shells": {
                             "3s": 2,
@@ -516,8 +420,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d2",
-                            "final": "3p5,3d3"
+                            "ground state": "3d2",
+                            "final state": "3p5,3d3"
                         },
                         "shells": {
                             "3p": 6,
@@ -613,46 +517,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d1": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d2": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d2": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d2": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d2": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d2": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d1",
-                            "final": "1s1,3d2"
+                            "ground state": "3d1",
+                            "final state": "1s1,3d2"
                         },
                         "shells": {
                             "1s": 2,
@@ -661,8 +533,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d1",
-                            "final": "2s1,3d2"
+                            "ground state": "3d1",
+                            "final state": "2s1,3d2"
                         },
                         "shells": {
                             "2s": 2,
@@ -671,8 +543,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d1",
-                            "final": "2p5,3d2"
+                            "ground state": "3d1",
+                            "final state": "2p5,3d2"
                         },
                         "shells": {
                             "2p": 6,
@@ -681,8 +553,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d1",
-                            "final": "3s1,3d2"
+                            "ground state": "3d1",
+                            "final state": "3s1,3d2"
                         },
                         "shells": {
                             "3s": 2,
@@ -691,8 +563,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d1",
-                            "final": "3p5,3d2"
+                            "ground state": "3d1",
+                            "final state": "3p5,3d2"
                         },
                         "shells": {
                             "3p": 6,
@@ -788,46 +660,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d0": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d1": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d1": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d1": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d1": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d1": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d0",
-                            "final": "1s1,3d1"
+                            "ground state": "3d0",
+                            "final state": "1s1,3d1"
                         },
                         "shells": {
                             "1s": 2,
@@ -836,8 +676,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d0",
-                            "final": "2s1,3d1"
+                            "ground state": "3d0",
+                            "final state": "2s1,3d1"
                         },
                         "shells": {
                             "2s": 2,
@@ -846,8 +686,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d0",
-                            "final": "2p5,3d1"
+                            "ground state": "3d0",
+                            "final state": "2p5,3d1"
                         },
                         "shells": {
                             "2p": 6,
@@ -856,8 +696,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d0",
-                            "final": "3s1,3d1"
+                            "ground state": "3d0",
+                            "final state": "3s1,3d1"
                         },
                         "shells": {
                             "3s": 2,
@@ -866,8 +706,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d0",
-                            "final": "3p5,3d1"
+                            "ground state": "3d0",
+                            "final state": "3p5,3d1"
                         },
                         "shells": {
                             "3p": 6,
@@ -965,46 +805,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d4": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d5": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d5": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d5": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d5": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d5": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d4",
-                            "final": "1s1,3d5"
+                            "ground state": "3d4",
+                            "final state": "1s1,3d5"
                         },
                         "shells": {
                             "1s": 2,
@@ -1013,8 +821,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d4",
-                            "final": "2s1,3d5"
+                            "ground state": "3d4",
+                            "final state": "2s1,3d5"
                         },
                         "shells": {
                             "2s": 2,
@@ -1023,8 +831,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d4",
-                            "final": "2p5,3d5"
+                            "ground state": "3d4",
+                            "final state": "2p5,3d5"
                         },
                         "shells": {
                             "2p": 6,
@@ -1033,8 +841,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d4",
-                            "final": "3s1,3d5"
+                            "ground state": "3d4",
+                            "final state": "3s1,3d5"
                         },
                         "shells": {
                             "3s": 2,
@@ -1043,8 +851,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d4",
-                            "final": "3p5,3d5"
+                            "ground state": "3d4",
+                            "final state": "3p5,3d5"
                         },
                         "shells": {
                             "3p": 6,
@@ -1140,46 +948,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d3": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d4": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d4": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d4": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d4": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d4": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d3",
-                            "final": "1s1,3d4"
+                            "ground state": "3d3",
+                            "final state": "1s1,3d4"
                         },
                         "shells": {
                             "1s": 2,
@@ -1188,8 +964,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d3",
-                            "final": "2s1,3d4"
+                            "ground state": "3d3",
+                            "final state": "2s1,3d4"
                         },
                         "shells": {
                             "2s": 2,
@@ -1198,8 +974,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d3",
-                            "final": "2p5,3d4"
+                            "ground state": "3d3",
+                            "final state": "2p5,3d4"
                         },
                         "shells": {
                             "2p": 6,
@@ -1208,8 +984,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d3",
-                            "final": "3s1,3d4"
+                            "ground state": "3d3",
+                            "final state": "3s1,3d4"
                         },
                         "shells": {
                             "3s": 2,
@@ -1218,8 +994,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d3",
-                            "final": "3p5,3d4"
+                            "ground state": "3d3",
+                            "final state": "3p5,3d4"
                         },
                         "shells": {
                             "3p": 6,
@@ -1315,46 +1091,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d2": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d3": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d3": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d3": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d3": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d3": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d2",
-                            "final": "1s1,3d3"
+                            "ground state": "3d2",
+                            "final state": "1s1,3d3"
                         },
                         "shells": {
                             "1s": 2,
@@ -1363,8 +1107,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d2",
-                            "final": "2s1,3d3"
+                            "ground state": "3d2",
+                            "final state": "2s1,3d3"
                         },
                         "shells": {
                             "2s": 2,
@@ -1373,8 +1117,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d2",
-                            "final": "2p5,3d3"
+                            "ground state": "3d2",
+                            "final state": "2p5,3d3"
                         },
                         "shells": {
                             "2p": 6,
@@ -1383,8 +1127,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d2",
-                            "final": "3s1,3d3"
+                            "ground state": "3d2",
+                            "final state": "3s1,3d3"
                         },
                         "shells": {
                             "3s": 2,
@@ -1393,8 +1137,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d2",
-                            "final": "3p5,3d3"
+                            "ground state": "3d2",
+                            "final state": "3p5,3d3"
                         },
                         "shells": {
                             "3p": 6,
@@ -1490,46 +1234,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d1": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d2": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d2": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d2": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d2": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d2": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d1",
-                            "final": "1s1,3d2"
+                            "ground state": "3d1",
+                            "final state": "1s1,3d2"
                         },
                         "shells": {
                             "1s": 2,
@@ -1538,8 +1250,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d1",
-                            "final": "2s1,3d2"
+                            "ground state": "3d1",
+                            "final state": "2s1,3d2"
                         },
                         "shells": {
                             "2s": 2,
@@ -1548,8 +1260,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d1",
-                            "final": "2p5,3d2"
+                            "ground state": "3d1",
+                            "final state": "2p5,3d2"
                         },
                         "shells": {
                             "2p": 6,
@@ -1558,8 +1270,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d1",
-                            "final": "3s1,3d2"
+                            "ground state": "3d1",
+                            "final state": "3s1,3d2"
                         },
                         "shells": {
                             "3s": 2,
@@ -1568,8 +1280,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d1",
-                            "final": "3p5,3d2"
+                            "ground state": "3d1",
+                            "final state": "3p5,3d2"
                         },
                         "shells": {
                             "3p": 6,
@@ -1665,46 +1377,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d0": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d1": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d1": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d1": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d1": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d1": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d0",
-                            "final": "1s1,3d1"
+                            "ground state": "3d0",
+                            "final state": "1s1,3d1"
                         },
                         "shells": {
                             "1s": 2,
@@ -1713,8 +1393,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d0",
-                            "final": "2s1,3d1"
+                            "ground state": "3d0",
+                            "final state": "2s1,3d1"
                         },
                         "shells": {
                             "2s": 2,
@@ -1723,8 +1403,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d0",
-                            "final": "2p5,3d1"
+                            "ground state": "3d0",
+                            "final state": "2p5,3d1"
                         },
                         "shells": {
                             "2p": 6,
@@ -1733,8 +1413,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d0",
-                            "final": "3s1,3d1"
+                            "ground state": "3d0",
+                            "final state": "3s1,3d1"
                         },
                         "shells": {
                             "3s": 2,
@@ -1743,8 +1423,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d0",
-                            "final": "3p5,3d1"
+                            "ground state": "3d0",
+                            "final state": "3p5,3d1"
                         },
                         "shells": {
                             "3p": 6,
@@ -1842,46 +1522,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d5": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d6": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d6": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d6": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d6": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d6": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d5",
-                            "final": "1s1,3d6"
+                            "ground state": "3d5",
+                            "final state": "1s1,3d6"
                         },
                         "shells": {
                             "1s": 2,
@@ -1890,8 +1538,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d5",
-                            "final": "2s1,3d6"
+                            "ground state": "3d5",
+                            "final state": "2s1,3d6"
                         },
                         "shells": {
                             "2s": 2,
@@ -1900,8 +1548,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d5",
-                            "final": "2p5,3d6"
+                            "ground state": "3d5",
+                            "final state": "2p5,3d6"
                         },
                         "shells": {
                             "2p": 6,
@@ -1910,8 +1558,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d5",
-                            "final": "3s1,3d6"
+                            "ground state": "3d5",
+                            "final state": "3s1,3d6"
                         },
                         "shells": {
                             "3s": 2,
@@ -1920,8 +1568,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d5",
-                            "final": "3p5,3d6"
+                            "ground state": "3d5",
+                            "final state": "3p5,3d6"
                         },
                         "shells": {
                             "3p": 6,
@@ -2017,46 +1665,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d4": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d5": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d5": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d5": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d5": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d5": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d4",
-                            "final": "1s1,3d5"
+                            "ground state": "3d4",
+                            "final state": "1s1,3d5"
                         },
                         "shells": {
                             "1s": 2,
@@ -2065,8 +1681,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d4",
-                            "final": "2s1,3d5"
+                            "ground state": "3d4",
+                            "final state": "2s1,3d5"
                         },
                         "shells": {
                             "2s": 2,
@@ -2075,8 +1691,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d4",
-                            "final": "2p5,3d5"
+                            "ground state": "3d4",
+                            "final state": "2p5,3d5"
                         },
                         "shells": {
                             "2p": 6,
@@ -2085,8 +1701,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d4",
-                            "final": "3s1,3d5"
+                            "ground state": "3d4",
+                            "final state": "3s1,3d5"
                         },
                         "shells": {
                             "3s": 2,
@@ -2095,8 +1711,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d4",
-                            "final": "3p5,3d5"
+                            "ground state": "3d4",
+                            "final state": "3p5,3d5"
                         },
                         "shells": {
                             "3p": 6,
@@ -2192,46 +1808,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d3": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d4": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d4": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d4": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d4": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d4": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d3",
-                            "final": "1s1,3d4"
+                            "ground state": "3d3",
+                            "final state": "1s1,3d4"
                         },
                         "shells": {
                             "1s": 2,
@@ -2240,8 +1824,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d3",
-                            "final": "2s1,3d4"
+                            "ground state": "3d3",
+                            "final state": "2s1,3d4"
                         },
                         "shells": {
                             "2s": 2,
@@ -2250,8 +1834,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d3",
-                            "final": "2p5,3d4"
+                            "ground state": "3d3",
+                            "final state": "2p5,3d4"
                         },
                         "shells": {
                             "2p": 6,
@@ -2260,8 +1844,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d3",
-                            "final": "3s1,3d4"
+                            "ground state": "3d3",
+                            "final state": "3s1,3d4"
                         },
                         "shells": {
                             "3s": 2,
@@ -2270,8 +1854,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d3",
-                            "final": "3p5,3d4"
+                            "ground state": "3d3",
+                            "final state": "3p5,3d4"
                         },
                         "shells": {
                             "3p": 6,
@@ -2367,46 +1951,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d2": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d3": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d3": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d3": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d3": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d3": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d2",
-                            "final": "1s1,3d3"
+                            "ground state": "3d2",
+                            "final state": "1s1,3d3"
                         },
                         "shells": {
                             "1s": 2,
@@ -2415,8 +1967,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d2",
-                            "final": "2s1,3d3"
+                            "ground state": "3d2",
+                            "final state": "2s1,3d3"
                         },
                         "shells": {
                             "2s": 2,
@@ -2425,8 +1977,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d2",
-                            "final": "2p5,3d3"
+                            "ground state": "3d2",
+                            "final state": "2p5,3d3"
                         },
                         "shells": {
                             "2p": 6,
@@ -2435,8 +1987,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d2",
-                            "final": "3s1,3d3"
+                            "ground state": "3d2",
+                            "final state": "3s1,3d3"
                         },
                         "shells": {
                             "3s": 2,
@@ -2445,8 +1997,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d2",
-                            "final": "3p5,3d3"
+                            "ground state": "3d2",
+                            "final state": "3p5,3d3"
                         },
                         "shells": {
                             "3p": 6,
@@ -2542,46 +2094,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d1": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d2": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d2": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d2": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d2": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d2": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d1",
-                            "final": "1s1,3d2"
+                            "ground state": "3d1",
+                            "final state": "1s1,3d2"
                         },
                         "shells": {
                             "1s": 2,
@@ -2590,8 +2110,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d1",
-                            "final": "2s1,3d2"
+                            "ground state": "3d1",
+                            "final state": "2s1,3d2"
                         },
                         "shells": {
                             "2s": 2,
@@ -2600,8 +2120,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d1",
-                            "final": "2p5,3d2"
+                            "ground state": "3d1",
+                            "final state": "2p5,3d2"
                         },
                         "shells": {
                             "2p": 6,
@@ -2610,8 +2130,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d1",
-                            "final": "3s1,3d2"
+                            "ground state": "3d1",
+                            "final state": "3s1,3d2"
                         },
                         "shells": {
                             "3s": 2,
@@ -2620,8 +2140,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d1",
-                            "final": "3p5,3d2"
+                            "ground state": "3d1",
+                            "final state": "3p5,3d2"
                         },
                         "shells": {
                             "3p": 6,
@@ -2717,46 +2237,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d0": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d1": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d1": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d1": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d1": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d1": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d0",
-                            "final": "1s1,3d1"
+                            "ground state": "3d0",
+                            "final state": "1s1,3d1"
                         },
                         "shells": {
                             "1s": 2,
@@ -2765,8 +2253,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d0",
-                            "final": "2s1,3d1"
+                            "ground state": "3d0",
+                            "final state": "2s1,3d1"
                         },
                         "shells": {
                             "2s": 2,
@@ -2775,8 +2263,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d0",
-                            "final": "2p5,3d1"
+                            "ground state": "3d0",
+                            "final state": "2p5,3d1"
                         },
                         "shells": {
                             "2p": 6,
@@ -2785,8 +2273,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d0",
-                            "final": "3s1,3d1"
+                            "ground state": "3d0",
+                            "final state": "3s1,3d1"
                         },
                         "shells": {
                             "3s": 2,
@@ -2795,8 +2283,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d0",
-                            "final": "3p5,3d1"
+                            "ground state": "3d0",
+                            "final state": "3p5,3d1"
                         },
                         "shells": {
                             "3p": 6,
@@ -2894,46 +2382,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d6": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d7": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d7": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d7": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d7": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d7": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d6",
-                            "final": "1s1,3d7"
+                            "ground state": "3d6",
+                            "final state": "1s1,3d7"
                         },
                         "shells": {
                             "1s": 2,
@@ -2942,8 +2398,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d6",
-                            "final": "2s1,3d7"
+                            "ground state": "3d6",
+                            "final state": "2s1,3d7"
                         },
                         "shells": {
                             "2s": 2,
@@ -2952,8 +2408,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d6",
-                            "final": "2p5,3d7"
+                            "ground state": "3d6",
+                            "final state": "2p5,3d7"
                         },
                         "shells": {
                             "2p": 6,
@@ -2962,8 +2418,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d6",
-                            "final": "3s1,3d7"
+                            "ground state": "3d6",
+                            "final state": "3s1,3d7"
                         },
                         "shells": {
                             "3s": 2,
@@ -2972,8 +2428,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d6",
-                            "final": "3p5,3d7"
+                            "ground state": "3d6",
+                            "final state": "3p5,3d7"
                         },
                         "shells": {
                             "3p": 6,
@@ -3069,46 +2525,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d5": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d6": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d6": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d6": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d6": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d6": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d5",
-                            "final": "1s1,3d6"
+                            "ground state": "3d5",
+                            "final state": "1s1,3d6"
                         },
                         "shells": {
                             "1s": 2,
@@ -3117,8 +2541,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d5",
-                            "final": "2s1,3d6"
+                            "ground state": "3d5",
+                            "final state": "2s1,3d6"
                         },
                         "shells": {
                             "2s": 2,
@@ -3127,8 +2551,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d5",
-                            "final": "2p5,3d6"
+                            "ground state": "3d5",
+                            "final state": "2p5,3d6"
                         },
                         "shells": {
                             "2p": 6,
@@ -3137,8 +2561,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d5",
-                            "final": "3s1,3d6"
+                            "ground state": "3d5",
+                            "final state": "3s1,3d6"
                         },
                         "shells": {
                             "3s": 2,
@@ -3147,8 +2571,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d5",
-                            "final": "3p5,3d6"
+                            "ground state": "3d5",
+                            "final state": "3p5,3d6"
                         },
                         "shells": {
                             "3p": 6,
@@ -3244,46 +2668,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d4": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d5": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d5": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d5": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d5": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d5": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d4",
-                            "final": "1s1,3d5"
+                            "ground state": "3d4",
+                            "final state": "1s1,3d5"
                         },
                         "shells": {
                             "1s": 2,
@@ -3292,8 +2684,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d4",
-                            "final": "2s1,3d5"
+                            "ground state": "3d4",
+                            "final state": "2s1,3d5"
                         },
                         "shells": {
                             "2s": 2,
@@ -3302,8 +2694,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d4",
-                            "final": "2p5,3d5"
+                            "ground state": "3d4",
+                            "final state": "2p5,3d5"
                         },
                         "shells": {
                             "2p": 6,
@@ -3312,8 +2704,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d4",
-                            "final": "3s1,3d5"
+                            "ground state": "3d4",
+                            "final state": "3s1,3d5"
                         },
                         "shells": {
                             "3s": 2,
@@ -3322,8 +2714,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d4",
-                            "final": "3p5,3d5"
+                            "ground state": "3d4",
+                            "final state": "3p5,3d5"
                         },
                         "shells": {
                             "3p": 6,
@@ -3419,46 +2811,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d3": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d4": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d4": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d4": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d4": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d4": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d3",
-                            "final": "1s1,3d4"
+                            "ground state": "3d3",
+                            "final state": "1s1,3d4"
                         },
                         "shells": {
                             "1s": 2,
@@ -3467,8 +2827,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d3",
-                            "final": "2s1,3d4"
+                            "ground state": "3d3",
+                            "final state": "2s1,3d4"
                         },
                         "shells": {
                             "2s": 2,
@@ -3477,8 +2837,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d3",
-                            "final": "2p5,3d4"
+                            "ground state": "3d3",
+                            "final state": "2p5,3d4"
                         },
                         "shells": {
                             "2p": 6,
@@ -3487,8 +2847,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d3",
-                            "final": "3s1,3d4"
+                            "ground state": "3d3",
+                            "final state": "3s1,3d4"
                         },
                         "shells": {
                             "3s": 2,
@@ -3497,8 +2857,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d3",
-                            "final": "3p5,3d4"
+                            "ground state": "3d3",
+                            "final state": "3p5,3d4"
                         },
                         "shells": {
                             "3p": 6,
@@ -3594,46 +2954,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d2": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d3": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d3": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d3": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d3": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d3": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d2",
-                            "final": "1s1,3d3"
+                            "ground state": "3d2",
+                            "final state": "1s1,3d3"
                         },
                         "shells": {
                             "1s": 2,
@@ -3642,8 +2970,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d2",
-                            "final": "2s1,3d3"
+                            "ground state": "3d2",
+                            "final state": "2s1,3d3"
                         },
                         "shells": {
                             "2s": 2,
@@ -3652,8 +2980,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d2",
-                            "final": "2p5,3d3"
+                            "ground state": "3d2",
+                            "final state": "2p5,3d3"
                         },
                         "shells": {
                             "2p": 6,
@@ -3662,8 +2990,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d2",
-                            "final": "3s1,3d3"
+                            "ground state": "3d2",
+                            "final state": "3s1,3d3"
                         },
                         "shells": {
                             "3s": 2,
@@ -3672,8 +3000,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d2",
-                            "final": "3p5,3d3"
+                            "ground state": "3d2",
+                            "final state": "3p5,3d3"
                         },
                         "shells": {
                             "3p": 6,
@@ -3769,46 +3097,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d1": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d2": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d2": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d2": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d2": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d2": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d1",
-                            "final": "1s1,3d2"
+                            "ground state": "3d1",
+                            "final state": "1s1,3d2"
                         },
                         "shells": {
                             "1s": 2,
@@ -3817,8 +3113,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d1",
-                            "final": "2s1,3d2"
+                            "ground state": "3d1",
+                            "final state": "2s1,3d2"
                         },
                         "shells": {
                             "2s": 2,
@@ -3827,8 +3123,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d1",
-                            "final": "2p5,3d2"
+                            "ground state": "3d1",
+                            "final state": "2p5,3d2"
                         },
                         "shells": {
                             "2p": 6,
@@ -3837,8 +3133,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d1",
-                            "final": "3s1,3d2"
+                            "ground state": "3d1",
+                            "final state": "3s1,3d2"
                         },
                         "shells": {
                             "3s": 2,
@@ -3847,8 +3143,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d1",
-                            "final": "3p5,3d2"
+                            "ground state": "3d1",
+                            "final state": "3p5,3d2"
                         },
                         "shells": {
                             "3p": 6,
@@ -3944,46 +3240,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d0": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d1": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d1": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d1": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d1": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d1": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d0",
-                            "final": "1s1,3d1"
+                            "ground state": "3d0",
+                            "final state": "1s1,3d1"
                         },
                         "shells": {
                             "1s": 2,
@@ -3992,8 +3256,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d0",
-                            "final": "2s1,3d1"
+                            "ground state": "3d0",
+                            "final state": "2s1,3d1"
                         },
                         "shells": {
                             "2s": 2,
@@ -4002,8 +3266,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d0",
-                            "final": "2p5,3d1"
+                            "ground state": "3d0",
+                            "final state": "2p5,3d1"
                         },
                         "shells": {
                             "2p": 6,
@@ -4012,8 +3276,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d0",
-                            "final": "3s1,3d1"
+                            "ground state": "3d0",
+                            "final state": "3s1,3d1"
                         },
                         "shells": {
                             "3s": 2,
@@ -4022,8 +3286,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d0",
-                            "final": "3p5,3d1"
+                            "ground state": "3d0",
+                            "final state": "3p5,3d1"
                         },
                         "shells": {
                             "3p": 6,
@@ -4121,46 +3385,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d7": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d8": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d8": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d8": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d8": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d8": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d7",
-                            "final": "1s1,3d8"
+                            "ground state": "3d7",
+                            "final state": "1s1,3d8"
                         },
                         "shells": {
                             "1s": 2,
@@ -4169,8 +3401,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d7",
-                            "final": "2s1,3d8"
+                            "ground state": "3d7",
+                            "final state": "2s1,3d8"
                         },
                         "shells": {
                             "2s": 2,
@@ -4179,8 +3411,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d7",
-                            "final": "2p5,3d8"
+                            "ground state": "3d7",
+                            "final state": "2p5,3d8"
                         },
                         "shells": {
                             "2p": 6,
@@ -4189,8 +3421,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d7",
-                            "final": "3s1,3d8"
+                            "ground state": "3d7",
+                            "final state": "3s1,3d8"
                         },
                         "shells": {
                             "3s": 2,
@@ -4199,8 +3431,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d7",
-                            "final": "3p5,3d8"
+                            "ground state": "3d7",
+                            "final state": "3p5,3d8"
                         },
                         "shells": {
                             "3p": 6,
@@ -4296,46 +3528,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d6": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d7": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d7": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d7": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d7": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d7": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d6",
-                            "final": "1s1,3d7"
+                            "ground state": "3d6",
+                            "final state": "1s1,3d7"
                         },
                         "shells": {
                             "1s": 2,
@@ -4344,8 +3544,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d6",
-                            "final": "2s1,3d7"
+                            "ground state": "3d6",
+                            "final state": "2s1,3d7"
                         },
                         "shells": {
                             "2s": 2,
@@ -4354,8 +3554,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d6",
-                            "final": "2p5,3d7"
+                            "ground state": "3d6",
+                            "final state": "2p5,3d7"
                         },
                         "shells": {
                             "2p": 6,
@@ -4364,8 +3564,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d6",
-                            "final": "3s1,3d7"
+                            "ground state": "3d6",
+                            "final state": "3s1,3d7"
                         },
                         "shells": {
                             "3s": 2,
@@ -4374,8 +3574,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d6",
-                            "final": "3p5,3d7"
+                            "ground state": "3d6",
+                            "final state": "3p5,3d7"
                         },
                         "shells": {
                             "3p": 6,
@@ -4471,46 +3671,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d5": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d6": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d6": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d6": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d6": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d6": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d5",
-                            "final": "1s1,3d6"
+                            "ground state": "3d5",
+                            "final state": "1s1,3d6"
                         },
                         "shells": {
                             "1s": 2,
@@ -4519,8 +3687,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d5",
-                            "final": "2s1,3d6"
+                            "ground state": "3d5",
+                            "final state": "2s1,3d6"
                         },
                         "shells": {
                             "2s": 2,
@@ -4529,8 +3697,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d5",
-                            "final": "2p5,3d6"
+                            "ground state": "3d5",
+                            "final state": "2p5,3d6"
                         },
                         "shells": {
                             "2p": 6,
@@ -4539,8 +3707,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d5",
-                            "final": "3s1,3d6"
+                            "ground state": "3d5",
+                            "final state": "3s1,3d6"
                         },
                         "shells": {
                             "3s": 2,
@@ -4549,8 +3717,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d5",
-                            "final": "3p5,3d6"
+                            "ground state": "3d5",
+                            "final state": "3p5,3d6"
                         },
                         "shells": {
                             "3p": 6,
@@ -4646,46 +3814,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d4": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d5": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d5": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d5": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d5": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d5": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d4",
-                            "final": "1s1,3d5"
+                            "ground state": "3d4",
+                            "final state": "1s1,3d5"
                         },
                         "shells": {
                             "1s": 2,
@@ -4694,8 +3830,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d4",
-                            "final": "2s1,3d5"
+                            "ground state": "3d4",
+                            "final state": "2s1,3d5"
                         },
                         "shells": {
                             "2s": 2,
@@ -4704,8 +3840,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d4",
-                            "final": "2p5,3d5"
+                            "ground state": "3d4",
+                            "final state": "2p5,3d5"
                         },
                         "shells": {
                             "2p": 6,
@@ -4714,8 +3850,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d4",
-                            "final": "3s1,3d5"
+                            "ground state": "3d4",
+                            "final state": "3s1,3d5"
                         },
                         "shells": {
                             "3s": 2,
@@ -4724,8 +3860,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d4",
-                            "final": "3p5,3d5"
+                            "ground state": "3d4",
+                            "final state": "3p5,3d5"
                         },
                         "shells": {
                             "3p": 6,
@@ -4821,46 +3957,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d3": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d4": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d4": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d4": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d4": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d4": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d3",
-                            "final": "1s1,3d4"
+                            "ground state": "3d3",
+                            "final state": "1s1,3d4"
                         },
                         "shells": {
                             "1s": 2,
@@ -4869,8 +3973,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d3",
-                            "final": "2s1,3d4"
+                            "ground state": "3d3",
+                            "final state": "2s1,3d4"
                         },
                         "shells": {
                             "2s": 2,
@@ -4879,8 +3983,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d3",
-                            "final": "2p5,3d4"
+                            "ground state": "3d3",
+                            "final state": "2p5,3d4"
                         },
                         "shells": {
                             "2p": 6,
@@ -4889,8 +3993,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d3",
-                            "final": "3s1,3d4"
+                            "ground state": "3d3",
+                            "final state": "3s1,3d4"
                         },
                         "shells": {
                             "3s": 2,
@@ -4899,8 +4003,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d3",
-                            "final": "3p5,3d4"
+                            "ground state": "3d3",
+                            "final state": "3p5,3d4"
                         },
                         "shells": {
                             "3p": 6,
@@ -4996,46 +4100,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d2": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d3": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d3": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d3": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d3": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d3": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d2",
-                            "final": "1s1,3d3"
+                            "ground state": "3d2",
+                            "final state": "1s1,3d3"
                         },
                         "shells": {
                             "1s": 2,
@@ -5044,8 +4116,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d2",
-                            "final": "2s1,3d3"
+                            "ground state": "3d2",
+                            "final state": "2s1,3d3"
                         },
                         "shells": {
                             "2s": 2,
@@ -5054,8 +4126,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d2",
-                            "final": "2p5,3d3"
+                            "ground state": "3d2",
+                            "final state": "2p5,3d3"
                         },
                         "shells": {
                             "2p": 6,
@@ -5064,8 +4136,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d2",
-                            "final": "3s1,3d3"
+                            "ground state": "3d2",
+                            "final state": "3s1,3d3"
                         },
                         "shells": {
                             "3s": 2,
@@ -5074,8 +4146,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d2",
-                            "final": "3p5,3d3"
+                            "ground state": "3d2",
+                            "final state": "3p5,3d3"
                         },
                         "shells": {
                             "3p": 6,
@@ -5173,46 +4245,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d8": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d9": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d9": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d9": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d9": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d9": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d8",
-                            "final": "1s1,3d9"
+                            "ground state": "3d8",
+                            "final state": "1s1,3d9"
                         },
                         "shells": {
                             "1s": 2,
@@ -5221,8 +4261,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d8",
-                            "final": "2s1,3d9"
+                            "ground state": "3d8",
+                            "final state": "2s1,3d9"
                         },
                         "shells": {
                             "2s": 2,
@@ -5231,8 +4271,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d8",
-                            "final": "2p5,3d9"
+                            "ground state": "3d8",
+                            "final state": "2p5,3d9"
                         },
                         "shells": {
                             "2p": 6,
@@ -5241,8 +4281,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d8",
-                            "final": "3s1,3d9"
+                            "ground state": "3d8",
+                            "final state": "3s1,3d9"
                         },
                         "shells": {
                             "3s": 2,
@@ -5251,8 +4291,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d8",
-                            "final": "3p5,3d9"
+                            "ground state": "3d8",
+                            "final state": "3p5,3d9"
                         },
                         "shells": {
                             "3p": 6,
@@ -5348,46 +4388,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d7": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d8": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d8": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d8": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d8": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d8": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d7",
-                            "final": "1s1,3d8"
+                            "ground state": "3d7",
+                            "final state": "1s1,3d8"
                         },
                         "shells": {
                             "1s": 2,
@@ -5396,8 +4404,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d7",
-                            "final": "2s1,3d8"
+                            "ground state": "3d7",
+                            "final state": "2s1,3d8"
                         },
                         "shells": {
                             "2s": 2,
@@ -5406,8 +4414,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d7",
-                            "final": "2p5,3d8"
+                            "ground state": "3d7",
+                            "final state": "2p5,3d8"
                         },
                         "shells": {
                             "2p": 6,
@@ -5416,8 +4424,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d7",
-                            "final": "3s1,3d8"
+                            "ground state": "3d7",
+                            "final state": "3s1,3d8"
                         },
                         "shells": {
                             "3s": 2,
@@ -5426,8 +4434,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d7",
-                            "final": "3p5,3d8"
+                            "ground state": "3d7",
+                            "final state": "3p5,3d8"
                         },
                         "shells": {
                             "3p": 6,
@@ -5523,46 +4531,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d6": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d7": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d7": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d7": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d7": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d7": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d6",
-                            "final": "1s1,3d7"
+                            "ground state": "3d6",
+                            "final state": "1s1,3d7"
                         },
                         "shells": {
                             "1s": 2,
@@ -5571,8 +4547,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d6",
-                            "final": "2s1,3d7"
+                            "ground state": "3d6",
+                            "final state": "2s1,3d7"
                         },
                         "shells": {
                             "2s": 2,
@@ -5581,8 +4557,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d6",
-                            "final": "2p5,3d7"
+                            "ground state": "3d6",
+                            "final state": "2p5,3d7"
                         },
                         "shells": {
                             "2p": 6,
@@ -5591,8 +4567,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d6",
-                            "final": "3s1,3d7"
+                            "ground state": "3d6",
+                            "final state": "3s1,3d7"
                         },
                         "shells": {
                             "3s": 2,
@@ -5601,8 +4577,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d6",
-                            "final": "3p5,3d7"
+                            "ground state": "3d6",
+                            "final state": "3p5,3d7"
                         },
                         "shells": {
                             "3p": 6,
@@ -5698,46 +4674,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d5": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d6": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d6": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d6": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d6": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d6": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d5",
-                            "final": "1s1,3d6"
+                            "ground state": "3d5",
+                            "final state": "1s1,3d6"
                         },
                         "shells": {
                             "1s": 2,
@@ -5746,8 +4690,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d5",
-                            "final": "2s1,3d6"
+                            "ground state": "3d5",
+                            "final state": "2s1,3d6"
                         },
                         "shells": {
                             "2s": 2,
@@ -5756,8 +4700,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d5",
-                            "final": "2p5,3d6"
+                            "ground state": "3d5",
+                            "final state": "2p5,3d6"
                         },
                         "shells": {
                             "2p": 6,
@@ -5766,8 +4710,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d5",
-                            "final": "3s1,3d6"
+                            "ground state": "3d5",
+                            "final state": "3s1,3d6"
                         },
                         "shells": {
                             "3s": 2,
@@ -5776,8 +4720,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d5",
-                            "final": "3p5,3d6"
+                            "ground state": "3d5",
+                            "final state": "3p5,3d6"
                         },
                         "shells": {
                             "3p": 6,
@@ -5873,46 +4817,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d4": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d5": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d5": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d5": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d5": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d5": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d4",
-                            "final": "1s1,3d5"
+                            "ground state": "3d4",
+                            "final state": "1s1,3d5"
                         },
                         "shells": {
                             "1s": 2,
@@ -5921,8 +4833,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d4",
-                            "final": "2s1,3d5"
+                            "ground state": "3d4",
+                            "final state": "2s1,3d5"
                         },
                         "shells": {
                             "2s": 2,
@@ -5931,8 +4843,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d4",
-                            "final": "2p5,3d5"
+                            "ground state": "3d4",
+                            "final state": "2p5,3d5"
                         },
                         "shells": {
                             "2p": 6,
@@ -5941,8 +4853,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d4",
-                            "final": "3s1,3d5"
+                            "ground state": "3d4",
+                            "final state": "3s1,3d5"
                         },
                         "shells": {
                             "3s": 2,
@@ -5951,8 +4863,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d4",
-                            "final": "3p5,3d5"
+                            "ground state": "3d4",
+                            "final state": "3p5,3d5"
                         },
                         "shells": {
                             "3p": 6,
@@ -6050,46 +4962,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d9": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d10": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d10": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d10": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d10": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d10": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d9",
-                            "final": "1s1,3d10"
+                            "ground state": "3d9",
+                            "final state": "1s1,3d10"
                         },
                         "shells": {
                             "1s": 2,
@@ -6098,8 +4978,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d9",
-                            "final": "2s1,3d10"
+                            "ground state": "3d9",
+                            "final state": "2s1,3d10"
                         },
                         "shells": {
                             "2s": 2,
@@ -6108,8 +4988,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d9",
-                            "final": "2p5,3d10"
+                            "ground state": "3d9",
+                            "final state": "2p5,3d10"
                         },
                         "shells": {
                             "2p": 6,
@@ -6118,8 +4998,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d9",
-                            "final": "3s1,3d10"
+                            "ground state": "3d9",
+                            "final state": "3s1,3d10"
                         },
                         "shells": {
                             "3s": 2,
@@ -6128,8 +5008,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d9",
-                            "final": "3p5,3d10"
+                            "ground state": "3d9",
+                            "final state": "3p5,3d10"
                         },
                         "shells": {
                             "3p": 6,
@@ -6225,46 +5105,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d8": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d9": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d9": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d9": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d9": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d9": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d8",
-                            "final": "1s1,3d9"
+                            "ground state": "3d8",
+                            "final state": "1s1,3d9"
                         },
                         "shells": {
                             "1s": 2,
@@ -6273,8 +5121,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d8",
-                            "final": "2s1,3d9"
+                            "ground state": "3d8",
+                            "final state": "2s1,3d9"
                         },
                         "shells": {
                             "2s": 2,
@@ -6283,8 +5131,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d8",
-                            "final": "2p5,3d9"
+                            "ground state": "3d8",
+                            "final state": "2p5,3d9"
                         },
                         "shells": {
                             "2p": 6,
@@ -6293,8 +5141,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d8",
-                            "final": "3s1,3d9"
+                            "ground state": "3d8",
+                            "final state": "3s1,3d9"
                         },
                         "shells": {
                             "3s": 2,
@@ -6303,8 +5151,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d8",
-                            "final": "3p5,3d9"
+                            "ground state": "3d8",
+                            "final state": "3p5,3d9"
                         },
                         "shells": {
                             "3p": 6,
@@ -6400,46 +5248,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d7": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d8": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d8": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d8": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d8": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d8": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d7",
-                            "final": "1s1,3d8"
+                            "ground state": "3d7",
+                            "final state": "1s1,3d8"
                         },
                         "shells": {
                             "1s": 2,
@@ -6448,8 +5264,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d7",
-                            "final": "2s1,3d8"
+                            "ground state": "3d7",
+                            "final state": "2s1,3d8"
                         },
                         "shells": {
                             "2s": 2,
@@ -6458,8 +5274,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d7",
-                            "final": "2p5,3d8"
+                            "ground state": "3d7",
+                            "final state": "2p5,3d8"
                         },
                         "shells": {
                             "2p": 6,
@@ -6468,8 +5284,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d7",
-                            "final": "3s1,3d8"
+                            "ground state": "3d7",
+                            "final state": "3s1,3d8"
                         },
                         "shells": {
                             "3s": 2,
@@ -6478,8 +5294,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d7",
-                            "final": "3p5,3d8"
+                            "ground state": "3d7",
+                            "final state": "3p5,3d8"
                         },
                         "shells": {
                             "3p": 6,
@@ -6575,46 +5391,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d6": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d7": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d7": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d7": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d7": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d7": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d6",
-                            "final": "1s1,3d7"
+                            "ground state": "3d6",
+                            "final state": "1s1,3d7"
                         },
                         "shells": {
                             "1s": 2,
@@ -6623,8 +5407,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d6",
-                            "final": "2s1,3d7"
+                            "ground state": "3d6",
+                            "final state": "2s1,3d7"
                         },
                         "shells": {
                             "2s": 2,
@@ -6633,8 +5417,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d6",
-                            "final": "2p5,3d7"
+                            "ground state": "3d6",
+                            "final state": "2p5,3d7"
                         },
                         "shells": {
                             "2p": 6,
@@ -6643,8 +5427,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d6",
-                            "final": "3s1,3d7"
+                            "ground state": "3d6",
+                            "final state": "3s1,3d7"
                         },
                         "shells": {
                             "3s": 2,
@@ -6653,8 +5437,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d6",
-                            "final": "3p5,3d7"
+                            "ground state": "3d6",
+                            "final state": "3p5,3d7"
                         },
                         "shells": {
                             "3p": 6,
@@ -6752,46 +5536,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d9": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d10": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d10": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d10": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d10": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d10": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d9",
-                            "final": "1s1,3d10"
+                            "ground state": "3d9",
+                            "final state": "1s1,3d10"
                         },
                         "shells": {
                             "1s": 2,
@@ -6800,8 +5552,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d9",
-                            "final": "2s1,3d10"
+                            "ground state": "3d9",
+                            "final state": "2s1,3d10"
                         },
                         "shells": {
                             "2s": 2,
@@ -6810,8 +5562,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d9",
-                            "final": "2p5,3d10"
+                            "ground state": "3d9",
+                            "final state": "2p5,3d10"
                         },
                         "shells": {
                             "2p": 6,
@@ -6820,8 +5572,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d9",
-                            "final": "3s1,3d10"
+                            "ground state": "3d9",
+                            "final state": "3s1,3d10"
                         },
                         "shells": {
                             "3s": 2,
@@ -6830,8 +5582,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d9",
-                            "final": "3p5,3d10"
+                            "ground state": "3d9",
+                            "final state": "3p5,3d10"
                         },
                         "shells": {
                             "3p": 6,
@@ -6927,46 +5679,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d8": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d9": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d9": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d9": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d9": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d9": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d8",
-                            "final": "1s1,3d9"
+                            "ground state": "3d8",
+                            "final state": "1s1,3d9"
                         },
                         "shells": {
                             "1s": 2,
@@ -6975,8 +5695,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d8",
-                            "final": "2s1,3d9"
+                            "ground state": "3d8",
+                            "final state": "2s1,3d9"
                         },
                         "shells": {
                             "2s": 2,
@@ -6985,8 +5705,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d8",
-                            "final": "2p5,3d9"
+                            "ground state": "3d8",
+                            "final state": "2p5,3d9"
                         },
                         "shells": {
                             "2p": 6,
@@ -6995,8 +5715,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d8",
-                            "final": "3s1,3d9"
+                            "ground state": "3d8",
+                            "final state": "3s1,3d9"
                         },
                         "shells": {
                             "3s": 2,
@@ -7005,8 +5725,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d8",
-                            "final": "3p5,3d9"
+                            "ground state": "3d8",
+                            "final state": "3p5,3d9"
                         },
                         "shells": {
                             "3p": 6,
@@ -7102,46 +5822,14 @@
                             "10Dq": 1.0
                         }
                     }
-                },
-                "Magnetic field": {
-                    "3d7": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "1s1,3d8": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2s1,3d8": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "2p5,3d8": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3s1,3d8": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    },
-                    "3p5,3d8": {
-                        "Bx": 0.0,
-                        "By": 0.0,
-                        "Bz": 1e-06
-                    }
                 }
             },
             "experiments": {
                 "XAS": {
                     "K": {
                         "configurations": {
-                            "initial": "3d7",
-                            "final": "1s1,3d8"
+                            "ground state": "3d7",
+                            "final state": "1s1,3d8"
                         },
                         "shells": {
                             "1s": 2,
@@ -7150,8 +5838,8 @@
                     },
                     "L1": {
                         "configurations": {
-                            "initial": "3d7",
-                            "final": "2s1,3d8"
+                            "ground state": "3d7",
+                            "final state": "2s1,3d8"
                         },
                         "shells": {
                             "2s": 2,
@@ -7160,8 +5848,8 @@
                     },
                     "L2,3": {
                         "configurations": {
-                            "initial": "3d7",
-                            "final": "2p5,3d8"
+                            "ground state": "3d7",
+                            "final state": "2p5,3d8"
                         },
                         "shells": {
                             "2p": 6,
@@ -7170,8 +5858,8 @@
                     },
                     "M1": {
                         "configurations": {
-                            "initial": "3d7",
-                            "final": "3s1,3d8"
+                            "ground state": "3d7",
+                            "final state": "3s1,3d8"
                         },
                         "shells": {
                             "3s": 2,
@@ -7180,8 +5868,8 @@
                     },
                     "M2,3": {
                         "configurations": {
-                            "initial": "3d7",
-                            "final": "3p5,3d8"
+                            "ground state": "3d7",
+                            "final state": "3p5,3d8"
                         },
                         "shells": {
                             "3p": 6,
