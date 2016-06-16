@@ -42,6 +42,8 @@ class MainWindow(QMainWindow):
         uic.loadUi(os.path.join(os.path.dirname(os.path.realpath(__file__)),
             'canvas.ui'), self)
 
+        self.root = os.getenv('CRISPY_ROOT')
+
         self.loadParameters()
         self.updateHamiltonianModelData()
 
@@ -49,8 +51,9 @@ class MainWindow(QMainWindow):
         self.activateToolBoxActions()
         self.statusBar().showMessage('Ready')
 
+
     def loadParameters(self):
-        with open(os.path.join('crispy', 'data', 'parameters.json')) as f:
+        with open(os.path.join(self.root, 'data', 'parameters.json')) as f:
             self.parameters = json.loads(
                 f.read(), object_pairs_hook=collections.OrderedDict)
 
@@ -130,8 +133,8 @@ class MainWindow(QMainWindow):
 
     def makeBackendInput(self):
         # Load the template file specific to the requested calculation.
-        templateFile = os.path.join(
-            'crispy', 'backends', self.backend, 'templates',
+        templateFile = os.path.join(self.root,
+            'backends', self.backend, 'templates',
             self.symmetry.lower(),
             self.experiment.lower(), '2p3d',
             'crystal_field', 'template')
@@ -141,7 +144,7 @@ class MainWindow(QMainWindow):
         except IOError:
             print('Template file not available for the requested'
                   'calculation type.')
-            return
+            raise
 
         self.shells = (self.parameters[self.element][self.charge]
                                  ['experiments'][self.experiment]
