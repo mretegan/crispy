@@ -12,7 +12,7 @@ from PyQt5.QtWidgets import QWidget
 
 class PlotWidget(FigureCanvas):
 
-    _defaults = {'dpi': 90,
+    _defaults = {'dpi': 72,
                  'alpha': 0.0,
                  'canvas': None,
                  'figure': None,
@@ -25,10 +25,8 @@ class PlotWidget(FigureCanvas):
         plt.style.use('bmh')
 
         # Create the figure and canvas.
-        self.fig = Figure(dpi=self.dpi)
+        self.fig = Figure(dpi=self.dpi, facecolor='w')
         super(PlotWidget, self).__init__(self.fig)
-
-        self.fig.patch.set_alpha(self.alpha)
 
     def plot(self, x, y, label=None):
         self.ax = self.fig.add_subplot(1, 1, 1)
@@ -36,7 +34,7 @@ class PlotWidget(FigureCanvas):
 
         self.ax.plot(x, y, '-', label=label)
 
-        # self.ax.grid(True)
+        self.ax.grid(True)
         self.ax.yaxis.set_ticklabels([])
         self.ax.set_xlabel('Energy (eV)')
         self.ax.set_ylabel('Absorbtion crossection (a.u.)')

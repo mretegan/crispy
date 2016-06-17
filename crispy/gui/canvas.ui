@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1100</width>
-    <height>610</height>
+    <height>620</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,8 +18,8 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>1100</width>
-    <height>610</height>
+    <width>800</width>
+    <height>600</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -34,9 +34,7 @@
 
 QListView {
    background-color: rgba(255, 255, 255, 255); 
-}
-
-</string>
+}</string>
   </property>
   <property name="toolButtonStyle">
    <enum>Qt::ToolButtonFollowStyle</enum>
@@ -48,6 +46,9 @@ QListView {
    <layout class="QHBoxLayout" name="centralWidgetHorizontalLayout">
     <property name="spacing">
      <number>6</number>
+    </property>
+    <property name="sizeConstraint">
+     <enum>QLayout::SetDefaultConstraint</enum>
     </property>
     <property name="leftMargin">
      <number>6</number>
@@ -74,30 +75,9 @@ QListView {
       </property>
       <property name="minimumSize">
        <size>
-        <width>260</width>
+        <width>265</width>
         <height>0</height>
        </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>16777215</height>
-       </size>
-      </property>
-      <property name="toolTip">
-       <string/>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::NoFrame</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Plain</enum>
-      </property>
-      <property name="lineWidth">
-       <number>1</number>
       </property>
       <property name="currentIndex">
        <number>0</number>
@@ -107,14 +87,29 @@ QListView {
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>251</width>
-         <height>498</height>
+         <width>250</width>
+         <height>466</height>
         </rect>
        </property>
        <attribute name="label">
         <string>Setup</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
+       <layout class="QVBoxLayout" name="setupPageVerticalLayout" stretch="0,0,0,0,0,0">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
         <item>
          <widget class="QGroupBox" name="elementAndSymmetryGroupBox">
           <property name="title">
@@ -366,6 +361,9 @@ QListView {
                <property name="singleStep">
                 <double>0.100000000000000</double>
                </property>
+               <property name="value">
+                <double>0.400000000000000</double>
+               </property>
               </widget>
              </item>
             </layout>
@@ -390,8 +388,14 @@ QListView {
                <property name="alignment">
                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                </property>
+               <property name="minimum">
+                <double>0.200000000000000</double>
+               </property>
                <property name="singleStep">
                 <double>0.100000000000000</double>
+               </property>
+               <property name="value">
+                <double>0.400000000000000</double>
                </property>
               </widget>
              </item>
@@ -420,14 +424,29 @@ QListView {
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>100</width>
-         <height>186</height>
+         <width>265</width>
+         <height>461</height>
         </rect>
        </property>
        <attribute name="label">
         <string>Hamiltonian</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_3">
+       <layout class="QVBoxLayout" name="hamiltonianPageVerticalLayout">
+        <property name="spacing">
+         <number>6</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
         <item>
          <widget class="QListView" name="hamiltonianView">
           <property name="sizePolicy">
@@ -436,17 +455,8 @@ QListView {
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>16777215</height>
-           </size>
+          <property name="focusPolicy">
+           <enum>Qt::StrongFocus</enum>
           </property>
           <property name="frameShape">
            <enum>QFrame::NoFrame</enum>
@@ -474,20 +484,18 @@ QListView {
      </widget>
     </item>
     <item>
-     <widget class="PlotWidget" name="plotWidget" native="true">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
-      </property>
-     </widget>
+     <layout class="QVBoxLayout" name="plotWidgetVerticalLayout">
+      <item>
+       <widget class="PlotWidget" name="plotWidget" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
     <item>
      <widget class="QToolBox" name="resultsToolBox">
@@ -524,13 +532,28 @@ QListView {
          <x>0</x>
          <y>0</y>
          <width>200</width>
-         <height>485</height>
+         <height>495</height>
         </rect>
        </property>
        <attribute name="label">
         <string>Results</string>
        </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <layout class="QHBoxLayout" name="resultsPageHorizontalLayout">
+        <property name="spacing">
+         <number>6</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
         <item>
          <widget class="QListView" name="resultsView">
           <property name="frameShape">

@@ -14,7 +14,7 @@ from PyQt5 import uic
 
 from .models.treemodel import TreeModel
 from .models.listmodel import ListModel
-from ..backends import quanty
+from ..backends import Quanty
 
 
 class MainWindow(QMainWindow):
@@ -32,8 +32,6 @@ class MainWindow(QMainWindow):
                  'broadeningGaussian': 0.4,
                  'broadeningLorentzian': 0.4,
                  'backend': 'Quanty',
-                 'backendInput': None,
-                 'backendInputFileName': 'input.inp',
                  'hamiltonianModelData': collections.OrderedDict()}
 
     def __init__(self):
@@ -51,6 +49,7 @@ class MainWindow(QMainWindow):
         self.activateToolBoxActions()
         self.statusBar().showMessage('Ready')
 
+        self.setBackend()
 
     def loadParameters(self):
         with open(os.path.join(self.root, 'data', 'parameters.json')) as f:
@@ -107,44 +106,33 @@ class MainWindow(QMainWindow):
         self.resultsView.setModel(self.resultsModel)
         self.resultsView.selectionModel().selectionChanged.connect(
             self.selectedResultsChanged)
+        self.resultsView.setAttribute(Qt.WA_MacShowFocusRect, False)
 
-    def runBackendCalculation(self):
-        self.saveBackendInput()
+    def activateToolBoxActions(self):
+        self.actionSave.triggered.connect(self.createBackendInput)
+        self.actionRun.triggered.connect(self.runBackendCalculation)
 
-        quanty.run(self.backendInputFileName)
-        spectrum = np.loadtxt('spectrum.dat', skiprows=5)
+    def setBackend(self):
+        if 'Quanty' in self.backend:
+            self.backendInput = None
+            self.backendInputFile = 'quanty.lua'
+            self.backendSpecFile = 'quanty.spec'
+            self.backendRun = Quanty.run
 
-        # Load the data to be plotted.
-        id = len(self.resultsModel._data) + 1
-        label = '#{:d} - {:s}{:s} | {:s} | {:s} | {:s}'.format(
-            id, self.element, self.charge, self.symmetry,
-            self.experiment, self.edge)
-
-        # Plot the spectrum.
-        self.plotWidget.clear()
-        self.plotWidget.plot(spectrum[:, 0], -spectrum[:, 2], label[:3])
-
-        # Store the simulation details.
-        self.resultsModel.appendItem((label, spectrum))
-
-        # Remove generated files.
-        os.remove(self.backendInputFileName)
-        os.remove('spectrum.dat')
-
-    def makeBackendInput(self):
+    def createBackendInput(self):
         # Load the template file specific to the requested calculation.
-        templateFile = os.path.join(self.root,
-            'backends', self.backend, 'templates',
-            self.symmetry.lower(),
-            self.experiment.lower(), '2p3d',
-            'crystal_field', 'template')
+        templateFileName = (self.parameters[self.element][self.charge]
+                ['experiments'][self.experiment][self.edge]
+                ['template']['Crystal field'])
+
+        templateFile = os.path.join(self.root, 'backends', self.backend,
+                'templates', '{0:s}.lua'.format(templateFileName))
 
         try:
             self.backendInput = open(templateFile, 'r').read()
-        except IOError:
-            print('Template file not available for the requested'
-                  'calculation type.')
-            raise
+        except FileNotFoundError:
+            print('Template not available for the requested calculation.')
+            return
 
         self.shells = (self.parameters[self.element][self.charge]
                                  ['experiments'][self.experiment]
@@ -194,16 +182,31 @@ class MainWindow(QMainWindow):
                 '$BroadeningLorentzian', '{0:8.2f}'.format(
                     self.broadeningLorentzianDoubleSpinBox.value()))
 
-    def saveBackendInput(self):
-        self.makeBackendInput()
-        with open(self.backendInputFileName, 'w') as f:
+        with open(self.backendInputFile, 'w') as f:
             f.write(self.backendInput)
-        # self.statusBar().showMessage('
-                # Input file was saved to disk.', msecs=1000)
 
-    def activateToolBoxActions(self):
-        self.actionSave.triggered.connect(self.saveBackendInput)
-        self.actionRun.triggered.connect(self.runBackendCalculation)
+    def runBackendCalculation(self):
+        self.createBackendInput()
+
+        self.backendRun(self.backendInputFile)
+        backendSpec = np.loadtxt(self.backendSpecFile, skiprows=5)
+
+        # Load the data to be plotted.
+        id = len(self.resultsModel._data) + 1
+        label = '#{:d} - {:s}{:s} | {:s} | {:s} | {:s}'.format(
+            id, self.element, self.charge, self.symmetry,
+            self.experiment, self.edge)
+
+        # Plot the spectrum.
+        self.plotWidget.clear()
+        self.plotWidget.plot(backendSpec[:, 0], -backendSpec[:, 2], label[:3])
+
+        # Store the simulation details.
+        self.resultsModel.appendItem((label, backendSpec))
+
+        # Remove generated files.
+        os.remove(self.backendInputFile)
+        os.remove(self.backendSpecFile)
 
     def selectedHamiltonianTermChanged(self):
         currentIndex = self.hamiltonianView.selectionModel().currentIndex()
@@ -287,6 +290,7 @@ class MainWindow(QMainWindow):
         currentIndex = self.hamiltonianView.selectionModel().currentIndex()
         self.hamiltonianView.selectionModel().selectionChanged.connect(
             self.selectedHamiltonianTermChanged)
+        self.hamiltonianView.setAttribute(Qt.WA_MacShowFocusRect, False)
 
         # Assign the Hamiltonian model to the Hamiltonian parameters view, and
         # set some properties.
@@ -294,6 +298,7 @@ class MainWindow(QMainWindow):
         self.hamiltonianParametersView.expandAll()
         self.hamiltonianParametersView.resizeAllColumns()
         self.hamiltonianParametersView.setRootIndex(currentIndex)
+        self.hamiltonianParametersView.setAttribute(Qt.WA_MacShowFocusRect, False)
 
     # def keyPressEvent(self, press):
         # if press.key() == Qt.Key_Escape:

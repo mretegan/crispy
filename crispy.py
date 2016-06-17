@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-"A simple GUI launcher."
+"Application launcher."
 
 def main():
     import os

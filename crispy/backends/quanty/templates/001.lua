@@ -144,6 +144,9 @@ OppTx = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_2p, IndexDn
 OppTy = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_2p, IndexDn_2p, {{1, -1, t * I}, {1, 1,  t * I}})
 OppTz = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_2p, IndexDn_2p, {{1,  0, 1    }                })
 
+OppTr =  math.sqrt(1/2) * (OppTx - OppTy * I)
+OppTl = -math.sqrt(1/2) * (OppTx + OppTy * I)
+
 --------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
@@ -159,7 +162,7 @@ Spectrum_z = 0
 
 Emin = -20.0
 Emax = 20.0
-Gamma = 0.05
+Gamma = 0.20
 NE = math.floor(10 * (Emax - Emin) / Gamma)
 
 for j = 1, NPsis do
@@ -185,4 +188,4 @@ BroadeningLorentzian = $BroadeningLorentzian
 BroadeningGaussian = $BroadeningGaussian
 Spectrum.Broaden(BroadeningGaussian, BroadeningLorentzian - Gamma)
 
-Spectrum.Print({{'file', 'spectrum.dat'}})
+Spectrum.Print({{'file', 'quanty.spec'}})
