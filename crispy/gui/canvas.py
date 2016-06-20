@@ -149,11 +149,11 @@ class MainWindow(QMainWindow):
         for hamiltonian in hamiltonians:
             configurations = hamiltonians[hamiltonian]
             for configuration in configurations:
-                if 'ground state' in configuration.lower():
+                if 'Ground state' in configuration:
                     suffix = 'gs'
-                elif 'intermediate state' in configuration.lower():
+                elif 'Intermediate state' in configuration:
                     suffix = 'is'
-                elif 'final state' in configuration.lower():
+                elif 'Final state' in configuration:
                     suffix = 'fs'
                 else:
                     suffix = str()
@@ -181,6 +181,23 @@ class MainWindow(QMainWindow):
         self.backendInput = self.backendInput.replace(
                 '$BroadeningLorentzian', '{0:8.2f}'.format(
                     self.broadeningLorentzianDoubleSpinBox.value()))
+
+        for hamiltonianTerm, hamiltonianTermState in (
+                self.hamiltonianModel.getNodesState().items()):
+            if 'Coulomb' in hamiltonianTerm:
+                termName = 'H_coulomb'
+            elif 'Spin-orbit coupling' in hamiltonianTerm:
+                termName = 'H_soc'
+            elif 'Crystal field' in hamiltonianTerm:
+                termName = 'H_cf'
+
+            if hamiltonianTermState == 0:
+                termState = 0
+            else:
+                termState = 1
+
+            self.backendInput = self.backendInput.replace(
+                    '${0:s}'.format(termName), '{0:2.1f}'.format(termState))
 
         with open(self.backendInputFile, 'w') as f:
             f.write(self.backendInput)
@@ -291,6 +308,8 @@ class MainWindow(QMainWindow):
         self.hamiltonianView.selectionModel().selectionChanged.connect(
             self.selectedHamiltonianTermChanged)
         self.hamiltonianView.setAttribute(Qt.WA_MacShowFocusRect, False)
+        # print(self.hamiltonianModel._rootNode._children[1].__dict__)
+        # self.hamiltonianModel._rootNode._children[0]._state = 2
 
         # Assign the Hamiltonian model to the Hamiltonian parameters view, and
         # set some properties.

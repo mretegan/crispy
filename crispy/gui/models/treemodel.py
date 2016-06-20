@@ -326,15 +326,17 @@ class TreeModel(QAbstractItemModel):
         self._data = data
         return self._data
 
+    def getNodesState(self, parentNode=None):
+        """Return the state (disabled, tristate, enable) of all nodes belonging to a
+        parent"""
+        if parentNode is None:
+            parentNode = self._rootNode
 
-class TreeView(QTreeView):
-    """Class enabling additional functionality in QTreeView."""
-    def __init__(self, parent=None):
-        super(TreeView, self).__init__(parent)
+        data = dict()
+        for node in parentNode.getChildren():
+            data[node._data[0]] = node.checkState()
 
-    def resizeAllColumns(self):
-        for i in range(self.model().columnCount(0)):
-            self.resizeColumnToContents(i)
+        return data
 
 def main():
     pass
