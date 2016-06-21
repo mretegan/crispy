@@ -75,8 +75,14 @@ QListView {
       </property>
       <property name="minimumSize">
        <size>
-        <width>265</width>
+        <width>245</width>
         <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>245</width>
+        <height>16777215</height>
        </size>
       </property>
       <property name="currentIndex">
@@ -87,7 +93,7 @@ QListView {
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>250</width>
+         <width>230</width>
          <height>466</height>
         </rect>
        </property>
@@ -424,9 +430,27 @@ QListView {
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>265</width>
+         <width>245</width>
          <height>461</height>
         </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>245</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>245</width>
+         <height>16777215</height>
+        </size>
        </property>
        <attribute name="label">
         <string>Hamiltonian</string>
@@ -507,7 +531,7 @@ QListView {
       </property>
       <property name="minimumSize">
        <size>
-        <width>200</width>
+        <width>195</width>
         <height>0</height>
        </size>
       </property>
