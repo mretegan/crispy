@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- XAS K-edge for 3d TM in Oh symmetry using crystal field approximation.
+-- XAS L1-edge for 3d TM in Oh symmetry using crystal field approximation.
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
@@ -8,11 +8,11 @@
 NBosons = 0
 NFermions = 12
 
-NElectrons_1s = $NElectrons_1s
+NElectrons_2s = $NElectrons_2s
 NElectrons_3d = $NElectrons_3d
 
-IndexDn_1s = {0}
-IndexUp_1s = {1}
+IndexDn_2s = {0}
+IndexUp_2s = {1}
 IndexDn_3d = {2, 4, 6, 8, 10}
 IndexUp_3d = {3, 5, 7, 9, 11}
 
@@ -23,8 +23,8 @@ OppF0_3d_3d = NewOperator('U', NFermions, IndexUp_3d, IndexDn_3d, {1, 0, 0})
 OppF2_3d_3d = NewOperator('U', NFermions, IndexUp_3d, IndexDn_3d, {0, 1, 0})
 OppF4_3d_3d = NewOperator('U', NFermions, IndexUp_3d, IndexDn_3d, {0, 0, 1})
 
-OppF0_1s_3d = NewOperator('U', NFermions, IndexUp_1s, IndexDn_1s, IndexUp_3d, IndexDn_3d, {1}, {0})
-OppG2_1s_3d = NewOperator('U', NFermions, IndexUp_1s, IndexDn_1s, IndexUp_3d, IndexDn_3d, {0}, {1})
+OppF0_2s_3d = NewOperator('U', NFermions, IndexUp_2s, IndexDn_2s, IndexUp_3d, IndexDn_3d, {1}, {0})
+OppG2_2s_3d = NewOperator('U', NFermions, IndexUp_2s, IndexDn_2s, IndexUp_3d, IndexDn_3d, {0}, {1})
 
 scaling_gs  = $scaling_gs
 F2_3d_3d_gs = $F2(3d,3d)_gs * scaling_gs
@@ -35,7 +35,7 @@ scaling_fs  = $scaling_fs
 F2_3d_3d_fs = $F2(3d,3d)_fs * scaling_fs
 F4_3d_3d_fs = $F4(3d,3d)_fs * scaling_fs
 F0_3d_3d_fs = 2.0 / 63.0 * (F2_3d_3d_fs + F4_3d_3d_fs) 
-G2_1s_3d_fs = $G2(1s,3d)_fs * scaling_fs
+G2_2s_3d_fs = $G2(2s,3d)_fs * scaling_fs
 -- F0_2p_3d_fs = 1.0 / 15.0 * G2_2p_3d_fs
 
 H_coulomb_gs = F0_3d_3d_gs * OppF0_3d_3d +
@@ -45,7 +45,7 @@ H_coulomb_gs = F0_3d_3d_gs * OppF0_3d_3d +
 H_coulomb_fs = F0_3d_3d_fs * OppF0_3d_3d +
                F2_3d_3d_fs * OppF2_3d_3d +
                F4_3d_3d_fs * OppF4_3d_3d +
-               G2_1s_3d_fs * OppG2_1s_3d 
+               G2_2s_3d_fs * OppG2_2s_3d 
 
 --------------------------------------------------------------------------------
 -- Define the spin-orbit coupling.
@@ -115,7 +115,7 @@ H_fs = $H_coulomb * H_coulomb_fs + $H_soc * H_soc_fs + $H_cf * H_cf_fs + B
 -- Determine the number of possible states in the initial configuration.
 NPsis = math.fact(10) / (math.fact(NElectrons_3d) * math.fact(10 - NElectrons_3d))
 
-GoundStateRestrictions = {NFermions, NBosons, {'11 0000000000', NElectrons_1s, NElectrons_1s},
+GoundStateRestrictions = {NFermions, NBosons, {'11 0000000000', NElectrons_2s, NElectrons_2s},
                                               {'00 1111111111', NElectrons_3d, NElectrons_3d}}
 
 -- Calculate the wave functions.
@@ -132,11 +132,11 @@ E_gs = Psis[1] * H_gs * Psis[1]
 --------------------------------------------------------------------------------
 t = math.sqrt(1/2);
 
-OppTxy   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -2, t * I}, {2, 2, -t * I}})
-OppTxz   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -1, t    }, {2, 1, -t    }})
-OppTyz   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -1, t * I}, {2, 1,  t * I}})
-OppTx2y2 = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -2, t    }, {2, 2,  t    }})
-OppTz2   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2,  0, 1    }                })
+OppTxy   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_2s, IndexDn_2s, {{2, -2, t * I}, {2, 2, -t * I}})
+OppTxz   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_2s, IndexDn_2s, {{2, -1, t    }, {2, 1, -t    }})
+OppTyz   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_2s, IndexDn_2s, {{2, -1, t * I}, {2, 1,  t * I}})
+OppTx2y2 = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_2s, IndexDn_2s, {{2, -2, t    }, {2, 2,  t    }})
+OppTz2   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_2s, IndexDn_2s, {{2,  0, 1    }                })
 
 --------------------------------------------------------------------------------
 -- Calculate and save the spectra.
