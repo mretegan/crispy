@@ -315,7 +315,9 @@ class MainWindow(QMainWindow):
         # set some properties.
         self.hamiltonianParametersView.setModel(self.hamiltonianModel)
         self.hamiltonianParametersView.expandAll()
-        self.hamiltonianParametersView.resizeAllColumns()
+        # self.hamiltonianParametersView.resizeAllColumns()
+        self.hamiltonianParametersView.resizeColumnToContents(0)
+        self.hamiltonianParametersView.resizeColumnToContents(1)
         self.hamiltonianParametersView.setRootIndex(currentIndex)
         self.hamiltonianParametersView.setAttribute(Qt.WA_MacShowFocusRect, False)
 
