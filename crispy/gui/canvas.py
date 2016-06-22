@@ -6,7 +6,7 @@ import numpy as np
 import os
 import sys
 
-from PyQt5.QtCore import QItemSelectionModel, Qt
+from PyQt5.QtCore import QItemSelectionModel, QEvent, Qt
 from PyQt5.QtWidgets import (
     QAbstractItemView, QDoubleSpinBox, QLabel,
     QMainWindow, QGroupBox, QHBoxLayout, QTabWidget)
@@ -107,6 +107,7 @@ class MainWindow(QMainWindow):
         self.resultsView.selectionModel().selectionChanged.connect(
             self.selectedResultsChanged)
         self.resultsView.setAttribute(Qt.WA_MacShowFocusRect, False)
+        self.resultsView.viewport().installEventFilter(self)
 
     def activateToolBoxActions(self):
         self.actionSave.triggered.connect(self.createBackendInput)
@@ -320,11 +321,20 @@ class MainWindow(QMainWindow):
         # set some properties.
         self.hamiltonianParametersView.setModel(self.hamiltonianModel)
         self.hamiltonianParametersView.expandAll()
-        # self.hamiltonianParametersView.resizeAllColumns()
         self.hamiltonianParametersView.resizeColumnToContents(0)
         self.hamiltonianParametersView.resizeColumnToContents(1)
         self.hamiltonianParametersView.setRootIndex(currentIndex)
         self.hamiltonianParametersView.setAttribute(Qt.WA_MacShowFocusRect, False)
+        self.hamiltonianParametersView.viewport().installEventFilter(self)
+
+    def eventFilter(self, source, event):
+        if (event.type() == QEvent.MouseButtonPress and
+            event.button() == Qt.RightButton and
+            (source is self.hamiltonianParametersView.viewport() or
+                source is self.resultsView.viewport())):
+            return True
+        else:
+            return super(MainWindow, self).eventFilter(source, event)
 
     # def keyPressEvent(self, press):
         # if press.key() == Qt.Key_Escape:
