@@ -1,5 +1,12 @@
 --------------------------------------------------------------------------------
--- XAS M1-edge for 3d TM in Oh symmetry using crystal field approximation.
+-- Quanty input file generated using the CRiSPy user-interface.
+--
+-- experiment: XAS
+-- edge: K
+-- elements: 3d transition metals
+-- symmetry: Oh
+-- Hamiltonian: Coulomb, spin-orbit coupling, crystal field
+-- transition operators: quadrupole
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------

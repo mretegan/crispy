@@ -98,7 +98,7 @@ QListView {
         </rect>
        </property>
        <attribute name="label">
-        <string>Setup</string>
+        <string>General setup</string>
        </attribute>
        <layout class="QVBoxLayout" name="setupPageVerticalLayout" stretch="0,0,0,0,0,0">
         <property name="spacing">
@@ -431,7 +431,7 @@ QListView {
          <x>0</x>
          <y>0</y>
          <width>245</width>
-         <height>461</height>
+         <height>158</height>
         </rect>
        </property>
        <property name="sizePolicy">
