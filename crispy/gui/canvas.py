@@ -29,8 +29,8 @@ class MainWindow(QMainWindow):
                  'magneticFieldX': 0.0,
                  'magneticFieldY': 0.0,
                  'magneticFieldZ': 0.0,
-                 'broadeningGaussian': 0.4,
-                 'broadeningLorentzian': 0.4,
+                 'broadeningGaussian': 0.5,
+                 'broadeningLorentzian': 0.5,
                  'backend': 'Quanty',
                  'hamiltonianModelData': collections.OrderedDict()}
 
