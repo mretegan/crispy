@@ -66,7 +66,7 @@ class ListModel(QAbstractListModel):
         return True
 
     def appendItem(self, item):
-        """Append an item at the end of the model's data.
+        """Insert an item at the end of the model's data.
 
         Parameters
         ----------

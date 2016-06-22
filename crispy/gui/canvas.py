@@ -221,6 +221,11 @@ class MainWindow(QMainWindow):
         # Store the simulation details.
         self.resultsModel.appendItem((label, backendSpec))
 
+        # Update the selected item in the results view.
+        self.resultsView.selectionModel().clearSelection()
+        index = self.resultsModel.index(self.resultsModel.rowCount()-1)
+        self.resultsView.selectionModel().select(index, QItemSelectionModel.Select)
+
         # Remove generated files.
         os.remove(self.backendInputFile)
         os.remove(self.backendSpecFile)
