@@ -36,7 +36,6 @@ F2_3d_3d_fs = $F2(3d,3d)_fs * scaling_fs
 F4_3d_3d_fs = $F4(3d,3d)_fs * scaling_fs
 F0_3d_3d_fs = 2.0 / 63.0 * (F2_3d_3d_fs + F4_3d_3d_fs) 
 G2_2s_3d_fs = $G2(2s,3d)_fs * scaling_fs
--- F0_2p_3d_fs = 1.0 / 15.0 * G2_2p_3d_fs
 
 H_coulomb_gs = F0_3d_3d_gs * OppF0_3d_3d +
                F2_3d_3d_gs * OppF2_3d_3d +

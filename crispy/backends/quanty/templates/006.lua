@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- XAS K-edge for 3d TM in Oh symmetry using crystal field approximation.
+-- XAS K-edge for 3d TM in D4h symmetry using crystal field approximation.
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
@@ -63,12 +63,24 @@ H_soc_fs = zeta_3d_fs * Oppldots_3d
 -- Define the crystal field.
 --------------------------------------------------------------------------------
 tenDq_gs = $10Dq_gs
+Ds_gs = $Ds_gs
+Dt_gs = $Dt_gs
+
 tenDq_fs = $10Dq_fs
+Ds_fs = $Ds_fs
+Dt_fs = $Dt_fs
 
-OpptenDq = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm('Oh', 2, {0.6, -0.4}))
+OpptenDq = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm('D4h', 2, { 0.6,  0.6, -0.4, -0.4}))
+OppDs    = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm('D4h', 2, {-2.0,  2.0,  2.0, -1.0}))
+OppDt    = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm('D4h', 2, {-6.0, -1.0, -1.0,  4.0}))
 
-H_cf_gs = tenDq_gs * OpptenDq
-H_cf_fs = tenDq_fs * OpptenDq
+H_cf_gs = tenDq_gs * OpptenDq +
+          Ds_gs * OppDs +
+          Dt_gs * OppDt
+
+H_cf_fs = tenDq_fs * OpptenDq +
+          Ds_fs * OppDs +
+          Dt_fs * OppDt
 
 --------------------------------------------------------------------------------
 -- Define the magnetic field.

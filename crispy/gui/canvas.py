@@ -67,7 +67,7 @@ class MainWindow(QMainWindow):
         self.chargeComboBox.setCurrentText(self.charge)
         self.chargeComboBox.currentTextChanged.connect(self.updateCharge)
 
-        symmetries = ['Oh']
+        symmetries = ['Oh', 'D4h']
         self.symmetryComboBox.addItems(symmetries)
         self.symmetryComboBox.setCurrentText(self.symmetry)
         self.symmetryComboBox.currentTextChanged.connect(self.updateSymmetry)
@@ -123,7 +123,7 @@ class MainWindow(QMainWindow):
         # Load the template file specific to the requested calculation.
         templateFileName = (self.parameters[self.element][self.charge]
                 ['experiments'][self.experiment][self.edge]
-                ['template']['Crystal field'])
+                ['template']['Crystal field'][self.symmetry])
 
         templateFile = os.path.join(self.root, 'backends', self.backend,
                 'templates', '{0:s}.lua'.format(templateFileName))
@@ -247,7 +247,7 @@ class MainWindow(QMainWindow):
         self.updateExperiment()
 
     def updateSymmetry(self):
-        symmetries = ['Oh']
+        symmetries = ['Oh', 'D4h']
         self.symmetryComboBox.updateItems(symmetries)
         self.symmetry = self.symmetryComboBox.currentText()
         self.updateHamiltonianModelData()

@@ -117,6 +117,7 @@ B = Bx * (2 * OppSx + OppLx) +
 -- Compose the final Hamiltonian.
 --------------------------------------------------------------------------------
 H_gs = $H_coulomb * H_coulomb_gs + $H_soc * H_soc_gs + $H_cf * H_cf_gs + B
+
 H_fs = $H_coulomb * H_coulomb_fs + $H_soc * H_soc_fs + $H_cf * H_cf_fs + B
 
 --------------------------------------------------------------------------------

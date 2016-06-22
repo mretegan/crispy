@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
--- XAS K-edge for 3d TM in Oh symmetry using crystal field approximation.
+-- XAS M1-edge for 3d TM in D4h symmetry using crystal field approximation.
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
@@ -8,11 +8,11 @@
 NBosons = 0
 NFermions = 12
 
-NElectrons_1s = $NElectrons_1s
+NElectrons_3s = $NElectrons_3s
 NElectrons_3d = $NElectrons_3d
 
-IndexDn_1s = {0}
-IndexUp_1s = {1}
+IndexDn_3s = {0}
+IndexUp_3s = {1}
 IndexDn_3d = {2, 4, 6, 8, 10}
 IndexUp_3d = {3, 5, 7, 9, 11}
 
@@ -23,8 +23,8 @@ OppF0_3d_3d = NewOperator('U', NFermions, IndexUp_3d, IndexDn_3d, {1, 0, 0})
 OppF2_3d_3d = NewOperator('U', NFermions, IndexUp_3d, IndexDn_3d, {0, 1, 0})
 OppF4_3d_3d = NewOperator('U', NFermions, IndexUp_3d, IndexDn_3d, {0, 0, 1})
 
-OppF0_1s_3d = NewOperator('U', NFermions, IndexUp_1s, IndexDn_1s, IndexUp_3d, IndexDn_3d, {1}, {0})
-OppG2_1s_3d = NewOperator('U', NFermions, IndexUp_1s, IndexDn_1s, IndexUp_3d, IndexDn_3d, {0}, {1})
+OppF0_3s_3d = NewOperator('U', NFermions, IndexUp_3s, IndexDn_3s, IndexUp_3d, IndexDn_3d, {1}, {0})
+OppG2_3s_3d = NewOperator('U', NFermions, IndexUp_3s, IndexDn_3s, IndexUp_3d, IndexDn_3d, {0}, {1})
 
 scaling_gs  = $scaling_gs
 F2_3d_3d_gs = $F2(3d,3d)_gs * scaling_gs
@@ -35,7 +35,7 @@ scaling_fs  = $scaling_fs
 F2_3d_3d_fs = $F2(3d,3d)_fs * scaling_fs
 F4_3d_3d_fs = $F4(3d,3d)_fs * scaling_fs
 F0_3d_3d_fs = 2.0 / 63.0 * (F2_3d_3d_fs + F4_3d_3d_fs) 
-G2_1s_3d_fs = $G2(1s,3d)_fs * scaling_fs
+G2_3s_3d_fs = $G2(3s,3d)_fs * scaling_fs
 
 H_coulomb_gs = F0_3d_3d_gs * OppF0_3d_3d +
                F2_3d_3d_gs * OppF2_3d_3d +
@@ -44,7 +44,7 @@ H_coulomb_gs = F0_3d_3d_gs * OppF0_3d_3d +
 H_coulomb_fs = F0_3d_3d_fs * OppF0_3d_3d +
                F2_3d_3d_fs * OppF2_3d_3d +
                F4_3d_3d_fs * OppF4_3d_3d +
-               G2_1s_3d_fs * OppG2_1s_3d 
+               G2_3s_3d_fs * OppG2_3s_3d 
 
 --------------------------------------------------------------------------------
 -- Define the spin-orbit coupling.
@@ -63,12 +63,24 @@ H_soc_fs = zeta_3d_fs * Oppldots_3d
 -- Define the crystal field.
 --------------------------------------------------------------------------------
 tenDq_gs = $10Dq_gs
+Ds_gs = $Ds_gs
+Dt_gs = $Dt_gs
+
 tenDq_fs = $10Dq_fs
+Ds_fs = $Ds_fs
+Dt_fs = $Dt_fs
 
-OpptenDq = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm('Oh', 2, {0.6, -0.4}))
+OpptenDq = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm('D4h', 2, { 0.6,  0.6, -0.4, -0.4}))
+OppDs    = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm('D4h', 2, {-2.0,  2.0,  2.0, -1.0}))
+OppDt    = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm('D4h', 2, {-6.0, -1.0, -1.0,  4.0}))
 
-H_cf_gs = tenDq_gs * OpptenDq
-H_cf_fs = tenDq_fs * OpptenDq
+H_cf_gs = tenDq_gs * OpptenDq +
+          Ds_gs * OppDs +
+          Dt_gs * OppDt
+
+H_cf_fs = tenDq_fs * OpptenDq +
+          Ds_fs * OppDs +
+          Dt_fs * OppDt
 
 --------------------------------------------------------------------------------
 -- Define the magnetic field.
@@ -115,7 +127,7 @@ H_fs = $H_coulomb * H_coulomb_fs + $H_soc * H_soc_fs + $H_cf * H_cf_fs + B
 -- Determine the number of possible states in the initial configuration.
 NPsis = math.fact(10) / (math.fact(NElectrons_3d) * math.fact(10 - NElectrons_3d))
 
-GoundStateRestrictions = {NFermions, NBosons, {'11 0000000000', NElectrons_1s, NElectrons_1s},
+GoundStateRestrictions = {NFermions, NBosons, {'11 0000000000', NElectrons_3s, NElectrons_3s},
                                               {'00 1111111111', NElectrons_3d, NElectrons_3d}}
 
 -- Calculate the wave functions.
@@ -132,11 +144,11 @@ E_gs = Psis[1] * H_gs * Psis[1]
 --------------------------------------------------------------------------------
 t = math.sqrt(1/2);
 
-OppTxy   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -2, t * I}, {2, 2, -t * I}})
-OppTxz   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -1, t    }, {2, 1, -t    }})
-OppTyz   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -1, t * I}, {2, 1,  t * I}})
-OppTx2y2 = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -2, t    }, {2, 2,  t    }})
-OppTz2   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2,  0, 1    }                })
+OppTxy   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_3s, IndexDn_3s, {{2, -2, t * I}, {2, 2, -t * I}})
+OppTxz   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_3s, IndexDn_3s, {{2, -1, t    }, {2, 1, -t    }})
+OppTyz   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_3s, IndexDn_3s, {{2, -1, t * I}, {2, 1,  t * I}})
+OppTx2y2 = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_3s, IndexDn_3s, {{2, -2, t    }, {2, 2,  t    }})
+OppTz2   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_3s, IndexDn_3s, {{2,  0, 1    }                })
 
 --------------------------------------------------------------------------------
 -- Calculate and save the spectra.
