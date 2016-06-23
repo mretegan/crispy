@@ -22,9 +22,9 @@ class MainWindow(QMainWindow):
     _defaults = {'element': 'Ni',
                  'charge': '2+',
                  'symmetry': 'Oh',
+                 'theoreticalModel': 'Crystal field (CF)',
                  'experiment': 'XAS',
-                 'edge': 'L2,3',
-                 'polarization': 'iso',
+                 'edge': 'L2,3 (2p)',
                  'temperature': 1.0,
                  'magneticFieldX': 0.0,
                  'magneticFieldY': 0.0,
@@ -67,29 +67,33 @@ class MainWindow(QMainWindow):
         self.chargeComboBox.setCurrentText(self.charge)
         self.chargeComboBox.currentTextChanged.connect(self.updateCharge)
 
-        symmetries = ['Oh', 'D4h']
+        symmetries = (self.parameters[self.element][self.charge]
+                ['experiments'][self.experiment][self.edge]
+                ['templates'][self.theoreticalModel])
         self.symmetryComboBox.addItems(symmetries)
         self.symmetryComboBox.setCurrentText(self.symmetry)
         self.symmetryComboBox.currentTextChanged.connect(self.updateSymmetry)
 
         experiments = (self.parameters[self.element][self.charge]
-                                      ['experiments'])
+                ['experiments'])
         self.experimentComboBox.addItems(experiments)
         self.experimentComboBox.setCurrentText(self.experiment)
         self.experimentComboBox.currentTextChanged.connect(
             self.updateExperiment)
 
         edges = (self.parameters[self.element][self.charge]
-                                ['experiments'][self.experiment])
+                ['experiments'][self.experiment])
         self.edgeComboBox.addItems(edges)
         self.edgeComboBox.setCurrentText(self.edge)
         self.edgeComboBox.currentTextChanged.connect(self.updateEdge)
 
-        polarizations = ['iso']
-        self.polarizationComboBox.addItems(polarizations)
-        self.polarizationComboBox.setCurrentText(self.polarization)
-        self.polarizationComboBox.currentTextChanged.connect(
-                self.updatePolarization)
+        theoreticalModels = (self.parameters[self.element][self.charge]
+                ['experiments'][self.experiment][self.edge]
+                ['templates'])
+        self.theoreticalModelComboBox.addItems(theoreticalModels)
+        self.theoreticalModelComboBox.setCurrentText(self.theoreticalModel)
+        self.theoreticalModelComboBox.currentTextChanged.connect(
+                self.updateTheoreticalModel)
 
         self.temperatureDoubleSpinBox.setValue(self.temperature)
 
@@ -124,7 +128,7 @@ class MainWindow(QMainWindow):
         # Load the template file specific to the requested calculation.
         templateFileName = (self.parameters[self.element][self.charge]
                 ['experiments'][self.experiment][self.edge]
-                ['template']['Crystal field'][self.symmetry])
+                ['templates'][self.theoreticalModel][self.symmetry])
 
         templateFile = os.path.join(self.root, 'backends', self.backend,
                 'templates', '{0:s}.lua'.format(templateFileName))
@@ -146,9 +150,9 @@ class MainWindow(QMainWindow):
         # Get the most recent Hamiltonian data from the model.
         self.hamiltonianModelData = self.hamiltonianModel.getModelData()
 
-        hamiltonians = self.hamiltonianModelData
-        for hamiltonian in hamiltonians:
-            configurations = hamiltonians[hamiltonian]
+        hamiltonian = self.hamiltonianModelData
+        for hamiltonianTerm in hamiltonian:
+            configurations = hamiltonian[hamiltonianTerm]
             for configuration in configurations:
                 if 'Ground state' in configuration:
                     suffix = 'gs'
@@ -191,6 +195,8 @@ class MainWindow(QMainWindow):
                 termName = 'H_soc'
             elif 'Crystal field' in hamiltonianTerm:
                 termName = 'H_cf'
+            elif 'Ligand field' in hamiltonianTerm:
+                termName = 'H_lf'
 
             if hamiltonianTermState == 0:
                 termState = 0
@@ -211,9 +217,9 @@ class MainWindow(QMainWindow):
 
         # Load the data to be plotted.
         id = len(self.resultsModel._data) + 1
-        label = '#{:d} - {:s}{:s} | {:s} | {:s} | {:s}'.format(
+        label = '#{:d} - {:s}{:s} | {:s} | {:s} | {:s} | {:s}'.format(
             id, self.element, self.charge, self.symmetry,
-            self.experiment, self.edge)
+            self.experiment, self.edge, self.theoreticalModel)
 
         # Plot the spectrum.
         self.plotWidget.clear()
@@ -225,7 +231,8 @@ class MainWindow(QMainWindow):
         # Update the selected item in the results view.
         self.resultsView.selectionModel().clearSelection()
         index = self.resultsModel.index(self.resultsModel.rowCount()-1)
-        self.resultsView.selectionModel().select(index, QItemSelectionModel.Select)
+        self.resultsView.selectionModel().select(
+                index, QItemSelectionModel.Select)
 
         # Remove generated files.
         os.remove(self.backendInputFile)
@@ -250,55 +257,62 @@ class MainWindow(QMainWindow):
         charges = self.parameters[self.element]
         self.chargeComboBox.updateItems(charges)
         self.charge = self.chargeComboBox.currentText()
-        self.updateExperiment()
+        self.updateSymmetry()
 
     def updateSymmetry(self):
-        symmetries = ['Oh', 'D4h']
+        symmetries = (self.parameters[self.element][self.charge]
+                ['experiments'][self.experiment][self.edge]
+                ['templates'][self.theoreticalModel])
         self.symmetryComboBox.updateItems(symmetries)
         self.symmetry = self.symmetryComboBox.currentText()
-        self.updateHamiltonianModelData()
+        self.updateExperiment()
 
     def updateExperiment(self):
         experiments = (self.parameters[self.element][self.charge]
-                                      ['experiments'])
+                ['experiments'])
         self.experimentComboBox.updateItems(experiments)
         self.experiment = self.experimentComboBox.currentText()
         self.updateEdge()
 
     def updateEdge(self):
         edges = (self.parameters[self.element][self.charge]
-                                ['experiments'][self.experiment])
+                ['experiments'][self.experiment])
         self.edgeComboBox.updateItems(edges)
         self.edge = self.edgeComboBox.currentText()
-        self.updatePolarization()
+        self.updateTheoreticalModel()
 
-    def updatePolarization(self):
-        polarizations = ['iso']
-        self.polarizationComboBox.updateItems(polarizations)
-        self.polarization = self.polarizationComboBox.currentText()
+    def updateTheoreticalModel(self):
+        theoreticalModels = (self.parameters[self.element][self.charge]
+                ['experiments'][self.experiment][self.edge]
+                ['templates'])
+        self.theoreticalModelComboBox.updateItems(theoreticalModels)
+        self.theoreticalModel = self.theoreticalModelComboBox.currentText()
         self.updateHamiltonianModelData()
 
     def updateHamiltonianModelData(self):
         configurations = (self.parameters[self.element][self.charge]
-                                         ['experiments'][self.experiment]
-                                         [self.edge]['configurations'])
+                ['experiments'][self.experiment][self.edge]['configurations'])
 
-        hamiltonians = (self.parameters[self.element][self.charge]
-                                       ['hamiltonians'])
+        hamiltonian = (self.parameters[self.element][self.charge]
+                                       ['Hamiltonian'])
 
-        for hamiltonian in hamiltonians:
-            self.hamiltonianModelData[hamiltonian] = collections.OrderedDict()
+        self.hamiltonianModelData = collections.OrderedDict()
+        for hamiltonianTerm in hamiltonian:
 
-            if 'Crystal field' in hamiltonian:
-                parameters = hamiltonians[hamiltonian][self.symmetry]
+            if 'field' not in hamiltonianTerm:
+                parameters = hamiltonian[hamiltonianTerm]
             else:
-                parameters = hamiltonians[hamiltonian]
+                hamiltonianTerm = self.theoreticalModel
+                parameters = hamiltonian[hamiltonianTerm][self.symmetry]
+
+            self.hamiltonianModelData[hamiltonianTerm] = (
+                    collections.OrderedDict())
 
             for configuration in configurations:
                 label = '{0} ({1})'.format(
                     configuration.capitalize(), configurations[configuration])
 
-                self.hamiltonianModelData[hamiltonian][label] = (
+                self.hamiltonianModelData[hamiltonianTerm][label] = (
                     parameters[configurations[configuration]])
 
         # Create the Hamiltonian model.
@@ -313,9 +327,8 @@ class MainWindow(QMainWindow):
         currentIndex = self.hamiltonianView.selectionModel().currentIndex()
         self.hamiltonianView.selectionModel().selectionChanged.connect(
             self.selectedHamiltonianTermChanged)
-        self.hamiltonianView.setAttribute(Qt.WA_MacShowFocusRect, False)
-        # print(self.hamiltonianModel._rootNode._children[1].__dict__)
-        # self.hamiltonianModel._rootNode._children[0]._state = 2
+        self.hamiltonianView.setAttribute(
+                Qt.WA_MacShowFocusRect, False)
 
         # Assign the Hamiltonian model to the Hamiltonian parameters view, and
         # set some properties.
@@ -324,7 +337,8 @@ class MainWindow(QMainWindow):
         self.hamiltonianParametersView.resizeColumnToContents(0)
         self.hamiltonianParametersView.resizeColumnToContents(1)
         self.hamiltonianParametersView.setRootIndex(currentIndex)
-        self.hamiltonianParametersView.setAttribute(Qt.WA_MacShowFocusRect, False)
+        self.hamiltonianParametersView.setAttribute(
+                Qt.WA_MacShowFocusRect, False)
         self.hamiltonianParametersView.viewport().installEventFilter(self)
 
     def eventFilter(self, source, event):
@@ -335,11 +349,6 @@ class MainWindow(QMainWindow):
             return True
         else:
             return super(MainWindow, self).eventFilter(source, event)
-
-    # def keyPressEvent(self, press):
-        # if press.key() == Qt.Key_Escape:
-            # sys.exit()
-
 
 def main():
     import os
@@ -355,7 +364,7 @@ def main():
     # app.setStyle('Windows')
     # app.setStyle('Fusion')
     window = MainWindow()
-    window.setWindowTitle('CRiSPy')
+    window.setWindowTitle('')
     window.show()
 
     app.setAttribute(Qt.AA_UseHighDpiPixmaps)

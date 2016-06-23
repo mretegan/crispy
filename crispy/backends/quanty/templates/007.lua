@@ -59,11 +59,9 @@ H_coulomb_fs = F0_3d_3d_fs * OppF0_3d_3d +
 Oppldots_3d = NewOperator('ldots', NFermions, IndexUp_3d, IndexDn_3d)
 
 zeta_3d_gs = $zeta(3d)_gs
-
 zeta_3d_fs = $zeta(3d)_fs
 
 H_soc_gs = zeta_3d_gs * Oppldots_3d
-
 H_soc_fs = zeta_3d_fs * Oppldots_3d
 
 --------------------------------------------------------------------------------
@@ -125,7 +123,6 @@ B = Bx * (2 * OppSx + OppLx) +
 -- Compose the final Hamiltonian.
 --------------------------------------------------------------------------------
 H_gs = $H_coulomb * H_coulomb_gs + $H_soc * H_soc_gs + $H_cf * H_cf_gs + B
-
 H_fs = $H_coulomb * H_coulomb_fs + $H_soc * H_soc_fs + $H_cf * H_cf_fs + B
 
 --------------------------------------------------------------------------------
@@ -134,11 +131,11 @@ H_fs = $H_coulomb * H_coulomb_fs + $H_soc * H_soc_fs + $H_cf * H_cf_fs + B
 -- Determine the number of possible states in the initial configuration.
 NPsis = math.fact(10) / (math.fact(NElectrons_3d) * math.fact(10 - NElectrons_3d))
 
-GoundStateRestrictions = {NFermions, NBosons, {'11 0000000000', NElectrons_2s, NElectrons_2s},
-                                              {'00 1111111111', NElectrons_3d, NElectrons_3d}}
+GroundStateRestrictions = {NFermions, NBosons, {'11 0000000000', NElectrons_2s, NElectrons_2s},
+                                               {'00 1111111111', NElectrons_3d, NElectrons_3d}}
 
 -- Calculate the wave functions.
-Psis = Eigensystem(H_gs, GoundStateRestrictions, NPsis)
+Psis = Eigensystem(H_gs, GroundStateRestrictions, NPsis)
 if not (type(Psis) == 'table') then
     Psis = {Psis}
 end
