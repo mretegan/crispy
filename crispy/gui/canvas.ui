@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1100</width>
-    <height>690</height>
+    <height>680</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,7 +19,7 @@
   <property name="minimumSize">
    <size>
     <width>800</width>
-    <height>690</height>
+    <height>620</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -422,7 +422,7 @@ QListView {
          <x>0</x>
          <y>0</y>
          <width>235</width>
-         <height>531</height>
+         <height>521</height>
         </rect>
        </property>
        <property name="sizePolicy">
@@ -553,7 +553,7 @@ QListView {
          <x>0</x>
          <y>0</y>
          <width>200</width>
-         <height>565</height>
+         <height>555</height>
         </rect>
        </property>
        <attribute name="label">
@@ -664,6 +664,18 @@ QListView {
    </property>
    <property name="toolTip">
     <string>Quit the application</string>
+   </property>
+  </action>
+  <action name="actionStop">
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/stop.svg</normaloff>icons/stop.svg</iconset>
+   </property>
+   <property name="text">
+    <string>stop</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
  </widget>
