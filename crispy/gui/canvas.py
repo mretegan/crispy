@@ -243,8 +243,8 @@ class MainWindow(QMainWindow):
         self.hamiltonianParametersView.setRootIndex(currentIndex)
 
     def selectedResultsChanged(self):
-        selectedIndexes = self.resultsView.selectionModel().selectedIndexes()
         self.plotWidget.clear()
+        selectedIndexes = self.resultsView.selectionModel().selectedIndexes()
         for index in selectedIndexes:
             label, spectrum = self.resultsModel.getIndexData(index)
             self.plotWidget.plot(spectrum[:, 0], -spectrum[:, 2], label[:3])
