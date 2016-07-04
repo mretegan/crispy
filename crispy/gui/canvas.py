@@ -130,7 +130,7 @@ class MainWindow(QMainWindow):
                 ['experiments'][self.experiment][self.edge]
                 ['templates'][self.theoreticalModel][self.symmetry])
 
-        templateFile = os.path.join(self.root, 'backends', self.backend,
+        templateFile = os.path.join(self.root, 'backends', self.backend.lower(),
                 'templates', '{0:s}.lua'.format(templateFileName))
 
         try:
