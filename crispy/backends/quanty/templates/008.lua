@@ -2,7 +2,7 @@
 -- Quanty input file generated using the CRiSPy user-interface.
 --
 -- experiment: XAS
--- edge: K
+-- edge: L2,3 (2p)
 -- elements: 3d transition metals
 -- symmetry: Oh
 -- Hamiltonian: Coulomb, spin-orbit coupling, crystal field
@@ -174,9 +174,7 @@ T = $T * EnergyUnits.Kelvin.value
 -- Initialize the partition function and the spectrum.
 Z = 0
 
-Spectrum_x = 0
-Spectrum_y = 0
-Spectrum_z = 0
+Spectrum = 0
 
 Emin = -20.0
 Emax = 20.0
@@ -193,13 +191,13 @@ for j = 1, NPsis do
 
     Z = Z + dZ
 
-    Spectrum_x = Spectrum_x + CreateSpectra(H_fs, {OppTx}, Psis[j], {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
-    Spectrum_y = Spectrum_y + CreateSpectra(H_fs, {OppTy}, Psis[j], {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
-    Spectrum_z = Spectrum_z + CreateSpectra(H_fs, {OppTz}, Psis[j], {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+    Spectrum = Spectrum + CreateSpectra(H_fs, {OppTx, OppTy, OppTz}, Psis[1], {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'Tensor', true}}) * dZ
 
 end
 
-Spectrum = (Spectrum_x + Spectrum_y + Spectrum_z) / 3.0
+Spectrum = Spectra.Sum(Spectrum, {1.0, 0.0, 0.0,
+                                  0.0, 1.0, 0.0, 
+                                  0.0, 0.0, 1.0}) / 3.0
 
 -- Broaden the spectrum.
 BroadeningLorentzian = $BroadeningLorentzian

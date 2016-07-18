@@ -2,7 +2,7 @@
 -- Quanty input file generated using the CRiSPy user-interface.
 --
 -- experiment: XAS
--- edge: K
+-- edge: K (1s)
 -- elements: 3d transition metals
 -- symmetry: Oh
 -- Hamiltonian: Coulomb, spin-orbit coupling, crystal field
@@ -151,11 +151,7 @@ T = $T * EnergyUnits.Kelvin.value
 -- Initialize the partition function and the spectrum.
 Z = 0
 
-Spectrum_xy   = 0
-Spectrum_xz   = 0
-Spectrum_yz   = 0
-Spectrum_x2y2 = 0
-Spectrum_z2   = 0
+Spectrum = 0
 
 Emin = -20.0
 Emax = 20.0
@@ -172,15 +168,15 @@ for j = 1, NPsis do
 
     Z = Z + dZ
 
-    Spectrum_xy   = Spectrum_xy   + CreateSpectra(H_fs, {OppTxy},   Psis[j], {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
-    Spectrum_xz   = Spectrum_xz   + CreateSpectra(H_fs, {OppTxz},   Psis[j], {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
-    Spectrum_yz   = Spectrum_yz   + CreateSpectra(H_fs, {OppTyz},   Psis[j], {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
-    Spectrum_x2y2 = Spectrum_x2y2 + CreateSpectra(H_fs, {OppTx2y2}, Psis[j], {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
-    Spectrum_z2   = Spectrum_z2   + CreateSpectra(H_fs, {OppTz2},   Psis[j], {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+    Spectrum = Spectrum + CreateSpectra(H_fs, {OppTxy, OppTxz, OppTyz, OppTx2y2, OppTz2}, Psis[j], {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'Tensor', true}}) * dZ
 
 end
 
-Spectrum = (Spectrum_xy + Spectrum_xz + Spectrum_yz + Spectrum_x2y2 + Spectrum_z2) / 15.0
+Spectrum = Spectra.Sum(Spectrum, {1.0, 0.0, 0.0, 0.0, 0.0, 
+                                  0.0, 1.0, 0.0, 0.0, 0.0,
+                                  0.0, 0.0, 1.0, 0.0, 0.0,
+                                  0.0, 0.0, 0.0, 1.0, 0.0,
+                                  0.0, 0.0, 0.0, 0.0, 1.0}) / 15.0
 
 -- Broaden the spectrum.
 BroadeningLorentzian = $BroadeningLorentzian
