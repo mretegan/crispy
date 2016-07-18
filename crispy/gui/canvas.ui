@@ -422,7 +422,7 @@ QListView {
          <x>0</x>
          <y>0</y>
          <width>235</width>
-         <height>521</height>
+         <height>513</height>
         </rect>
        </property>
        <property name="sizePolicy">
@@ -553,7 +553,7 @@ QListView {
          <x>0</x>
          <y>0</y>
          <width>200</width>
-         <height>555</height>
+         <height>547</height>
         </rect>
        </property>
        <attribute name="label">
@@ -602,12 +602,6 @@ QListView {
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
     <string>toolBar</string>
-   </property>
-   <property name="iconSize">
-    <size>
-     <width>24</width>
-     <height>24</height>
-    </size>
    </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
