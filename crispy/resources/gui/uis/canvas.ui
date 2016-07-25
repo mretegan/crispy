@@ -618,7 +618,7 @@ QListView {
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>icons/play.svg</normaloff>icons/play.svg</iconset>
+     <normaloff>../icons/play.svg</normaloff>../icons/play.svg</iconset>
    </property>
    <property name="text">
     <string>Run</string>
@@ -636,7 +636,7 @@ QListView {
   <action name="actionSave">
    <property name="icon">
     <iconset>
-     <normaloff>icons/save.svg</normaloff>icons/save.svg</iconset>
+     <normaloff>../icons/save.svg</normaloff>../icons/save.svg</iconset>
    </property>
    <property name="text">
     <string>save</string>
@@ -651,7 +651,7 @@ QListView {
   <action name="actionExit">
    <property name="icon">
     <iconset>
-     <normaloff>icons/close.svg</normaloff>icons/close.svg</iconset>
+     <normaloff>../icons/close.svg</normaloff>../icons/close.svg</iconset>
    </property>
    <property name="text">
     <string>exit</string>
@@ -663,7 +663,7 @@ QListView {
   <action name="actionStop">
    <property name="icon">
     <iconset>
-     <normaloff>icons/stop.svg</normaloff>icons/stop.svg</iconset>
+     <normaloff>../icons/stop.svg</normaloff>../icons/stop.svg</iconset>
    </property>
    <property name="text">
     <string>stop</string>

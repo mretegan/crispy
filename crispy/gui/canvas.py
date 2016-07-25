@@ -15,6 +15,7 @@ from PyQt5 import uic
 from .models.treemodel import TreeModel
 from .models.listmodel import ListModel
 from ..backends import Quanty
+from ..resources import resource_filename
 
 
 class MainWindow(QMainWindow):
@@ -37,10 +38,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.__dict__.update(self._defaults)
-        uic.loadUi(os.path.join(os.path.dirname(os.path.realpath(__file__)),
-            'canvas.ui'), self)
-
-        self.root = os.getenv('CRISPY_ROOT')
+        uic.loadUi(resource_filename('gui/uis/canvas.ui'), self)
 
         self.loadParameters()
         self.updateHamiltonianModelData()
@@ -52,7 +50,7 @@ class MainWindow(QMainWindow):
         self.setBackend()
 
     def loadParameters(self):
-        with open(os.path.join(self.root, 'data', 'parameters.json')) as f:
+        with open(resource_filename('parameters.json')) as f:
             self.parameters = json.loads(
                 f.read(), object_pairs_hook=collections.OrderedDict)
 
@@ -130,8 +128,8 @@ class MainWindow(QMainWindow):
                 ['experiments'][self.experiment][self.edge]
                 ['templates'][self.theoreticalModel][self.symmetry])
 
-        templateFile = os.path.join(self.root, 'backends', self.backend.lower(),
-                'templates', '{0:s}.lua'.format(templateFileName))
+        templateFile = resource_filename(os.path.join('backends', self.backend.lower(),
+                'templates', '{0:s}.lua'.format(templateFileName)))
 
         try:
             self.backendInput = open(templateFile, 'r').read()
@@ -354,11 +352,8 @@ def main():
     import os
     import sys
 
-    from PyQt5.QtGui import QIcon
-    from PyQt5.QtCore import Qt, QSize
+    from PyQt5.QtCore import Qt
     from PyQt5.QtWidgets import QApplication
-
-    from .canvas import MainWindow
 
     app = QApplication(sys.argv)
     # app.setStyle('Windows')

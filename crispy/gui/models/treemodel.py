@@ -337,9 +337,3 @@ class TreeModel(QAbstractItemModel):
             data[node._data[0]] = node.checkState()
 
         return data
-
-def main():
-    pass
-
-if __name__ == '__main__':
-    main()

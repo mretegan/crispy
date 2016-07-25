@@ -8,12 +8,7 @@ def main():
     import sys
     import crispy
 
-    _dir = os.path.dirname(crispy.__file__)
-    if os.path.isdir(_dir):
-        os.environ['CRISPY_ROOT'] = _dir
-
-    sys.path.insert(0, os.path.join(_dir, 'gui'))
-
+    sys.path.insert(0, os.path.join(os.path.dirname(crispy.__file__), 'gui'))
     crispy.gui.canvas.main()
 
 if __name__ == '__main__':

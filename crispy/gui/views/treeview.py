@@ -13,9 +13,3 @@ class TreeView(QTreeView):
     def resizeAllColumns(self):
         for i in range(self.model().columnCount(0)):
             self.resizeColumnToContents(i)
-
-def main():
-    pass
-
-if __name__ == '__main__':
-    main()
