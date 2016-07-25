@@ -14,6 +14,7 @@ from PyQt5 import uic
 
 from .models.treemodel import TreeModel
 from .models.listmodel import ListModel
+from .widgets.plotwidget import PlotWidget
 from ..backends import Quanty
 from ..resources import resource_filename
 
@@ -38,7 +39,8 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.__dict__.update(self._defaults)
-        uic.loadUi(resource_filename('gui/uis/canvas.ui'), self)
+        uic.loadUi(resource_filename('gui/uis/canvas.ui'), baseinstance=self,
+                package='crispy.gui')
 
         self.loadParameters()
         self.updateHamiltonianModelData()
@@ -128,8 +130,9 @@ class MainWindow(QMainWindow):
                 ['experiments'][self.experiment][self.edge]
                 ['templates'][self.theoreticalModel][self.symmetry])
 
-        templateFile = resource_filename(os.path.join('backends', self.backend.lower(),
-                'templates', '{0:s}.lua'.format(templateFileName)))
+        templateFile = resource_filename(os.path.join('backends',
+            self.backend.lower(), 'templates',
+            '{0:s}.lua'.format(templateFileName)))
 
         try:
             self.backendInput = open(templateFile, 'r').read()
