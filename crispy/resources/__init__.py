@@ -105,4 +105,4 @@ def resource_filename(resource):
     return path
 
 if __name__ == '__main__':
-    print(resource_filename('gui/icons/*'))
+    pass
