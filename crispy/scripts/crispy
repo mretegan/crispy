@@ -6,9 +6,15 @@
 def main():
     import os
     import sys
-    import crispy
+    try:
+        import crispy
+    except ImportError:
+        # The package is run without being installed; its path must be first 
+        # added to sys.path.
+        _dir = os.path.join(os.path.dirname(__file__), '../..')
+        sys.path.insert(0, os.path.abspath(_dir))
+        import crispy
 
-    # sys.path.insert(0, os.path.join(os.path.dirname(crispy.__file__), 'gui'))
     crispy.gui.canvas.main()
 
 if __name__ == '__main__':
