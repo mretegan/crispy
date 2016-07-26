@@ -28,9 +28,7 @@ class MainWindow(QMainWindow):
                  'experiment': 'XAS',
                  'edge': 'L2,3 (2p)',
                  'temperature': 1.0,
-                 'magneticFieldX': 0.0,
-                 'magneticFieldY': 0.0,
-                 'magneticFieldZ': 0.0,
+                 'magneticField': [0.0, 0.0, 0.0],
                  'broadeningGaussian': 0.5,
                  'broadeningLorentzian': 0.5,
                  'backend': 'Quanty',
@@ -97,9 +95,9 @@ class MainWindow(QMainWindow):
 
         self.temperatureDoubleSpinBox.setValue(self.temperature)
 
-        self.magneticFieldXDoubleSpinBox.setValue(self.magneticFieldX)
-        self.magneticFieldYDoubleSpinBox.setValue(self.magneticFieldY)
-        self.magneticFieldZDoubleSpinBox.setValue(self.magneticFieldZ)
+        self.magneticFieldXDoubleSpinBox.setValue(self.magneticField[0])
+        self.magneticFieldYDoubleSpinBox.setValue(self.magneticField[1])
+        self.magneticFieldZDoubleSpinBox.setValue(self.magneticField[2])
 
         self.broadeningGaussianDoubleSpinBox.setValue(self.broadeningGaussian)
         self.broadeningLorentzianDoubleSpinBox.setValue(
