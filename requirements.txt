@@ -1,0 +1,11 @@
+# List all dependencies of crispy
+# Requires pip >= 8.0
+
+--trusted-host www.silx.org
+--find-links http://www.silx.org/pub/wheelhouse/
+--only-binary PyQt5,silx
+
+numpy
+matplotlib >= 1.2.0
+PyQt5
+silx >= 0.2.0
