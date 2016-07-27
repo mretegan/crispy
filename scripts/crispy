@@ -11,7 +11,7 @@ def main():
     except ImportError:
         # The package is run without being installed; its path must be first 
         # added to sys.path.
-        _dir = os.path.join(os.path.dirname(__file__), '../..')
+        _dir = os.path.join(os.path.dirname(__file__), '..')
         sys.path.insert(0, os.path.abspath(_dir))
         import crispy
 
