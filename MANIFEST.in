@@ -6,4 +6,4 @@ recursive-include crispy/resources parameters.json
 recursive-include crispy/resources/gui/uis *.ui
 recursive-include crispy/resources/gui/icons *.svg
 recursive-include crispy/resources/backends/quanty/templates *.lua
-recursive-include crispy/scripts *
+recursive-include scripts *
