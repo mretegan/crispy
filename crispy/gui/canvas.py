@@ -360,7 +360,7 @@ def main():
     # app.setStyle('Windows')
     # app.setStyle('Fusion')
     window = MainWindow()
-    window.setWindowTitle('')
+    window.setWindowTitle('Crispy')
     window.show()
 
     app.setAttribute(Qt.AA_UseHighDpiPixmaps)
