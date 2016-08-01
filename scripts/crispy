@@ -15,7 +15,7 @@ def main():
         sys.path.insert(0, os.path.abspath(_dir))
         import crispy
 
-    crispy.gui.canvas.main()
+    crispy.gui.main.main()
 
 if __name__ == '__main__':
     main()

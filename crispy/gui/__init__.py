@@ -1,1 +1,1 @@
-from . import canvas
+from . import main
