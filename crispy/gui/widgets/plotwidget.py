@@ -10,6 +10,7 @@ class PlotWidget(PlotWindow):
         self.setActiveCurveHandling(False)
         self.setGraphXLabel('Energy (eV)')
         self.setGraphYLabel('Absorption cross section (a.u.)')
+        self.setGraphGrid('both')
 
     def plot(self, x, y, legend=None):
         self.addCurve(x, y, legend=legend)

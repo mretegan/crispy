@@ -4,13 +4,14 @@ import collections
 import json
 import numpy as np
 import os
+import shutil
 import sys
 import subprocess
 
 from PyQt5.QtCore import QItemSelectionModel, QEvent, Qt
 from PyQt5.QtWidgets import (
-    QAbstractItemView, QDoubleSpinBox, QLabel,
-    QMainWindow, QGroupBox, QHBoxLayout, QTabWidget)
+    QAbstractItemView, QDoubleSpinBox, QLabel, QMainWindow, QGroupBox,
+    QHBoxLayout, QTabWidget, QFileDialog)
 from PyQt5 import uic
 
 from .models.treemodel import TreeModel
@@ -21,7 +22,10 @@ from ..resources import resource_filename
 
 class MainWindow(QMainWindow):
 
-    _defaults = {'baseName': 'quanty',
+    _defaults = {'command': None,
+                 'inputPath': None,
+                 'outputPath': None,
+                 'baseName': 'untitled',
                  'element': 'Ni',
                  'charge': '2+',
                  'symmetry': 'Oh',
@@ -35,8 +39,8 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.__dict__.update(self._defaults)
-        uic.loadUi(resource_filename('gui/main.ui'), baseinstance=self,
-                   package='crispy.gui')
+        uiPath = resource_filename('gui/main.ui')
+        uic.loadUi(uiPath, baseinstance=self, package='crispy.gui')
 
         self.loadUiParameters()
         self.populateUi()
@@ -48,13 +52,17 @@ class MainWindow(QMainWindow):
         self.statusBar().showMessage('Ready')
 
     def loadHamiltonianParameters(self):
-        with open(resource_filename('modules/quanty/hamiltonian.json')) as fp:
+        jsonPath = resource_filename(
+                'modules/quanty/parameters/hamiltonian.json')
+        with open(jsonPath) as fp:
             self.hamiltonianParameters = json.loads(
                 fp.read(), object_pairs_hook=collections.OrderedDict)
 
     def loadUiParameters(self):
         # Load the parameters used to populate some of the UI elements.
-        with open(resource_filename('modules/quanty/ui.json')) as fp:
+        jsonPath = resource_filename(
+                'modules/quanty/parameters/ui.json')
+        with open(jsonPath) as fp:
             self.uiParameters = json.loads(
                 fp.read(), object_pairs_hook=collections.OrderedDict)
 
@@ -116,8 +124,11 @@ class MainWindow(QMainWindow):
         self.runPushButton.clicked.connect(self.runCalculation)
 
         # Activate the menubar.
-        self.actionSave.triggered.connect(self.saveInput)
-        self.actionRun.triggered.connect(self.runCalculation)
+        self.quantyRunCalculation.triggered.connect(self.runCalculation)
+        self.quantySaveInput.triggered.connect(self.saveInput)
+        self.quantySaveAsInput.triggered.connect(self.saveInputAs)
+        self.quantyModuleEnable.triggered.connect(self.moduleEnable)
+        self.quantyModuleDisable.triggered.connect(self.moduleDisable)
 
     def updateUi(self):
         self.element = self.elementComboBox.currentText()
@@ -227,34 +238,34 @@ class MainWindow(QMainWindow):
                          '{0:s}.lua'.format(templateFileName)))
 
         with open(templateFile) as fp:
-            inputFile = fp.read()
+            template = fp.read()
 
         shells = (self.uiParameters[self.element][self.charge]
                   [self.symmetry][self.theoreticalModel][self.experiment]
                   [self.edge]['shells'])
 
         for shell in shells:
-            inputFile = inputFile.replace(
+            template = template.replace(
                     '$NElectrons_{0:s}'.format(shell), str(shells[shell]))
 
-        inputFile = inputFile.replace(
+        template = template.replace(
                 '$BroadeningGaussian', '{0:8.2f}'.format(
                     self.broadeningGaussianDoubleSpinBox.value()))
-        inputFile = inputFile.replace(
+        template = template.replace(
                 '$BroadeningLorentzian', '{0:8.2f}'.format(
                     self.broadeningLorentzianDoubleSpinBox.value()))
 
-        inputFile = inputFile.replace(
+        template = template.replace(
                 '$T', '{0:8.3f}'.format(
                     self.temperatureDoubleSpinBox.value()))
 
-        inputFile = inputFile.replace(
+        template = template.replace(
                 '$Bx', '{0:8.3f}'.format(
                     self.magneticFieldXDoubleSpinBox.value()))
-        inputFile = inputFile.replace(
+        template = template.replace(
                 '$By', '{0:8.3f}'.format(
                     self.magneticFieldYDoubleSpinBox.value()))
-        inputFile = inputFile.replace(
+        template = template.replace(
                 '$Bz', '{0:8.3f}'.format(
                     self.magneticFieldZDoubleSpinBox.value()))
 
@@ -274,7 +285,7 @@ class MainWindow(QMainWindow):
                     suffix = str()
                 parameters = configurations[configuration]
                 for parameter in parameters:
-                    inputFile = inputFile.replace(
+                    template = template.replace(
                         '${0:s}_{1:s}'.format(parameter, suffix),
                         '{0:8.4f}'.format(float(parameters[parameter])))
 
@@ -295,26 +306,48 @@ class MainWindow(QMainWindow):
             else:
                 termState = 1
 
-            inputFile = inputFile.replace(
-                    '${0:s}'.format(termName), '{0:2.1f}'.format(termState))
+            template = template.replace(
+                    '${0:s}_flag'.format(termName), '{0:d}'.format(termState))
 
-        with open('{0:s}.lua'.format(self.baseName), 'w') as fp:
-            fp.write(inputFile)
+        template = template.replace('$baseName', self.baseName)
+
+        if not self.inputPath:
+            self.inputPath = '{0:s}.lua'.format(self.baseName)
+
+        with open(self.inputPath, 'w') as fp:
+            fp.write(template)
 
     def runCalculation(self):
+        # Determine the location of the executable program.
+        self.command = shutil.which('Quanty') or shutil.which('Quanty.exe')
+
+        if self.command is None:
+            print('Could not find Quanty in the path.')
+            return
+
         # Write the input file to disk.
         self.saveInput()
 
-        output = subprocess.check_output(
-                ['Quanty', '{0:s}.lua'.format(self.baseName)])
+        # Determine the name of the output file including the path.
+        self.outputPath = '{0:s}.out'.format(self.baseName)
+
+        outputFile = open(self.outputPath, 'w')
+        try:
+            subprocess.check_call(
+                    [self.command, self.inputPath],
+                    stdout=outputFile, stderr=outputFile)
+        except subprocess.CalledProcessError:
+            print('Quanty has not terminated gracefully. Check the output file'
+                ' for more details.')
+            return
 
         data = np.loadtxt('{0:s}.spec'.format(self.baseName), skiprows=5)
 
         # Load the data to be plotted.
         id = len(self.resultsModel._data) + 1
-        label = '#{:d} - {:s}{:s} | {:s} | {:s} | {:s} | {:s}'.format(
-            id, self.element, self.charge, self.symmetry,
-            self.theoreticalModel, self.experiment, self.edge)
+        label = '#{:d} - {:s}{:s} | {:s} | {:s} | {:s}'.format(
+            id, self.element, self.charge, self.symmetry, self.experiment,
+            self.edge)
 
         # Plot the spectrum.
         self.plotWidget.clear()
@@ -329,6 +362,29 @@ class MainWindow(QMainWindow):
         self.resultsView.selectionModel().select(
                 index, QItemSelectionModel.Select)
 
+    def saveInputAs(self):
+        caption = 'Save Quanty Input'
+        path = '{0:s}.lua'.format(self.baseName)
+        filter = 'Quanty Input File (*.lua)'
+        path = QFileDialog.getSaveFileName(self, caption, path, filter)[0]
+
+        if path:
+            os.chdir(os.path.dirname(path))
+            self.baseName = os.path.splitext(os.path.basename(path))[0]
+            self.saveInput()
+
+    def moduleEnable(self):
+        self.quantyDockWidget.setVisible(True)
+        self.menuModulesQuanty.insertAction(
+                self.quantyModuleEnable, self.quantyModuleDisable)
+        self.menuModulesQuanty.removeAction(self.quantyModuleEnable)
+
+    def moduleDisable(self):
+        self.quantyDockWidget.setVisible(False)
+        self.menuModulesQuanty.insertAction(
+                self.quantyModuleDisable, self.quantyModuleEnable)
+        self.menuModulesQuanty.removeAction(self.quantyModuleDisable)
+
 
 def main():
     import os
@@ -342,7 +398,7 @@ def main():
     window.setWindowTitle('Crispy')
     window.show()
 
-    # app.setAttribute(Qt.AA_UseHighDpiPixmaps)
+    app.setAttribute(Qt.AA_UseHighDpiPixmaps)
     sys.exit(app.exec_())
 
 if __name__ == '__main__':

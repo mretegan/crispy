@@ -2,7 +2,7 @@
 -- Quanty input file generated using Crispy.
 --
 -- experiment: XAS
--- edge: K (3s)
+-- edge: M2,3 (3p)
 -- elements: 3d transition metals
 -- symmetry: Oh
 -- Hamiltonian: Coulomb, spin-orbit coupling, ligand field
@@ -15,18 +15,18 @@ Verbosity(0x00FF)
 -- Define the number of electrons, shells, etc.
 --------------------------------------------------------------------------------
 NBosons = 0
-NFermions = 22
+NFermions = 26
 
-NElectrons_3s = $NElectrons_3s
+NElectrons_3p = $NElectrons_3p
 NElectrons_3d = $NElectrons_3d
 NElectrons_Ld = 10
 
-IndexDn_3s = {0}
-IndexUp_3s = {1}
-IndexDn_3d = {2, 4, 6, 8, 10}
-IndexUp_3d = {3, 5, 7, 9, 11}
-IndexDn_Ld = {12, 14, 16, 18, 20}
-IndexUp_Ld = {13, 15, 17, 19, 21}
+IndexDn_3p = {0, 2, 4}
+IndexUp_3p = {1, 3, 5}
+IndexDn_3d = {6, 8, 10, 12, 14}
+IndexUp_3d = {7, 9, 11, 13, 15}
+IndexDn_Ld = {16, 18, 20, 22, 24}
+IndexUp_Ld = {17, 19, 21, 23, 25}
 
 --------------------------------------------------------------------------------
 -- Define the Coulomb term.
@@ -35,12 +35,14 @@ OppF0_3d_3d = NewOperator('U', NFermions, IndexUp_3d, IndexDn_3d, {1, 0, 0})
 OppF2_3d_3d = NewOperator('U', NFermions, IndexUp_3d, IndexDn_3d, {0, 1, 0})
 OppF4_3d_3d = NewOperator('U', NFermions, IndexUp_3d, IndexDn_3d, {0, 0, 1})
 
-OppF0_3s_3d = NewOperator('U', NFermions, IndexUp_3s, IndexDn_3s, IndexUp_3d, IndexDn_3d, {1}, {0})
-OppG2_3s_3d = NewOperator('U', NFermions, IndexUp_3s, IndexDn_3s, IndexUp_3d, IndexDn_3d, {0}, {1})
+OppF0_3p_3d = NewOperator('U', NFermions, IndexUp_3p, IndexDn_3p, IndexUp_3d, IndexDn_3d, {1, 0}, {0, 0})
+OppF2_3p_3d = NewOperator('U', NFermions, IndexUp_3p, IndexDn_3p, IndexUp_3d, IndexDn_3d, {0, 1}, {0, 0})
+OppG1_3p_3d = NewOperator('U', NFermions, IndexUp_3p, IndexDn_3p, IndexUp_3d, IndexDn_3d, {0, 0}, {1, 0})
+OppG3_3p_3d = NewOperator('U', NFermions, IndexUp_3p, IndexDn_3p, IndexUp_3d, IndexDn_3d, {0, 0}, {0, 1})
 
-OppNUp_3s = NewOperator('Number', NFermions, IndexUp_3s, IndexUp_3s, {1})
-OppNDn_3s = NewOperator('Number', NFermions, IndexDn_3s, IndexDn_3s, {1})
-OppN_3s   = OppNUp_3s + OppNDn_3s
+OppNUp_3p = NewOperator('Number', NFermions, IndexUp_3p, IndexUp_3p, {1, 1, 1})
+OppNDn_3p = NewOperator('Number', NFermions, IndexDn_3p, IndexDn_3p, {1, 1, 1})
+OppN_3p   = OppNUp_3p + OppNDn_3p
 
 OppNUp_3d = NewOperator('Number', NFermions, IndexUp_3d, IndexUp_3d, {1, 1, 1, 1, 1})
 OppNDn_3d = NewOperator('Number', NFermions, IndexDn_3d, IndexDn_3d, {1, 1, 1, 1, 1})
@@ -63,12 +65,14 @@ U_3d_3d_fs  = $U(3d,3d)_fs
 F2_3d_3d_fs = $F2(3d,3d)_fs
 F4_3d_3d_fs = $F4(3d,3d)_fs
 F0_3d_3d_fs = U_3d_3d_fs + 2 / 63 * F2_3d_3d_fs + 2 / 63 * F4_3d_3d_fs
-U_3s_3d_fs  = $U(3s,3d)_fs
-G2_3s_3d_fs = $G2(3s,3d)_fs
-F0_3s_3d_fs = U_3s_3d_fs + 1 / 10 * G2_3s_3d_fs
-e_3s_fs = (10 * Delta_fs + (1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_fs / 2 - (10 + NElectrons_3d) * U_3s_3d_fs)) / (12 + NElectrons_3d)
-e_3d_fs = (10 * Delta_fs - NElectrons_3d * (23 + NElectrons_3d) * U_3d_3d_fs / 2 - 22 * U_3s_3d_fs) / (12 + NElectrons_3d)
-e_Ld_fs = ((1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_fs / 2 + 2 * U_3s_3d_fs) - (2 + NElectrons_3d) * Delta_fs) / (12 + NElectrons_3d)
+U_3p_3d_fs  = $U(3p,3d)_fs
+F2_3p_3d_fs = $F2(3p,3d)_fs
+G1_3p_3d_fs = $G1(3p,3d)_fs
+G3_3p_3d_fs = $G3(3p,3d)_fs
+F0_3p_3d_fs = U_3p_3d_fs + 1 / 15 * G1_3p_3d_fs + 3 / 70 * G3_3p_3d_fs
+e_3p_fs    = (10 * Delta_fs + (1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_fs / 2 - (10 + NElectrons_3d) * U_3p_3d_fs)) / (16 + NElectrons_3d)
+e_3d_fs    = (10 * Delta_fs - NElectrons_3d * (31 + NElectrons_3d) * U_3d_3d_fs / 2 - 90 * U_3p_3d_fs) / (16 + NElectrons_3d)
+e_Ld_fs    = ((1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_fs / 2 + 6 * U_3p_3d_fs) - (6 + NElectrons_3d) * Delta_fs) / (16 + NElectrons_3d)
 
 H_coulomb_gs = F0_3d_3d_gs * OppF0_3d_3d
              + F2_3d_3d_gs * OppF2_3d_3d
@@ -76,13 +80,14 @@ H_coulomb_gs = F0_3d_3d_gs * OppF0_3d_3d
              + e_3d_gs     * OppN_3d
              + e_Ld_gs     * OppN_Ld
 
-
 H_coulomb_fs = F0_3d_3d_fs * OppF0_3d_3d
              + F2_3d_3d_fs * OppF2_3d_3d
              + F4_3d_3d_fs * OppF4_3d_3d
-             + F0_3s_3d_fs * OppF0_3s_3d
-             + G2_3s_3d_fs * OppG2_3s_3d
-             + e_3s_fs     * OppN_3s
+             + F0_3p_3d_fs * OppF0_3p_3d
+             + F2_3p_3d_fs * OppF2_3p_3d
+             + G1_3p_3d_fs * OppG1_3p_3d
+             + G3_3p_3d_fs * OppG3_3p_3d
+             + e_3p_fs     * OppN_3p
              + e_3d_fs     * OppN_3d
              + e_Ld_fs     * OppN_Ld
 
@@ -91,13 +96,17 @@ H_coulomb_fs = F0_3d_3d_fs * OppF0_3d_3d
 --------------------------------------------------------------------------------
 Oppldots_3d = NewOperator('ldots', NFermions, IndexUp_3d, IndexDn_3d)
 
+Oppldots_3p = NewOperator('ldots', NFermions, IndexUp_3p, IndexDn_3p)
+
 zeta_3d_gs = $zeta(3d)_gs
 
 zeta_3d_fs = $zeta(3d)_fs
+zeta_3p_fs = $zeta(3p)_fs
 
 H_soc_gs = zeta_3d_gs * Oppldots_3d
 
 H_soc_fs = zeta_3d_fs * Oppldots_3d
+         + zeta_3p_fs * Oppldots_3p
 
 --------------------------------------------------------------------------------
 -- Define the ligand field.
@@ -213,9 +222,9 @@ H_fs = $H_coulomb_flag * H_coulomb_fs + $H_soc_flag * H_soc_fs + $H_lf_flag * H_
 -- Determine the number of possible states in the initial configuration.
 NPsis = 16
 
-GroundStateRestrictions = {NFermions, NBosons, {'11 0000000000 0000000000', NElectrons_3s, NElectrons_3s},
-                                               {'00 1111111111 0000000000', NElectrons_3d, NElectrons_3d},
-                                               {'00 0000000000 1111111111', NElectrons_Ld, NElectrons_Ld}}
+GroundStateRestrictions = {NFermions, NBosons, {'111111 0000000000 0000000000', NElectrons_3p, NElectrons_3p},
+                                               {'000000 1111111111 0000000000', NElectrons_3d, NElectrons_3d},
+                                               {'000000 0000000000 1111111111', NElectrons_Ld, NElectrons_Ld}}
 
 -- Calculate the wave functions.
 Psis = Eigensystem(H_gs, GroundStateRestrictions, NPsis)
@@ -227,7 +236,7 @@ end
 E_gs = Psis[1] * H_gs * Psis[1]
 
 -- Print some useful information about the lowest eigenstates.
-OppList = {H_gs, OppSsqr, OppLsqr, OppJsqr, OppSz, OppLz, OppN_3s, OppN_3d, OppN_Ld}
+OppList = {H_gs, OppSsqr, OppLsqr, OppJsqr, OppSz, OppLz, OppN_3p, OppN_3d, OppN_Ld}
 
 print('     <E>    <S^2>    <L^2>    <J^2>    <Sz>     <Lz>     <Np>      <Nd>     <NL>');
 for key, Psi in pairs(Psis) do
@@ -243,11 +252,9 @@ end
 --------------------------------------------------------------------------------
 t = math.sqrt(1/2);
 
-OppTxy_3s_3d   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_3s, IndexDn_3s, {{2, -2, t * I}, {2, 2, -t * I}})
-OppTxz_3s_3d   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_3s, IndexDn_3s, {{2, -1, t    }, {2, 1, -t    }})
-OppTyz_3s_3d   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_3s, IndexDn_3s, {{2, -1, t * I}, {2, 1,  t * I}})
-OppTx2y2_3s_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_3s, IndexDn_3s, {{2, -2, t    }, {2, 2,  t    }})
-OppTz2_3s_3d   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_3s, IndexDn_3s, {{2,  0, 1    }                })
+OppTx_3p_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_3p, IndexDn_3p, {{1, -1, t    }, {1, 1, -t    }})
+OppTy_3p_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_3p, IndexDn_3p, {{1, -1, t * I}, {1, 1,  t * I}})
+OppTz_3p_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_3p, IndexDn_3p, {{1,  0, 1    }                })
 
 --------------------------------------------------------------------------------
 -- Calculate and save the spectra.
@@ -276,7 +283,7 @@ for j = 1, NPsis do
         break
     end
     Z = Z + dZ
-    Spectrum = Spectrum + CreateSpectra(H_fs, {OppTxy_3s_3d, OppTxz_3s_3d, OppTyz_3s_3d, OppTx2y2_3s_3d, OppTz2_3s_3d}, Psis[j], {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+    Spectrum = Spectrum + CreateSpectra(H_fs, {OppTx_3p_3d, OppTy_3p_3d, OppTz_3p_3d}, Psis[j], {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
 end
 
 Spectrum = Spectrum / Z

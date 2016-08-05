@@ -4,6 +4,6 @@ include MANIFEST.in
 recursive-include crispy *.py
 recursive-include crispy/resources/gui *.ui
 recursive-include crispy/resources/gui/icons *.svg
-recursive-include crispy/resources/modules/quanty *.json
+recursive-include crispy/resources/modules/quanty/parameters *.json
 recursive-include crispy/resources/modules/quanty/templates *.lua
 recursive-include scripts *

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>950</width>
-    <height>600</height>
+    <width>960</width>
+    <height>720</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,12 +22,33 @@
 QListView {
    background-color: rgba(255, 255, 255, 255); 
 }
-</string>
+
+QMainWindow::separator { 
+  width: 1px;
+}</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout_4">
+   <layout class="QVBoxLayout" name="_7">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
     <item>
      <layout class="QVBoxLayout" name="plotWidgetLayout">
+      <property name="spacing">
+       <number>0</number>
+      </property>
       <item>
        <widget class="PlotWidget" name="plotWidget" native="true">
         <property name="minimumSize">
@@ -47,7 +68,7 @@ QListView {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>950</width>
+     <width>960</width>
      <height>22</height>
     </rect>
    </property>
@@ -55,18 +76,18 @@ QListView {
     <property name="title">
      <string>Modules</string>
     </property>
-    <widget class="QMenu" name="menuQuanty">
+    <widget class="QMenu" name="menuModulesQuanty">
      <property name="title">
       <string>Quanty</string>
      </property>
-     <addaction name="actionSetPath"/>
+     <addaction name="quantyModuleDisable"/>
      <addaction name="separator"/>
-     <addaction name="actionSave"/>
-     <addaction name="actionSaveAs"/>
+     <addaction name="quantySaveInput"/>
+     <addaction name="quantySaveAsInput"/>
      <addaction name="separator"/>
-     <addaction name="actionRun"/>
+     <addaction name="quantyRunCalculation"/>
     </widget>
-    <addaction name="menuQuanty"/>
+    <addaction name="menuModulesQuanty"/>
    </widget>
    <addaction name="menuModules"/>
   </widget>
@@ -78,21 +99,21 @@ QListView {
     </size>
    </property>
    <property name="features">
-    <set>QDockWidget::AllDockWidgetFeatures</set>
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
    </property>
    <property name="allowedAreas">
-    <set>Qt::AllDockWidgetAreas</set>
+    <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
    </property>
    <property name="windowTitle">
     <string>Quanty</string>
    </property>
    <attribute name="dockWidgetArea">
-    <number>1</number>
+    <number>2</number>
    </attribute>
    <widget class="QWidget" name="quantyDockWidgetContents">
     <layout class="QVBoxLayout" name="_5">
      <property name="spacing">
-      <number>3</number>
+      <number>0</number>
      </property>
      <property name="leftMargin">
       <number>0</number>
@@ -114,13 +135,28 @@ QListView {
           <x>0</x>
           <y>0</y>
           <width>225</width>
-          <height>567</height>
+          <height>534</height>
          </rect>
         </property>
         <attribute name="label">
          <string>General Setup</string>
         </attribute>
         <layout class="QVBoxLayout" name="_2">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="leftMargin">
+          <number>3</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>3</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
          <item>
           <widget class="QGroupBox" name="elementAndSymmetryGroupBox">
            <property name="title">
@@ -448,14 +484,26 @@ QListView {
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>280</width>
-          <height>398</height>
+          <width>256</width>
+          <height>519</height>
          </rect>
         </property>
         <attribute name="label">
          <string>Hamiltonian Setup</string>
         </attribute>
         <layout class="QVBoxLayout" name="_3">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
          <item>
           <widget class="QSplitter" name="splitter">
            <property name="sizePolicy">
@@ -463,9 +511,6 @@ QListView {
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Raised</enum>
            </property>
            <property name="orientation">
             <enum>Qt::Vertical</enum>
@@ -517,13 +562,25 @@ QListView {
           <x>0</x>
           <y>0</y>
           <width>240</width>
-          <height>398</height>
+          <height>519</height>
          </rect>
         </property>
         <attribute name="label">
          <string>Results</string>
         </attribute>
         <layout class="QVBoxLayout" name="_4">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
          <item>
           <widget class="QListView" name="resultsView">
            <property name="sizePolicy">
@@ -541,6 +598,18 @@ QListView {
      <item>
       <layout class="QHBoxLayout" name="buttonsLayout">
        <property name="spacing">
+        <number>12</number>
+       </property>
+       <property name="leftMargin">
+        <number>12</number>
+       </property>
+       <property name="topMargin">
+        <number>6</number>
+       </property>
+       <property name="rightMargin">
+        <number>12</number>
+       </property>
+       <property name="bottomMargin">
         <number>6</number>
        </property>
        <item>
@@ -582,35 +651,38 @@ QListView {
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionSave">
-   <property name="icon">
-    <iconset>
-     <normaloff>icons/save.svg</normaloff>icons/save.svg</iconset>
-   </property>
+  <action name="quantySaveInput">
    <property name="text">
     <string>Save</string>
    </property>
    <property name="toolTip">
-    <string>Save</string>
+    <string>Save the Quanty Input File</string>
    </property>
   </action>
-  <action name="actionRun">
-   <property name="icon">
-    <iconset>
-     <normaloff>icons/play.svg</normaloff>icons/play.svg</iconset>
-   </property>
+  <action name="quantyRunCalculation">
    <property name="text">
     <string>Run</string>
    </property>
   </action>
-  <action name="actionSetPath">
-   <property name="text">
-    <string>Set Path...</string>
-   </property>
-  </action>
-  <action name="actionSaveAs">
+  <action name="quantySaveAsInput">
    <property name="text">
     <string>Save As...</string>
+   </property>
+  </action>
+  <action name="quantyModuleEnable">
+   <property name="text">
+    <string>Enable</string>
+   </property>
+   <property name="toolTip">
+    <string>Enable the Quanty Module</string>
+   </property>
+  </action>
+  <action name="quantyModuleDisable">
+   <property name="text">
+    <string>Disable</string>
+   </property>
+   <property name="toolTip">
+    <string>Disable the Quanty Module</string>
    </property>
   </action>
  </widget>
