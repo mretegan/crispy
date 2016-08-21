@@ -80,7 +80,7 @@ QMainWindow::separator {
      <property name="title">
       <string>Quanty</string>
      </property>
-     <addaction name="quantyModuleDisable"/>
+     <addaction name="quantyModuleHide"/>
      <addaction name="separator"/>
      <addaction name="quantySaveInput"/>
      <addaction name="quantySaveAsInput"/>
@@ -134,7 +134,7 @@ QMainWindow::separator {
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>225</width>
+          <width>240</width>
           <height>534</height>
          </rect>
         </property>
@@ -484,8 +484,8 @@ QMainWindow::separator {
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>256</width>
-          <height>519</height>
+          <width>98</width>
+          <height>161</height>
          </rect>
         </property>
         <attribute name="label">
@@ -561,8 +561,8 @@ QMainWindow::separator {
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>240</width>
-          <height>519</height>
+          <width>98</width>
+          <height>79</height>
          </rect>
         </property>
         <attribute name="label">
@@ -669,20 +669,20 @@ QMainWindow::separator {
     <string>Save As...</string>
    </property>
   </action>
-  <action name="quantyModuleEnable">
+  <action name="quantyModuleShow">
    <property name="text">
-    <string>Enable</string>
+    <string>Show</string>
    </property>
    <property name="toolTip">
-    <string>Enable the Quanty Module</string>
+    <string>Show the Quanty Module</string>
    </property>
   </action>
-  <action name="quantyModuleDisable">
+  <action name="quantyModuleHide">
    <property name="text">
-    <string>Disable</string>
+    <string>Hide</string>
    </property>
    <property name="toolTip">
-    <string>Disable the Quanty Module</string>
+    <string>Hide the Quanty Module</string>
    </property>
   </action>
  </widget>

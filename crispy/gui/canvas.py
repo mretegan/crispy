@@ -127,8 +127,8 @@ class MainWindow(QMainWindow):
         self.quantyRunCalculation.triggered.connect(self.runCalculation)
         self.quantySaveInput.triggered.connect(self.saveInput)
         self.quantySaveAsInput.triggered.connect(self.saveInputAs)
-        self.quantyModuleEnable.triggered.connect(self.moduleEnable)
-        self.quantyModuleDisable.triggered.connect(self.moduleDisable)
+        self.quantyModuleShow.triggered.connect(self.moduleShow)
+        self.quantyModuleHide.triggered.connect(self.moduleHide)
 
     def updateUi(self):
         self.element = self.elementComboBox.currentText()
@@ -373,17 +373,17 @@ class MainWindow(QMainWindow):
             self.baseName = os.path.splitext(os.path.basename(path))[0]
             self.saveInput()
 
-    def moduleEnable(self):
+    def moduleShow(self):
         self.quantyDockWidget.setVisible(True)
         self.menuModulesQuanty.insertAction(
-                self.quantyModuleEnable, self.quantyModuleDisable)
-        self.menuModulesQuanty.removeAction(self.quantyModuleEnable)
+                self.quantyModuleShow, self.quantyModuleHide)
+        self.menuModulesQuanty.removeAction(self.quantyModuleShow)
 
-    def moduleDisable(self):
+    def moduleHide(self):
         self.quantyDockWidget.setVisible(False)
         self.menuModulesQuanty.insertAction(
-                self.quantyModuleDisable, self.quantyModuleEnable)
-        self.menuModulesQuanty.removeAction(self.quantyModuleDisable)
+                self.quantyModuleHide, self.quantyModuleShow)
+        self.menuModulesQuanty.removeAction(self.quantyModuleHide)
 
 
 def main():
