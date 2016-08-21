@@ -1,7 +1,7 @@
 crispy
 ======
 
-Crispy is a graphical user interface that facilitates the simulation of core-level spectra. The interface provides a set of tools to generate input files, submit calculations, and analyze the results from external programs such as Quanty and ORCA. It has a modular design and can be run on Mac OS X, Linux, Windows platforms.
+Crispy is a graphical user interface that facilitates the simulation of core-level spectra. The interface provides a set of tools to generate input files, submit calculations, and analyze the results obtained with programs such as `Quanty <http://quanty.org>`_ and `ORCA <https://orcaforum.cec.mpg.de>`_. It has a modular design and can be run on Mac OS X, Linux, Windows platforms.
 
 .. image:: doc/screenshot.png
 
@@ -17,7 +17,7 @@ Dependencies
 Instalation
 -----------
 
-A working Python installation (version 3.4 or greater) is required to use crispy (on Windows you can alternatively use the provided installer on the `releases page <https://github.com/mretegan/crispy/releases>`_). The way this is done depends on the underlying operating system. On Linux, Python and most of the dependencies can be installed using the system's package manager (``apt-get``, ``dnf``, ``pacman``, etc.). On Mac OS X and Windows you can download the `official Python package <https://www.python.org>`_. Afterwards, crispy can be installed by running::
+A working Python installation (version 3.4 or greater) is required to use crispy; on Windows you can alternatively use the provided installer on the `releases page <https://github.com/mretegan/crispy/releases>`_. The way this is done depends on the underlying operating system. On Linux, Python and most of the dependencies can be installed using the system's package manager (``apt-get``, ``dnf``, ``pacman``, etc.). On Mac OS X and Windows you can download the `official Python package <https://www.python.org>`_. Afterwards, crispy can be installed by running::
 
     pip install crispy
 
