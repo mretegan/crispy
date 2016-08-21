@@ -1,7 +1,7 @@
 crispy
 ======
 
-Crispy is a graphical user interface that facilitates the simulation of core-level spectra. The interface provides a set of tools to generate input files, submit calculations, and analyze the results from external programs. It has a modular design and can be run on MacOS X, Linux, Windows platforms.
+Crispy is a graphical user interface that facilitates the simulation of core-level spectra. The interface provides a set of tools to generate input files, submit calculations, and analyze the results from external programs. It has a modular design and can be run on Mac OS X, Linux, Windows platforms.
 
 .. image:: doc/screenshot.png
 
@@ -10,14 +10,14 @@ Dependencies
 
 * `Python <https://www.python.org>`_ 3.4 and 3.5.
 * `PyQt5 <https://riverbankcomputing.com/software/pyqt/intro>`_
-* `silx <http:://silx.org>`_ 
+* `silx <http:://silx.org>`_
 * `numpy <http://www.numpy.org>`_
 * `matplotlib <http://matplotlib.org>`_
 
 Instalation
 -----------
 
-To install crispy, run::
+A working Python (version 3.4 or greater) installation is required to use crispy (on Windows you can alternatively use the provided installer LINK). The way this is done depends on the underlying operating system. On Linux, Python and most of the dependencies can be installed using the system's package manager (``apt-get``, ``dnf``, ``pacman``, etc.). On Mac OS X and Windows you can download the `official Python package <https://www.python.org>`_. Afterwards, crispy can be installed by running::
 
     pip install crispy
 
@@ -31,7 +31,7 @@ The latest development version can be obtained from the GitHub repository::
     cd crispy
     pip install . [--user]
 
-The external packages required to run the calculations have to be installed and the PATH environment variable must be set for crispy to be able to use them. 
+The external programs required to run the spectroscopy calculations have to be installed and the PATH environment variable must be set for crispy to be able to use them.
 
 Usage
 -----
