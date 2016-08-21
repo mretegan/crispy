@@ -311,8 +311,7 @@ class MainWindow(QMainWindow):
 
         template = template.replace('$baseName', self.baseName)
 
-        if not self.inputPath:
-            self.inputPath = '{0:s}.lua'.format(self.baseName)
+        self.inputPath = '{0:s}.lua'.format(self.baseName)
 
         with open(self.inputPath, 'w') as fp:
             fp.write(template)
