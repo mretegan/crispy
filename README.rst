@@ -17,7 +17,7 @@ Dependencies
 Instalation
 -----------
 
-A working Python (version 3.4 or greater) installation is required to use crispy (on Windows you can alternatively use the provided installer LINK). The way this is done depends on the underlying operating system. On Linux, Python and most of the dependencies can be installed using the system's package manager (``apt-get``, ``dnf``, ``pacman``, etc.). On Mac OS X and Windows you can download the `official Python package <https://www.python.org>`_. Afterwards, crispy can be installed by running::
+A working Python (version 3.4 or greater) installation is required to use crispy (on Windows you can alternatively use the provided installer on the `releases page <https://github.com/mretegan/crispy/releases>`_). The way this is done depends on the underlying operating system. On Linux, Python and most of the dependencies can be installed using the system's package manager (``apt-get``, ``dnf``, ``pacman``, etc.). On Mac OS X and Windows you can download the `official Python package <https://www.python.org>`_. Afterwards, crispy can be installed by running::
 
     pip install crispy
 
