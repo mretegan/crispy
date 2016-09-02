@@ -54,17 +54,17 @@ class MainWindow(QMainWindow):
     def loadHamiltonianParameters(self):
         jsonPath = resource_filename(
                 'modules/quanty/parameters/hamiltonian.json')
-        with open(jsonPath) as fp:
+        with open(jsonPath) as f:
             self.hamiltonianParameters = json.loads(
-                fp.read(), object_pairs_hook=collections.OrderedDict)
+                f.read(), object_pairs_hook=collections.OrderedDict)
 
     def loadUiParameters(self):
         # Load the parameters used to populate some of the UI elements.
         jsonPath = resource_filename(
                 'modules/quanty/parameters/ui.json')
-        with open(jsonPath) as fp:
+        with open(jsonPath) as f:
             self.uiParameters = json.loads(
-                fp.read(), object_pairs_hook=collections.OrderedDict)
+                f.read(), object_pairs_hook=collections.OrderedDict)
 
     def populateUi(self):
         self.elementComboBox.addItems(self.uiParameters)
@@ -126,7 +126,7 @@ class MainWindow(QMainWindow):
         # Activate the menubar.
         self.quantyRunCalculation.triggered.connect(self.runCalculation)
         self.quantySaveInput.triggered.connect(self.saveInput)
-        self.quantySaveAsInput.triggered.connect(self.saveInputAs)
+        self.quantySaveAsInput.triggered.connect(self.saveAsInput)
         self.quantyModuleShow.triggered.connect(self.moduleShow)
         self.quantyModuleHide.triggered.connect(self.moduleHide)
 
@@ -237,8 +237,8 @@ class MainWindow(QMainWindow):
             os.path.join('modules', 'quanty', 'templates',
                          '{0:s}.lua'.format(templateFileName)))
 
-        with open(templateFile) as fp:
-            template = fp.read()
+        with open(templateFile) as f:
+            template = f.read()
 
         shells = (self.uiParameters[self.element][self.charge]
                   [self.symmetry][self.theoreticalModel][self.experiment]
@@ -313,8 +313,8 @@ class MainWindow(QMainWindow):
 
         self.inputPath = '{0:s}.lua'.format(self.baseName)
 
-        with open(self.inputPath, 'w') as fp:
-            fp.write(template)
+        with open(self.inputPath, 'w') as f:
+            f.write(template)
 
     def runCalculation(self):
         # Determine the location of the executable program.
@@ -325,20 +325,24 @@ class MainWindow(QMainWindow):
             return
 
         # Write the input file to disk.
-        self.saveInput()
+        if self.inputPath:
+            self.saveInput()
+        else:
+            self.saveAsInput()
 
-        # Determine the name of the output file including the path.
+        if not self.inputPath:
+            return
+
+        # Determine the name of the output path.
         self.outputPath = '{0:s}.out'.format(self.baseName)
 
-        outputFile = open(self.outputPath, 'w')
-        try:
-            subprocess.check_call(
-                    [self.command, self.inputPath],
-                    stdout=outputFile, stderr=outputFile)
-        except subprocess.CalledProcessError:
-            print('Quanty has not terminated gracefully. Check the output file'
-                ' for more details.')
-            return
+        with open(self.outputPath, 'w') as f:
+            try:
+                subprocess.check_call(
+                        [self.command, self.inputPath], stdout=f, stderr=f)
+            except subprocess.CalledProcessError:
+                print('Quanty has not terminated gracefully.')
+                return
 
         data = np.loadtxt('{0:s}.spec'.format(self.baseName), skiprows=5)
 
@@ -361,11 +365,10 @@ class MainWindow(QMainWindow):
         self.resultsView.selectionModel().select(
                 index, QItemSelectionModel.Select)
 
-    def saveInputAs(self):
-        caption = 'Save Quanty Input'
-        path = '{0:s}.lua'.format(self.baseName)
-        filter = 'Quanty Input File (*.lua)'
-        path = QFileDialog.getSaveFileName(self, caption, path, filter)[0]
+    def saveAsInput(self):
+        path, _ = QFileDialog.getSaveFileName(
+            self, 'Save Quanty Input', '{0:s}.lua'.format(self.baseName),
+            'Quanty Input File (*.lua)')
 
         if path:
             os.chdir(os.path.dirname(path))
