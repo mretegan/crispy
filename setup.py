@@ -20,7 +20,7 @@ def main():
     if sys.version_info[0] < 3:
         sys.exit('crispy currently requires Python 3.4+')
 
-    skw = dict(
+    kwargs = dict(
         name='crispy',
         version='0.1.0',
         description='Core-level spectRoscopy Simulations in Python',
@@ -51,6 +51,7 @@ def main():
             'Operating System :: MacOS :: MacOS X',
             'Operating System :: Microsoft :: Windows',
             'Operating System :: POSIX :: Linux',
+            'Programming Language :: Python :: 3.4',
             'Programming Language :: Python :: 3.5',
             'Topic :: Scientific/Engineering :: Visualization'])
 
@@ -61,12 +62,12 @@ def main():
     # The most straight forward workaround is to have a .bat script to run
     # crispy on Windows.
 
-    if 'win' not in sys.platform:
-        skw['scripts'] = ['scripts/crispy']
+    if 'win32' in sys.platform:
+        kwargs['scripts'] = ['scripts/crispy.bat']
     else:
-        skw['scripts'] = ['scripts/crispy.bat']
+        kwargs['scripts'] = ['scripts/crispy']
 
-    setup(**skw)
+    setup(**kwargs)
 
 if __name__ == '__main__':
     main()
