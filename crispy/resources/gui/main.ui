@@ -134,12 +134,12 @@ QMainWindow::separator {
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>240</width>
+          <width>225</width>
           <height>534</height>
          </rect>
         </property>
         <attribute name="label">
-         <string>General Setup</string>
+         <string>1. General Setup</string>
         </attribute>
         <layout class="QVBoxLayout" name="_2">
          <property name="spacing">
@@ -484,12 +484,12 @@ QMainWindow::separator {
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>98</width>
-          <height>161</height>
+          <width>256</width>
+          <height>379</height>
          </rect>
         </property>
         <attribute name="label">
-         <string>Hamiltonian Setup</string>
+         <string>2. Hamiltonian Setup</string>
         </attribute>
         <layout class="QVBoxLayout" name="_3">
          <property name="leftMargin">
@@ -561,12 +561,12 @@ QMainWindow::separator {
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>98</width>
-          <height>79</height>
+          <width>240</width>
+          <height>379</height>
          </rect>
         </property>
         <attribute name="label">
-         <string>Results</string>
+         <string>3. Results</string>
         </attribute>
         <layout class="QVBoxLayout" name="_4">
          <property name="leftMargin">
