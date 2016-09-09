@@ -302,8 +302,12 @@ class TreeModel(QAbstractItemModel):
                     self.setModelData(value, node)
                 # Not very nice to default to float.
                 elif isinstance(value, float):
-                    node = TreeNode([key, '{0:8.4f}'.format(value)],
-                            parentNode)
+                    node = TreeNode(
+                            [key, '{0:8.4f}'.format(value)], parentNode)
+                elif isinstance(value, list):
+                    node = TreeNode(
+                            [key, '{0:8.4f}'.format(value[0]),
+                                '{0:8.2f}'.format(value[1])], parentNode)
                 else:
                     print('Invalid data sent to the model: {0}'.format(value))
 
@@ -318,7 +322,10 @@ class TreeModel(QAbstractItemModel):
                 data[key] = collections.OrderedDict()
                 self._getModelData(data[key], node)
             else:
-                data[key] = node.getItemData(1)
+                if node.getItemData(2):
+                    data[key] = [node.getItemData(1), node.getItemData(2)]
+                else:
+                    data[key] = node.getItemData(1)
 
     def getModelData(self):
         data = collections.OrderedDict()

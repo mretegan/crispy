@@ -183,7 +183,7 @@ class MainWindow(QMainWindow):
 
         # Create the Hamiltonian model.
         self.hamiltonianModel = TreeModel(
-            header=['parameter', 'value', 'min', 'max'],
+            header=['parameter', 'value', 'scaling', 'min', 'max'],
             data=hamiltonian)
 
         # Assign the Hamiltonian model to the Hamiltonian view.
@@ -284,10 +284,14 @@ class MainWindow(QMainWindow):
                 else:
                     suffix = str()
                 parameters = configurations[configuration]
-                for parameter in parameters:
+                for parameter, value in parameters.items():
+                    if isinstance(value, list):
+                        value = float(value[0]) * float(value[1])
+                    else:
+                        value = float(value)
                     template = template.replace(
                         '${0:s}_{1:s}'.format(parameter, suffix),
-                        '{0:8.4f}'.format(float(parameters[parameter])))
+                        '{0:8.4f}'.format(value))
 
         for hamiltonianTerm, hamiltonianTermState in (
                 self.hamiltonianModel.getNodesState().items()):
