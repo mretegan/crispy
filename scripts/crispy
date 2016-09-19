@@ -1,21 +1,21 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-"Simple application launcher."
+'Simple application launcher.'
 
-def main():
+def main()
     import os
     import sys
     try:
-        import crispy
+        from crispy.__main__ import main
     except ImportError:
         # The package is run without being installed; its path must be first 
         # added to sys.path.
         _dir = os.path.join(os.path.dirname(__file__), '..')
         sys.path.insert(0, os.path.abspath(_dir))
-        import crispy
+        from crispy.__main__ import main
 
-    crispy.gui.canvas.main()
+    main()
 
 if __name__ == '__main__':
     main()

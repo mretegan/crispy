@@ -17,10 +17,3 @@ class ComboBox(QComboBox):
         except ValueError:
             self.setCurrentIndex(0)
         self.blockSignals(False)
-
-
-def main():
-    pass
-
-if __name__ == '__main__':
-    main()

@@ -50,7 +50,7 @@ def get_version():
 
 
 def main():
-    """The main entry point."""
+    '''The main entry point.'''
     if sys.version_info[0] < 3:
         sys.exit('crispy currently requires Python 3.4+')
 
@@ -72,10 +72,10 @@ def main():
         packages=[
             'crispy',
             'crispy.gui',
-            'crispy.resources',
             'crispy.gui.models',
             'crispy.gui.views',
             'crispy.gui.widgets',
+            'crispy.resources',
             ],
         package_data={
             'crispy.resources': [
@@ -96,7 +96,7 @@ def main():
             'Operating System :: POSIX :: Linux',
             'Programming Language :: Python :: 3.4',
             'Programming Language :: Python :: 3.5',
-            'Topic :: Scientific/Engineering :: Visualization'
+            'Topic :: Scientific/Engineering :: Visualization',
             ]
         )
 

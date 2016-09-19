@@ -450,20 +450,8 @@ class MainWindow(QMainWindow):
             self.quantyModuleHide, self.quantyModuleShow)
         self.menuModulesQuanty.removeAction(self.quantyModuleHide)
 
-
 def main():
-    import sys
-
-    from PyQt5.QtCore import Qt
-    from PyQt5.QtWidgets import QApplication
-
-    app = QApplication(sys.argv)
-    window = MainWindow()
-    window.setWindowTitle('Crispy')
-    window.show()
-
-    app.setAttribute(Qt.AA_UseHighDpiPixmaps)
-    sys.exit(app.exec_())
+    pass
 
 if __name__ == '__main__':
-    main()
+    main
