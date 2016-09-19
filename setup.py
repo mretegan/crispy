@@ -39,8 +39,11 @@ except ImportError:
 
 def get_readme():
     _dir = os.path.dirname(os.path.abspath(__file__))
-    with open(os.path.join(_dir, 'README.rst'), 'r') as f:
-        long_description = f.read()
+    long_description = ''
+    with open(os.path.join(_dir, 'README.rst')) as f:
+        for line in f:
+            if 'image::' not in line:
+                long_description += line
     return long_description
 
 
