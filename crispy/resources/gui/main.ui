@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>900</width>
-    <height>580</height>
+    <width>1126</width>
+    <height>826</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -68,7 +68,7 @@ QMainWindow::separator {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>900</width>
+     <width>1126</width>
      <height>22</height>
     </rect>
    </property>
@@ -94,7 +94,7 @@ QMainWindow::separator {
   <widget class="QDockWidget" name="quantyDockWidget">
    <property name="minimumSize">
     <size>
-     <width>240</width>
+     <width>278</width>
      <height>350</height>
     </size>
    </property>
@@ -129,34 +129,19 @@ QMainWindow::separator {
      </property>
      <item>
       <widget class="QToolBox" name="quantyToolBox">
-       <widget class="QWidget" name="generalSetupPage">
+       <widget class="QWidget" name="generalPage">
         <property name="geometry">
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>225</width>
-          <height>534</height>
+          <width>283</width>
+          <height>625</height>
          </rect>
         </property>
         <attribute name="label">
-         <string>1. General Setup</string>
+         <string>General</string>
         </attribute>
-        <layout class="QVBoxLayout" name="_2">
-         <property name="spacing">
-          <number>0</number>
-         </property>
-         <property name="leftMargin">
-          <number>3</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>3</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
          <item>
           <widget class="QGroupBox" name="elementAndSymmetryGroupBox">
            <property name="title">
@@ -234,10 +219,16 @@ QMainWindow::separator {
             <item>
              <widget class="ComboBox" name="edgeComboBox">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>165</width>
+                <height>0</height>
+               </size>
               </property>
              </widget>
             </item>
@@ -245,55 +236,182 @@ QMainWindow::separator {
           </widget>
          </item>
          <item>
-          <widget class="QGroupBox" name="broadeningGroupBox">
+          <widget class="QGroupBox" name="temperatureGroupBox">
            <property name="title">
-            <string>Broadening FWHM (eV)</string>
+            <string>Temperature</string>
            </property>
-           <layout class="QVBoxLayout" name="_6">
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
             <item>
-             <layout class="QHBoxLayout" name="broadeningGaussianHorizontalLayout">
+             <layout class="QHBoxLayout" name="temperatureHorizontalLayout">
               <item>
-               <widget class="QLabel" name="broadeningGaussianLabel">
+               <widget class="QLabel" name="temperatureLabel">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="text">
-                 <string>Gaussian</string>
+                 <string>T (K)</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QDoubleSpinBox" name="broadeningGaussianDoubleSpinBox">
+               <widget class="QDoubleSpinBox" name="temperatureDoubleSpinBox">
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+                <property name="decimals">
+                 <number>3</number>
+                </property>
+                <property name="maximum">
+                 <double>1000.000000000000000</double>
+                </property>
+                <property name="singleStep">
+                 <double>0.100000000000000</double>
+                </property>
+                <property name="value">
+                 <double>1.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="e1GroupBox">
+           <property name="title">
+            <string>Absorption Energy </string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout">
+            <item>
+             <layout class="QHBoxLayout" name="e1RangeHorizontalLayout">
+              <item>
+               <widget class="QLabel" name="e1RangeLabel">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>Range (eV)</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QDoubleSpinBox" name="e1MinDoubleSpinBox">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="minimumSize">
                  <size>
-                  <width>100</width>
+                  <width>70</width>
                   <height>0</height>
                  </size>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                 </property>
-                <property name="singleStep">
-                 <double>0.100000000000000</double>
+                <property name="decimals">
+                 <number>1</number>
                 </property>
-                <property name="value">
-                 <double>0.400000000000000</double>
+                <property name="minimum">
+                 <double>-99.000000000000000</double>
+                </property>
+                <property name="maximum">
+                 <double>99.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QDoubleSpinBox" name="e1MaxDoubleSpinBox">
+                <property name="minimumSize">
+                 <size>
+                  <width>70</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+                <property name="decimals">
+                 <number>1</number>
+                </property>
+                <property name="minimum">
+                 <double>-99.000000000000000</double>
+                </property>
+                <property name="maximum">
+                 <double>99.000000000000000</double>
                 </property>
                </widget>
               </item>
              </layout>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="broadeningLorentzianHorizontalLayout">
+             <layout class="QHBoxLayout" name="e1NPointsHorizontalLayout">
               <item>
-               <widget class="QLabel" name="broadeningLorentzianLabel">
+               <widget class="QLabel" name="e1NPointslabel">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="text">
-                 <string>Lorenzian</string>
+                 <string>Nunber of points</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QDoubleSpinBox" name="broadeningLorentzianDoubleSpinBox">
+               <widget class="QDoubleSpinBox" name="e1NPointsDoubleSpinBox">
                 <property name="minimumSize">
                  <size>
-                  <width>100</width>
+                  <width>70</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+                <property name="decimals">
+                 <number>0</number>
+                </property>
+                <property name="minimum">
+                 <double>10.000000000000000</double>
+                </property>
+                <property name="maximum">
+                 <double>10000.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="e1GammaHorizontalLayout">
+              <item>
+               <widget class="QLabel" name="e1GammaLabel">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>Gamma FWHM (eV)</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QDoubleSpinBox" name="e1GammaDoubleSpinBox">
+                <property name="minimumSize">
+                 <size>
+                  <width>70</width>
                   <height>0</height>
                  </size>
                 </property>
@@ -301,13 +419,10 @@ QMainWindow::separator {
                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                 </property>
                 <property name="minimum">
-                 <double>0.200000000000000</double>
+                 <double>0.010000000000000</double>
                 </property>
                 <property name="singleStep">
-                 <double>0.100000000000000</double>
-                </property>
-                <property name="value">
-                 <double>0.400000000000000</double>
+                 <double>0.050000000000000</double>
                 </property>
                </widget>
               </item>
@@ -317,25 +432,40 @@ QMainWindow::separator {
           </widget>
          </item>
          <item>
-          <widget class="QGroupBox" name="temperatureGroupBox">
+          <widget class="QGroupBox" name="e2GroupBox">
            <property name="title">
-            <string>Temperature (K)</string>
+            <string>Energy Transfer</string>
            </property>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <property name="flat">
+            <bool>false</bool>
+           </property>
+           <property name="checkable">
+            <bool>false</bool>
+           </property>
+           <property name="checked">
+            <bool>false</bool>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_2">
             <item>
-             <layout class="QHBoxLayout" name="temperatureHorizontalLayout">
+             <layout class="QHBoxLayout" name="e2RangeHorizontalLayout">
               <item>
-               <widget class="QLabel" name="temperatureLabel">
+               <widget class="QLabel" name="e2RangeLabel">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="text">
-                 <string>T</string>
+                 <string>Range (eV)</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QDoubleSpinBox" name="temperatureDoubleSpinBox">
+               <widget class="QDoubleSpinBox" name="e2MinDoubleSpinBox">
                 <property name="minimumSize">
                  <size>
-                  <width>100</width>
+                  <width>70</width>
                   <height>0</height>
                  </size>
                 </property>
@@ -343,112 +473,119 @@ QMainWindow::separator {
                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                 </property>
                 <property name="decimals">
-                 <number>3</number>
+                 <number>1</number>
+                </property>
+                <property name="minimum">
+                 <double>-99.000000000000000</double>
+                </property>
+                <property name="maximum">
+                 <double>99.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QDoubleSpinBox" name="e2MaxDoubleSpinBox">
+                <property name="minimumSize">
+                 <size>
+                  <width>70</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+                <property name="decimals">
+                 <number>1</number>
+                </property>
+                <property name="minimum">
+                 <double>-99.000000000000000</double>
+                </property>
+                <property name="maximum">
+                 <double>99.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="e2NPointsHorizontalLayout">
+              <item>
+               <widget class="QLabel" name="e2NPointsLabel">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>55</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Nunber of points</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QDoubleSpinBox" name="e2NPointsDoubleSpinBox">
+                <property name="minimumSize">
+                 <size>
+                  <width>70</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+                <property name="decimals">
+                 <number>0</number>
+                </property>
+                <property name="minimum">
+                 <double>10.000000000000000</double>
                 </property>
                 <property name="maximum">
                  <double>10000.000000000000000</double>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="e2GammaHorizontalLayout">
+              <item>
+               <widget class="QLabel" name="e2GammaLabel">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>Gamma FWHM (eV)</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QDoubleSpinBox" name="e2GammaDoubleSpinBox">
+                <property name="minimumSize">
+                 <size>
+                  <width>70</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+                <property name="minimum">
+                 <double>0.010000000000000</double>
+                </property>
+                <property name="maximum">
+                 <double>10.000000000000000</double>
                 </property>
                 <property name="singleStep">
                  <double>0.100000000000000</double>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <widget class="QGroupBox" name="magneticFieldGroupBox">
-           <property name="title">
-            <string>Magnetic Field (T)</string>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_5">
-            <item>
-             <layout class="QHBoxLayout" name="magneticFieldXHorizontalLayout">
-              <item>
-               <widget class="QLabel" name="magneticFieldXLabel">
-                <property name="text">
-                 <string>Bx</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QDoubleSpinBox" name="magneticFieldXDoubleSpinBox">
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                </property>
-                <property name="decimals">
-                 <number>3</number>
-                </property>
-                <property name="maximum">
-                 <double>10000.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="magneticFieldYHorizontalLayout">
-              <item>
-               <widget class="QLabel" name="magneticFieldYLabel">
-                <property name="text">
-                 <string>By</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QDoubleSpinBox" name="magneticFieldYDoubleSpinBox">
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                </property>
-                <property name="decimals">
-                 <number>3</number>
-                </property>
-                <property name="maximum">
-                 <double>10000.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="magneticFieldZHorizontalLayout">
-              <item>
-               <widget class="QLabel" name="magneticFieldZlabel">
-                <property name="text">
-                 <string>Bz</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QDoubleSpinBox" name="magneticFieldZDoubleSpinBox">
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                </property>
-                <property name="decimals">
-                 <number>3</number>
-                </property>
-                <property name="maximum">
-                 <double>10000.000000000000000</double>
                 </property>
                </widget>
               </item>
@@ -475,21 +612,21 @@ QMainWindow::separator {
         <zorder>experimentGroupBox</zorder>
         <zorder>theoreticalModelGroupBox</zorder>
         <zorder>temperatureGroupBox</zorder>
-        <zorder>magneticFieldGroupBox</zorder>
-        <zorder>broadeningGroupBox</zorder>
         <zorder>verticalSpacer</zorder>
+        <zorder>e1GroupBox</zorder>
+        <zorder>e2GroupBox</zorder>
        </widget>
-       <widget class="QWidget" name="hamiltonianSetupPage">
+       <widget class="QWidget" name="hamiltonianPage">
         <property name="geometry">
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>256</width>
-          <height>379</height>
+          <width>278</width>
+          <height>591</height>
          </rect>
         </property>
         <attribute name="label">
-         <string>2. Hamiltonian Setup</string>
+         <string>Hamiltonian Parameters</string>
         </attribute>
         <layout class="QVBoxLayout" name="_3">
          <property name="leftMargin">
@@ -561,12 +698,12 @@ QMainWindow::separator {
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>240</width>
-          <height>379</height>
+          <width>278</width>
+          <height>591</height>
          </rect>
         </property>
         <attribute name="label">
-         <string>3. Results</string>
+         <string>Results</string>
         </attribute>
         <layout class="QVBoxLayout" name="_4">
          <property name="leftMargin">

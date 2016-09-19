@@ -2,8 +2,8 @@
 
 import collections
 
-from PyQt5.QtCore import (Qt, QAbstractItemModel, QModelIndex, QVariant)
-from PyQt5.QtWidgets import (QApplication, QTreeView)
+from PyQt5.QtCore import Qt, QAbstractItemModel, QModelIndex, QVariant
+
 
 class TreeNode(object):
     """Class implementing a tree node to be used in a tree model.
@@ -258,7 +258,7 @@ class TreeModel(QAbstractItemModel):
             Flags enabled for the model.
         """
         activeFlags = (Qt.ItemIsEnabled | Qt.ItemIsSelectable |
-                Qt.ItemIsEditable | Qt.ItemIsUserCheckable)
+                       Qt.ItemIsEditable | Qt.ItemIsUserCheckable)
         return activeFlags
 
     def headerData(self, section, orientation, role):
@@ -303,11 +303,11 @@ class TreeModel(QAbstractItemModel):
                 # Not very nice to default to float.
                 elif isinstance(value, float):
                     node = TreeNode(
-                            [key, '{0:8.4f}'.format(value)], parentNode)
+                        [key, '{0:8.4f}'.format(value)], parentNode)
                 elif isinstance(value, list):
                     node = TreeNode(
-                            [key, '{0:8.4f}'.format(value[0]),
-                                '{0:8.2f}'.format(value[1])], parentNode)
+                        [key, '{0:8.4f}'.format(value[0]),
+                            '{0:8.2f}'.format(value[1])], parentNode)
                 else:
                     print('Invalid data sent to the model: {0}'.format(value))
 
@@ -344,3 +344,6 @@ class TreeModel(QAbstractItemModel):
             data[node._data[0]] = node.checkState()
 
         return data
+
+    def size(self):
+        return len(self._data)

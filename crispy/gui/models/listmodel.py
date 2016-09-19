@@ -93,3 +93,6 @@ class ListModel(QAbstractListModel):
         if index.isValid():
             data = self._data[index.row()]
             return data
+
+    def size(self):
+        return len(self._data)

@@ -5,18 +5,14 @@ import json
 import numpy as np
 import os
 import shutil
-import sys
 import subprocess
 
 from PyQt5.QtCore import QItemSelectionModel, QEvent, Qt
-from PyQt5.QtWidgets import (
-    QAbstractItemView, QDoubleSpinBox, QLabel, QMainWindow, QGroupBox,
-    QHBoxLayout, QTabWidget, QFileDialog)
+from PyQt5.QtWidgets import QAbstractItemView, QMainWindow, QFileDialog
 from PyQt5 import uic
 
 from .models.treemodel import TreeModel
 from .models.listmodel import ListModel
-from .widgets.plotwidget import PlotWidget
 from ..resources import resource_filename
 
 
@@ -32,9 +28,7 @@ class MainWindow(QMainWindow):
                  'theoreticalModel': 'Crystal field (CF)',
                  'experiment': 'XAS',
                  'edge': 'L2,3 (2p)',
-                 'temperature': 1.0,
-                 'magneticField': [0.0, 0.0, 0.0],
-                 'broadenings': [0.5, 0.5]}
+                 }
 
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -46,23 +40,25 @@ class MainWindow(QMainWindow):
         self.populateUi()
         self.activateUi()
 
+        self.updateEnergyAxes()
+
         self.loadHamiltonianParameters()
         self.updateHamiltonian()
 
         self.statusBar().showMessage('Ready')
 
     def loadHamiltonianParameters(self):
-        jsonPath = resource_filename(
-                'modules/quanty/parameters/hamiltonian.json')
-        with open(jsonPath) as f:
+        path = resource_filename(
+            'modules/quanty/parameters/hamiltonian.json')
+        with open(path) as f:
             self.hamiltonianParameters = json.loads(
                 f.read(), object_pairs_hook=collections.OrderedDict)
 
     def loadUiParameters(self):
         # Load the parameters used to populate some of the UI elements.
-        jsonPath = resource_filename(
-                'modules/quanty/parameters/ui.json')
-        with open(jsonPath) as f:
+        path = resource_filename(
+            'modules/quanty/parameters/ui.json')
+        with open(path) as f:
             self.uiParameters = json.loads(
                 f.read(), object_pairs_hook=collections.OrderedDict)
 
@@ -74,31 +70,22 @@ class MainWindow(QMainWindow):
         self.chargeComboBox.setCurrentText(self.charge)
 
         self.symmetryComboBox.addItems(
-                self.uiParameters[self.element][self.charge])
+            self.uiParameters[self.element][self.charge])
         self.symmetryComboBox.setCurrentText(self.symmetry)
 
         self.theoreticalModelComboBox.addItems(
-                self.uiParameters[self.element][self.charge][self.symmetry])
+            self.uiParameters[self.element][self.charge][self.symmetry])
         self.theoreticalModelComboBox.setCurrentText(self.theoreticalModel)
 
         self.experimentComboBox.addItems(
-                self.uiParameters[self.element][self.charge][self.symmetry]
-                [self.theoreticalModel])
+            self.uiParameters[self.element][self.charge][self.symmetry]
+            [self.theoreticalModel])
         self.experimentComboBox.setCurrentText(self.experiment)
 
         self.edgeComboBox.addItems(
-                self.uiParameters[self.element][self.charge][self.symmetry]
-                [self.theoreticalModel][self.experiment])
+            self.uiParameters[self.element][self.charge][self.symmetry]
+            [self.theoreticalModel][self.experiment])
         self.edgeComboBox.setCurrentText(self.edge)
-
-        self.broadeningGaussianDoubleSpinBox.setValue(self.broadenings[0])
-        self.broadeningLorentzianDoubleSpinBox.setValue(self.broadenings[1])
-
-        self.temperatureDoubleSpinBox.setValue(self.temperature)
-
-        self.magneticFieldXDoubleSpinBox.setValue(self.magneticField[0])
-        self.magneticFieldYDoubleSpinBox.setValue(self.magneticField[1])
-        self.magneticFieldZDoubleSpinBox.setValue(self.magneticField[2])
 
         self.resultsModel = ListModel(list())
         self.resultsView.setSelectionMode(QAbstractItemView.ExtendedSelection)
@@ -137,24 +124,47 @@ class MainWindow(QMainWindow):
         self.charge = self.chargeComboBox.currentText()
 
         self.symmetryComboBox.updateItems(
-                self.uiParameters[self.element][self.charge])
+            self.uiParameters[self.element][self.charge])
         self.symmetry = self.symmetryComboBox.currentText()
 
         self.theoreticalModelComboBox.updateItems(
-                self.uiParameters[self.element][self.charge][self.symmetry])
+            self.uiParameters[self.element][self.charge][self.symmetry])
         self.theoreticalModel = self.theoreticalModelComboBox.currentText()
 
         self.experimentComboBox.updateItems(
-                self.uiParameters[self.element][self.charge][self.symmetry]
-                [self.theoreticalModel])
+            self.uiParameters[self.element][self.charge][self.symmetry]
+            [self.theoreticalModel])
         self.experiment = self.experimentComboBox.currentText()
 
         self.edgeComboBox.updateItems(
-                self.uiParameters[self.element][self.charge][self.symmetry]
-                [self.theoreticalModel][self.experiment])
+            self.uiParameters[self.element][self.charge][self.symmetry]
+            [self.theoreticalModel][self.experiment])
         self.edge = self.edgeComboBox.currentText()
 
+        self.updateEnergyAxes()
         self.updateHamiltonian()
+
+    def updateEnergyAxes(self):
+        self.e2GroupBox.setHidden(True)
+
+        axes = (self.uiParameters[self.element][self.charge]
+                [self.symmetry][self.theoreticalModel]
+                [self.experiment][self.edge]['axes'])
+
+        self.e1GroupBox.setTitle(axes['e1']['label'])
+        self.e1MinDoubleSpinBox.setValue(axes['e1']['min'])
+        self.e1MaxDoubleSpinBox.setValue(axes['e1']['max'])
+        self.e1NPointsDoubleSpinBox.setValue(axes['e1']['npoints'])
+        self.e1GammaDoubleSpinBox.setValue(axes['e1']['gamma'])
+
+        if self.experiment == 'RIXS':
+            self.e2GroupBox.setHidden(False)
+
+            self.e2GroupBox.setTitle(axes['e2']['label'])
+            self.e2MinDoubleSpinBox.setValue(axes['e2']['min'])
+            self.e2MaxDoubleSpinBox.setValue(axes['e2']['max'])
+            self.e2NPointsDoubleSpinBox.setValue(axes['e2']['npoints'])
+            self.e2GammaDoubleSpinBox.setValue(axes['e2']['gamma'])
 
     def updateHamiltonian(self):
         data = self.hamiltonianParameters[self.element][self.charge]
@@ -175,8 +185,8 @@ class MainWindow(QMainWindow):
             hamiltonian[hamiltonianTerm] = collections.OrderedDict()
 
             for configuration in configurations:
-                label = '{0} ({1})'.format(
-                    configuration.capitalize(), configurations[configuration])
+                label = '{0} CFG ({1})'.format(
+                    configuration, configurations[configuration])
 
                 hamiltonian[hamiltonianTerm][label] = (
                     parameters[configurations[configuration]])
@@ -194,17 +204,17 @@ class MainWindow(QMainWindow):
         self.hamiltonianTermsView.selectionModel().selectionChanged.connect(
             self.selectedHamiltonianTermChanged)
         self.hamiltonianTermsView.setAttribute(
-                Qt.WA_MacShowFocusRect, False)
+            Qt.WA_MacShowFocusRect, False)
 
         # Assign the Hamiltonian model to the Hamiltonian parameters view, and
         # set some properties.
         self.hamiltonianParametersView.setModel(self.hamiltonianModel)
         self.hamiltonianParametersView.expandAll()
-        self.hamiltonianParametersView.resizeColumnToContents(0)
-        self.hamiltonianParametersView.resizeColumnToContents(1)
+        self.hamiltonianParametersView.resizeAllColumnsToContents()
+        self.hamiltonianParametersView.setColumnWidth(0, 160)
         self.hamiltonianParametersView.setRootIndex(index)
         self.hamiltonianParametersView.setAttribute(
-                Qt.WA_MacShowFocusRect, False)
+            Qt.WA_MacShowFocusRect, False)
         self.hamiltonianParametersView.viewport().installEventFilter(self)
 
     def selectedHamiltonianTermChanged(self):
@@ -215,8 +225,8 @@ class MainWindow(QMainWindow):
         self.plotWidget.clear()
         selectedIndexes = self.resultsView.selectionModel().selectedIndexes()
         for index in selectedIndexes:
-            label, spectrum = self.resultsModel.getIndexData(index)
-            self.plotWidget.plot(spectrum[:, 0], -spectrum[:, 2], label[:3])
+            label, data = self.resultsModel.getIndexData(index)
+            self.plot(data, label)
 
     def eventFilter(self, source, event):
         if (event.type() == QEvent.MouseButtonPress and
@@ -235,10 +245,14 @@ class MainWindow(QMainWindow):
 
         templateFile = resource_filename(
             os.path.join('modules', 'quanty', 'templates',
-                         '{0:s}.lua'.format(templateFileName)))
+                         '{0:s}'.format(templateFileName)))
 
-        with open(templateFile) as f:
-            template = f.read()
+        try:
+            with open(templateFile) as f:
+                template = f.read()
+        except FileNotFoundError:
+            print('Could not find template: {0:s}'.format(templateFileName))
+            return
 
         shells = (self.uiParameters[self.element][self.charge]
                   [self.symmetry][self.theoreticalModel][self.experiment]
@@ -246,28 +260,49 @@ class MainWindow(QMainWindow):
 
         for shell in shells:
             template = template.replace(
-                    '$NElectrons_{0:s}'.format(shell), str(shells[shell]))
+                '$NElectrons_{0:s}'.format(shell), str(shells[shell]))
 
         template = template.replace(
-                '$BroadeningGaussian', '{0:8.2f}'.format(
-                    self.broadeningGaussianDoubleSpinBox.value()))
+            '$T', '{0:8.3f}'.format(
+                self.temperatureDoubleSpinBox.value()))
+
+        template = template.replace('$Bx', '0')
+        template = template.replace('$By', '0')
+        template = template.replace('$Bz', '1e-6')
+
+        # Absorption or incident energy group box
         template = template.replace(
-                '$BroadeningLorentzian', '{0:8.2f}'.format(
-                    self.broadeningLorentzianDoubleSpinBox.value()))
+            '$Emin1', '{0:8.1f}'.format(
+                self.e1MinDoubleSpinBox.value()))
 
         template = template.replace(
-                '$T', '{0:8.3f}'.format(
-                    self.temperatureDoubleSpinBox.value()))
+            '$Emax1', '{0:8.1f}'.format(
+                self.e1MaxDoubleSpinBox.value()))
 
         template = template.replace(
-                '$Bx', '{0:8.3f}'.format(
-                    self.magneticFieldXDoubleSpinBox.value()))
+            '$NE1', '{0:8.0f}'.format(
+                self.e1NPointsDoubleSpinBox.value()))
+
         template = template.replace(
-                '$By', '{0:8.3f}'.format(
-                    self.magneticFieldYDoubleSpinBox.value()))
+            '$Gamma1', '{0:8.2f}'.format(
+                self.e1GammaDoubleSpinBox.value()))
+
+        # Energy transfer group box
         template = template.replace(
-                '$Bz', '{0:8.3f}'.format(
-                    self.magneticFieldZDoubleSpinBox.value()))
+            '$Emin2', '{0:8.1f}'.format(
+                self.e2MinDoubleSpinBox.value()))
+
+        template = template.replace(
+            '$Emax2', '{0:8.1f}'.format(
+                self.e2MaxDoubleSpinBox.value()))
+
+        template = template.replace(
+            '$NE2', '{0:8.0f}'.format(
+                self.e2NPointsDoubleSpinBox.value()))
+
+        template = template.replace(
+            '$Gamma2', '{0:8.2f}'.format(
+                self.e2GammaDoubleSpinBox.value()))
 
         # Get the most recent Hamiltonian data from the model.
         hamiltonian = self.hamiltonianModel.getModelData()
@@ -275,12 +310,12 @@ class MainWindow(QMainWindow):
         for hamiltonianTerm in hamiltonian:
             configurations = hamiltonian[hamiltonianTerm]
             for configuration in configurations:
-                if 'Ground state' in configuration:
-                    suffix = 'gs'
-                elif 'Intermediate state' in configuration:
-                    suffix = 'is'
-                elif 'Final state' in configuration:
-                    suffix = 'fs'
+                if 'Starting' in configuration:
+                    suffix = 'sc'
+                elif 'Intermediate' in configuration:
+                    suffix = 'ic'
+                elif 'Final' in configuration:
+                    suffix = 'fc'
                 else:
                     suffix = str()
                 parameters = configurations[configuration]
@@ -311,7 +346,7 @@ class MainWindow(QMainWindow):
                 termState = 1
 
             template = template.replace(
-                    '${0:s}_flag'.format(termName), '{0:d}'.format(termState))
+                '${0:s}_flag'.format(termName), '{0:d}'.format(termState))
 
         template = template.replace('$baseName', self.baseName)
 
@@ -343,31 +378,55 @@ class MainWindow(QMainWindow):
         with open(self.outputPath, 'w') as f:
             try:
                 subprocess.check_call(
-                        [self.command, self.inputPath], stdout=f, stderr=f)
+                    [self.command, self.inputPath], stdout=f, stderr=f)
             except subprocess.CalledProcessError:
                 print('Quanty has not terminated gracefully.')
                 return
 
+        # Load the data to be plotted.
         data = np.loadtxt('{0:s}.spec'.format(self.baseName), skiprows=5)
 
-        # Load the data to be plotted.
-        id = len(self.resultsModel._data) + 1
+        id = self.resultsModel.size() + 1
         label = '#{:d} - {:s}{:s} | {:s} | {:s} | {:s}'.format(
             id, self.element, self.charge, self.symmetry, self.experiment,
             self.edge)
-
-        # Plot the spectrum.
-        self.plotWidget.clear()
-        self.plotWidget.plot(data[:, 0], -data[:, 2], label[:3])
 
         # Store the simulation details.
         self.resultsModel.appendItem((label, data))
 
         # Update the selected item in the results view.
         self.resultsView.selectionModel().clearSelection()
-        index = self.resultsModel.index(self.resultsModel.rowCount()-1)
+        index = self.resultsModel.index(self.resultsModel.rowCount() - 1)
         self.resultsView.selectionModel().select(
-                index, QItemSelectionModel.Select)
+            index, QItemSelectionModel.Select)
+
+    def plot(self, data, label):
+        if data.shape[1] < 4:
+            x = data[:, 0]
+            y = -data[:, 2]
+            self.plotWidget.addCurve(x, y, legend=label)
+            self.plotWidget.setGraphXLabel('Absorption Energy (eV)')
+            self.plotWidget.setGraphYLabel('Absorption cross section (a.u.)')
+        else:
+            xMin = self.e1MinDoubleSpinBox.value()
+            xMax = self.e1MaxDoubleSpinBox.value()
+            xPoints = self.e1NPointsDoubleSpinBox.value()
+            xScale = (xMax - xMin) / xPoints
+
+            yMin = self.e2MinDoubleSpinBox.value()
+            yMax = self.e2MaxDoubleSpinBox.value()
+            yPoints = self.e2NPointsDoubleSpinBox.value()
+            yScale = (yMax - yMin) / yPoints
+
+            self.plotWidget.setGraphXLabel('Incident Energy (eV)')
+            self.plotWidget.setGraphYLabel('Energy Transfer (eV)')
+            colormap = {'name': 'viridis', 'normalization': 'linear',
+                                'autoscale': True, 'vmin': 0.0, 'vmax': 1.0}
+            self.plotWidget.setDefaultColormap(colormap)
+
+            data = -data[:, 2::2]
+            self.plotWidget.addImage(
+                data, origin=(xMin, yMin), scale=(xScale, yScale))
 
     def saveAsInput(self):
         path, _ = QFileDialog.getSaveFileName(
@@ -382,18 +441,17 @@ class MainWindow(QMainWindow):
     def moduleShow(self):
         self.quantyDockWidget.setVisible(True)
         self.menuModulesQuanty.insertAction(
-                self.quantyModuleShow, self.quantyModuleHide)
+            self.quantyModuleShow, self.quantyModuleHide)
         self.menuModulesQuanty.removeAction(self.quantyModuleShow)
 
     def moduleHide(self):
         self.quantyDockWidget.setVisible(False)
         self.menuModulesQuanty.insertAction(
-                self.quantyModuleHide, self.quantyModuleShow)
+            self.quantyModuleHide, self.quantyModuleShow)
         self.menuModulesQuanty.removeAction(self.quantyModuleHide)
 
 
 def main():
-    import os
     import sys
 
     from PyQt5.QtCore import Qt

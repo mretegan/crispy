@@ -64,32 +64,41 @@ def main():
         author_email='marius.retegan@esrf.eu',
         url='https://github.com/mretegan/crispy',
         download_url='https://github.com/mretegan/crispy/releases',
-        platforms=['MacOS :: MacOS X',
-                   'Microsoft :: Windows',
-                   'POSIX :: Linux'],
-        packages=['crispy',
-                  'crispy.gui',
-                  'crispy.resources',
-                  'crispy.gui.models',
-                  'crispy.gui.views',
-                  'crispy.gui.widgets'],
+        platforms=[
+            'MacOS :: MacOS X',
+            'Microsoft :: Windows',
+            'POSIX :: Linux'
+            ],
+        packages=[
+            'crispy',
+            'crispy.gui',
+            'crispy.resources',
+            'crispy.gui.models',
+            'crispy.gui.views',
+            'crispy.gui.widgets',
+            ],
         package_data={
             'crispy.resources': [
                 'gui/*.ui',
                 'gui/icons/*.svg',
                 'modules/quanty/parameters/*.json',
-                'modules/quanty/templates/*.lua']},
-        classifiers=['Development Status :: 4 - Beta',
-                     'Environment :: X11 Applications :: Qt',
-                     'Intended Audience :: Education',
-                     'Intended Audience :: Science/Research',
-                     'License :: OSI Approved :: MIT License',
-                     'Operating System :: MacOS :: MacOS X',
-                     'Operating System :: Microsoft :: Windows',
-                     'Operating System :: POSIX :: Linux',
-                     'Programming Language :: Python :: 3.4',
-                     'Programming Language :: Python :: 3.5',
-                     'Topic :: Scientific/Engineering :: Visualization'])
+                'modules/quanty/templates/*.lua',
+                ],
+            },
+        classifiers=[
+            'Development Status :: 4 - Beta',
+            'Environment :: X11 Applications :: Qt',
+            'Intended Audience :: Education',
+            'Intended Audience :: Science/Research',
+            'License :: OSI Approved :: MIT License',
+            'Operating System :: MacOS :: MacOS X',
+            'Operating System :: Microsoft :: Windows',
+            'Operating System :: POSIX :: Linux',
+            'Programming Language :: Python :: 3.4',
+            'Programming Language :: Python :: 3.5',
+            'Topic :: Scientific/Engineering :: Visualization'
+            ]
+        )
 
     # At the moment pip/setuptools doesn't play nice with shebang paths
     # containing white space.

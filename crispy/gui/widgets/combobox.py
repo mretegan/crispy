@@ -18,6 +18,7 @@ class ComboBox(QComboBox):
             self.setCurrentIndex(0)
         self.blockSignals(False)
 
+
 def main():
     pass
 
