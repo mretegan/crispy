@@ -82,7 +82,7 @@ def main():
             ],
         package_data={
             'crispy.resources': [
-                'gui/*.ui',
+                'gui/uis/*.ui',
                 'gui/icons/*.svg',
                 'modules/quanty/parameters/*.json',
                 'modules/quanty/templates/*.lua',

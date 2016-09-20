@@ -4,10 +4,10 @@ from PyQt5.QtCore import Qt, QAbstractListModel, QModelIndex
 
 
 class ListModel(QAbstractListModel):
-    """Class implementing a simple list model. It subclasses QAbstractListModel
-    and implements the required rowCount() and data(). It also adds methods to
-    insert and append items, and to get model's data at an index.
-    """
+    """Class implementing a simple list model. It subclasses
+    QAbstractListModel and implements the required rowCount() and
+    data(). It also adds methods to insert and append items, and to get
+    model's data at an index. """
 
     def __init__(self, data, parent=None):
         super(ListModel, self).__init__(parent)
@@ -24,7 +24,8 @@ class ListModel(QAbstractListModel):
         return len(self._data)
 
     def data(self, index, role):
-        """Return role specific data for the item referred by index.column().
+        """Return role specific data for the item referred by
+        index.column().
 
         Parameters
         ----------
@@ -44,7 +45,7 @@ class ListModel(QAbstractListModel):
             pass
 
         if role == Qt.DisplayRole or role == Qt.EditRole:
-            return self._data[index.row()][0]
+            return self._data[index.row()]['label']
 
     def insertItem(self, position, item, parent=QModelIndex()):
         """Insert an item at the specified position in the model's data.
@@ -58,11 +59,8 @@ class ListModel(QAbstractListModel):
             Item to be added at the specified position.
         """
         self.beginInsertRows(parent, position, position)
-
         self._data.insert(position, item)
-
         self.endInsertRows()
-
         return True
 
     def appendItem(self, item):
@@ -86,13 +84,15 @@ class ListModel(QAbstractListModel):
 
         Returns
         -------
-        data : list
+        data :
             Data at the given index.
 
         """
-        if index.isValid():
-            data = self._data[index.row()]
-            return data
+        if not index.isValid():
+            pass
+
+        data = self._data[index.row()]
+        return data
 
     def size(self):
         return len(self._data)

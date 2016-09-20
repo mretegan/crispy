@@ -6,7 +6,7 @@ def main():
     from PyQt5.QtCore import Qt
     from PyQt5.QtWidgets import QApplication
 
-    from .gui.canvas import MainWindow
+    from .gui.main import MainWindow
 
     app = QApplication(sys.argv)
     window = MainWindow()

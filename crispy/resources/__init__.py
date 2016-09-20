@@ -79,6 +79,7 @@ if getattr(sys, 'frozen', False):
     if os.path.isdir(_dir):
         _RESOURCES_DIR = _dir
 
+
 def resource_filename(resource):
     """Return a true filesystem path for the specified resource.
 
@@ -103,6 +104,10 @@ def resource_filename(resource):
         path = pkg_resources.resource_filename(__name__, resource)
 
     return path
+
+
+def resourceFileName(resource):
+    return resource_filename(resource)
 
 if __name__ == '__main__':
     pass

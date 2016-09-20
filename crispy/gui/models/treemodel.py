@@ -323,9 +323,12 @@ class TreeModel(QAbstractItemModel):
                 self._getModelData(data[key], node)
             else:
                 if node.getItemData(2):
-                    data[key] = [node.getItemData(1), node.getItemData(2)]
+                    data[key] = [
+                        float(node.getItemData(1)),
+                        float(node.getItemData(2)),
+                        ]
                 else:
-                    data[key] = node.getItemData(1)
+                    data[key] = float(node.getItemData(1))
 
     def getModelData(self):
         data = collections.OrderedDict()

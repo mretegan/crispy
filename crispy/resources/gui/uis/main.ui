@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1000</width>
+    <height>700</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QMainWindow::separator { 
+  width: 1px;
+}</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QVBoxLayout" name="_7">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <layout class="QVBoxLayout" name="plotWidgetLayout">
+      <item>
+       <widget class="PlotWidget" name="plotWidget" native="true">
+        <property name="minimumSize">
+         <size>
+          <width>455</width>
+          <height>400</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1000</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuModules">
+    <property name="title">
+     <string>Modules</string>
+    </property>
+    <widget class="QMenu" name="menuModulesQuanty">
+     <property name="title">
+      <string>Quanty</string>
+     </property>
+     <addaction name="quantyModuleHideAction"/>
+     <addaction name="separator"/>
+     <addaction name="quantySaveInputAction"/>
+     <addaction name="quantySaveAsInputAction"/>
+     <addaction name="separator"/>
+     <addaction name="quantyRunCalculationAction"/>
+    </widget>
+    <addaction name="menuModulesQuanty"/>
+   </widget>
+   <addaction name="menuModules"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="quantySaveInputAction">
+   <property name="text">
+    <string>Save</string>
+   </property>
+   <property name="toolTip">
+    <string>Save the Quanty Input File</string>
+   </property>
+  </action>
+  <action name="quantyRunCalculationAction">
+   <property name="text">
+    <string>Run</string>
+   </property>
+  </action>
+  <action name="quantySaveAsInputAction">
+   <property name="text">
+    <string>Save As...</string>
+   </property>
+  </action>
+  <action name="quantyModuleShowAction">
+   <property name="text">
+    <string>Show</string>
+   </property>
+   <property name="toolTip">
+    <string>Show the Quanty Module</string>
+   </property>
+  </action>
+  <action name="quantyModuleHideAction">
+   <property name="text">
+    <string>Hide</string>
+   </property>
+   <property name="toolTip">
+    <string>Hide the Quanty Module</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PlotWidget</class>
+   <extends>QWidget</extends>
+   <header>.widgets.plotwidget</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

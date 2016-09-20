@@ -10,6 +10,3 @@ class PlotWidget(PlotWindow):
             roi=False, mask=False, print_=False)
         self.setActiveCurveHandling(False)
         self.setGraphGrid('both')
-
-    def clear(self):
-        super(PlotWidget, self).clear()
