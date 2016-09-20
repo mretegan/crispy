@@ -23,7 +23,7 @@
 # THE SOFTWARE.
 #
 # ###########################################################################*/
-'''Unique place where the version number is defined.
+"""Unique place where the version number is defined.
 
 provides:
 * version = '1.2.3' or '1.2.3-beta4'
@@ -47,7 +47,7 @@ Bits (big endian order)     Meaning
 
 Thus 2.1.0a3 is hexversion 0x020100a3.
 
-'''
+"""
 
 from __future__ import absolute_import, print_function, division
 __authors__ = ['Jérôme Kieffer']
@@ -87,7 +87,7 @@ if version_info.releaselevel != 'final':
 
 
 def calc_hexversion(major=0, minor=0, micro=0, releaselevel='dev', serial=0):
-    '''Calculate the hexadecimal version number from the tuple version_info:
+    """Calculate the hexadecimal version number from the tuple version_info:
 
     :param major: integer
     :param minor: integer
@@ -95,7 +95,7 @@ def calc_hexversion(major=0, minor=0, micro=0, releaselevel='dev', serial=0):
     :param relev: integer or string
     :param serial: integer
     :return: integerm always increasing with revision numbers
-    '''
+    """
     try:
         releaselevel = int(releaselevel)
     except ValueError:

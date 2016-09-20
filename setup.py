@@ -53,7 +53,7 @@ def get_version():
 
 
 def main():
-    '''The main entry point.'''
+    """The main entry point."""
     if sys.version_info[0] < 3:
         sys.exit('crispy currently requires Python 3.4+')
 

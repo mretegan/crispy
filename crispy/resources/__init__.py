@@ -53,9 +53,9 @@ of this modules to ensure access accross different distribution schemes:
              )
 """
 
-__authors__ = ["V.A. Sole", "Thomas Vincent"]
-__license__ = "MIT"
-__date__ = "12/05/2016"
+__authors__ = ['V.A. Sole', 'Thomas Vincent']
+__license__ = 'MIT'
+__date__ = '12/05/2016'
 
 import os
 import sys

@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-'Simple application launcher.'
 
 def main():
+    """Simple application launcher."""
     import os
     import sys
     try:
