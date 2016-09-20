@@ -3,7 +3,7 @@
 
 'Simple application launcher.'
 
-def main()
+def main():
     import os
     import sys
     try:
