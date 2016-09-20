@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from PyQt5.QtCore import Qt, QAbstractListModel, QModelIndex, QVariant
+from PyQt5.QtCore import Qt, QAbstractListModel, QModelIndex
 
 
 class ListModel(QAbstractListModel):
@@ -37,14 +37,14 @@ class ListModel(QAbstractListModel):
 
         Returns
         -------
-        data : QVariant
+        data :
             Role specific data at the given index.
         """
         if not index.isValid():
-            return QVariant
+            pass
 
         if role == Qt.DisplayRole or role == Qt.EditRole:
-            return QVariant(self._data[index.row()][0])
+            return self._data[index.row()][0]
 
     def insertItem(self, position, item, parent=QModelIndex()):
         """Insert an item at the specified position in the model's data.

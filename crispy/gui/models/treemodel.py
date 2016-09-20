@@ -2,7 +2,7 @@
 
 import collections
 
-from PyQt5.QtCore import Qt, QAbstractItemModel, QModelIndex, QVariant
+from PyQt5.QtCore import Qt, QAbstractItemModel, QModelIndex
 
 
 class TreeNode(object):
@@ -209,11 +209,11 @@ class TreeModel(QAbstractItemModel):
 
         Returns
         -------
-        data : QVariant
+        data :
             Role specific data at the given index.
         """
         if not index.isValid():
-            return QVariant()
+            pass
 
         node = self.getNode(index)
 
