@@ -9,7 +9,7 @@ import subprocess
 
 from PyQt5.QtCore import QItemSelectionModel, QEvent, Qt
 from PyQt5.QtWidgets import QAbstractItemView, QMainWindow, QFileDialog
-from PyQt5 import uic
+from PyQt5.uic import loadUi
 
 from .models.treemodel import TreeModel
 from .models.listmodel import ListModel
@@ -34,7 +34,7 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
         self.__dict__.update(self._defaults)
         uiPath = resource_filename('gui/main.ui')
-        uic.loadUi(uiPath, baseinstance=self, package='crispy.gui')
+        loadUi(uiPath, baseinstance=self, package='crispy.gui')
 
         self.loadUiParameters()
         self.populateUi()
