@@ -10,7 +10,7 @@ Dependencies
 
 * `Python <https://www.python.org>`_ 3.4 and 3.5.
 * `PyQt5 <https://riverbankcomputing.com/software/pyqt/intro>`_
-* `silx <http:://silx.org>`_
+* `silx <http://silx.org>`_
 * `numpy <http://www.numpy.org>`_
 * `matplotlib <http://matplotlib.org>`_
 
