@@ -7,7 +7,6 @@ import numpy as np
 import os
 import shutil
 import subprocess
-import time
 
 from PyQt5.QtCore import QItemSelectionModel
 from PyQt5.QtWidgets import QAbstractItemView, QDockWidget, QFileDialog
@@ -35,7 +34,7 @@ class QuantyDockWidget(QDockWidget):
         'shells': None,
         'hamiltonian': None,
         'label': None,
-        'data': None,
+        'spectrum': None,
         'templateName': None,
         'baseName': 'untitled',
         'input': None,
@@ -116,14 +115,14 @@ class QuantyDockWidget(QDockWidget):
             energies['e1']['npoints'])
         self.e1GammaDoubleSpinBox.setValue(energies['e1']['gamma'])
 
-        try:
+        if 'RIXS' in self.experiment:
             self.e2GroupBox.setTitle(energies['e2']['label'])
             self.e2MinDoubleSpinBox.setValue(energies['e2']['min'])
             self.e2MaxDoubleSpinBox.setValue(energies['e2']['max'])
             self.e2NPointsDoubleSpinBox.setValue(energies['e2']['npoints'])
             self.e2GammaDoubleSpinBox.setValue(energies['e2']['gamma'])
             self.e2GroupBox.setHidden(False)
-        except KeyError:
+        else:
             self.e2GroupBox.setHidden(True)
 
         # Set the Hamiltonian parameters.
@@ -237,14 +236,12 @@ class QuantyDockWidget(QDockWidget):
             self.e1NPointsDoubleSpinBox.value())
         self.energies['e1']['gamma'] = self.e1GammaDoubleSpinBox.value()
 
-        try:
+        if 'RIXS' in self.experiment:
             self.energies['e2']['min'] = self.e2MinDoubleSpinBox.value()
             self.energies['e2']['max'] = self.e2MaxDoubleSpinBox.value()
             self.energies['e2']['npoints'] = int(
                     self.e2NPointsDoubleSpinBox.value())
             self.energies['e2']['gamma'] = self.e2GammaDoubleSpinBox.value()
-        except KeyError:
-            pass
 
         self.hamiltonian = self.hamiltonianModel.getModelData()
 
@@ -278,13 +275,11 @@ class QuantyDockWidget(QDockWidget):
         replacements['$NE1'] = self.energies['e1']['npoints']
         replacements['$Gamma1'] = self.energies['e1']['gamma']
 
-        try:
+        if 'RIXS' in self.experiment:
             replacements['$Emin2'] = self.energies['e2']['min']
             replacements['$Emax2'] = self.energies['e2']['max']
             replacements['$NE2'] = self.energies['e2']['npoints']
             replacements['$Gamma2'] = self.energies['e2']['gamma']
-        except KeyError:
-            pass
 
         for term in self.hamiltonian:
             configurations = self.hamiltonian[term]
@@ -361,15 +356,15 @@ class QuantyDockWidget(QDockWidget):
         if not self.inputName:
             return
 
-        self.time = time.time()
         self.runPushButton.setCallable(
             subprocess.run, [self.command, self.inputName])
 
     def processResults(self):
-        self.time = time.time() - self.time
-        # print(str(datetime.timedelta(seconds=self.time)))
+        spectrumName = '{0:s}.spec'.format(self.baseName)
+        self.spectrum = np.loadtxt(spectrumName, skiprows=5)
 
-        self.data = np.loadtxt('{0:s}.spec'.format(self.baseName), skiprows=5)
+        # Remove the spectrum file
+        os.remove(spectrumName)
 
         index = self.resultsModel.size() + 1
         self.label = '#{:d} - {:s}{:s} | {:s} | {:s} | {:s}'.format(
@@ -390,15 +385,7 @@ class QuantyDockWidget(QDockWidget):
             index, QItemSelectionModel.Select)
 
     def plotResults(self):
-        if 'RIXS' not in self.experiment:
-            self.parent().plotWidget.setGraphXLabel('Absorption Energy (eV)')
-            self.parent().plotWidget.setGraphYLabel(
-                    'Absorption cross section (a.u.)')
-
-            x = self.data[:, 0]
-            y = -self.data[:, 2]
-            self.parent().plotWidget.addCurve(x, y, legend=self.label)
-        else:
+        if 'RIXS' in self.experiment:
             self.parent().plotWidget.setGraphXLabel('Incident Energy (eV)')
             self.parent().plotWidget.setGraphYLabel('Energy Transfer (eV)')
 
@@ -416,9 +403,17 @@ class QuantyDockWidget(QDockWidget):
             yPoints = self.energies['e2']['npoints']
             yScale = (yMax - yMin) / yPoints
 
-            data = -self.data[:, 2::2]
+            spectrum = -self.spectrum[:, 2::2]
             self.parent().plotWidget.addImage(
-                data, origin=(xMin, yMin), scale=(xScale, yScale))
+                spectrum, origin=(xMin, yMin), scale=(xScale, yScale))
+        else:
+            self.parent().plotWidget.setGraphXLabel('Absorption Energy (eV)')
+            self.parent().plotWidget.setGraphYLabel(
+                    'Absorption cross section (a.u.)')
+
+            x = self.spectrum[:, 0]
+            y = -self.spectrum[:, 2]
+            self.parent().plotWidget.addCurve(x, y, legend=self.label)
 
     def selectedHamiltonianTermChanged(self):
         index = self.hamiltonianTermsView.selectionModel().currentIndex()
