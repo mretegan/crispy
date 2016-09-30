@@ -331,6 +331,9 @@ class QuantyDockWidget(QDockWidget):
         self.input = template
 
     def saveAsInput(self):
+        if not self.baseName:
+            self.baseName = 'untitled'
+
         path, _ = QFileDialog.getSaveFileName(
             self, 'Save Quanty Input', '{0:s}.lua'.format(self.baseName),
             'Quanty Input File (*.lua)')
