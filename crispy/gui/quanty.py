@@ -36,7 +36,7 @@ class QuantyDockWidget(QDockWidget):
         'label': None,
         'spectrum': None,
         'templateName': None,
-        'baseName': 'untitled',
+        'baseName': None,
         'input': None,
         'inputName': None,
         'command': None,
@@ -66,7 +66,6 @@ class QuantyDockWidget(QDockWidget):
             self.hamiltonianParameters = json.loads(
                 p.read(), object_pairs_hook=collections.OrderedDict)
 
-        # self.loadSimulationParameters({'element': 'Cu'})
         self.setUiParameters()
         self.createActions()
 
@@ -111,8 +110,7 @@ class QuantyDockWidget(QDockWidget):
         self.e1GroupBox.setTitle(energies['e1']['label'])
         self.e1MinDoubleSpinBox.setValue(energies['e1']['min'])
         self.e1MaxDoubleSpinBox.setValue(energies['e1']['max'])
-        self.e1NPointsDoubleSpinBox.setValue(
-            energies['e1']['npoints'])
+        self.e1NPointsDoubleSpinBox.setValue(energies['e1']['npoints'])
         self.e1GammaDoubleSpinBox.setValue(energies['e1']['gamma'])
 
         if 'RIXS' in self.experiment:
@@ -177,7 +175,6 @@ class QuantyDockWidget(QDockWidget):
             self.resultsView.setSelectionMode(
                     QAbstractItemView.ExtendedSelection)
             self.resultsView.setModel(self.resultsModel)
-            self.resultsView.viewport().installEventFilter(self)
             self.resultsView.selectionModel().selectionChanged.connect(
                 self.selectedResultsChanged)
 
@@ -199,12 +196,12 @@ class QuantyDockWidget(QDockWidget):
         self.model = self.modelComboBox.currentText()
         self.experiment = self.experimentComboBox.currentText()
         self.edge = self.edgeComboBox.currentText()
-        self.temperature = None
-        self.energies = None
-        self.hamiltonian = None
-        self.configurations = None
-        self.shells = None
-        self.templateName = None
+
+        # Reset the rest of the parameters
+        for key in self._defaults:
+            if not self._defaults[key]:
+                self.__dict__[key] = None
+
         self.setUiParameters()
 
     def createActions(self):
@@ -315,6 +312,9 @@ class QuantyDockWidget(QDockWidget):
                 termState = 1
 
             replacements['${}_flag'.format(termName)] = termState
+
+        if not self.baseName:
+            self.baseName = 'untitled'
 
         replacements['$baseName'] = self.baseName
 
