@@ -362,7 +362,13 @@ class QuantyDockWidget(QDockWidget):
 
     def processResults(self):
         spectrumName = '{0:s}.spec'.format(self.baseName)
-        self.spectrum = np.loadtxt(spectrumName, skiprows=5)
+        spectrum = np.loadtxt(spectrumName, skiprows=5)
+
+        if 'RIXS' in self.experiment:
+            self.spectrum = -spectrum[:, 2::2]
+        else:
+            self.spectrum = spectrum[:, ::2]
+            self.spectrum[:, 1] = -self.spectrum[:, 1]
 
         # Remove the spectrum file
         os.remove(spectrumName)
@@ -404,17 +410,15 @@ class QuantyDockWidget(QDockWidget):
             yPoints = self.energies['e2']['npoints']
             yScale = (yMax - yMin) / yPoints
 
-            spectrum = -self.spectrum[:, 2::2]
             self.parent().plotWidget.addImage(
-                spectrum, origin=(xMin, yMin), scale=(xScale, yScale))
+                self.spectrum, origin=(xMin, yMin), scale=(xScale, yScale))
         else:
             self.parent().plotWidget.setGraphXLabel('Absorption Energy (eV)')
             self.parent().plotWidget.setGraphYLabel(
-                    'Absorption cross section (a.u.)')
+                'Absorption cross section (a.u.)')
 
-            x = self.spectrum[:, 0]
-            y = -self.spectrum[:, 2]
-            self.parent().plotWidget.addCurve(x, y, legend=self.label)
+            self.parent().plotWidget.addCurve(
+                self.spectrum[:, 0], self.spectrum[:, 1], legend=self.label)
 
     def selectedHamiltonianTermChanged(self):
         index = self.hamiltonianTermsView.selectionModel().currentIndex()
