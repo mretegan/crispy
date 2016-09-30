@@ -214,7 +214,7 @@ QListView {
                 <number>3</number>
                </property>
                <property name="maximum">
-                <double>1000.000000000000000</double>
+                <double>10000.000000000000000</double>
                </property>
                <property name="singleStep">
                 <double>0.100000000000000</double>
