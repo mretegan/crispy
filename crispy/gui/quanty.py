@@ -247,6 +247,7 @@ class QuantyDockWidget(QDockWidget):
         path = resourceFileName(
             os.path.join('modules', 'quanty', 'templates',
                          '{0:s}'.format(self.templateName)))
+
         try:
             with open(path) as p:
                 template = p.read()
