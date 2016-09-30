@@ -6,93 +6,54 @@ from PyQt5.QtCore import Qt, QAbstractListModel, QModelIndex
 class ListModel(QAbstractListModel):
     """Class implementing a simple list model. It subclasses
     QAbstractListModel and implements the required rowCount() and
-    data(). It also adds methods to insert and append items, and to get
-    model's data at an index. """
+    data(). It also adds methods to insert, append, and remove items,
+    and to get data stored at a given index"""
 
-    def __init__(self, data, parent=None):
+    def __init__(self, parent=None, data=list()):
         super(ListModel, self).__init__(parent)
         self._data = data
 
     def rowCount(self, parent=QModelIndex()):
-        """Return the number of rows in the model.
-
-        Returns
-        -------
-        n : int
-            Number of items in the model.
-        """
-        return len(self._data)
+        """Return the number of rows in the model."""
+        lenght = len(self._data)
+        return lenght
 
     def data(self, index, role):
-        """Return role specific data for the item referred by
-        index.column().
-
-        Parameters
-        ----------
-        index : QModelIndex
-            Index of the item for which data is requested.
-
-        role : int
-            Qt display role used by the view to indicate to the model
-            which type of data it needs
-
-        Returns
-        -------
-        data :
-            Role specific data at the given index.
-        """
+        """Return role specific data for the item referred by the
+        index."""
         if not index.isValid():
-            pass
-
+            return
         if role == Qt.DisplayRole or role == Qt.EditRole:
-            return self._data[index.row()]['label']
+            label = self._data[index.row()]['label']
+            return label
 
-    def insertItem(self, position, item, parent=QModelIndex()):
-        """Insert an item at the specified position in the model's data.
-
-        Parameters
-        ----------
-        position : int
-            List index where the item should be added.
-
-        item : list
-            Item to be added at the specified position.
-        """
-        self.beginInsertRows(parent, position, position)
-        self._data.insert(position, item)
+    def insertItems(self, position, items, parent=QModelIndex()):
+        """Insert items at a given position in the model."""
+        first = position
+        last = position + len(items) - 1
+        self.beginInsertRows(parent, first, last)
+        for item in items:
+            self._data.insert(position, item)
         self.endInsertRows()
         return True
 
-    def appendItem(self, item):
-        """Insert an item at the end of the model's data.
+    def removeItems(self, indexes, parent=QModelIndex()):
+        """Remove items from the model."""
+        rows = [index.row() for index in indexes]
+        first = min(rows)
+        last = max(rows)
+        self.beginRemoveRows(parent, first, last)
+        for index in indexes:
+            self._data.remove(self.getIndexData(index))
+        self.endRemoveRows()
+        return True
 
-        Parameters
-        ----------
-        item : list
-            Item to be appended.
-        """
+    def appendItems(self, items):
+        """Insert items at the end of model."""
         position = self.rowCount()
-        self.insertItem(position, item)
+        self.insertItems(position, items)
 
     def getIndexData(self, index):
-        """Return model's data at the given index.
-
-        Parameters
-        ----------
-        index : QModelIndex
-            Index of the item to be retrieved.
-
-        Returns
-        -------
-        data :
-            Data at the given index.
-
-        """
-        if not index.isValid():
-            pass
-
+        """Return the data stored in the model at the given index."""
         data = self._data[index.row()]
         return data
-
-    def size(self):
-        return len(self._data)

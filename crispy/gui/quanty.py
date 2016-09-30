@@ -8,8 +8,9 @@ import os
 import shutil
 import subprocess
 
-from PyQt5.QtCore import QItemSelectionModel
-from PyQt5.QtWidgets import QAbstractItemView, QDockWidget, QFileDialog
+from PyQt5.QtCore import QItemSelectionModel, Qt, QPoint
+from PyQt5.QtWidgets import (
+    QAbstractItemView, QDockWidget, QFileDialog, QAction, QMenu)
 from PyQt5.uic import loadUi
 
 from .models.treemodel import TreeModel
@@ -171,12 +172,16 @@ class QuantyDockWidget(QDockWidget):
 
         # Create the results model and assign it to the view.
         if not hasattr(self, 'resultsModel'):
-            self.resultsModel = ListModel(list())
+            self.resultsModel = ListModel()
             self.resultsView.setSelectionMode(
                     QAbstractItemView.ExtendedSelection)
             self.resultsView.setModel(self.resultsModel)
             self.resultsView.selectionModel().selectionChanged.connect(
                 self.selectedResultsChanged)
+            # Add a context menu
+            self.resultsView.setContextMenuPolicy(Qt.CustomContextMenu)
+            self.resultsView.customContextMenuRequested[QPoint].connect(
+                self.createContextMenu)
 
         # Set some of the derived data. This is not related to the UI,
         # but it makes sens to set it here.
@@ -188,6 +193,17 @@ class QuantyDockWidget(QDockWidget):
             self.shells = parameters['shells']
         if not self.templateName:
             self.templateName = parameters['template name']
+
+    def createContextMenu(self, position):
+        selectedIndexes = self.resultsView.selectionModel().selectedIndexes()
+        if selectedIndexes:
+            contextMenu = QMenu('Items Context Menu', self)
+            contextMenu.addAction(self.removeResultsModelItemsAction)
+            contextMenu.exec_(self.resultsView.mapToGlobal(position))
+        else:
+            contextMenu = QMenu('View Context Menu', self)
+            contextMenu.addAction(self.loadResultsModelItemsAction)
+            contextMenu.exec_(self.resultsView.mapToGlobal(position))
 
     def updateComboBoxes(self):
         self.element = self.elementComboBox.currentText()
@@ -216,6 +232,18 @@ class QuantyDockWidget(QDockWidget):
         self.savePushButton.clicked.connect(self.saveInput)
         self.runPushButton.beforeExecuting.connect(self.runCalculation)
         self.runPushButton.succeeded.connect(self.processResults)
+
+        self.removeResultsModelItemsAction = QAction(
+            'Remove', self, triggered=self.removeResultsModelItems)
+        self.loadResultsModelItemsAction = QAction(
+            'Load Simulations', self, triggered=self.loadResultsModelItems)
+
+    def removeResultsModelItems(self):
+        selectedIndexes = self.resultsView.selectionModel().selectedIndexes()
+        self.resultsModel.removeItems(selectedIndexes)
+
+    def loadResultsModelItems(self):
+        pass
 
     def getUiParameters(self):
         self.element = self.elementComboBox.currentText()
@@ -376,9 +404,8 @@ class QuantyDockWidget(QDockWidget):
         # Remove the spectrum file
         os.remove(spectrumName)
 
-        index = self.resultsModel.size() + 1
-        self.label = '#{:d} - {:s}{:s} | {:s} | {:s} | {:s}'.format(
-            index, self.element, self.charge, self.symmetry, self.experiment,
+        self.label = '{:s}{:s} | {:s} | {:s} | {:s}'.format(
+            self.element, self.charge, self.symmetry, self.experiment,
             self.edge)
 
         simulation = collections.OrderedDict()
@@ -386,11 +413,13 @@ class QuantyDockWidget(QDockWidget):
             simulation[key] = copy.deepcopy(self.__dict__[key])
 
         # Store the simulation details.
-        self.resultsModel.appendItem(simulation)
+        items = list()
+        items.append(simulation)
+        self.resultsModel.appendItems(items)
 
         # Update the selected item in the results view.
         self.resultsView.selectionModel().clearSelection()
-        index = self.resultsModel.index(self.resultsModel.size() - 1)
+        index = self.resultsModel.index(self.resultsModel.rowCount() - 1)
         self.resultsView.selectionModel().select(
             index, QItemSelectionModel.Select)
 
