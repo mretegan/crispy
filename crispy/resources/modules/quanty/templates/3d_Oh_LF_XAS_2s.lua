@@ -7,7 +7,7 @@
 -- edge: K (2s)
 -- Hamiltonian: Coulomb, spin-orbit coupling, ligand field
 -- transition operators: quadrupole
--- date: 16/09/2016
+-- template modification date: 03/10/2016
 --------------------------------------------------------------------------------
 Verbosity(0x00FF)
 
