@@ -76,7 +76,7 @@ QListView {
         </rect>
        </property>
        <attribute name="label">
-        <string>General</string>
+        <string>General Setup</string>
        </attribute>
        <layout class="QVBoxLayout" name="_2">
         <property name="leftMargin">
@@ -682,7 +682,7 @@ QListView {
         </rect>
        </property>
        <attribute name="label">
-        <string>Hamiltonian Terms and Parameters</string>
+        <string>Hamiltonian Setup</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout">
         <property name="leftMargin">
@@ -744,7 +744,7 @@ QListView {
         </rect>
        </property>
        <attribute name="label">
-        <string>Simulation Results</string>
+        <string>Simulations Results</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <property name="leftMargin">
