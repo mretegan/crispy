@@ -860,6 +860,29 @@ QListView {
    <header>silx.gui.widgets.ThreadPoolPushButton</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>saveAsPushButton</tabstop>
+  <tabstop>runPushButton</tabstop>
+  <tabstop>elementComboBox</tabstop>
+  <tabstop>chargeComboBox</tabstop>
+  <tabstop>symmetryComboBox</tabstop>
+  <tabstop>modelComboBox</tabstop>
+  <tabstop>experimentComboBox</tabstop>
+  <tabstop>edgeComboBox</tabstop>
+  <tabstop>temperatureDoubleSpinBox</tabstop>
+  <tabstop>nPsisDoubleSpinBox</tabstop>
+  <tabstop>e1MinDoubleSpinBox</tabstop>
+  <tabstop>e1MaxDoubleSpinBox</tabstop>
+  <tabstop>e1NPointsDoubleSpinBox</tabstop>
+  <tabstop>e1GammaDoubleSpinBox</tabstop>
+  <tabstop>e2MinDoubleSpinBox</tabstop>
+  <tabstop>e2MaxDoubleSpinBox</tabstop>
+  <tabstop>e2NPointsDoubleSpinBox</tabstop>
+  <tabstop>e2GammaDoubleSpinBox</tabstop>
+  <tabstop>hamiltonianTermsView</tabstop>
+  <tabstop>hamiltonianParametersView</tabstop>
+  <tabstop>resultsView</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
