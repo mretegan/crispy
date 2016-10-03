@@ -1,49 +1,53 @@
 crispy
 ======
 
-Crispy is a graphical user interface that facilitates the simulation of core-level spectra. The interface provides a set of tools to generate input files, submit calculations, and analyze the results obtained with programs such as `Quanty <http://quanty.org>`_ and `ORCA <https://orcaforum.cec.mpg.de>`_. It has a modular design and can be run on Mac OS X, Linux, Windows platforms.
+Crispy is a graphical user interface written in `Python <https://www.python.org/>`_ that facilitates the simulation of core-level spectra. The interface provides a set of tools to generate input files, submit calculations, and analyze the results obtained with programs such as `Quanty <http://quanty.org>`_ and `ORCA <https://orcaforum.cec.mpg.de>`_ (planned). It has a modular design and can be run on Mac OS X, Linux, Windows platforms.
 
 .. image:: doc/screenshot.png
 
 Dependencies
 ------------
+Crispy depends on the following Python packages:
 
-* `Python <https://www.python.org>`_ 3.4 and 3.5.
 * `PyQt5 <https://riverbankcomputing.com/software/pyqt/intro>`_
-* `silx <https://github.com/silx-kit/silx>`_
 * `numpy <http://www.numpy.org>`_
-* `matplotlib <http://matplotlib.org>`_
+* `silx <https://github.com/silx-kit/silx>`_
 
 Instalation
 -----------
+The easiest way to install crispy is to use the installers provided on the `releases <https://github.com/mretegan/crispy/releases>`_ page; currently these are only available for Windows. While being simple to use, the installers aren't updated very frequently, and might lack newly implemented features.
 
-A working Python installation (version 3.4 or greater) is required to use crispy; on Windows you can alternatively use the installer provided on the `releases page <https://github.com/mretegan/crispy/releases>`_. The way this is done depends on the underlying operating system. On Linux, Python and most of the dependencies can be installed using the system's package manager (``apt-get``, ``dnf``, ``pacman``, etc.). On Mac OS X and Windows you can download the `official Python package <https://www.python.org>`_. Afterwards, crispy can be installed by running::
+If you want to use the latest development version, you have to build crispy from source. For this a working Python 3.5 (or newer) installation is required. On Linux, Python can be installed using the system's package manager (``apt-get``, ``dnf``, ``pacman``, etc.). On Mac OS X and Windows, you can install Python using the `official <https://www.python.org/downloads>`_ installers.
 
-    pip install crispy
+After the installation, the remaining dependencies can be installed using ``pip``::
 
-To install it locally, run::
+    pip install PyQt5 numpy silx
 
-    pip install crispy --user
+**Note**: It is possible that the development version of crispy requires features that are not yet available with the pip installable version of silx. In this case you have to also install silx from source. This is not always a very simple task, especially on Windows platforms, but there is extensive `documentation <https://pythonhosted.org/silx>`_ on how to do it. 
 
-The latest development version can be obtained from the GitHub repository::
+The source code for crispy can be downloaded from GitHub either as an `archive <https://github.com/mretegan/crispy/archive/master.zip>`_ or using ``git``::
 
     git clone https://github.com/mretegan/crispy.git
+
+To install it, run::
+
     cd crispy
     pip install . [--user]
 
-The external programs required to run the spectroscopy calculations have to be installed and the PATH environment variable must be set for crispy to be able to use them.
+**Note**: External programs required to run the spectroscopy calculations have to be installed and the PATH environment variable must be set for crispy to be able to use them.
 
 Usage
 -----
-
-After installation, crispy can be started using the included startup script::
+If you have used the installers, crispy should be easy to find and launch. For the installation from source you can start crispy from the command line using::
 
     crispy
 
-Crispy can also be started without installing it::
+This is a binary file created during the installation and should be available if the PATH environment variable was set correctly during the initial Python installation. Alternatively you run crispy using::
 
-    git clone https://github.com/mretegan/crispy.git
-    cd crispy
+    python path_to_crispy/scripts/crispy
+
+You can also started crispy without installing it by going to the source directory and executing::
+
     python -m crispy
 
 License
