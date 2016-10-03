@@ -277,12 +277,9 @@ QListView {
         <item>
          <widget class="QGroupBox" name="groupBox">
           <property name="title">
-           <string>Number of states</string>
+           <string>Number of Initial States</string>
           </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_2">
-           <property name="leftMargin">
-            <number>6</number>
-           </property>
+          <layout class="QHBoxLayout" name="_4">
            <item>
             <layout class="QHBoxLayout" name="nPsisHorizontalLayout">
              <item>

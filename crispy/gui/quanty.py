@@ -3,6 +3,7 @@
 import collections
 import copy
 import json
+import math
 import numpy as np
 import os
 import shutil
@@ -34,6 +35,7 @@ class QuantyDockWidget(QDockWidget):
         'configurations': None,
         'shells': None,
         'hamiltonian': None,
+        'nPsis': None,
         'label': None,
         'spectrum': None,
         'templateName': None,
@@ -101,8 +103,9 @@ class QuantyDockWidget(QDockWidget):
         if self.temperature:
             self.temperatureDoubleSpinBox.setValue(self.temperature)
 
-        # Set the energies group boxes.
         parameters = edges[edge]
+
+        # Set the energies group boxes.
         if not self.energies:
             energies = parameters['energies']
         else:
@@ -123,6 +126,9 @@ class QuantyDockWidget(QDockWidget):
             self.e2GroupBox.setHidden(False)
         else:
             self.e2GroupBox.setHidden(True)
+
+        # Set the number of initial states.
+        self.nPsisDoubleSpinBox.setValue(parameters['number of states'])
 
         # Set the Hamiltonian parameters.
         if not self.hamiltonian:
@@ -271,6 +277,8 @@ class QuantyDockWidget(QDockWidget):
                     self.e2NPointsDoubleSpinBox.value())
             self.energies['e2']['gamma'] = self.e2GammaDoubleSpinBox.value()
 
+        self.nPsis = int(self.nPsisDoubleSpinBox.value())
+
         self.hamiltonian = self.hamiltonianModel.getModelData()
 
     def saveInput(self):
@@ -287,6 +295,9 @@ class QuantyDockWidget(QDockWidget):
             return
 
         self.getUiParameters()
+
+        # Do the magic here
+        print(self.nPsis)
 
         replacements = collections.OrderedDict()
 
@@ -309,6 +320,8 @@ class QuantyDockWidget(QDockWidget):
             replacements['$Emax2'] = self.energies['e2']['max']
             replacements['$NE2'] = self.energies['e2']['npoints']
             replacements['$Gamma2'] = self.energies['e2']['gamma']
+
+        replacements['$NPsis'] = self.nPsis
 
         for term in self.hamiltonian:
             configurations = self.hamiltonian[term]

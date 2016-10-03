@@ -248,7 +248,7 @@ H_fc = $H_coulomb_flag * H_coulomb_fc + $H_soc_flag * H_soc_fc + $H_lf_flag * H_
 --------------------------------------------------------------------------------
 -- Determine the maximum number of states and define the starting restrictions.
 --------------------------------------------------------------------------------
-NPsis = 1
+NPsis = $NPsis
 
 StartingRestrictions = {NFermions, NBosons, {'111111 0000000000 0000000000', NElectrons_2p, NElectrons_2p},
                                             {'000000 1111111111 0000000000', NElectrons_3d, NElectrons_3d},

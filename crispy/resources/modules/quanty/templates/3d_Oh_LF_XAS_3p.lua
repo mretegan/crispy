@@ -219,7 +219,7 @@ H_fc = $H_coulomb_flag * H_coulomb_fc + $H_soc_flag * H_soc_fc + $H_lf_flag * H_
 --------------------------------------------------------------------------------
 -- Determine the maximum number of states and define the starting restrictions.
 --------------------------------------------------------------------------------
-NPsis = 16
+NPsis = $NPsis
 
 StartingRestrictions = {NFermions, NBosons, {'111111 0000000000 0000000000', NElectrons_3p, NElectrons_3p},
                                             {'000000 1111111111 0000000000', NElectrons_3d, NElectrons_3d},
@@ -230,7 +230,7 @@ if not (type(Psis) == 'table') then
     Psis = {Psis}
 end
 
--- Print some useful information about the lowest eigenstates.
+-- Print some useful information about the calculated states.
 OppList = {H_sc, OppSsqr, OppLsqr, OppJsqr, OppSz, OppLz, OppN_3p, OppN_3d, OppN_Ld}
 
 print('     <E>    <S^2>    <L^2>    <J^2>    <Sz>     <Lz>     <Np>      <Nd>     <NL>');
