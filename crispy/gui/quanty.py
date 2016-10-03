@@ -447,7 +447,7 @@ class QuantyDockWidget(QDockWidget):
         else:
             self.parent().plotWidget.setGraphXLabel('Absorption Energy (eV)')
             self.parent().plotWidget.setGraphYLabel(
-                'Absorption cross section (a.u.)')
+                'Absorption Cross Section (a.u.)')
 
             self.parent().plotWidget.addCurve(
                 self.spectrum[:, 0], self.spectrum[:, 1], legend=self.label)
