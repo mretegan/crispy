@@ -296,9 +296,6 @@ class QuantyDockWidget(QDockWidget):
 
         self.getUiParameters()
 
-        # Do the magic here
-        print(self.nPsis)
-
         replacements = collections.OrderedDict()
 
         for shell in self.shells:

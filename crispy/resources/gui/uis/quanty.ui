@@ -744,7 +744,7 @@ QListView {
         </rect>
        </property>
        <attribute name="label">
-        <string>Simulations Results</string>
+        <string>Results</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <property name="leftMargin">
