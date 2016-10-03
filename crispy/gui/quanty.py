@@ -10,6 +10,7 @@ import shutil
 import subprocess
 
 from PyQt5.QtCore import QItemSelectionModel, Qt, QPoint
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (
     QAbstractItemView, QDockWidget, QFileDialog, QAction, QMenu)
 from PyQt5.uic import loadUi
@@ -242,10 +243,15 @@ class QuantyDockWidget(QDockWidget):
         self.runPushButton.beforeExecuting.connect(self.runCalculation)
         self.runPushButton.succeeded.connect(self.processResults)
 
+        icon = QIcon(resourceFileName(os.path.join(
+            'gui', 'icons', 'trash.svg')))
         self.removeResultsModelItemsAction = QAction(
-            'Remove', self, triggered=self.removeResultsModelItems)
+            icon, 'Remove', self, triggered=self.removeResultsModelItems)
+
+        icon = QIcon(resourceFileName(os.path.join(
+            'gui', 'icons', 'folder-open.svg')))
         self.loadResultsModelItemsAction = QAction(
-            'Load Simulations', self, triggered=self.loadResultsModelItems)
+            icon, 'Load Simulations', self, triggered=self.loadResultsModelItems)
 
     def removeResultsModelItems(self):
         selectedIndexes = self.resultsView.selectionModel().selectedIndexes()
