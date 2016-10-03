@@ -229,7 +229,7 @@ class QuantyDockWidget(QDockWidget):
                 self.updateComboBoxes)
         self.edgeComboBox.currentTextChanged.connect(self.updateComboBoxes)
 
-        self.savePushButton.clicked.connect(self.saveInput)
+        self.saveAsPushButton.clicked.connect(self.saveAsInput)
         self.runPushButton.beforeExecuting.connect(self.runCalculation)
         self.runPushButton.succeeded.connect(self.processResults)
 
@@ -369,24 +369,17 @@ class QuantyDockWidget(QDockWidget):
         if path:
             os.chdir(os.path.dirname(path))
             self.baseName = os.path.splitext(os.path.basename(path))[0]
-            self.saveInput()
 
     def runCalculation(self):
         # Determine the location of the executable program.
         self.command = shutil.which('Quanty') or shutil.which('Quanty.exe')
 
-        if self.command is None:
+        if not self.command:
             print('Could not find Quanty in the path.')
             return
 
         # Write the input file to disk.
-        if self.inputName:
-            self.saveInput()
-        else:
-            self.saveAsInput()
-
-        if not self.inputName:
-            return
+        self.saveInput()
 
         self.runPushButton.setCallable(
             subprocess.run, [self.command, self.inputName])
