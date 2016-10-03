@@ -701,25 +701,19 @@ QListView {
          <number>3</number>
         </property>
         <item>
-         <widget class="QSplitter" name="splitter">
+         <widget class="QSplitter" name="hamiltonianSplitter">
           <property name="lineWidth">
            <number>0</number>
           </property>
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
+          <property name="childrenCollapsible">
+           <bool>false</bool>
+          </property>
           <widget class="QListView" name="hamiltonianTermsView">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>110</height>
-            </size>
+           <property name="enabled">
+            <bool>true</bool>
            </property>
            <property name="frameShape">
             <enum>QFrame::NoFrame</enum>

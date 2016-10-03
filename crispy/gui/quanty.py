@@ -170,6 +170,9 @@ class QuantyDockWidget(QDockWidget):
         self.hamiltonianTermsView.selectionModel().selectionChanged.connect(
             self.selectedHamiltonianTermChanged)
 
+        # Set the sizes of the two views
+        self.hamiltonianSplitter.setSizes((100, 300))
+
         # Create the results model and assign it to the view.
         if not hasattr(self, 'resultsModel'):
             self.resultsModel = ListModel()
