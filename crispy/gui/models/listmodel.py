@@ -43,8 +43,8 @@ class ListModel(QAbstractListModel):
         first = min(rows)
         last = max(rows)
         self.beginRemoveRows(QModelIndex(), first, last)
-        for index in indexes:
-            del self._data[index.row()]
+        for row in sorted(rows, reverse=True):
+            del self._data[row]
         self.endRemoveRows()
         return True
 

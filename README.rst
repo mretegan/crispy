@@ -23,7 +23,7 @@ After the installation, the remaining dependencies can be installed using ``pip`
 
     pip install PyQt5 numpy silx
 
-**Note**: It is possible that the development version of crispy requires features that are not yet available with the pip installable version of silx. In this case you have to also install silx from source. This is not always a very simple task, especially on Windows platforms, but there is extensive `documentation <https://pythonhosted.org/silx>`_ on how to do it. 
+**Note**: It is possible that the development version of crispy requires features that are not yet available with the pip installable version of silx. In this case you have to also install silx from source. This is not always a very simple task, especially on Windows platform, but there is extensive `documentation <https://pythonhosted.org/silx>`_ on how to do it. 
 
 The source code for crispy can be downloaded from GitHub either as an `archive <https://github.com/mretegan/crispy/archive/master.zip>`_ or using ``git``::
 
