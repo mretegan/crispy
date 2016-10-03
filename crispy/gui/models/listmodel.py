@@ -15,8 +15,8 @@ class ListModel(QAbstractListModel):
 
     def rowCount(self, parent=QModelIndex()):
         """Return the number of rows in the model."""
-        lenght = len(self._data)
-        return lenght
+        length = len(self._data)
+        return length
 
     def data(self, index, role):
         """Return role specific data for the item referred by the
@@ -31,7 +31,7 @@ class ListModel(QAbstractListModel):
         """Insert items at a given position in the model."""
         first = position
         last = position + len(items) - 1
-        self.beginInsertRows(parent, first, last)
+        self.beginInsertRows(QModelIndex(), first, last)
         for item in items:
             self._data.insert(position, item)
         self.endInsertRows()
@@ -42,7 +42,7 @@ class ListModel(QAbstractListModel):
         rows = [index.row() for index in indexes]
         first = min(rows)
         last = max(rows)
-        self.beginRemoveRows(parent, first, last)
+        self.beginRemoveRows(QModelIndex(), first, last)
         for index in indexes:
             del self._data[index.row()]
         self.endRemoveRows()
