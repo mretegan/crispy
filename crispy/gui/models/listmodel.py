@@ -44,7 +44,7 @@ class ListModel(QAbstractListModel):
         last = max(rows)
         self.beginRemoveRows(parent, first, last)
         for index in indexes:
-            self._data.remove(self.getIndexData(index))
+            del self._data[index.row()]
         self.endRemoveRows()
         return True
 
@@ -55,5 +55,7 @@ class ListModel(QAbstractListModel):
 
     def getIndexData(self, index):
         """Return the data stored in the model at the given index."""
+        if not index.isValid():
+            return
         data = self._data[index.row()]
         return data
