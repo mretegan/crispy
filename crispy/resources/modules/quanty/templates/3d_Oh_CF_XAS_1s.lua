@@ -7,7 +7,7 @@
 -- edge: K (1s)
 -- Hamiltonian: Coulomb, spin-orbit coupling, crystal field
 -- transition operators: quadrupole
--- template modification date: 03/10/2016
+-- template modification date: 04/10/2016
 --------------------------------------------------------------------------------
 Verbosity(0x00FF)
 
@@ -125,12 +125,12 @@ H_sc = $H_coulomb_flag * H_coulomb_sc + $H_soc_flag * H_soc_sc + $H_cf_flag * H_
 H_fc = $H_coulomb_flag * H_coulomb_fc + $H_soc_flag * H_soc_fc + $H_cf_flag * H_cf_fc + B
 
 --------------------------------------------------------------------------------
--- Determine the maximum number of states and define the starting restrictions.
+-- Define the starting restrictions and set the number of initial states.
 --------------------------------------------------------------------------------
-NPsis = $NPsis
-
 StartingRestrictions = {NFermions, NBosons, {'11 0000000000', NElectrons_1s, NElectrons_1s},
                                             {'00 1111111111', NElectrons_3d, NElectrons_3d}}
+
+NPsis = $NPsis
 
 Psis = Eigensystem(H_sc, StartingRestrictions, NPsis)
 if not (type(Psis) == 'table') then
