@@ -401,7 +401,7 @@ class QuantyDockWidget(QDockWidget):
         self.saveInput()
 
         self.runPushButton.setCallable(
-            subprocess.check_call, [self.command, self.inputName], stdout=subprocess.PIPE)
+            subprocess.check_call, [self.command, self.inputName])
 
     def processResults(self):
         spectrumName = '{0:s}.spec'.format(self.baseName)
