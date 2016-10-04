@@ -388,6 +388,7 @@ class QuantyDockWidget(QDockWidget):
         if path:
             os.chdir(os.path.dirname(path))
             self.baseName = os.path.splitext(os.path.basename(path))[0]
+            self.saveInput()
 
     def runCalculation(self):
         # Determine the location of the executable program.
@@ -398,7 +399,8 @@ class QuantyDockWidget(QDockWidget):
             return
 
         # Write the input file to disk.
-        self.saveInput()
+        if not self.inputName:
+            self.saveInput()
 
         self.runPushButton.setCallable(
             subprocess.check_call, [self.command, self.inputName])
