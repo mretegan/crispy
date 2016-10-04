@@ -74,7 +74,7 @@ class QuantyDockWidget(QDockWidget):
         self.createActions()
 
     def loadSimulationParameters(self, simulation):
-        """Load parameters from a dictionary."""
+        # Load parameters from a dictionary.
         for key in simulation:
             self.__dict__[key] = copy.deepcopy(simulation[key])
 

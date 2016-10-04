@@ -7,7 +7,8 @@ class ListModel(QAbstractListModel):
     """Class implementing a simple list model. It subclasses
     QAbstractListModel and implements the required rowCount() and
     data(). It also adds methods to insert, append, and remove items,
-    and to get data stored at a given index"""
+    and to get data stored at a given index.
+    """
 
     def __init__(self, parent=None, data=list()):
         super(ListModel, self).__init__(parent)
