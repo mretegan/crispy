@@ -399,8 +399,7 @@ class QuantyDockWidget(QDockWidget):
             return
 
         # Write the input file to disk.
-        if not self.inputName:
-            self.saveInput()
+        self.saveInput()
 
         self.runPushButton.setCallable(
             subprocess.check_call, [self.command, self.inputName])
