@@ -3,6 +3,7 @@
 import collections
 import copy
 import json
+import logging
 import math
 import numpy as np
 import os
@@ -19,8 +20,7 @@ from .models.treemodel import TreeModel
 from .models.listmodel import ListModel
 from ..resources import resourceFileName
 
-from pprint import pprint as print
-
+_logger = logging.getLogger(__name__)
 
 class QuantyDockWidget(QDockWidget):
 
@@ -297,7 +297,7 @@ class QuantyDockWidget(QDockWidget):
             with open(path) as p:
                 template = p.read()
         except FileNotFoundError:
-            print('Could not find template: {0:s}'.format(self.template))
+            _logger.error('Could not find template: {0:s}'.format(self.template))
             return
 
         self.getUiParameters()
@@ -394,14 +394,14 @@ class QuantyDockWidget(QDockWidget):
         self.command = shutil.which('Quanty') or shutil.which('Quanty.exe')
 
         if not self.command:
-            print('Could not find Quanty in the path.')
+            _logger.error('Could not find Quanty in the path.')
             return
 
         # Write the input file to disk.
         self.saveInput()
 
         self.runPushButton.setCallable(
-            subprocess.run, [self.command, self.inputName])
+            subprocess.check_call, [self.command, self.inputName], stdout=subprocess.PIPE)
 
     def processResults(self):
         spectrumName = '{0:s}.spec'.format(self.baseName)

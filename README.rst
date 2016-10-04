@@ -15,7 +15,7 @@ Crispy depends on the following Python packages:
 
 Instalation
 -----------
-The easiest way to install crispy is to use the installers provided on the `releases <https://github.com/mretegan/crispy/releases>`_ page; currently these are only available for Windows. While being simple to use, the installers aren't updated very frequently, and might lack newly implemented features.
+The easiest way to install crispy is to use the installers provided on the `releases <https://github.com/mretegan/crispy/releases>`_ page; currently these are only available for Windows. While being simple to use, the installers are not updated very frequently, and might lack newly implemented features. 
 
 If you want to use the latest development version, you have to build crispy from source. For this a working Python 3.5 (or newer) installation is required. On Linux, Python can be installed using the system's package manager (``apt-get``, ``dnf``, ``pacman``, etc.). On Mac OS X and Windows, you can install Python using the `official <https://www.python.org/downloads>`_ installers.
 
@@ -23,7 +23,7 @@ After the installation, the remaining dependencies can be installed using ``pip`
 
     pip install PyQt5 numpy silx
 
-**Note**: It is possible that the development version of crispy requires features that are not yet available with the pip installable version of silx. In this case you have to also install silx from source. This is not always a very simple task, especially on Windows platform, but there is extensive `documentation <https://pythonhosted.org/silx>`_ on how to do it. 
+**Note**: It is possible that the development version of crispy requires features that are not yet available with the pip installable version of silx. In this case you have to also install silx from source. This is not always a very simple task, especially on Windows, but there is extensive `documentation <https://pythonhosted.org/silx>`_ on how to do it. 
 
 The source code for crispy can be downloaded from GitHub either as an `archive <https://github.com/mretegan/crispy/archive/master.zip>`_ or using ``git``::
 
