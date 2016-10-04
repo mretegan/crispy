@@ -210,10 +210,10 @@ class QuantyDockWidget(QDockWidget):
             contextMenu = QMenu('Items Context Menu', self)
             contextMenu.addAction(self.removeResultsModelItemsAction)
             contextMenu.exec_(self.resultsView.mapToGlobal(position))
-        else:
-            contextMenu = QMenu('View Context Menu', self)
-            contextMenu.addAction(self.loadResultsModelItemsAction)
-            contextMenu.exec_(self.resultsView.mapToGlobal(position))
+        # else:
+            # contextMenu = QMenu('View Context Menu', self)
+            # contextMenu.addAction(self.loadResultsModelItemsAction)
+            # contextMenu.exec_(self.resultsView.mapToGlobal(position))
 
     def updateComboBoxes(self):
         self.element = self.elementComboBox.currentText()
