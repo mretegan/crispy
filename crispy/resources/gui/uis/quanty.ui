@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>300</width>
-    <height>700</height>
+    <height>570</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -72,7 +72,7 @@ QListView {
          <x>0</x>
          <y>0</y>
          <width>300</width>
-         <height>536</height>
+         <height>406</height>
         </rect>
        </property>
        <attribute name="label">
@@ -255,7 +255,7 @@ QListView {
          <x>0</x>
          <y>0</y>
          <width>300</width>
-         <height>536</height>
+         <height>406</height>
         </rect>
        </property>
        <attribute name="label">
@@ -678,7 +678,7 @@ QListView {
          <x>0</x>
          <y>0</y>
          <width>300</width>
-         <height>536</height>
+         <height>406</height>
         </rect>
        </property>
        <attribute name="label">
@@ -740,7 +740,7 @@ QListView {
          <x>0</x>
          <y>0</y>
          <width>300</width>
-         <height>536</height>
+         <height>406</height>
         </rect>
        </property>
        <attribute name="label">
