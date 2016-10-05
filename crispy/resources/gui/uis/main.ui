@@ -72,8 +72,6 @@
      <addaction name="separator"/>
      <addaction name="quantySaveInputAction"/>
      <addaction name="quantySaveAsInputAction"/>
-     <addaction name="separator"/>
-     <addaction name="quantyRunCalculationAction"/>
     </widget>
     <addaction name="menuModulesQuanty"/>
    </widget>

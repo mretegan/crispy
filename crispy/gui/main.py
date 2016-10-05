@@ -21,8 +21,7 @@ class MainWindow(QMainWindow):
         self.quantyDockWidget = QuantyDockWidget()
         self.addDockWidget(Qt.RightDockWidgetArea, self.quantyDockWidget)
         self.quantyDockWidget.setVisible(True)
-        self.quantyRunCalculationAction.triggered.connect(
-            self.quantyDockWidget.runCalculation)
+        self.quantyRunCalculationAction.triggered.connect(print)
         self.quantySaveInputAction.triggered.connect(
             self.quantyDockWidget.saveInput)
         self.quantySaveAsInputAction.triggered.connect(
