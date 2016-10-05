@@ -176,7 +176,8 @@ class TreeModel(QAbstractItemModel):
 
     def flags(self, index):
         """Return the active flags for the given index."""
-        activeFlags = Qt.ItemIsEnabled | Qt.ItemIsSelectable
+        activeFlags = (
+            Qt.ItemIsEnabled | Qt.ItemIsSelectable | Qt.ItemIsEditable)
         return activeFlags
 
     def headerData(self, section, orientation, role):
