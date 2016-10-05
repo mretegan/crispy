@@ -4,8 +4,9 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QDockWidget
 from PyQt5.uic import loadUi
 
-from ..resources import resourceFileName
+from .widgets.plotwidget import PlotWidget
 from .quanty import QuantyDockWidget
+from ..resources import resourceFileName
 
 
 class MainWindow(QMainWindow):

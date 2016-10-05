@@ -2,6 +2,9 @@
 
 def main():
     import sys
+    import logging
+
+    logging.basicConfig(level=logging.WARNING)
 
     from PyQt5.QtCore import Qt
     from PyQt5.QtWidgets import QApplication
