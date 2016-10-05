@@ -395,7 +395,8 @@ class QuantyDockWidget(QDockWidget):
         self.command = shutil.which('Quanty') or shutil.which('Quanty.exe')
 
         if not self.command:
-            _logger.error('Could not find Quanty in the path.')
+            _logger.error('Could not find Quanty in the path. Please install '
+                    'the program and set the PATH environment variable.')
             return
 
         # Write the input file to disk.
