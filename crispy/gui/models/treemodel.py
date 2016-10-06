@@ -7,6 +7,7 @@ from PyQt5.QtCore import Qt, QAbstractItemModel, QModelIndex
 
 class TreeNode(object):
     """Class implementing a tree node to be used in a tree model."""
+
     def __init__(self, data, parent=None):
         self._data = data
         self._parent = parent
@@ -45,7 +46,7 @@ class TreeNode(object):
         try:
             return self._data[column]
         except IndexError:
-            return None
+            return str()
 
     def setItemData(self, column, value):
         """Set the data at a given column."""
@@ -132,16 +133,14 @@ class TreeModel(QAbstractItemModel):
         else:
             parentNode = self.getNode(parentIndex)
 
-        n = parentNode.childCount()
-        return n
+        return parentNode.childCount()
 
     def columnCount(self, parentIndex):
         """Return the number of columns. The index of the parent is
         required, but not used, as in this implementation it defaults
         for all nodes to the length of the header.
         """
-        n = len(self._header)
-        return n
+        return len(self._header)
 
     def data(self, index, role):
         """Return role specific data for the item referred by
@@ -150,9 +149,20 @@ class TreeModel(QAbstractItemModel):
             pass
 
         node = self.getNode(index)
+        column = index.column()
+        value = node.getItemData(column)
 
-        if role == Qt.DisplayRole or role == Qt.EditRole:
-            return node.getItemData(index.column())
+        if role == Qt.DisplayRole:
+            try:
+                if column > 1:
+                    return '{0:8.1f}'.format(value)
+                else:
+                    return '{0:8.3f}'.format(value)
+            except ValueError:
+                return value
+
+        if role == Qt.EditRole:
+            return str(value)
 
         if role == Qt.TextAlignmentRole:
             if index.column() > 0:
@@ -160,24 +170,38 @@ class TreeModel(QAbstractItemModel):
 
     def setData(self, index, value, role):
         """Set the role data for the item at index to value."""
-        if index.isValid():
-            node = self.getNode(index)
-            if role == Qt.DisplayRole or role == Qt.EditRole:
-                node.setItemData(index.column(), value)
-                self.getModelData()
-            elif role == Qt.CheckStateRole:
-                if node.checkState() == Qt.Checked:
-                    node.setState(Qt.Unchecked)
-                else:
-                    node.setState(Qt.Checked)
-            return True
-        else:
+        if not index.isValid():
             return False
 
+        node = self.getNode(index)
+        column = index.column()
+
+        if role == Qt.DisplayRole or role == Qt.EditRole:
+            if column > 0 and not node.childCount():
+                try:
+                    node.setItemData(column, float(value))
+                except ValueError:
+                    return False
+            else:
+                node.setItemData(column, value)
+
+            # This is needed do display data from multiple items.
+            self.getModelData()
+
+        return True
+
     def flags(self, index):
-        """Return the active flags for the given index."""
-        activeFlags = (
-            Qt.ItemIsEnabled | Qt.ItemIsSelectable | Qt.ItemIsEditable)
+        """Return the active flags for the given index. Add editable
+        flag to items in the first colum or greater.
+        """
+        activeFlags = Qt.ItemIsEnabled | Qt.ItemIsSelectable
+
+        node = self.getNode(index)
+        column = index.column()
+
+        if column > 0 and not node.childCount():
+            activeFlags = activeFlags | Qt.ItemIsEditable
+
         return activeFlags
 
     def headerData(self, section, orientation, role):
@@ -188,12 +212,10 @@ class TreeModel(QAbstractItemModel):
             return self._header[section]
 
     def getNode(self, index):
-        if index.isValid():
-            node = index.internalPointer()
-            if node:
-                return node
-        else:
+        if not index.isValid():
             return self._rootNode
+
+        return index.internalPointer()
 
     def setModelData(self, data, parentNode=None):
         if parentNode is None:
@@ -208,12 +230,9 @@ class TreeModel(QAbstractItemModel):
                     self.setModelData(value, node)
                 # Not very nice, but works.
                 elif isinstance(value, float):
-                    node = TreeNode(
-                        [key, '{0:8.4f}'.format(value)], parentNode)
+                    node = TreeNode([key, value], parentNode)
                 elif isinstance(value, list):
-                    node = TreeNode(
-                        [key, '{0:8.4f}'.format(value[0]),
-                            '{0:8.2f}'.format(value[1])], parentNode)
+                    node = TreeNode([key, value[0], value[1]], parentNode)
                 else:
                     print('Invalid data sent to the model: {0}'.format(value))
 
@@ -224,17 +243,14 @@ class TreeModel(QAbstractItemModel):
 
         for node in parentNode.getChildren():
             key = node.getItemData(0)
-            if node.childCount() != 0:
+            if node.childCount():
                 data[key] = collections.OrderedDict()
                 self._getModelData(data[key], node)
             else:
                 if node.getItemData(2):
-                    data[key] = [
-                        float(node.getItemData(1)),
-                        float(node.getItemData(2)),
-                        ]
+                    data[key] = [node.getItemData(1), node.getItemData(2)]
                 else:
-                    data[key] = float(node.getItemData(1))
+                    data[key] = node.getItemData(1)
 
     def getModelData(self):
         data = collections.OrderedDict()

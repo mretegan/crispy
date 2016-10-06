@@ -712,8 +712,14 @@ QListView {
            <property name="enabled">
             <bool>true</bool>
            </property>
+           <property name="toolTip">
+            <string>Select the Hamiltonian term you want to modify</string>
+           </property>
            <property name="frameShape">
             <enum>QFrame::NoFrame</enum>
+           </property>
+           <property name="tabKeyNavigation">
+            <bool>true</bool>
            </property>
            <property name="alternatingRowColors">
             <bool>false</bool>
@@ -725,6 +731,9 @@ QListView {
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
+           </property>
+           <property name="toolTip">
+            <string>Double-click to edit the value or the scaling of a parameter</string>
            </property>
            <property name="frameShape">
             <enum>QFrame::NoFrame</enum>
