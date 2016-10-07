@@ -9,6 +9,7 @@ import numpy as np
 import os
 import shutil
 import subprocess
+import uuid
 
 from PyQt5.QtCore import QItemSelectionModel, Qt, QPoint
 from PyQt5.QtGui import QIcon
@@ -418,9 +419,9 @@ class QuantyDockWidget(QDockWidget):
         # Remove the spectrum file
         os.remove(spectrumName)
 
-        self.label = '{:s}{:s} | {:s} | {:s} | {:s}'.format(
+        self.label = '{:s}{:s} | {:s} | {:s} | {:s} | {:s}'.format(
             self.element, self.charge, self.symmetry, self.experiment,
-            self.edge)
+            self.edge, uuid.uuid4().hex[:5])
 
         simulation = collections.OrderedDict()
         for key in self._defaults:

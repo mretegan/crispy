@@ -185,9 +185,6 @@ class TreeModel(QAbstractItemModel):
             else:
                 node.setItemData(column, value)
 
-            # This is needed do display data from multiple items.
-            self.getModelData()
-
         return True
 
     def flags(self, index):
