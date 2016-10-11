@@ -19,35 +19,44 @@
 }</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="_7">
-    <property name="spacing">
-     <number>0</number>
-    </property>
-    <property name="leftMargin">
-     <number>0</number>
-    </property>
-    <property name="topMargin">
-     <number>0</number>
-    </property>
-    <property name="rightMargin">
-     <number>0</number>
-    </property>
-    <property name="bottomMargin">
-     <number>0</number>
-    </property>
+   <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
-     <layout class="QVBoxLayout" name="plotWidgetLayout">
-      <item>
-       <widget class="PlotWidget" name="plotWidget" native="true">
-        <property name="minimumSize">
-         <size>
-          <width>455</width>
-          <height>400</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-     </layout>
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="childrenCollapsible">
+       <bool>false</bool>
+      </property>
+      <widget class="QWidget" name="verticalLayoutWidget">
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="PlotWidget" name="plotWidget" native="true">
+          <property name="minimumSize">
+           <size>
+            <width>455</width>
+            <height>400</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QPlainTextEdit" name="console">
+       <property name="font">
+        <font>
+         <family>Courier</family>
+         <pointsize>13</pointsize>
+        </font>
+       </property>
+       <property name="lineWidth">
+        <number>0</number>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </widget>
     </item>
    </layout>
   </widget>

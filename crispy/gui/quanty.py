@@ -11,7 +11,7 @@ import shutil
 import subprocess
 import uuid
 
-from PyQt5.QtCore import QItemSelectionModel, Qt, QPoint
+from PyQt5.QtCore import QItemSelectionModel, QProcess, Qt, QPoint
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (
     QAbstractItemView, QDockWidget, QFileDialog, QAction, QMenu)
@@ -241,8 +241,8 @@ class QuantyDockWidget(QDockWidget):
         self.edgeComboBox.currentTextChanged.connect(self.updateComboBoxes)
 
         self.saveAsPushButton.clicked.connect(self.saveAsInput)
-        self.runPushButton.beforeExecuting.connect(self.runCalculation)
-        self.runPushButton.succeeded.connect(self.processResults)
+        self.runPushButton.clicked.connect(self.runCalculation)
+        # self.runPushButton.succeeded.connect(self.processResults)
 
         icon = QIcon(resourceFileName(os.path.join(
             'gui', 'icons', 'trash.svg')))
@@ -403,8 +403,18 @@ class QuantyDockWidget(QDockWidget):
         # Write the input file to disk.
         self.saveInput()
 
-        self.runPushButton.setCallable(
-            subprocess.check_call, [self.command, self.inputName])
+        # Run Quanty using a process
+        self.process = QProcess()
+        self.process.setProcessChannelMode(QProcess.MergedChannels)
+        self.process.readyReadStandardOutput.connect(self.handleOutput)
+        self.process.readyReadStandardError.connect(self.handleOutput)
+        self.process.start(self.command, (self.inputName, ))
+        self.process.waitForReadyRead()
+        self.process.finished.connect(self.processResults)
+
+    def handleOutput(self):
+        output = self.process.readAll()
+        self.parent().console.appendPlainText(str(output, encoding='utf-8'))
 
     def processResults(self):
         spectrumName = '{0:s}.spec'.format(self.baseName)

@@ -709,9 +709,6 @@ QListView {
            <bool>false</bool>
           </property>
           <widget class="QListView" name="hamiltonianTermsView">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
            <property name="toolTip">
             <string>Select the Hamiltonian term you want to modify</string>
            </property>
@@ -726,12 +723,6 @@ QListView {
            </property>
           </widget>
           <widget class="TreeView" name="hamiltonianParametersView">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
            <property name="toolTip">
             <string>Double-click to edit the value or the scaling of a parameter</string>
            </property>
@@ -827,7 +818,7 @@ QListView {
        </widget>
       </item>
       <item>
-       <widget class="ThreadPoolPushButton" name="runPushButton">
+       <widget class="QPushButton" name="runPushButton">
         <property name="toolTip">
          <string>Run Quanty</string>
         </property>
@@ -859,11 +850,6 @@ QListView {
    <class>ComboBox</class>
    <extends>QComboBox</extends>
    <header>.widgets.combobox</header>
-  </customwidget>
-  <customwidget>
-   <class>ThreadPoolPushButton</class>
-   <extends>QPushButton</extends>
-   <header>silx.gui.widgets.ThreadPoolPushButton</header>
   </customwidget>
  </customwidgets>
  <tabstops>
