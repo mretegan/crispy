@@ -17,7 +17,7 @@ class MainWindow(QMainWindow):
         loadUi(uiPath, baseinstance=self, package='crispy.gui')
 
         self.splitter.setCollapsible(1, True)
-        self.splitter.setSizes((100, 0))
+        self.splitter.setSizes((500, 50))
 
         self.statusBar().showMessage('Ready')
 

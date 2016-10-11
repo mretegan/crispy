@@ -414,7 +414,7 @@ class QuantyDockWidget(QDockWidget):
 
     def handleOutput(self):
         output = self.process.readAll()
-        self.parent().console.appendPlainText(str(output, encoding='utf-8'))
+        self.parent().logger.appendPlainText(str(output, encoding='utf-8'))
 
     def processResults(self):
         spectrumName = '{0:s}.spec'.format(self.baseName)

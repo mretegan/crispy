@@ -42,7 +42,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QPlainTextEdit" name="console">
+      <widget class="QPlainTextEdit" name="logger">
        <property name="font">
         <font>
          <family>Courier</family>
