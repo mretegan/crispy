@@ -429,7 +429,7 @@ class QuantyDockWidget(QDockWidget):
         # Remove the spectrum file
         os.remove(spectrumName)
 
-        self.label = '{:s}{:s} | {:s} | {:s} | {:s} | {:s}'.format(
+        self.label = '{:s}{:s} | {:s} | {:s} | {:s} | id: {:s}'.format(
             self.element, self.charge, self.symmetry, self.experiment,
             self.edge, uuid.uuid4().hex[:5])
 
