@@ -244,7 +244,7 @@ class TreeModel(QAbstractItemModel):
                 data[key] = collections.OrderedDict()
                 self._getModelData(data[key], node)
             else:
-                if node.getItemData(2):
+                if isinstance(node.getItemData(2), float):
                     data[key] = [node.getItemData(1), node.getItemData(2)]
                 else:
                     data[key] = node.getItemData(1)
