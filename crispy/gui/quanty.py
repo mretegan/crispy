@@ -165,6 +165,7 @@ class QuantyDockWidget(QDockWidget):
         self.hamiltonianTermsView.setModel(self.hamiltonianModel)
         self.hamiltonianTermsView.selectionModel().setCurrentIndex(
             self.hamiltonianModel.index(0, 0), QItemSelectionModel.Select)
+        self.hamiltonianTermsView.setAttribute(Qt.WA_MacShowFocusRect, False)
 
         # Assign the Hamiltonian model to the Hamiltonian parameters view, and
         # set some properties.
@@ -172,6 +173,7 @@ class QuantyDockWidget(QDockWidget):
         self.hamiltonianParametersView.expandAll()
         self.hamiltonianParametersView.resizeAllColumnsToContents()
         self.hamiltonianParametersView.setColumnWidth(0, 160)
+        self.hamiltonianParametersView.setAttribute(Qt.WA_MacShowFocusRect, False)
 
         index = self.hamiltonianTermsView.selectionModel().currentIndex()
         self.hamiltonianParametersView.setRootIndex(index)
@@ -189,6 +191,7 @@ class QuantyDockWidget(QDockWidget):
             self.resultsView.setModel(self.resultsModel)
             self.resultsView.selectionModel().selectionChanged.connect(
                 self.selectedResultsChanged)
+            self.resultsView.setAttribute(Qt.WA_MacShowFocusRect, False)
             # Add a context menu
             self.resultsView.setContextMenuPolicy(Qt.CustomContextMenu)
             self.resultsView.customContextMenuRequested[QPoint].connect(
