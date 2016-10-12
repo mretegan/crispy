@@ -19,7 +19,7 @@
   <property name="minimumSize">
    <size>
     <width>290</width>
-    <height>268</height>
+    <height>300</height>
    </size>
   </property>
   <property name="styleSheet">
@@ -29,8 +29,9 @@
 }
 
 QListView {
-   background-color: rgba(255, 255, 255, 255); 
-}</string>
+   background-color: rgba(255, 255, 255, 255);
+}
+</string>
   </property>
   <property name="features">
    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
@@ -64,7 +65,7 @@ QListView {
        <number>0</number>
       </property>
       <property name="tabSpacing">
-       <number>3</number>
+       <number>6</number>
       </property>
       <widget class="QWidget" name="generalPage">
        <property name="geometry">
@@ -72,7 +73,7 @@ QListView {
          <x>0</x>
          <y>0</y>
          <width>300</width>
-         <height>406</height>
+         <height>394</height>
         </rect>
        </property>
        <attribute name="label">
@@ -83,7 +84,7 @@ QListView {
          <number>6</number>
         </property>
         <property name="topMargin">
-         <number>6</number>
+         <number>0</number>
         </property>
         <property name="rightMargin">
          <number>6</number>
@@ -255,7 +256,7 @@ QListView {
          <x>0</x>
          <y>0</y>
          <width>300</width>
-         <height>406</height>
+         <height>394</height>
         </rect>
        </property>
        <attribute name="label">
@@ -266,7 +267,7 @@ QListView {
          <number>6</number>
         </property>
         <property name="topMargin">
-         <number>6</number>
+         <number>0</number>
         </property>
         <property name="rightMargin">
          <number>6</number>
@@ -678,7 +679,7 @@ QListView {
          <x>0</x>
          <y>0</y>
          <width>300</width>
-         <height>406</height>
+         <height>394</height>
         </rect>
        </property>
        <attribute name="label">
@@ -686,16 +687,16 @@ QListView {
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout">
         <property name="leftMargin">
-         <number>6</number>
+         <number>0</number>
         </property>
         <property name="topMargin">
-         <number>3</number>
+         <number>0</number>
         </property>
         <property name="rightMargin">
-         <number>6</number>
+         <number>0</number>
         </property>
         <property name="bottomMargin">
-         <number>3</number>
+         <number>0</number>
         </property>
         <item>
          <widget class="QSplitter" name="hamiltonianSplitter">
@@ -704,6 +705,9 @@ QListView {
           </property>
           <property name="orientation">
            <enum>Qt::Vertical</enum>
+          </property>
+          <property name="handleWidth">
+           <number>6</number>
           </property>
           <property name="childrenCollapsible">
            <bool>false</bool>
@@ -740,7 +744,7 @@ QListView {
          <x>0</x>
          <y>0</y>
          <width>300</width>
-         <height>406</height>
+         <height>394</height>
         </rect>
        </property>
        <attribute name="label">
@@ -748,16 +752,16 @@ QListView {
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <property name="leftMargin">
-         <number>6</number>
+         <number>0</number>
         </property>
         <property name="topMargin">
-         <number>3</number>
+         <number>0</number>
         </property>
         <property name="rightMargin">
-         <number>6</number>
+         <number>0</number>
         </property>
         <property name="bottomMargin">
-         <number>3</number>
+         <number>0</number>
         </property>
         <item>
          <widget class="QListView" name="resultsView">
@@ -798,12 +802,6 @@ QListView {
       </property>
       <item>
        <widget class="QPushButton" name="saveAsPushButton">
-        <property name="minimumSize">
-         <size>
-          <width>70</width>
-          <height>0</height>
-         </size>
-        </property>
         <property name="toolTip">
          <string>Save a Quanty input file</string>
         </property>

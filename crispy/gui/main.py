@@ -2,6 +2,7 @@
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QDockWidget
+from PyQt5.QtGui import QFontDatabase
 from PyQt5.uic import loadUi
 
 from .widgets.plotwidget import PlotWidget
@@ -16,10 +17,11 @@ class MainWindow(QMainWindow):
         uiPath = resourceFileName('gui/uis/main.ui')
         loadUi(uiPath, baseinstance=self, package='crispy.gui')
 
-        self.splitter.setCollapsible(1, True)
-        self.splitter.setSizes((500, 50))
+        self.splitter.setSizes((600, 100))
 
-        self.statusBar().showMessage('Ready')
+        font = QFontDatabase.systemFont(QFontDatabase.FixedFont)
+        font.setPointSize(font.pointSize() + 2)
+        self.loggerWidget.setFont(font)
 
         # Quanty
         self.quantyDockWidget = QuantyDockWidget()

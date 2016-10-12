@@ -21,8 +21,6 @@ from .models.treemodel import TreeModel
 from .models.listmodel import ListModel
 from ..resources import resourceFileName
 
-_logger = logging.getLogger(__name__)
-
 class QuantyDockWidget(QDockWidget):
 
     _defaults = {
@@ -245,7 +243,6 @@ class QuantyDockWidget(QDockWidget):
 
         self.saveAsPushButton.clicked.connect(self.saveAsInput)
         self.runPushButton.clicked.connect(self.runCalculation)
-        # self.runPushButton.succeeded.connect(self.processResults)
 
         icon = QIcon(resourceFileName(os.path.join(
             'gui', 'icons', 'trash.svg')))
@@ -301,7 +298,8 @@ class QuantyDockWidget(QDockWidget):
             with open(path) as p:
                 template = p.read()
         except FileNotFoundError:
-            _logger.error('Could not find template: {0:s}'.format(self.template))
+            self.parent().statusBar().showMessage(
+                    'Could not find template: {0:s}'.format(self.template))
             return
 
         self.getUiParameters()
@@ -399,8 +397,9 @@ class QuantyDockWidget(QDockWidget):
         self.command = shutil.which('Quanty') or shutil.which('Quanty.exe')
 
         if not self.command:
-            _logger.error('Could not find Quanty in the path. Please install '
-                    'the program and set the PATH environment variable.')
+            self.parent().statusBar().showMessage(
+                'Could not find Quanty. Please install '
+                'it and set the PATH environment variable')
             return
 
         # Write the input file to disk.
@@ -408,18 +407,24 @@ class QuantyDockWidget(QDockWidget):
 
         # Run Quanty using a process
         self.process = QProcess()
+
         self.process.setProcessChannelMode(QProcess.MergedChannels)
         self.process.readyReadStandardOutput.connect(self.handleOutput)
         self.process.readyReadStandardError.connect(self.handleOutput)
+
         self.process.start(self.command, (self.inputName, ))
+
         self.process.waitForReadyRead()
+        self.parent().statusBar().showMessage('Running Quanty...')
         self.process.finished.connect(self.processResults)
 
     def handleOutput(self):
         output = self.process.readAll()
-        self.parent().logger.appendPlainText(str(output, encoding='utf-8'))
+        self.parent().loggerWidget.appendPlainText(str(output, encoding='utf-8'))
 
     def processResults(self):
+        self.parent().statusBar().showMessage('Quanty has finished successfully.')
+
         spectrumName = '{0:s}.spec'.format(self.baseName)
         spectrum = np.loadtxt(spectrumName, skiprows=5)
 

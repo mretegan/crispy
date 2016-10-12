@@ -18,15 +18,36 @@
   width: 1px;
 }</string>
   </property>
+  <property name="iconSize">
+   <size>
+    <width>16</width>
+    <height>16</height>
+   </size>
+  </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout_2">
+   <layout class="QVBoxLayout" name="_2">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
     <item>
      <widget class="QSplitter" name="splitter">
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
-      <property name="childrenCollapsible">
-       <bool>false</bool>
+      <property name="handleWidth">
+       <number>6</number>
       </property>
       <widget class="QWidget" name="verticalLayoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout">
@@ -34,23 +55,23 @@
          <widget class="PlotWidget" name="plotWidget" native="true">
           <property name="minimumSize">
            <size>
-            <width>455</width>
-            <height>400</height>
+            <width>400</width>
+            <height>300</height>
            </size>
           </property>
          </widget>
         </item>
        </layout>
       </widget>
-      <widget class="QPlainTextEdit" name="logger">
-       <property name="font">
-        <font>
-         <family>Courier</family>
-         <pointsize>13</pointsize>
-        </font>
+      <widget class="QPlainTextEdit" name="loggerWidget">
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Plain</enum>
        </property>
        <property name="lineWidth">
-        <number>0</number>
+        <number>1</number>
        </property>
        <property name="readOnly">
         <bool>true</bool>
