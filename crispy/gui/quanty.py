@@ -3,12 +3,9 @@
 import collections
 import copy
 import json
-import logging
-import math
 import numpy as np
 import os
 import shutil
-import subprocess
 import uuid
 
 from PyQt5.QtCore import QItemSelectionModel, QProcess, Qt, QPoint
@@ -20,6 +17,7 @@ from PyQt5.uic import loadUi
 from .models.treemodel import TreeModel
 from .models.listmodel import ListModel
 from ..resources import resourceFileName
+
 
 class QuantyDockWidget(QDockWidget):
 
@@ -171,7 +169,8 @@ class QuantyDockWidget(QDockWidget):
         self.hamiltonianParametersView.expandAll()
         self.hamiltonianParametersView.resizeAllColumnsToContents()
         self.hamiltonianParametersView.setColumnWidth(0, 160)
-        self.hamiltonianParametersView.setAttribute(Qt.WA_MacShowFocusRect, False)
+        self.hamiltonianParametersView.setAttribute(
+                Qt.WA_MacShowFocusRect, False)
 
         index = self.hamiltonianTermsView.selectionModel().currentIndex()
         self.hamiltonianParametersView.setRootIndex(index)
@@ -217,7 +216,7 @@ class QuantyDockWidget(QDockWidget):
             # contextMenu.addAction(self.loadResultsModelItemsAction)
             # contextMenu.exec_(self.resultsView.mapToGlobal(position))
 
-    def updateComboBoxes(self):
+    def updateUiParameters(self):
         self.element = self.elementComboBox.currentText()
         self.charge = self.chargeComboBox.currentText()
         self.symmetry = self.symmetryComboBox.currentText()
@@ -233,13 +232,18 @@ class QuantyDockWidget(QDockWidget):
         self.setUiParameters()
 
     def createActions(self):
-        self.elementComboBox.currentTextChanged.connect(self.updateComboBoxes)
-        self.chargeComboBox.currentTextChanged.connect(self.updateComboBoxes)
-        self.symmetryComboBox.currentTextChanged.connect(self.updateComboBoxes)
-        self.modelComboBox.currentTextChanged.connect(self.updateComboBoxes)
+        self.elementComboBox.currentTextChanged.connect(
+                self.updateUiParameters)
+        self.chargeComboBox.currentTextChanged.connect(
+                self.updateUiParameters)
+        self.symmetryComboBox.currentTextChanged.connect(
+                self.updateUiParameters)
+        self.modelComboBox.currentTextChanged.connect(
+                self.updateUiParameters)
         self.experimentComboBox.currentTextChanged.connect(
-                self.updateComboBoxes)
-        self.edgeComboBox.currentTextChanged.connect(self.updateComboBoxes)
+                self.updateUiParameters)
+        self.edgeComboBox.currentTextChanged.connect(
+                self.updateUiParameters)
 
         self.saveAsPushButton.clicked.connect(self.saveAsInput)
         self.runPushButton.clicked.connect(self.runCalculation)
@@ -252,7 +256,8 @@ class QuantyDockWidget(QDockWidget):
         icon = QIcon(resourceFileName(os.path.join(
             'gui', 'icons', 'folder-open.svg')))
         self.loadResultsModelItemsAction = QAction(
-            icon, 'Load Simulations', self, triggered=self.loadResultsModelItems)
+            icon, 'Load Simulations', self,
+            triggered=self.loadResultsModelItems)
 
     def removeResultsModelItems(self):
         selectedIndexes = self.resultsView.selectionModel().selectedIndexes()
@@ -406,24 +411,27 @@ class QuantyDockWidget(QDockWidget):
         self.saveInput()
 
         # Run Quanty using a process
-        self.process = QProcess()
+        self._process = QProcess()
 
-        self.process.setProcessChannelMode(QProcess.MergedChannels)
-        self.process.readyReadStandardOutput.connect(self.handleOutput)
-        self.process.readyReadStandardError.connect(self.handleOutput)
+        self._process.setProcessChannelMode(QProcess.MergedChannels)
+        self._process.readyReadStandardOutput.connect(self.handleLogging)
+        self._process.readyReadStandardError.connect(self.handleLogging)
 
-        self.process.start(self.command, (self.inputName, ))
+        self._process.start(self.command, (self.inputName, ))
 
-        self.process.waitForReadyRead()
+        self._process.waitForReadyRead()
+        self._process.finished.connect(self.processCalculation)
+
         self.parent().statusBar().showMessage('Running Quanty...')
-        self.process.finished.connect(self.processResults)
 
-    def handleOutput(self):
-        output = self.process.readAll()
-        self.parent().loggerWidget.appendPlainText(str(output, encoding='utf-8'))
+    def handleLogging(self):
+        output = self._process.readAll()
+        self.parent().loggerWidget.appendPlainText(
+                str(output, encoding='utf-8'))
 
-    def processResults(self):
-        self.parent().statusBar().showMessage('Quanty has finished successfully.')
+    def processCalculation(self):
+        self.parent().statusBar().showMessage(
+                'Quanty has finished successfully.')
 
         spectrumName = '{0:s}.spec'.format(self.baseName)
         spectrum = np.loadtxt(spectrumName, skiprows=5)
@@ -455,6 +463,9 @@ class QuantyDockWidget(QDockWidget):
         index = self.resultsModel.index(self.resultsModel.rowCount() - 1)
         self.resultsView.selectionModel().select(
             index, QItemSelectionModel.Select)
+
+        # Reset the base name
+        self.baseName = self._defaults['baseName']
 
     def plotResults(self):
         if 'RIXS' in self.experiment:
