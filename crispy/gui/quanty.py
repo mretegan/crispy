@@ -126,7 +126,10 @@ class QuantyDockWidget(QDockWidget):
             self.e2GroupBox.setHidden(True)
 
         # Set the number of initial states.
-        self.nPsisDoubleSpinBox.setValue(parameters['number of states'])
+        if self.nPsis:
+            self.nPsisDoubleSpinBox.setValue(self.nPsis)
+        else:
+            self.nPsisDoubleSpinBox.setValue(parameters['number of states'])
 
         # Set the Hamiltonian parameters.
         if not self.hamiltonian:
@@ -410,7 +413,7 @@ class QuantyDockWidget(QDockWidget):
         # Write the input file to disk.
         self.saveInput()
 
-        # Run Quanty using a process
+        # Run Quanty using a QProcess
         self._process = QProcess()
 
         self._process.setProcessChannelMode(QProcess.MergedChannels)
