@@ -27,10 +27,6 @@
     background-color: rgb(75, 75, 75);
     color: white;
 }
-
-QListView {
-   background-color: rgba(255, 255, 255, 255);
-}
 </string>
   </property>
   <property name="features">

@@ -20,7 +20,7 @@ class MainWindow(QMainWindow):
         self.splitter.setSizes((600, 100))
 
         font = QFontDatabase.systemFont(QFontDatabase.FixedFont)
-        font.setPointSize(font.pointSize() + 2)
+        font.setPointSize(font.pointSize() + 1)
         self.loggerWidget.setFont(font)
 
         # Quanty
