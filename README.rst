@@ -10,13 +10,13 @@ Crispy depends on the following Python packages:
 
 * `PyQt5 <https://riverbankcomputing.com/software/pyqt/intro>`_
 * `numpy <http://numpy.org>`_
-* `silx <https://silx.org>`_
+* `silx <http://silx.org>`_
 
 Instalation
 -----------
 The easiest way to install crispy is to use the installers provided on the `releases <https://github.com/mretegan/crispy/releases>`_ page; currently these are only available for Windows. While being simple to use, the installers are not updated very frequently, and might lack newly implemented features. 
 
-If you want to use the latest development version, you have to build crispy from source. For this a working Python 2.7 or 3.4+ installation is required. On Linux, Python can be installed using the system's package manager (``apt-get``, ``dnf``, ``pacman``, etc.). On Mac OS X and Windows, you can install Python using the `official <https://www.python.org/downloads>`_ installers.
+If you want to use the latest development version, you have to build crispy from source. For this a working Python 2.7 or 3.4+ installation is required. I strongly suggest that you install Python 3.5 or greater, as in the previous Python version some of the dependencies like PyQt5 cannot be installed using ``pip``. On Linux, Python can be installed using the system's package manager (``apt-get``, ``dnf``, ``pacman``, etc.). On Mac OS X and Windows, you can install Python using the `official <https://www.python.org/downloads>`_ installers.
 
 After the installation, the remaining dependencies can be installed using ``pip``::
 
