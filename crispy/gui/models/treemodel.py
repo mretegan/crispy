@@ -1,5 +1,8 @@
 # coding: utf-8
 
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
+
 import collections
 
 from PyQt5.QtCore import Qt, QAbstractItemModel, QModelIndex

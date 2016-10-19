@@ -1,11 +1,16 @@
 # coding: utf-8
 
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
+
 import collections
 import copy
 import json
 import numpy as np
 import os
 import shutil
+import subprocess
+import sys
 import uuid
 
 from PyQt5.QtCore import QItemSelectionModel, QProcess, Qt, QPoint
@@ -40,7 +45,6 @@ class QuantyDockWidget(QDockWidget):
         'baseName': None,
         'input': None,
         'inputName': None,
-        'command': None,
         }
 
     def __init__(self):
@@ -305,9 +309,9 @@ class QuantyDockWidget(QDockWidget):
         try:
             with open(path) as p:
                 template = p.read()
-        except FileNotFoundError:
+        except IOError:
             self.parent().statusBar().showMessage(
-                    'Could not find template: {0:s}'.format(self.template))
+                    'Could not find template: {0:s}'.format(self.templateName))
             return
 
         self.getUiParameters()
@@ -401,14 +405,19 @@ class QuantyDockWidget(QDockWidget):
             self.saveInput()
 
     def runCalculation(self):
-        # Determine the location of the executable program.
-        self.command = shutil.which('Quanty') or shutil.which('Quanty.exe')
+        if 'win32' in sys.platform:
+            self._command = 'Quanty.exe'
+        else:
+            self._command = 'Quanty'
 
-        if not self.command:
-            self.parent().statusBar().showMessage(
-                'Could not find Quanty. Please install '
-                'it and set the PATH environment variable')
-            return
+        with open(os.devnull, 'w') as f:
+            try:
+                subprocess.call(self._command, stdout=f, stderr=f)
+            except:
+                self.parent().statusBar().showMessage(
+                    'Could not find Quanty. Please install '
+                    'it and set the PATH environment variable')
+                return
 
         # Write the input file to disk.
         self.saveInput()
@@ -420,7 +429,7 @@ class QuantyDockWidget(QDockWidget):
         self._process.readyReadStandardOutput.connect(self.handleLogging)
         self._process.readyReadStandardError.connect(self.handleLogging)
 
-        self._process.start(self.command, (self.inputName, ))
+        self._process.start(self._command, (self.inputName, ))
 
         self._process.waitForReadyRead()
         self._process.finished.connect(self.processCalculation)
@@ -428,9 +437,8 @@ class QuantyDockWidget(QDockWidget):
         self.parent().statusBar().showMessage('Running Quanty...')
 
     def handleLogging(self):
-        output = self._process.readAll()
-        self.parent().loggerWidget.appendPlainText(
-                str(output, encoding='utf-8'))
+        data = self._process.readAll().data()
+        self.parent().loggerWidget.appendPlainText(data.decode('utf-8'))
 
     def processCalculation(self):
         self.parent().statusBar().showMessage(

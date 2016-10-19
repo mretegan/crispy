@@ -52,6 +52,8 @@ of this modules to ensure access accross different distribution schemes:
              options={'py2app': {'packages': ['crispy']}}
              )
 """
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
 
 __authors__ = ['V.A. Sole', 'Thomas Vincent']
 __license__ = 'MIT'

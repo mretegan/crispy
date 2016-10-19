@@ -25,7 +25,7 @@
 # ###########################################################################*/
 
 __authors__ = ['Marius Retegan']
-__date__ = '13/09/2016'
+__date__ = '19/10/2016'
 __license__ = 'MIT'
 
 import os
@@ -54,8 +54,10 @@ def get_version():
 
 def main():
     """The main entry point."""
-    if sys.version_info[0] < 3:
-        sys.exit('crispy currently requires Python 3.4+')
+    if sys.version_info < (2, 7):
+        sys.exit('crispy requires at least Python 2.7')
+    elif sys.version_info[0] == 3 and sys.version_info < (3, 4):
+        sys.exit('crispy requires at least Python 3.4')
 
     kwargs = dict(
         name='crispy',
@@ -97,6 +99,7 @@ def main():
             'Operating System :: MacOS :: MacOS X',
             'Operating System :: Microsoft :: Windows',
             'Operating System :: POSIX :: Linux',
+            'Programming Language :: Python :: 2.7',
             'Programming Language :: Python :: 3.4',
             'Programming Language :: Python :: 3.5',
             'Topic :: Scientific/Engineering :: Visualization',
@@ -104,7 +107,7 @@ def main():
         )
 
     # At the moment pip/setuptools doesn't play nice with shebang paths
-    # containing white space.
+    # containing white spaces.
     # See: https://github.com/pypa/pip/issues/2783
     #      https://github.com/xonsh/xonsh/issues/879
     # The most straight forward workaround is to have a .bat script to run

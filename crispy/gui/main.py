@@ -1,5 +1,8 @@
 # coding: utf-8
 
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
+
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QDockWidget
 from PyQt5.QtGui import QFontDatabase
@@ -13,7 +16,7 @@ from ..resources import resourceFileName
 class MainWindow(QMainWindow):
 
     def __init__(self):
-        super().__init__()
+        super(MainWindow, self).__init__()
         uiPath = resourceFileName('gui/uis/main.ui')
         loadUi(uiPath, baseinstance=self, package='crispy.gui')
 
@@ -27,7 +30,8 @@ class MainWindow(QMainWindow):
         self.quantyDockWidget = QuantyDockWidget()
         self.addDockWidget(Qt.RightDockWidgetArea, self.quantyDockWidget)
         self.quantyDockWidget.setVisible(True)
-        self.quantyRunCalculationAction.triggered.connect(print)
+        self.quantyRunCalculationAction.triggered.connect(
+            self.quantyDockWidget.runCalculation)
         self.quantySaveInputAction.triggered.connect(
             self.quantyDockWidget.saveInput)
         self.quantySaveAsInputAction.triggered.connect(
