@@ -10,7 +10,7 @@ Crispy depends on the following Python packages:
 
 * `PyQt5 <https://riverbankcomputing.com/software/pyqt/intro>`_
 * `numpy <http://numpy.org>`_
-* `silx <http://silx.org>`_
+* `silx <http://www.silx.org>`_
 
 Instalation
 -----------
