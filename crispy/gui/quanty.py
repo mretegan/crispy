@@ -356,7 +356,7 @@ class QuantyDockWidget(QDockWidget):
                     else:
                         value = float(value)
                     key = '${0:s}_{1:s}'.format(parameter, suffix)
-                    replacements[key] = '{0:12.6}'.format(value)
+                    replacements[key] = '{0:.4}'.format(value)
 
         terms = self.hamiltonianModel.getNodesState()
         for term in terms:
