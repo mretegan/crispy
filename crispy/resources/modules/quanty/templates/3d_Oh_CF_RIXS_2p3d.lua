@@ -7,7 +7,7 @@
 -- edge: L2,3-M4,5 (2p3d)
 -- Hamiltonian: Coulomb, spin-orbit coupling, crystal field
 -- transition operators: dipole-in, dipole-out
--- template modification date: 04/10/2016
+-- template modification date: 28/10/2016
 --------------------------------------------------------------------------------
 Verbosity(0x00FF)
 
@@ -226,10 +226,14 @@ t = math.sqrt(1/2);
 OppTx_2p_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_2p, IndexDn_2p, {{1, -1, t    }, {1, 1, -t    }})
 OppTy_2p_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_2p, IndexDn_2p, {{1, -1, t * I}, {1, 1,  t * I}})
 OppTz_2p_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_2p, IndexDn_2p, {{1,  0, 1    }                })
+OppTr_2p_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_2p, IndexDn_2p, {{1, -1, 1    }                })
+OppTl_2p_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_2p, IndexDn_2p, {{1,  1, 1    }                })
 
-OppTx_3d_2p = ConjugateTranspose(OppTx_2p_3d)
-OppTy_3d_2p = ConjugateTranspose(OppTy_2p_3d)
-OppTz_3d_2p = ConjugateTranspose(OppTz_2p_3d)
+OppTx_3d_2p = NewOperator('CF', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_3d, IndexDn_3d, {{1, -1, t    }, {1, 1, -t    }})
+OppTy_3d_2p = NewOperator('CF', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_3d, IndexDn_3d, {{1, -1, t * I}, {1, 1,  t * I}})
+OppTz_3d_2p = NewOperator('CF', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_3d, IndexDn_3d, {{1,  0, 1    }                })
+OppTr_3d_2p = NewOperator('CF', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_3d, IndexDn_3d, {{1, -1, 1    }                })
+OppTl_3d_2p = NewOperator('CF', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_3d, IndexDn_3d, {{1,  1, 1    }                })
 
 --------------------------------------------------------------------------------
 -- Calculate and save the spectra.
@@ -268,7 +272,18 @@ for j = 1, NPsis do
     end
 
     Z = Z + dZ
-    G = G + CreateResonantSpectra(H_ic, H_fc, OppTx_2p_3d, OppTy_3d_2p, Psis[j], {{"Emin1", Emin1}, {"Emax1", Emax1}, {"NE1", NE1}, {"Gamma1", Gamma1}, {"Emin2", Emin2}, {"Emax2", Emax2}, {"NE2", NE2}, {"Gamma2", Gamma2}}) * dZ
+
+    G = G + CreateResonantSpectra(H_ic, H_fc, OppTx_2p_3d, OppTx_3d_2p, Psis[j], {{"Emin1", Emin1}, {"Emax1", Emax1}, {"NE1", NE1}, {"Gamma1", Gamma1}, {"Emin2", Emin2}, {"Emax2", Emax2}, {"NE2", NE2}, {"Gamma2", Gamma2}})
+    G = G + CreateResonantSpectra(H_ic, H_fc, OppTx_2p_3d, OppTy_3d_2p, Psis[j], {{"Emin1", Emin1}, {"Emax1", Emax1}, {"NE1", NE1}, {"Gamma1", Gamma1}, {"Emin2", Emin2}, {"Emax2", Emax2}, {"NE2", NE2}, {"Gamma2", Gamma2}})
+    G = G + CreateResonantSpectra(H_ic, H_fc, OppTx_2p_3d, OppTz_3d_2p, Psis[j], {{"Emin1", Emin1}, {"Emax1", Emax1}, {"NE1", NE1}, {"Gamma1", Gamma1}, {"Emin2", Emin2}, {"Emax2", Emax2}, {"NE2", NE2}, {"Gamma2", Gamma2}})
+
+    G = G + CreateResonantSpectra(H_ic, H_fc, OppTy_2p_3d, OppTx_3d_2p, Psis[j], {{"Emin1", Emin1}, {"Emax1", Emax1}, {"NE1", NE1}, {"Gamma1", Gamma1}, {"Emin2", Emin2}, {"Emax2", Emax2}, {"NE2", NE2}, {"Gamma2", Gamma2}})
+    G = G + CreateResonantSpectra(H_ic, H_fc, OppTy_2p_3d, OppTy_3d_2p, Psis[j], {{"Emin1", Emin1}, {"Emax1", Emax1}, {"NE1", NE1}, {"Gamma1", Gamma1}, {"Emin2", Emin2}, {"Emax2", Emax2}, {"NE2", NE2}, {"Gamma2", Gamma2}})
+    G = G + CreateResonantSpectra(H_ic, H_fc, OppTy_2p_3d, OppTz_3d_2p, Psis[j], {{"Emin1", Emin1}, {"Emax1", Emax1}, {"NE1", NE1}, {"Gamma1", Gamma1}, {"Emin2", Emin2}, {"Emax2", Emax2}, {"NE2", NE2}, {"Gamma2", Gamma2}})
+
+    G = G + CreateResonantSpectra(H_ic, H_fc, OppTz_2p_3d, OppTx_3d_2p, Psis[j], {{"Emin1", Emin1}, {"Emax1", Emax1}, {"NE1", NE1}, {"Gamma1", Gamma1}, {"Emin2", Emin2}, {"Emax2", Emax2}, {"NE2", NE2}, {"Gamma2", Gamma2}})
+    G = G + CreateResonantSpectra(H_ic, H_fc, OppTz_2p_3d, OppTy_3d_2p, Psis[j], {{"Emin1", Emin1}, {"Emax1", Emax1}, {"NE1", NE1}, {"Gamma1", Gamma1}, {"Emin2", Emin2}, {"Emax2", Emax2}, {"NE2", NE2}, {"Gamma2", Gamma2}})
+    G = G + CreateResonantSpectra(H_ic, H_fc, OppTz_2p_3d, OppTz_3d_2p, Psis[j], {{"Emin1", Emin1}, {"Emax1", Emax1}, {"NE1", NE1}, {"Gamma1", Gamma1}, {"Emin2", Emin2}, {"Emax2", Emax2}, {"NE2", NE2}, {"Gamma2", Gamma2}})
 end
 
 G = G / Z
