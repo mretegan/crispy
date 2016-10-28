@@ -14,7 +14,7 @@ import sys
 import uuid
 
 from PyQt5.QtCore import QItemSelectionModel, QProcess, Qt, QPoint
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon, QCursor
 from PyQt5.QtWidgets import (
     QAbstractItemView, QDockWidget, QFileDialog, QAction, QMenu)
 from PyQt5.uic import loadUi
@@ -213,8 +213,12 @@ class QuantyDockWidget(QDockWidget):
             self.templateName = parameters['template name']
 
     def createContextMenu(self, position):
-        selectedIndexes = self.resultsView.selectionModel().selectedIndexes()
-        if selectedIndexes:
+        selection = self.resultsView.selectionModel().selection()
+        selectedItemsRegion = self.resultsView.visualRegionForSelection(
+                selection)
+        cursorPosition = self.resultsView.mapFromGlobal(QCursor.pos())
+
+        if selectedItemsRegion.contains(cursorPosition):
             contextMenu = QMenu('Items Context Menu', self)
             contextMenu.addAction(self.removeResultsModelItemsAction)
             contextMenu.exec_(self.resultsView.mapToGlobal(position))
