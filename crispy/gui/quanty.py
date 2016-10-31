@@ -179,7 +179,7 @@ class QuantyDockWidget(QDockWidget):
         self.hamiltonianParametersView.setAttribute(
                 Qt.WA_MacShowFocusRect, False)
 
-        index = self.hamiltonianTermsView.selectionModel().currentIndex()
+        index = self.hamiltonianTermsView.currentIndex()
         self.hamiltonianParametersView.setRootIndex(index)
         self.hamiltonianTermsView.selectionModel().selectionChanged.connect(
             self.selectedHamiltonianTermChanged)
@@ -271,7 +271,7 @@ class QuantyDockWidget(QDockWidget):
             triggered=self.loadResultsModelItems)
 
     def removeResultsModelItems(self):
-        selectedIndexes = self.resultsView.selectionModel().selectedIndexes()
+        selectedIndexes = self.resultsView.selectedIndexes()
         self.resultsModel.removeItems(selectedIndexes)
 
     def loadResultsModelItems(self):
@@ -512,12 +512,12 @@ class QuantyDockWidget(QDockWidget):
                 self.spectrum[:, 0], self.spectrum[:, 1], legend=self.label)
 
     def selectedHamiltonianTermChanged(self):
-        index = self.hamiltonianTermsView.selectionModel().currentIndex()
+        index = self.hamiltonianTermsView.currentIndex()
         self.hamiltonianParametersView.setRootIndex(index)
 
     def selectedResultsChanged(self):
         self.parent().plotWidget.clear()
-        selectedIndexes = self.resultsView.selectionModel().selectedIndexes()
+        selectedIndexes = self.resultsView.selectedIndexes()
         for index in selectedIndexes:
             simulation = self.resultsModel.getIndexData(index)
             self.loadSimulationParameters(simulation)
