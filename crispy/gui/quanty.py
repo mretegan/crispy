@@ -446,7 +446,7 @@ class QuantyDockWidget(QDockWidget):
 
     def processCalculation(self):
         self.parent().statusBar().showMessage(
-                'Quanty has finished successfully.')
+                'Quanty has finished successfully.', 5000)
 
         spectrumName = '{0:s}.spec'.format(self.baseName)
         spectrum = np.loadtxt(spectrumName, skiprows=5)

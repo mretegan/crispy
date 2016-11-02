@@ -20,7 +20,9 @@ class MainWindow(QMainWindow):
         uiPath = resourceFileName('gui/uis/main.ui')
         loadUi(uiPath, baseinstance=self, package='crispy.gui')
 
-        self.splitter.setSizes((600, 100))
+        self.splitter.setSizes((600, 0))
+
+        self.statusbar.showMessage('Ready')
 
         font = QFontDatabase.systemFont(QFontDatabase.FixedFont)
         font.setPointSize(font.pointSize() + 1)
