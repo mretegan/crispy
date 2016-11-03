@@ -20,7 +20,7 @@ The easiest way to install crispy is to use the installers provided on the `rele
 
 If you want to use the latest development version, you will have to install Python and the required dependencies. While crispy works with both Python 2 and Python 3, I strongly suggest that you install Python 3.5 or greater, as in previous Python versions some of the dependencies like PyQt5 cannot be installed using ``pip``. 
 
-On Linux, Python and all dependencies can be installed using the system's package manager (``apt-get``, ``dnf``, ``pacman``, etc.). The same can be done on macOS if you install first a package manager like `MacPorts < https://www.macports.org>`_. 
+On Linux, Python and all dependencies can be installed using the system's package manager (``apt-get``, ``dnf``, ``pacman``, etc.). The same can be done on macOS if you install first a package manager like `MacPorts <https://www.macports.org>`_. 
 
 On macOS and Windows you can install Python using the `official <https://www.python.org/downloads>`_ installers. In particular for Windows I recommend that you install the 64-bit version of Python, and make sure that during the installation you select to add Python to system's PATH. For Linux stick to the system's package manager unless you want to compile Python from source. After the installation, the dependencies can be installed using ``pip``, but only if you have installed Python 3.5 or greater:: 
 
