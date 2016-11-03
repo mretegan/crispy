@@ -18,7 +18,7 @@ Instalation
 -----------
 The easiest way to install crispy is to use the installers provided on the `releases <https://github.com/mretegan/crispy/releases>`_ page; currently these are only available for Windows. While being simple to use, the installers are not updated very frequently, and might lack newly implemented features. 
 
-If you want to use the latest development version, you will have to install Python and the required dependencies. While crispy works with both Python 2 and Python 3, I strongly suggest that you install Python 3.5 or greater, as in previous Python versions some of the dependencies like PyQt5 cannot be installed using ``pip``. 
+If you want to use the latest development version, you will have to install Python and the required dependencies. While crispy works with both Python 2 and Python 3, I strongly suggest that you install Python 3.5 or greater, as in previous versions some of the dependencies like PyQt5 cannot be installed using ``pip``. 
 
 On Linux, Python and all dependencies can be installed using the system's package manager (``apt-get``, ``dnf``, ``pacman``, etc.). The same can be done on macOS if you install first a package manager like `MacPorts <https://www.macports.org>`_. 
 

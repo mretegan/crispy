@@ -192,9 +192,9 @@ OppJy   = OppJy_3d + OppJy_Ld
 OppJz   = OppJz_3d + OppJz_Ld
 OppJsqr = OppJx * OppJx + OppJy * OppJy + OppJz * OppJz
 
-Bx =  0.0 * EnergyUnits.Tesla.value
-By =  0.0 * EnergyUnits.Tesla.value
-Bz = 1e-6 * EnergyUnits.Tesla.value
+Bx = $Bx * EnergyUnits.Tesla.value
+By = $By * EnergyUnits.Tesla.value
+Bz = $Bz * EnergyUnits.Tesla.value
 
 B = Bx * (2 * OppSx + OppLx)
   + By * (2 * OppSy + OppLy)
@@ -209,9 +209,8 @@ H_fc = $H_coulomb_flag * H_coulomb_fc + $H_soc_flag * H_soc_fc + $H_lf_flag * H_
 --------------------------------------------------------------------------------
 -- Define the starting restrictions and set the number of initial states.
 --------------------------------------------------------------------------------
-StartingRestrictions = {NFermions, NBosons, {'11 0000000000 0000000000', NElectrons_3s, NElectrons_3s},
-                                            {'00 1111111111 0000000000', NElectrons_3d, NElectrons_3d},
-                                            {'00 0000000000 1111111111', NElectrons_Ld, NElectrons_Ld}}
+StartingRestrictions = {NFermions, NBosons, {'111111 0000000000 0000000000', NElectrons_2p, NElectrons_2p},
+                                            {'000000 1111111111 1111111111', NElectrons_3d + NElectrons_Ld, NElectrons_3d + NElectrons_Ld}}
 
 NPsis = $NPsis
 
