@@ -3,9 +3,10 @@
 
 --trusted-host www.silx.org
 --find-links http://www.silx.org/pub/wheelhouse/
---only-binary PyQt5,silx
+--only-binary h5py
 
+PyQt5
+h5py
 numpy
 matplotlib >= 1.2.0
-PyQt5
 silx >= 0.3.0
