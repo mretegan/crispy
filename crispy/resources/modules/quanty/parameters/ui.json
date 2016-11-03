@@ -385,6 +385,37 @@
                             },
                             "number of states": 1
                         }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 0
+                            },
+                            "configurations": {
+                                "Starting": "3d0",
+                                "Intermediate": "2p5,3d1",
+                                "Final": "3d0"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
+                                }
+                            },
+                            "number of states": 1
+                        }
                     }
                 }
             }
@@ -772,6 +803,37 @@
                                     "max": 20.0,
                                     "npoints": 1000,
                                     "gamma": 0.5
+                                }
+                            },
+                            "number of states": 120
+                        }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 3
+                            },
+                            "configurations": {
+                                "Starting": "3d3",
+                                "Intermediate": "2p5,3d4",
+                                "Final": "3d3"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
                                 }
                             },
                             "number of states": 120
@@ -1165,6 +1227,37 @@
                             },
                             "number of states": 45
                         }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 2
+                            },
+                            "configurations": {
+                                "Starting": "3d2",
+                                "Intermediate": "2p5,3d3",
+                                "Final": "3d2"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
+                                }
+                            },
+                            "number of states": 45
+                        }
                     }
                 }
             }
@@ -1554,6 +1647,37 @@
                             },
                             "number of states": 10
                         }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 1
+                            },
+                            "configurations": {
+                                "Starting": "3d1",
+                                "Intermediate": "2p5,3d2",
+                                "Final": "3d1"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
+                                }
+                            },
+                            "number of states": 10
+                        }
                     }
                 }
             }
@@ -1939,6 +2063,37 @@
                                     "max": 20.0,
                                     "npoints": 1000,
                                     "gamma": 0.5
+                                }
+                            },
+                            "number of states": 1
+                        }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 0
+                            },
+                            "configurations": {
+                                "Starting": "3d0",
+                                "Intermediate": "2p5,3d1",
+                                "Final": "3d0"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
                                 }
                             },
                             "number of states": 1
@@ -2334,6 +2489,37 @@
                             },
                             "number of states": 210
                         }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 4
+                            },
+                            "configurations": {
+                                "Starting": "3d4",
+                                "Intermediate": "2p5,3d5",
+                                "Final": "3d4"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
+                                }
+                            },
+                            "number of states": 210
+                        }
                     }
                 }
             }
@@ -2719,6 +2905,37 @@
                                     "max": 20.0,
                                     "npoints": 1000,
                                     "gamma": 0.5
+                                }
+                            },
+                            "number of states": 120
+                        }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 3
+                            },
+                            "configurations": {
+                                "Starting": "3d3",
+                                "Intermediate": "2p5,3d4",
+                                "Final": "3d3"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
                                 }
                             },
                             "number of states": 120
@@ -3112,6 +3329,37 @@
                             },
                             "number of states": 45
                         }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 2
+                            },
+                            "configurations": {
+                                "Starting": "3d2",
+                                "Intermediate": "2p5,3d3",
+                                "Final": "3d2"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
+                                }
+                            },
+                            "number of states": 45
+                        }
                     }
                 }
             }
@@ -3501,6 +3749,37 @@
                             },
                             "number of states": 10
                         }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 1
+                            },
+                            "configurations": {
+                                "Starting": "3d1",
+                                "Intermediate": "2p5,3d2",
+                                "Final": "3d1"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
+                                }
+                            },
+                            "number of states": 10
+                        }
                     }
                 }
             }
@@ -3886,6 +4165,37 @@
                                     "max": 20.0,
                                     "npoints": 1000,
                                     "gamma": 0.5
+                                }
+                            },
+                            "number of states": 1
+                        }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 0
+                            },
+                            "configurations": {
+                                "Starting": "3d0",
+                                "Intermediate": "2p5,3d1",
+                                "Final": "3d0"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
                                 }
                             },
                             "number of states": 1
@@ -4281,6 +4591,37 @@
                             },
                             "number of states": 252
                         }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 5
+                            },
+                            "configurations": {
+                                "Starting": "3d5",
+                                "Intermediate": "2p5,3d6",
+                                "Final": "3d5"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
+                                }
+                            },
+                            "number of states": 252
+                        }
                     }
                 }
             }
@@ -4666,6 +5007,37 @@
                                     "max": 20.0,
                                     "npoints": 1000,
                                     "gamma": 0.5
+                                }
+                            },
+                            "number of states": 210
+                        }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 4
+                            },
+                            "configurations": {
+                                "Starting": "3d4",
+                                "Intermediate": "2p5,3d5",
+                                "Final": "3d4"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
                                 }
                             },
                             "number of states": 210
@@ -5059,6 +5431,37 @@
                             },
                             "number of states": 120
                         }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 3
+                            },
+                            "configurations": {
+                                "Starting": "3d3",
+                                "Intermediate": "2p5,3d4",
+                                "Final": "3d3"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
+                                }
+                            },
+                            "number of states": 120
+                        }
                     }
                 }
             }
@@ -5444,6 +5847,37 @@
                                     "max": 20.0,
                                     "npoints": 1000,
                                     "gamma": 0.5
+                                }
+                            },
+                            "number of states": 45
+                        }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 2
+                            },
+                            "configurations": {
+                                "Starting": "3d2",
+                                "Intermediate": "2p5,3d3",
+                                "Final": "3d2"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
                                 }
                             },
                             "number of states": 45
@@ -5837,6 +6271,37 @@
                             },
                             "number of states": 10
                         }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 1
+                            },
+                            "configurations": {
+                                "Starting": "3d1",
+                                "Intermediate": "2p5,3d2",
+                                "Final": "3d1"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
+                                }
+                            },
+                            "number of states": 10
+                        }
                     }
                 }
             }
@@ -6222,6 +6687,37 @@
                                     "max": 20.0,
                                     "npoints": 1000,
                                     "gamma": 0.5
+                                }
+                            },
+                            "number of states": 1
+                        }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 0
+                            },
+                            "configurations": {
+                                "Starting": "3d0",
+                                "Intermediate": "2p5,3d1",
+                                "Final": "3d0"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
                                 }
                             },
                             "number of states": 1
@@ -6617,6 +7113,37 @@
                             },
                             "number of states": 210
                         }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 6
+                            },
+                            "configurations": {
+                                "Starting": "3d6",
+                                "Intermediate": "2p5,3d7",
+                                "Final": "3d6"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
+                                }
+                            },
+                            "number of states": 210
+                        }
                     }
                 }
             }
@@ -7002,6 +7529,37 @@
                                     "max": 20.0,
                                     "npoints": 1000,
                                     "gamma": 0.5
+                                }
+                            },
+                            "number of states": 252
+                        }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 5
+                            },
+                            "configurations": {
+                                "Starting": "3d5",
+                                "Intermediate": "2p5,3d6",
+                                "Final": "3d5"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
                                 }
                             },
                             "number of states": 252
@@ -7395,6 +7953,37 @@
                             },
                             "number of states": 210
                         }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 4
+                            },
+                            "configurations": {
+                                "Starting": "3d4",
+                                "Intermediate": "2p5,3d5",
+                                "Final": "3d4"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
+                                }
+                            },
+                            "number of states": 210
+                        }
                     }
                 }
             }
@@ -7780,6 +8369,37 @@
                                     "max": 20.0,
                                     "npoints": 1000,
                                     "gamma": 0.5
+                                }
+                            },
+                            "number of states": 120
+                        }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 3
+                            },
+                            "configurations": {
+                                "Starting": "3d3",
+                                "Intermediate": "2p5,3d4",
+                                "Final": "3d3"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
                                 }
                             },
                             "number of states": 120
@@ -8173,6 +8793,37 @@
                             },
                             "number of states": 45
                         }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 2
+                            },
+                            "configurations": {
+                                "Starting": "3d2",
+                                "Intermediate": "2p5,3d3",
+                                "Final": "3d2"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
+                                }
+                            },
+                            "number of states": 45
+                        }
                     }
                 }
             }
@@ -8562,6 +9213,37 @@
                             },
                             "number of states": 10
                         }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 1
+                            },
+                            "configurations": {
+                                "Starting": "3d1",
+                                "Intermediate": "2p5,3d2",
+                                "Final": "3d1"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
+                                }
+                            },
+                            "number of states": 10
+                        }
                     }
                 }
             }
@@ -8947,6 +9629,37 @@
                                     "max": 20.0,
                                     "npoints": 1000,
                                     "gamma": 0.5
+                                }
+                            },
+                            "number of states": 1
+                        }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 0
+                            },
+                            "configurations": {
+                                "Starting": "3d0",
+                                "Intermediate": "2p5,3d1",
+                                "Final": "3d0"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
                                 }
                             },
                             "number of states": 1
@@ -9342,6 +10055,37 @@
                             },
                             "number of states": 120
                         }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 7
+                            },
+                            "configurations": {
+                                "Starting": "3d7",
+                                "Intermediate": "2p5,3d8",
+                                "Final": "3d7"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
+                                }
+                            },
+                            "number of states": 120
+                        }
                     }
                 }
             }
@@ -9727,6 +10471,37 @@
                                     "max": 20.0,
                                     "npoints": 1000,
                                     "gamma": 0.5
+                                }
+                            },
+                            "number of states": 210
+                        }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 6
+                            },
+                            "configurations": {
+                                "Starting": "3d6",
+                                "Intermediate": "2p5,3d7",
+                                "Final": "3d6"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
                                 }
                             },
                             "number of states": 210
@@ -10120,6 +10895,37 @@
                             },
                             "number of states": 252
                         }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 5
+                            },
+                            "configurations": {
+                                "Starting": "3d5",
+                                "Intermediate": "2p5,3d6",
+                                "Final": "3d5"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
+                                }
+                            },
+                            "number of states": 252
+                        }
                     }
                 }
             }
@@ -10505,6 +11311,37 @@
                                     "max": 20.0,
                                     "npoints": 1000,
                                     "gamma": 0.5
+                                }
+                            },
+                            "number of states": 210
+                        }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 4
+                            },
+                            "configurations": {
+                                "Starting": "3d4",
+                                "Intermediate": "2p5,3d5",
+                                "Final": "3d4"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
                                 }
                             },
                             "number of states": 210
@@ -10898,6 +11735,37 @@
                             },
                             "number of states": 120
                         }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 3
+                            },
+                            "configurations": {
+                                "Starting": "3d3",
+                                "Intermediate": "2p5,3d4",
+                                "Final": "3d3"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
+                                }
+                            },
+                            "number of states": 120
+                        }
                     }
                 }
             }
@@ -11283,6 +12151,37 @@
                                     "max": 20.0,
                                     "npoints": 1000,
                                     "gamma": 0.5
+                                }
+                            },
+                            "number of states": 45
+                        }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 2
+                            },
+                            "configurations": {
+                                "Starting": "3d2",
+                                "Intermediate": "2p5,3d3",
+                                "Final": "3d2"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
                                 }
                             },
                             "number of states": 45
@@ -11678,6 +12577,37 @@
                             },
                             "number of states": 45
                         }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 8
+                            },
+                            "configurations": {
+                                "Starting": "3d8",
+                                "Intermediate": "2p5,3d9",
+                                "Final": "3d8"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
+                                }
+                            },
+                            "number of states": 45
+                        }
                     }
                 }
             }
@@ -12063,6 +12993,37 @@
                                     "max": 20.0,
                                     "npoints": 1000,
                                     "gamma": 0.5
+                                }
+                            },
+                            "number of states": 120
+                        }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 7
+                            },
+                            "configurations": {
+                                "Starting": "3d7",
+                                "Intermediate": "2p5,3d8",
+                                "Final": "3d7"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
                                 }
                             },
                             "number of states": 120
@@ -12456,6 +13417,37 @@
                             },
                             "number of states": 210
                         }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 6
+                            },
+                            "configurations": {
+                                "Starting": "3d6",
+                                "Intermediate": "2p5,3d7",
+                                "Final": "3d6"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
+                                }
+                            },
+                            "number of states": 210
+                        }
                     }
                 }
             }
@@ -12845,6 +13837,37 @@
                             },
                             "number of states": 252
                         }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 5
+                            },
+                            "configurations": {
+                                "Starting": "3d5",
+                                "Intermediate": "2p5,3d6",
+                                "Final": "3d5"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
+                                }
+                            },
+                            "number of states": 252
+                        }
                     }
                 }
             }
@@ -13230,6 +14253,37 @@
                                     "max": 20.0,
                                     "npoints": 1000,
                                     "gamma": 0.5
+                                }
+                            },
+                            "number of states": 210
+                        }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 4
+                            },
+                            "configurations": {
+                                "Starting": "3d4",
+                                "Intermediate": "2p5,3d5",
+                                "Final": "3d4"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
                                 }
                             },
                             "number of states": 210
@@ -13625,6 +14679,37 @@
                             },
                             "number of states": 10
                         }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 9
+                            },
+                            "configurations": {
+                                "Starting": "3d9",
+                                "Intermediate": "2p5,3d10",
+                                "Final": "3d9"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
+                                }
+                            },
+                            "number of states": 10
+                        }
                     }
                 }
             }
@@ -14010,6 +15095,37 @@
                                     "max": 20.0,
                                     "npoints": 1000,
                                     "gamma": 0.5
+                                }
+                            },
+                            "number of states": 45
+                        }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 8
+                            },
+                            "configurations": {
+                                "Starting": "3d8",
+                                "Intermediate": "2p5,3d9",
+                                "Final": "3d8"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
                                 }
                             },
                             "number of states": 45
@@ -14403,6 +15519,37 @@
                             },
                             "number of states": 120
                         }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 7
+                            },
+                            "configurations": {
+                                "Starting": "3d7",
+                                "Intermediate": "2p5,3d8",
+                                "Final": "3d7"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
+                                }
+                            },
+                            "number of states": 120
+                        }
                     }
                 }
             }
@@ -14788,6 +15935,37 @@
                                     "max": 20.0,
                                     "npoints": 1000,
                                     "gamma": 0.5
+                                }
+                            },
+                            "number of states": 210
+                        }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 6
+                            },
+                            "configurations": {
+                                "Starting": "3d6",
+                                "Intermediate": "2p5,3d7",
+                                "Final": "3d6"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
                                 }
                             },
                             "number of states": 210
@@ -15183,6 +16361,37 @@
                             },
                             "number of states": 10
                         }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 9
+                            },
+                            "configurations": {
+                                "Starting": "3d9",
+                                "Intermediate": "2p5,3d10",
+                                "Final": "3d9"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
+                                }
+                            },
+                            "number of states": 10
+                        }
                     }
                 }
             }
@@ -15572,6 +16781,37 @@
                             },
                             "number of states": 45
                         }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 8
+                            },
+                            "configurations": {
+                                "Starting": "3d8",
+                                "Intermediate": "2p5,3d9",
+                                "Final": "3d8"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
+                                }
+                            },
+                            "number of states": 45
+                        }
                     }
                 }
             }
@@ -15957,6 +17197,37 @@
                                     "max": 20.0,
                                     "npoints": 1000,
                                     "gamma": 0.5
+                                }
+                            },
+                            "number of states": 120
+                        }
+                    },
+                    "RIXS": {
+                        "L2,3-M4,5 (2p3d)": {
+                            "shells": {
+                                "2p": 6,
+                                "3d": 7
+                            },
+                            "configurations": {
+                                "Starting": "3d7",
+                                "Intermediate": "2p5,3d8",
+                                "Final": "3d7"
+                            },
+                            "template name": "3d_D4h_CF_RIXS_2p3d.lua",
+                            "energies": {
+                                "e1": {
+                                    "label": "Incident Energy",
+                                    "min": -20.0,
+                                    "max": 20.0,
+                                    "npoints": 100,
+                                    "gamma": 0.5
+                                },
+                                "e2": {
+                                    "label": "Energy Transfer",
+                                    "min": -1.0,
+                                    "max": 20.0,
+                                    "npoints": 1000,
+                                    "gamma": 0.05
                                 }
                             },
                             "number of states": 120

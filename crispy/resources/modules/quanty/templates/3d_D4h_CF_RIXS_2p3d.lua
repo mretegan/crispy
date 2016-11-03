@@ -2,7 +2,7 @@
 -- Quanty input file generated using Crispy.
 --
 -- elements: 3d transition metals
--- symmetry: Oh
+-- symmetry: D4h
 -- experiment: RIXS
 -- edge: L2,3-M4,5 (2p3d)
 -- Hamiltonian: Coulomb, spin-orbit coupling, crystal field
@@ -100,19 +100,33 @@ H_soc_fc = zeta_3d_fc * Oppldots_3d
 --------------------------------------------------------------------------------
 -- Define the crystal field term.
 --------------------------------------------------------------------------------
-OpptenDq = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm('Oh', 2, {0.6, -0.4}))
+OpptenDq = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm('D4h', 2, { 0.6,  0.6, -0.4, -0.4}))
+OppDs    = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm('D4h', 2, {-2.0,  2.0,  2.0, -1.0}))
+OppDt    = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm('D4h', 2, {-6.0, -1.0, -1.0,  4.0}))
 
 tenDq_sc = $10Dq_sc
+Ds_sc = $Ds_sc
+Dt_sc = $Dt_sc
 
 tenDq_ic = $10Dq_ic
+Ds_ic = $Ds_ic
+Dt_ic = $Dt_ic
 
 tenDq_fc = $10Dq_fc
+Ds_fc = $Ds_fc
+Dt_fc = $Dt_fc
 
 H_cf_sc = tenDq_sc * OpptenDq
+        + Ds_sc * OppDs
+        + Dt_sc * OppDt
 
-H_cf_ic = tenDq_sc * OpptenDq
+H_cf_ic = tenDq_ic * OpptenDq
+        + Ds_ic * OppDs
+        + Dt_ic * OppDt
 
 H_cf_fc = tenDq_fc * OpptenDq
+        + Ds_fc * OppDs
+        + Dt_fc * OppDt
 
 --------------------------------------------------------------------------------
 -- Define the magnetic field term.
