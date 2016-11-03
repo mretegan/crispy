@@ -162,8 +162,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -183,8 +182,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -204,8 +202,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -225,8 +222,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -246,8 +242,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -277,8 +272,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -305,7 +299,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 1
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -326,7 +320,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 1
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -347,7 +341,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 1
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -368,7 +362,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 1
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -389,7 +383,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 1
                         }
                     }
                 }
@@ -559,8 +553,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -580,8 +573,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -601,8 +593,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -622,8 +613,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -643,8 +633,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -674,8 +663,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -702,7 +690,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -723,7 +711,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -744,7 +732,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -765,7 +753,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -786,7 +774,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         }
                     }
                 }
@@ -954,8 +942,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -975,8 +962,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -996,8 +982,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -1017,8 +1002,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -1038,8 +1022,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -1069,8 +1052,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -1097,7 +1079,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -1118,7 +1100,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -1139,7 +1121,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -1160,7 +1142,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -1181,7 +1163,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         }
                     }
                 }
@@ -1349,8 +1331,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -1370,8 +1351,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -1391,8 +1371,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -1412,8 +1391,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -1433,8 +1411,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -1464,8 +1441,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -1492,7 +1468,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 10
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -1513,7 +1489,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 10
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -1534,7 +1510,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 10
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -1555,7 +1531,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 10
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -1576,7 +1552,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 10
                         }
                     }
                 }
@@ -1744,8 +1720,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -1765,8 +1740,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -1786,8 +1760,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -1807,8 +1780,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -1828,8 +1800,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -1859,8 +1830,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -1887,7 +1857,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 1
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -1908,7 +1878,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 1
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -1929,7 +1899,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 1
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -1950,7 +1920,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 1
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -1971,7 +1941,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 1
                         }
                     }
                 }
@@ -2141,8 +2111,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -2162,8 +2131,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -2183,8 +2151,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -2204,8 +2171,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -2225,8 +2191,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -2256,8 +2221,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -2284,7 +2248,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -2305,7 +2269,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -2326,7 +2290,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -2347,7 +2311,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -2368,7 +2332,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         }
                     }
                 }
@@ -2536,8 +2500,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -2557,8 +2520,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -2578,8 +2540,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -2599,8 +2560,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -2620,8 +2580,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -2651,8 +2610,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -2679,7 +2637,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -2700,7 +2658,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -2721,7 +2679,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -2742,7 +2700,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -2763,7 +2721,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         }
                     }
                 }
@@ -2931,8 +2889,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -2952,8 +2909,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -2973,8 +2929,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -2994,8 +2949,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -3015,8 +2969,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -3046,8 +2999,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -3074,7 +3026,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -3095,7 +3047,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -3116,7 +3068,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -3137,7 +3089,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -3158,7 +3110,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         }
                     }
                 }
@@ -3326,8 +3278,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -3347,8 +3298,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -3368,8 +3318,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -3389,8 +3338,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -3410,8 +3358,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -3441,8 +3388,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -3469,7 +3415,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 10
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -3490,7 +3436,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 10
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -3511,7 +3457,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 10
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -3532,7 +3478,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 10
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -3553,7 +3499,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 10
                         }
                     }
                 }
@@ -3721,8 +3667,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -3742,8 +3687,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -3763,8 +3707,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -3784,8 +3727,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -3805,8 +3747,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -3836,8 +3777,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -3864,7 +3804,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 1
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -3885,7 +3825,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 1
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -3906,7 +3846,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 1
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -3927,7 +3867,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 1
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -3948,7 +3888,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 1
                         }
                     }
                 }
@@ -4118,8 +4058,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -4139,8 +4078,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -4160,8 +4098,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -4181,8 +4118,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -4202,8 +4138,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -4233,8 +4168,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -4261,7 +4195,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 252
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -4282,7 +4216,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 252
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -4303,7 +4237,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 252
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -4324,7 +4258,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 252
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -4345,7 +4279,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 252
                         }
                     }
                 }
@@ -4513,8 +4447,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -4534,8 +4467,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -4555,8 +4487,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -4576,8 +4507,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -4597,8 +4527,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -4628,8 +4557,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -4656,7 +4584,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -4677,7 +4605,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -4698,7 +4626,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -4719,7 +4647,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -4740,7 +4668,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         }
                     }
                 }
@@ -4908,8 +4836,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -4929,8 +4856,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -4950,8 +4876,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -4971,8 +4896,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -4992,8 +4916,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -5023,8 +4946,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -5051,7 +4973,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -5072,7 +4994,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -5093,7 +5015,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -5114,7 +5036,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -5135,7 +5057,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         }
                     }
                 }
@@ -5303,8 +5225,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -5324,8 +5245,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -5345,8 +5265,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -5366,8 +5285,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -5387,8 +5305,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -5418,8 +5335,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -5446,7 +5362,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -5467,7 +5383,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -5488,7 +5404,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -5509,7 +5425,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -5530,7 +5446,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         }
                     }
                 }
@@ -5698,8 +5614,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -5719,8 +5634,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -5740,8 +5654,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -5761,8 +5674,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -5782,8 +5694,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -5813,8 +5724,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -5841,7 +5751,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 10
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -5862,7 +5772,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 10
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -5883,7 +5793,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 10
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -5904,7 +5814,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 10
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -5925,7 +5835,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 10
                         }
                     }
                 }
@@ -6093,8 +6003,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -6114,8 +6023,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -6135,8 +6043,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -6156,8 +6063,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -6177,8 +6083,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -6208,8 +6113,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -6236,7 +6140,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 1
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -6257,7 +6161,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 1
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -6278,7 +6182,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 1
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -6299,7 +6203,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 1
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -6320,7 +6224,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 1
                         }
                     }
                 }
@@ -6490,8 +6394,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -6511,8 +6414,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -6532,8 +6434,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -6553,8 +6454,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -6574,8 +6474,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -6605,8 +6504,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -6633,7 +6531,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -6654,7 +6552,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -6675,7 +6573,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -6696,7 +6594,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -6717,7 +6615,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         }
                     }
                 }
@@ -6885,8 +6783,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -6906,8 +6803,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -6927,8 +6823,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -6948,8 +6843,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -6969,8 +6863,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -7000,8 +6893,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -7028,7 +6920,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 252
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -7049,7 +6941,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 252
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -7070,7 +6962,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 252
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -7091,7 +6983,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 252
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -7112,7 +7004,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 252
                         }
                     }
                 }
@@ -7280,8 +7172,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -7301,8 +7192,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -7322,8 +7212,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -7343,8 +7232,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -7364,8 +7252,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -7395,8 +7282,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -7423,7 +7309,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -7444,7 +7330,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -7465,7 +7351,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -7486,7 +7372,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -7507,7 +7393,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         }
                     }
                 }
@@ -7675,8 +7561,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -7696,8 +7581,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -7717,8 +7601,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -7738,8 +7621,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -7759,8 +7641,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -7790,8 +7671,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -7818,7 +7698,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -7839,7 +7719,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -7860,7 +7740,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -7881,7 +7761,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -7902,7 +7782,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         }
                     }
                 }
@@ -8070,8 +7950,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -8091,8 +7970,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -8112,8 +7990,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -8133,8 +8010,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -8154,8 +8030,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -8185,8 +8060,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -8213,7 +8087,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -8234,7 +8108,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -8255,7 +8129,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -8276,7 +8150,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -8297,7 +8171,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         }
                     }
                 }
@@ -8465,8 +8339,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -8486,8 +8359,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -8507,8 +8379,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -8528,8 +8399,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -8549,8 +8419,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -8580,8 +8449,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -8608,7 +8476,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 10
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -8629,7 +8497,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 10
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -8650,7 +8518,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 10
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -8671,7 +8539,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 10
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -8692,7 +8560,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 10
                         }
                     }
                 }
@@ -8860,8 +8728,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -8881,8 +8748,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -8902,8 +8768,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -8923,8 +8788,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -8944,8 +8808,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -8975,8 +8838,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -9003,7 +8865,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 1
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -9024,7 +8886,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 1
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -9045,7 +8907,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 1
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -9066,7 +8928,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 1
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -9087,7 +8949,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 1
                         }
                     }
                 }
@@ -9257,8 +9119,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -9278,8 +9139,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -9299,8 +9159,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -9320,8 +9179,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -9341,8 +9199,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -9372,8 +9229,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -9400,7 +9256,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -9421,7 +9277,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -9442,7 +9298,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -9463,7 +9319,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -9484,7 +9340,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         }
                     }
                 }
@@ -9652,8 +9508,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -9673,8 +9528,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -9694,8 +9548,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -9715,8 +9568,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -9736,8 +9588,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -9767,8 +9618,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -9795,7 +9645,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -9816,7 +9666,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -9837,7 +9687,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -9858,7 +9708,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -9879,7 +9729,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         }
                     }
                 }
@@ -10047,8 +9897,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -10068,8 +9917,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -10089,8 +9937,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -10110,8 +9957,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -10131,8 +9977,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -10162,8 +10007,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -10190,7 +10034,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 252
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -10211,7 +10055,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 252
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -10232,7 +10076,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 252
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -10253,7 +10097,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 252
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -10274,7 +10118,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 252
                         }
                     }
                 }
@@ -10442,8 +10286,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -10463,8 +10306,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -10484,8 +10326,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -10505,8 +10346,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -10526,8 +10366,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -10557,8 +10396,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -10585,7 +10423,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -10606,7 +10444,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -10627,7 +10465,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -10648,7 +10486,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -10669,7 +10507,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         }
                     }
                 }
@@ -10837,8 +10675,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -10858,8 +10695,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -10879,8 +10715,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -10900,8 +10735,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -10921,8 +10755,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -10952,8 +10785,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -10980,7 +10812,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -11001,7 +10833,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -11022,7 +10854,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -11043,7 +10875,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -11064,7 +10896,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         }
                     }
                 }
@@ -11232,8 +11064,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -11253,8 +11084,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -11274,8 +11104,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -11295,8 +11124,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -11316,8 +11144,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -11347,8 +11174,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -11375,7 +11201,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -11396,7 +11222,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -11417,7 +11243,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -11438,7 +11264,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -11459,7 +11285,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         }
                     }
                 }
@@ -11629,8 +11455,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -11650,8 +11475,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -11671,8 +11495,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -11692,8 +11515,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -11713,8 +11535,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -11744,8 +11565,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -11772,7 +11592,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -11793,7 +11613,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -11814,7 +11634,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -11835,7 +11655,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -11856,7 +11676,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         }
                     }
                 }
@@ -12024,8 +11844,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -12045,8 +11864,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -12066,8 +11884,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -12087,8 +11904,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -12108,8 +11924,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -12139,8 +11954,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -12167,7 +11981,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -12188,7 +12002,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -12209,7 +12023,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -12230,7 +12044,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -12251,7 +12065,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         }
                     }
                 }
@@ -12419,8 +12233,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -12440,8 +12253,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -12461,8 +12273,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -12482,8 +12293,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -12503,8 +12313,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -12534,8 +12343,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -12562,7 +12370,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -12583,7 +12391,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -12604,7 +12412,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -12625,7 +12433,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -12646,7 +12454,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         }
                     }
                 }
@@ -12814,8 +12622,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -12835,8 +12642,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -12856,8 +12662,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -12877,8 +12682,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -12898,8 +12702,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -12929,8 +12732,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -12957,7 +12759,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 252
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -12978,7 +12780,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 252
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -12999,7 +12801,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 252
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -13020,7 +12822,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 252
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -13041,7 +12843,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 252
                         }
                     }
                 }
@@ -13209,8 +13011,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -13230,8 +13031,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -13251,8 +13051,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -13272,8 +13071,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -13293,8 +13091,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -13324,8 +13121,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -13352,7 +13148,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -13373,7 +13169,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -13394,7 +13190,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -13415,7 +13211,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -13436,7 +13232,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         }
                     }
                 }
@@ -13606,8 +13402,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -13627,8 +13422,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -13648,8 +13442,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -13669,8 +13462,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -13690,8 +13482,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -13721,8 +13512,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -13749,7 +13539,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 10
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -13770,7 +13560,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 10
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -13791,7 +13581,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 10
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -13812,7 +13602,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 10
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -13833,7 +13623,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 10
                         }
                     }
                 }
@@ -14001,8 +13791,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -14022,8 +13811,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -14043,8 +13831,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -14064,8 +13851,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -14085,8 +13871,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -14116,8 +13901,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -14144,7 +13928,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -14165,7 +13949,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -14186,7 +13970,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -14207,7 +13991,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -14228,7 +14012,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         }
                     }
                 }
@@ -14396,8 +14180,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -14417,8 +14200,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -14438,8 +14220,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -14459,8 +14240,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -14480,8 +14260,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -14511,8 +14290,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -14539,7 +14317,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -14560,7 +14338,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -14581,7 +14359,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -14602,7 +14380,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -14623,7 +14401,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         }
                     }
                 }
@@ -14791,8 +14569,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -14812,8 +14589,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -14833,8 +14609,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -14854,8 +14629,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -14875,8 +14649,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -14906,8 +14679,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -14934,7 +14706,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -14955,7 +14727,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -14976,7 +14748,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -14997,7 +14769,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -15018,7 +14790,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 210
                         }
                     }
                 }
@@ -15188,8 +14960,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -15209,8 +14980,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -15230,8 +15000,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -15251,8 +15020,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -15272,8 +15040,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -15303,8 +15070,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -15331,7 +15097,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 10
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -15352,7 +15118,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 10
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -15373,7 +15139,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 10
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -15394,7 +15160,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 10
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -15415,7 +15181,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 10
                         }
                     }
                 }
@@ -15583,8 +15349,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -15604,8 +15369,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -15625,8 +15389,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -15646,8 +15409,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -15667,8 +15429,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -15698,8 +15459,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -15726,7 +15486,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -15747,7 +15507,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -15768,7 +15528,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -15789,7 +15549,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -15810,7 +15570,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 45
                         }
                     }
                 }
@@ -15978,8 +15738,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -15999,8 +15758,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -16020,8 +15778,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -16041,8 +15798,7 @@
                                     "npoints": 1000,
                                     "gamma": 1.0
                                 }
-                            },
-                            "number of states": 16
+                            }
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -16062,8 +15818,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.5
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     },
                     "RIXS": {
@@ -16093,8 +15848,7 @@
                                     "npoints": 1000,
                                     "gamma": 0.05
                                 }
-                            },
-                            "number of states": 16
+                            }
                         }
                     }
                 }
@@ -16121,7 +15875,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "L1 (2s)": {
                             "shells": {
@@ -16142,7 +15896,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "L2,3 (2p)": {
                             "shells": {
@@ -16163,7 +15917,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "M1 (3s)": {
                             "shells": {
@@ -16184,7 +15938,7 @@
                                     "gamma": 1.0
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         },
                         "M2,3 (3p)": {
                             "shells": {
@@ -16205,7 +15959,7 @@
                                     "gamma": 0.5
                                 }
                             },
-                            "number of states": 16
+                            "number of states": 120
                         }
                     }
                 }

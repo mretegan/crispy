@@ -8,7 +8,6 @@ import copy
 import json
 import numpy as np
 import os
-import shutil
 import subprocess
 import sys
 import uuid
@@ -102,41 +101,52 @@ class QuantyDockWidget(QDockWidget):
         edge = self.edgeComboBox.updateItems(edges, self.edge)
 
         # Set the temperature spin box.
-        if self.temperature:
-            self.temperatureDoubleSpinBox.setValue(self.temperature)
+        if self.temperature is None:
+            self.temperature = 0.1
+
+        self.temperatureDoubleSpinBox.setValue(self.temperature)
 
         parameters = edges[edge]
 
         # Set the energies group boxes.
-        if not self.energies:
-            energies = parameters['energies']
-        else:
-            energies = self.energies
+        if self.energies is None:
+            self.energies = parameters['energies']
 
-        self.e1GroupBox.setTitle(energies['e1']['label'])
-        self.e1MinDoubleSpinBox.setValue(energies['e1']['min'])
-        self.e1MaxDoubleSpinBox.setValue(energies['e1']['max'])
-        self.e1NPointsDoubleSpinBox.setValue(energies['e1']['npoints'])
-        self.e1GammaDoubleSpinBox.setValue(energies['e1']['gamma'])
+        self.e1GroupBox.setTitle(self.energies['e1']['label'])
+        self.e1MinDoubleSpinBox.setValue(self.energies['e1']['min'])
+        self.e1MaxDoubleSpinBox.setValue(self.energies['e1']['max'])
+        self.e1NPointsDoubleSpinBox.setValue(self.energies['e1']['npoints'])
+        self.e1GammaDoubleSpinBox.setValue(self.energies['e1']['gamma'])
 
         if 'RIXS' in self.experiment:
-            self.e2GroupBox.setTitle(energies['e2']['label'])
-            self.e2MinDoubleSpinBox.setValue(energies['e2']['min'])
-            self.e2MaxDoubleSpinBox.setValue(energies['e2']['max'])
-            self.e2NPointsDoubleSpinBox.setValue(energies['e2']['npoints'])
-            self.e2GammaDoubleSpinBox.setValue(energies['e2']['gamma'])
+            self.e2GroupBox.setTitle(self.energies['e2']['label'])
+            self.e2MinDoubleSpinBox.setValue(self.energies['e2']['min'])
+            self.e2MaxDoubleSpinBox.setValue(self.energies['e2']['max'])
+            self.e2NPointsDoubleSpinBox.setValue(self.energies['e2']['npoints'])
+            self.e2GammaDoubleSpinBox.setValue(self.energies['e2']['gamma'])
             self.e2GroupBox.setHidden(False)
         else:
             self.e2GroupBox.setHidden(True)
 
-        # Set the number of initial states.
-        if self.nPsis:
-            self.nPsisDoubleSpinBox.setValue(self.nPsis)
+        # Set the number of initial states. Not the prettiest implementation :-(.
+        if self.nPsis is None:
+            try:
+                self.nPsis = parameters['number of states']
+                nPsisMax = self.nPsis
+            except KeyError:
+                self.nPsis = 16
+                nPsisMax = 100
         else:
-            self.nPsisDoubleSpinBox.setValue(parameters['number of states'])
+            try:
+                nPsisMax = parameters['number of states']
+            except KeyError:
+                nPsisMax = 100
+
+        self.nPsisDoubleSpinBox.setValue(self.nPsis)
+        self.nPsisDoubleSpinBox.setMaximum(nPsisMax)
 
         # Set the Hamiltonian parameters.
-        if not self.hamiltonian:
+        if self.hamiltonian is None:
             configurations = parameters['configurations']
 
             hamiltonian = collections.OrderedDict()
@@ -203,13 +213,11 @@ class QuantyDockWidget(QDockWidget):
 
         # Set some of the derived data. This is not related to the UI,
         # but it makes sens to set it here.
-        if not self.energies:
-            self.energies = parameters['energies']
-        if not self.configurations:
+        if self.configurations is None:
             self.configurations = parameters['configurations']
-        if not self.shells:
+        if self.shells is None:
             self.shells = parameters['shells']
-        if not self.templateName:
+        if self.templateName is None:
             self.templateName = parameters['template name']
 
     def createContextMenu(self, position):
@@ -237,7 +245,7 @@ class QuantyDockWidget(QDockWidget):
 
         # Reset the rest of the parameters
         for key in self._defaults:
-            if not self._defaults[key]:
+            if self._defaults[key] is None:
                 self.__dict__[key] = None
 
         self.setUiParameters()

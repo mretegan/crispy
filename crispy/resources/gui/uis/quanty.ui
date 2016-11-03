@@ -216,9 +216,6 @@
                <property name="singleStep">
                 <double>0.100000000000000</double>
                </property>
-               <property name="value">
-                <double>0.100000000000000</double>
-               </property>
               </widget>
              </item>
             </layout>
@@ -310,10 +307,7 @@
                 <double>1.000000000000000</double>
                </property>
                <property name="maximum">
-                <double>9999.000000000000000</double>
-               </property>
-               <property name="value">
-                <double>1.000000000000000</double>
+                <double>100.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -369,9 +363,6 @@
                <property name="maximum">
                 <double>99.000000000000000</double>
                </property>
-               <property name="value">
-                <double>-20.000000000000000</double>
-               </property>
               </widget>
              </item>
              <item>
@@ -393,9 +384,6 @@
                </property>
                <property name="maximum">
                 <double>99.000000000000000</double>
-               </property>
-               <property name="value">
-                <double>20.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -435,9 +423,6 @@
                </property>
                <property name="maximum">
                 <double>10000.000000000000000</double>
-               </property>
-               <property name="value">
-                <double>1000.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -532,9 +517,6 @@
                <property name="maximum">
                 <double>99.000000000000000</double>
                </property>
-               <property name="value">
-                <double>-1.000000000000000</double>
-               </property>
               </widget>
              </item>
              <item>
@@ -556,9 +538,6 @@
                </property>
                <property name="maximum">
                 <double>99.000000000000000</double>
-               </property>
-               <property name="value">
-                <double>20.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -604,9 +583,6 @@
                </property>
                <property name="maximum">
                 <double>10000.000000000000000</double>
-               </property>
-               <property name="value">
-                <double>1000.000000000000000</double>
                </property>
               </widget>
              </item>
