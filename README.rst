@@ -1,8 +1,6 @@
-crispy
-======
-Crispy is a graphical user interface written in `Python <https://www.python.org/>`_ that facilitates the simulation of core-level spectra. The interface provides a set of tools to generate input files, submit calculations, and analyze the results obtained with programs such as `Quanty <http://quanty.org>`_ and `ORCA <https://orcaforum.cec.mpg.de>`_ (planned). It has a modular design and can be run on macOS, Linux, and Windows platforms.
+Crispy is a graphical user interface written in `Python <https://www.python.org/>`_ that facilitates the simulation of core-level spectra. The interface provides a set of tools to generate input files, submit calculations, and analyze the results obtained with programs such as `Quanty <http://quanty.org>`_ and `ORCA <https://orcaforum.cec.mpg.de>`_. It has a modular design and can be run on macOS, Linux, and Windows platforms.
 
-.. image:: doc/screenshot.png
+.. image:: doc/crispy.png
 
 Dependencies
 ------------
