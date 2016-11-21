@@ -15,11 +15,11 @@ class ListModel(QAbstractListModel):
 
     def __init__(self, parent=None, data=list()):
         super(ListModel, self).__init__(parent)
-        self._data = data
+        self.data = data
 
     def rowCount(self, parent=QModelIndex()):
         """Return the number of rows in the model."""
-        length = len(self._data)
+        length = len(self.data)
         return length
 
     def data(self, index, role):
@@ -28,7 +28,7 @@ class ListModel(QAbstractListModel):
         if not index.isValid():
             return
         if role == Qt.DisplayRole or role == Qt.EditRole:
-            label = self._data[index.row()]['label']
+            label = self.data[index.row()]['label']
             return label
 
     def insertItems(self, position, items, parent=QModelIndex()):
@@ -37,7 +37,7 @@ class ListModel(QAbstractListModel):
         last = position + len(items) - 1
         self.beginInsertRows(QModelIndex(), first, last)
         for item in items:
-            self._data.insert(position, item)
+            self.data.insert(position, item)
         self.endInsertRows()
         return True
 
@@ -48,7 +48,7 @@ class ListModel(QAbstractListModel):
         last = max(rows)
         self.beginRemoveRows(QModelIndex(), first, last)
         for row in sorted(rows, reverse=True):
-            del self._data[row]
+            del self.data[row]
         self.endRemoveRows()
         return True
 
@@ -61,5 +61,10 @@ class ListModel(QAbstractListModel):
         """Return the data stored in the model at the given index."""
         if not index.isValid():
             return
-        data = self._data[index.row()]
+        data = self.data[index.row()]
         return data
+
+    def reset(self):
+        self.beginResetModel()
+        self.data = list()
+        self.endResetModel()

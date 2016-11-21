@@ -6,7 +6,6 @@
 --only-binary h5py
 
 PyQt5
-h5py
 numpy
 matplotlib >= 1.2.0
 silx >= 0.3.0

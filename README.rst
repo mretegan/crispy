@@ -4,23 +4,20 @@ Crispy is a graphical user interface written in `Python <https://www.python.org/
 
 Dependencies
 ------------
-Crispy depends on the following Python packages:
-
 * `PyQt5 <https://riverbankcomputing.com/software/pyqt/intro>`_
-* `h5py <http://www.h5py.org>`_
 * `numpy <http://numpy.org>`_
 * `matplotlib <http://matplotlib.org>`_
 * `silx <http://www.silx.org>`_
 
 Instalation
 -----------
-The easiest way to install crispy is to use the installers provided on the `releases <https://github.com/mretegan/crispy/releases>`_ page; currently these are only available for Windows. While being simple to use, the installers are not updated very frequently, and might lack newly implemented features. 
+The easiest way to install crispy is to use the installers provided on the `releases <https://github.com/mretegan/crispy/releases>`_ page. While being simple to use, the installers are only created when a release is published, and, therefore/ might lack newly implemented features. 
 
-If you want to use the latest development version, you will have to install Python and the required dependencies. While crispy works with both Python 2 and Python 3, I strongly suggest that you install Python 3.5 or greater, as in previous versions some of the dependencies like PyQt5 cannot be installed using ``pip``. 
+If you want to use the latest development version, you will have to install Python and the dependencies listed above. While crispy works with both Python 2 and Python 3, you should try to install Python 3.5 or greater, as in previous versions some of the dependencies like PyQt5 cannot be installed using ``pip``. 
 
-On Linux, Python and all dependencies can be installed using the system's package manager (``apt-get``, ``dnf``, ``pacman``, etc.). The same can be done on macOS if you install first a package manager like `MacPorts <https://www.macports.org>`_. 
+On Linux, Python and all dependencies can be installed using the system's package manager (``apt-get``, ``dnf``, ``pacman``, etc.). The same can be done on macOS if you first install a package manager like `MacPorts <https://www.macports.org>`_. 
 
-On macOS and Windows you can install Python using the `official <https://www.python.org/downloads>`_ installers. In particular for Windows I recommend that you install the 64-bit version of Python, and make sure that during the installation you select to add Python to system's PATH. For Linux stick to the system's package manager unless you want to compile Python from source. After the installation, the dependencies can be installed using ``pip``, but only if you have installed Python 3.5 or greater:: 
+On macOS and Windows you can install Python using the `official <https://www.python.org/downloads>`_ installers. In particular for Windows you should install the 64-bit version of Python, and make sure that during the installation you select to add Python to system's PATH. After the installation, the dependencies can be installed using ``pip`` (only for Python 3.5 or greater):: 
 
     pip install -r requirements.txt [--user]
 
@@ -47,7 +44,7 @@ If you have used the installers, crispy should be easy to find and launch. For t
 
 This is a file created during the installation and should be available from the command line if the PATH environment variable was set correctly during the initial Python installation. 
 
-You can also started crispy without installing it by going to the source directory and executing (currently this only works with Python 3.5 or greater)::
+You can also start crispy without installing it by going to the source directory and executing (only for Python 3.5 or greater)::
 
     python -m crispy
 

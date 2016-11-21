@@ -3,12 +3,13 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+import os
+
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QMainWindow, QDockWidget
+from PyQt5.QtWidgets import QMainWindow, QPlainTextEdit
 from PyQt5.QtGui import QFontDatabase
 from PyQt5.uic import loadUi
 
-from .widgets.plotwidget import PlotWidget
 from .quanty import QuantyDockWidget
 from ..resources import resourceFileName
 
@@ -17,8 +18,10 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         super(MainWindow, self).__init__()
-        uiPath = resourceFileName('gui/uis/main.ui')
+        uiPath = resourceFileName(os.path.join('gui', 'uis', 'main.ui'))
         loadUi(uiPath, baseinstance=self, package='crispy.gui')
+
+        self.setWindowTitle('Crispy - untitled.lua')
 
         self.splitter.setSizes((600, 0))
 
@@ -27,6 +30,7 @@ class MainWindow(QMainWindow):
         font = QFontDatabase.systemFont(QFontDatabase.FixedFont)
         font.setPointSize(font.pointSize() + 1)
         self.loggerWidget.setFont(font)
+        self.loggerWidget.setLineWrapMode(QPlainTextEdit.NoWrap)
 
         # Quanty
         self.quantyDockWidget = QuantyDockWidget()
@@ -37,7 +41,11 @@ class MainWindow(QMainWindow):
         self.quantySaveInputAction.triggered.connect(
             self.quantyDockWidget.saveInput)
         self.quantySaveAsInputAction.triggered.connect(
-            self.quantyDockWidget.saveAsInput)
+            self.quantyDockWidget.saveInputAs)
+        self.quantyLoadCalculations.triggered.connect(
+                self.quantyDockWidget.loadCalculations)
+        self.quantyRemoveAllCalculations.triggered.connect(
+                self.quantyDockWidget.removeAllCalculations)
 
         self.quantyModuleShowAction.triggered.connect(self.quantyModuleShow)
         self.quantyModuleHideAction.triggered.connect(self.quantyModuleHide)

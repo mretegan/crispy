@@ -6,13 +6,14 @@ def main():
     """Simple application launcher."""
     import os
     import sys
+
     try:
         from crispy.__main__ import main
     except ImportError:
         # The package is run without being installed; its path must be first 
         # added to sys.path.
-        _dir = os.path.join(os.path.dirname(__file__), '..')
-        sys.path.insert(0, os.path.abspath(_dir))
+        path = os.path.join(os.path.dirname(__file__), os.path.pardir)
+        sys.path.insert(0, os.path.abspath(path))
         from crispy.__main__ import main
 
     main()

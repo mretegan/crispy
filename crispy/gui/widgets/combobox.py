@@ -10,14 +10,9 @@ class ComboBox(QComboBox):
     def __init__(self, *args, **kwargs):
         super(ComboBox, self).__init__(*args, **kwargs)
 
-    def updateItems(self, items, currentText):
-        # currentText = self.currentText()
+    def setItems(self, items, currentItem):
         self.blockSignals(True)
         self.clear()
         self.addItems(items)
-        try:
-            self.setCurrentText(currentText)
-        except ValueError:
-            self.setCurrentIndex(0)
+        self.setCurrentText(currentItem)
         self.blockSignals(False)
-        return self.currentText()

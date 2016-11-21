@@ -14,10 +14,9 @@ def main():
 
     app = QApplication(sys.argv)
     window = MainWindow()
-    window.setWindowTitle('Crispy')
     window.show()
 
-    app.setAttribute(Qt.AA_UseHighDpiPixmaps)
+    # app.setAttribute(Qt.AA_UseHighDpiPixmaps)
     sys.exit(app.exec_())
 
 if __name__ == '__main__':

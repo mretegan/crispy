@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>300</width>
+    <width>270</width>
     <height>570</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>290</width>
+    <width>270</width>
     <height>300</height>
    </size>
   </property>
@@ -26,8 +26,7 @@
    <string notr="true">QToolBox::tab {
     background-color: rgb(75, 75, 75);
     color: white;
-}
-</string>
+}</string>
   </property>
   <property name="features">
    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
@@ -68,7 +67,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>300</width>
+         <width>270</width>
          <height>394</height>
         </rect>
        </property>
@@ -116,25 +115,6 @@
            </item>
            <item>
             <widget class="ComboBox" name="symmetryComboBox">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QGroupBox" name="modelGroupBox">
-          <property name="title">
-           <string>Theoretical Model</string>
-          </property>
-          <layout class="QHBoxLayout" name="_7">
-           <item>
-            <widget class="ComboBox" name="modelComboBox">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -239,7 +219,6 @@
        </layout>
        <zorder>elementAndSymmetryGroupBox</zorder>
        <zorder>experimentGroupBox</zorder>
-       <zorder>modelGroupBox</zorder>
        <zorder>temperatureGroupBox</zorder>
        <zorder>verticalSpacer</zorder>
       </widget>
@@ -248,8 +227,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>300</width>
-         <height>394</height>
+         <width>271</width>
+         <height>384</height>
         </rect>
        </property>
        <attribute name="label">
@@ -275,16 +254,16 @@
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
-            <layout class="QHBoxLayout" name="nPsisHorizontalLayout">
+            <layout class="QHBoxLayout" name="psisHorizontalLayout">
              <item>
-              <widget class="QLabel" name="nPsisLabel">
+              <widget class="QLabel" name="psisLabel">
                <property name="text">
                 <string>#Ψ</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QDoubleSpinBox" name="nPsisDoubleSpinBox">
+              <widget class="QDoubleSpinBox" name="psisDoubleSpinBox">
                <property name="minimumSize">
                 <size>
                  <width>70</width>
@@ -305,9 +284,6 @@
                </property>
                <property name="minimum">
                 <double>1.000000000000000</double>
-               </property>
-               <property name="maximum">
-                <double>100.000000000000000</double>
                </property>
               </widget>
              </item>
@@ -400,7 +376,7 @@
                 </sizepolicy>
                </property>
                <property name="text">
-                <string>Nunber of points</string>
+                <string>Nunber of Points</string>
                </property>
               </widget>
              </item>
@@ -417,9 +393,6 @@
                </property>
                <property name="decimals">
                 <number>0</number>
-               </property>
-               <property name="minimum">
-                <double>5.000000000000000</double>
                </property>
                <property name="maximum">
                 <double>10000.000000000000000</double>
@@ -560,7 +533,7 @@
                 </size>
                </property>
                <property name="text">
-                <string>Nunber of points</string>
+                <string>Nunber of Points</string>
                </property>
               </widget>
              </item>
@@ -577,9 +550,6 @@
                </property>
                <property name="decimals">
                 <number>0</number>
-               </property>
-               <property name="minimum">
-                <double>5.000000000000000</double>
                </property>
                <property name="maximum">
                 <double>10000.000000000000000</double>
@@ -650,7 +620,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>300</width>
+         <width>270</width>
          <height>394</height>
         </rect>
        </property>
@@ -686,7 +656,7 @@
           </property>
           <widget class="QListView" name="hamiltonianTermsView">
            <property name="toolTip">
-            <string>Select the Hamiltonian term you want to modify</string>
+            <string>Left-click to display the parameters of a Hamiltonian term.</string>
            </property>
            <property name="frameShape">
             <enum>QFrame::NoFrame</enum>
@@ -697,13 +667,19 @@
            <property name="alternatingRowColors">
             <bool>false</bool>
            </property>
+           <property name="isWrapping" stdset="0">
+            <bool>false</bool>
+           </property>
           </widget>
           <widget class="TreeView" name="hamiltonianParametersView">
            <property name="toolTip">
-            <string>Double-click to edit the value or the scaling of a parameter</string>
+            <string>Double-click to edit the value or the scaling of a parameter.</string>
            </property>
            <property name="frameShape">
             <enum>QFrame::NoFrame</enum>
+           </property>
+           <property name="indentation">
+            <number>15</number>
            </property>
           </widget>
          </widget>
@@ -715,7 +691,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>300</width>
+         <width>270</width>
          <height>394</height>
         </rect>
        </property>
@@ -773,22 +749,40 @@
        <number>6</number>
       </property>
       <item>
-       <widget class="QPushButton" name="saveAsPushButton">
+       <widget class="QPushButton" name="saveInputAsPushButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="toolTip">
          <string>Save a Quanty input file</string>
         </property>
         <property name="text">
-         <string>Save As...</string>
+         <string>Save Input As...</string>
         </property>
         <property name="icon">
          <iconset>
           <normalon>../icons/save.svg</normalon>
          </iconset>
         </property>
+        <property name="iconSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
+        </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="runPushButton">
+       <widget class="QPushButton" name="calculationPushButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="toolTip">
          <string>Run Quanty</string>
         </property>
@@ -799,6 +793,12 @@
          <iconset>
           <normalon>../icons/play.svg</normalon>
          </iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
         </property>
         <property name="checkable">
          <bool>false</bool>
@@ -823,16 +823,15 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>saveAsPushButton</tabstop>
-  <tabstop>runPushButton</tabstop>
   <tabstop>elementComboBox</tabstop>
   <tabstop>chargeComboBox</tabstop>
   <tabstop>symmetryComboBox</tabstop>
-  <tabstop>modelComboBox</tabstop>
   <tabstop>experimentComboBox</tabstop>
   <tabstop>edgeComboBox</tabstop>
   <tabstop>temperatureDoubleSpinBox</tabstop>
-  <tabstop>nPsisDoubleSpinBox</tabstop>
+  <tabstop>saveInputAsPushButton</tabstop>
+  <tabstop>calculationPushButton</tabstop>
+  <tabstop>psisDoubleSpinBox</tabstop>
   <tabstop>e1MinDoubleSpinBox</tabstop>
   <tabstop>e1MaxDoubleSpinBox</tabstop>
   <tabstop>e1NPointsDoubleSpinBox</tabstop>

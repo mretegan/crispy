@@ -5,70 +5,66 @@ from __future__ import (absolute_import, division, print_function,
 
 import collections
 
-from PyQt5.QtCore import Qt, QAbstractItemModel, QModelIndex
+from PyQt5.QtCore import Qt, QAbstractItemModel, QModelIndex, pyqtSignal
 
 
 class TreeNode(object):
     """Class implementing a tree node to be used in a tree model."""
 
     def __init__(self, data, parent=None):
-        self._data = data
-        self._parent = parent
-        self._children = []
-        self._state = Qt.Checked
+        self.data = data
+        self.parent = parent
+        self.children = []
+        self.checkState = None
 
         if parent is not None:
             parent.appendChild(self)
 
     def appendChild(self, node):
         """Append a child to the parent node."""
-        self._children.append(node)
+        self.children.append(node)
 
     def getChildren(self):
-        return self._children
+        return self.children
 
     def child(self, row):
-        """Return the child at a given row (index)."""
-        return self._children[row]
+        """Return the child at a given row."""
+        return self.children[row]
 
     def row(self):
-        """Return the row (index) of the child."""
-        if self._parent is not None:
-            return self._parent._children.index(self)
+        """Return the row of the child."""
+        if self.parent is not None:
+            children = self.parent.getChildren()
+            # The index method of the list object.
+            return children.index(self)
         else:
             return 0
 
     def childCount(self):
-        return len(self._children)
+        return len(self.children)
 
     def columnCount(self):
-        return len(self._data)
+        return len(self.data)
 
     def getItemData(self, column):
         """Return the data for a given column."""
         try:
-            return self._data[column]
+            return self.data[column]
         except IndexError:
             return str()
 
     def setItemData(self, column, value):
         """Set the data at a given column."""
         try:
-            self._data[column] = value
+            self.data[column] = value
         except IndexError:
             pass
 
-    def getData(self):
-        return self._data
+    def getCheckState(self):
+        return self.checkState
 
-    def parent(self):
-        return self._parent
-
-    def checkState(self):
-        return self._state
-
-    def setState(self, state):
-        self._state = state
+    def setCheckState(self, checkState):
+        self.checkState = checkState
 
 
 class TreeModel(QAbstractItemModel):
@@ -81,18 +77,20 @@ class TreeModel(QAbstractItemModel):
     also reimplemented to control the way the header is presented.
     """
 
+    nodeCheckStateChanged = pyqtSignal(QModelIndex)
+
     def __init__(self, header, data, parent=None):
         super(TreeModel, self).__init__(parent)
-        self._header = header
-        self._data = data
-        self.setModelData(self._data)
+        self.header = header
+        self.data = data
+        self.setModelData(self.data)
 
     def index(self, row, column, parentIndex=None):
         """Return the index of the item in the model specified by the
-        given row, column and parent index.
+        given row, column, and parent index.
         """
         if parentIndex is None or not parentIndex.isValid():
-            parentNode = self._rootNode
+            parentNode = self.rootNode
         else:
             parentNode = self.getNode(parentIndex)
 
@@ -112,9 +110,9 @@ class TreeModel(QAbstractItemModel):
         confusion about what parent actually is - an index or an item.
         """
         childNode = self.getNode(childIndex)
-        parentNode = childNode.parent()
+        parentNode = childNode.parent
 
-        if parentNode == self._rootNode:
+        if parentNode == self.rootNode:
             parentIndex = QModelIndex()
         else:
             parentIndex = self.createIndex(parentNode.row(), 0, parentNode)
@@ -132,7 +130,7 @@ class TreeModel(QAbstractItemModel):
             return 0
 
         if not parentIndex.isValid():
-            parentNode = self._rootNode
+            parentNode = self.rootNode
         else:
             parentNode = self.getNode(parentIndex)
 
@@ -143,7 +141,7 @@ class TreeModel(QAbstractItemModel):
         required, but not used, as in this implementation it defaults
         for all nodes to the length of the header.
         """
-        return len(self._header)
+        return len(self.header)
 
     def data(self, index, role):
         """Return role specific data for the item referred by
@@ -157,18 +155,22 @@ class TreeModel(QAbstractItemModel):
 
         if role == Qt.DisplayRole:
             try:
-                if column > 1:
-                    return '{0:8.1f}'.format(value)
+                if column == 1:
+                    return '{0:8.2f}'.format(value)
                 else:
-                    return '{0:8.3f}'.format(value)
+                    return '{0:8.2f}'.format(value)
             except ValueError:
                 return value
 
         if role == Qt.EditRole:
             return str(value)
 
+        if role == Qt.CheckStateRole:
+            if node.parent == self.rootNode and column == 0:
+                return node.getCheckState()
+
         if role == Qt.TextAlignmentRole:
-            if index.column() > 0:
+            if column > 0:
                 return Qt.AlignRight
 
     def setData(self, index, value, role):
@@ -188,13 +190,21 @@ class TreeModel(QAbstractItemModel):
             else:
                 node.setItemData(column, value)
 
+        elif role == Qt.CheckStateRole:
+            node.setCheckState(value)
+            if value == Qt.Checked:
+                self.nodeCheckStateChanged.emit(index)
+
+        self.dataChanged.emit(index, index)
+
         return True
 
     def flags(self, index):
         """Return the active flags for the given index. Add editable
         flag to items in the first colum or greater.
         """
-        activeFlags = Qt.ItemIsEnabled | Qt.ItemIsSelectable
+        activeFlags = (Qt.ItemIsEnabled | Qt.ItemIsSelectable |
+                       Qt.ItemIsUserCheckable)
 
         node = self.getNode(index)
         column = index.column()
@@ -209,19 +219,19 @@ class TreeModel(QAbstractItemModel):
         with the specified orientation.
         """
         if orientation == Qt.Horizontal and role == Qt.DisplayRole:
-            return self._header[section]
+            return self.header[section]
 
     def getNode(self, index):
         if not index.isValid():
-            return self._rootNode
+            return self.rootNode
 
         return index.internalPointer()
 
     def setModelData(self, data, parentNode=None):
         if parentNode is None:
-            self._data = data
-            self._rootNode = TreeNode(self._header)
-            parentNode = self._rootNode
+            self.data = data
+            self.rootNode = TreeNode(self.header)
+            parentNode = self.rootNode
 
         if isinstance(data, dict):
             for key, value in data.items():
@@ -233,13 +243,15 @@ class TreeModel(QAbstractItemModel):
                     node = TreeNode([key, value], parentNode)
                 elif isinstance(value, list):
                     node = TreeNode([key, value[0], value[1]], parentNode)
+                elif isinstance(value, tuple):
+                    node = TreeNode([key, value[0], value[1]], parentNode)
                 else:
-                    print('Invalid data sent to the model: {0}'.format(value))
+                    return
 
     def _getModelData(self, data, parentNode=None):
         """Return the data contained in the model."""
         if parentNode is None:
-            parentNode = self._rootNode
+            parentNode = self.rootNode
 
         for node in parentNode.getChildren():
             key = node.getItemData(0)
@@ -255,18 +267,33 @@ class TreeModel(QAbstractItemModel):
     def getModelData(self):
         data = collections.OrderedDict()
         self._getModelData(data)
-        self._data = data
-        return self._data
+        self.data = data
+        return self.data
 
-    def getNodesState(self, parentNode=None):
-        """Return the state (disabled, tristate, enable) of all nodes
+    def setNodesCheckState(self, data, parentNode=None):
+        if parentNode is None:
+            parentNode = self.rootNode
+
+        children = parentNode.getChildren()
+
+        for child in children:
+            childName = child.data[0]
+            try:
+                child.setCheckState(data[childName])
+            except KeyError:
+                pass
+
+    def getNodesCheckState(self, parentNode=None):
+        """Return the check state (disabled, tristate, enable) of all nodes
         belonging to a parent.
         """
         if parentNode is None:
-            parentNode = self._rootNode
+            parentNode = self.rootNode
 
-        data = dict()
-        for node in parentNode.getChildren():
-            data[node._data[0]] = node.checkState()
+        data = collections.OrderedDict()
+        children = parentNode.getChildren()
+
+        for child in children:
+            data[child.data[0]] = child.getCheckState()
 
         return data
