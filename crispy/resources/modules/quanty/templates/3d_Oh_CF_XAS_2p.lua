@@ -7,7 +7,6 @@
 -- edge: L2,3 (2p)
 -- Hamiltonian: Coulomb, spin-orbit coupling, crystal field
 -- transition operators: dipole
--- template modification date: 04/10/2016
 --------------------------------------------------------------------------------
 Verbosity(0x00FF)
 

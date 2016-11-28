@@ -7,7 +7,6 @@
 -- edge: L2,3-M4,5 (2p3d)
 -- Hamiltonian: Coulomb, spin-orbit coupling, ligand field
 -- transition operators: dipole-in, dipole-out
--- template modification date: 03/11/2016
 --------------------------------------------------------------------------------
 Verbosity(0x00FF)
 

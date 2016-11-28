@@ -7,7 +7,6 @@
 -- edge: M1 (3s)
 -- Hamiltonian: Coulomb, spin-orbit coupling, crystal field
 -- transition operators: quadrupole
--- template modification date: 04/10/2016
 --------------------------------------------------------------------------------
 Verbosity(0x00FF)
 
