@@ -210,8 +210,8 @@ class QuantyDockWidget(QDockWidget):
         self.hamiltonianParametersView.setColumnWidth(0, 160)
         self.hamiltonianParametersView.setAlternatingRowColors(True)
 
-        # index = self.hamiltonianTermsView.currentIndex()
-        # self.hamiltonianParametersView.setRootIndex(index)
+        index = self.hamiltonianTermsView.currentIndex()
+        self.hamiltonianParametersView.setRootIndex(index)
 
         self.hamiltonianTermsView.selectionModel().selectionChanged.connect(
             self.selectedHamiltonianTermChanged)
