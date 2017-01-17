@@ -47,7 +47,7 @@ class QuantyDockWidget(QDockWidget):
         'hamiltonianTermsCheckState': None,
         'spectrum': None,
         'templateName': None,
-        'inputName': 'untitled.lua',
+        'baseName': 'untitled',
         'label': None,
         'startingTime': None,
         'endingTime': None,
@@ -155,6 +155,9 @@ class QuantyDockWidget(QDockWidget):
         self.symmetry = self.symmetryComboBox.currentText()
         self.experiment = self.experimentComboBox.currentText()
         self.edge = self.edgeComboBox.currentText()
+
+        self.baseName = self._defaults['baseName']
+        self.updateMainWindowTitle()
 
         self.setParameters()
 
@@ -430,25 +433,24 @@ class QuantyDockWidget(QDockWidget):
 
             replacements['${}_state'.format(name)] = checkState
 
-        replacements['$baseName'] = os.path.splitext(
-            os.path.basename(self.inputName))[0]
+        replacements['$baseName'] = self.baseName
 
         for replacement in replacements:
             template = template.replace(
                 replacement, str(replacements[replacement]))
 
-        with open(self.inputName, 'w') as f:
+        with open(self.baseName + '.lua', 'w') as f:
             f.write(template)
 
         self.updateMainWindowTitle()
 
     def saveInputAs(self):
         path, _ = QFileDialog.getSaveFileName(
-            self, 'Save Quanty Input', '{}'.format(self.inputName),
+            self, 'Save Quanty Input', '{}'.format(self.baseName + '.lua'),
             'Quanty Input File (*.lua)')
 
         if path:
-            self.inputName = os.path.basename(path)
+            self.baseName, _ = os.path.splitext(os.path.basename(path))
             os.chdir(os.path.dirname(path))
             self.saveInput()
 
@@ -482,10 +484,10 @@ class QuantyDockWidget(QDockWidget):
         # Run Quanty using QProcess.
         self.process = QProcess()
 
-        self.process.start(self.command, (self.inputName, ))
+        self.process.start(self.command, (self.baseName + '.lua', ))
         self.parent().statusBar().showMessage(
-                'Running {} {} in {}.'.format(
-                    self.command, self.inputName, os.getcwd()))
+                'Running "{} {} in {}.'.format(
+                    self.command, self.baseName + '.lua', os.getcwd()))
 
         self.process.readyReadStandardOutput.connect(self.handleOutputLogging)
         self.process.started.connect(self.updateCalculationPushButton)
@@ -557,8 +559,7 @@ class QuantyDockWidget(QDockWidget):
         # changes done by the user during the calculation.
         self.loadParameters(self.calculation)
 
-        spectrumName = '{}.spec'.format(os.path.splitext(
-            os.path.basename(self.inputName))[0])
+        spectrumName = '{}.spec'.format(self.baseName)
         spectrum = np.loadtxt(spectrumName, skiprows=5)
 
         if 'RIXS' in self.experiment:
@@ -656,7 +657,7 @@ class QuantyDockWidget(QDockWidget):
         self.parent().loggerWidget.appendPlainText(data.decode('utf-8'))
 
     def updateMainWindowTitle(self):
-        self.parent().setWindowTitle('Crispy - {}'.format(self.inputName))
+        self.parent().setWindowTitle('Crispy - {}'.format(self.baseName + '.lua'))
 
 
 def main():
