@@ -1,7 +1,34 @@
 # coding: utf-8
+# /*##########################################################################
+#
+# Copyright (c) 2016-2017 European Synchrotron Radiation Facility
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+#
+# ###########################################################################*/
 
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
+from __future__ import absolute_import, division, unicode_literals
+
+__authors__ = ['Marius Retegan']
+__license__ = 'MIT'
+__date__ = '17/01/2017'
+
 
 import collections
 import copy
@@ -196,9 +223,9 @@ class QuantyDockWidget(QDockWidget):
         self.hamiltonianModel = TreeModel(
             ('Parameter', 'Value', 'Scaling'), self.hamiltonianData)
         self.hamiltonianModel.setNodesCheckState(
-                self.hamiltonianTermsCheckState)
+            self.hamiltonianTermsCheckState)
         self.hamiltonianModel.nodeCheckStateChanged.connect(
-                self.hamiltonianTermCheckStateChanged)
+            self.hamiltonianTermCheckStateChanged)
 
         # Assign the Hamiltonian model to the Hamiltonian terms view.
         self.hamiltonianTermsView.setModel(self.hamiltonianModel)
@@ -282,7 +309,7 @@ class QuantyDockWidget(QDockWidget):
 
         self.hamiltonianData = self.hamiltonianModel.getModelData()
         self.hamiltonianTermsCheckState = (
-                self.hamiltonianModel.getNodesCheckState())
+            self.hamiltonianModel.getNodesCheckState())
 
     def saveParameters(self, dictionary):
         for key in self._defaults:
@@ -374,7 +401,7 @@ class QuantyDockWidget(QDockWidget):
                 template = p.read()
         except IOError:
             self.parent().statusBar().showMessage(
-                    'Could not find template: {}'.format(self.templateName))
+                'Could not find template: {}'.format(self.templateName))
             return
 
         self.getParameters()
@@ -486,8 +513,8 @@ class QuantyDockWidget(QDockWidget):
 
         self.process.start(self.command, (self.baseName + '.lua', ))
         self.parent().statusBar().showMessage(
-                'Running "{} {} in {}.'.format(
-                    self.command, self.baseName + '.lua', os.getcwd()))
+            'Running "{} {} in {}.'.format(
+                self.command, self.baseName + '.lua', os.getcwd()))
 
         self.process.readyReadStandardOutput.connect(self.handleOutputLogging)
         self.process.started.connect(self.updateCalculationPushButton)
@@ -536,7 +563,7 @@ class QuantyDockWidget(QDockWidget):
             minutes, seconds = divmod(reminder, 60)
             if hours > 0:
                 message += '{} hours {} minutes and {} seconds.'.format(
-                        hours, minutes, seconds)
+                    hours, minutes, seconds)
             elif minutes > 0:
                 message += '{} minutes and {} seconds.'.format(minutes, hours)
             else:
@@ -623,10 +650,8 @@ class QuantyDockWidget(QDockWidget):
         for child in parent.getChildren():
             childName = child.data[0]
             childIndex = self.hamiltonianModel.index(child.row(), 0)
-            if (('Crystal Field' in nodeName
-                 and 'Ligand Field' in childName) or
-                ('Ligand Field' in nodeName
-                 and 'Crystal Field' in childName)):
+            if (('Crystal Field' in nodeName and 'Ligand Field' in childName) or
+               ('Ligand Field' in nodeName and 'Crystal Field' in childName)):
                 self.hamiltonianModel.setData(childIndex, 0, Qt.CheckStateRole)
 
     def selectedHamiltonianTermChanged(self):
@@ -657,7 +682,8 @@ class QuantyDockWidget(QDockWidget):
         self.parent().loggerWidget.appendPlainText(data.decode('utf-8'))
 
     def updateMainWindowTitle(self):
-        self.parent().setWindowTitle('Crispy - {}'.format(self.baseName + '.lua'))
+        title = 'Crispy - {}'.format(self.baseName + '.lua')
+        self.parent().setWindowTitle(title)
 
 
 def main():

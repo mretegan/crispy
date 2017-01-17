@@ -22,24 +22,25 @@
 # THE SOFTWARE.
 #
 # ###########################################################################*/
-"""Access project's data files.
+"""Access project's data and documentation files.
 
-All access to data files must be made through the functions
+All access to data and documentation files MUST be made through the functions
 of this modules to ensure access accross different distribution schemes:
 
-- Installing from source or from wheel.
-- Installing package as a zip (through the use of pkg_resources).
-- Linux packaging willing to install data files (and doc files) in alternative
-  folders. In this case, this file must be patched.
-- Frozen fat binary application using crispy (frozen with cx_Freeze or py2app).
+- Installing from source or from wheel
+- Installing package as a zip (through the use of pkg_resources)
+- Linux packaging willing to install data files (and doc files) in
+  alternative folders. In this case, this file must be patched.
+- Frozen fat binary application using crispy (forzen with cx_Freeze or py2app).
   This needs special care for the resource files in the setup:
+
   - With cx_Freeze, add crispy/resources to include_files:
 
     .. code-block:: python
 
        import crispy.resources
        crispy_include_files = (os.path.dirname(crispy.resources.__file__),
-                               os.path.join('crispy', 'resources'))
+                             os.path.join('crispy', 'resources'))
        setup(...
              options={'build_exe': {'include_files': [crispy_include_files]}}
              )
@@ -52,61 +53,69 @@ of this modules to ensure access accross different distribution schemes:
              options={'py2app': {'packages': ['crispy']}}
              )
 """
-from __future__ import (absolute_import, division, print_function,
-                        unicode_literals)
 
 __authors__ = ['V.A. Sole', 'Thomas Vincent']
 __license__ = 'MIT'
-__date__ = '12/05/2016'
+__date__ = '17/01/2017'
+
 
 import os
 import sys
 
+# pkg_resources is useful when this package is stored in a zip
+# When pkg_resources is not available, the resources dir defaults to the
+# directory containing this module.
 try:
     import pkg_resources
 except ImportError:
     pkg_resources = None
 
-# For packaging purpose, patch this variable to use an alternative directory,
-# e.g., replace with _RESOURCES_DIR = '/usr/share/crispy/data'.
+
+# For packaging purpose, patch this variable to use an alternative directory
+# E.g., replace with _RESOURCES_DIR = '/usr/share/silx/data'
 _RESOURCES_DIR = None
 
-# cx_Freeze frozen support.
-# See the official documentation:
-# http://cx-freeze.readthedocs.io/en/latest/faq.html#using-data-files.
+# For packaging purpose, patch this variable to use an alternative directory
+# E.g., replace with _RESOURCES_DIR = '/usr/share/silx/doc'
+# Not in use, uncomment when functionality is needed
+# _RESOURCES_DOC_DIR = None
+
+# cx_Freeze forzen support
+# See http://cx-freeze.readthedocs.io/en/latest/faq.html#using-data-files
 if getattr(sys, 'frozen', False):
-    # When running in a frozen application we expect the resources to be
-    # located in the crispy/resources directory relative to the executable.
-    _dir = os.path.join(os.path.dirname(sys.executable), 'crispy', 'resources')
+    # Running in a frozen application:
+    # We expect resources to be located either in a silx/resources/ dir
+    # relative to the executable or within this package.
+    _dir = os.path.join(os.path.dirname(sys.executable), 'silx', 'resources')
     if os.path.isdir(_dir):
         _RESOURCES_DIR = _dir
 
 
 def resource_filename(resource):
-    """Return a true filesystem path for the specified resource.
+    """Return filename corresponding to resource.
 
-    Parameters
-    ----------
-    resource : str
-        Resource path relative to the resource directory. It must be specified
-        using the '/' path separator.
+    resource can be the name of either a file or a directory.
+    The existence of the resource is not checked.
 
-    Returns
-    -------
-    path : str
-        Resource path in the file system with respect of the current
-        directory.
+    :param str resource: Resource path relative to resource directory
+                         using '/' path separator.
+    :return: Absolute resource path in the file system
     """
-    if _RESOURCES_DIR is not None:  # If set, use this directory.
-        path = os.path.join(_RESOURCES_DIR, *resource.split('/'))
-    elif pkg_resources is None:  # Fallback if pkg_resources is not available.
-        path = os.path.join(os.path.abspath(os.path.dirname(__file__)),
+    # Not in use, uncomment when functionality is needed
+    # If _RESOURCES_DOC_DIR is set, use it to get resources in doc/ subfoldler
+    # from an alternative directory.
+    # if _RESOURCES_DOC_DIR is not None and (resource is 'doc' or
+    #         resource.startswith('doc/')):
+    #     # Remove doc folder from resource relative path
+    #     return os.path.join(_RESOURCES_DOC_DIR, *resource.split('/')[1:])
+
+    if _RESOURCES_DIR is not None:  # if set, use this directory
+        return os.path.join(_RESOURCES_DIR, *resource.split('/'))
+    elif pkg_resources is None:  # Fallback if pkg_resources is not available
+        return os.path.join(os.path.abspath(os.path.dirname(__file__)),
                             *resource.split('/'))
-    else:  # Preferred way to get resources as it supports zipfile package.
-        path = pkg_resources.resource_filename(__name__, resource)
-
-    return path
-
+    else:  # Preferred way to get resources as it supports zipfile package
+        return pkg_resources.resource_filename(__name__, resource)
 
 def resourceFileName(resource):
     return resource_filename(resource)
