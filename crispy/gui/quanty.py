@@ -166,13 +166,12 @@ class QuantyDockWidget(QDockWidget):
                     self.hamiltonianData[term][label][parameter] = (
                         parameters[parameter], scaling)
 
-        if not self.hamiltonianTermsCheckState:
-            self.hamiltonianTermsCheckState = collections.OrderedDict()
-            for term in terms:
-                if 'Ligand Field' in term:
-                    self.hamiltonianTermsCheckState[term] = 0
-                else:
-                    self.hamiltonianTermsCheckState[term] = 2
+        self.hamiltonianTermsCheckState = collections.OrderedDict()
+        for term in terms:
+            if 'Ligand Field' in term:
+                self.hamiltonianTermsCheckState[term] = 0
+            else:
+                self.hamiltonianTermsCheckState[term] = 2
 
         self.setUi()
 
