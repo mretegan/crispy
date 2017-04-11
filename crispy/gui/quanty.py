@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '17/01/2017'
+__date__ = '11/04/2017'
 
 
 import collections
@@ -57,6 +57,12 @@ from .views.treeview import TreeView
 from ..resources import resourceFileName
 
 
+class OrderedDict(collections.OrderedDict):
+    def __missing__(self, key):
+        value = self[key] = type(self)()
+        return value
+
+
 class QuantyDockWidget(QDockWidget):
 
     _defaults = {
@@ -65,12 +71,11 @@ class QuantyDockWidget(QDockWidget):
         'symmetry': 'Oh',
         'experiment': 'XAS',
         'edge': 'L2,3 (2p)',
-        'temperature': 0.1,
-        'psis': None,
-        'axes': None,
+        'temperature': 10,
         'shells': None,
-        'configurations': None,
-        'hamiltonianData': None,
+        'nPsis': None,
+        'axes': None,
+        'hamiltonianParameters': None,
         'hamiltonianTermsCheckState': None,
         'spectrum': None,
         'templateName': None,
@@ -92,86 +97,84 @@ class QuantyDockWidget(QDockWidget):
         for child in self.findChildren((QListView, TreeView, QDoubleSpinBox)):
             child.setAttribute(Qt.WA_MacShowFocusRect, False)
 
+        self.setParameters()
+        self.activateUi()
+
+    def setParameters(self):
         # Load the external parameters.
         path = resourceFileName(os.path.join(
             'modules', 'quanty', 'parameters', 'ui.json'))
 
         with open(path) as p:
-            self.uiParameters = json.loads(
+            uiParameters = json.loads(
                 p.read(), object_pairs_hook=collections.OrderedDict)
 
-        path = resourceFileName(os.path.join(
-            'modules', 'quanty', 'parameters', 'hamiltonian.json'))
-
-        with open(path) as p:
-            self.hamiltonianParameters = json.loads(
-                p.read(), object_pairs_hook=collections.OrderedDict)
-
-        self.setParameters()
-        self.activateUi()
-
-    def setParameters(self):
-        self.elements = self.uiParameters
+        self.elements = uiParameters['elements']
         if self.element not in self.elements:
             self.element = tuple(self.elements)[0]
 
-        self.charges = self.elements[self.element]
+        self.charges = self.elements[self.element]['charges']
         if self.charge not in self.charges:
             self.charge = tuple(self.charges)[0]
 
-        self.symmetries = self.charges[self.charge]
+        self.symmetries = self.charges[self.charge]['symmetries']
         if self.symmetry not in self.symmetries:
             self.symmetry = tuple(self.symmetries)[0]
 
-        self.experiments = self.symmetries[self.symmetry]
+        self.experiments = self.symmetries[self.symmetry]['experiments']
         if self.experiment not in self.experiments:
             self.experiment = tuple(self.experiments)[0]
 
-        self.edges = self.experiments[self.experiment]
+        self.edges = self.experiments[self.experiment]['edges']
         if self.edge not in self.edges:
             self.edge = tuple(self.edges)[0]
 
         branch = self.edges[self.edge]
 
-        self.axes = branch['axes']
         self.shells = branch['shells']
-        self.configurations = branch['configurations']
-        self.psis = branch['psis']
+        self.nPsis = branch['nPsis']
+        self.axes = branch['axes']
         self.templateName = branch['template name']
+        self.hamiltonians = branch['configurations']
 
-        terms = self.hamiltonianParameters[self.element][self.charge]
+        path = resourceFileName(os.path.join(
+            'modules', 'quanty', 'parameters', 'hamiltonian.json'))
 
-        self.hamiltonianData = collections.OrderedDict()
-        for term in terms:
-            if ('Crystal Field' in term) or ('Ligand Field' in term):
-                try:
-                    configurations = terms[term][self.symmetry]
-                except KeyError:
-                    continue
-            else:
-                configurations = terms[term]
+        with open(path) as p:
+            hamiltonianParameters = json.loads(
+                p.read(), object_pairs_hook=collections.OrderedDict)
 
-            self.hamiltonianData[term] = collections.OrderedDict()
-            for configuration in self.configurations:
-                label = '{} CFG ({})'.format(configuration[0],
-                                             configuration[1])
-                parameters = configurations[configuration[1]]
-                self.hamiltonianData[term][label] = collections.OrderedDict()
+        self.hamiltonianParameters = OrderedDict()
+        self.hamiltonianTermsCheckState = collections.OrderedDict()
 
+        for hamiltonian in self.hamiltonians:
+            label = '{} Hamiltonian'.format(hamiltonian[0])
+            configuration = hamiltonian[1]
+
+            terms = (hamiltonianParameters['elements']
+                     [self.element]['charges'][self.charge]['configurations']
+                     [configuration]['Hamiltonian Terms'])
+
+            for term in terms:
+                if ('Coulomb' in term) or ('Spin-Orbit Coupling' in term):
+                    parameters = terms[term]
+                else:
+                    try:
+                        parameters = terms[term][self.symmetry]
+                    except KeyError:
+                        continue
                 for parameter in parameters:
                     if parameter[0] in ('F', 'G'):
                         scaling = 0.8
                     else:
                         scaling = 1.0
-                    self.hamiltonianData[term][label][parameter] = (
+                    self.hamiltonianParameters[term][label][parameter] = (
                         parameters[parameter], scaling)
 
-        self.hamiltonianTermsCheckState = collections.OrderedDict()
-        for term in terms:
-            if 'Ligand Field' in term:
-                self.hamiltonianTermsCheckState[term] = 0
-            else:
-                self.hamiltonianTermsCheckState[term] = 2
+                if 'Hybridization' in term:
+                    self.hamiltonianTermsCheckState[term] = 0
+                else:
+                    self.hamiltonianTermsCheckState[term] = 2
 
         self.setUi()
 
@@ -215,16 +218,13 @@ class QuantyDockWidget(QDockWidget):
         else:
             self.e2GroupBox.setHidden(True)
 
-        self.psisDoubleSpinBox.setValue(self.psis[0])
-        self.psisDoubleSpinBox.setMaximum(self.psis[1])
+        self.nPsisDoubleSpinBox.setValue(self.nPsis)
 
         # Create the Hamiltonian model.
         self.hamiltonianModel = TreeModel(
-            ('Parameter', 'Value', 'Scaling'), self.hamiltonianData)
+            ('Parameter', 'Value', 'Scaling'), self.hamiltonianParameters)
         self.hamiltonianModel.setNodesCheckState(
             self.hamiltonianTermsCheckState)
-        self.hamiltonianModel.nodeCheckStateChanged.connect(
-            self.hamiltonianTermCheckStateChanged)
 
         # Assign the Hamiltonian model to the Hamiltonian terms view.
         self.hamiltonianTermsView.setModel(self.hamiltonianModel)
@@ -286,7 +286,7 @@ class QuantyDockWidget(QDockWidget):
 
         self.temperature = self.temperatureDoubleSpinBox.value()
 
-        self.psis = (int(self.psisDoubleSpinBox.value()), self.psis[1])
+        self.nPsis = int(self.nPsisDoubleSpinBox.value())
 
         self.axes = ((self.e1GroupBox.title(),
                       self.e1MinDoubleSpinBox.value(),
@@ -306,7 +306,7 @@ class QuantyDockWidget(QDockWidget):
                           int(self.e2NPointsDoubleSpinBox.value()),
                           self.e2GammaDoubleSpinBox.value()))
 
-        self.hamiltonianData = self.hamiltonianModel.getModelData()
+        self.hamiltonianParameters = self.hamiltonianModel.getModelData()
         self.hamiltonianTermsCheckState = (
             self.hamiltonianModel.getNodesCheckState())
 
@@ -398,10 +398,10 @@ class QuantyDockWidget(QDockWidget):
         try:
             with open(path) as p:
                 template = p.read()
-        except IOError:
+        except IOError as e:
             self.parent().statusBar().showMessage(
-                'Could not find template: {}'.format(self.templateName))
-            return
+                'Could not find template file: {}.' .format(self.templateName))
+            raise e
 
         self.getParameters()
 
@@ -427,26 +427,28 @@ class QuantyDockWidget(QDockWidget):
             replacements['$NE2'] = self.axes[1][3]
             replacements['$Gamma2'] = self.axes[1][4]
 
-        replacements['$NPsis'] = self.psis[0]
+        replacements['$NPsis'] = self.nPsis
 
-        for term in self.hamiltonianData:
+        for term in self.hamiltonianParameters:
             if 'Coulomb' in term:
                 name = 'H_coulomb'
             elif 'Spin-Orbit Coupling' in term:
                 name = 'H_soc'
             elif 'Crystal Field' in term:
                 name = 'H_cf'
-            elif 'Ligand Field' in term:
-                name = 'H_lf'
+            elif '3d-Ligands Hybridization' in term:
+                name = 'H_3d_Ld_hybridization'
+            elif '3d-4p Hybridization' in term:
+                name = 'H_3d_4p_hybridization'
 
-            configurations = self.hamiltonianData[term]
+            configurations = self.hamiltonianParameters[term]
             for configuration, parameters in configurations.items():
                 if 'Initial' in configuration:
-                    suffix = 'ic'
+                    suffix = 'i'
                 elif 'Intermediate' in configuration:
-                    suffix = 'nc'
+                    suffix = 'm'
                 elif 'Final' in configuration:
-                    suffix = 'fc'
+                    suffix = 'f'
                 for parameter, (value, scaling) in parameters.items():
                     key = '${}_{}_value'.format(parameter, suffix)
                     replacements[key] = '{}'.format(value)
@@ -457,7 +459,7 @@ class QuantyDockWidget(QDockWidget):
             if checkState > 0:
                 checkState = 1
 
-            replacements['${}_state'.format(name)] = checkState
+            replacements['${}'.format(name)] = checkState
 
         replacements['$baseName'] = self.baseName
 
@@ -468,8 +470,6 @@ class QuantyDockWidget(QDockWidget):
         with open(self.baseName + '.lua', 'w') as f:
             f.write(template)
 
-        self.updateMainWindowTitle()
-
     def saveInputAs(self):
         path, _ = QFileDialog.getSaveFileName(
             self, 'Save Quanty Input', '{}'.format(self.baseName + '.lua'),
@@ -477,8 +477,12 @@ class QuantyDockWidget(QDockWidget):
 
         if path:
             self.baseName, _ = os.path.splitext(os.path.basename(path))
+            self.updateMainWindowTitle()
             os.chdir(os.path.dirname(path))
-            self.saveInput()
+            try:
+                self.saveInput()
+            except IOError:
+                return
 
     def runCalculation(self):
         if 'win32' in sys.platform:
@@ -492,14 +496,17 @@ class QuantyDockWidget(QDockWidget):
             except:
                 self.parent().statusBar().showMessage(
                     'Could not find Quanty. Please install '
-                    'it and set the PATH environment variable')
+                    'it and set the PATH environment variable.')
                 return
 
         # Write the input file to disk.
-        self.saveInput()
+        try:
+            self.saveInput()
+        except FileNotFoundError:
+            return
 
         # You are about to run; I will give you a label and a starting time.
-        self.label = '{}{} | {} | {} | {}'.format(
+        self.label = '{} | {} | {} | {} | {}'.format(
             self.element, self.charge, self.symmetry,
             self.experiment, self.edge)
         self.startingTime = datetime.datetime.now()
@@ -512,7 +519,7 @@ class QuantyDockWidget(QDockWidget):
 
         self.process.start(self.command, (self.baseName + '.lua', ))
         self.parent().statusBar().showMessage(
-            'Running "{} {} in {}.'.format(
+            'Running {} {} in {}.'.format(
                 self.command, self.baseName + '.lua', os.getcwd()))
 
         self.process.readyReadStandardOutput.connect(self.handleOutputLogging)
@@ -586,7 +593,10 @@ class QuantyDockWidget(QDockWidget):
         self.loadParameters(self.calculation)
 
         spectrumName = '{}.spec'.format(self.baseName)
-        spectrum = np.loadtxt(spectrumName, skiprows=5)
+        try:
+            spectrum = np.loadtxt(spectrumName, skiprows=5)
+        except FileNotFoundError:
+            return
 
         if 'RIXS' in self.experiment:
             self.spectrum = -spectrum[:, 2::2]
@@ -639,20 +649,6 @@ class QuantyDockWidget(QDockWidget):
             self.parent().plotWidget.addCurve(
                 self.spectrum[:, 0], self.spectrum[:, 1], legend)
 
-    def hamiltonianTermCheckStateChanged(self, nodeIndex):
-        node = self.hamiltonianModel.getNode(nodeIndex)
-        nodeName = node.data[0]
-
-        parentIndex = self.hamiltonianModel.parent(nodeIndex)
-        parent = self.hamiltonianModel.getNode(parentIndex)
-
-        for child in parent.getChildren():
-            childName = child.data[0]
-            childIndex = self.hamiltonianModel.index(child.row(), 0)
-            if (('Crystal Field' in nodeName and 'Ligand Field' in childName) or
-               ('Ligand Field' in nodeName and 'Crystal Field' in childName)):
-                self.hamiltonianModel.setData(childIndex, 0, Qt.CheckStateRole)
-
     def selectedHamiltonianTermChanged(self):
         index = self.hamiltonianTermsView.currentIndex()
         self.hamiltonianParametersView.setRootIndex(index)
@@ -683,10 +679,3 @@ class QuantyDockWidget(QDockWidget):
     def updateMainWindowTitle(self):
         title = 'Crispy - {}'.format(self.baseName + '.lua')
         self.parent().setWindowTitle(title)
-
-
-def main():
-    pass
-
-if __name__ == '__main__':
-    main()

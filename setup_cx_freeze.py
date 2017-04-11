@@ -28,7 +28,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '17/01/2017'
+__date__ = '10/04/2017'
 
 import crispy
 import os
@@ -41,9 +41,9 @@ def get_version():
     import version
     return version.strictversion
 
-packages = ['matplotlib']
+packages = ['matplotlib', 'PyQt5.QtPrintSupport']
 includes = []
-excludes = ['scipy', 'tkinter']
+excludes = ['tkinter']
 
 modules = [crispy, silx]
 modules_path = [os.path.dirname(module.__file__) for module in modules]
@@ -65,7 +65,7 @@ if sys.platform == 'win32':
 
 executables = [
     Executable(
-        'scripts/Crispy',
+        'scripts/crispy',
         base=base,
         icon='icons/crispy.ico',
         ),
@@ -73,7 +73,7 @@ executables = [
 
 
 def main():
-    setup(name='Crispy',
+    setup(name='crispy',
           version=get_version(),
           options=options,
           executables=executables)

@@ -72,11 +72,11 @@ except ImportError:
 
 
 # For packaging purpose, patch this variable to use an alternative directory
-# E.g., replace with _RESOURCES_DIR = '/usr/share/silx/data'
+# E.g., replace with _RESOURCES_DIR = '/usr/share/crispy/data'
 _RESOURCES_DIR = None
 
 # For packaging purpose, patch this variable to use an alternative directory
-# E.g., replace with _RESOURCES_DIR = '/usr/share/silx/doc'
+# E.g., replace with _RESOURCES_DIR = '/usr/share/crispy/doc'
 # Not in use, uncomment when functionality is needed
 # _RESOURCES_DOC_DIR = None
 
@@ -84,9 +84,9 @@ _RESOURCES_DIR = None
 # See http://cx-freeze.readthedocs.io/en/latest/faq.html#using-data-files
 if getattr(sys, 'frozen', False):
     # Running in a frozen application:
-    # We expect resources to be located either in a silx/resources/ dir
+    # We expect resources to be located either in a crispy/resources/ dir
     # relative to the executable or within this package.
-    _dir = os.path.join(os.path.dirname(sys.executable), 'silx', 'resources')
+    _dir = os.path.join(os.path.dirname(sys.executable), 'crispy', 'resources')
     if os.path.isdir(_dir):
         _RESOURCES_DIR = _dir
 

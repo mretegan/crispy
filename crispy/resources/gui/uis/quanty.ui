@@ -254,16 +254,16 @@
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
-            <layout class="QHBoxLayout" name="psisHorizontalLayout">
+            <layout class="QHBoxLayout" name="nPsisHorizontalLayout">
              <item>
-              <widget class="QLabel" name="psisLabel">
+              <widget class="QLabel" name="nPsisLabel">
                <property name="text">
                 <string>#Ψ</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QDoubleSpinBox" name="psisDoubleSpinBox">
+              <widget class="QDoubleSpinBox" name="nPsisDoubleSpinBox">
                <property name="minimumSize">
                 <size>
                  <width>70</width>
@@ -778,10 +778,16 @@
       <item>
        <widget class="QPushButton" name="calculationPushButton">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Ignored" vsizetype="Fixed">
+         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>0</height>
+         </size>
         </property>
         <property name="toolTip">
          <string>Run Quanty</string>
@@ -831,7 +837,7 @@
   <tabstop>temperatureDoubleSpinBox</tabstop>
   <tabstop>saveInputAsPushButton</tabstop>
   <tabstop>calculationPushButton</tabstop>
-  <tabstop>psisDoubleSpinBox</tabstop>
+  <tabstop>nPsisDoubleSpinBox</tabstop>
   <tabstop>e1MinDoubleSpinBox</tabstop>
   <tabstop>e1MaxDoubleSpinBox</tabstop>
   <tabstop>e1NPointsDoubleSpinBox</tabstop>

@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '17/01/2017'
+__date__ = '10/04/2017'
 
 
 import os
@@ -93,10 +93,3 @@ class MainWindow(QMainWindow):
         self.menuModulesQuanty.insertAction(
             self.quantyModuleHideAction, self.quantyModuleShowAction)
         self.menuModulesQuanty.removeAction(self.quantyModuleHideAction)
-
-
-def main():
-    pass
-
-if __name__ == '__main__':
-    main
