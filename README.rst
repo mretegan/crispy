@@ -13,7 +13,7 @@ Source
 ------
 First you have to make sure you have a working Python distribution. While crispy works with both Python 2 and Python 3, you should try to install Python 3.5 or greater, as in previous versions some of the dependencies like PyQt5 cannot be easily installed. On macOS and Windows you can install Python using the `official <https://www.python.org/downloads>`_ installers. In particular for Windows you should install the 64-bit version of Python, and make sure that during the installation you select to add Python to system's PATH. On Linux, Python and dependencies (see below) can be installed using the system's package manager (``apt-get``, ``dnf``, ``pacman``, etc.). 
 
-Crispy depends on the following Python packages::
+Crispy depends on the following Python packages:
 
 * `PyQt5 <https://riverbankcomputing.com/software/pyqt/intro>`_
 * `numpy <http://numpy.org>`_
