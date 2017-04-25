@@ -1,16 +1,19 @@
+About
+=====
+
 Crispy is a graphical user interface written in `Python <https://www.python.org/>`_ that facilitates the simulation of core-level spectra. The interface provides a set of tools to generate input files, submit calculations, and analyze the results obtained with programs such as `Quanty <http://quanty.org>`_ and `ORCA <https://orcaforum.cec.mpg.de>`_. It has a modular design and can be run on macOS, Linux, and Windows platforms.
 
 .. image:: doc/crispy.png
 
-Instalation
-===========
+Installation
+============
 
 Windows
 -------
 The easiest way to install crispy is to use the installer provided on the `releases <https://github.com/mretegan/crispy/releases>`_ page. Because the installer is only created when a release is published, it might lack newly implemented features. If you want to use the latest development version, follow the instructions below.
 
-Source
-------
+From Source
+-----------
 First you have to make sure you have a working Python distribution. While crispy works with both Python 2 and Python 3, you should try to install Python 3.5 or greater, as in previous versions some of the dependencies like PyQt5 cannot be easily installed. On macOS and Windows you can install Python using the `official <https://www.python.org/downloads>`_ installers. In particular for Windows you should install the 64-bit version of Python, and make sure that during the installation you select to add Python to system's PATH. On Linux, Python and dependencies (see below) can be installed using the system's package manager (``apt-get``, ``dnf``, ``pacman``, etc.). 
 
 Crispy depends on the following Python packages:
