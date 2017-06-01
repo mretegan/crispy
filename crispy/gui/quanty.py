@@ -27,13 +27,14 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '11/04/2017'
+__date__ = '01/06/2017'
 
 
 import collections
 import copy
 import datetime
 import json
+import math
 import numpy as np
 import os
 try:
@@ -81,6 +82,7 @@ class QuantyDockWidget(QDockWidget):
         'templateName': None,
         'baseName': 'untitled',
         'label': None,
+        'uuid': None,
         'startingTime': None,
         'endingTime': None,
         }
@@ -206,17 +208,25 @@ class QuantyDockWidget(QDockWidget):
         self.e1MinDoubleSpinBox.setValue(self.axes[0][1])
         self.e1MaxDoubleSpinBox.setValue(self.axes[0][2])
         self.e1NPointsDoubleSpinBox.setValue(self.axes[0][3])
-        self.e1GammaDoubleSpinBox.setValue(self.axes[0][4])
+        self.e1LorentzianBroadeningDoubleSpinBox.setValue(self.axes[0][4])
 
         if 'RIXS' in self.experiment:
             self.e2GroupBox.setTitle(self.axes[1][0])
             self.e2MinDoubleSpinBox.setValue(self.axes[1][1])
             self.e2MaxDoubleSpinBox.setValue(self.axes[1][2])
             self.e2NPointsDoubleSpinBox.setValue(self.axes[1][3])
-            self.e2GammaDoubleSpinBox.setValue(self.axes[1][4])
-            self.e2GroupBox.setHidden(False)
+            self.e2LorentzianBroadeningDoubleSpinBox.setValue(self.axes[1][4])
+            self.e2GroupBox.setVisible(True)
+            self.e1GaussianBroadeningDoubleSpinBox.setVisible(False)
+            self.e1GaussianBroadeningLabel.setVisible(False)
+            self.e2GaussianBroadeningDoubleSpinBox.setVisible(False)
+            self.e2GaussianBroadeningLabel.setVisible(False)
         else:
-            self.e2GroupBox.setHidden(True)
+            self.e2GroupBox.setVisible(False)
+            self.e1GaussianBroadeningDoubleSpinBox.setVisible(True)
+            self.e1GaussianBroadeningLabel.setVisible(True)
+            self.e2GaussianBroadeningDoubleSpinBox.setVisible(True)
+            self.e2GaussianBroadeningLabel.setVisible(True)
 
         self.nPsisDoubleSpinBox.setValue(self.nPsis)
 
@@ -277,6 +287,11 @@ class QuantyDockWidget(QDockWidget):
         self.saveInputAsPushButton.clicked.connect(self.saveInputAs)
         self.calculationPushButton.clicked.connect(self.runCalculation)
 
+        self.e1GaussianBroadeningDoubleSpinBox.valueChanged.connect(
+                self.e1GaussianBroadeningDoubleSpinBoxChanged)
+        self.e1GaussianBroadeningHorizontalSlider.valueChanged.connect(
+                self.e1GaussianBroadeningHorizontalSliderChanged)
+
     def getParameters(self):
         self.element = self.elementComboBox.currentText()
         self.charge = self.chargeComboBox.currentText()
@@ -292,19 +307,22 @@ class QuantyDockWidget(QDockWidget):
                       self.e1MinDoubleSpinBox.value(),
                       self.e1MaxDoubleSpinBox.value(),
                       int(self.e1NPointsDoubleSpinBox.value()),
-                      self.e1GammaDoubleSpinBox.value()), )
+                      self.e1LorentzianBroadeningDoubleSpinBox.value(),
+                      self.e1GaussianBroadeningDoubleSpinBox.value()), )
 
         if 'RIXS' in self.experiment:
             self.axes = ((self.e1GroupBox.title(),
                           self.e1MinDoubleSpinBox.value(),
                           self.e1MaxDoubleSpinBox.value(),
                           int(self.e1NPointsDoubleSpinBox.value()),
-                          self.e1GammaDoubleSpinBox.value()),
+                          self.e1LorentzianBroadeningDoubleSpinBox.value(),
+                          self.e1GaussianBroadeningDoubleSpinBox.value(),
                          (self.e2GroupBox.title(),
                           self.e2MinDoubleSpinBox.value(),
                           self.e2MaxDoubleSpinBox.value(),
                           int(self.e2NPointsDoubleSpinBox.value()),
-                          self.e2GammaDoubleSpinBox.value()))
+                          self.e2LorentzianBroadeningDoubleSpinBox.value(),
+                          self.e2GaussianBroadeningDoubleSpinBox.value())))
 
         self.hamiltonianParameters = self.hamiltonianModel.getModelData()
         self.hamiltonianTermsCheckState = (
@@ -505,10 +523,12 @@ class QuantyDockWidget(QDockWidget):
         except FileNotFoundError:
             return
 
-        # You are about to run; I will give you a label and a starting time.
+        # You are about to run; I will give you a label, a unique identifier,
+        # and a starting time.
         self.label = '{} | {} | {} | {} | {}'.format(
             self.element, self.charge, self.symmetry,
             self.experiment, self.edge)
+        self.uuid = uuid.uuid4().hex
         self.startingTime = datetime.datetime.now()
 
         self.calculation = collections.OrderedDict()
@@ -618,7 +638,12 @@ class QuantyDockWidget(QDockWidget):
         self.resultsView.selectionModel().select(
             index, QItemSelectionModel.Select)
 
-    def plot(self):
+    def plot(self, replot=False):
+        try:
+            _ = self.spectrum.shape
+        except AttributeError:
+            return
+
         if 'RIXS' in self.experiment:
             self.parent().plotWidget.setGraphXLabel('Incident Energy (eV)')
             self.parent().plotWidget.setGraphYLabel('Energy Transfer (eV)')
@@ -626,6 +651,8 @@ class QuantyDockWidget(QDockWidget):
             colormap = {'name': 'viridis', 'normalization': 'linear',
                                 'autoscale': True, 'vmin': 0.0, 'vmax': 1.0}
             self.parent().plotWidget.setDefaultColormap(colormap)
+
+            legend = self.label + self.uuid
 
             xMin = self.axes[0][1]
             xMax = self.axes[0][2]
@@ -637,17 +664,55 @@ class QuantyDockWidget(QDockWidget):
             yPoints = self.axes[1][3]
             yScale = (yMax - yMin) / yPoints
 
+            z = self.spectrum
+
             self.parent().plotWidget.addImage(
-                self.spectrum, origin=(xMin, yMin), scale=(xScale, yScale))
+                z, origin=(xMin, yMin), scale=(xScale, yScale))
         else:
             self.parent().plotWidget.setGraphXLabel('Absorption Energy (eV)')
             self.parent().plotWidget.setGraphYLabel(
                 'Absorption Cross Section (a.u.)')
 
-            # Make each legend unique.
-            legend = self.label + uuid.uuid4().hex[:4]
-            self.parent().plotWidget.addCurve(
-                self.spectrum[:, 0], self.spectrum[:, 1], legend)
+            legend = self.label + self.uuid
+
+            x = self.spectrum[:, 0]
+            y = self.spectrum[:, 1]
+
+            fwhm = self.e1GaussianBroadeningDoubleSpinBox.value()
+            if fwhm != 0:
+                y = self.broaden(x, y, fwhm=fwhm) * y.max()
+            else:
+                pass
+
+            if replot:
+                self.parent().plotWidget.remove(legend)
+            self.parent().plotWidget.addCurve(x, y, legend)
+
+    @staticmethod
+    def broaden(x, y, type='gaussian', fwhm=0.5):
+        yb = np.zeros_like(y)
+        if type == 'gaussian':
+            sigma = fwhm / 2.0 * np.sqrt(2.0 * np.log(2.0))
+            for xi, yi in zip(x, y):
+                yb += yi / (sigma * np.sqrt(2.0 * np. pi)) * np.exp(
+                        -1.0 / 2.0 * ((x - xi) / sigma)**2)
+        else:
+            pass
+        yb = yb / yb.max()
+        return yb
+
+    def e1GaussianBroadeningDoubleSpinBoxChanged(self):
+        value = self.e1GaussianBroadeningDoubleSpinBox.value()
+        decimal, _ = math.modf(value)
+        self.e1GaussianBroadeningHorizontalSlider.setValue(decimal * 20.0)
+        self.plot(replot=True)
+
+    def e1GaussianBroadeningHorizontalSliderChanged(self):
+        decimal = self.e1GaussianBroadeningHorizontalSlider.value() / 20.0
+        value = self.e1GaussianBroadeningDoubleSpinBox.value()
+        _, integer = math.modf(value)
+        self.e1GaussianBroadeningDoubleSpinBox.setValue(integer + decimal)
+        self.plot(replot=True)
 
     def selectedHamiltonianTermChanged(self):
         index = self.hamiltonianTermsView.currentIndex()
