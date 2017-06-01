@@ -702,10 +702,13 @@ class QuantyDockWidget(QDockWidget):
         return yb
 
     def e1GaussianBroadeningDoubleSpinBoxChanged(self):
+        # Block the signals from the horizontal slider.
+        self.e1GaussianBroadeningHorizontalSlider.blockSignals(True)
         value = self.e1GaussianBroadeningDoubleSpinBox.value()
         decimal, _ = math.modf(value)
         self.e1GaussianBroadeningHorizontalSlider.setValue(decimal * 20.0)
         self.plot(replot=True)
+        self.e1GaussianBroadeningHorizontalSlider.blockSignals(False)
 
     def e1GaussianBroadeningHorizontalSliderChanged(self):
         decimal = self.e1GaussianBroadeningHorizontalSlider.value() / 20.0
