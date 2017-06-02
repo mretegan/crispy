@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '01/06/2017'
+__date__ = '02/06/2017'
 
 
 import collections
@@ -49,7 +49,7 @@ from PyQt5.QtCore import QItemSelectionModel, QProcess, Qt, QPoint
 from PyQt5.QtGui import QIcon, QCursor
 from PyQt5.QtWidgets import (
     QAbstractItemView, QDockWidget, QFileDialog, QAction, QMenu, QListView,
-    QDoubleSpinBox)
+    QDoubleSpinBox, QWidget)
 from PyQt5.uic import loadUi
 
 from .models.treemodel import TreeModel
@@ -204,29 +204,26 @@ class QuantyDockWidget(QDockWidget):
         self.temperatureDoubleSpinBox.setValue(self.temperature)
 
         # Set the axes labels, ranges, etc.
-        self.e1GroupBox.setTitle(self.axes[0][0])
+        self.eTabWidget.setTabText(0, self.axes[0][0])
         self.e1MinDoubleSpinBox.setValue(self.axes[0][1])
         self.e1MaxDoubleSpinBox.setValue(self.axes[0][2])
         self.e1NPointsDoubleSpinBox.setValue(self.axes[0][3])
         self.e1LorentzianBroadeningDoubleSpinBox.setValue(self.axes[0][4])
 
         if 'RIXS' in self.experiment:
-            self.e2GroupBox.setTitle(self.axes[1][0])
+            tab = self.eTabWidget.findChild(QWidget, 'e2Tab')
+            self.eTabWidget.addTab(tab, tab.objectName())
+            self.eTabWidget.setTabText(1, self.axes[1][0])
             self.e2MinDoubleSpinBox.setValue(self.axes[1][1])
             self.e2MaxDoubleSpinBox.setValue(self.axes[1][2])
             self.e2NPointsDoubleSpinBox.setValue(self.axes[1][3])
             self.e2LorentzianBroadeningDoubleSpinBox.setValue(self.axes[1][4])
-            self.e2GroupBox.setVisible(True)
-            self.e1GaussianBroadeningDoubleSpinBox.setVisible(False)
-            self.e1GaussianBroadeningLabel.setVisible(False)
-            self.e2GaussianBroadeningDoubleSpinBox.setVisible(False)
-            self.e2GaussianBroadeningLabel.setVisible(False)
+            self.e1GaussianBroadeningDoubleSpinBox.setEnabled(False)
+            self.e2GaussianBroadeningDoubleSpinBox.setEnabled(False)
         else:
-            self.e2GroupBox.setVisible(False)
-            self.e1GaussianBroadeningDoubleSpinBox.setVisible(True)
-            self.e1GaussianBroadeningLabel.setVisible(True)
-            self.e2GaussianBroadeningDoubleSpinBox.setVisible(True)
-            self.e2GaussianBroadeningLabel.setVisible(True)
+            self.eTabWidget.removeTab(1)
+            self.e1GaussianBroadeningDoubleSpinBox.setEnabled(True)
+            self.e2GaussianBroadeningDoubleSpinBox.setEnabled(True)
 
         self.nPsisDoubleSpinBox.setValue(self.nPsis)
 
@@ -287,10 +284,10 @@ class QuantyDockWidget(QDockWidget):
         self.saveInputAsPushButton.clicked.connect(self.saveInputAs)
         self.calculationPushButton.clicked.connect(self.runCalculation)
 
-        self.e1GaussianBroadeningDoubleSpinBox.valueChanged.connect(
-                self.e1GaussianBroadeningDoubleSpinBoxChanged)
-        self.e1GaussianBroadeningHorizontalSlider.valueChanged.connect(
-                self.e1GaussianBroadeningHorizontalSliderChanged)
+        self.e1GaussianBroadeningDoubleSpinBox.valueChanged.connect(self.plot)
+
+        self.e1LorentzianBroadeningDoubleSpinBox.valueChanged.connect(
+                self.plot)
 
     def getParameters(self):
         self.element = self.elementComboBox.currentText()
@@ -303,7 +300,7 @@ class QuantyDockWidget(QDockWidget):
 
         self.nPsis = int(self.nPsisDoubleSpinBox.value())
 
-        self.axes = ((self.e1GroupBox.title(),
+        self.axes = ((self.eTabWidget.tabText(0),
                       self.e1MinDoubleSpinBox.value(),
                       self.e1MaxDoubleSpinBox.value(),
                       int(self.e1NPointsDoubleSpinBox.value()),
@@ -311,13 +308,13 @@ class QuantyDockWidget(QDockWidget):
                       self.e1GaussianBroadeningDoubleSpinBox.value()), )
 
         if 'RIXS' in self.experiment:
-            self.axes = ((self.e1GroupBox.title(),
+            self.axes = ((self.eTabWidget.tabText(0),
                           self.e1MinDoubleSpinBox.value(),
                           self.e1MaxDoubleSpinBox.value(),
                           int(self.e1NPointsDoubleSpinBox.value()),
                           self.e1LorentzianBroadeningDoubleSpinBox.value(),
                           self.e1GaussianBroadeningDoubleSpinBox.value(),
-                         (self.e2GroupBox.title(),
+                         (self.eTabWidget.tabText(1),
                           self.e2MinDoubleSpinBox.value(),
                           self.e2MaxDoubleSpinBox.value(),
                           int(self.e2NPointsDoubleSpinBox.value()),
@@ -437,12 +434,15 @@ class QuantyDockWidget(QDockWidget):
         replacements['$Emin1'] = self.axes[0][1]
         replacements['$Emax1'] = self.axes[0][2]
         replacements['$NE1'] = self.axes[0][3]
-        replacements['$Gamma1'] = self.axes[0][4]
+        # Broadening is done in the interface.
+        value = self.e1LorentzianBroadeningDoubleSpinBox.minimum()
+        replacements['$Gamma1'] = value
 
         if 'RIXS' in self.experiment:
             replacements['$Emin2'] = self.axes[1][1]
             replacements['$Emax2'] = self.axes[1][2]
             replacements['$NE2'] = self.axes[1][3]
+            replacements['$Gamma1'] = self.axes[0][4]
             replacements['$Gamma2'] = self.axes[1][4]
 
         replacements['$NPsis'] = self.nPsis
@@ -640,7 +640,7 @@ class QuantyDockWidget(QDockWidget):
 
     def plot(self, replot=False):
         try:
-            _ = self.spectrum.shape
+            self.spectrum.size()
         except AttributeError:
             return
 
@@ -679,43 +679,33 @@ class QuantyDockWidget(QDockWidget):
             y = self.spectrum[:, 1]
 
             fwhm = self.e1GaussianBroadeningDoubleSpinBox.value()
-            if fwhm != 0:
-                y = self.broaden(x, y, fwhm=fwhm) * y.max()
-            else:
-                pass
+            if fwhm:
+                y = self.broaden(x, y, type='gaussian', fwhm=fwhm) * y.max()
+
+            fwhm = (self.e1LorentzianBroadeningDoubleSpinBox.value() -
+                    self.e1LorentzianBroadeningDoubleSpinBox.minimum())
+            if fwhm:
+                y = self.broaden(x, y, type='lorentzian', fwhm=fwhm) * y.max()
 
             if replot:
                 self.parent().plotWidget.remove(legend)
             self.parent().plotWidget.addCurve(x, y, legend)
 
     @staticmethod
-    def broaden(x, y, type='gaussian', fwhm=0.5):
+    def broaden(x, y, type='gaussian', fwhm=None):
         yb = np.zeros_like(y)
         if type == 'gaussian':
             sigma = fwhm / 2.0 * np.sqrt(2.0 * np.log(2.0))
             for xi, yi in zip(x, y):
                 yb += yi / (sigma * np.sqrt(2.0 * np. pi)) * np.exp(
                         -1.0 / 2.0 * ((x - xi) / sigma)**2)
-        else:
-            pass
+        elif type == 'lorentzian':
+            gamma = fwhm
+            for xi, yi in zip(x, y):
+                yb += yi / np.pi * (0.5 * gamma) / (
+                    (x - xi)**2 + (0.5 * gamma)**2)
         yb = yb / yb.max()
         return yb
-
-    def e1GaussianBroadeningDoubleSpinBoxChanged(self):
-        # Block the signals from the horizontal slider.
-        self.e1GaussianBroadeningHorizontalSlider.blockSignals(True)
-        value = self.e1GaussianBroadeningDoubleSpinBox.value()
-        decimal, _ = math.modf(value)
-        self.e1GaussianBroadeningHorizontalSlider.setValue(decimal * 20.0)
-        self.plot(replot=True)
-        self.e1GaussianBroadeningHorizontalSlider.blockSignals(False)
-
-    def e1GaussianBroadeningHorizontalSliderChanged(self):
-        decimal = self.e1GaussianBroadeningHorizontalSlider.value() / 20.0
-        value = self.e1GaussianBroadeningDoubleSpinBox.value()
-        _, integer = math.modf(value)
-        self.e1GaussianBroadeningDoubleSpinBox.setValue(integer + decimal)
-        self.plot(replot=True)
 
     def selectedHamiltonianTermChanged(self):
         index = self.hamiltonianTermsView.currentIndex()
