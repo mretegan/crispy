@@ -383,4 +383,4 @@ for i, Psi in ipairs(Psis) do
 end
 
 G = G / 9 / Z
-G.Print({{'file', '$baseName' .. '.spec'}})
+G.Print({{'file', '$baseName' .. '_iso.spec'}})

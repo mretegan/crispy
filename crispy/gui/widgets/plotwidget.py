@@ -31,6 +31,7 @@ __date__ = '17/01/2017'
 
 
 from silx.gui.plot import PlotWindow
+from PyQt5.QtWidgets import QComboBox
 
 
 class PlotWidget(PlotWindow):
@@ -38,5 +39,12 @@ class PlotWidget(PlotWindow):
         super(PlotWidget, self).__init__(
             logScale=False, grid=True, aspectRatio=False, yInverted=False,
             roi=False, mask=False, print_=False)
-        self.setActiveCurveHandling(False)
+        self.setActiveCurveHandling(True)
         self.setGraphGrid('both')
+
+        self.spectraComboBox = QComboBox()
+        self.spectraComboBox.setMinimumWidth(150)
+
+        toolbar = self.toolBar()
+        toolbar.addSeparator()
+        toolbar.addWidget(self.spectraComboBox)

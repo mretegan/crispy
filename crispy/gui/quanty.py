@@ -33,6 +33,7 @@ __date__ = '02/06/2017'
 import collections
 import copy
 import datetime
+import glob
 import json
 import math
 import numpy as np
@@ -75,10 +76,10 @@ class QuantyDockWidget(QDockWidget):
         'temperature': 10,
         'shells': None,
         'nPsis': None,
-        'axes': None,
+        'energies': None,
         'hamiltonianParameters': None,
         'hamiltonianTermsCheckState': None,
-        'spectrum': None,
+        'spectra': None,
         'templateName': None,
         'baseName': 'untitled',
         'label': None,
@@ -135,7 +136,7 @@ class QuantyDockWidget(QDockWidget):
 
         self.shells = branch['shells']
         self.nPsis = branch['nPsis']
-        self.axes = branch['axes']
+        self.energies = branch['energies']
         self.templateName = branch['template name']
         self.hamiltonians = branch['configurations']
 
@@ -203,25 +204,26 @@ class QuantyDockWidget(QDockWidget):
         # Set the temperature spin box.
         self.temperatureDoubleSpinBox.setValue(self.temperature)
 
-        # Set the axes labels, ranges, etc.
-        self.eTabWidget.setTabText(0, self.axes[0][0])
-        self.e1MinDoubleSpinBox.setValue(self.axes[0][1])
-        self.e1MaxDoubleSpinBox.setValue(self.axes[0][2])
-        self.e1NPointsDoubleSpinBox.setValue(self.axes[0][3])
-        self.e1LorentzianBroadeningDoubleSpinBox.setValue(self.axes[0][4])
+        # Set the labels, ranges, etc.
+        self.energiesTabWidget.setTabText(0, self.energies[0][0])
+        self.e1MinDoubleSpinBox.setValue(self.energies[0][1])
+        self.e1MaxDoubleSpinBox.setValue(self.energies[0][2])
+        self.e1NPointsDoubleSpinBox.setValue(self.energies[0][3])
+        self.e1LorentzianBroadeningDoubleSpinBox.setValue(self.energies[0][4])
 
         if 'RIXS' in self.experiment:
-            tab = self.eTabWidget.findChild(QWidget, 'e2Tab')
-            self.eTabWidget.addTab(tab, tab.objectName())
-            self.eTabWidget.setTabText(1, self.axes[1][0])
-            self.e2MinDoubleSpinBox.setValue(self.axes[1][1])
-            self.e2MaxDoubleSpinBox.setValue(self.axes[1][2])
-            self.e2NPointsDoubleSpinBox.setValue(self.axes[1][3])
-            self.e2LorentzianBroadeningDoubleSpinBox.setValue(self.axes[1][4])
+            tab = self.energiesTabWidget.findChild(QWidget, 'e2Tab')
+            self.energiesTabWidget.addTab(tab, tab.objectName())
+            self.energiesTabWidget.setTabText(1, self.energies[1][0])
+            self.e2MinDoubleSpinBox.setValue(self.energies[1][1])
+            self.e2MaxDoubleSpinBox.setValue(self.energies[1][2])
+            self.e2NPointsDoubleSpinBox.setValue(self.energies[1][3])
+            self.e2LorentzianBroadeningDoubleSpinBox.setValue(
+                self.energies[1][4])
             self.e1GaussianBroadeningDoubleSpinBox.setEnabled(False)
             self.e2GaussianBroadeningDoubleSpinBox.setEnabled(False)
         else:
-            self.eTabWidget.removeTab(1)
+            self.energiesTabWidget.removeTab(1)
             self.e1GaussianBroadeningDoubleSpinBox.setEnabled(True)
             self.e2GaussianBroadeningDoubleSpinBox.setEnabled(True)
 
@@ -300,26 +302,26 @@ class QuantyDockWidget(QDockWidget):
 
         self.nPsis = int(self.nPsisDoubleSpinBox.value())
 
-        self.axes = ((self.eTabWidget.tabText(0),
-                      self.e1MinDoubleSpinBox.value(),
-                      self.e1MaxDoubleSpinBox.value(),
-                      int(self.e1NPointsDoubleSpinBox.value()),
-                      self.e1LorentzianBroadeningDoubleSpinBox.value(),
-                      self.e1GaussianBroadeningDoubleSpinBox.value()), )
-
         if 'RIXS' in self.experiment:
-            self.axes = ((self.eTabWidget.tabText(0),
-                          self.e1MinDoubleSpinBox.value(),
-                          self.e1MaxDoubleSpinBox.value(),
-                          int(self.e1NPointsDoubleSpinBox.value()),
-                          self.e1LorentzianBroadeningDoubleSpinBox.value(),
-                          self.e1GaussianBroadeningDoubleSpinBox.value(),
-                         (self.eTabWidget.tabText(1),
-                          self.e2MinDoubleSpinBox.value(),
-                          self.e2MaxDoubleSpinBox.value(),
-                          int(self.e2NPointsDoubleSpinBox.value()),
-                          self.e2LorentzianBroadeningDoubleSpinBox.value(),
-                          self.e2GaussianBroadeningDoubleSpinBox.value())))
+            self.energies = ((self.energiesTabWidget.tabText(0),
+                              self.e1MinDoubleSpinBox.value(),
+                              self.e1MaxDoubleSpinBox.value(),
+                              int(self.e1NPointsDoubleSpinBox.value()),
+                              self.e1LorentzianBroadeningDoubleSpinBox.value(),
+                              self.e1GaussianBroadeningDoubleSpinBox.value()),
+                             (self.energiesTabWidget.tabText(1),
+                              self.e2MinDoubleSpinBox.value(),
+                              self.e2MaxDoubleSpinBox.value(),
+                              int(self.e2NPointsDoubleSpinBox.value()),
+                              self.e2LorentzianBroadeningDoubleSpinBox.value(),
+                              self.e2GaussianBroadeningDoubleSpinBox.value()))
+        else:
+            self.energies = ((self.energiesTabWidget.tabText(0),
+                              self.e1MinDoubleSpinBox.value(),
+                              self.e1MaxDoubleSpinBox.value(),
+                              int(self.e1NPointsDoubleSpinBox.value()),
+                              self.e1LorentzianBroadeningDoubleSpinBox.value(),
+                              self.e1GaussianBroadeningDoubleSpinBox.value()),)
 
         self.hamiltonianParameters = self.hamiltonianModel.getModelData()
         self.hamiltonianTermsCheckState = (
@@ -383,8 +385,10 @@ class QuantyDockWidget(QDockWidget):
 
         if path:
             os.chdir(os.path.dirname(path))
+            calculations = list(self.selectedCalculations())
+            calculations.reverse()
             with open(path, 'wb') as p:
-                pickle.dump(list(self.selectedCalculations()), p)
+                pickle.dump(calculations, p)
 
     def removeSelectedCalculations(self):
         indexes = self.resultsView.selectedIndexes()
@@ -431,19 +435,19 @@ class QuantyDockWidget(QDockWidget):
         replacements['$By'] = '0'
         replacements['$Bz'] = '1e-6'
 
-        replacements['$Emin1'] = self.axes[0][1]
-        replacements['$Emax1'] = self.axes[0][2]
-        replacements['$NE1'] = self.axes[0][3]
+        replacements['$Emin1'] = self.energies[0][1]
+        replacements['$Emax1'] = self.energies[0][2]
+        replacements['$NE1'] = self.energies[0][3]
         # Broadening is done in the interface.
         value = self.e1LorentzianBroadeningDoubleSpinBox.minimum()
         replacements['$Gamma1'] = value
 
         if 'RIXS' in self.experiment:
-            replacements['$Emin2'] = self.axes[1][1]
-            replacements['$Emax2'] = self.axes[1][2]
-            replacements['$NE2'] = self.axes[1][3]
-            replacements['$Gamma1'] = self.axes[0][4]
-            replacements['$Gamma2'] = self.axes[1][4]
+            replacements['$Emin2'] = self.energies[1][1]
+            replacements['$Emax2'] = self.energies[1][2]
+            replacements['$NE2'] = self.energies[1][3]
+            replacements['$Gamma1'] = self.energies[0][4]
+            replacements['$Gamma2'] = self.energies[1][4]
 
         replacements['$NPsis'] = self.nPsis
 
@@ -582,6 +586,7 @@ class QuantyDockWidget(QDockWidget):
         exitStatus = self.process.exitStatus()
         exitCode = self.process.exitCode()
         timeout = 10000
+        statusBar = self.parent().statusBar()
         if exitStatus == 0 and exitCode == 0:
             message = ('Quanty has finished successfully in ')
             delta = int((self.endingTime - self.startingTime).total_seconds())
@@ -594,10 +599,10 @@ class QuantyDockWidget(QDockWidget):
                 message += '{} minutes and {} seconds.'.format(minutes, hours)
             else:
                 message += '{} seconds.'.format(seconds)
-            self.parent().statusBar().showMessage(message, timeout)
+            statusBar.showMessage(message, timeout)
         elif exitStatus == 0 and exitCode == 1:
             self.handleErrorLogging()
-            self.parent().statusBar().showMessage((
+            statusBar.showMessage((
                 'Quanty has finished unsuccessfully. '
                 'Check the logging window for more details.'), timeout)
             self.parent().splitter.setSizes((400, 200))
@@ -605,29 +610,53 @@ class QuantyDockWidget(QDockWidget):
         # exitCode is platform dependend; exitStatus is always 1.
         elif exitStatus == 1:
             message = 'Quanty was stopped.'
-            self.parent().statusBar().showMessage(message, timeout)
+            statusBar.showMessage(message, timeout)
             return
 
         # Copy back the details of the calculation, and overwrite all UI
         # changes done by the user during the calculation.
         self.loadParameters(self.calculation)
 
-        spectrumName = '{}.spec'.format(self.baseName)
-        try:
-            spectrum = np.loadtxt(spectrumName, skiprows=5)
-        except FileNotFoundError:
-            return
+        # Initialize the spectra container.
+        self.spectra = dict()
+
+        e1Min = self.energies[0][1]
+        e1Max = self.energies[0][2]
+        e1NPoints = self.energies[0][3]
+        self.spectra['e1'] = np.linspace(e1Min, e1Max, e1NPoints + 1)
 
         if 'RIXS' in self.experiment:
-            self.spectrum = -spectrum[:, 2::2]
-        else:
-            self.spectrum = spectrum[:, ::2]
-            self.spectrum[:, 1] = -self.spectrum[:, 1]
+            e2Min = self.energies[1][1]
+            e2Max = self.energies[1][2]
+            e2NPoints = self.energies[1][3]
+            self.spectra['e2'] = np.linspace(e2Min, e2Max, e2NPoints + 1)
 
+        # Find all spectra in the current folder.
+        pattern = '{}*.spec'.format(self.baseName)
+
+        for spectrumName in glob.glob(pattern):
+            try:
+                spectrum = np.loadtxt(spectrumName, skiprows=5)
+            except FileNotFoundError:
+                return
+
+            if '_iso.spec' in spectrumName:
+                key = 'Isotropic'
+            elif '_cd.spec' in spectrumName:
+                key = 'Circular Dichorism'
+
+            plotWidget = self.parent().plotWidget
+            plotWidget.spectraComboBox.addItem(key)
+
+            self.spectra[key] = -spectrum[:, 2::2]
+
+            # Remove the spectrum file
+            os.remove(spectrumName)
+
+        # TODO: Move this action in a better place.
+        plotWidget.spectraComboBox.currentTextChanged.connect(
+            self.plot)
         self.saveParameters(self.calculation)
-
-        # Remove the spectrum file
-        os.remove(spectrumName)
 
         # Store the calculation details; have to encapsulate it into a list.
         self.resultsModel.appendItems([self.calculation])
@@ -639,10 +668,10 @@ class QuantyDockWidget(QDockWidget):
             index, QItemSelectionModel.Select)
 
     def plot(self, replot=False):
-        try:
-            self.spectrum.size()
-        except AttributeError:
+        if not self.spectra:
             return
+
+        plotWidget = self.parent().plotWidget
 
         if 'RIXS' in self.experiment:
             self.parent().plotWidget.setGraphXLabel('Incident Energy (eV)')
@@ -654,17 +683,23 @@ class QuantyDockWidget(QDockWidget):
 
             legend = self.label + self.uuid
 
-            xMin = self.axes[0][1]
-            xMax = self.axes[0][2]
-            xPoints = self.axes[0][3]
-            xScale = (xMax - xMin) / xPoints
+            x = self.spectra['e1']
+            xMin = x.min()
+            xMax = x.max()
+            xNPoints = x.size
+            xScale = (xMax - xMin) / xNPoints
 
-            yMin = self.axes[1][1]
-            yMax = self.axes[1][2]
-            yPoints = self.axes[1][3]
-            yScale = (yMax - yMin) / yPoints
+            y = self.spectra['e2']
+            yMin = y.min()
+            yMax = y.max()
+            yNPoints = y.size
+            yScale = (yMax - yMin) / yNPoints
 
-            z = self.spectrum
+            key = plotWidget.spectraComboBox.currentText()
+            try:
+                z = self.spectra[key]
+            except KeyError:
+                return
 
             self.parent().plotWidget.addImage(
                 z, origin=(xMin, yMin), scale=(xScale, yScale))
@@ -675,8 +710,15 @@ class QuantyDockWidget(QDockWidget):
 
             legend = self.label + self.uuid
 
-            x = self.spectrum[:, 0]
-            y = self.spectrum[:, 1]
+            x = self.spectra['e1']
+
+            key = plotWidget.spectraComboBox.currentText()
+            try:
+                y = self.spectra[key]
+            except KeyError:
+                return
+
+            y = y[:, 0]
 
             fwhm = self.e1GaussianBroadeningDoubleSpinBox.value()
             if fwhm:
@@ -689,6 +731,7 @@ class QuantyDockWidget(QDockWidget):
 
             if replot:
                 self.parent().plotWidget.remove(legend)
+
             self.parent().plotWidget.addCurve(x, y, legend)
 
     @staticmethod
