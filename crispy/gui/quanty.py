@@ -73,7 +73,8 @@ class QuantyDockWidget(QDockWidget):
         'symmetry': 'Oh',
         'experiment': 'XAS',
         'edge': 'L2,3 (2p)',
-        'temperature': 10,
+        'temperature': 10.0,
+        'magneticField': (0.0, 0.0, 0.0),
         'shells': None,
         'nPsis': None,
         'energies': None,
@@ -204,6 +205,11 @@ class QuantyDockWidget(QDockWidget):
         # Set the temperature spin box.
         self.temperatureDoubleSpinBox.setValue(self.temperature)
 
+        # Set the magnetic field spin boxes.
+        self.magneticFieldXDoubleSpinBox.setValue(self.magneticField[0])
+        self.magneticFieldYDoubleSpinBox.setValue(self.magneticField[1])
+        self.magneticFieldZDoubleSpinBox.setValue(self.magneticField[2])
+
         # Set the labels, ranges, etc.
         self.energiesTabWidget.setTabText(0, self.energies[0][0])
         self.e1MinDoubleSpinBox.setValue(self.energies[0][1])
@@ -299,6 +305,11 @@ class QuantyDockWidget(QDockWidget):
         self.edge = self.edgeComboBox.currentText()
 
         self.temperature = self.temperatureDoubleSpinBox.value()
+        self.magneticField = (
+            self.magneticFieldXDoubleSpinBox.value(),
+            self.magneticFieldYDoubleSpinBox.value(),
+            self.magneticFieldZDoubleSpinBox.value(),
+            )
 
         self.nPsis = int(self.nPsisDoubleSpinBox.value())
 
@@ -431,9 +442,15 @@ class QuantyDockWidget(QDockWidget):
 
         replacements['$T'] = self.temperature
 
-        replacements['$Bx'] = '0'
-        replacements['$By'] = '0'
-        replacements['$Bz'] = '1e-6'
+        # If all components of the magnetic field are zero, 
+        # add a small contribution in the y-direction to make the simulation
+        # converge faster.
+        if all(value == 0.0 for value in self.magneticField):
+            self.magneticField = (0.0, 0.00001, 0.0)
+
+        replacements['$Bx'] = self.magneticField[0]
+        replacements['$By'] = self.magneticField[1]
+        replacements['$Bz'] = self.magneticField[2]
 
         replacements['$Emin1'] = self.energies[0][1]
         replacements['$Emax1'] = self.energies[0][2]

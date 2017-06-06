@@ -69,25 +69,13 @@
          <x>0</x>
          <y>0</y>
          <width>280</width>
-         <height>364</height>
+         <height>372</height>
         </rect>
        </property>
        <attribute name="label">
         <string>General Setup</string>
        </attribute>
-       <layout class="QVBoxLayout" name="_2">
-        <property name="leftMargin">
-         <number>6</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>6</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
+       <layout class="QVBoxLayout" name="verticalLayout_5">
         <item>
          <widget class="QGroupBox" name="elementAndSymmetryGroupBox">
           <property name="title">
@@ -185,13 +173,7 @@
           <property name="title">
            <string>Experimental Conditions</string>
           </property>
-          <layout class="QHBoxLayout" name="_9">
-           <property name="leftMargin">
-            <number>12</number>
-           </property>
-           <property name="rightMargin">
-            <number>12</number>
-           </property>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
            <item>
             <layout class="QHBoxLayout" name="temperatureHorizontalLayout">
              <item>
@@ -237,7 +219,155 @@
              </item>
             </layout>
            </item>
+           <item>
+            <widget class="QLabel" name="magneticFieldLabel">
+             <property name="text">
+              <string>Magnetic Field (T)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="magneticFieldXHorizontalLayout">
+             <item>
+              <widget class="QLabel" name="magneticFieldXLabel">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>           x-direction</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QDoubleSpinBox" name="magneticFieldXDoubleSpinBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>130</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+               <property name="decimals">
+                <number>2</number>
+               </property>
+               <property name="maximum">
+                <double>10000.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.010000000000000</double>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="magneticFieldYHorizontalLayout">
+             <item>
+              <widget class="QLabel" name="magneticFieldYLabel">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>           y-direction</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QDoubleSpinBox" name="magneticFieldYDoubleSpinBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>130</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+               <property name="decimals">
+                <number>2</number>
+               </property>
+               <property name="maximum">
+                <double>10000.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.010000000000000</double>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="magneticFieldZHorizontalLayout">
+             <item>
+              <widget class="QLabel" name="magneticFieldZLabel">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>           z-direction</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QDoubleSpinBox" name="magneticFieldZDoubleSpinBox">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>130</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+               <property name="decimals">
+                <number>2</number>
+               </property>
+               <property name="maximum">
+                <double>10000.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.010000000000000</double>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
           </layout>
+          <zorder>magneticFieldLabel</zorder>
+          <zorder>layoutWidget</zorder>
+          <zorder>layoutWidget_2</zorder>
+          <zorder>layoutWidget_3</zorder>
+          <zorder>magneticFieldYLabel</zorder>
+          <zorder>magneticFieldZLabel</zorder>
          </widget>
         </item>
         <item>
@@ -338,7 +468,7 @@
            </sizepolicy>
           </property>
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="e1Tab">
            <attribute name="title">
@@ -490,7 +620,7 @@
                  </sizepolicy>
                 </property>
                 <property name="text">
-                 <string>   Lifetime (Lorentzian)</string>
+                 <string>     Lifetime (Lorentzian)</string>
                 </property>
                </widget>
               </item>
@@ -538,7 +668,7 @@
                  </sizepolicy>
                 </property>
                 <property name="text">
-                 <string>   Instrumental (Gaussian)</string>
+                 <string>     Instrumental (Gaussian)</string>
                 </property>
                </widget>
               </item>
@@ -739,7 +869,7 @@
                  </sizepolicy>
                 </property>
                 <property name="text">
-                 <string>   Lifetime (Lorentzian)</string>
+                 <string>     Lifetime (Lorentzian)</string>
                 </property>
                </widget>
               </item>
@@ -787,7 +917,7 @@
                  </sizepolicy>
                 </property>
                 <property name="text">
-                 <string>   Instrumental (Gaussian)</string>
+                 <string>     Instrumental (Gaussian)</string>
                 </property>
                </widget>
               </item>
