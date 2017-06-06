@@ -292,10 +292,10 @@ class QuantyDockWidget(QDockWidget):
         self.saveInputAsPushButton.clicked.connect(self.saveInputAs)
         self.calculationPushButton.clicked.connect(self.runCalculation)
 
-        self.e1GaussianBroadeningDoubleSpinBox.valueChanged.connect(self.plot)
-
+        self.e1GaussianBroadeningDoubleSpinBox.valueChanged.connect(
+                self.replot)
         self.e1LorentzianBroadeningDoubleSpinBox.valueChanged.connect(
-                self.plot)
+                self.replot)
 
     def getParameters(self):
         self.element = self.elementComboBox.currentText()
@@ -338,12 +338,12 @@ class QuantyDockWidget(QDockWidget):
         self.hamiltonianTermsCheckState = (
             self.hamiltonianModel.getNodesCheckState())
 
-    def saveParameters(self, dictionary):
+    def saveParameters(self):
         for key in self._defaults:
             try:
-                dictionary[key] = copy.deepcopy(self.__dict__[key])
+                self.calculation[key] = copy.deepcopy(self.__dict__[key])
             except KeyError:
-                dictionary[key] = None
+                self.calculation[key] = None
 
     def loadParameters(self, dictionary):
         for key in self._defaults:
@@ -553,7 +553,7 @@ class QuantyDockWidget(QDockWidget):
         self.startingTime = datetime.datetime.now()
 
         self.calculation = collections.OrderedDict()
-        self.saveParameters(self.calculation)
+        self.saveParameters()
 
         # Run Quanty using QProcess.
         self.process = QProcess()
@@ -660,22 +660,17 @@ class QuantyDockWidget(QDockWidget):
             if '_iso.spec' in spectrumName:
                 key = 'Isotropic'
             elif '_cd.spec' in spectrumName:
-                key = 'Circular Dichorism'
-
-            plotWidget = self.parent().plotWidget
-            plotWidget.spectraComboBox.addItem(key)
+                key = 'Circular Dichroism'
 
             self.spectra[key] = -spectrum[:, 2::2]
 
             # Remove the spectrum file
             os.remove(spectrumName)
 
-        # TODO: Move this action in a better place.
-        plotWidget.spectraComboBox.currentTextChanged.connect(
-            self.plot)
-        self.saveParameters(self.calculation)
+        self.updateSpectraComboBox()
 
         # Store the calculation details; have to encapsulate it into a list.
+        self.saveParameters()
         self.resultsModel.appendItems([self.calculation])
 
         # Update the selected item in the results view.
@@ -684,19 +679,35 @@ class QuantyDockWidget(QDockWidget):
         self.resultsView.selectionModel().select(
             index, QItemSelectionModel.Select)
 
-    def plot(self, replot=False):
+        # TODO: Move this action in a better place.
+        self.parent().plotWidget.spectraComboBox.currentTextChanged.connect(
+            self.plot)
+
+        self.plot()
+
+    def updateSpectraComboBox(self):
+        self.parent().plotWidget.spectraComboBox.clear()
+
+        keys = ('Isotropic', 'Circular Dichroism')
+        for key in keys:
+            if key in self.spectra:
+                self.parent().plotWidget.spectraComboBox.addItem(key)
+
+        self.parent().plotWidget.spectraComboBox.setCurrentIndex(0)
+
+    def plot(self):
         if not self.spectra:
             return
 
         plotWidget = self.parent().plotWidget
 
         if 'RIXS' in self.experiment:
-            self.parent().plotWidget.setGraphXLabel('Incident Energy (eV)')
-            self.parent().plotWidget.setGraphYLabel('Energy Transfer (eV)')
+            plotWidget.setGraphXLabel('Incident Energy (eV)')
+            plotWidget.setGraphYLabel('Energy Transfer (eV)')
 
             colormap = {'name': 'viridis', 'normalization': 'linear',
                                 'autoscale': True, 'vmin': 0.0, 'vmax': 1.0}
-            self.parent().plotWidget.setDefaultColormap(colormap)
+            plotWidget.setDefaultColormap(colormap)
 
             legend = self.label + self.uuid
 
@@ -712,26 +723,25 @@ class QuantyDockWidget(QDockWidget):
             yNPoints = y.size
             yScale = (yMax - yMin) / yNPoints
 
-            key = plotWidget.spectraComboBox.currentText()
+            currentPlot = plotWidget.spectraComboBox.currentText()
             try:
-                z = self.spectra[key]
+                z = self.spectra[currentPlot]
             except KeyError:
                 return
 
-            self.parent().plotWidget.addImage(
+            plotWidget.addImage(
                 z, origin=(xMin, yMin), scale=(xScale, yScale))
         else:
-            self.parent().plotWidget.setGraphXLabel('Absorption Energy (eV)')
-            self.parent().plotWidget.setGraphYLabel(
-                'Absorption Cross Section (a.u.)')
+            plotWidget.setGraphXLabel('Absorption Energy (eV)')
+            plotWidget.setGraphYLabel('Absorption Cross Section (a.u.)')
 
             legend = self.label + self.uuid
 
             x = self.spectra['e1']
 
-            key = plotWidget.spectraComboBox.currentText()
+            currentPlot = plotWidget.spectraComboBox.currentText()
             try:
-                y = self.spectra[key]
+                y = self.spectra[currentPlot]
             except KeyError:
                 return
 
@@ -746,10 +756,22 @@ class QuantyDockWidget(QDockWidget):
             if fwhm:
                 y = self.broaden(x, y, type='lorentzian', fwhm=fwhm) * y.max()
 
-            if replot:
-                self.parent().plotWidget.remove(legend)
+            plotWidget.addCurve(x, y, legend)
 
-            self.parent().plotWidget.addCurve(x, y, legend)
+    def replot(self):
+        # Whenever the broading changes, the data related to that plot 
+        # has to change.
+
+        # index = self.resultsView.selectedIndexes()[0]
+
+        # self.getParameters()
+        # self.saveParameters()
+        # index = self.resultsModel.replaceItem(index, self.calculation)
+
+        # self.resultsView.selectionModel().select(
+        #     index, QItemSelectionModel.Select)
+
+        self.plot()
 
     @staticmethod
     def broaden(x, y, type='gaussian', fwhm=None):
@@ -778,9 +800,9 @@ class QuantyDockWidget(QDockWidget):
 
     def selectedCalculationsChanged(self):
         self.parent().plotWidget.clear()
-        for calculation in self.selectedCalculations():
-            self.loadParameters(calculation)
-            self.plot()
+        for index in self.selectedCalculations():
+            self.loadParameters(index)
+            self.updateSpectraComboBox()
         self.setUi()
         self.updateMainWindowTitle()
 

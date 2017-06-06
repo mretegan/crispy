@@ -192,14 +192,20 @@
              <item>
               <widget class="QDoubleSpinBox" name="temperatureDoubleSpinBox">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
+               <property name="minimumSize">
+                <size>
+                 <width>75</width>
+                 <height>0</height>
+                </size>
+               </property>
                <property name="maximumSize">
                 <size>
-                 <width>130</width>
+                 <width>75</width>
                  <height>16777215</height>
                 </size>
                </property>
@@ -244,14 +250,20 @@
              <item>
               <widget class="QDoubleSpinBox" name="magneticFieldXDoubleSpinBox">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
+               <property name="minimumSize">
+                <size>
+                 <width>75</width>
+                 <height>0</height>
+                </size>
+               </property>
                <property name="maximumSize">
                 <size>
-                 <width>130</width>
+                 <width>75</width>
                  <height>16777215</height>
                 </size>
                </property>
@@ -289,14 +301,20 @@
              <item>
               <widget class="QDoubleSpinBox" name="magneticFieldYDoubleSpinBox">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
+               <property name="minimumSize">
+                <size>
+                 <width>75</width>
+                 <height>0</height>
+                </size>
+               </property>
                <property name="maximumSize">
                 <size>
-                 <width>130</width>
+                 <width>75</width>
                  <height>16777215</height>
                 </size>
                </property>
@@ -334,14 +352,20 @@
              <item>
               <widget class="QDoubleSpinBox" name="magneticFieldZDoubleSpinBox">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
+               <property name="minimumSize">
+                <size>
+                 <width>75</width>
+                 <height>0</height>
+                </size>
+               </property>
                <property name="maximumSize">
                 <size>
-                 <width>130</width>
+                 <width>75</width>
                  <height>16777215</height>
                 </size>
                </property>
@@ -394,7 +418,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>280</width>
+         <width>281</width>
          <height>364</height>
         </rect>
        </property>
@@ -437,9 +461,15 @@
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
+               <property name="minimumSize">
+                <size>
+                 <width>75</width>
+                 <height>0</height>
+                </size>
+               </property>
                <property name="maximumSize">
                 <size>
-                 <width>65</width>
+                 <width>75</width>
                  <height>16777215</height>
                 </size>
                </property>
@@ -468,7 +498,7 @@
            </sizepolicy>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="e1Tab">
            <attribute name="title">
@@ -506,7 +536,7 @@
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>65</width>
+                  <width>75</width>
                   <height>16777215</height>
                  </size>
                 </property>
@@ -517,10 +547,10 @@
                  <number>1</number>
                 </property>
                 <property name="minimum">
-                 <double>-100.000000000000000</double>
+                 <double>-1000.000000000000000</double>
                 </property>
                 <property name="maximum">
-                 <double>100.000000000000000</double>
+                 <double>1000.000000000000000</double>
                 </property>
                 <property name="singleStep">
                  <double>0.100000000000000</double>
@@ -537,7 +567,7 @@
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>65</width>
+                  <width>75</width>
                   <height>16777215</height>
                  </size>
                 </property>
@@ -548,10 +578,10 @@
                  <number>1</number>
                 </property>
                 <property name="minimum">
-                 <double>-100.000000000000000</double>
+                 <double>-1000.000000000000000</double>
                 </property>
                 <property name="maximum">
-                 <double>100.000000000000000</double>
+                 <double>1000.000000000000000</double>
                 </property>
                 <property name="singleStep">
                  <double>0.100000000000000</double>
@@ -571,7 +601,7 @@
                  </sizepolicy>
                 </property>
                 <property name="text">
-                 <string>Nunber of Points</string>
+                 <string>Number of Points</string>
                 </property>
                </widget>
               </item>
@@ -583,9 +613,15 @@
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>75</width>
+                  <height>0</height>
+                 </size>
+                </property>
                 <property name="maximumSize">
                  <size>
-                  <width>65</width>
+                  <width>64</width>
                   <height>16777215</height>
                  </size>
                 </property>
@@ -620,7 +656,7 @@
                  </sizepolicy>
                 </property>
                 <property name="text">
-                 <string>     Lifetime (Lorentzian)</string>
+                 <string>              Lorentzian</string>
                 </property>
                </widget>
               </item>
@@ -635,9 +671,15 @@
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>75</width>
+                  <height>0</height>
+                 </size>
+                </property>
                 <property name="maximumSize">
                  <size>
-                  <width>65</width>
+                  <width>64</width>
                   <height>16777215</height>
                  </size>
                 </property>
@@ -668,7 +710,7 @@
                  </sizepolicy>
                 </property>
                 <property name="text">
-                 <string>     Instrumental (Gaussian)</string>
+                 <string>              Gaussian</string>
                 </property>
                </widget>
               </item>
@@ -683,9 +725,15 @@
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>75</width>
+                  <height>0</height>
+                 </size>
+                </property>
                 <property name="maximumSize">
                  <size>
-                  <width>65</width>
+                  <width>75</width>
                   <height>16777215</height>
                  </size>
                 </property>
@@ -744,9 +792,15 @@
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>75</width>
+                  <height>0</height>
+                 </size>
+                </property>
                 <property name="maximumSize">
                  <size>
-                  <width>65</width>
+                  <width>75</width>
                   <height>16777215</height>
                  </size>
                 </property>
@@ -775,9 +829,15 @@
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>75</width>
+                  <height>0</height>
+                 </size>
+                </property>
                 <property name="maximumSize">
                  <size>
-                  <width>65</width>
+                  <width>75</width>
                   <height>16777215</height>
                  </size>
                 </property>
@@ -817,7 +877,7 @@
                  </size>
                 </property>
                 <property name="text">
-                 <string>Nunber of Points</string>
+                 <string>Number of Points</string>
                 </property>
                </widget>
               </item>
@@ -832,9 +892,15 @@
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>75</width>
+                  <height>0</height>
+                 </size>
+                </property>
                 <property name="maximumSize">
                  <size>
-                  <width>65</width>
+                  <width>75</width>
                   <height>16777215</height>
                  </size>
                 </property>
@@ -869,7 +935,7 @@
                  </sizepolicy>
                 </property>
                 <property name="text">
-                 <string>     Lifetime (Lorentzian)</string>
+                 <string>              Lorentzian</string>
                 </property>
                </widget>
               </item>
@@ -884,9 +950,15 @@
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>75</width>
+                  <height>0</height>
+                 </size>
+                </property>
                 <property name="maximumSize">
                  <size>
-                  <width>65</width>
+                  <width>75</width>
                   <height>16777215</height>
                  </size>
                 </property>
@@ -917,7 +989,7 @@
                  </sizepolicy>
                 </property>
                 <property name="text">
-                 <string>     Instrumental (Gaussian)</string>
+                 <string>              Gaussian</string>
                 </property>
                </widget>
               </item>
@@ -932,9 +1004,15 @@
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>75</width>
+                  <height>0</height>
+                 </size>
+                </property>
                 <property name="maximumSize">
                  <size>
-                  <width>65</width>
+                  <width>75</width>
                   <height>16777215</height>
                  </size>
                 </property>

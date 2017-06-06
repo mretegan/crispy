@@ -22257,6 +22257,509 @@
           }
         }
       }
+    },
+    "Re": {
+      "charges": {
+        "2+": {
+          "symmetries": {
+            "Oh": {
+              "experiments": {
+                "XAS": {
+                  "edges": {
+                    "M2,3 (3p)": {
+                      "shells": [
+                        [
+                          "3p",
+                          6
+                        ],
+                        [
+                          "5d",
+                          5
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "5d5"
+                        ],
+                        [
+                          "Final",
+                          "3p5,5d6"
+                        ]
+                      ],
+                      "nPsis": 252,
+                      "energies": [
+                        [
+                          "Absorption Energy",
+                          -200.0,
+                          -100.0,
+                          2000,
+                          0.5
+                        ]
+                      ],
+                      "template name": "5d_Oh_XAS_3p.lua"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "3+": {
+          "symmetries": {
+            "Oh": {
+              "experiments": {
+                "XAS": {
+                  "edges": {
+                    "M2,3 (3p)": {
+                      "shells": [
+                        [
+                          "3p",
+                          6
+                        ],
+                        [
+                          "5d",
+                          4
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "5d4"
+                        ],
+                        [
+                          "Final",
+                          "3p5,5d5"
+                        ]
+                      ],
+                      "nPsis": 210,
+                      "energies": [
+                        [
+                          "Absorption Energy",
+                          -200.0,
+                          -100.0,
+                          2000,
+                          0.5
+                        ]
+                      ],
+                      "template name": "5d_Oh_XAS_3p.lua"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "4+": {
+          "symmetries": {
+            "Oh": {
+              "experiments": {
+                "XAS": {
+                  "edges": {
+                    "M2,3 (3p)": {
+                      "shells": [
+                        [
+                          "3p",
+                          6
+                        ],
+                        [
+                          "5d",
+                          3
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "5d3"
+                        ],
+                        [
+                          "Final",
+                          "3p5,5d4"
+                        ]
+                      ],
+                      "nPsis": 120,
+                      "energies": [
+                        [
+                          "Absorption Energy",
+                          -200.0,
+                          -100.0,
+                          2000,
+                          0.5
+                        ]
+                      ],
+                      "template name": "5d_Oh_XAS_3p.lua"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "5+": {
+          "symmetries": {
+            "Oh": {
+              "experiments": {
+                "XAS": {
+                  "edges": {
+                    "M2,3 (3p)": {
+                      "shells": [
+                        [
+                          "3p",
+                          6
+                        ],
+                        [
+                          "5d",
+                          2
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "5d2"
+                        ],
+                        [
+                          "Final",
+                          "3p5,5d3"
+                        ]
+                      ],
+                      "nPsis": 45,
+                      "energies": [
+                        [
+                          "Absorption Energy",
+                          -200.0,
+                          -100.0,
+                          2000,
+                          0.5
+                        ]
+                      ],
+                      "template name": "5d_Oh_XAS_3p.lua"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "6+": {
+          "symmetries": {
+            "Oh": {
+              "experiments": {
+                "XAS": {
+                  "edges": {
+                    "M2,3 (3p)": {
+                      "shells": [
+                        [
+                          "3p",
+                          6
+                        ],
+                        [
+                          "5d",
+                          1
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "5d1"
+                        ],
+                        [
+                          "Final",
+                          "3p5,5d2"
+                        ]
+                      ],
+                      "nPsis": 10,
+                      "energies": [
+                        [
+                          "Absorption Energy",
+                          -200.0,
+                          -100.0,
+                          2000,
+                          0.5
+                        ]
+                      ],
+                      "template name": "5d_Oh_XAS_3p.lua"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Ir": {
+      "charges": {
+        "1+": {
+          "symmetries": {
+            "Oh": {
+              "experiments": {
+                "XAS": {
+                  "edges": {
+                    "M2,3 (3p)": {
+                      "shells": [
+                        [
+                          "3p",
+                          6
+                        ],
+                        [
+                          "5d",
+                          6
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "5d6"
+                        ],
+                        [
+                          "Final",
+                          "3p5,5d7"
+                        ]
+                      ],
+                      "nPsis": 210,
+                      "energies": [
+                        [
+                          "Absorption Energy",
+                          -200.0,
+                          -100.0,
+                          2000,
+                          0.5
+                        ]
+                      ],
+                      "template name": "5d_Oh_XAS_3p.lua"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "2+": {
+          "symmetries": {
+            "Oh": {
+              "experiments": {
+                "XAS": {
+                  "edges": {
+                    "M2,3 (3p)": {
+                      "shells": [
+                        [
+                          "3p",
+                          6
+                        ],
+                        [
+                          "5d",
+                          5
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "5d5"
+                        ],
+                        [
+                          "Final",
+                          "3p5,5d6"
+                        ]
+                      ],
+                      "nPsis": 252,
+                      "energies": [
+                        [
+                          "Absorption Energy",
+                          -200.0,
+                          -100.0,
+                          2000,
+                          0.5
+                        ]
+                      ],
+                      "template name": "5d_Oh_XAS_3p.lua"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "3+": {
+          "symmetries": {
+            "Oh": {
+              "experiments": {
+                "XAS": {
+                  "edges": {
+                    "M2,3 (3p)": {
+                      "shells": [
+                        [
+                          "3p",
+                          6
+                        ],
+                        [
+                          "5d",
+                          4
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "5d4"
+                        ],
+                        [
+                          "Final",
+                          "3p5,5d5"
+                        ]
+                      ],
+                      "nPsis": 210,
+                      "energies": [
+                        [
+                          "Absorption Energy",
+                          -200.0,
+                          -100.0,
+                          2000,
+                          0.5
+                        ]
+                      ],
+                      "template name": "5d_Oh_XAS_3p.lua"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "4+": {
+          "symmetries": {
+            "Oh": {
+              "experiments": {
+                "XAS": {
+                  "edges": {
+                    "M2,3 (3p)": {
+                      "shells": [
+                        [
+                          "3p",
+                          6
+                        ],
+                        [
+                          "5d",
+                          3
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "5d3"
+                        ],
+                        [
+                          "Final",
+                          "3p5,5d4"
+                        ]
+                      ],
+                      "nPsis": 120,
+                      "energies": [
+                        [
+                          "Absorption Energy",
+                          -200.0,
+                          -100.0,
+                          2000,
+                          0.5
+                        ]
+                      ],
+                      "template name": "5d_Oh_XAS_3p.lua"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "5+": {
+          "symmetries": {
+            "Oh": {
+              "experiments": {
+                "XAS": {
+                  "edges": {
+                    "M2,3 (3p)": {
+                      "shells": [
+                        [
+                          "3p",
+                          6
+                        ],
+                        [
+                          "5d",
+                          2
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "5d2"
+                        ],
+                        [
+                          "Final",
+                          "3p5,5d3"
+                        ]
+                      ],
+                      "nPsis": 45,
+                      "energies": [
+                        [
+                          "Absorption Energy",
+                          -200.0,
+                          -100.0,
+                          2000,
+                          0.5
+                        ]
+                      ],
+                      "template name": "5d_Oh_XAS_3p.lua"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "6+": {
+          "symmetries": {
+            "Oh": {
+              "experiments": {
+                "XAS": {
+                  "edges": {
+                    "M2,3 (3p)": {
+                      "shells": [
+                        [
+                          "3p",
+                          6
+                        ],
+                        [
+                          "5d",
+                          1
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "5d1"
+                        ],
+                        [
+                          "Final",
+                          "3p5,5d2"
+                        ]
+                      ],
+                      "nPsis": 10,
+                      "energies": [
+                        [
+                          "Absorption Energy",
+                          -200.0,
+                          -100.0,
+                          2000,
+                          0.5
+                        ]
+                      ],
+                      "template name": "5d_Oh_XAS_3p.lua"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

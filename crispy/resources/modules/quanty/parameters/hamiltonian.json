@@ -8235,6 +8235,1356 @@
           }
         }
       }
+    },
+    "Re": {
+      "charges": {
+        "2+": {
+          "configurations": {
+            "5d5": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 13.4668,
+                  "F4(5d,5d)": 9.3189
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 1.7272
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "1s1,5d6": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 13.7463,
+                  "F4(5d,5d)": 9.509,
+                  "U(1s,5d)": 0.0,
+                  "G2(1s,5d)": 0.077
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 1.8632
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "2s1,5d6": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 13.7427,
+                  "F4(5d,5d)": 9.5071,
+                  "U(2s,5d)": 0.0,
+                  "G2(2s,5d)": 2.3169
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 1.837
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "2p5,5d6": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 13.7436,
+                  "F4(5d,5d)": 9.5076,
+                  "U(2p,5d)": 0.0,
+                  "F2(2p,5d)": 2.9309,
+                  "G1(2p,5d)": 2.6205,
+                  "G3(2p,5d)": 1.5628
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 1.8421,
+                  "zeta(2p)": 1003.7374
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "3s1,5d6": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 13.6961,
+                  "F4(5d,5d)": 9.4761,
+                  "U(3s,5d)": 0.0,
+                  "G2(3s,5d)": 1.0911
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 1.7998
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "3p5,5d6": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 13.6955,
+                  "F4(5d,5d)": 9.4756,
+                  "U(3p,5d)": 0.0,
+                  "F2(3p,5d)": 5.1678,
+                  "G1(3p,5d)": 1.0855,
+                  "G3(3p,5d)": 1.1676
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 1.7996,
+                  "zeta(3p)": 220.055
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            }
+          }
+        },
+        "3+": {
+          "configurations": {
+            "5d4": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 13.6151,
+                  "F4(5d,5d)": 9.4305
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 1.7798
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "1s1,5d5": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 13.8943,
+                  "F4(5d,5d)": 9.6206,
+                  "U(1s,5d)": 0.0,
+                  "G2(1s,5d)": 0.0794
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 1.9188
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "2s1,5d5": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 13.8905,
+                  "F4(5d,5d)": 9.6185,
+                  "U(2s,5d)": 0.0,
+                  "G2(2s,5d)": 2.3841
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 1.8915
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "2p5,5d5": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 13.8913,
+                  "F4(5d,5d)": 9.6191,
+                  "U(2p,5d)": 0.0,
+                  "F2(2p,5d)": 3.0133,
+                  "G1(2p,5d)": 2.6966,
+                  "G3(2p,5d)": 1.6084
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 1.8968,
+                  "zeta(2p)": 1003.7727
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "3s1,5d5": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 13.8432,
+                  "F4(5d,5d)": 9.587,
+                  "U(3s,5d)": 0.0,
+                  "G2(3s,5d)": 1.1223
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 1.8532
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "3p5,5d5": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 13.8426,
+                  "F4(5d,5d)": 9.5866,
+                  "U(3p,5d)": 0.0,
+                  "F2(3p,5d)": 5.2956,
+                  "G1(3p,5d)": 1.1161,
+                  "G3(3p,5d)": 1.2006
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 1.8529,
+                  "zeta(3p)": 220.145
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            }
+          }
+        },
+        "4+": {
+          "configurations": {
+            "5d3": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 13.76,
+                  "F4(5d,5d)": 9.5393
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 1.8332
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "1s1,5d4": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.039,
+                  "F4(5d,5d)": 9.7293,
+                  "U(1s,5d)": 0.0,
+                  "G2(1s,5d)": 0.0818
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 1.9748
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "2s1,5d4": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.035,
+                  "F4(5d,5d)": 9.7271,
+                  "U(2s,5d)": 0.0,
+                  "G2(2s,5d)": 2.4521
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 1.9468
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "2p5,5d4": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.0359,
+                  "F4(5d,5d)": 9.7277,
+                  "U(2p,5d)": 0.0,
+                  "F2(2p,5d)": 3.0965,
+                  "G1(2p,5d)": 2.7736,
+                  "G3(2p,5d)": 1.6545
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 1.9522,
+                  "zeta(2p)": 1003.811
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "3s1,5d4": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 13.9871,
+                  "F4(5d,5d)": 9.6952,
+                  "U(3s,5d)": 0.0,
+                  "G2(3s,5d)": 1.154
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 1.907
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "3p5,5d4": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 13.9865,
+                  "F4(5d,5d)": 9.6948,
+                  "U(3p,5d)": 0.0,
+                  "F2(3p,5d)": 5.424,
+                  "G1(3p,5d)": 1.147,
+                  "G3(3p,5d)": 1.2338
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 1.9069,
+                  "zeta(3p)": 220.2418
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            }
+          }
+        },
+        "5+": {
+          "configurations": {
+            "5d2": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 13.902,
+                  "F4(5d,5d)": 9.6456
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 1.8872
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "1s1,5d3": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.1806,
+                  "F4(5d,5d)": 9.8354,
+                  "U(1s,5d)": 0.0,
+                  "G2(1s,5d)": 0.0842
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.0317
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "2s1,5d3": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.1765,
+                  "F4(5d,5d)": 9.8331,
+                  "U(2s,5d)": 0.0,
+                  "G2(2s,5d)": 2.5208
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.0027
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "2p5,5d3": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.1774,
+                  "F4(5d,5d)": 9.8337,
+                  "U(2p,5d)": 0.0,
+                  "F2(2p,5d)": 3.1806,
+                  "G1(2p,5d)": 2.8515,
+                  "G3(2p,5d)": 1.7011
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.0083,
+                  "zeta(2p)": 1003.8525
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "3s1,5d3": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.128,
+                  "F4(5d,5d)": 9.8008,
+                  "U(3s,5d)": 0.0,
+                  "G2(3s,5d)": 1.186
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 1.9618
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "3p5,5d3": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.1275,
+                  "F4(5d,5d)": 9.8004,
+                  "U(3p,5d)": 0.0,
+                  "F2(3p,5d)": 5.5529,
+                  "G1(3p,5d)": 1.1781,
+                  "G3(3p,5d)": 1.2673
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 1.9616,
+                  "zeta(3p)": 220.3453
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            }
+          }
+        },
+        "6+": {
+          "configurations": {
+            "5d1": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 0.0,
+                  "F4(5d,5d)": 0.0
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 1.9416
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "1s1,5d2": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.3203,
+                  "F4(5d,5d)": 9.9398,
+                  "U(1s,5d)": 0.0,
+                  "G2(1s,5d)": 0.0866
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.0886
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "2s1,5d2": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.3156,
+                  "F4(5d,5d)": 9.9371,
+                  "U(2s,5d)": 0.0,
+                  "G2(2s,5d)": 2.5895
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.0588
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "2p5,5d2": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.3166,
+                  "F4(5d,5d)": 9.9377,
+                  "U(2p,5d)": 0.0,
+                  "F2(2p,5d)": 3.2645,
+                  "G1(2p,5d)": 2.9292,
+                  "G3(2p,5d)": 1.7477
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.0646,
+                  "zeta(2p)": 1003.8974
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "3s1,5d2": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.2664,
+                  "F4(5d,5d)": 9.9041,
+                  "U(3s,5d)": 0.0,
+                  "G2(3s,5d)": 1.2183
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.0171
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "3p5,5d2": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.2658,
+                  "F4(5d,5d)": 9.9036,
+                  "U(3p,5d)": 0.0,
+                  "F2(3p,5d)": 5.6823,
+                  "G1(3p,5d)": 1.2095,
+                  "G3(3p,5d)": 1.3011
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.017,
+                  "zeta(3p)": 220.4556
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Ir": {
+      "charges": {
+        "1+": {
+          "configurations": {
+            "5d6": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 13.8579,
+                  "F4(5d,5d)": 9.5727
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 1.9432
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "1s1,5d7": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.1366,
+                  "F4(5d,5d)": 9.7621,
+                  "U(1s,5d)": 0.0,
+                  "G2(1s,5d)": 0.0791
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.0925
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "2s1,5d7": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.1329,
+                  "F4(5d,5d)": 9.7602,
+                  "U(2s,5d)": 0.0,
+                  "G2(2s,5d)": 2.358
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.0637
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "2p5,5d7": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.1337,
+                  "F4(5d,5d)": 9.7607,
+                  "U(2p,5d)": 0.0,
+                  "F2(2p,5d)": 2.9955,
+                  "G1(2p,5d)": 2.6775,
+                  "G3(2p,5d)": 1.5975
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.0692,
+                  "zeta(2p)": 1137.8079
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "3s1,5d7": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.0863,
+                  "F4(5d,5d)": 9.7293,
+                  "U(3s,5d)": 0.0,
+                  "G2(3s,5d)": 1.1083
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.0237
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "3p5,5d7": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.0855,
+                  "F4(5d,5d)": 9.7287,
+                  "U(3p,5d)": 0.0,
+                  "F2(3p,5d)": 5.2803,
+                  "G1(3p,5d)": 1.1065,
+                  "G3(3p,5d)": 1.1898
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.0234,
+                  "zeta(3p)": 251.5196
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            }
+          }
+        },
+        "2+": {
+          "configurations": {
+            "5d5": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.0096,
+                  "F4(5d,5d)": 9.6877
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.0004
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "1s1,5d6": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.2881,
+                  "F4(5d,5d)": 9.877,
+                  "U(1s,5d)": 0.0,
+                  "G2(1s,5d)": 0.0814
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.1524
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "2s1,5d6": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.2842,
+                  "F4(5d,5d)": 9.875,
+                  "U(2s,5d)": 0.0,
+                  "G2(2s,5d)": 2.424
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.1227
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "2p5,5d6": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.285,
+                  "F4(5d,5d)": 9.8754,
+                  "U(2p,5d)": 0.0,
+                  "F2(2p,5d)": 3.0769,
+                  "G1(2p,5d)": 2.7526,
+                  "G3(2p,5d)": 1.6425
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.1284,
+                  "zeta(2p)": 1137.8429
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "3s1,5d6": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.237,
+                  "F4(5d,5d)": 9.8436,
+                  "U(3s,5d)": 0.0,
+                  "G2(3s,5d)": 1.139
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.0815
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "3p5,5d6": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.2362,
+                  "F4(5d,5d)": 9.843,
+                  "U(3p,5d)": 0.0,
+                  "F2(3p,5d)": 5.4066,
+                  "G1(3p,5d)": 1.1367,
+                  "G3(3p,5d)": 1.2223
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.0812,
+                  "zeta(3p)": 251.6092
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            }
+          }
+        },
+        "3+": {
+          "configurations": {
+            "5d4": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.1577,
+                  "F4(5d,5d)": 9.7995
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.0582
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "1s1,5d5": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.4361,
+                  "F4(5d,5d)": 9.9889,
+                  "U(1s,5d)": 0.0,
+                  "G2(1s,5d)": 0.0837
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.2131
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "2s1,5d5": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.432,
+                  "F4(5d,5d)": 9.9867,
+                  "U(2s,5d)": 0.0,
+                  "G2(2s,5d)": 2.4908
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.1825
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "2p5,5d5": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.4328,
+                  "F4(5d,5d)": 9.9872,
+                  "U(2p,5d)": 0.0,
+                  "F2(2p,5d)": 3.1589,
+                  "G1(2p,5d)": 2.8284,
+                  "G3(2p,5d)": 1.688
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.1883,
+                  "zeta(2p)": 1137.8813
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "3s1,5d5": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.3841,
+                  "F4(5d,5d)": 9.9548,
+                  "U(3s,5d)": 0.0,
+                  "G2(3s,5d)": 1.1701
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.14
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "3p5,5d5": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.3833,
+                  "F4(5d,5d)": 9.9543,
+                  "U(3p,5d)": 0.0,
+                  "F2(3p,5d)": 5.5335,
+                  "G1(3p,5d)": 1.1671,
+                  "G3(3p,5d)": 1.2551
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.1396,
+                  "zeta(3p)": 251.7058
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            }
+          }
+        },
+        "4+": {
+          "configurations": {
+            "5d3": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.3027,
+                  "F4(5d,5d)": 9.9086
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.1167
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "1s1,5d4": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.5809,
+                  "F4(5d,5d)": 10.098,
+                  "U(1s,5d)": 0.0,
+                  "G2(1s,5d)": 0.0861
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.2746
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "2s1,5d4": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.5765,
+                  "F4(5d,5d)": 10.0956,
+                  "U(2s,5d)": 0.0,
+                  "G2(2s,5d)": 2.5582
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.2429
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "2p5,5d4": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.5774,
+                  "F4(5d,5d)": 10.0961,
+                  "U(2p,5d)": 0.0,
+                  "F2(2p,5d)": 3.2417,
+                  "G1(2p,5d)": 2.905,
+                  "G3(2p,5d)": 1.7339
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.2489,
+                  "zeta(2p)": 1137.9229
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "3s1,5d4": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.5279,
+                  "F4(5d,5d)": 10.0632,
+                  "U(3s,5d)": 0.0,
+                  "G2(3s,5d)": 1.2014
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.1991
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "3p5,5d4": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.5272,
+                  "F4(5d,5d)": 10.0627,
+                  "U(3p,5d)": 0.0,
+                  "F2(3p,5d)": 5.6606,
+                  "G1(3p,5d)": 1.1977,
+                  "G3(3p,5d)": 1.288
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.1988,
+                  "zeta(3p)": 251.8095
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            }
+          }
+        },
+        "5+": {
+          "configurations": {
+            "5d2": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.4447,
+                  "F4(5d,5d)": 10.0151
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.1761
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "1s1,5d3": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.7228,
+                  "F4(5d,5d)": 10.2046,
+                  "U(1s,5d)": 0.0,
+                  "G2(1s,5d)": 0.0885
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.3368
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "2s1,5d3": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.7181,
+                  "F4(5d,5d)": 10.202,
+                  "U(2s,5d)": 0.0,
+                  "G2(2s,5d)": 2.6263
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.3041
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "2p5,5d3": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.719,
+                  "F4(5d,5d)": 10.2025,
+                  "U(2p,5d)": 0.0,
+                  "F2(2p,5d)": 3.3252,
+                  "G1(2p,5d)": 2.9824,
+                  "G3(2p,5d)": 1.7803
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.3102,
+                  "zeta(2p)": 1137.9681
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "3s1,5d3": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.669,
+                  "F4(5d,5d)": 10.1692,
+                  "U(3s,5d)": 0.0,
+                  "G2(3s,5d)": 1.233
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.2588
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "3p5,5d3": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.6683,
+                  "F4(5d,5d)": 10.1687,
+                  "U(3p,5d)": 0.0,
+                  "F2(3p,5d)": 5.7883,
+                  "G1(3p,5d)": 1.2286,
+                  "G3(3p,5d)": 1.3212
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.2585,
+                  "zeta(3p)": 251.9204
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            }
+          }
+        },
+        "6+": {
+          "configurations": {
+            "5d1": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.5839,
+                  "F4(5d,5d)": 10.1192
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.2361
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "1s1,5d2": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.8619,
+                  "F4(5d,5d)": 10.3088,
+                  "U(1s,5d)": 0.0,
+                  "G2(1s,5d)": 0.0909
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.3994
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "2s1,5d2": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.8569,
+                  "F4(5d,5d)": 10.3059,
+                  "U(2s,5d)": 0.0,
+                  "G2(2s,5d)": 2.695
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.366
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "2p5,5d2": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.8578,
+                  "F4(5d,5d)": 10.3064,
+                  "U(2p,5d)": 0.0,
+                  "F2(2p,5d)": 3.4094,
+                  "G1(2p,5d)": 3.0605,
+                  "G3(2p,5d)": 1.8271
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.3723,
+                  "zeta(2p)": 1138.0168
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "3s1,5d2": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.8075,
+                  "F4(5d,5d)": 10.2729,
+                  "U(3s,5d)": 0.0,
+                  "G2(3s,5d)": 1.2649
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.3192
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            },
+            "3p5,5d2": {
+              "Hamiltonian Terms": {
+                "Coulomb": {
+                  "U(5d,5d)": 0.0,
+                  "F2(5d,5d)": 14.8067,
+                  "F4(5d,5d)": 10.2723,
+                  "U(3p,5d)": 0.0,
+                  "F2(3p,5d)": 5.9165,
+                  "G1(3p,5d)": 1.2598,
+                  "G3(3p,5d)": 1.3546
+                },
+                "Spin-Orbit Coupling": {
+                  "zeta(5d)": 2.3189,
+                  "zeta(3p)": 252.0385
+                },
+                "Crystal Field": {
+                  "Oh": {
+                    "10Dq(5d)": 2.0
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

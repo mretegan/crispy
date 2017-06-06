@@ -84,6 +84,12 @@ class ListModel(QAbstractListModel):
         position = self.rowCount()
         self.insertItems(position, items)
 
+    def replaceItem(self, index, item):
+        row = index.row()
+        self.removeItems([index])
+        self.insertItems(row, [item])
+        return self.index(row)
+
     def getIndexData(self, index):
         """Return the data stored in the model at the given index."""
         if not index.isValid():
