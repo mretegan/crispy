@@ -1,6 +1,6 @@
 Crispy is a graphical user interface written in `Python <https://www.python.org/>`_ that facilitates the simulation of core-level spectra. The interface provides a set of tools to generate input files, submit calculations, and analyze the results obtained with programs such as `Quanty <http://quanty.org>`_. It has a modular design and can be run on macOS, Linux, and Windows platforms.
 
-.. image:: doc/crispy.png
+.. image:: docs/crispy.png
 
 Installation
 ============
