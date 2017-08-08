@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '17/01/2017'
+__date__ = '22/07/2017'
 
 
 from silx.gui.plot import PlotWindow
@@ -45,6 +45,6 @@ class PlotWidget(PlotWindow):
         self.spectraComboBox = QComboBox()
         self.spectraComboBox.setMinimumWidth(150)
 
-        toolbar = self.toolBar()
-        toolbar.addSeparator()
-        toolbar.addWidget(self.spectraComboBox)
+        # toolbar = self.toolBar()
+        # toolbar.addSeparator()
+        # toolbar.addWidget(self.spectraComboBox)

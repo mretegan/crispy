@@ -52,7 +52,7 @@ Thus 2.1.0a3 is hexversion 0x020100a3.
 from __future__ import absolute_import, print_function, division
 __authors__ = ['Jérôme Kieffer']
 __license__ = 'MIT'
-__date__ = '13/09/2016'
+__date__ = '08/08/2016'
 __all__ = ['date', 'version_info', 'strictversion', 'hexversion', 'debianversion', 'calc_hexversion']
 
 
@@ -64,9 +64,9 @@ RELEASE_LEVEL_VALUE = {'dev': 0,
                        'final': 15}
 
 MAJOR = 0
-MINOR = 2
+MINOR = 3
 MICRO = 0
-RELEV = 'final'  # <16
+RELEV = 'dev'  # <16
 SERIAL = 0  # <16
 
 date = __date__

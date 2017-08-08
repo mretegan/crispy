@@ -35,7 +35,6 @@ import copy
 import datetime
 import glob
 import json
-import math
 import numpy as np
 import os
 try:
@@ -780,7 +779,7 @@ class QuantyDockWidget(QDockWidget):
             sigma = fwhm / 2.0 * np.sqrt(2.0 * np.log(2.0))
             for xi, yi in zip(x, y):
                 yb += yi / (sigma * np.sqrt(2.0 * np. pi)) * np.exp(
-                        -1.0 / 2.0 * ((x - xi) / sigma)**2)
+                    -1.0 / 2.0 * ((x - xi) / sigma)**2)
         elif type == 'lorentzian':
             gamma = fwhm
             for xi, yi in zip(x, y):
