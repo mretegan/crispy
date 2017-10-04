@@ -6,15 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>890</width>
-    <height>570</height>
+    <width>960</width>
+    <height>640</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QMainWindow::separator { 
+   <string notr="true">QMainWindow::separator {
   width: 1px;
 }</string>
   </property>
@@ -92,17 +92,17 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>890</width>
+     <width>960</width>
      <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuModules">
     <property name="title">
-     <string>Modules</string>
+     <string>Mo&amp;dules</string>
     </property>
     <widget class="QMenu" name="menuModulesQuanty">
      <property name="title">
-      <string>Quanty</string>
+      <string>&amp;Quanty</string>
      </property>
      <addaction name="quantyModuleHideAction"/>
      <addaction name="separator"/>

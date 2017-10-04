@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '02/06/2017'
+__date__ = '04/10/2017'
 
 
 import collections
@@ -46,16 +46,18 @@ import sys
 import uuid
 
 from PyQt5.QtCore import QItemSelectionModel, QProcess, Qt, QPoint
-from PyQt5.QtGui import QIcon, QCursor
+from PyQt5.QtGui import (
+    QIcon, QCursor, QIntValidator, QValidator, QDoubleValidator)
 from PyQt5.QtWidgets import (
     QAbstractItemView, QDockWidget, QFileDialog, QAction, QMenu, QListView,
-    QDoubleSpinBox, QWidget)
+    QWidget, QLineEdit)
 from PyQt5.uic import loadUi
+from silx.resources import resource_filename as resourceFileName
 
 from .models.treemodel import TreeModel
 from .models.listmodel import ListModel
 from .views.treeview import TreeView
-from ..resources import resourceFileName
+from ..math.broaden import broaden
 
 
 class OrderedDict(collections.OrderedDict):
@@ -64,7 +66,9 @@ class OrderedDict(collections.OrderedDict):
         return value
 
 
-class QuantyDockWidget(QDockWidget):
+class QuantyCalculation(object):
+
+    MIN_BROADENING = 0.1
 
     _defaults = {
         'element': 'Ni',
@@ -72,414 +76,201 @@ class QuantyDockWidget(QDockWidget):
         'symmetry': 'Oh',
         'experiment': 'XAS',
         'edge': 'L2,3 (2p)',
-        'temperature': 10.0,
-        'magneticField': (0.0, 0.0, 0.0),
-        'shells': None,
-        'nPsis': None,
-        'energies': None,
-        'hamiltonianParameters': None,
-        'hamiltonianTermsCheckState': None,
-        'spectra': None,
-        'templateName': None,
+        'temperature': 10.,
+        'magneticFieldX': 0.,
+        'magneticFieldY': 0.,
+        'magneticFieldZ': 0.,
+        'nPsisAuto': 1,
         'baseName': 'untitled',
-        'label': None,
-        'uuid': None,
+        '_uuid': None,
+        'spectra': None,
+        '_spectra': None,
         'startingTime': None,
         'endingTime': None,
-        }
+    }
 
-    def __init__(self):
-        super(QuantyDockWidget, self).__init__()
+    def __init__(self, **kwargs):
         self.__dict__.update(self._defaults)
+        self.__dict__.update(kwargs)
 
-        # Load the external .ui file for the widget.
-        path = resourceFileName(os.path.join('gui', 'uis', 'quanty.ui'))
-        loadUi(path, baseinstance=self, package='crispy.gui')
-
-        # Remove macOS focus border.
-        for child in self.findChildren((QListView, TreeView, QDoubleSpinBox)):
-            child.setAttribute(Qt.WA_MacShowFocusRect, False)
-
-        self.setParameters()
-        self.activateUi()
-
-    def setParameters(self):
-        # Load the external parameters.
-        path = resourceFileName(os.path.join(
-            'modules', 'quanty', 'parameters', 'ui.json'))
+        path = resourceFileName(
+            'crispy:' + os.path.join('modules', 'quanty', 'parameters',
+                                     'parameters.json'))
 
         with open(path) as p:
-            uiParameters = json.loads(
+            tree = json.loads(
                 p.read(), object_pairs_hook=collections.OrderedDict)
 
-        self.elements = uiParameters['elements']
-        if self.element not in self.elements:
-            self.element = tuple(self.elements)[0]
+        branch = tree['elements']
+        self._elements = list(branch)
+        if self.element not in self._elements:
+            self.element = self._elements[0]
 
-        self.charges = self.elements[self.element]['charges']
-        if self.charge not in self.charges:
-            self.charge = tuple(self.charges)[0]
+        branch = branch[self.element]['charges']
+        self._charges = list(branch)
+        if self.charge not in self._charges:
+            self.charge = self._charges[0]
 
-        self.symmetries = self.charges[self.charge]['symmetries']
-        if self.symmetry not in self.symmetries:
-            self.symmetry = tuple(self.symmetries)[0]
+        branch = branch[self.charge]['symmetries']
+        self._symmetries = list(branch)
+        if self.symmetry not in self._symmetries:
+            self.symmetry = self._symmetries[0]
 
-        self.experiments = self.symmetries[self.symmetry]['experiments']
-        if self.experiment not in self.experiments:
-            self.experiment = tuple(self.experiments)[0]
+        branch = branch[self.symmetry]['experiments']
+        self._experiments = list(branch)
+        if self.experiment not in self._experiments:
+            self.experiment = self._experiments[0]
 
-        self.edges = self.experiments[self.experiment]['edges']
-        if self.edge not in self.edges:
-            self.edge = tuple(self.edges)[0]
+        branch = branch[self.experiment]['edges']
+        self._edges = list(branch)
+        if self.edge not in self._edges:
+            self.edge = self._edges[0]
 
-        branch = self.edges[self.edge]
+        branch = branch[self.edge]
 
-        self.shells = branch['shells']
-        self.nPsis = branch['nPsis']
-        self.energies = branch['energies']
-        self.templateName = branch['template name']
-        self.hamiltonians = branch['configurations']
+        self._templateName = branch['template name']
 
-        path = resourceFileName(os.path.join(
-            'modules', 'quanty', 'parameters', 'hamiltonian.json'))
+        self._configurations = branch['configurations']
+        self.nPsis = branch['number of states']
+        try:
+            self.monoElectronicRadialME = (branch[
+                'monoelectronic radial matrix elements'])
+        except KeyError:
+            self.monoElectronicRadialME = None
 
-        with open(path) as p:
-            hamiltonianParameters = json.loads(
-                p.read(), object_pairs_hook=collections.OrderedDict)
+        self._e1Label = branch['energies'][0][0]
+        self.e1Min = branch['energies'][0][1]
+        self.e1Max = branch['energies'][0][2]
+        self.e1NPoints = branch['energies'][0][3]
+        self.e1Energy = branch['energies'][0][4]
+        self.e1Lorentzian = branch['energies'][0][5]
+        self.e1Gaussian = branch['energies'][0][6]
 
-        self.hamiltonianParameters = OrderedDict()
-        self.hamiltonianTermsCheckState = collections.OrderedDict()
+        self._e1LorentzianMin = min(self.MIN_BROADENING, self.e1Lorentzian)
 
-        for hamiltonian in self.hamiltonians:
-            label = '{} Hamiltonian'.format(hamiltonian[0])
-            configuration = hamiltonian[1]
+        if 'RIXS' in self.experiment:
+            self._e2Label = branch['energies'][1][0]
+            self.e2Min = branch['energies'][1][1]
+            self.e2Max = branch['energies'][1][2]
+            self.e2NPoints = branch['energies'][1][3]
+            self.e2Energy = branch['energies'][1][4]
+            self.e2Lorentzian = branch['energies'][1][5]
+            self.e2Gaussian = branch['energies'][1][6]
 
-            terms = (hamiltonianParameters['elements']
-                     [self.element]['charges'][self.charge]['configurations']
-                     [configuration]['Hamiltonian Terms'])
+            self._e2LorentzianMin = min(self.MIN_BROADENING, self.e2Lorentzian)
+
+        self.hamiltonianData = OrderedDict()
+        self.hamiltonianState = OrderedDict()
+
+        branch = tree['elements'][self.element]['charges'][self.charge]
+
+        for label, configuration in self._configurations:
+            label = '{} Hamiltonian'.format(label)
+            terms = branch['configurations'][configuration]['terms']
 
             for term in terms:
-                if ('Coulomb' in term) or ('Spin-Orbit Coupling' in term):
+                if 'Atomic' in term:
                     parameters = terms[term]
                 else:
                     try:
                         parameters = terms[term][self.symmetry]
                     except KeyError:
                         continue
+
                 for parameter in parameters:
                     if parameter[0] in ('F', 'G'):
                         scaling = 0.8
                     else:
                         scaling = 1.0
-                    self.hamiltonianParameters[term][label][parameter] = (
+                    self.hamiltonianData[term][label][parameter] = (
                         parameters[parameter], scaling)
 
-                if 'Hybridization' in term:
-                    self.hamiltonianTermsCheckState[term] = 0
+                if 'Atomic' in term:
+                    self.hamiltonianState[term] = 2
                 else:
-                    self.hamiltonianTermsCheckState[term] = 2
+                    self.hamiltonianState[term] = 0
 
-        self.setUi()
+    @property
+    def spectra(self):
+        return self._spectra
 
-    def updateParameters(self):
-        self.element = self.elementComboBox.currentText()
-        self.charge = self.chargeComboBox.currentText()
-        self.symmetry = self.symmetryComboBox.currentText()
-        self.experiment = self.experimentComboBox.currentText()
-        self.edge = self.edgeComboBox.currentText()
+    @spectra.setter
+    def spectra(self, files):
+        self._spectra = OrderedDict()
 
-        self.baseName = self._defaults['baseName']
-        self.updateMainWindowTitle()
-
-        self.setParameters()
-
-    def setUi(self):
-        # Set the values for the combo boxes.
-        self.elementComboBox.setItems(self.elements, self.element)
-        self.chargeComboBox.setItems(self.charges, self.charge)
-        self.symmetryComboBox.setItems(self.symmetries, self.symmetry)
-        self.experimentComboBox.setItems(self.experiments, self.experiment)
-        self.edgeComboBox.setItems(self.edges, self.edge)
-
-        # Set the temperature spin box.
-        self.temperatureDoubleSpinBox.setValue(self.temperature)
-
-        # Set the magnetic field spin boxes.
-        self.magneticFieldXDoubleSpinBox.setValue(self.magneticField[0])
-        self.magneticFieldYDoubleSpinBox.setValue(self.magneticField[1])
-        self.magneticFieldZDoubleSpinBox.setValue(self.magneticField[2])
-
-        # Set the labels, ranges, etc.
-        self.energiesTabWidget.setTabText(0, self.energies[0][0])
-        self.e1MinDoubleSpinBox.setValue(self.energies[0][1])
-        self.e1MaxDoubleSpinBox.setValue(self.energies[0][2])
-        self.e1NPointsDoubleSpinBox.setValue(self.energies[0][3])
-        self.e1LorentzianBroadeningDoubleSpinBox.setValue(self.energies[0][4])
-
-        if 'RIXS' in self.experiment:
-            tab = self.energiesTabWidget.findChild(QWidget, 'e2Tab')
-            self.energiesTabWidget.addTab(tab, tab.objectName())
-            self.energiesTabWidget.setTabText(1, self.energies[1][0])
-            self.e2MinDoubleSpinBox.setValue(self.energies[1][1])
-            self.e2MaxDoubleSpinBox.setValue(self.energies[1][2])
-            self.e2NPointsDoubleSpinBox.setValue(self.energies[1][3])
-            self.e2LorentzianBroadeningDoubleSpinBox.setValue(
-                self.energies[1][4])
-            self.e1GaussianBroadeningDoubleSpinBox.setEnabled(False)
-            self.e2GaussianBroadeningDoubleSpinBox.setEnabled(False)
-        else:
-            self.energiesTabWidget.removeTab(1)
-            self.e1GaussianBroadeningDoubleSpinBox.setEnabled(True)
-            self.e2GaussianBroadeningDoubleSpinBox.setEnabled(True)
-
-        self.nPsisDoubleSpinBox.setValue(self.nPsis)
-
-        # Create the Hamiltonian model.
-        self.hamiltonianModel = TreeModel(
-            ('Parameter', 'Value', 'Scaling'), self.hamiltonianParameters)
-        self.hamiltonianModel.setNodesCheckState(
-            self.hamiltonianTermsCheckState)
-
-        # Assign the Hamiltonian model to the Hamiltonian terms view.
-        self.hamiltonianTermsView.setModel(self.hamiltonianModel)
-        self.hamiltonianTermsView.selectionModel().setCurrentIndex(
-            self.hamiltonianModel.index(0, 0), QItemSelectionModel.Select)
-
-        # Assign the Hamiltonian model to the Hamiltonian parameters view, and
-        # set some properties.
-        self.hamiltonianParametersView.setModel(self.hamiltonianModel)
-        self.hamiltonianParametersView.expandAll()
-        self.hamiltonianParametersView.resizeAllColumnsToContents()
-        self.hamiltonianParametersView.setColumnWidth(0, 160)
-        self.hamiltonianParametersView.setAlternatingRowColors(True)
-
-        index = self.hamiltonianTermsView.currentIndex()
-        self.hamiltonianParametersView.setRootIndex(index)
-
-        self.hamiltonianTermsView.selectionModel().selectionChanged.connect(
-            self.selectedHamiltonianTermChanged)
-
-        # Set the sizes of the two views.
-        self.hamiltonianSplitter.setSizes((120, 300))
-
-        # Create the results model and assign it to the view.
-        if not hasattr(self, 'resultsModel'):
-            self.resultsModel = ListModel()
-            self.resultsView.setSelectionMode(
-                QAbstractItemView.ExtendedSelection)
-            self.resultsView.setModel(self.resultsModel)
-            self.resultsView.selectionModel().selectionChanged.connect(
-                self.selectedCalculationsChanged)
-            # Add a context menu
-            self.resultsView.setContextMenuPolicy(Qt.CustomContextMenu)
-            self.resultsView.customContextMenuRequested[QPoint].connect(
-                self.createContextMenu)
-            self.resultsView.setAlternatingRowColors(True)
-
-    def activateUi(self):
-        self.elementComboBox.currentTextChanged.connect(
-            self.updateParameters)
-        self.chargeComboBox.currentTextChanged.connect(
-            self.updateParameters)
-        self.symmetryComboBox.currentTextChanged.connect(
-            self.updateParameters)
-        self.experimentComboBox.currentTextChanged.connect(
-            self.updateParameters)
-        self.edgeComboBox.currentTextChanged.connect(
-            self.updateParameters)
-
-        self.saveInputAsPushButton.clicked.connect(self.saveInputAs)
-        self.calculationPushButton.clicked.connect(self.runCalculation)
-
-        self.e1GaussianBroadeningDoubleSpinBox.valueChanged.connect(
-                self.replot)
-        self.e1LorentzianBroadeningDoubleSpinBox.valueChanged.connect(
-                self.replot)
-
-    def getParameters(self):
-        self.element = self.elementComboBox.currentText()
-        self.charge = self.chargeComboBox.currentText()
-        self.symmetry = self.symmetryComboBox.currentText()
-        self.experiment = self.experimentComboBox.currentText()
-        self.edge = self.edgeComboBox.currentText()
-
-        self.temperature = self.temperatureDoubleSpinBox.value()
-        self.magneticField = (
-            self.magneticFieldXDoubleSpinBox.value(),
-            self.magneticFieldYDoubleSpinBox.value(),
-            self.magneticFieldZDoubleSpinBox.value(),
-            )
-
-        self.nPsis = int(self.nPsisDoubleSpinBox.value())
-
-        if 'RIXS' in self.experiment:
-            self.energies = ((self.energiesTabWidget.tabText(0),
-                              self.e1MinDoubleSpinBox.value(),
-                              self.e1MaxDoubleSpinBox.value(),
-                              int(self.e1NPointsDoubleSpinBox.value()),
-                              self.e1LorentzianBroadeningDoubleSpinBox.value(),
-                              self.e1GaussianBroadeningDoubleSpinBox.value()),
-                             (self.energiesTabWidget.tabText(1),
-                              self.e2MinDoubleSpinBox.value(),
-                              self.e2MaxDoubleSpinBox.value(),
-                              int(self.e2NPointsDoubleSpinBox.value()),
-                              self.e2LorentzianBroadeningDoubleSpinBox.value(),
-                              self.e2GaussianBroadeningDoubleSpinBox.value()))
-        else:
-            self.energies = ((self.energiesTabWidget.tabText(0),
-                              self.e1MinDoubleSpinBox.value(),
-                              self.e1MaxDoubleSpinBox.value(),
-                              int(self.e1NPointsDoubleSpinBox.value()),
-                              self.e1LorentzianBroadeningDoubleSpinBox.value(),
-                              self.e1GaussianBroadeningDoubleSpinBox.value()),)
-
-        self.hamiltonianParameters = self.hamiltonianModel.getModelData()
-        self.hamiltonianTermsCheckState = (
-            self.hamiltonianModel.getNodesCheckState())
-
-    def saveParameters(self):
-        for key in self._defaults:
+        for f in files:
             try:
-                self.calculation[key] = copy.deepcopy(self.__dict__[key])
-            except KeyError:
-                self.calculation[key] = None
+                spectrum = np.loadtxt(f, skiprows=5)
+            except FileNotFoundError:
+                continue
 
-    def loadParameters(self, dictionary):
-        for key in self._defaults:
-            try:
-                self.__dict__[key] = copy.deepcopy(dictionary[key])
-            except KeyError:
-                self.__dict__[key] = None
+            if '_iso.spec' in f:
+                key = 'Isotropic'
+            elif '_cd.spec' in f:
+                key = 'Circular Dichroism'
 
-    def createContextMenu(self, position):
-        icon = QIcon(resourceFileName(os.path.join(
-            'gui', 'icons', 'save.svg')))
-        self.saveSelectedCalculationsAsAction = QAction(
-            icon, 'Save Selected Calculations As...', self,
-            triggered=self.saveSelectedCalculationsAs)
+            if 'RIXS' in self.experiment:
+                self._spectra[key] = -spectrum[:, 2::2]
+            else:
+                self._spectra[key] = -spectrum[:, 2::2][:, 0]
 
-        icon = QIcon(resourceFileName(os.path.join(
-            'gui', 'icons', 'trash.svg')))
-        self.removeCalculationsAction = QAction(
-            icon, 'Remove Selected Calculations', self,
-            triggered=self.removeSelectedCalculations)
-        self.removeAllCalculationsAction = QAction(
-            icon, 'Remove All Calculations', self,
-            triggered=self.removeAllCalculations)
-
-        icon = QIcon(resourceFileName(os.path.join(
-            'gui', 'icons', 'folder-open.svg')))
-        self.loadCalculationsAction = QAction(
-            icon, 'Load Calculations', self,
-            triggered=self.loadCalculations)
-
-        selection = self.resultsView.selectionModel().selection()
-        selectedItemsRegion = self.resultsView.visualRegionForSelection(
-            selection)
-        cursorPosition = self.resultsView.mapFromGlobal(QCursor.pos())
-
-        if selectedItemsRegion.contains(cursorPosition):
-            contextMenu = QMenu('Items Context Menu', self)
-            contextMenu.addAction(self.saveSelectedCalculationsAsAction)
-            contextMenu.addAction(self.removeCalculationsAction)
-            contextMenu.exec_(self.resultsView.mapToGlobal(position))
-        else:
-            contextMenu = QMenu('View Context Menu', self)
-            contextMenu.addAction(self.loadCalculationsAction)
-            contextMenu.addAction(self.removeAllCalculationsAction)
-            contextMenu.exec_(self.resultsView.mapToGlobal(position))
-
-    def saveSelectedCalculationsAs(self):
-        path, _ = QFileDialog.getSaveFileName(
-            self, 'Save Calculations', 'untitled', 'Pickle File (*.pkl)')
-
-        if path:
-            os.chdir(os.path.dirname(path))
-            calculations = list(self.selectedCalculations())
-            calculations.reverse()
-            with open(path, 'wb') as p:
-                pickle.dump(calculations, p)
-
-    def removeSelectedCalculations(self):
-        indexes = self.resultsView.selectedIndexes()
-        self.resultsModel.removeItems(indexes)
-
-    def removeAllCalculations(self):
-        self.resultsModel.reset()
-
-    def loadCalculations(self):
-        path, _ = QFileDialog.getOpenFileName(
-            self, 'Load Calculations', '', 'Pickle File (*.pkl)')
-
-        if path:
-            with open(path, 'rb') as p:
-                self.resultsModel.appendItems(pickle.load(p))
-
-        self.resultsView.selectionModel().setCurrentIndex(
-            self.resultsModel.index(0, 0), QItemSelectionModel.Select)
+            # os.remove(f)
 
     def saveInput(self):
-        # Load the template file specific to the requested calculation.
-        path = resourceFileName(
-            os.path.join('modules', 'quanty', 'templates',
-                         '{}'.format(self.templateName)))
+        templatePath = resourceFileName(
+            'crispy:' + os.path.join('modules', 'quanty', 'templates',
+                                     '{}'.format(self._templateName)))
 
-        try:
-            with open(path) as p:
-                template = p.read()
-        except IOError as e:
-            self.parent().statusBar().showMessage(
-                'Could not find template file: {}.' .format(self.templateName))
-            raise e
-
-        self.getParameters()
+        with open(templatePath) as p:
+            self._template = p.read()
 
         replacements = collections.OrderedDict()
 
-        for shell in self.shells:
-            replacements['$NElectrons_{}'.format(shell[0])] = shell[1]
+        subshell = self._configurations[0][1][:2]
+        subshell_occupation = self._configurations[0][1][2:]
+        replacements['$NElectrons_{}'.format(subshell)] = subshell_occupation
 
         replacements['$T'] = self.temperature
 
-        # If all components of the magnetic field are zero, 
-        # add a small contribution in the y-direction to make the simulation
-        # converge faster.
-        if all(value == 0.0 for value in self.magneticField):
-            self.magneticField = (0.0, 0.00001, 0.0)
+        replacements['$Bx'] = self.magneticFieldX
+        replacements['$By'] = self.magneticFieldY
+        replacements['$Bz'] = self.magneticFieldZ
 
-        replacements['$Bx'] = self.magneticField[0]
-        replacements['$By'] = self.magneticField[1]
-        replacements['$Bz'] = self.magneticField[2]
-
-        replacements['$Emin1'] = self.energies[0][1]
-        replacements['$Emax1'] = self.energies[0][2]
-        replacements['$NE1'] = self.energies[0][3]
-        # Broadening is done in the interface.
-        value = self.e1LorentzianBroadeningDoubleSpinBox.minimum()
-        replacements['$Gamma1'] = value
+        replacements['$Emin1'] = self.e1Min
+        replacements['$Emax1'] = self.e1Max
+        replacements['$NE1'] = self.e1NPoints
+        replacements['$Gamma1'] = self.e1Lorentzian
 
         if 'RIXS' in self.experiment:
-            replacements['$Emin2'] = self.energies[1][1]
-            replacements['$Emax2'] = self.energies[1][2]
-            replacements['$NE2'] = self.energies[1][3]
-            replacements['$Gamma1'] = self.energies[0][4]
-            replacements['$Gamma2'] = self.energies[1][4]
+            # The Lorentzian broadening along the incident axis cannot be
+            # changed in the interface, and must therefore be set to the
+            # final value before the start of the calculation.
+            # replacements['$Gamma1'] = self.e1Lorentzian
+            replacements['$Emin2'] = self.e2Min
+            replacements['$Emax2'] = self.e2Max
+            replacements['$NE2'] = self.e2NPoints
+            replacements['$Gamma2'] = self.e2Lorentzian
 
+        replacements['$NPsisAuto'] = self.nPsisAuto
         replacements['$NPsis'] = self.nPsis
 
-        for term in self.hamiltonianParameters:
-            if 'Coulomb' in term:
-                name = 'H_coulomb'
-            elif 'Spin-Orbit Coupling' in term:
-                name = 'H_soc'
+        for term in self.hamiltonianData:
+            if 'Atomic' in term:
+                name = 'H_atomic'
             elif 'Crystal Field' in term:
                 name = 'H_cf'
             elif '3d-Ligands Hybridization' in term:
                 name = 'H_3d_Ld_hybridization'
             elif '3d-4p Hybridization' in term:
                 name = 'H_3d_4p_hybridization'
+            elif '4d-Ligands Hybridization' in term:
+                name = 'H_4d_Ld_hybridization'
+            elif '5d-Ligands Hybridization' in term:
+                name = 'H_5d_Ld_hybridization'
+            else:
+                pass
 
-            configurations = self.hamiltonianParameters[term]
+            configurations = self.hamiltonianData[term]
             for configuration, parameters in configurations.items():
                 if 'Initial' in configuration:
                     suffix = 'i'
@@ -488,39 +279,379 @@ class QuantyDockWidget(QDockWidget):
                 elif 'Final' in configuration:
                     suffix = 'f'
                 for parameter, (value, scaling) in parameters.items():
+                    # Convert to parameters name from Greek letter.
+                    parameter = parameter.replace('ζ', 'zeta')
+                    parameter = parameter.replace('Δ', 'Delta')
+                    parameter = parameter.replace('σ', 'sigma')
+                    parameter = parameter.replace('τ', 'tau')
                     key = '${}_{}_value'.format(parameter, suffix)
                     replacements[key] = '{}'.format(value)
                     key = '${}_{}_scaling'.format(parameter, suffix)
                     replacements[key] = '{}'.format(scaling)
 
-            checkState = self.hamiltonianTermsCheckState[term]
+            checkState = self.hamiltonianState[term]
             if checkState > 0:
                 checkState = 1
 
             replacements['${}'.format(name)] = checkState
 
+        if self.monoElectronicRadialME:
+            for parameter in self.monoElectronicRadialME:
+                value = self.monoElectronicRadialME[parameter]
+                replacements['${}'.format(parameter)] = value
+            replacements['$edgeEnergy'] = self.e1Energy
+
         replacements['$baseName'] = self.baseName
 
         for replacement in replacements:
-            template = template.replace(
+            self._template = self._template.replace(
                 replacement, str(replacements[replacement]))
 
         with open(self.baseName + '.lua', 'w') as f:
-            f.write(template)
+            f.write(self._template)
+
+        self._uuid = uuid.uuid4().hex
+
+        self.label = '{} | {} | {} | {} | {}'.format(
+            self.element, self.charge, self.symmetry, self.experiment,
+            self.edge)
+
+
+class QuantyDockWidget(QDockWidget):
+
+    def __init__(self):
+        super(QuantyDockWidget, self).__init__()
+
+        # Load the external .ui file for the widget.
+        path = resourceFileName(
+            'crispy:' + os.path.join('gui', 'uis', 'quanty.ui'))
+        loadUi(path, baseinstance=self, package='crispy.gui')
+
+        self.calculation = QuantyCalculation()
+        self.setUi()
+        self.updateUi()
+
+    def setUi(self):
+        self.temperatureLineEdit.setValidator(QDoubleValidator(self))
+        self.nPsisLineEdit.setValidator(QIntValidator(self))
+
+        self.magneticFieldXLineEdit.setValidator(QDoubleValidator(self))
+        self.magneticFieldYLineEdit.setValidator(QDoubleValidator(self))
+        self.magneticFieldZLineEdit.setValidator(QDoubleValidator(self))
+
+        self.e1MinLineEdit.setValidator(QDoubleValidator(self))
+        self.e1MaxLineEdit.setValidator(QDoubleValidator(self))
+        self.e1NPointsLineEdit.setValidator(QIntValidator(self))
+        self.e1LorentzianLineEdit.setValidator(QDoubleValidator(self))
+        self.e1GaussianLineEdit.setValidator(QDoubleValidator(self))
+
+        self.e2MinLineEdit.setValidator(QDoubleValidator(self))
+        self.e2MaxLineEdit.setValidator(QDoubleValidator(self))
+        self.e2NPointsLineEdit.setValidator(QIntValidator(self))
+        self.e2LorentzianLineEdit.setValidator(QDoubleValidator(self))
+        self.e2GaussianLineEdit.setValidator(QDoubleValidator(self))
+
+        # Create the results model and assign it to the view.
+        self.resultsModel = ListModel()
+
+        self.resultsView.setModel(self.resultsModel)
+        self.resultsView.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        self.resultsView.selectionModel().selectionChanged.connect(
+            self.selectedCalculationsChanged)
+        # Add a context menu.
+        self.resultsView.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.createResultsContextMenu()
+        self.resultsView.customContextMenuRequested[QPoint].connect(
+            self.showResultsContextMenu)
+
+        # Enable actions.
+        self.elementComboBox.currentTextChanged.connect(self.resetCalculation)
+        self.chargeComboBox.currentTextChanged.connect(self.resetCalculation)
+        self.symmetryComboBox.currentTextChanged.connect(self.resetCalculation)
+        self.experimentComboBox.currentTextChanged.connect(
+            self.resetCalculation)
+        self.edgeComboBox.currentTextChanged.connect(self.resetCalculation)
+
+        self.e1GaussianLineEdit.editingFinished.connect(self.updateBroadening)
+        self.e2GaussianLineEdit.editingFinished.connect(self.updateBroadening)
+
+        self.nPsisCheckBox.toggled.connect(self.updateNPsisLineEditState)
+        self.fkLineEdit.editingFinished.connect(self.updateScalingFactors)
+        self.gkLineEdit.editingFinished.connect(self.updateScalingFactors)
+        self.zetaLineEdit.editingFinished.connect(self.updateScalingFactors)
+
+        self.saveInputAsPushButton.clicked.connect(self.saveInputAs)
+        self.calculationPushButton.clicked.connect(self.runCalculation)
+
+    def updateUi(self):
+        c = self.calculation
+
+        self.elementComboBox.setItems(c._elements, c.element)
+        self.chargeComboBox.setItems(c._charges, c.charge)
+        self.symmetryComboBox.setItems(c._symmetries, c.symmetry)
+        self.experimentComboBox.setItems(c._experiments, c.experiment)
+        self.edgeComboBox.setItems(c._edges, c.edge)
+
+        self.temperatureLineEdit.setText(str(c.temperature))
+
+        self.magneticFieldXLineEdit.setText(str(c.magneticFieldX))
+        self.magneticFieldYLineEdit.setText(str(c.magneticFieldY))
+        self.magneticFieldZLineEdit.setText(str(c.magneticFieldZ))
+
+        self.nPsisLineEdit.setText(str(c.nPsis))
+        self.nPsisCheckBox.setEnabled(True)
+
+        # self.fkLineEdit.setText('0.8')
+        # self.gkLineEdit.setText('0.8')
+        # self.zetaLineEdit.setText('1.0')
+
+        self.energiesTabWidget.setTabText(0, str(c._e1Label))
+        self.e1MinLineEdit.setText(str(c.e1Min))
+        self.e1MaxLineEdit.setText(str(c.e1Max))
+        self.e1NPointsLineEdit.setText(str(c.e1NPoints))
+        self.e1LorentzianLineEdit.setText(str(c.e1Lorentzian))
+        self.e1GaussianLineEdit.setText(str(c.e1Gaussian))
+
+        if 'RIXS' in c.experiment:
+            if self.energiesTabWidget.count() == 1:
+                tab = self.energiesTabWidget.findChild(QWidget, 'e2Tab')
+                self.energiesTabWidget.addTab(tab, tab.objectName())
+                self.energiesTabWidget.setTabText(1, c._e2Label)
+            self.e2MinLineEdit.setText(str(c.e2Min))
+            self.e2MaxLineEdit.setText(str(c.e2Max))
+            self.e2NPointsLineEdit.setText(str(c.e2NPoints))
+            self.e2LorentzianLineEdit.setText(str(c.e2Lorentzian))
+            self.e2GaussianLineEdit.setText(str(c.e2Gaussian))
+        else:
+            self.energiesTabWidget.removeTab(1)
+
+        # Create the Hamiltonian model.
+        self.hamiltonianModel = TreeModel(
+            ('Parameter', 'Value', 'Scaling'), c.hamiltonianData)
+        self.hamiltonianModel.setNodesCheckState(c.hamiltonianState)
+
+        # Assign the Hamiltonian model to the Hamiltonian terms view.
+        self.hamiltonianTermsView.setModel(self.hamiltonianModel)
+        self.hamiltonianTermsView.selectionModel().setCurrentIndex(
+            self.hamiltonianModel.index(0, 0), QItemSelectionModel.Select)
+        self.hamiltonianTermsView.selectionModel().selectionChanged.connect(
+            self.selectedHamiltonianTermChanged)
+
+        # Assign the Hamiltonian model to the Hamiltonian parameters view.
+        self.hamiltonianParametersView.setModel(self.hamiltonianModel)
+        self.hamiltonianParametersView.expandAll()
+        self.hamiltonianParametersView.resizeAllColumnsToContents()
+        self.hamiltonianParametersView.setColumnWidth(0, 160)
+        self.hamiltonianParametersView.setRootIndex(
+            self.hamiltonianTermsView.currentIndex())
+
+        # Set the sizes of the two views.
+        self.hamiltonianSplitter.setSizes((120, 300))
+
+    def setUiEnabled(self, flag=True):
+        self.elementComboBox.setEnabled(flag)
+        self.chargeComboBox.setEnabled(flag)
+        self.symmetryComboBox.setEnabled(flag)
+        self.experimentComboBox.setEnabled(flag)
+        self.edgeComboBox.setEnabled(flag)
+
+        self.temperatureLineEdit.setEnabled(flag)
+        self.magneticFieldXLineEdit.setEnabled(flag)
+        self.magneticFieldYLineEdit.setEnabled(flag)
+        self.magneticFieldZLineEdit.setEnabled(flag)
+
+        self.e1MinLineEdit.setEnabled(flag)
+        self.e1MaxLineEdit.setEnabled(flag)
+        self.e1NPointsLineEdit.setEnabled(flag)
+        self.e1LorentzianLineEdit.setEnabled(flag)
+        self.e1GaussianLineEdit.setEnabled(flag)
+
+        self.e2MinLineEdit.setEnabled(flag)
+        self.e2MaxLineEdit.setEnabled(flag)
+        self.e2NPointsLineEdit.setEnabled(flag)
+        self.e2LorentzianLineEdit.setEnabled(flag)
+        self.e2GaussianLineEdit.setEnabled(flag)
+
+        self.nPsisCheckBox.setEnabled(flag)
+        if self.nPsisCheckBox.isChecked():
+            self.nPsisLineEdit.setEnabled(False)
+        else:
+            self.nPsisLineEdit.setEnabled(True)
+        self.fkLineEdit.setEnabled(flag)
+        self.gkLineEdit.setEnabled(flag)
+        self.zetaLineEdit.setEnabled(flag)
+
+        self.hamiltonianTermsView.setEnabled(flag)
+        self.hamiltonianParametersView.setEnabled(flag)
+        self.resultsView.setEnabled(flag)
+
+        self.saveInputAsPushButton.setEnabled(flag)
+
+        if self.calculation.spectra:
+            # self.elementComboBox.setEnabled(True)
+            # self.chargeComboBox.setEnabled(True)
+            # self.symmetryComboBox.setEnabled(True)
+            # self.experimentComboBox.setEnabled(True)
+            # self.edgeComboBox.setEnabled(True)
+
+            self.e1GaussianLineEdit.setEnabled(True)
+            self.e2GaussianLineEdit.setEnabled(True)
+
+            self.resultsView.setEnabled(True)
+
+            self.saveInputAsPushButton.setEnabled(True)
+
+        # if flag:
+        #     self.hamiltonianParametersView.setEditTriggers(
+        #         QAbstractItemView.DoubleClicked)
+        #     self.resultsView.setSelectionMode(
+        #         QAbstractItemView.ExtendedSelection)
+        # else:
+        #     self.hamiltonianParametersView.setEditTriggers(
+        #         QAbstractItemView.NoEditTriggers)
+        #     self.resultsView.setSelectionMode(
+        #         QAbstractItemView.NoSelection)
+
+        # if self.calculation.spectra:
+        #     self.resultsView.setSelectionMode(
+        #         QAbstractItemView.ExtendedSelection)
+
+    def updateBroadening(self):
+        c = self.calculation
+
+        if not c.spectra:
+            return
+
+        try:
+            index = list(self.resultsView.selectedIndexes())[-1]
+        except IndexError:
+            return
+        else:
+            c.e1Gaussian = float(self.e1GaussianLineEdit.text())
+            c.e2Gaussian = float(self.e2GaussianLineEdit.text())
+            self.resultsModel.replaceItem(index, c)
+            self.selectedCalculationsChanged()
+
+    def updateNPsisLineEditState(self):
+        if self.nPsisCheckBox.isChecked():
+            self.nPsisLineEdit.setEnabled(False)
+        else:
+            self.nPsisLineEdit.setEnabled(True)
+
+    def updateScalingFactors(self):
+        fk = float(self.fkLineEdit.text())
+        gk = float(self.gkLineEdit.text())
+        zeta = float(self.zetaLineEdit.text())
+
+        c = self.calculation
+        terms = c.hamiltonianData
+
+        for term in terms:
+            configurations = terms[term]
+            for configuration in configurations:
+                parameters = configurations[configuration]
+                for parameter in parameters:
+                    value, factor = parameters[parameter]
+                    if parameter.startswith('F'):
+                        terms[term][configuration][parameter] = (value, fk)
+                    elif parameter.startswith('G'):
+                        terms[term][configuration][parameter] = (value, gk)
+                    elif parameter.startswith('ζ'):
+                        terms[term][configuration][parameter] = (value, zeta)
+                    else:
+                        continue
+        self.updateUi()
+
+    def saveInput(self):
+        self.updateCalculation()
+        try:
+            self.calculation.saveInput()
+        except PermissionError:
+            self.parent().statusBar().showMessage(
+                'Permission denied to write Quanty input file.')
+            return
 
     def saveInputAs(self):
+        c = self.calculation
         path, _ = QFileDialog.getSaveFileName(
-            self, 'Save Quanty Input', '{}'.format(self.baseName + '.lua'),
+            self, 'Save Quanty Input', '{}'.format(c.baseName + '.lua'),
             'Quanty Input File (*.lua)')
 
         if path:
-            self.baseName, _ = os.path.splitext(os.path.basename(path))
+            self.calculation.baseName, _ = os.path.splitext(
+                    os.path.basename(path))
             self.updateMainWindowTitle()
             os.chdir(os.path.dirname(path))
-            try:
-                self.saveInput()
-            except IOError:
-                return
+            self.saveInput()
+
+    def saveSelectedCalculationsAs(self):
+        path, _ = QFileDialog.getSaveFileName(
+            self, 'Save Calculations', 'untitled.pkl', 'Pickle File (*.pkl)')
+        if path:
+            os.chdir(os.path.dirname(path))
+            calculations = self.selectedCalculations()
+            calculations.reverse()
+            with open(path, 'wb') as p:
+                pickle.dump(calculations, p)
+
+    def updateCalculation(self):
+        c = self.calculation
+
+        c.temperature = float(self.temperatureLineEdit.text())
+        c.magneticFieldX = float(self.magneticFieldXLineEdit.text())
+        c.magneticFieldY = float(self.magneticFieldYLineEdit.text())
+        c.magneticFieldZ = float(self.magneticFieldZLineEdit.text())
+
+        c.nPsis = int(self.nPsisLineEdit.text())
+        c.nPsisAuto = int(self.nPsisCheckBox.isChecked())
+
+        c.e1Min = float(self.e1MinLineEdit.text())
+        c.e1Max = float(self.e1MaxLineEdit.text())
+        c.e1NPoints = int(self.e1NPointsLineEdit.text())
+        c.e1Lorentzian = float(self.e1LorentzianLineEdit.text())
+        c.e1Gaussian = float(self.e1GaussianLineEdit.text())
+
+        if 'RIXS' in c.experiment:
+            c.e2Min = float(self.e2MinLineEdit.text())
+            c.e2Max = float(self.e2MaxLineEdit.text())
+            c.e2NPoints = int(self.e2NPointsLineEdit.text())
+            c.e2Lorentzian = float(self.e2LorentzianLineEdit.text())
+            c.e2Gaussian = float(self.e2GaussianLineEdit.text())
+
+        c.hamiltonianData = self.hamiltonianModel.getModelData()
+        c.hamiltonianState = self.hamiltonianModel.getNodesCheckState()
+
+    def resetCalculation(self):
+        element = self.elementComboBox.currentText()
+        charge = self.chargeComboBox.currentText()
+        symmetry = self.symmetryComboBox.currentText()
+        experiment = self.experimentComboBox.currentText()
+        edge = self.edgeComboBox.currentText()
+
+        self.calculation = QuantyCalculation(
+            element=element, charge=charge, symmetry=symmetry,
+            experiment=experiment, edge=edge)
+
+        self.updateUi()
+        self.parent().plotWidget.reset()
+        self.resultsView.selectionModel().clearSelection()
+
+    def removeSelectedCalculations(self):
+        self.resultsModel.removeItems(self.resultsView.selectedIndexes())
+        self.updateResultsViewSelection()
+
+    def removeAllCalculations(self):
+        self.resultsModel.reset()
+        self.parent().plotWidget.reset()
+
+    def loadCalculations(self):
+        path, _ = QFileDialog.getOpenFileName(
+            self, 'Load Calculations', '', 'Pickle File (*.pkl)')
+        if path:
+            with open(path, 'rb') as p:
+                self.resultsModel.appendItems(pickle.load(p))
+        self.updateResultsViewSelection()
+        self.updateMainWindowTitle()
 
     def runCalculation(self):
         if 'win32' in sys.platform:
@@ -538,37 +669,29 @@ class QuantyDockWidget(QDockWidget):
                 return
 
         # Write the input file to disk.
-        try:
-            self.saveInput()
-        except FileNotFoundError:
-            return
+        self.saveInput()
 
-        # You are about to run; I will give you a label, a unique identifier,
-        # and a starting time.
-        self.label = '{} | {} | {} | {} | {}'.format(
-            self.element, self.charge, self.symmetry,
-            self.experiment, self.edge)
-        self.uuid = uuid.uuid4().hex
-        self.startingTime = datetime.datetime.now()
+        # Disable the UI while the calculation is running.
+        self.setUiEnabled(False)
 
-        self.calculation = collections.OrderedDict()
-        self.saveParameters()
+        c = self.calculation
+        c.startingTime = datetime.datetime.now()
 
         # Run Quanty using QProcess.
         self.process = QProcess()
 
-        self.process.start(self.command, (self.baseName + '.lua', ))
+        self.process.start(self.command, (c.baseName + '.lua', ))
         self.parent().statusBar().showMessage(
-            'Running {} {} in {}.'.format(
-                self.command, self.baseName + '.lua', os.getcwd()))
+            'Running "{} {}" in {}.'.format(
+                self.command, c.baseName + '.lua', os.getcwd()))
 
         self.process.readyReadStandardOutput.connect(self.handleOutputLogging)
         self.process.started.connect(self.updateCalculationPushButton)
         self.process.finished.connect(self.processCalculation)
 
     def updateCalculationPushButton(self):
-        icon = QIcon(resourceFileName(os.path.join(
-            'gui', 'icons', 'stop.svg')))
+        icon = QIcon(resourceFileName(
+            'crispy:' + os.path.join('gui', 'icons', 'stop.svg')))
         self.calculationPushButton.setIcon(icon)
 
         self.calculationPushButton.setText('Stop')
@@ -578,8 +701,8 @@ class QuantyDockWidget(QDockWidget):
         self.calculationPushButton.clicked.connect(self.stopCalculation)
 
     def resetCalculationPushButton(self):
-        icon = QIcon(resourceFileName(os.path.join(
-            'gui', 'icons', 'play.svg')))
+        icon = QIcon(resourceFileName(
+            'crispy:' + os.path.join('gui', 'icons', 'play.svg')))
         self.calculationPushButton.setIcon(icon)
 
         self.calculationPushButton.setText('Run')
@@ -590,10 +713,13 @@ class QuantyDockWidget(QDockWidget):
 
     def stopCalculation(self):
         self.process.kill()
+        self.setUiEnabled(True)
 
     def processCalculation(self):
+        c = self.calculation
+
         # When did I finish?
-        self.endingTime = datetime.datetime.now()
+        c.endingTime = datetime.datetime.now()
 
         # Reset the calculation button.
         self.resetCalculationPushButton()
@@ -605,7 +731,7 @@ class QuantyDockWidget(QDockWidget):
         statusBar = self.parent().statusBar()
         if exitStatus == 0 and exitCode == 0:
             message = ('Quanty has finished successfully in ')
-            delta = int((self.endingTime - self.startingTime).total_seconds())
+            delta = int((c.endingTime - c.startingTime).total_seconds())
             hours, reminder = divmod(delta, 60)
             minutes, seconds = divmod(reminder, 60)
             if hours > 0:
@@ -622,6 +748,8 @@ class QuantyDockWidget(QDockWidget):
                 'Quanty has finished unsuccessfully. '
                 'Check the logging window for more details.'), timeout)
             self.parent().splitter.setSizes((400, 200))
+            # Must re-enable the UI if the calculation has crashed.
+            self.setUiEnabled(True)
             return
         # exitCode is platform dependend; exitStatus is always 1.
         elif exitStatus == 1:
@@ -629,78 +757,23 @@ class QuantyDockWidget(QDockWidget):
             statusBar.showMessage(message, timeout)
             return
 
-        # Copy back the details of the calculation, and overwrite all UI
-        # changes done by the user during the calculation.
-        self.loadParameters(self.calculation)
+        c.spectra = glob.glob('{}*.spec'.format(c.baseName))
 
-        # Initialize the spectra container.
-        self.spectra = dict()
+        # Store the calculation in the model.
+        self.resultsModel.appendItems([c])
 
-        e1Min = self.energies[0][1]
-        e1Max = self.energies[0][2]
-        e1NPoints = self.energies[0][3]
-        self.spectra['e1'] = np.linspace(e1Min, e1Max, e1NPoints + 1)
+        # This should be in a signal?
+        self.updateResultsViewSelection()
 
-        if 'RIXS' in self.experiment:
-            e2Min = self.energies[1][1]
-            e2Max = self.energies[1][2]
-            e2NPoints = self.energies[1][3]
-            self.spectra['e2'] = np.linspace(e2Min, e2Max, e2NPoints + 1)
-
-        # Find all spectra in the current folder.
-        pattern = '{}*.spec'.format(self.baseName)
-
-        for spectrumName in glob.glob(pattern):
-            try:
-                spectrum = np.loadtxt(spectrumName, skiprows=5)
-            except FileNotFoundError:
-                return
-
-            if '_iso.spec' in spectrumName:
-                key = 'Isotropic'
-            elif '_cd.spec' in spectrumName:
-                key = 'Circular Dichroism'
-
-            self.spectra[key] = -spectrum[:, 2::2]
-
-            # Remove the spectrum file
-            os.remove(spectrumName)
-
-        self.updateSpectraComboBox()
-
-        # Store the calculation details; have to encapsulate it into a list.
-        self.saveParameters()
-        self.resultsModel.appendItems([self.calculation])
-
-        # Update the selected item in the results view.
-        self.resultsView.selectionModel().clearSelection()
-        index = self.resultsModel.index(self.resultsModel.rowCount() - 1)
-        self.resultsView.selectionModel().select(
-            index, QItemSelectionModel.Select)
-
-        # TODO: Move this action in a better place.
-        self.parent().plotWidget.spectraComboBox.currentTextChanged.connect(
-            self.plot)
-
-        self.plot()
-
-    def updateSpectraComboBox(self):
-        self.parent().plotWidget.spectraComboBox.clear()
-
-        keys = ('Isotropic', 'Circular Dichroism')
-        for key in keys:
-            if key in self.spectra:
-                self.parent().plotWidget.spectraComboBox.addItem(key)
-
-        self.parent().plotWidget.spectraComboBox.setCurrentIndex(0)
+        # Open the results page.
+        # self.quantyToolBox.setCurrentWidget(self.resultsPage)
 
     def plot(self):
-        if not self.spectra:
-            return
+        c = self.calculation
 
         plotWidget = self.parent().plotWidget
 
-        if 'RIXS' in self.experiment:
+        if 'RIXS' in c.experiment:
             plotWidget.setGraphXLabel('Incident Energy (eV)')
             plotWidget.setGraphYLabel('Energy Transfer (eV)')
 
@@ -708,102 +781,127 @@ class QuantyDockWidget(QDockWidget):
                                 'autoscale': True, 'vmin': 0.0, 'vmax': 1.0}
             plotWidget.setDefaultColormap(colormap)
 
-            legend = self.label + self.uuid
+            xScale = (c.e1Max - c.e1Min) / c.e1NPoints
+            yScale = (c.e2Max - c.e2Min) / c.e2NPoints
+            scale = (xScale, yScale)
 
-            x = self.spectra['e1']
-            xMin = x.min()
-            xMax = x.max()
-            xNPoints = x.size
-            xScale = (xMax - xMin) / xNPoints
+            xOrigin = c.e1Min
+            yOrigin = c.e2Min
+            origin = (xOrigin, yOrigin)
 
-            y = self.spectra['e2']
-            yMin = y.min()
-            yMax = y.max()
-            yNPoints = y.size
-            yScale = (yMax - yMin) / yNPoints
+            z = c.spectra['Isotropic']
 
-            currentPlot = plotWidget.spectraComboBox.currentText()
-            try:
-                z = self.spectra[currentPlot]
-            except KeyError:
-                return
+            if c.e1Gaussian > 0. and c.e2Gaussian > 0.:
+                xFwhm = c.e1Gaussian / xScale
+                yFwhm = c.e2Gaussian / yScale
 
-            plotWidget.addImage(
-                z, origin=(xMin, yMin), scale=(xScale, yScale))
+                fwhm = [xFwhm, yFwhm]
+                z = broaden(z, fwhm, 'gaussian')
+
+            plotWidget.addImage(z, origin=origin, scale=scale, reset=False)
+
         else:
             plotWidget.setGraphXLabel('Absorption Energy (eV)')
             plotWidget.setGraphYLabel('Absorption Cross Section (a.u.)')
 
-            legend = self.label + self.uuid
+            legend = c.label + ' | ' + c._uuid
+            x = np.linspace(c.e1Min, c.e1Max, c.e1NPoints + 1)
+            scale = (c.e1Max - c.e1Min) / c.e1NPoints
+            y = c.spectra['Isotropic']
 
-            x = self.spectra['e1']
+            if c.e1Gaussian > 0.:
+                fwhm = c.e1Gaussian / scale
+                y = broaden(y, fwhm, 'gaussian')
 
-            currentPlot = plotWidget.spectraComboBox.currentText()
             try:
-                y = self.spectra[currentPlot]
-            except KeyError:
-                return
+                plotWidget.addCurve(x, y, legend)
+            except AssertionError:
+                statusBar = self.parent().statusBar()
+                message = 'The x and y arrays have different lengths.'
+                timeout = 4000
+                statusBar.showMessage(message, timeout)
 
-            y = y[:, 0]
-
-            fwhm = self.e1GaussianBroadeningDoubleSpinBox.value()
-            if fwhm:
-                y = self.broaden(x, y, type='gaussian', fwhm=fwhm) * y.max()
-
-            fwhm = (self.e1LorentzianBroadeningDoubleSpinBox.value() -
-                    self.e1LorentzianBroadeningDoubleSpinBox.minimum())
-            if fwhm:
-                y = self.broaden(x, y, type='lorentzian', fwhm=fwhm) * y.max()
-
-            plotWidget.addCurve(x, y, legend)
-
-    def replot(self):
-        # Whenever the broading changes, the data related to that plot 
-        # has to change.
-
-        # index = self.resultsView.selectedIndexes()[0]
-
-        # self.getParameters()
-        # self.saveParameters()
-        # index = self.resultsModel.replaceItem(index, self.calculation)
-
-        # self.resultsView.selectionModel().select(
-        #     index, QItemSelectionModel.Select)
-
-        self.plot()
-
-    @staticmethod
-    def broaden(x, y, type='gaussian', fwhm=None):
-        yb = np.zeros_like(y)
-        if type == 'gaussian':
-            sigma = fwhm / 2.0 * np.sqrt(2.0 * np.log(2.0))
-            for xi, yi in zip(x, y):
-                yb += yi / (sigma * np.sqrt(2.0 * np. pi)) * np.exp(
-                    -1.0 / 2.0 * ((x - xi) / sigma)**2)
-        elif type == 'lorentzian':
-            gamma = fwhm
-            for xi, yi in zip(x, y):
-                yb += yi / np.pi * (0.5 * gamma) / (
-                    (x - xi)**2 + (0.5 * gamma)**2)
-        yb = yb / yb.max()
-        return yb
+        # self.saveSelectedCalculationsAsAction.setEnabled(False)
 
     def selectedHamiltonianTermChanged(self):
         index = self.hamiltonianTermsView.currentIndex()
         self.hamiltonianParametersView.setRootIndex(index)
 
+    # Results view related methods.
+    def createResultsContextMenu(self):
+        icon = QIcon(resourceFileName(
+            'crispy:' + os.path.join('gui', 'icons', 'save.svg')))
+        self.saveSelectedCalculationsAsAction = QAction(
+            icon, 'Save Selected Calculations As...', self,
+            triggered=self.saveSelectedCalculationsAs)
+
+        icon = QIcon(resourceFileName(
+            'crispy:' + os.path.join('gui', 'icons', 'trash.svg')))
+        self.removeCalculationsAction = QAction(
+            icon, 'Remove Selected Calculations', self,
+            triggered=self.removeSelectedCalculations)
+        self.removeAllCalculationsAction = QAction(
+            icon, 'Remove All Calculations', self,
+            triggered=self.removeAllCalculations)
+
+        icon = QIcon(resourceFileName(
+            'crispy:' + os.path.join('gui', 'icons', 'folder-open.svg')))
+        self.loadCalculationsAction = QAction(
+            icon, 'Load Calculations', self,
+            triggered=self.loadCalculations)
+
+        self.itemsContextMenu = QMenu('Items Context Menu', self)
+        # icon = QIcon(resourceFileName(
+        #     'crispy:' + os.path.join('gui', 'icons', 'area-chart.svg')))
+        # spectrum = self.itemsContextMenu.addMenu(icon, 'Spectra')
+        # spectrum.addAction(self.removeAllCalculationsAction)
+        # self.itemsContextMenu.addSeparator()
+        self.itemsContextMenu.addAction(self.saveSelectedCalculationsAsAction)
+        self.itemsContextMenu.addAction(self.removeCalculationsAction)
+
+        self.viewContextMenu = QMenu('View Context Menu', self)
+        self.viewContextMenu.addAction(self.loadCalculationsAction)
+        self.viewContextMenu.addAction(self.removeAllCalculationsAction)
+
+    def showResultsContextMenu(self, position):
+        selection = self.resultsView.selectionModel().selection()
+        selectedItemsRegion = self.resultsView.visualRegionForSelection(
+            selection)
+        cursorPosition = self.resultsView.mapFromGlobal(QCursor.pos())
+
+        if selectedItemsRegion.contains(cursorPosition):
+            self.itemsContextMenu.exec_(self.resultsView.mapToGlobal(position))
+        else:
+            self.viewContextMenu.exec_(self.resultsView.mapToGlobal(position))
+
     def selectedCalculations(self):
+        calculations = list()
         indexes = self.resultsView.selectedIndexes()
         for index in indexes:
-            yield self.resultsModel.getIndexData(index)
+            calculations.append(self.resultsModel.getIndexData(index))
+        return calculations
 
     def selectedCalculationsChanged(self):
-        self.parent().plotWidget.clear()
-        for index in self.selectedCalculations():
-            self.loadParameters(index)
-            self.updateSpectraComboBox()
-        self.setUi()
-        self.updateMainWindowTitle()
+        calculations = self.selectedCalculations()
+        self.parent().plotWidget.reset()
+
+        if not calculations:
+            self.setUiEnabled(True)
+            return
+
+        for calculation in calculations:
+            self.calculation = copy.deepcopy(calculation)
+            self.plot()
+
+        # Set the UI using data from the last selected calculation.
+        self.updateUi()
+        self.setUiEnabled(False)
+
+    def updateResultsViewSelection(self):
+        self.resultsView.selectionModel().clearSelection()
+        index = self.resultsModel.index(self.resultsModel.rowCount() - 1)
+        self.resultsView.selectionModel().select(
+            index, QItemSelectionModel.Select)
 
     def handleOutputLogging(self):
         self.process.setReadChannel(QProcess.StandardOutput)
@@ -816,5 +914,10 @@ class QuantyDockWidget(QDockWidget):
         self.parent().loggerWidget.appendPlainText(data.decode('utf-8'))
 
     def updateMainWindowTitle(self):
-        title = 'Crispy - {}'.format(self.baseName + '.lua')
+        c = self.calculation
+        title = 'Crispy - {}'.format(c.baseName + '.lua')
         self.parent().setWindowTitle(title)
+
+
+if __name__ == '__main__':
+    pass

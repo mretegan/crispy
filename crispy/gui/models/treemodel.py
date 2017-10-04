@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '17/01/2017'
+__date__ = '04/10/2017'
 
 
 import collections
@@ -183,7 +183,7 @@ class TreeModel(QAbstractItemModel):
         if role == Qt.DisplayRole:
             try:
                 if column == 1:
-                    return '{0:8.2f}'.format(value)
+                    return '{0:8.3f}'.format(value)
                 else:
                     return '{0:8.2f}'.format(value)
             except ValueError:

@@ -27,22 +27,29 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '17/01/2017'
+__date__ = '04/10/2017'
 
 
 def main():
     import sys
-
     from PyQt5.QtWidgets import QApplication
+    from PyQt5.QtCore import Qt, QLocale
 
     from .gui.main import MainWindow
 
+    from silx.resources import register_resource_directory
+    register_resource_directory('crispy', 'crispy.resources')
+
+    QLocale.setDefault(QLocale.c())
+
     app = QApplication(sys.argv)
     window = MainWindow()
+
     window.show()
 
-    # app.setAttribute(Qt.AA_UseHighDpiPixmaps)
+    app.setAttribute(Qt.AA_UseHighDpiPixmaps)
     sys.exit(app.exec_())
+
 
 if __name__ == '__main__':
     main()

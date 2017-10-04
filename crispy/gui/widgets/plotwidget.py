@@ -27,17 +27,19 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '22/07/2017'
+__date__ = '04/10/2017'
 
 
 from silx.gui.plot import PlotWindow
+# from silx.gui.plot.PlotTools import PositionInfo
 from PyQt5.QtWidgets import QComboBox
+# from PyQt5.QtCore import Qt
 
 
 class PlotWidget(PlotWindow):
     def __init__(self, *args):
         super(PlotWidget, self).__init__(
-            logScale=False, grid=True, aspectRatio=False, yInverted=False,
+            logScale=False, grid=True, yInverted=False,
             roi=False, mask=False, print_=False)
         self.setActiveCurveHandling(True)
         self.setGraphGrid('both')
@@ -45,6 +47,25 @@ class PlotWidget(PlotWindow):
         self.spectraComboBox = QComboBox()
         self.spectraComboBox.setMinimumWidth(150)
 
+        # toolBar = self.toolBar()
+        # toolBar = QToolBar()
+        # self.addToolBar(Qt.TopToolBarArea, toolBar)
+        # toolBar.addSeparator()
+        # position = PositionInfo(plot=self)
+        # toolBar.addWidget(position)
+
+        # limitsToolBar = LimitsToolBar(plot=self)
+        # self.addToolBar(Qt.BottomToolBarArea, limitsToolBar)
+
         # toolbar = self.toolBar()
         # toolbar.addSeparator()
         # toolbar.addWidget(self.spectraComboBox)
+
+    def reset(self):
+        self.clear()
+        self.setGraphTitle()
+        self.setGraphXLabel('X')
+        self.setGraphXLimits(0, 100)
+        self.setGraphYLabel('Y')
+        self.setGraphYLimits(0, 100)
+        # self.keepDataAspectRatio(False)

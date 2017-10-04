@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '17/01/2017'
+__date__ = '04/10/2017'
 
 
 from PyQt5.QtCore import Qt, QAbstractListModel, QModelIndex
@@ -55,7 +55,7 @@ class ListModel(QAbstractListModel):
         if not index.isValid():
             return
         if role == Qt.DisplayRole or role == Qt.EditRole:
-            label = self.data[index.row()]['label']
+            label = self.data[index.row()].label
             return label
 
     def insertItems(self, position, items, parent=QModelIndex()):
@@ -82,13 +82,15 @@ class ListModel(QAbstractListModel):
     def appendItems(self, items):
         """Insert items at the end of model."""
         position = self.rowCount()
+        firstIndex = self.index(position)
+        lastIndex = self.index(position + len(items) - 1)
         self.insertItems(position, items)
+        self.dataChanged.emit(firstIndex, lastIndex)
 
     def replaceItem(self, index, item):
         row = index.row()
-        self.removeItems([index])
-        self.insertItems(row, [item])
-        return self.index(row)
+        self.data[row] = item
+        self.dataChanged.emit(index, index)
 
     def getIndexData(self, index):
         """Return the data stored in the model at the given index."""

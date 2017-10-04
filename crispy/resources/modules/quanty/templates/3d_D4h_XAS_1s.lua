@@ -17,9 +17,8 @@ H_f = 0
 --------------------------------------------------------------------------------
 -- Toggle the Hamiltonian terms.
 --------------------------------------------------------------------------------
-H_coulomb             = $H_coulomb
-H_soc                 = $H_soc
-H_cf                  = $H_cf
+H_atomic = $H_atomic
+H_cf     = $H_cf
 
 --------------------------------------------------------------------------------
 -- Define the number of electrons, shells, etc.
@@ -36,22 +35,22 @@ IndexDn_3d = {2, 4, 6, 8, 10}
 IndexUp_3d = {3, 5, 7, 9, 11}
 
 --------------------------------------------------------------------------------
--- Define the Coulomb term.
+-- Define the atomic term.
 --------------------------------------------------------------------------------
-F0_3d_3d = NewOperator('U', NFermions, IndexUp_3d, IndexDn_3d, {1, 0, 0})
-F2_3d_3d = NewOperator('U', NFermions, IndexUp_3d, IndexDn_3d, {0, 1, 0})
-F4_3d_3d = NewOperator('U', NFermions, IndexUp_3d, IndexDn_3d, {0, 0, 1})
-
-F0_1s_3d = NewOperator('U', NFermions, IndexUp_1s, IndexDn_1s, IndexUp_3d, IndexDn_3d, {1}, {0})
-G2_1s_3d = NewOperator('U', NFermions, IndexUp_1s, IndexDn_1s, IndexUp_3d, IndexDn_3d, {0}, {1})
-
 N_1s = NewOperator('Number', NFermions, IndexUp_1s, IndexUp_1s, {1})
      + NewOperator('Number', NFermions, IndexDn_1s, IndexDn_1s, {1})
 
 N_3d = NewOperator('Number', NFermions, IndexUp_3d, IndexUp_3d, {1, 1, 1, 1, 1})
      + NewOperator('Number', NFermions, IndexDn_3d, IndexDn_3d, {1, 1, 1, 1, 1})
 
-if H_coulomb == 1 then
+if H_atomic == 1 then
+    F0_3d_3d = NewOperator('U', NFermions, IndexUp_3d, IndexDn_3d, {1, 0, 0})
+    F2_3d_3d = NewOperator('U', NFermions, IndexUp_3d, IndexDn_3d, {0, 1, 0})
+    F4_3d_3d = NewOperator('U', NFermions, IndexUp_3d, IndexDn_3d, {0, 0, 1})
+
+    F0_1s_3d = NewOperator('U', NFermions, IndexUp_1s, IndexDn_1s, IndexUp_3d, IndexDn_3d, {1}, {0})
+    G2_1s_3d = NewOperator('U', NFermions, IndexUp_1s, IndexDn_1s, IndexUp_3d, IndexDn_3d, {0}, {1})
+
     U_3d_3d_i  = $U(3d,3d)_i_value * $U(3d,3d)_i_scaling
     F2_3d_3d_i = $F2(3d,3d)_i_value * $F2(3d,3d)_i_scaling
     F4_3d_3d_i = $F4(3d,3d)_i_value * $F4(3d,3d)_i_scaling
@@ -76,14 +75,9 @@ if H_coulomb == 1 then
         + F4_3d_3d_f * F4_3d_3d
         + F0_1s_3d_f * F0_1s_3d
         + G2_1s_3d_f * G2_1s_3d
-end
 
---------------------------------------------------------------------------------
--- Define the spin-orbit coupling term.
---------------------------------------------------------------------------------
-ldots_3d = NewOperator('ldots', NFermions, IndexUp_3d, IndexDn_3d)
+    ldots_3d = NewOperator('ldots', NFermions, IndexUp_3d, IndexDn_3d)
 
-if H_soc == 1 then
     zeta_3d_i = $zeta(3d)_i_value * $zeta(3d)_i_scaling
 
     zeta_3d_f = $zeta(3d)_f_value * $zeta(3d)_f_scaling
@@ -98,11 +92,12 @@ end
 --------------------------------------------------------------------------------
 -- Define the crystal field term.
 --------------------------------------------------------------------------------
-Dq_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm('D4h', 2, { 6,  6, -4, -4}))
-Ds_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm('D4h', 2, {-2,  2,  2, -1}))
-Dt_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm('D4h', 2, {-6, -1, -1,  4}))
-
 if H_cf == 1 then
+    -- PotentialExpandedOnClm('D4h', 2, {Ea1g, Eb1g, Eb2g, Eeg})
+    Dq_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm('D4h', 2, { 6,  6, -4, -4}))
+    Ds_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm('D4h', 2, {-2,  2,  2, -1}))
+    Dt_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm('D4h', 2, {-6, -1, -1,  4}))
+
     Dq_3d_i = $Dq(3d)_i_value * $Dq(3d)_i_scaling
     Ds_3d_i = $Ds(3d)_i_value * $Ds(3d)_i_scaling
     Dt_3d_i = $Dt(3d)_i_value * $Dt(3d)_i_scaling
@@ -182,19 +177,81 @@ H_f = H_f
 InitialRestrictions = {NFermions, NBosons, {'11 0000000000', NElectrons_1s, NElectrons_1s},
                                            {'00 1111111111', NElectrons_3d, NElectrons_3d}}
 
-NPsis = $NPsis
-Psis = Eigensystem(H_i, InitialRestrictions, NPsis)
-
-if not (type(Psis) == 'table') then
-    Psis = {Psis}
-end
-
 Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_1s, N_3d}
 header = '\nAnalysis of the initial Hamiltonian:\n'
 header = header .. '==============================================================================================\n'
 header = header .. '   i       <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>    <N_1s>    <N_3d>\n'
 header = header .. '==============================================================================================\n'
 footer = '==============================================================================================\n'
+
+-- Define the temperature.
+T = $T * EnergyUnits.Kelvin.value
+
+ -- Approximate machine epsilon.
+epsilon = 2.22e-16
+Z = 0
+
+NPsis = $NPsis
+NPsisAuto = $NPsisAuto
+
+if NPsisAuto == 1 and NPsis ~= 1 then
+    NPsis = 1
+    NPsisIncrement = 8
+    NPsisIsConverged = false
+    dZ = {}
+
+    while not NPsisIsConverged do
+        if CalculationRestrictions == nil then
+            Psis = Eigensystem(H_i, InitialRestrictions, NPsis)
+        else
+            Psis = Eigensystem(H_i, InitialRestrictions, NPsis, {'restrictions', CalculationRestrictions})
+        end
+
+        if not (type(Psis) == 'table') then
+            Psis = {Psis}
+        end
+
+        E_gs = Psis[1] * H_i * Psis[1]
+
+        for i, Psi in ipairs(Psis) do
+            E = Psi * H_i * Psi
+
+            if math.abs(E - E_gs) < epsilon then
+                dZ[i] = 1
+            else
+                dZ[i] = math.exp(-(E - E_gs) / T)
+            end
+
+            Z = Z + dZ[i]
+
+            if (dZ[i] / Z) < math.sqrt(epsilon) then
+                i = i - 1
+                NPsisIsConverged = true
+                NPsis = i
+                Psis = {unpack(Psis, 1, i)}
+                dZ = {unpack(dZ, 1, i)}
+                break
+            end
+        end
+
+        if NPsisIsConverged then
+            break
+        else
+            NPsis = NPsis + NPsisIncrement
+        end
+    end
+    Z = 0
+else
+        if CalculationRestrictions == nil then
+            Psis = Eigensystem(H_i, InitialRestrictions, NPsis)
+        else
+            Psis = Eigensystem(H_i, InitialRestrictions, NPsis, {'restrictions', CalculationRestrictions})
+        end
+
+    if not (type(Psis) == 'table') then
+        Psis = {Psis}
+    end
+end
 
 io.write(header)
 for i, Psi in ipairs(Psis) do
@@ -211,49 +268,42 @@ io.write(footer)
 --------------------------------------------------------------------------------
 t = math.sqrt(1/2);
 
-Txy_1s_3d   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -2, t * I}, {2, 2, -t * I}})
-Txz_1s_3d   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -1, t    }, {2, 1, -t    }})
-Tyz_1s_3d   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -1, t * I}, {2, 1,  t * I}})
-Tx2y2_1s_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -2, t    }, {2, 2,  t    }})
-Tz2_1s_3d   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2,  0, 1    }                })
+Tiso_1s_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -2, t * I}, {2, 2, -t * I}}) -- Txy
+           + NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -1, t    }, {2, 1, -t    }}) -- Txz
+           + NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -1, t * I}, {2, 1,  t * I}}) -- Tyz
+           + NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -2, t    }, {2, 2,  t    }}) -- Tx2y2
+           + NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2,  0, 1    }                }) -- Tz2
 
 --------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
--- Define the temperature.
-T = $T * EnergyUnits.Kelvin.value
-
--- Initialize the partition function and the spectra.
-Z = 0
-G = 0
+Giso = 0
 
 Emin = $Emin1
 Emax = $Emax1
 Gamma = $Gamma1
 NE = $NE1
 
--- Calculate the ground state energy.
 E_gs = Psis[1] * H_i * Psis[1]
 
 for i, Psi in ipairs(Psis) do
     E = Psi * H_i * Psi
 
-    if math.abs(E - E_gs) < 1e-12 then
+    if math.abs(E - E_gs) < epsilon then
         dZ = 1
     else
         dZ = math.exp(-(E - E_gs) / T)
     end
 
-    if (dZ < 1e-8) then
+    if (dZ < math.sqrt(epsilon)) then
         break
     end
 
     Z = Z + dZ
 
-    for j, Operator in ipairs({Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}) do
-        G = G + CreateSpectra(H_f, Operator, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
-    end
+    Giso = Giso + CreateSpectra(H_f, Tiso_1s_3d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
 end
 
-G = G / 5 / Z
-G.Print({{'file', '$baseName' .. '_iso.spec'}})
+Giso = Giso / Z
+Giso.Print({{'file', '$baseName' .. '_iso.spec'}})
+

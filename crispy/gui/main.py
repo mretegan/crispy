@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '10/04/2017'
+__date__ = '04/10/2017'
 
 
 import os
@@ -36,16 +36,17 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QPlainTextEdit
 from PyQt5.QtGui import QFontDatabase
 from PyQt5.uic import loadUi
+from silx.resources import resource_filename as resourceFileName
 
 from .quanty import QuantyDockWidget
-from ..resources import resourceFileName
 
 
 class MainWindow(QMainWindow):
 
     def __init__(self):
         super(MainWindow, self).__init__()
-        uiPath = resourceFileName(os.path.join('gui', 'uis', 'main.ui'))
+        uiPath = resourceFileName(
+            'crispy:' + os.path.join('gui', 'uis', 'main.ui'))
         loadUi(uiPath, baseinstance=self, package='crispy.gui')
 
         self.setWindowTitle('Crispy - untitled.lua')
