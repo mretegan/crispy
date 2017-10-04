@@ -28,7 +28,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '17/01/2017'
+__date__ = '04/10/2017'
 
 import os
 import sys
@@ -71,6 +71,13 @@ def main():
         author_email='marius.retegan@esrf.eu',
         url='https://github.com/mretegan/crispy',
         download_url='https://github.com/mretegan/crispy/releases',
+        keywords='gui, spectroscopy, simulation, synchrotron, science',
+        requires=[
+            'PyQt5',
+            'numpy',
+            'matplotlib',
+            'silx',
+            ],
         platforms=[
             'MacOS :: MacOS X',
             'Microsoft :: Windows',
@@ -121,6 +128,7 @@ def main():
         kwargs['scripts'] = ['scripts/crispy']
 
     setup(**kwargs)
+
 
 if __name__ == '__main__':
     main()
