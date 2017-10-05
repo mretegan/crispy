@@ -57,7 +57,7 @@ from silx.resources import resource_filename as resourceFileName
 from .models.treemodel import TreeModel
 from .models.listmodel import ListModel
 from .views.treeview import TreeView
-from ..math.broaden import broaden
+from ..utils.broaden import broaden
 
 
 class OrderedDict(collections.OrderedDict):
