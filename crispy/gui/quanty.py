@@ -441,7 +441,7 @@ class QuantyDockWidget(QDockWidget):
         self.hamiltonianParametersView.setModel(self.hamiltonianModel)
         self.hamiltonianParametersView.expandAll()
         self.hamiltonianParametersView.resizeAllColumnsToContents()
-        self.hamiltonianParametersView.setColumnWidth(0, 160)
+        self.hamiltonianParametersView.setColumnWidth(0, 140)
         self.hamiltonianParametersView.setRootIndex(
             self.hamiltonianTermsView.currentIndex())
 
