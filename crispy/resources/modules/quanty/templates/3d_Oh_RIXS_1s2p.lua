@@ -20,7 +20,7 @@ H_f = 0
 --------------------------------------------------------------------------------
 H_atomic              = $H_atomic
 H_cf                  = $H_cf
-H_2p_Ld_hybridization = $H_2p_Ld_hybridization
+H_3d_Ld_hybridization = $H_3d_Ld_hybridization
 
 --------------------------------------------------------------------------------
 -- Define the number of electrons, shells, etc.

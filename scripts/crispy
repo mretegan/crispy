@@ -10,7 +10,7 @@ def main():
     try:
         from crispy.__main__ import main
     except ImportError:
-        # The package is run without being installed; its path must be first 
+        # The package is run without being installed; its path must be first
         # added to sys.path.
         path = os.path.join(os.path.dirname(__file__), os.path.pardir)
         sys.path.insert(0, os.path.abspath(path))
