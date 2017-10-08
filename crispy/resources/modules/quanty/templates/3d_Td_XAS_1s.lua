@@ -233,9 +233,9 @@ if H_3d_4p_hybridization == 1 then
 
     ldots_4p = NewOperator('ldots', NFermions, IndexUp_4p, IndexDn_4p)
 
-    zeta_4p_i = $zeta(3d,4p)_i_value * $zeta(3d,4p)_i_scaling
+    zeta_4p_i = $zeta(4p)_i_value * $zeta(4p)_i_scaling
 
-    zeta_4p_f = $zeta(3d,4p)_f_value * $zeta(3d,4p)_f_scaling
+    zeta_4p_f = $zeta(4p)_f_value * $zeta(4p)_f_scaling
 
     H_i = H_i
         + zeta_4p_i * ldots_4p
