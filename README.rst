@@ -5,8 +5,8 @@ Crispy is a graphical user interface written in `Python <https://www.python.org/
 Installation
 ============
 
-Windows
--------
+Windows and macOS
+-----------------
 The easiest way to install crispy is to use the installer provided on the `releases <https://github.com/mretegan/crispy/releases>`_ page. Because the installer is only created when a release is published, it might lack newly implemented features. If you want to use the latest development version, follow the instructions below.
 
 From Source
