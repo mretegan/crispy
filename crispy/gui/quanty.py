@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '04/10/2017'
+__date__ = '10/10/2017'
 
 
 import collections
@@ -46,17 +46,15 @@ import sys
 import uuid
 
 from PyQt5.QtCore import QItemSelectionModel, QProcess, Qt, QPoint
-from PyQt5.QtGui import (
-    QIcon, QCursor, QIntValidator, QValidator, QDoubleValidator)
+from PyQt5.QtGui import QIcon, QCursor, QIntValidator, QDoubleValidator
 from PyQt5.QtWidgets import (
-    QAbstractItemView, QDockWidget, QFileDialog, QAction, QMenu, QListView,
-    QWidget, QLineEdit)
+    QAbstractItemView, QDockWidget, QFileDialog, QAction, QMenu,
+    QWidget)
 from PyQt5.uic import loadUi
 from silx.resources import resource_filename as resourceFileName
 
 from .models.treemodel import TreeModel
 from .models.listmodel import ListModel
-from .views.treeview import TreeView
 from ..utils.broaden import broaden
 
 
@@ -185,7 +183,7 @@ class QuantyCalculation(object):
                     self.hamiltonianData[term][label][parameter] = (
                         parameters[parameter], scaling)
 
-                if 'Atomic' in term:
+                if 'Atomic' in term or 'Crystal Field' in term:
                     self.hamiltonianState[term] = 2
                 else:
                     self.hamiltonianState[term] = 0
@@ -399,7 +397,10 @@ class QuantyDockWidget(QDockWidget):
         self.magneticFieldZLineEdit.setText(str(c.magneticFieldZ))
 
         self.nPsisLineEdit.setText(str(c.nPsis))
-        self.nPsisCheckBox.setEnabled(True)
+        if c.nPsisAuto == 1:
+            self.nPsisCheckBox.setChecked(True)
+        else:
+            self.nPsisCheckBox.setChecked(False)
 
         # self.fkLineEdit.setText('0.8')
         # self.gkLineEdit.setText('0.8')
@@ -487,19 +488,19 @@ class QuantyDockWidget(QDockWidget):
 
         self.saveInputAsPushButton.setEnabled(flag)
 
-        if self.calculation.spectra:
-            # self.elementComboBox.setEnabled(True)
-            # self.chargeComboBox.setEnabled(True)
-            # self.symmetryComboBox.setEnabled(True)
-            # self.experimentComboBox.setEnabled(True)
-            # self.edgeComboBox.setEnabled(True)
+        # if self.calculation.spectra:
+        #     self.elementComboBox.setEnabled(True)
+        #     self.chargeComboBox.setEnabled(True)
+        #     self.symmetryComboBox.setEnabled(True)
+        #     self.experimentComboBox.setEnabled(True)
+        #     self.edgeComboBox.setEnabled(True)
 
-            self.e1GaussianLineEdit.setEnabled(True)
-            self.e2GaussianLineEdit.setEnabled(True)
+        #     self.e1GaussianLineEdit.setEnabled(True)
+        #     self.e2GaussianLineEdit.setEnabled(True)
 
-            self.resultsView.setEnabled(True)
+        #     self.resultsView.setEnabled(True)
 
-            self.saveInputAsPushButton.setEnabled(True)
+        #     self.saveInputAsPushButton.setEnabled(True)
 
         # if flag:
         #     self.hamiltonianParametersView.setEditTriggers(
@@ -654,6 +655,7 @@ class QuantyDockWidget(QDockWidget):
         self.updateMainWindowTitle()
 
     def runCalculation(self):
+        # import sys
         if 'win32' in sys.platform:
             self.command = 'Quanty.exe'
         else:
@@ -724,6 +726,9 @@ class QuantyDockWidget(QDockWidget):
         # Reset the calculation button.
         self.resetCalculationPushButton()
 
+        # Re-enable the UI if the calculation has finished.
+        self.setUiEnabled(True)
+
         # Evaluate the exit code and status of the process.
         exitStatus = self.process.exitStatus()
         exitCode = self.process.exitCode()
@@ -748,8 +753,6 @@ class QuantyDockWidget(QDockWidget):
                 'Quanty has finished unsuccessfully. '
                 'Check the logging window for more details.'), timeout)
             self.parent().splitter.setSizes((400, 200))
-            # Must re-enable the UI if the calculation has crashed.
-            self.setUiEnabled(True)
             return
         # exitCode is platform dependend; exitStatus is always 1.
         elif exitStatus == 1:
@@ -885,9 +888,9 @@ class QuantyDockWidget(QDockWidget):
         calculations = self.selectedCalculations()
         self.parent().plotWidget.reset()
 
-        if not calculations:
-            self.setUiEnabled(True)
-            return
+        # if not calculations:
+        #     self.setUiEnabled(True)
+        #     return
 
         for calculation in calculations:
             self.calculation = copy.deepcopy(calculation)
@@ -895,7 +898,7 @@ class QuantyDockWidget(QDockWidget):
 
         # Set the UI using data from the last selected calculation.
         self.updateUi()
-        self.setUiEnabled(False)
+        # self.setUiEnabled(False)
 
     def updateResultsViewSelection(self):
         self.resultsView.selectionModel().clearSelection()
