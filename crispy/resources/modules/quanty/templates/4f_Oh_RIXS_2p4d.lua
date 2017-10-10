@@ -388,7 +388,7 @@ for i, Psi in ipairs(Psis) do
 
     for j, OperatorIn in ipairs({Txy_2p_4f, Txz_2p_4f, Tyz_2p_4f, Tx2y2_2p_4f, Tz2_2p_4f}) do
         for k, OperatorOut in ipairs({Tx_4d_2p, Ty_4d_2p, Tz_4d_2p}) do
-            Giso = Giso + CreateResonantSpectra(H_n, H_f, OperatorIn, OperatorOut, Psi, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}})
+            Giso = Giso + CreateResonantSpectra(H_i, H_f, OperatorIn, OperatorOut, Psi, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}})
         end
     end
 end
