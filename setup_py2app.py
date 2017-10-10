@@ -28,9 +28,11 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '04/10/2017'
+__date__ = '10/10/2017'
 
 import os
+import sys
+import shutil
 
 from setuptools import setup
 
@@ -59,8 +61,8 @@ parent = os.path.dirname(os.getcwd())
 options = {
     'py2app': {
         'iconfile': 'icons/crispy.icns',
-        'bdist_base': os.path.join(parent, 'build'),
-        'dist_dir': os.path.join(parent, 'dist'),
+        'bdist_base': os.path.join(parent, 'build', 'macOS'),
+        'dist_dir': os.path.join(parent, 'dist', 'macOS'),
         'packages': packages,
         'plist': plist,
         'argv_emulation': False,
@@ -71,6 +73,14 @@ options = {
 
 
 def main():
+    path = os.path.join(parent, 'build', 'macOS', 'python3.5-standalone')
+    shutil.rmtree(path, ignore_errors=True)
+
+    path = os.path.join(parent, 'dist', 'macOS', 'Crispy.app')
+    shutil.rmtree(path, ignore_errors=True)
+
+    sys.setrecursionlimit(2000)
+
     setup(name='Crispy',
           version=get_version(),
           app=['scripts/crispy'],
@@ -105,12 +115,12 @@ def main():
         'QtXmlPatterns',
         ]
 
-    path = os.path.join(parent, 'dist', 'crispy.app', 'contents', 'resources',
+    path = os.path.join(parent, 'dist', 'macOS', 'Crispy.app', 'contents', 'resources',
                         'lib', 'python3.5', 'pyqt5')
     for module in modules:
         os.remove(os.path.join(path, module + '.so'))
 
-    path = os.path.join(parent, 'dist', 'crispy.app', 'contents', 'resources',
+    path = os.path.join(parent, 'dist', 'macOS', 'Crispy.app', 'contents', 'resources',
                         'lib', 'python3.5', 'pyqt5', 'Qt', 'lib')
     for module in modules:
         for root, _, files in os.walk(os.path.join(
@@ -119,8 +129,7 @@ def main():
                 os.remove(os.path.join(root, file))
 
     os.chdir('..')
-    # os.system('Crispy_{}.dmg'.format(get_version()))
-    # os.system('hdiutil create Crispy_{}.dmg -volname Crispy -fs HFS+'.format(get_version()))
+    os.system('hdiutil create Crispy_{}.dmg -volname Crispy -fs HFS+ -srcfolder {}'.format(get_version(), os.path.join('dist', 'macOS')))
 
 
 if __name__ == '__main__':

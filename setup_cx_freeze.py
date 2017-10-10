@@ -28,7 +28,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '10/04/2017'
+__date__ = '10/10/2017'
 
 import crispy
 import os
@@ -49,6 +49,8 @@ modules = [crispy, silx]
 modules_path = [os.path.dirname(module.__file__) for module in modules]
 include_files = [(module, os.path.basename(module)) for module in modules_path]
 
+parent = os.path.dirname(os.getcwd())
+
 options = {
     'build_exe': {
         'packages': packages,
@@ -56,6 +58,7 @@ options = {
         'excludes': excludes,
         'include_files': include_files,
         'include_msvcr': True,
+        'build_exe': os.path.join(parent, 'build', 'Windows')
         },
     }
 
