@@ -129,7 +129,7 @@ def main():
                 os.remove(os.path.join(root, file))
 
     os.chdir('..')
-    os.system('hdiutil create Crispy_{}.dmg -volname Crispy -fs HFS+ -srcfolder {}'.format(get_version(), os.path.join('dist', 'macOS')))
+    os.system('hdiutil create Crispy-{}.dmg -volname Crispy -fs HFS+ -srcfolder {}'.format(get_version(), os.path.join('dist', 'macOS')))
 
 
 if __name__ == '__main__':
