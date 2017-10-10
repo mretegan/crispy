@@ -54,3 +54,8 @@ You can also start crispy without installing it by going to the source directory
 License
 =======
 The source code of crispy is licensed under the MIT license.
+
+Citation
+========
+.. image:: https://zenodo.org/badge/53660512.svg
+   :target: https://zenodo.org/badge/latestdoi/53660512
