@@ -24,16 +24,20 @@
 #
 # ###########################################################################*/
 
+# The application should be built from a virtual environment containing
+# only the required packages.
+
 from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '10/10/2017'
+__date__ = '23/10/2017'
 
 import crispy
 import os
 import silx
 import sys
+import shutil
 from cx_Freeze import setup, Executable
 
 
@@ -41,45 +45,52 @@ def get_version():
     import version
     return version.strictversion
 
-packages = ['matplotlib', 'PyQt5.QtPrintSupport']
-includes = []
-excludes = ['tkinter']
-
-modules = [crispy, silx]
-modules_path = [os.path.dirname(module.__file__) for module in modules]
-include_files = [(module, os.path.basename(module)) for module in modules_path]
-
-parent = os.path.dirname(os.getcwd())
-
-options = {
-    'build_exe': {
-        'packages': packages,
-        'includes': includes,
-        'excludes': excludes,
-        'include_files': include_files,
-        'include_msvcr': True,
-        'build_exe': os.path.join(parent, 'build', 'Windows')
-        },
-    }
-
-base = None
-if sys.platform == 'win32':
-    base = 'Win32GUI'
-
-executables = [
-    Executable(
-        'scripts/crispy',
-        base=base,
-        icon='icons/crispy.ico',
-        ),
-    ]
-
 
 def main():
-    setup(name='crispy',
-          version=get_version(),
-          options=options,
-          executables=executables)
+    root = os.path.dirname(os.getcwd())
+    build_dir = os.path.join(root, 'build', 'Windows')
+    # TODO: does this work in Windows?
+    shutil.rmtree(build_dir, ignore_errors=True)
+
+    packages = ['matplotlib', 'PyQt5.QtPrintSupport']
+    includes = []
+    excludes = ['tkinter']
+
+    modules = [crispy, silx]
+    modules_path = [os.path.dirname(module.__file__) for module in modules]
+    include_files = [
+        (module, os.path.basename(module)) for module in modules_path]
+
+    options = {
+        'build_exe': {
+            'packages': packages,
+            'includes': includes,
+            'excludes': excludes,
+            'include_files': include_files,
+            'include_msvcr': True,
+            'build_exe': build_dir,
+            },
+        }
+
+    base = None
+    if sys.platform == 'win32':
+        base = 'Win32GUI'
+
+    executables = [
+        Executable(
+            'scripts/crispy',
+            base=base,
+            icon='icons/crispy.ico',
+            ),
+        ]
+
+    setup(
+        name='crispy',
+        version=get_version(),
+        options=options,
+        executables=executables,
+        )
+
 
 if __name__ == '__main__':
     main()

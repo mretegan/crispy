@@ -28,7 +28,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '04/10/2017'
+__date__ = '25/10/2017'
 
 import os
 import sys
@@ -90,6 +90,7 @@ def main():
             'crispy.gui.views',
             'crispy.gui.widgets',
             'crispy.resources',
+            'crispy.utils',
             ],
         package_data={
             'crispy.resources': [
@@ -111,6 +112,7 @@ def main():
             'Programming Language :: Python :: 2.7',
             'Programming Language :: Python :: 3.4',
             'Programming Language :: Python :: 3.5',
+            'Programming Language :: Python :: 3.6',
             'Topic :: Scientific/Engineering :: Visualization',
             ]
         )

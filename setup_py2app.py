@@ -24,11 +24,15 @@
 #
 # ###########################################################################*/
 
+# The application should be built from a virtual environment containing
+# only the required packages.
+# TODO: Find a way to read the system's PATH.
+
 from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '10/10/2017'
+__date__ = '23/10/2017'
 
 import os
 import sys
@@ -42,50 +46,12 @@ def get_version():
     return version.strictversion
 
 
-packages = ['matplotlib', 'silx', 'crispy']
-
-plist = {
-    'CFBundleIdentifier': 'com.github.mretegan.crispy',
-    'CFBundleShortVersionString': get_version(),
-    'CFBundleVersion': 'Crispy' + get_version(),
-    'CFBundleGetInfoString': 'Crispy',
-    'LSTypeIsPackage': True,
-    'LSArchitecturePriority': 'x86_64',
-    'LSMinimumSystemVersion': '10.9.0',
-    'NSHumanReadableCopyright': 'MIT',
-    'NSHighResolutionCapable': True,
-    }
-
-parent = os.path.dirname(os.getcwd())
-
-options = {
-    'py2app': {
-        'iconfile': 'icons/crispy.icns',
-        'bdist_base': os.path.join(parent, 'build', 'macOS'),
-        'dist_dir': os.path.join(parent, 'dist', 'macOS'),
-        'packages': packages,
-        'plist': plist,
-        'argv_emulation': False,
-        'optimize':  2,
-        'compressed': True,
-        },
-    }
+def clean_folders(folders):
+    for folder in folders:
+        shutil.rmtree(folder, ignore_errors=True)
 
 
-def main():
-    path = os.path.join(parent, 'build', 'macOS', 'python3.5-standalone')
-    shutil.rmtree(path, ignore_errors=True)
-
-    path = os.path.join(parent, 'dist', 'macOS', 'Crispy.app')
-    shutil.rmtree(path, ignore_errors=True)
-
-    sys.setrecursionlimit(2000)
-
-    setup(name='Crispy',
-          version=get_version(),
-          app=['scripts/crispy'],
-          options=options,
-          )
+def prune_app(root):
 
     modules = [
         'QtBluetooth',
@@ -115,21 +81,79 @@ def main():
         'QtXmlPatterns',
         ]
 
-    path = os.path.join(parent, 'dist', 'macOS', 'Crispy.app', 'contents', 'resources',
-                        'lib', 'python3.5', 'pyqt5')
-    for module in modules:
-        os.remove(os.path.join(path, module + '.so'))
+    # TODO: detect the Python version
+    pyqt_dir = os.path.join(
+        root, 'dist', 'macOS', 'Crispy.app', 'Contents', 'Resources', 'lib',
+        'python3.6', 'PyQt5')
 
-    path = os.path.join(parent, 'dist', 'macOS', 'Crispy.app', 'contents', 'resources',
-                        'lib', 'python3.5', 'pyqt5', 'Qt', 'lib')
     for module in modules:
-        for root, _, files in os.walk(os.path.join(
-                path, module + '.framework')):
-            for file in files:
-                os.remove(os.path.join(root, file))
+        os.remove(os.path.join(pyqt_dir, module + '.so'))
 
-    os.chdir('..')
-    os.system('hdiutil create Crispy-{}.dmg -volname Crispy -fs HFS+ -srcfolder {}'.format(get_version(), os.path.join('dist', 'macOS')))
+        shutil.rmtree(
+            os.path.join(pyqt_dir, 'Qt', 'lib', module + '.framework'))
+
+
+def make_dmg(root, dist_dir):
+    dmg_name = 'Crispy-{}.dmg'.format(get_version())
+    dmg_path = os.path.join(root, 'downloads', dmg_name)
+
+    command = (
+        'hdiutil create {} -volname Crispy -fs HFS+ -srcfolder {}'.format(
+         dmg_path, dist_dir))
+    os.system(command)
+
+
+def main():
+    # Workaround the recursion error happening during the build process.
+    sys.setrecursionlimit(2000)
+
+    # Define the root folder and corresponding subfolders.
+    root = os.path.dirname(os.getcwd())
+    dist_dir = os.path.join(root, 'dist', 'macOS')
+    build_dir = os.path.join(root, 'build', 'macOS')
+
+    # Remove previously built application.
+    clean_folders([build_dir, os.path.join(dist_dir, 'Crispy.app')])
+
+    packages = ['matplotlib', 'silx', 'crispy']
+
+    plist = {
+        'CFBundleIdentifier': 'com.github.mretegan.crispy',
+        'CFBundleShortVersionString': get_version(),
+        'CFBundleVersion': 'Crispy' + get_version(),
+        'CFBundleGetInfoString': 'Crispy',
+        'LSTypeIsPackage': True,
+        'LSArchitecturePriority': 'x86_64',
+        'LSMinimumSystemVersion': '10.9.0',
+        'NSHumanReadableCopyright': 'MIT',
+        'NSHighResolutionCapable': True,
+        }
+
+    options = {
+        'py2app': {
+            'iconfile': 'icons/crispy.icns',
+            'bdist_base': build_dir,
+            'dist_dir': dist_dir,
+            'packages': packages,
+            'plist': plist,
+            'argv_emulation': False,
+            'optimize':  2,
+            'compressed': True,
+            },
+        }
+
+    setup(
+        name='Crispy',
+        version=get_version(),
+        app=['scripts/crispy'],
+        options=options,
+        )
+
+    # Remove unused modules.
+    prune_app(root)
+
+    # Package the application.
+    make_dmg(root, dist_dir)
 
 
 if __name__ == '__main__':
