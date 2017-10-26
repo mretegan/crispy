@@ -169,6 +169,11 @@ class QuantyCalculation(object):
             for term in terms:
                 if 'Atomic' in term:
                     parameters = terms[term]
+                elif '3d-4p Hybridization' in term:
+                    try:
+                        parameters = terms[term][self.symmetry][configuration]
+                    except KeyError:
+                        continue
                 else:
                     try:
                         parameters = terms[term][self.symmetry]
@@ -277,7 +282,7 @@ class QuantyCalculation(object):
                 elif 'Final' in configuration:
                     suffix = 'f'
                 for parameter, (value, scaling) in parameters.items():
-                    # Convert to parameters name from Greek letter.
+                    # Convert to parameters name from Greek letters.
                     parameter = parameter.replace('ζ', 'zeta')
                     parameter = parameter.replace('Δ', 'Delta')
                     parameter = parameter.replace('σ', 'sigma')

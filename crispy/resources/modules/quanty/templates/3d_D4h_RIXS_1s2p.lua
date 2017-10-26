@@ -257,7 +257,7 @@ if NPsisAuto == 1 and NPsis ~= 1 then
         if CalculationRestrictions == nil then
             Psis = Eigensystem(H_i, InitialRestrictions, NPsis)
         else
-            Psis = Eigensystem(H_i, InitialRestrictions, NPsis, {'restrictions', CalculationRestrictions})
+            Psis = Eigensystem(H_i, InitialRestrictions, NPsis, {{'restrictions', CalculationRestrictions}})
         end
 
         if not (type(Psis) == 'table') then
@@ -298,7 +298,7 @@ else
         if CalculationRestrictions == nil then
             Psis = Eigensystem(H_i, InitialRestrictions, NPsis)
         else
-            Psis = Eigensystem(H_i, InitialRestrictions, NPsis, {'restrictions', CalculationRestrictions})
+            Psis = Eigensystem(H_i, InitialRestrictions, NPsis, {{'restrictions', CalculationRestrictions}})
         end
 
     if not (type(Psis) == 'table') then

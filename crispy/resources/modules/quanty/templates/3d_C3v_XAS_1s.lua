@@ -134,6 +134,7 @@ if H_3d_4p_hybridization == 1 then
     F2_3d_4p = NewOperator('U', NFermions, IndexUp_4p, IndexDn_4p, IndexUp_3d, IndexDn_3d, {0, 1}, {0, 0})
     G1_3d_4p = NewOperator('U', NFermions, IndexUp_4p, IndexDn_4p, IndexUp_3d, IndexDn_3d, {0, 0}, {1, 0})
     G3_3d_4p = NewOperator('U', NFermions, IndexUp_4p, IndexDn_4p, IndexUp_3d, IndexDn_3d, {0, 0}, {0, 1})
+    G1_1s_4p = NewOperator('U', NFermions, IndexUp_1s, IndexDn_1s, IndexUp_4p, IndexDn_4p, {0}, {1})
 
     F2_3d_4p_i = $F2(3d,4p)_i_value * $F2(3d,4p)_i_scaling
     G1_3d_4p_i = $G1(3d,4p)_i_value * $G1(3d,4p)_i_scaling
@@ -142,6 +143,7 @@ if H_3d_4p_hybridization == 1 then
     F2_3d_4p_f = $F2(3d,4p)_i_value * $F2(3d,4p)_i_scaling
     G1_3d_4p_f = $G1(3d,4p)_i_value * $G1(3d,4p)_i_scaling
     G3_3d_4p_f = $G3(3d,4p)_i_value * $G3(3d,4p)_i_scaling
+    G1_1s_4p_f = $G1(1s,4p)_f_value * $G1(1s,4p)_f_scaling
 
     N_4p = NewOperator('Number', NFermions, IndexUp_4p, IndexUp_4p, {1, 1, 1})
          + NewOperator('Number', NFermions, IndexDn_4p, IndexDn_4p, {1, 1, 1})
@@ -165,6 +167,7 @@ if H_3d_4p_hybridization == 1 then
         + F2_3d_4p_f * F2_3d_4p
         + G1_3d_4p_f * G1_3d_4p
         + G3_3d_4p_f * G3_3d_4p
+        + G1_1s_4p_f * G1_1s_4p
         + e_3d_f * N_3d
         + e_4p_f * N_4p
 
@@ -314,7 +317,7 @@ if NPsisAuto == 1 and NPsis ~= 1 then
         if CalculationRestrictions == nil then
             Psis = Eigensystem(H_i, InitialRestrictions, NPsis)
         else
-            Psis = Eigensystem(H_i, InitialRestrictions, NPsis, {'restrictions', CalculationRestrictions})
+            Psis = Eigensystem(H_i, InitialRestrictions, NPsis, {{'restrictions', CalculationRestrictions}})
         end
 
         if not (type(Psis) == 'table') then
@@ -355,7 +358,7 @@ else
         if CalculationRestrictions == nil then
             Psis = Eigensystem(H_i, InitialRestrictions, NPsis)
         else
-            Psis = Eigensystem(H_i, InitialRestrictions, NPsis, {'restrictions', CalculationRestrictions})
+            Psis = Eigensystem(H_i, InitialRestrictions, NPsis, {{'restrictions', CalculationRestrictions}})
         end
 
     if not (type(Psis) == 'table') then
@@ -418,10 +421,11 @@ for i, Psi in ipairs(Psis) do
 
     Z = Z + dZ
 
-    Giso_quad = Giso_quad + CreateSpectra(H_f, Tiso_quad_1s_3d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
-
     if H_3d_4p_hybridization == 1 then
-        Giso_dip = Giso_dip + CreateSpectra(H_f, Tiso_dip_1s_4p, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+        Giso_quad = Giso_quad + CreateSpectra(H_f, Tiso_quad_1s_3d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}}) * dZ
+        Giso_dip = Giso_dip + CreateSpectra(H_f, Tiso_dip_1s_4p, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}}) * dZ
+    else
+        Giso_quad = Giso_quad + CreateSpectra(H_f, Tiso_quad_1s_3d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
     end
 end
 
@@ -434,12 +438,15 @@ P1_1s_4p = $P1(1s,4p)
 P2_1s_3d = $P2(1s,3d)
 
 EdgeEnergy = $edgeEnergy
+EdgeJump = 1e-5 -- $edgeJump
 
-Giso_quad = 4 * math.pi^2 * alpha * a0^4 / (2 * hbar * c)^2 * P2_1s_3d^2 * EdgeEnergy^3 / math.pi / 15 / Z * Giso_quad
-Giso_dip  = 4 * math.pi^2 * alpha * a0^2                    * P1_1s_4p^2 * EdgeEnergy   / math.pi /  3 / Z * Giso_dip
+if H_3d_4p_hybridization == 1 then
+    Giso_quad = 4 * math.pi^2 * alpha * a0^4 / (2 * hbar * c)^2 * P2_1s_3d^2 * EdgeEnergy^3 / EdgeJump / math.pi / 15 / Z * Giso_quad
+    Giso_dip  = 4 * math.pi^2 * alpha * a0^2                    * P1_1s_4p^2 * EdgeEnergy   / EdgeJump / math.pi /  3 / Z * Giso_dip
+else
+    Giso_quad = Giso_quad / Z
+end
 
 Giso = Giso_quad + Giso_dip
--- Scale the final spectrum to avoid numerical issues.
-Giso = Giso * 1e5
 Giso.Print({{'file', '$baseName' .. '_iso.spec'}})
 
