@@ -79,6 +79,9 @@ class QuantyCalculation(object):
         'magneticFieldY': 0.,
         'magneticFieldZ': 0.,
         'nPsisAuto': 1,
+        'fk': 0.8,
+        'gk': 0.8,
+        'zeta': 1.0,
         'baseName': 'untitled',
         '_uuid': None,
         'spectra': None,
@@ -217,8 +220,6 @@ class QuantyCalculation(object):
             else:
                 self._spectra[key] = -spectrum[:, 2::2][:, 0]
 
-            # os.remove(f)
-
     def saveInput(self):
         templatePath = resourceFileName(
             'crispy:' + os.path.join('modules', 'quanty', 'templates',
@@ -355,6 +356,11 @@ class QuantyDockWidget(QDockWidget):
         self.e2LorentzianLineEdit.setValidator(QDoubleValidator(self))
         self.e2GaussianLineEdit.setValidator(QDoubleValidator(self))
 
+        self.nPsisLineEdit.setValidator(QIntValidator(self))
+        self.fkLineEdit.setValidator(QDoubleValidator(self))
+        self.gkLineEdit.setValidator(QDoubleValidator(self))
+        self.zetaLineEdit.setValidator(QDoubleValidator(self))
+
         # Create the results model and assign it to the view.
         self.resultsModel = ListModel()
 
@@ -408,9 +414,9 @@ class QuantyDockWidget(QDockWidget):
         else:
             self.nPsisCheckBox.setChecked(False)
 
-        # self.fkLineEdit.setText('0.8')
-        # self.gkLineEdit.setText('0.8')
-        # self.zetaLineEdit.setText('1.0')
+        self.fkLineEdit.setText(str(c.fk))
+        self.gkLineEdit.setText(str(c.gk))
+        self.zetaLineEdit.setText(str(c.zeta))
 
         self.energiesTabWidget.setTabText(0, str(c._e1Label))
         self.e1MinLineEdit.setText(str(c.e1Min))
@@ -494,35 +500,6 @@ class QuantyDockWidget(QDockWidget):
 
         self.saveInputAsPushButton.setEnabled(flag)
 
-        # if self.calculation.spectra:
-        #     self.elementComboBox.setEnabled(True)
-        #     self.chargeComboBox.setEnabled(True)
-        #     self.symmetryComboBox.setEnabled(True)
-        #     self.experimentComboBox.setEnabled(True)
-        #     self.edgeComboBox.setEnabled(True)
-
-        #     self.e1GaussianLineEdit.setEnabled(True)
-        #     self.e2GaussianLineEdit.setEnabled(True)
-
-        #     self.resultsView.setEnabled(True)
-
-        #     self.saveInputAsPushButton.setEnabled(True)
-
-        # if flag:
-        #     self.hamiltonianParametersView.setEditTriggers(
-        #         QAbstractItemView.DoubleClicked)
-        #     self.resultsView.setSelectionMode(
-        #         QAbstractItemView.ExtendedSelection)
-        # else:
-        #     self.hamiltonianParametersView.setEditTriggers(
-        #         QAbstractItemView.NoEditTriggers)
-        #     self.resultsView.setSelectionMode(
-        #         QAbstractItemView.NoSelection)
-
-        # if self.calculation.spectra:
-        #     self.resultsView.setSelectionMode(
-        #         QAbstractItemView.ExtendedSelection)
-
     def updateBroadening(self):
         c = self.calculation
 
@@ -546,11 +523,12 @@ class QuantyDockWidget(QDockWidget):
             self.nPsisLineEdit.setEnabled(True)
 
     def updateScalingFactors(self):
-        fk = float(self.fkLineEdit.text())
-        gk = float(self.gkLineEdit.text())
-        zeta = float(self.zetaLineEdit.text())
-
         c = self.calculation
+
+        c.fk = float(self.fkLineEdit.text())
+        c.gk = float(self.gkLineEdit.text())
+        c.zeta = float(self.zetaLineEdit.text())
+
         terms = c.hamiltonianData
 
         for term in terms:
@@ -560,11 +538,11 @@ class QuantyDockWidget(QDockWidget):
                 for parameter in parameters:
                     value, factor = parameters[parameter]
                     if parameter.startswith('F'):
-                        terms[term][configuration][parameter] = (value, fk)
+                        terms[term][configuration][parameter] = (value, c.fk)
                     elif parameter.startswith('G'):
-                        terms[term][configuration][parameter] = (value, gk)
+                        terms[term][configuration][parameter] = (value, c.gk)
                     elif parameter.startswith('ζ'):
-                        terms[term][configuration][parameter] = (value, zeta)
+                        terms[term][configuration][parameter] = (value, c.zeta)
                     else:
                         continue
         self.updateUi()
@@ -661,7 +639,6 @@ class QuantyDockWidget(QDockWidget):
         self.updateMainWindowTitle()
 
     def runCalculation(self):
-        # import sys
         if 'win32' in sys.platform:
             self.command = 'Quanty.exe'
         else:
@@ -776,7 +753,7 @@ class QuantyDockWidget(QDockWidget):
         self.updateResultsViewSelection()
 
         # Open the results page.
-        # self.quantyToolBox.setCurrentWidget(self.resultsPage)
+        self.quantyToolBox.setCurrentWidget(self.resultsPage)
 
     def plot(self):
         c = self.calculation
@@ -831,6 +808,7 @@ class QuantyDockWidget(QDockWidget):
                 timeout = 4000
                 statusBar.showMessage(message, timeout)
 
+        # TODO: Work on saving the calculation data to different formats.
         # self.saveSelectedCalculationsAsAction.setEnabled(False)
 
     def selectedHamiltonianTermChanged(self):
@@ -894,18 +872,11 @@ class QuantyDockWidget(QDockWidget):
     def selectedCalculationsChanged(self):
         calculations = self.selectedCalculations()
         self.parent().plotWidget.reset()
-
-        # if not calculations:
-        #     self.setUiEnabled(True)
-        #     return
-
         for calculation in calculations:
             self.calculation = copy.deepcopy(calculation)
             self.plot()
-
         # Set the UI using data from the last selected calculation.
         self.updateUi()
-        # self.setUiEnabled(False)
 
     def updateResultsViewSelection(self):
         self.resultsView.selectionModel().clearSelection()
