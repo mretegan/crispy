@@ -187,6 +187,9 @@ H_f = H_f
 InitialRestrictions = {NFermions, NBosons, {'111111 0000000000', NElectrons_2p, NElectrons_2p},
                                            {'000000 1111111111', NElectrons_3d, NElectrons_3d}}
 
+FinalRestrictions = {NFermions, NBosons, {'111111 0000000000', NElectrons_2p - 1, NElectrons_2p - 1},
+                                         {'000000 1111111111', NElectrons_3d + 1, NElectrons_3d + 1}}
+
 Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_2p, N_3d}
 header = '\nAnalysis of the initial Hamiltonian:\n'
 header = header .. '==============================================================================================\n'
@@ -212,24 +215,24 @@ if NPsisAuto == 1 and NPsis ~= 1 then
 
     while not NPsisIsConverged do
         if CalculationRestrictions == nil then
-            Psis = Eigensystem(H_i, InitialRestrictions, NPsis)
+            Psis_i = Eigensystem(H_i, InitialRestrictions, NPsis)
         else
-            Psis = Eigensystem(H_i, InitialRestrictions, NPsis, {{'restrictions', CalculationRestrictions}})
+            Psis_i = Eigensystem(H_i, InitialRestrictions, NPsis, {{'restrictions', CalculationRestrictions}})
         end
 
-        if not (type(Psis) == 'table') then
-            Psis = {Psis}
+        if not (type(Psis_i) == 'table') then
+            Psis_i = {Psis_i}
         end
 
-        E_gs = Psis[1] * H_i * Psis[1]
+        E_gs_i = Psis_i[1] * H_i * Psis_i[1]
 
-        for i, Psi in ipairs(Psis) do
+        for i, Psi in ipairs(Psis_i) do
             E = Psi * H_i * Psi
 
-            if math.abs(E - E_gs) < epsilon then
+            if math.abs(E - E_gs_i) < epsilon then
                 dZ[i] = 1
             else
-                dZ[i] = math.exp(-(E - E_gs) / T)
+                dZ[i] = math.exp(-(E - E_gs_i) / T)
             end
 
             Z = Z + dZ[i]
@@ -238,7 +241,7 @@ if NPsisAuto == 1 and NPsis ~= 1 then
                 i = i - 1
                 NPsisIsConverged = true
                 NPsis = i
-                Psis = {unpack(Psis, 1, i)}
+                Psis_i = {unpack(Psis_i, 1, i)}
                 dZ = {unpack(dZ, 1, i)}
                 break
             end
@@ -253,18 +256,18 @@ if NPsisAuto == 1 and NPsis ~= 1 then
     Z = 0
 else
         if CalculationRestrictions == nil then
-            Psis = Eigensystem(H_i, InitialRestrictions, NPsis)
+            Psis_i = Eigensystem(H_i, InitialRestrictions, NPsis)
         else
-            Psis = Eigensystem(H_i, InitialRestrictions, NPsis, {{'restrictions', CalculationRestrictions}})
+            Psis_i = Eigensystem(H_i, InitialRestrictions, NPsis, {{'restrictions', CalculationRestrictions}})
         end
 
-    if not (type(Psis) == 'table') then
-        Psis = {Psis}
+    if not (type(Psis_i) == 'table') then
+        Psis_i = {Psis_i}
     end
 end
 
 io.write(header)
-for i, Psi in ipairs(Psis) do
+for i, Psi in ipairs(Psis_i) do
     io.write(string.format('%4d', i))
     for j, Operator in ipairs(Operators) do
         io.write(string.format('%10.4f', Complex.Re(Psi * Operator * Psi)))
@@ -285,22 +288,29 @@ Tiso_2p_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_2p, In
 --------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
-Giso = 0
+E_gs_i = Psis_i[1] * H_i * Psis_i[1]
 
-Emin = $Emin1
-Emax = $Emax1
+Psis_f = Eigensystem(H_f, FinalRestrictions, 1)
+Psis_f = {Psis_f}
+E_gs_f = Psis_f[1] * H_f * Psis_f[1]
+
+Eedge1 = $Eedge1
+DeltaE = Eedge1 + E_gs_i - E_gs_f
+
+Emin = $Emin1 - DeltaE
+Emax = $Emax1 - DeltaE
 Gamma = $Gamma1
 NE = $NE1
 
-E_gs = Psis[1] * H_i * Psis[1]
+Giso = 0
 
-for i, Psi in ipairs(Psis) do
+for i, Psi in ipairs(Psis_i) do
     E = Psi * H_i * Psi
 
-    if math.abs(E - E_gs) < epsilon then
+    if math.abs(E - E_gs_i) < epsilon then
         dZ = 1
     else
-        dZ = math.exp(-(E - E_gs) / T)
+        dZ = math.exp(-(E - E_gs_i) / T)
     end
 
     if (dZ < math.sqrt(epsilon)) then

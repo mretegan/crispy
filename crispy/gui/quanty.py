@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '10/10/2017'
+__date__ = '16/11/2017'
 
 
 import collections
@@ -140,7 +140,7 @@ class QuantyCalculation(object):
         self.e1Min = branch['energies'][0][1]
         self.e1Max = branch['energies'][0][2]
         self.e1NPoints = branch['energies'][0][3]
-        self.e1Energy = branch['energies'][0][4]
+        self.e1Edge = branch['energies'][0][4]
         self.e1Lorentzian = branch['energies'][0][5]
         self.e1Gaussian = branch['energies'][0][6]
 
@@ -151,7 +151,7 @@ class QuantyCalculation(object):
             self.e2Min = branch['energies'][1][1]
             self.e2Max = branch['energies'][1][2]
             self.e2NPoints = branch['energies'][1][3]
-            self.e2Energy = branch['energies'][1][4]
+            self.e2Edge = branch['energies'][1][4]
             self.e2Lorentzian = branch['energies'][1][5]
             self.e2Gaussian = branch['energies'][1][6]
 
@@ -242,6 +242,7 @@ class QuantyCalculation(object):
         replacements['$Emin1'] = self.e1Min
         replacements['$Emax1'] = self.e1Max
         replacements['$NE1'] = self.e1NPoints
+        replacements['$Eedge1'] = self.e1Edge
         replacements['$Gamma1'] = self.e1Lorentzian
 
         if 'RIXS' in self.experiment:
@@ -252,6 +253,7 @@ class QuantyCalculation(object):
             replacements['$Emin2'] = self.e2Min
             replacements['$Emax2'] = self.e2Max
             replacements['$NE2'] = self.e2NPoints
+            replacements['$Eedge2'] = self.e2Edge
             replacements['$Gamma2'] = self.e2Lorentzian
 
         replacements['$NPsisAuto'] = self.nPsisAuto
@@ -302,7 +304,6 @@ class QuantyCalculation(object):
             for parameter in self.monoElectronicRadialME:
                 value = self.monoElectronicRadialME[parameter]
                 replacements['${}'.format(parameter)] = value
-            replacements['$edgeEnergy'] = self.e1Energy
 
         replacements['$baseName'] = self.baseName
 
@@ -678,6 +679,8 @@ class QuantyDockWidget(QDockWidget):
         # Write the input file to disk.
         self.saveInput()
 
+        self.parent().splitter.setSizes((450, 150))
+
         # Disable the UI while the calculation is running.
         self.setUiEnabled(False)
 
@@ -757,7 +760,6 @@ class QuantyDockWidget(QDockWidget):
             statusBar.showMessage((
                 'Quanty has finished unsuccessfully. '
                 'Check the logging window for more details.'), timeout)
-            self.parent().splitter.setSizes((400, 200))
             return
         # exitCode is platform dependend; exitStatus is always 1.
         elif exitStatus == 1:
@@ -770,7 +772,7 @@ class QuantyDockWidget(QDockWidget):
         # Store the calculation in the model.
         self.resultsModel.appendItems([c])
 
-        # This should be in a signal?
+        # Should this be a signal?
         self.updateResultsViewSelection()
 
         # Open the results page.

@@ -274,10 +274,18 @@ H_f = H_f
 InitialRestrictions = {NFermions, NBosons, {'11 0000000000', NElectrons_1s, NElectrons_1s},
                                            {'00 1111111111', NElectrons_3d, NElectrons_3d}}
 
+FinalRestrictions = {NFermions, NBosons, {'11 0000000000', NElectrons_1s - 1, NElectrons_1s - 1},
+                                         {'00 1111111111', NElectrons_3d + 1, NElectrons_3d + 1}}
+
 if H_3d_4p_hybridization == 1 then
     InitialRestrictions = {NFermions, NBosons, {'11 0000000000 000000', NElectrons_1s, NElectrons_1s},
                                                {'00 1111111111 000000', NElectrons_3d, NElectrons_3d},
                                                {'00 0000000000 111111', NElectrons_4p, NElectrons_4p}}
+
+    FinalRestrictions = {NFermions, NBosons, {'11 0000000000 000000', NElectrons_1s - 1, NElectrons_1s - 1},
+                                             {'00 1111111111 000000', NElectrons_3d + 1, NElectrons_3d + 1},
+                                             {'00 0000000000 111111', NElectrons_4p, NElectrons_4p}}
+
     CalculationRestrictions ={NFermions, NBosons, {'00 0000000000 111111', NElectrons_4p, NElectrons_4p + 1}}
 end
 
@@ -315,24 +323,24 @@ if NPsisAuto == 1 and NPsis ~= 1 then
 
     while not NPsisIsConverged do
         if CalculationRestrictions == nil then
-            Psis = Eigensystem(H_i, InitialRestrictions, NPsis)
+            Psis_i = Eigensystem(H_i, InitialRestrictions, NPsis)
         else
-            Psis = Eigensystem(H_i, InitialRestrictions, NPsis, {{'restrictions', CalculationRestrictions}})
+            Psis_i = Eigensystem(H_i, InitialRestrictions, NPsis, {{'restrictions', CalculationRestrictions}})
         end
 
-        if not (type(Psis) == 'table') then
-            Psis = {Psis}
+        if not (type(Psis_i) == 'table') then
+            Psis_i = {Psis_i}
         end
 
-        E_gs = Psis[1] * H_i * Psis[1]
+        E_gs_i = Psis_i[1] * H_i * Psis_i[1]
 
-        for i, Psi in ipairs(Psis) do
+        for i, Psi in ipairs(Psis_i) do
             E = Psi * H_i * Psi
 
-            if math.abs(E - E_gs) < epsilon then
+            if math.abs(E - E_gs_i) < epsilon then
                 dZ[i] = 1
             else
-                dZ[i] = math.exp(-(E - E_gs) / T)
+                dZ[i] = math.exp(-(E - E_gs_i) / T)
             end
 
             Z = Z + dZ[i]
@@ -341,7 +349,7 @@ if NPsisAuto == 1 and NPsis ~= 1 then
                 i = i - 1
                 NPsisIsConverged = true
                 NPsis = i
-                Psis = {unpack(Psis, 1, i)}
+                Psis_i = {unpack(Psis_i, 1, i)}
                 dZ = {unpack(dZ, 1, i)}
                 break
             end
@@ -356,18 +364,18 @@ if NPsisAuto == 1 and NPsis ~= 1 then
     Z = 0
 else
         if CalculationRestrictions == nil then
-            Psis = Eigensystem(H_i, InitialRestrictions, NPsis)
+            Psis_i = Eigensystem(H_i, InitialRestrictions, NPsis)
         else
-            Psis = Eigensystem(H_i, InitialRestrictions, NPsis, {{'restrictions', CalculationRestrictions}})
+            Psis_i = Eigensystem(H_i, InitialRestrictions, NPsis, {{'restrictions', CalculationRestrictions}})
         end
 
-    if not (type(Psis) == 'table') then
-        Psis = {Psis}
+    if not (type(Psis_i) == 'table') then
+        Psis_i = {Psis_i}
     end
 end
 
 io.write(header)
-for i, Psi in ipairs(Psis) do
+for i, Psi in ipairs(Psis_i) do
     io.write(string.format('%4d', i))
     for j, Operator in ipairs(Operators) do
         io.write(string.format('%10.4f', Complex.Re(Psi * Operator * Psi)))
@@ -396,23 +404,30 @@ end
 --------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
-Giso_quad = 0
-Giso_dip = 0
+E_gs_i = Psis_i[1] * H_i * Psis_i[1]
 
-Emin = $Emin1
-Emax = $Emax1
+Psis_f = Eigensystem(H_f, FinalRestrictions, 1)
+Psis_f = {Psis_f}
+E_gs_f = Psis_f[1] * H_f * Psis_f[1]
+
+Eedge1 = $Eedge1
+DeltaE = Eedge1 + E_gs_i - E_gs_f
+
+Emin = $Emin1 - DeltaE
+Emax = $Emax1 - DeltaE
 Gamma = $Gamma1
 NE = $NE1
 
-E_gs = Psis[1] * H_i * Psis[1]
+Giso_quad = 0
+Giso_dip = 0
 
-for i, Psi in ipairs(Psis) do
+for i, Psi in ipairs(Psis_i) do
     E = Psi * H_i * Psi
 
-    if math.abs(E - E_gs) < epsilon then
+    if math.abs(E - E_gs_i) < epsilon then
         dZ = 1
     else
-        dZ = math.exp(-(E - E_gs) / T)
+        dZ = math.exp(-(E - E_gs_i) / T)
     end
 
     if (dZ < math.sqrt(epsilon)) then
@@ -437,12 +452,11 @@ c = 2.99792458E+18
 P1_1s_4p = $P1(1s,4p)
 P2_1s_3d = $P2(1s,3d)
 
-EdgeEnergy = $edgeEnergy
-EdgeJump = 1e-5 -- $edgeJump
+Iedge1 = 1e-5 -- edge jump
 
 if H_3d_4p_hybridization == 1 then
-    Giso_quad = 4 * math.pi^2 * alpha * a0^4 / (2 * hbar * c)^2 * P2_1s_3d^2 * EdgeEnergy^3 / EdgeJump / math.pi / 15 / Z * Giso_quad
-    Giso_dip  = 4 * math.pi^2 * alpha * a0^2                    * P1_1s_4p^2 * EdgeEnergy   / EdgeJump / math.pi /  3 / Z * Giso_dip
+    Giso_quad = 4 * math.pi^2 * alpha * a0^4 / (2 * hbar * c)^2 * P2_1s_3d^2 * Eedge1^3 / Iedge1 / math.pi / 15 / Z * Giso_quad
+    Giso_dip  = 4 * math.pi^2 * alpha * a0^2                    * P1_1s_4p^2 * Eedge1   / Iedge1 / math.pi /  3 / Z * Giso_dip
 else
     Giso_quad = Giso_quad / Z
 end
