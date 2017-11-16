@@ -6,7 +6,7 @@
 -- experiment: XAS
 -- edge: K (1s)
 --------------------------------------------------------------------------------
-Verbosity(0x00FF)
+Verbosity($verbosity)
 
 --------------------------------------------------------------------------------
 -- Initialize the Hamiltonians.
@@ -181,7 +181,7 @@ FinalRestrictions = {NFermions, NBosons, {'11 0000000000', NElectrons_1s - 1, NE
                                          {'00 1111111111', NElectrons_3d + 1, NElectrons_3d + 1}}
 
 Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_1s, N_3d}
-header = '\nAnalysis of the initial Hamiltonian:\n'
+header = 'Analysis of the initial Hamiltonian:\n'
 header = header .. '==============================================================================================\n'
 header = header .. '   i       <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>    <N_1s>    <N_3d>\n'
 header = header .. '==============================================================================================\n'

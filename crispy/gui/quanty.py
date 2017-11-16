@@ -88,6 +88,7 @@ class QuantyCalculation(object):
         '_spectra': None,
         'startingTime': None,
         'endingTime': None,
+        'verbosity': '0x0000'
     }
 
     def __init__(self, **kwargs):
@@ -229,6 +230,8 @@ class QuantyCalculation(object):
             self._template = p.read()
 
         replacements = collections.OrderedDict()
+
+        replacements['$verbosity'] = self.verbosity
 
         subshell = self._configurations[0][1][:2]
         subshell_occupation = self._configurations[0][1][2:]

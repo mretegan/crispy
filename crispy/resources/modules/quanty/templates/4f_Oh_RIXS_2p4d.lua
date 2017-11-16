@@ -6,7 +6,7 @@
 -- experiment: RIXS
 -- edge: L2,3-N4,5 (2p4d)
 --------------------------------------------------------------------------------
-Verbosity(0x00FF)
+Verbosity($verbosity)
 
 --------------------------------------------------------------------------------
 -- Initialize the Hamiltonians.
@@ -262,7 +262,7 @@ FinalRestrictions = {NFermions, NBosons, {'111111 0000000000 00000000000000', NE
                                          {'000000 0000000000 11111111111111', NElectrons_4f + 1, NElectrons_4f + 1}}
 
 Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_2p, N_4d, N_4f}
-header = '\nAnalysis of the initial Hamiltonian:\n'
+header = 'Analysis of the initial Hamiltonian:\n'
 header = header .. '========================================================================================================\n'
 header = header .. '  i       <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>     <N_2p>    <N_4d>    <N_4f>\n'
 header = header .. '========================================================================================================\n'
