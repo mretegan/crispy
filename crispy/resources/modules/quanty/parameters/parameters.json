@@ -456,7 +456,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d1"
+                          "3p5,3d1"
                         ]
                       ],
                       "number of states": 1,
@@ -598,7 +598,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d1"
+                          "3p5,3d1"
                         ]
                       ],
                       "number of states": 1,
@@ -1142,7 +1142,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d3"
+                          "3p5,3d3"
                         ]
                       ],
                       "number of states": 45,
@@ -1322,7 +1322,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d3"
+                          "3p5,3d3"
                         ]
                       ],
                       "number of states": 45,
@@ -1900,7 +1900,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d2"
+                          "3p5,3d2"
                         ]
                       ],
                       "number of states": 10,
@@ -2080,7 +2080,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d2"
+                          "3p5,3d2"
                         ]
                       ],
                       "number of states": 10,
@@ -2658,7 +2658,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d1"
+                          "3p5,3d1"
                         ]
                       ],
                       "number of states": 1,
@@ -2838,7 +2838,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d1"
+                          "3p5,3d1"
                         ]
                       ],
                       "number of states": 1,
@@ -3420,7 +3420,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d4"
+                          "3p5,3d4"
                         ]
                       ],
                       "number of states": 120,
@@ -3600,7 +3600,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d4"
+                          "3p5,3d4"
                         ]
                       ],
                       "number of states": 120,
@@ -4178,7 +4178,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d3"
+                          "3p5,3d3"
                         ]
                       ],
                       "number of states": 45,
@@ -4358,7 +4358,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d3"
+                          "3p5,3d3"
                         ]
                       ],
                       "number of states": 45,
@@ -4936,7 +4936,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d2"
+                          "3p5,3d2"
                         ]
                       ],
                       "number of states": 10,
@@ -5116,7 +5116,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d2"
+                          "3p5,3d2"
                         ]
                       ],
                       "number of states": 10,
@@ -5694,7 +5694,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d1"
+                          "3p5,3d1"
                         ]
                       ],
                       "number of states": 1,
@@ -5874,7 +5874,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d1"
+                          "3p5,3d1"
                         ]
                       ],
                       "number of states": 1,
@@ -6456,7 +6456,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d5"
+                          "3p5,3d5"
                         ]
                       ],
                       "number of states": 210,
@@ -6636,7 +6636,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d5"
+                          "3p5,3d5"
                         ]
                       ],
                       "number of states": 210,
@@ -7214,7 +7214,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d4"
+                          "3p5,3d4"
                         ]
                       ],
                       "number of states": 120,
@@ -7394,7 +7394,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d4"
+                          "3p5,3d4"
                         ]
                       ],
                       "number of states": 120,
@@ -7972,7 +7972,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d3"
+                          "3p5,3d3"
                         ]
                       ],
                       "number of states": 45,
@@ -8152,7 +8152,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d3"
+                          "3p5,3d3"
                         ]
                       ],
                       "number of states": 45,
@@ -8730,7 +8730,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d2"
+                          "3p5,3d2"
                         ]
                       ],
                       "number of states": 10,
@@ -8910,7 +8910,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d2"
+                          "3p5,3d2"
                         ]
                       ],
                       "number of states": 10,
@@ -9492,7 +9492,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d6"
+                          "3p5,3d6"
                         ]
                       ],
                       "number of states": 252,
@@ -9672,7 +9672,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d6"
+                          "3p5,3d6"
                         ]
                       ],
                       "number of states": 252,
@@ -10250,7 +10250,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d5"
+                          "3p5,3d5"
                         ]
                       ],
                       "number of states": 210,
@@ -10430,7 +10430,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d5"
+                          "3p5,3d5"
                         ]
                       ],
                       "number of states": 210,
@@ -11008,7 +11008,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d4"
+                          "3p5,3d4"
                         ]
                       ],
                       "number of states": 120,
@@ -11188,7 +11188,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d4"
+                          "3p5,3d4"
                         ]
                       ],
                       "number of states": 120,
@@ -11766,7 +11766,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d3"
+                          "3p5,3d3"
                         ]
                       ],
                       "number of states": 45,
@@ -11946,7 +11946,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d3"
+                          "3p5,3d3"
                         ]
                       ],
                       "number of states": 45,
@@ -12524,7 +12524,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d2"
+                          "3p5,3d2"
                         ]
                       ],
                       "number of states": 10,
@@ -12704,7 +12704,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d2"
+                          "3p5,3d2"
                         ]
                       ],
                       "number of states": 10,
@@ -13282,7 +13282,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d1"
+                          "3p5,3d1"
                         ]
                       ],
                       "number of states": 1,
@@ -13462,7 +13462,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d1"
+                          "3p5,3d1"
                         ]
                       ],
                       "number of states": 1,
@@ -14044,7 +14044,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d7"
+                          "3p5,3d7"
                         ]
                       ],
                       "number of states": 210,
@@ -14224,7 +14224,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d7"
+                          "3p5,3d7"
                         ]
                       ],
                       "number of states": 210,
@@ -14802,7 +14802,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d6"
+                          "3p5,3d6"
                         ]
                       ],
                       "number of states": 252,
@@ -14982,7 +14982,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d6"
+                          "3p5,3d6"
                         ]
                       ],
                       "number of states": 252,
@@ -15560,7 +15560,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d5"
+                          "3p5,3d5"
                         ]
                       ],
                       "number of states": 210,
@@ -15740,7 +15740,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d5"
+                          "3p5,3d5"
                         ]
                       ],
                       "number of states": 210,
@@ -16318,7 +16318,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d4"
+                          "3p5,3d4"
                         ]
                       ],
                       "number of states": 120,
@@ -16498,7 +16498,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d4"
+                          "3p5,3d4"
                         ]
                       ],
                       "number of states": 120,
@@ -17076,7 +17076,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d3"
+                          "3p5,3d3"
                         ]
                       ],
                       "number of states": 45,
@@ -17256,7 +17256,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d3"
+                          "3p5,3d3"
                         ]
                       ],
                       "number of states": 45,
@@ -17838,7 +17838,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d8"
+                          "3p5,3d8"
                         ]
                       ],
                       "number of states": 120,
@@ -18018,7 +18018,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d8"
+                          "3p5,3d8"
                         ]
                       ],
                       "number of states": 120,
@@ -18596,7 +18596,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d7"
+                          "3p5,3d7"
                         ]
                       ],
                       "number of states": 210,
@@ -18776,7 +18776,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d7"
+                          "3p5,3d7"
                         ]
                       ],
                       "number of states": 210,
@@ -19354,7 +19354,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d6"
+                          "3p5,3d6"
                         ]
                       ],
                       "number of states": 252,
@@ -19534,7 +19534,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d6"
+                          "3p5,3d6"
                         ]
                       ],
                       "number of states": 252,
@@ -20112,7 +20112,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d5"
+                          "3p5,3d5"
                         ]
                       ],
                       "number of states": 210,
@@ -20292,7 +20292,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d5"
+                          "3p5,3d5"
                         ]
                       ],
                       "number of states": 210,
@@ -20874,7 +20874,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d9"
+                          "3p5,3d9"
                         ]
                       ],
                       "number of states": 45,
@@ -21054,7 +21054,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d9"
+                          "3p5,3d9"
                         ]
                       ],
                       "number of states": 45,
@@ -21632,7 +21632,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d8"
+                          "3p5,3d8"
                         ]
                       ],
                       "number of states": 120,
@@ -21812,7 +21812,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d8"
+                          "3p5,3d8"
                         ]
                       ],
                       "number of states": 120,
@@ -22390,7 +22390,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d7"
+                          "3p5,3d7"
                         ]
                       ],
                       "number of states": 210,
@@ -22570,7 +22570,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d7"
+                          "3p5,3d7"
                         ]
                       ],
                       "number of states": 210,
@@ -23152,7 +23152,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d10"
+                          "3p5,3d10"
                         ]
                       ],
                       "number of states": 10,
@@ -23332,7 +23332,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d10"
+                          "3p5,3d10"
                         ]
                       ],
                       "number of states": 10,
@@ -23910,7 +23910,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d9"
+                          "3p5,3d9"
                         ]
                       ],
                       "number of states": 45,
@@ -24090,7 +24090,7 @@
                         ],
                         [
                           "Final",
-                          "2p5,3d9"
+                          "3p5,3d9"
                         ]
                       ],
                       "number of states": 45,

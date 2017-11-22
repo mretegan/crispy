@@ -28,13 +28,13 @@ NBosons = 0
 NFermions = 18
 
 NElectrons_1s = 2
-NElectrons_2p = 6
+NElectrons_3p = 6
 NElectrons_3d = $NElectrons_3d
 
 IndexDn_1s = {0}
 IndexUp_1s = {1}
-IndexDn_2p = {2, 4, 6}
-IndexUp_2p = {3, 5, 7}
+IndexDn_3p = {2, 4, 6}
+IndexUp_3p = {3, 5, 7}
 IndexDn_3d = {8, 10, 12, 14, 16}
 IndexUp_3d = {9, 11, 13, 15, 17}
 
