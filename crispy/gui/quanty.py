@@ -27,13 +27,13 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '16/11/2017'
+__date__ = '05/12/2017'
 
 
 import collections
 import copy
 import datetime
-import glob
+import functools
 import json
 import numpy as np
 import os
@@ -41,6 +41,7 @@ try:
     import cPickle as pickle
 except ImportError:
     import pickle
+import re
 import subprocess
 import sys
 import uuid
@@ -64,30 +65,46 @@ class OrderedDict(collections.OrderedDict):
         return value
 
 
+class NonPerpendicularVectorsError(Exception):
+    pass
+
+
+class NullVectorError(Exception):
+    pass
+
+
+class InvalidVectorError(Exception):
+    pass
+
+
 class QuantyCalculation(object):
 
-    MIN_BROADENING = 0.1
-
+    # Parameters not loaded from external files should have defaults.
     _defaults = {
         'element': 'Ni',
         'charge': '2+',
         'symmetry': 'Oh',
         'experiment': 'XAS',
         'edge': 'L2,3 (2p)',
-        'temperature': 10.,
-        'magneticFieldX': 0.,
-        'magneticFieldY': 0.,
-        'magneticFieldZ': 0.,
+        'temperature': 10.0,
+        'magneticField': 0.0,
+        '_kin': np.array([0.0, -1.0, 0.0]),
+        '_ein': np.array([0.0, 0.0, 1.0]),
+        '_kout': np.array([0.0, 0.0, 0.0]),
+        '_eout': np.array([0.0, 0.0, 0.0]),
         'nPsisAuto': 1,
+        'calculateIso': 1,
+        'calculateCD': 0,
+        'calculateLD': 0,
         'fk': 0.8,
         'gk': 0.8,
         'zeta': 1.0,
         'baseName': 'untitled',
-        '_uuid': None,
         'spectra': None,
-        '_spectra': None,
+        '_uuid': None,
         'startingTime': None,
         'endingTime': None,
+        '_needsCompleteUiEnabled': False,
         'verbosity': '0x0000'
     }
 
@@ -148,8 +165,6 @@ class QuantyCalculation(object):
         self.e1Lorentzian = branch['energies'][0][5]
         self.e1Gaussian = branch['energies'][0][6]
 
-        self._e1LorentzianMin = min(self.MIN_BROADENING, self.e1Lorentzian)
-
         if 'RIXS' in self.experiment:
             self._e2Label = branch['energies'][1][0]
             self.e2Min = branch['energies'][1][1]
@@ -158,8 +173,6 @@ class QuantyCalculation(object):
             self.e2Edge = branch['energies'][1][4]
             self.e2Lorentzian = branch['energies'][1][5]
             self.e2Gaussian = branch['energies'][1][6]
-
-            self._e2LorentzianMin = min(self.MIN_BROADENING, self.e2Lorentzian)
 
         self.hamiltonianData = OrderedDict()
         self.hamiltonianState = OrderedDict()
@@ -171,7 +184,23 @@ class QuantyCalculation(object):
             terms = branch['configurations'][configuration]['terms']
 
             for term in terms:
-                if 'Atomic' in term:
+                # Hack to include the magnetic and exchange terms only for
+                # selected calculations.
+                subshell = self._configurations[0][1][:2]
+                if not ((subshell == '4f' and self.edge == 'M4,5 (3d)') or
+                        (subshell == '3d' and self.edge == 'L2,3 (2p)') or
+                        (subshell == '4d' and self.edge == 'L2,3 (2p)') or
+                        (subshell == '5d' and self.edge == 'L2,3 (2p)')):
+                    if 'Magnetic' in term or 'Exchange' in term:
+                        continue
+
+                if 'Magnetic' in term or 'Exchange' in term:
+                    self._needsCompleteUiEnabled = True
+                else:
+                    self._needsCompleteUiEnabled = False
+
+                if ('Atomic' in term or 'Magnetic' in term or
+                        'Exchange' in term):
                     parameters = terms[term]
                 elif '3d-4p Hybridization' in term:
                     try:
@@ -185,10 +214,14 @@ class QuantyCalculation(object):
                         continue
 
                 for parameter in parameters:
-                    if parameter[0] in ('F', 'G'):
-                        scaling = 0.8
+                    if 'Atomic' in term:
+                        if parameter[0] in ('F', 'G'):
+                            scaling = 0.8
+                        else:
+                            scaling = 1.0
                     else:
-                        scaling = 1.0
+                        scaling = str()
+
                     self.hamiltonianData[term][label][parameter] = (
                         parameters[parameter], scaling)
 
@@ -198,28 +231,39 @@ class QuantyCalculation(object):
                     self.hamiltonianState[term] = 0
 
     @property
-    def spectra(self):
-        return self._spectra
+    def kin(self):
+        return(self._kin)
 
-    @spectra.setter
-    def spectra(self, files):
-        self._spectra = OrderedDict()
-
-        for f in files:
-            try:
-                spectrum = np.loadtxt(f, skiprows=5)
-            except FileNotFoundError:
-                continue
-
-            if '_iso.spec' in f:
-                key = 'Isotropic'
-            elif '_cd.spec' in f:
-                key = 'Circular Dichroism'
-
-            if 'RIXS' in self.experiment:
-                self._spectra[key] = -spectrum[:, 2::2]
+    @kin.setter
+    def kin(self, v):
+        if np.all(v == 0):
+            raise(NullVectorError)
+        # self._kin = v / np.linalg.norm(v)
+        self._kin = v
+        # Check if the wave and polarization vectors are perpendicular.
+        if np.dot(self.kin, self.ein) != 0:
+            # Determine a possible perpendicular vector.
+            if v[2] != 0 or (-v[0] - v[1]) != 0:
+                w = np.array([v[2], v[2], -v[0] - v[1]])
             else:
-                self._spectra[key] = -spectrum[:, 2::2][:, 0]
+                w = np.array([-v[2] - v[1], v[0], v[0]])
+            # Assign it to the polarization vector.
+            self.ein = w
+            # self.ein = w / np.linalg.norm(w)
+
+    @property
+    def ein(self):
+        return(self._ein)
+
+    @ein.setter
+    def ein(self, w):
+        if np.dot(self.kin, w) != 0:
+            raise(NonPerpendicularVectorsError)
+        else:
+            if np.all(w == 0):
+                raise(NullVectorError)
+        self._ein = w
+        # self._ein = w / np.linalg.norm(w)
 
     def saveInput(self):
         templatePath = resourceFileName(
@@ -239,15 +283,28 @@ class QuantyCalculation(object):
 
         replacements['$T'] = self.temperature
 
-        replacements['$Bx'] = self.magneticFieldX
-        replacements['$By'] = self.magneticFieldY
-        replacements['$Bz'] = self.magneticFieldZ
-
         replacements['$Emin1'] = self.e1Min
         replacements['$Emax1'] = self.e1Max
         replacements['$NE1'] = self.e1NPoints
         replacements['$Eedge1'] = self.e1Edge
         replacements['$Gamma1'] = self.e1Lorentzian
+
+        s = '{{{0:.6g}, {1:.6g}, {2:.6g}}}'
+        u = self.kin / np.linalg.norm(self.kin)
+        replacements['$kin'] = s.format(u[0], u[1], u[2])
+
+        v = self.ein / np.linalg.norm(self.ein)
+        replacements['$ein1'] = s.format(v[0], v[1], v[2])
+
+        # Generate a second, perpedicular, polarization vector to the plane
+        # defined by the wave vector and the first polarization vector.
+        w = np.cross(v, u)
+        w = w / np.linalg.norm(w)
+        replacements['$ein2'] = s.format(w[0], w[1], w[2])
+
+        replacements['$calculateIso'] = self.calculateIso
+        replacements['$calculateCD'] = self.calculateCD
+        replacements['$calculateLD'] = self.calculateLD
 
         if 'RIXS' in self.experiment:
             # The Lorentzian broadening along the incident axis cannot be
@@ -276,6 +333,10 @@ class QuantyCalculation(object):
                 name = 'H_4d_Ld_hybridization'
             elif '5d-Ligands Hybridization' in term:
                 name = 'H_5d_Ld_hybridization'
+            elif 'Magnetic Field' in term:
+                name = 'H_magnetic_field'
+            elif 'Exchange Field' in term:
+                name = 'H_exchange_field'
             else:
                 pass
 
@@ -341,11 +402,7 @@ class QuantyDockWidget(QDockWidget):
 
     def setUi(self):
         self.temperatureLineEdit.setValidator(QDoubleValidator(self))
-        self.nPsisLineEdit.setValidator(QIntValidator(self))
-
-        self.magneticFieldXLineEdit.setValidator(QDoubleValidator(self))
-        self.magneticFieldYLineEdit.setValidator(QDoubleValidator(self))
-        self.magneticFieldZLineEdit.setValidator(QDoubleValidator(self))
+        self.magneticFieldLineEdit.setValidator(QDoubleValidator(self))
 
         self.e1MinLineEdit.setValidator(QDoubleValidator(self))
         self.e1MaxLineEdit.setValidator(QDoubleValidator(self))
@@ -385,13 +442,20 @@ class QuantyDockWidget(QDockWidget):
             self.resetCalculation)
         self.edgeComboBox.currentTextChanged.connect(self.resetCalculation)
 
-        self.e1GaussianLineEdit.editingFinished.connect(self.updateBroadening)
-        self.e2GaussianLineEdit.editingFinished.connect(self.updateBroadening)
+        self.magneticFieldLineEdit.returnPressed.connect(
+            self.updateMagneticField)
 
-        self.nPsisCheckBox.toggled.connect(self.updateNPsisLineEditState)
-        self.fkLineEdit.editingFinished.connect(self.updateScalingFactors)
-        self.gkLineEdit.editingFinished.connect(self.updateScalingFactors)
-        self.zetaLineEdit.editingFinished.connect(self.updateScalingFactors)
+        self.e1GaussianLineEdit.returnPressed.connect(self.updateBroadening)
+        self.e2GaussianLineEdit.returnPressed.connect(self.updateBroadening)
+
+        self.kinLineEdit.returnPressed.connect(self.updateIncidentWaveVector)
+        self.einLineEdit.returnPressed.connect(
+            self.updateIncidentPolarizationVector)
+
+        self.nPsisAutoCheckBox.toggled.connect(self.updateNPsisLineEditState)
+        self.fkLineEdit.returnPressed.connect(self.updateScalingFactors)
+        self.gkLineEdit.returnPressed.connect(self.updateScalingFactors)
+        self.zetaLineEdit.returnPressed.connect(self.updateScalingFactors)
 
         self.saveInputAsPushButton.clicked.connect(self.saveInputAs)
         self.calculationPushButton.clicked.connect(self.runCalculation)
@@ -406,16 +470,32 @@ class QuantyDockWidget(QDockWidget):
         self.edgeComboBox.setItems(c._edges, c.edge)
 
         self.temperatureLineEdit.setText(str(c.temperature))
+        self.magneticFieldLineEdit.setText(str(c.magneticField))
 
-        self.magneticFieldXLineEdit.setText(str(c.magneticFieldX))
-        self.magneticFieldYLineEdit.setText(str(c.magneticFieldY))
-        self.magneticFieldZLineEdit.setText(str(c.magneticFieldZ))
+        if c._needsCompleteUiEnabled:
+            self.magneticFieldLineEdit.setEnabled(True)
+            self.kinLineEdit.setEnabled(True)
+            self.einLineEdit.setEnabled(True)
+            self.calculateIsoCheckBox.setEnabled(True)
+            self.calculateCDCheckBox.setEnabled(True)
+            self.calculateLDCheckBox.setEnabled(True)
+        else:
+            self.magneticFieldLineEdit.setEnabled(False)
+            self.kinLineEdit.setEnabled(False)
+            self.einLineEdit.setEnabled(False)
+            self.calculateIsoCheckBox.setEnabled(True)
+            self.calculateCDCheckBox.setEnabled(False)
+            self.calculateLDCheckBox.setEnabled(False)
+
+        self.kinLineEdit.setText(self.vectorToString(c.kin))
+        self.einLineEdit.setText(self.vectorToString(c.ein))
+
+        self.calculateIsoCheckBox.setChecked(c.calculateIso)
+        self.calculateCDCheckBox.setChecked(c.calculateCD)
+        self.calculateLDCheckBox.setChecked(c.calculateLD)
 
         self.nPsisLineEdit.setText(str(c.nPsis))
-        if c.nPsisAuto == 1:
-            self.nPsisCheckBox.setChecked(True)
-        else:
-            self.nPsisCheckBox.setChecked(False)
+        self.nPsisAutoCheckBox.setChecked(c.nPsisAuto)
 
         self.fkLineEdit.setText(str(c.fk))
         self.gkLineEdit.setText(str(c.gk))
@@ -441,7 +521,12 @@ class QuantyDockWidget(QDockWidget):
         else:
             self.energiesTabWidget.removeTab(1)
 
-        # Create the Hamiltonian model.
+        self.updateHamiltonian()
+
+    def updateHamiltonian(self):
+        c = self.calculation
+
+        # Create a Hamiltonian model.
         self.hamiltonianModel = TreeModel(
             ('Parameter', 'Value', 'Scaling'), c.hamiltonianData)
         self.hamiltonianModel.setNodesCheckState(c.hamiltonianState)
@@ -457,12 +542,12 @@ class QuantyDockWidget(QDockWidget):
         self.hamiltonianParametersView.setModel(self.hamiltonianModel)
         self.hamiltonianParametersView.expandAll()
         self.hamiltonianParametersView.resizeAllColumnsToContents()
-        self.hamiltonianParametersView.setColumnWidth(0, 140)
+        self.hamiltonianParametersView.setColumnWidth(0, 130)
         self.hamiltonianParametersView.setRootIndex(
             self.hamiltonianTermsView.currentIndex())
 
         # Set the sizes of the two views.
-        self.hamiltonianSplitter.setSizes((120, 300))
+        self.hamiltonianSplitter.setSizes((130, 300))
 
     def setUiEnabled(self, flag=True):
         self.elementComboBox.setEnabled(flag)
@@ -472,9 +557,7 @@ class QuantyDockWidget(QDockWidget):
         self.edgeComboBox.setEnabled(flag)
 
         self.temperatureLineEdit.setEnabled(flag)
-        self.magneticFieldXLineEdit.setEnabled(flag)
-        self.magneticFieldYLineEdit.setEnabled(flag)
-        self.magneticFieldZLineEdit.setEnabled(flag)
+        self.magneticFieldLineEdit.setEnabled(flag)
 
         self.e1MinLineEdit.setEnabled(flag)
         self.e1MaxLineEdit.setEnabled(flag)
@@ -488,8 +571,22 @@ class QuantyDockWidget(QDockWidget):
         self.e2LorentzianLineEdit.setEnabled(flag)
         self.e2GaussianLineEdit.setEnabled(flag)
 
-        self.nPsisCheckBox.setEnabled(flag)
-        if self.nPsisCheckBox.isChecked():
+        c = self.calculation
+        if c._needsCompleteUiEnabled:
+            self.kinLineEdit.setEnabled(flag)
+            self.einLineEdit.setEnabled(flag)
+            self.calculateIsoCheckBox.setEnabled(flag)
+            self.calculateCDCheckBox.setEnabled(flag)
+            self.calculateLDCheckBox.setEnabled(flag)
+        else:
+            self.kinLineEdit.setEnabled(False)
+            self.einLineEdit.setEnabled(False)
+            self.calculateIsoCheckBox.setEnabled(False)
+            self.calculateCDCheckBox.setEnabled(False)
+            self.calculateLDCheckBox.setEnabled(False)
+
+        self.nPsisAutoCheckBox.setEnabled(flag)
+        if self.nPsisAutoCheckBox.isChecked():
             self.nPsisLineEdit.setEnabled(False)
         else:
             self.nPsisLineEdit.setEnabled(True)
@@ -502,6 +599,29 @@ class QuantyDockWidget(QDockWidget):
         self.resultsView.setEnabled(flag)
 
         self.saveInputAsPushButton.setEnabled(flag)
+
+    def updateMagneticField(self):
+        c = self.calculation
+        c.magneticField = float(self.magneticFieldLineEdit.text())
+
+        if c.magneticField == 0:
+            c.hamiltonianState['Magnetic Field'] = 0
+            c.calculateCD = 0
+            self.calculateCDCheckBox.setChecked(False)
+        else:
+            c.hamiltonianState['Magnetic Field'] = 2
+            c.calculateCD = 1
+            self.calculateCDCheckBox.setChecked(True)
+
+        configurations = c.hamiltonianData['Magnetic Field']
+        for configuration in configurations:
+            parameters = configurations[configuration]
+            for i, parameter in enumerate(parameters):
+                value = c.magneticField * -c.kin[i]
+                if abs(value) == 0.0:
+                    value = 0.0
+                configurations[configuration][parameter] = (value, str())
+        self.updateHamiltonian()
 
     def updateBroadening(self):
         c = self.calculation
@@ -517,10 +637,50 @@ class QuantyDockWidget(QDockWidget):
             c.e1Gaussian = float(self.e1GaussianLineEdit.text())
             c.e2Gaussian = float(self.e2GaussianLineEdit.text())
             self.resultsModel.replaceItem(index, c)
-            self.selectedCalculationsChanged()
+            try:
+                self.plotSelectedCalculations(self.currentSpectrum)
+            except AttributeError:
+                self.plotSelectedCalculations(None)
+
+    def updateIncidentWaveVector(self):
+        timeout = 4000
+        statusBar = self.parent().statusBar()
+
+        c = self.calculation
+        try:
+            c.kin = self.stringToVector(self.kinLineEdit.text())
+        except NullVectorError:
+            message = 'The wave vector cannot be null.'
+            statusBar.showMessage(message, timeout)
+        except InvalidVectorError:
+            message = 'Wrong expression given for the wave vector.'
+            statusBar.showMessage(message, timeout)
+        finally:
+            self.updateMagneticField()
+            self.updateUi()
+
+    def updateIncidentPolarizationVector(self):
+        timeout = 4000
+        c = self.calculation
+        statusBar = self.parent().statusBar()
+
+        try:
+            c.ein = self.stringToVector(self.einLineEdit.text())
+        except NonPerpendicularVectorsError:
+            message = ('The waven and polarization vectors need to be '
+                       'perpendicular.')
+            statusBar.showMessage(message, timeout)
+        except NullVectorError:
+            message = 'The polarization vector cannot be null.'
+            statusBar.showMessage(message, timeout)
+        except InvalidVectorError:
+            message = 'Wrong expression given for the polarization vector.'
+            statusBar.showMessage(message, timeout)
+        finally:
+            self.updateUi()
 
     def updateNPsisLineEditState(self):
-        if self.nPsisCheckBox.isChecked():
+        if self.nPsisAutoCheckBox.isChecked():
             self.nPsisLineEdit.setEnabled(False)
         else:
             self.nPsisLineEdit.setEnabled(True)
@@ -539,7 +699,7 @@ class QuantyDockWidget(QDockWidget):
             for configuration in configurations:
                 parameters = configurations[configuration]
                 for parameter in parameters:
-                    value, factor = parameters[parameter]
+                    value, scaling = parameters[parameter]
                     if parameter.startswith('F'):
                         terms[term][configuration][parameter] = (value, c.fk)
                     elif parameter.startswith('G'):
@@ -552,10 +712,11 @@ class QuantyDockWidget(QDockWidget):
 
     def saveInput(self):
         self.updateCalculation()
+        statusBar = self.parent().statusBar()
         try:
             self.calculation.saveInput()
         except PermissionError:
-            self.parent().statusBar().showMessage(
+            statusBar.showMessage(
                 'Permission denied to write Quanty input file.')
             return
 
@@ -583,15 +744,18 @@ class QuantyDockWidget(QDockWidget):
                 pickle.dump(calculations, p)
 
     def updateCalculation(self):
-        c = self.calculation
+        c = copy.deepcopy(self.calculation)
 
         c.temperature = float(self.temperatureLineEdit.text())
-        c.magneticFieldX = float(self.magneticFieldXLineEdit.text())
-        c.magneticFieldY = float(self.magneticFieldYLineEdit.text())
-        c.magneticFieldZ = float(self.magneticFieldZLineEdit.text())
+        c.magneticField = float(self.magneticFieldLineEdit.text())
 
-        c.nPsis = int(self.nPsisLineEdit.text())
-        c.nPsisAuto = int(self.nPsisCheckBox.isChecked())
+        # The wave and the polarization vectors have more complex update
+        # mechanisms, and they are updated as soon as the user changes
+        # them in the interface.
+
+        c.calculateIso = int(self.calculateIsoCheckBox.isChecked())
+        c.calculateCD = int(self.calculateCDCheckBox.isChecked())
+        c.calculateLD = int(self.calculateLDCheckBox.isChecked())
 
         c.e1Min = float(self.e1MinLineEdit.text())
         c.e1Max = float(self.e1MaxLineEdit.text())
@@ -606,8 +770,15 @@ class QuantyDockWidget(QDockWidget):
             c.e2Lorentzian = float(self.e2LorentzianLineEdit.text())
             c.e2Gaussian = float(self.e2GaussianLineEdit.text())
 
+        c.nPsis = int(self.nPsisLineEdit.text())
+        c.nPsisAuto = int(self.nPsisAutoCheckBox.isChecked())
+
         c.hamiltonianData = self.hamiltonianModel.getModelData()
         c.hamiltonianState = self.hamiltonianModel.getNodesCheckState()
+
+        c.spectra = dict()
+
+        self.calculation = copy.deepcopy(c)
 
     def resetCalculation(self):
         element = self.elementComboBox.currentText()
@@ -647,11 +818,12 @@ class QuantyDockWidget(QDockWidget):
         else:
             self.command = 'Quanty'
 
+        statusBar = self.parent().statusBar()
         with open(os.devnull, 'w') as f:
             try:
                 subprocess.call(self.command, stdout=f, stderr=f)
             except:
-                self.parent().statusBar().showMessage(
+                statusBar.showMessage(
                     'Could not find Quanty. Please install '
                     'it and set the PATH environment variable.')
                 return
@@ -671,7 +843,7 @@ class QuantyDockWidget(QDockWidget):
         self.process = QProcess()
 
         self.process.start(self.command, (c.baseName + '.lua', ))
-        self.parent().statusBar().showMessage(
+        statusBar.showMessage(
             'Running "{} {}" in {}.'.format(
                 self.command, c.baseName + '.lua', os.getcwd()))
 
@@ -747,7 +919,25 @@ class QuantyDockWidget(QDockWidget):
             statusBar.showMessage(message, timeout)
             return
 
-        c.spectra = glob.glob('{}*.spec'.format(c.baseName))
+        spectra = list()
+        if c.calculateIso:
+            spectra.append(('Isotropic', '_iso.spec'))
+        if c.calculateCD:
+            spectra.append(('XMCD', '_cd.spec'))
+        if c.calculateLD:
+            spectra.append(('X(M)LD', '_ld.spec'))
+
+        for spectrum, suffix in spectra:
+            try:
+                f = '{0:s}{1:s}'.format(c.baseName, suffix)
+                data = np.loadtxt(f, skiprows=5)
+            except FileNotFoundError:
+                continue
+
+            if 'RIXS' in c.experiment:
+                c.spectra[spectrum] = -data[:, 2::2]
+            else:
+                c.spectra[spectrum] = -data[:, 2::2][:, 0]
 
         # Store the calculation in the model.
         self.resultsModel.appendItems([c])
@@ -759,9 +949,11 @@ class QuantyDockWidget(QDockWidget):
         self.quantyToolBox.setCurrentWidget(self.resultsPage)
 
     def plot(self):
-        c = self.calculation
-
         plotWidget = self.parent().plotWidget
+        statusBar = self.parent().statusBar()
+
+        c = self.calculation
+        data = c.spectra[self.currentSpectrum]
 
         if 'RIXS' in c.experiment:
             plotWidget.setGraphXLabel('Incident Energy (eV)')
@@ -779,7 +971,7 @@ class QuantyDockWidget(QDockWidget):
             yOrigin = c.e2Min
             origin = (xOrigin, yOrigin)
 
-            z = c.spectra['Isotropic']
+            z = data
 
             if c.e1Gaussian > 0. and c.e2Gaussian > 0.:
                 xFwhm = c.e1Gaussian / xScale
@@ -791,13 +983,18 @@ class QuantyDockWidget(QDockWidget):
             plotWidget.addImage(z, origin=origin, scale=scale, reset=False)
 
         else:
+            # Check if the data is valid.
+            if np.max(np.abs(data)) < np.finfo(np.float32).eps:
+                message = 'Spectrum has very low intensity.'
+                statusBar.showMessage(message, 4000)
+
             plotWidget.setGraphXLabel('Absorption Energy (eV)')
             plotWidget.setGraphYLabel('Absorption Cross Section (a.u.)')
 
             legend = c.label + ' | ' + c._uuid
             x = np.linspace(c.e1Min, c.e1Max, c.e1NPoints + 1)
             scale = (c.e1Max - c.e1Min) / c.e1NPoints
-            y = c.spectra['Isotropic']
+            y = data
 
             if c.e1Gaussian > 0.:
                 fwhm = c.e1Gaussian / scale
@@ -806,7 +1003,6 @@ class QuantyDockWidget(QDockWidget):
             try:
                 plotWidget.addCurve(x, y, legend)
             except AssertionError:
-                statusBar = self.parent().statusBar()
                 message = 'The x and y arrays have different lengths.'
                 timeout = 4000
                 statusBar.showMessage(message, timeout)
@@ -842,11 +1038,11 @@ class QuantyDockWidget(QDockWidget):
             triggered=self.loadCalculations)
 
         self.itemsContextMenu = QMenu('Items Context Menu', self)
-        # icon = QIcon(resourceFileName(
-        #     'crispy:' + os.path.join('gui', 'icons', 'area-chart.svg')))
-        # spectrum = self.itemsContextMenu.addMenu(icon, 'Spectra')
-        # spectrum.addAction(self.removeAllCalculationsAction)
-        # self.itemsContextMenu.addSeparator()
+        icon = QIcon(resourceFileName(
+            'crispy:' + os.path.join('gui', 'icons', 'area-chart.svg')))
+        self.spectraMenu = self.itemsContextMenu.addMenu(
+            icon, 'Select Spectrum to Plot')
+        self.itemsContextMenu.addSeparator()
         self.itemsContextMenu.addAction(self.saveSelectedCalculationsAsAction)
         self.itemsContextMenu.addAction(self.removeCalculationsAction)
 
@@ -873,13 +1069,49 @@ class QuantyDockWidget(QDockWidget):
         return calculations
 
     def selectedCalculationsChanged(self):
-        calculations = self.selectedCalculations()
+        # Reset the plot widget.
         self.parent().plotWidget.reset()
-        for calculation in calculations:
+        self.updateSpectraMenu()
+        self.plotSelectedCalculations()
+        self.updateUi()
+
+    def plotSelectedCalculations(self, spectrum=None):
+        if self.spectraMenu.isEmpty():
+            return
+
+        if not spectrum:
+            action = self.spectraMenu.actions()[0]
+            spectrum = action.text()
+
+        # Updated the currently plotted spectrum.
+        self.currentSpectrum = spectrum
+
+        for calculation in self.selectedCalculations():
             self.calculation = copy.deepcopy(calculation)
             self.plot()
-        # Set the UI using data from the last selected calculation.
-        self.updateUi()
+
+    def updateSpectraMenu(self):
+        self.spectraMenu.clear()
+
+        # Get the spectra available for the individual calculations.
+        spectra = list()
+        for calculation in self.selectedCalculations():
+            spectra.append((set(calculation.spectra.keys())))
+
+        # Find the common spectra among the calculations.
+        try:
+            spectra = sorted(set.intersection(*spectra))
+        except TypeError:
+            return
+
+        if len(spectra) == 0:
+            return
+
+        for spectrum in spectra:
+            action = QAction(spectrum, self)
+            self.spectraMenu.addAction(action)
+            action.triggered.connect(
+                functools.partial(self.plotSelectedCalculations, spectrum))
 
     def updateResultsViewSelection(self):
         self.resultsView.selectionModel().clearSelection()
@@ -890,7 +1122,9 @@ class QuantyDockWidget(QDockWidget):
     def handleOutputLogging(self):
         self.process.setReadChannel(QProcess.StandardOutput)
         data = self.process.readAllStandardOutput().data()
-        self.parent().loggerWidget.appendPlainText(data.decode('utf-8'))
+        data = data.decode('utf-8').rstrip()
+        # data = data.decode('utf-8')
+        self.parent().loggerWidget.appendPlainText(data)
 
     def handleErrorLogging(self):
         self.process.setReadChannel(QProcess.StandardError)
@@ -901,6 +1135,27 @@ class QuantyDockWidget(QDockWidget):
         c = self.calculation
         title = 'Crispy - {}'.format(c.baseName + '.lua')
         self.parent().setWindowTitle(title)
+
+    @staticmethod
+    def vectorToString(v):
+        return '[{0:.1g}, {1:.1g}, {2:.1g}]'.format(v[0], v[1], v[2])
+
+    @staticmethod
+    def stringToVector(s):
+        match = re.match(r'\[(.+)\]', s)
+        try:
+            tokens = match.group(1)
+        except AttributeError:
+            raise(InvalidVectorError)
+
+        tokens = tokens.split(',')
+
+        try:
+            v = np.array([tokens[0], tokens[1], tokens[2]], dtype=np.float64)
+        except (ValueError, IndexError):
+            raise(InvalidVectorError)
+        else:
+            return(v)
 
 
 if __name__ == '__main__':

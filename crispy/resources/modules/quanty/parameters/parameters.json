@@ -44,6 +44,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d0": {
@@ -228,6 +238,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -730,6 +750,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d2": {
@@ -914,6 +944,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -1488,6 +1528,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d1": {
@@ -1672,6 +1722,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -2246,6 +2306,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d0": {
@@ -2430,6 +2500,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -3008,6 +3088,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d3": {
@@ -3192,6 +3282,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -3766,6 +3866,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d2": {
@@ -3950,6 +4060,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -4524,6 +4644,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d1": {
@@ -4708,6 +4838,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -5282,6 +5422,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d0": {
@@ -5466,6 +5616,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -6044,6 +6204,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d4": {
@@ -6228,6 +6398,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -6802,6 +6982,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d3": {
@@ -6986,6 +7176,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -7560,6 +7760,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d2": {
@@ -7744,6 +7954,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -8318,6 +8538,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d1": {
@@ -8502,6 +8732,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -9080,6 +9320,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d5": {
@@ -9264,6 +9514,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -9838,6 +10098,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d4": {
@@ -10022,6 +10292,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -10596,6 +10876,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d3": {
@@ -10780,6 +11070,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -11354,6 +11654,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d2": {
@@ -11538,6 +11848,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -12112,6 +12432,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d1": {
@@ -12296,6 +12626,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -12870,6 +13210,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d0": {
@@ -13054,6 +13404,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -13632,6 +13992,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d6": {
@@ -13816,6 +14186,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -14390,6 +14770,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d5": {
@@ -14574,6 +14964,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -15148,6 +15548,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d4": {
@@ -15332,6 +15742,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -15906,6 +16326,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d3": {
@@ -16090,6 +16520,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -16664,6 +17104,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d2": {
@@ -16848,6 +17298,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -17426,6 +17886,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d7": {
@@ -17610,6 +18080,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -18184,6 +18664,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d6": {
@@ -18368,6 +18858,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -18942,6 +19442,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d5": {
@@ -19126,6 +19636,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -19700,6 +20220,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d4": {
@@ -19884,6 +20414,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -20462,6 +21002,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d8": {
@@ -20646,6 +21196,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -21220,6 +21780,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d7": {
@@ -21404,6 +21974,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -21978,6 +22558,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d6": {
@@ -22162,6 +22752,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -22740,6 +23340,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d9": {
@@ -22924,6 +23534,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -23498,6 +24118,16 @@
                     "Vt2(3d,Ld)": 0.0
                   }
                 },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
+                },
                 "3d-4p Hybridization Term": {
                   "Td": {
                     "3d8": {
@@ -23682,6 +24312,16 @@
                     "Ve(3d,Ld)": 0.0,
                     "Vt2(3d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -24245,6 +24885,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -24338,6 +24988,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -24527,6 +25187,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -24620,6 +25290,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -24813,6 +25493,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -24906,6 +25596,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -25095,6 +25795,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -25188,6 +25898,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -25377,6 +26097,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -25470,6 +26200,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -25663,6 +26403,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -25756,6 +26506,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -25945,6 +26705,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -26038,6 +26808,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -26227,6 +27007,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -26320,6 +27110,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -26509,6 +27309,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -26602,6 +27412,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -26795,6 +27615,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -26888,6 +27718,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -27077,6 +27917,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -27170,6 +28020,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -27359,6 +28219,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -27452,6 +28322,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -27641,6 +28521,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -27734,6 +28624,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -27923,6 +28823,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -28016,6 +28926,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -28209,6 +29129,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -28302,6 +29232,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -28491,6 +29431,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -28584,6 +29534,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -28773,6 +29733,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -28866,6 +29836,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -29055,6 +30035,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -29148,6 +30138,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -29337,6 +30337,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -29430,6 +30440,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -29619,6 +30639,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -29712,6 +30742,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -29905,6 +30945,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -29998,6 +31048,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -30187,6 +31247,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -30280,6 +31350,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -30469,6 +31549,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -30562,6 +31652,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -30751,6 +31851,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -30844,6 +31954,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -31037,6 +32157,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -31130,6 +32260,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -31319,6 +32459,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -31412,6 +32562,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -31601,6 +32761,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -31694,6 +32864,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -31887,6 +33067,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -31980,6 +33170,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -32169,6 +33369,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -32262,6 +33472,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -32455,6 +33675,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -32548,6 +33778,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -32737,6 +33977,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -32830,6 +34080,16 @@
                     "Veg(4d,Ld)": 0.0,
                     "Vt2g(4d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -33012,6 +34272,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -33140,6 +34410,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -33325,6 +34605,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -33453,6 +34743,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -33642,6 +34942,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -33770,6 +35080,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -33993,6 +35313,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -34121,6 +35451,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -34344,6 +35684,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -34472,6 +35822,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -34699,6 +36059,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -34827,6 +36197,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -34868,6 +36248,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -34996,6 +36386,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -35219,6 +36619,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -35347,6 +36757,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -35388,6 +36808,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -35516,6 +36946,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -35739,6 +37179,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -35867,6 +37317,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -35908,6 +37368,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -36036,6 +37506,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -36263,6 +37743,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -36391,6 +37881,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -36614,6 +38114,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -36742,6 +38252,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -36965,6 +38485,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -37093,6 +38623,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -37320,6 +38860,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -37448,6 +38998,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -37671,6 +39231,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -37799,6 +39369,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -38022,6 +39602,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -38150,6 +39740,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -38377,6 +39977,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -38505,6 +40115,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -38728,6 +40348,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -38856,6 +40486,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -39079,6 +40719,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -39207,6 +40857,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -39434,6 +41094,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -39562,6 +41232,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -39785,6 +41465,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -39913,6 +41603,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -40136,6 +41836,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -40264,6 +41974,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -40491,6 +42211,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -40619,6 +42349,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -40842,6 +42582,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -40970,6 +42720,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -41193,6 +42953,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -41321,6 +43091,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -41548,6 +43328,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -41676,6 +43466,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -41899,6 +43699,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -42027,6 +43837,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -42250,6 +44070,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -42378,6 +44208,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -42605,6 +44445,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -42733,6 +44583,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -42956,6 +44816,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -43084,6 +44954,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -43307,6 +45187,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -43435,6 +45325,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -43662,6 +45562,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -43790,6 +45700,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -44013,6 +45933,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -44141,6 +46071,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -44364,6 +46304,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -44492,6 +46442,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -44719,6 +46679,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -44847,6 +46817,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -45070,6 +47050,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -45198,6 +47188,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -45421,6 +47421,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -45549,6 +47559,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -45776,6 +47796,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -45904,6 +47934,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -46127,6 +48167,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -46255,6 +48305,16 @@
                     "\u03941(4f)": 1.0,
                     "\u03942(4f)": 2.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -46493,6 +48553,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -46586,6 +48656,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -46774,6 +48854,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -46867,6 +48957,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -47055,6 +49155,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -47148,6 +49258,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -47340,6 +49460,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -47433,6 +49563,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -47621,6 +49761,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -47714,6 +49864,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -47902,6 +50062,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -47995,6 +50165,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -48183,6 +50363,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -48276,6 +50466,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -48468,6 +50668,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -48561,6 +50771,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -48749,6 +50969,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -48842,6 +51072,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -49030,6 +51270,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -49123,6 +51373,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -49311,6 +51571,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -49404,6 +51674,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -49592,6 +51872,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -49685,6 +51975,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -49877,6 +52177,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -49970,6 +52280,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -50158,6 +52478,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -50251,6 +52581,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -50439,6 +52779,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -50532,6 +52882,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -50720,6 +53080,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -50813,6 +53183,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -51001,6 +53381,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -51094,6 +53484,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -51286,6 +53686,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -51379,6 +53789,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -51567,6 +53987,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -51660,6 +54090,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -51848,6 +54288,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -51941,6 +54391,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -52129,6 +54589,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -52222,6 +54692,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -52410,6 +54890,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -52503,6 +54993,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -52695,6 +55195,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -52788,6 +55298,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -52976,6 +55496,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -53069,6 +55599,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -53257,6 +55797,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -53350,6 +55900,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -53538,6 +56098,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -53631,6 +56201,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -53819,6 +56399,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -53912,6 +56502,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -54104,6 +56704,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -54197,6 +56807,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -54385,6 +57005,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -54478,6 +57108,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -54666,6 +57306,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -54759,6 +57409,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -54947,6 +57607,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -55040,6 +57710,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -55228,6 +57908,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -55321,6 +58011,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -55513,6 +58213,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -55606,6 +58316,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -55794,6 +58514,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -55887,6 +58617,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -56075,6 +58815,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },
@@ -56168,6 +58918,16 @@
                     "Veg(5d,Ld)": 0.0,
                     "Vt2g(5d,Ld)": 0.0
                   }
+                },
+                "Magnetic Field": {
+                  "Bx": 0.0,
+                  "By": 0.0,
+                  "Bz": 0.0
+                },
+                "Exchange Field": {
+                  "Hx": 0.0,
+                  "Hy": 0.0,
+                  "Hz": 0.0
                 }
               }
             },

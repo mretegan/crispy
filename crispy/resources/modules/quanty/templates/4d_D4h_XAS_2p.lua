@@ -17,8 +17,10 @@ H_f = 0
 --------------------------------------------------------------------------------
 -- Toggle the Hamiltonian terms.
 --------------------------------------------------------------------------------
-H_atomic = $H_atomic
-H_cf     = $H_cf
+H_atomic         = $H_atomic
+H_cf             = $H_cf
+H_magnetic_field = $H_magnetic_field
+H_exchange_field = $H_exchange_field
 
 --------------------------------------------------------------------------------
 -- Define the number of electrons, shells, etc.
@@ -108,13 +110,13 @@ if H_cf == 1 then
     Ds_4d = NewOperator('CF', NFermions, IndexUp_4d, IndexDn_4d, PotentialExpandedOnClm('D4h', 2, {-2,  2,  2, -1}))
     Dt_4d = NewOperator('CF', NFermions, IndexUp_4d, IndexDn_4d, PotentialExpandedOnClm('D4h', 2, {-6, -1, -1,  4}))
 
-    Dq_4d_i = $Dq(4d)_i_value * $Dq(4d)_i_scaling
-    Ds_4d_i = $Ds(4d)_i_value * $Ds(4d)_i_scaling
-    Dt_4d_i = $Dt(4d)_i_value * $Dt(4d)_i_scaling
+    Dq_4d_i = $Dq(4d)_i_value
+    Ds_4d_i = $Ds(4d)_i_value
+    Dt_4d_i = $Dt(4d)_i_value
 
-    Dq_4d_f = $Dq(4d)_f_value * $Dq(4d)_f_scaling
-    Ds_4d_f = $Ds(4d)_f_value * $Ds(4d)_f_scaling
-    Dt_4d_f = $Dt(4d)_f_value * $Dt(4d)_f_scaling
+    Dq_4d_f = $Dq(4d)_f_value
+    Ds_4d_f = $Ds(4d)_f_value
+    Dt_4d_f = $Dt(4d)_f_value
 
     H_i = H_i
         + Dq_4d_i * Dq_4d
@@ -128,7 +130,7 @@ if H_cf == 1 then
 end
 
 --------------------------------------------------------------------------------
--- Define the magnetic field term.
+-- Define the magnetic field and exchange field terms.
 --------------------------------------------------------------------------------
 Sx_4d    = NewOperator('Sx'   , NFermions, IndexUp_4d, IndexDn_4d)
 Sy_4d    = NewOperator('Sy'   , NFermions, IndexUp_4d, IndexDn_4d)
@@ -167,19 +169,45 @@ Ssqr = Sx * Sx + Sy * Sy + Sz * Sz
 Lsqr = Lx * Lx + Ly * Ly + Lz * Lz
 Jsqr = Jx * Jx + Jy * Jy + Jz * Jz
 
-Bx = $Bx * EnergyUnits.Tesla.value
-By = $By * EnergyUnits.Tesla.value
-Bz = $Bz * EnergyUnits.Tesla.value
+if H_magnetic_field == 1 then
+    Bx_i = $Bx_i_value * EnergyUnits.Tesla.value
+    By_i = $By_i_value * EnergyUnits.Tesla.value
+    Bz_i = $Bz_i_value * EnergyUnits.Tesla.value
 
-B = Bx * (2 * Sx + Lx)
-  + By * (2 * Sy + Ly)
-  + Bz * (2 * Sz + Lz)
+    Bx_f = $Bx_f_value * EnergyUnits.Tesla.value
+    By_f = $By_f_value * EnergyUnits.Tesla.value
+    Bz_f = $Bz_f_value * EnergyUnits.Tesla.value
 
-H_i = H_i
-    + B
+    H_i = H_i
+        + Bx_i * (2 * Sx + Lx)
+        + By_i * (2 * Sy + Ly)
+        + Bz_i * (2 * Sz + Lz)
 
-H_f = H_f
-    + B
+    H_f = H_f
+        + Bx_f * (2 * Sx + Lx)
+        + By_f * (2 * Sy + Ly)
+        + Bz_f * (2 * Sz + Lz)
+end
+
+if H_exchange_field == 1 then
+    Hx_i = $Hx_i_value
+    Hy_i = $Hy_i_value
+    Hz_i = $Hz_i_value
+
+    Hx_f = $Hx_f_value
+    Hy_f = $Hy_f_value
+    Hz_f = $Hz_f_value
+
+    H_i = H_i
+        + Hx_i * Sx
+        + Hy_i * Sy
+        + Hz_i * Sz
+
+    H_f = H_f
+        + Hx_f * Sx
+        + Hy_f * Sy
+        + Hz_f * Sz
+end
 
 --------------------------------------------------------------------------------
 -- Define the restrictions and set the number of initial states.
@@ -281,13 +309,31 @@ io.write(footer)
 --------------------------------------------------------------------------------
 t = math.sqrt(1/2);
 
-Tiso_2p_4d = NewOperator('CF', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_2p, IndexDn_2p, {{1, -1, t    }, {1, 1, -t    }}) -- Tx
-           + NewOperator('CF', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_2p, IndexDn_2p, {{1, -1, t * I}, {1, 1,  t * I}}) -- Ty
-           + NewOperator('CF', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_2p, IndexDn_2p, {{1,  0, 1    }                }) -- Tz
+kin = $kin
+ein1 = $ein1
+ein2 = $ein2
+
+Tx_2p_4d = NewOperator('CF', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_2p, IndexDn_2p, {{1, -1, t    }, {1, 1, -t    }})
+Ty_2p_4d = NewOperator('CF', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_2p, IndexDn_2p, {{1, -1, t * I}, {1, 1,  t * I}})
+Tz_2p_4d = NewOperator('CF', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_2p, IndexDn_2p, {{1,  0, 1    }                })
+
+Tein1_2p_4d = ein1[1] * Tx_2p_4d + ein1[2] * Ty_2p_4d + ein1[3] * Tz_2p_4d
+Tein2_2p_4d = ein2[1] * Tx_2p_4d + ein2[2] * Ty_2p_4d + ein2[3] * Tz_2p_4d
+
+Tr_2p_4d =  t * (Tein1_2p_4d - I * Tein2_2p_4d)
+Tl_2p_4d = -t * (Tein1_2p_4d + I * Tein2_2p_4d)
 
 --------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
+calculateIso = $calculateIso
+calculateCD  = $calculateCD
+calculateLD  = $calculateLD
+
+if calculateIso == 0 and calculateCD == 0 and calculateLD == 0 then
+    return
+end
+
 E_gs_i = Psis_i[1] * H_i * Psis_i[1]
 
 Psis_f = Eigensystem(H_f, FinalRestrictions, 1)
@@ -304,6 +350,17 @@ NE = $NE1
 
 Giso = 0
 
+Gr = 0
+Gl = 0
+
+Gein1 = 0
+Gein2 = 0
+
+io.write(string.format('\nSpectrum calculation for each of the selected states:\n'))
+io.write(string.format('==================\n'))
+io.write(string.format('State Contribution\n'))
+io.write(string.format('==================\n'))
+
 for i, Psi in ipairs(Psis_i) do
     E = Psi * H_i * Psi
 
@@ -313,15 +370,42 @@ for i, Psi in ipairs(Psis_i) do
         dZ = math.exp(-(E - E_gs_i) / T)
     end
 
-    if (dZ < math.sqrt(epsilon)) then
-        break
-    end
-
     Z = Z + dZ
 
-    Giso = Giso + CreateSpectra(H_f, Tiso_2p_4d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+    io.write(string.format('%5d   %6.4E\n', i, dZ))
+
+    if calculateIso == 1 then
+        Giso = Giso + CreateSpectra(H_f, {Tx_2p_4d, Ty_2p_4d, Tz_2p_4d}, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+    end
+
+    if calculateCD == 1 then
+        Gr = Gr + CreateSpectra(H_f, Tr_2p_4d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+        Gl = Gl + CreateSpectra(H_f, Tl_2p_4d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+    end
+
+    if calculateLD == 1 then
+        Gein1 = Gein1 + CreateSpectra(H_f, Tein1_2p_4d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+        Gein2 = Gein2 + CreateSpectra(H_f, Tein2_2p_4d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+    end
+end
+io.write(string.format('==================\n'))
+
+if calculateIso == 1 then
+    Giso = Giso / Z / 3
+    Giso.Print({{'file', '$baseName' .. '_iso.spec'}})
 end
 
-Giso = Giso / Z
-Giso.Print({{'file', '$baseName' .. '_iso.spec'}})
+if calculateCD == 1 then
+    Gr = Gr / Z
+    Gl = Gl / Z
+    Gcd = Gr - Gl
+    Gcd.Print({{'file', '$baseName' .. '_cd.spec'}})
+end
+
+if calculateLD == 1 then
+    Gein1 = Gein1 / Z
+    Gein2 = Gein2 / Z
+    Gld = Gein1 - Gein2
+    Gld.Print({{'file', '$baseName' .. '_ld.spec'}})
+end
 

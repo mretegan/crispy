@@ -146,11 +146,11 @@ if H_cf == 1 then
     -- PotentialExpandedOnClm('Oh', 2, {Eeg, Et2g})
     tenDq_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm('Oh', 2, {0.6, -0.4}))
 
-    tenDq_3d_i = $10Dq(3d)_i_value * $10Dq(3d)_i_scaling
+    tenDq_3d_i = $10Dq(3d)_i_value
 
-    tenDq_3d_m = $10Dq(3d)_m_value * $10Dq(3d)_m_scaling
+    tenDq_3d_m = $10Dq(3d)_m_value
 
-    tenDq_3d_f = $10Dq(3d)_f_value * $10Dq(3d)_f_scaling
+    tenDq_3d_f = $10Dq(3d)_f_value
 
     H_i = H_i
         + tenDq_3d_i * tenDq_3d
@@ -169,16 +169,16 @@ if H_3d_Ld_hybridization == 1 then
     N_Ld = NewOperator('Number', NFermions, IndexUp_Ld, IndexUp_Ld, {1, 1, 1, 1, 1})
          + NewOperator('Number', NFermions, IndexDn_Ld, IndexDn_Ld, {1, 1, 1, 1, 1})
 
-    Delta_3d_Ld_i = $Delta(3d,Ld)_i_value * $Delta(3d,Ld)_i_scaling
+    Delta_3d_Ld_i = $Delta(3d,Ld)_i_value
     e_3d_i  = (10 * Delta_3d_Ld_i - NElectrons_3d * (19 + NElectrons_3d) * U_3d_3d_i / 2) / (10 + NElectrons_3d)
     e_Ld_i  = NElectrons_3d * ((1 + NElectrons_3d) * U_3d_3d_i / 2 - Delta_3d_Ld_i) / (10 + NElectrons_3d)
 
-    Delta_3d_Ld_m = $Delta(3d,Ld)_m_value * $Delta(3d,Ld)_m_scaling
+    Delta_3d_Ld_m = $Delta(3d,Ld)_m_value
     e_1s_m = (10 * Delta_3d_Ld_m + (1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_m / 2 - (10 + NElectrons_3d) * U_1s_3d_m)) / (12 + NElectrons_3d)
     e_3d_m = (10 * Delta_3d_Ld_m - NElectrons_3d * (23 + NElectrons_3d) * U_3d_3d_m / 2 - 22 * U_1s_3d_m) / (12 + NElectrons_3d)
     e_Ld_m = ((1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_m / 2 + 2 * U_1s_3d_m) - (2 + NElectrons_3d) * Delta_3d_Ld_m) / (12 + NElectrons_3d)
 
-    Delta_3d_Ld_f = $Delta(3d,Ld)_f_value * $Delta(3d,Ld)_f_scaling
+    Delta_3d_Ld_f = $Delta(3d,Ld)_f_value
     e_2p_f = (10 * Delta_3d_Ld_f + (1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_f / 2 - (10 + NElectrons_3d) * U_2p_3d_f)) / (16 + NElectrons_3d)
     e_3d_f = (10 * Delta_3d_Ld_f - NElectrons_3d * (31 + NElectrons_3d) * U_3d_3d_f / 2 - 90 * U_2p_3d_f) / (16 + NElectrons_3d)
     e_Ld_f = ((1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_f / 2 + 6 * U_2p_3d_f) - (6 + NElectrons_3d) * Delta_3d_Ld_f) / (16 + NElectrons_3d)
@@ -205,17 +205,17 @@ if H_3d_Ld_hybridization == 1 then
     Veg_3d_Ld = NewOperator('CF', NFermions, IndexUp_Ld, IndexDn_Ld, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm('Oh', 2, {1, 0}))
               + NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_Ld, IndexDn_Ld, PotentialExpandedOnClm('Oh', 2, {1, 0}))
 
-    tenDq_Ld_i   = $10Dq(Ld)_i_value * $10Dq(Ld)_i_scaling
-    Veg_3d_Ld_i  = $Veg(3d,Ld)_i_value * $Veg(3d,Ld)_i_scaling
-    Vt2g_3d_Ld_i = $Vt2g(3d,Ld)_i_value * $Vt2g(3d,Ld)_i_scaling
+    tenDq_Ld_i   = $10Dq(Ld)_i_value
+    Veg_3d_Ld_i  = $Veg(3d,Ld)_i_value
+    Vt2g_3d_Ld_i = $Vt2g(3d,Ld)_i_value
 
-    tenDq_Ld_m   = $10Dq(Ld)_m_value * $10Dq(Ld)_m_scaling
-    Veg_3d_Ld_m  = $Veg(3d,Ld)_m_value * $Veg(3d,Ld)_m_scaling
-    Vt2g_3d_Ld_m = $Vt2g(3d,Ld)_m_value * $Vt2g(3d,Ld)_m_scaling
+    tenDq_Ld_m   = $10Dq(Ld)_m_value
+    Veg_3d_Ld_m  = $Veg(3d,Ld)_m_value
+    Vt2g_3d_Ld_m = $Vt2g(3d,Ld)_m_value
 
-    tenDq_Ld_f   = $10Dq(Ld)_f_value * $10Dq(Ld)_f_scaling
-    Veg_3d_Ld_f  = $Veg(3d,Ld)_f_value * $Veg(3d,Ld)_f_scaling
-    Vt2g_3d_Ld_f = $Vt2g(3d,Ld)_f_value * $Vt2g(3d,Ld)_f_scaling
+    tenDq_Ld_f   = $10Dq(Ld)_f_value
+    Veg_3d_Ld_f  = $Veg(3d,Ld)_f_value
+    Vt2g_3d_Ld_f = $Vt2g(3d,Ld)_f_value
 
     H_i = H_i
         + tenDq_Ld_i   * tenDq_Ld
@@ -234,7 +234,7 @@ if H_3d_Ld_hybridization == 1 then
 end
 
 --------------------------------------------------------------------------------
--- Define the magnetic field term.
+-- Define the spin and orbital operators.
 --------------------------------------------------------------------------------
 Sx_3d    = NewOperator('Sx'   , NFermions, IndexUp_3d, IndexDn_3d)
 Sy_3d    = NewOperator('Sy'   , NFermions, IndexUp_3d, IndexDn_3d)
@@ -272,23 +272,6 @@ Jz = Jz_3d
 Ssqr = Sx * Sx + Sy * Sy + Sz * Sz
 Lsqr = Lx * Lx + Ly * Ly + Lz * Lz
 Jsqr = Jx * Jx + Jy * Jy + Jz * Jz
-
-Bx = $Bx * EnergyUnits.Tesla.value
-By = $By * EnergyUnits.Tesla.value
-Bz = $Bz * EnergyUnits.Tesla.value
-
-B = Bx * (2 * Sx + Lx)
-  + By * (2 * Sy + Ly)
-  + Bz * (2 * Sz + Lz)
-
-H_i = H_i
-    + B
-
-H_m = H_m
-    + B
-
-H_f = H_f
-    + B
 
 --------------------------------------------------------------------------------
 -- Define the restrictions and set the number of initial states.
@@ -432,6 +415,12 @@ Tz_2p_1s = NewOperator('CF', NFermions, IndexUp_1s, IndexDn_1s, IndexUp_2p, Inde
 --------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
+calculateIso = $calculateIso
+
+if calculateIso == 0 then
+    return
+end
+
 E_gs_i = Psis_i[1] * H_i * Psis_i[1]
 
 Psis_m = Eigensystem(H_m, IntermediateRestrictions, 1)
@@ -469,19 +458,19 @@ for i, Psi in ipairs(Psis_i) do
         dZ = math.exp(-(E - E_gs_i) / T)
     end
 
-    if (dZ < math.sqrt(epsilon)) then
-        break
-    end
-
     Z = Z + dZ
 
-    for j, OperatorIn in ipairs({Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}) do
-        for k, OperatorOut in ipairs({Tx_2p_1s, Ty_2p_1s, Tz_2p_1s}) do
-            Giso = Giso + CreateResonantSpectra(H_m, H_f, OperatorIn, OperatorOut, Psi, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}}) * dZ
+    if calculateIso == 1 then
+        for j, OperatorIn in ipairs({Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}) do
+            for k, OperatorOut in ipairs({Tx_2p_1s, Ty_2p_1s, Tz_2p_1s}) do
+                Giso = Giso + CreateResonantSpectra(H_m, H_f, OperatorIn, OperatorOut, Psi, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}}) * dZ
+            end
         end
     end
 end
 
-Giso = Giso / Z
-Giso.Print({{'file', '$baseName' .. '_iso.spec'}})
+if calculateIso == 1 then
+    Giso = Giso / Z
+    Giso.Print({{'file', '$baseName' .. '_iso.spec'}})
+end
 

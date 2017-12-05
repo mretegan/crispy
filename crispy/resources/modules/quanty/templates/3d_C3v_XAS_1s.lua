@@ -107,13 +107,13 @@ if H_cf == 1 then
     Dsigma_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, {{2, 0, -7}})
     Dtau_3d   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, {{4, 0, -21}})
 
-    Dq_3d_i     = $Dq(3d)_i_value * $Dq(3d)_i_scaling
-    Dsigma_3d_i = $Dsigma(3d)_i_value * $Dsigma(3d)_i_scaling
-    Dtau_3d_i   = $Dtau(3d)_i_value * $Dtau(3d)_i_scaling
+    Dq_3d_i     = $Dq(3d)_i_value
+    Dsigma_3d_i = $Dsigma(3d)_i_value
+    Dtau_3d_i   = $Dtau(3d)_i_value
 
-    Dq_3d_f     = $Dq(3d)_f_value * $Dq(3d)_f_scaling
-    Dsigma_3d_f = $Dsigma(3d)_f_value * $Dsigma(3d)_f_scaling
-    Dtau_3d_f   = $Dtau(3d)_f_value * $Dtau(3d)_f_scaling
+    Dq_3d_f     = $Dq(3d)_f_value
+    Dsigma_3d_f = $Dsigma(3d)_f_value
+    Dtau_3d_f   = $Dtau(3d)_f_value
 
     H_i = H_i
         + Dq_3d_i * Dq_3d
@@ -136,23 +136,23 @@ if H_3d_4p_hybridization == 1 then
     G3_3d_4p = NewOperator('U', NFermions, IndexUp_4p, IndexDn_4p, IndexUp_3d, IndexDn_3d, {0, 0}, {0, 1})
     G1_1s_4p = NewOperator('U', NFermions, IndexUp_1s, IndexDn_1s, IndexUp_4p, IndexDn_4p, {0}, {1})
 
-    F2_3d_4p_i = $F2(3d,4p)_i_value * $F2(3d,4p)_i_scaling
-    G1_3d_4p_i = $G1(3d,4p)_i_value * $G1(3d,4p)_i_scaling
-    G3_3d_4p_i = $G3(3d,4p)_i_value * $G3(3d,4p)_i_scaling
+    F2_3d_4p_i = $F2(3d,4p)_i_value
+    G1_3d_4p_i = $G1(3d,4p)_i_value
+    G3_3d_4p_i = $G3(3d,4p)_i_value
 
-    F2_3d_4p_f = $F2(3d,4p)_i_value * $F2(3d,4p)_i_scaling
-    G1_3d_4p_f = $G1(3d,4p)_i_value * $G1(3d,4p)_i_scaling
-    G3_3d_4p_f = $G3(3d,4p)_i_value * $G3(3d,4p)_i_scaling
-    G1_1s_4p_f = $G1(1s,4p)_f_value * $G1(1s,4p)_f_scaling
+    F2_3d_4p_f = $F2(3d,4p)_i_value
+    G1_3d_4p_f = $G1(3d,4p)_i_value
+    G3_3d_4p_f = $G3(3d,4p)_i_value
+    G1_1s_4p_f = $G1(1s,4p)_f_value
 
     N_4p = NewOperator('Number', NFermions, IndexUp_4p, IndexUp_4p, {1, 1, 1})
          + NewOperator('Number', NFermions, IndexDn_4p, IndexDn_4p, {1, 1, 1})
 
-    Delta_3d_4p_i = $Delta(3d,4p)_i_value * $Delta(3d,4p)_i_scaling
+    Delta_3d_4p_i = $Delta(3d,4p)_i_value
     e_3d_i= -(NElectrons_3d - 1) * U_3d_3d_i / 2
     e_4p_i=  (NElectrons_3d - 1) * U_3d_3d_i / 2 + Delta_3d_4p_i
 
-    Delta_3d_4p_f = $Delta(3d,4p)_f_value * $Delta(3d,4p)_f_scaling
+    Delta_3d_4p_f = $Delta(3d,4p)_f_value
     e_3d_f= -(NElectrons_3d - 1) * U_3d_3d_f / 2
     e_4p_f=  (NElectrons_3d - 1) * U_3d_3d_f / 2 + Delta_3d_4p_f
 
@@ -173,9 +173,9 @@ if H_3d_4p_hybridization == 1 then
 
     ldots_4p = NewOperator('ldots', NFermions, IndexUp_4p, IndexDn_4p)
 
-    zeta_4p_i = $zeta(4p)_i_value * $zeta(4p)_i_scaling
+    zeta_4p_i = $zeta(4p)_i_value
 
-    zeta_4p_f = $zeta(4p)_f_value * $zeta(4p)_f_scaling
+    zeta_4p_f = $zeta(4p)_f_value
 
     H_i = H_i
         + zeta_4p_i * ldots_4p
@@ -195,13 +195,13 @@ if H_3d_4p_hybridization == 1 then
     Ve_t2g_3d_4p = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_4p, IndexDn_4p, Akm)
                  + NewOperator('CF', NFermions, IndexUp_4p, IndexDn_4p, IndexUp_3d, IndexDn_3d, Akm)
 
-	Va1_3d_4p_i    = $Va1(3d,4p)_i_value     * $Va1(3d,4p)_i_scaling
-	Ve_eg_3d_4p_i  = $Ve(eg)(3d,4p)_i_value  * $Ve(eg)(3d,4p)_i_scaling
-	Ve_t2g_3d_4p_i = $Ve(t2g)(3d,4p)_i_value * $Ve(t2g)(3d,4p)_i_scaling
+	Va1_3d_4p_i    = $Va1(3d,4p)_i_value
+	Ve_eg_3d_4p_i  = $Ve(eg)(3d,4p)_i_value
+	Ve_t2g_3d_4p_i = $Ve(t2g)(3d,4p)_i_value
 
-	Va1_3d_4p_f    = $Va1(3d,4p)_f_value     * $Va1(3d,4p)_f_scaling
-	Ve_eg_3d_4p_f  = $Ve(eg)(3d,4p)_f_value  * $Ve(eg)(3d,4p)_f_scaling
-	Ve_t2g_3d_4p_f = $Ve(t2g)(3d,4p)_f_value * $Ve(t2g)(3d,4p)_f_scaling
+	Va1_3d_4p_f    = $Va1(3d,4p)_f_value
+	Ve_eg_3d_4p_f  = $Ve(eg)(3d,4p)_f_value
+	Ve_t2g_3d_4p_f = $Ve(t2g)(3d,4p)_f_value
 
     H_i = H_i
         + Va1_3d_4p_i * Va1_3d_4p
@@ -215,7 +215,7 @@ if H_3d_4p_hybridization == 1 then
 end
 
 --------------------------------------------------------------------------------
--- Define the magnetic field term.
+-- Define the spin and orbital operators.
 --------------------------------------------------------------------------------
 Sx_3d    = NewOperator('Sx'   , NFermions, IndexUp_3d, IndexDn_3d)
 Sy_3d    = NewOperator('Sy'   , NFermions, IndexUp_3d, IndexDn_3d)
@@ -253,20 +253,6 @@ Jz = Jz_3d
 Ssqr = Sx * Sx + Sy * Sy + Sz * Sz
 Lsqr = Lx * Lx + Ly * Ly + Lz * Lz
 Jsqr = Jx * Jx + Jy * Jy + Jz * Jz
-
-Bx = $Bx * EnergyUnits.Tesla.value
-By = $By * EnergyUnits.Tesla.value
-Bz = $Bz * EnergyUnits.Tesla.value
-
-B = Bx * (2 * Sx + Lx)
-  + By * (2 * Sy + Ly)
-  + Bz * (2 * Sz + Lz)
-
-H_i = H_i
-    + B
-
-H_f = H_f
-    + B
 
 --------------------------------------------------------------------------------
 -- Define the restrictions and set the number of initial states.
@@ -389,21 +375,27 @@ io.write(footer)
 --------------------------------------------------------------------------------
 t = math.sqrt(1/2);
 
-Tiso_quad_1s_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -2, t * I}, {2, 2, -t * I}}) -- Txy
-                + NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -1, t    }, {2, 1, -t    }}) -- Txz
-                + NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -1, t * I}, {2, 1,  t * I}}) -- Tyz
-                + NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -2, t    }, {2, 2,  t    }}) -- Tx2y2
-                + NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2,  0, 1    }                }) -- Tz2
+Txy_1s_3d   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -2, t * I}, {2, 2, -t * I}})
+Txz_1s_3d   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -1, t    }, {2, 1, -t    }})
+Tyz_1s_3d   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -1, t * I}, {2, 1,  t * I}})
+Tx2y2_1s_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -2, t    }, {2, 2,  t    }})
+Tz2_1s_3d   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2,  0, 1    }                })
 
 if H_3d_4p_hybridization == 1 then
-    Tiso_dip_1s_4p = NewOperator('CF', NFermions, IndexUp_4p, IndexDn_4p, IndexUp_1s, IndexDn_1s, {{1, -1, t    }, {1, 1, -t    }}) -- Tx
-                   + NewOperator('CF', NFermions, IndexUp_4p, IndexDn_4p, IndexUp_1s, IndexDn_1s, {{1, -1, t * I}, {1, 1,  t * I}}) -- Ty
-                   + NewOperator('CF', NFermions, IndexUp_4p, IndexDn_4p, IndexUp_1s, IndexDn_1s, {{1,  0, 1    }                }) -- Tz
+    Tx_1s_4p = NewOperator('CF', NFermions, IndexUp_4p, IndexDn_4p, IndexUp_1s, IndexDn_1s, {{1, -1, t    }, {1, 1, -t    }})
+    Ty_1s_4p = NewOperator('CF', NFermions, IndexUp_4p, IndexDn_4p, IndexUp_1s, IndexDn_1s, {{1, -1, t * I}, {1, 1,  t * I}})
+    Tz_1s_4p = NewOperator('CF', NFermions, IndexUp_4p, IndexDn_4p, IndexUp_1s, IndexDn_1s, {{1,  0, 1    }                })
 end
 
 --------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
+calculateIso = $calculateIso
+
+if calculateIso == 0 then
+    return
+end
+
 E_gs_i = Psis_i[1] * H_i * Psis_i[1]
 
 Psis_f = Eigensystem(H_f, FinalRestrictions, 1)
@@ -430,17 +422,15 @@ for i, Psi in ipairs(Psis_i) do
         dZ = math.exp(-(E - E_gs_i) / T)
     end
 
-    if (dZ < math.sqrt(epsilon)) then
-        break
-    end
-
     Z = Z + dZ
 
-    if H_3d_4p_hybridization == 1 then
-        Giso_quad = Giso_quad + CreateSpectra(H_f, Tiso_quad_1s_3d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}}) * dZ
-        Giso_dip = Giso_dip + CreateSpectra(H_f, Tiso_dip_1s_4p, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}}) * dZ
-    else
-        Giso_quad = Giso_quad + CreateSpectra(H_f, Tiso_quad_1s_3d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+    if calculateIso == 1 then
+        if H_3d_4p_hybridization == 1 then
+            Giso_quad = Giso_quad + CreateSpectra(H_f, {Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}}) * dZ
+            Giso_dip = Giso_dip + CreateSpectra(H_f, {Tx_1s_4p, Ty_1s_4p, Tz_1s_4p}, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}}) * dZ
+        else
+            Giso_quad = Giso_quad + CreateSpectra(H_f, {Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+        end
     end
 end
 
@@ -454,13 +444,15 @@ P2_1s_3d = $P2(1s,3d)
 
 Iedge1 = 1e-5 -- edge jump
 
-if H_3d_4p_hybridization == 1 then
-    Giso_quad = 4 * math.pi^2 * alpha * a0^4 / (2 * hbar * c)^2 * P2_1s_3d^2 * Eedge1^3 / Iedge1 / math.pi / 15 / Z * Giso_quad
-    Giso_dip  = 4 * math.pi^2 * alpha * a0^2                    * P1_1s_4p^2 * Eedge1   / Iedge1 / math.pi /  3 / Z * Giso_dip
-else
-    Giso_quad = Giso_quad / Z
-end
+if calculateIso == 1 then
+    if H_3d_4p_hybridization == 1 then
+        Giso_quad = (4 * math.pi^2 * alpha * a0^4 / (2 * hbar * c)^2 * P2_1s_3d^2 * Eedge1^3 / Iedge1 / math.pi) * Giso_quad / Z / 15
+        Giso_dip  = (4 * math.pi^2 * alpha * a0^2                    * P1_1s_4p^2 * Eedge1   / Iedge1 / math.pi) * Giso_dip / Z / 3
+    else
+        Giso_quad = Giso_quad / Z / 15
+    end
 
-Giso = Giso_quad + Giso_dip
-Giso.Print({{'file', '$baseName' .. '_iso.spec'}})
+    Giso = Giso_quad + Giso_dip
+    Giso.Print({{'file', '$baseName' .. '_iso.spec'}})
+end
 

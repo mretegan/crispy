@@ -167,14 +167,14 @@ if H_cf == 1 then
     Delta1_4f = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, PotentialExpandedOnClm('Oh', 3, {-3/7, 4/7, -3/7}))
     Delta2_4f = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, PotentialExpandedOnClm('Oh', 3, {-3/7, -3/7, 4/7}))
 
-    Delta1_4f_i = $Delta1(4f)_i_value * $Delta1(4f)_i_scaling
-    Delta2_4f_i = $Delta2(4f)_i_value * $Delta2(4f)_i_scaling
+    Delta1_4f_i = $Delta1(4f)_i_value
+    Delta2_4f_i = $Delta2(4f)_i_value
 
-    Delta1_4f_m = $Delta1(4f)_m_value * $Delta1(4f)_m_scaling
-    Delta2_4f_m = $Delta2(4f)_m_value * $Delta2(4f)_m_scaling
+    Delta1_4f_m = $Delta1(4f)_m_value
+    Delta2_4f_m = $Delta2(4f)_m_value
 
-    Delta1_4f_f = $Delta1(4f)_f_value * $Delta1(4f)_f_scaling
-    Delta2_4f_f = $Delta2(4f)_f_value * $Delta2(4f)_f_scaling
+    Delta1_4f_f = $Delta1(4f)_f_value
+    Delta2_4f_f = $Delta2(4f)_f_value
 
     H_i = H_i
         + Delta1_4f_i * Delta1_4f
@@ -190,7 +190,7 @@ if H_cf == 1 then
 end
 
 --------------------------------------------------------------------------------
--- Define the magnetic field term.
+-- Define the spin and orbital operators.
 --------------------------------------------------------------------------------
 Sx_4f    = NewOperator('Sx'   , NFermions, IndexUp_4f, IndexDn_4f)
 Sy_4f    = NewOperator('Sy'   , NFermions, IndexUp_4f, IndexDn_4f)
@@ -228,23 +228,6 @@ Jz = Jz_4f
 Ssqr = Sx * Sx + Sy * Sy + Sz * Sz
 Lsqr = Lx * Lx + Ly * Ly + Lz * Lz
 Jsqr = Jx * Jx + Jy * Jy + Jz * Jz
-
-Bx = $Bx * EnergyUnits.Tesla.value
-By = $By * EnergyUnits.Tesla.value
-Bz = $Bz * EnergyUnits.Tesla.value
-
-B = Bx * (2 * Sx + Lx)
-  + By * (2 * Sy + Ly)
-  + Bz * (2 * Sz + Lz)
-
-H_i = H_i
-    + B
-
-H_m = H_m
-    + B
-
-H_f = H_f
-    + B
 
 --------------------------------------------------------------------------------
 -- Define the restrictions and set the number of initial states.
@@ -365,6 +348,12 @@ Tz_4d_2p = NewOperator('CF', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_4d, Inde
 --------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
+calculateIso = $calculateIso
+
+if calculateIso == 0 then
+    return
+end
+
 E_gs_i = Psis_i[1] * H_i * Psis_i[1]
 
 Psis_m = Eigensystem(H_m, IntermediateRestrictions, 1)
@@ -402,20 +391,19 @@ for i, Psi in ipairs(Psis_i) do
         dZ = math.exp(-(E - E_gs_i) / T)
     end
 
-    if (dZ < math.sqrt(epsilon)) then
-        break
-    end
-
     Z = Z + dZ
 
-    for j, OperatorIn in ipairs({Txy_2p_4f, Txz_2p_4f, Tyz_2p_4f, Tx2y2_2p_4f, Tz2_2p_4f}) do
-        for k, OperatorOut in ipairs({Tx_4d_2p, Ty_4d_2p, Tz_4d_2p}) do
-            Giso = Giso + CreateResonantSpectra(H_m, H_f, OperatorIn, OperatorOut, Psi, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}})
+    if calculateIso == 1 then
+        for j, OperatorIn in ipairs({Txy_2p_4f, Txz_2p_4f, Tyz_2p_4f, Tx2y2_2p_4f, Tz2_2p_4f}) do
+            for k, OperatorOut in ipairs({Tx_4d_2p, Ty_4d_2p, Tz_4d_2p}) do
+                Giso = Giso + CreateResonantSpectra(H_m, H_f, OperatorIn, OperatorOut, Psi, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}})
+            end
         end
     end
 end
 
-Giso = Giso / Z
-Giso.Print({{'file', '$baseName' .. '_iso.spec'}})
-
+if calculateIso == 1 then
+    Giso = Giso / Z
+    Giso.Print({{'file', '$baseName' .. '_iso.spec'}})
+end
 

@@ -119,11 +119,11 @@ if H_cf == 1 then
     Delta1_4f = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, PotentialExpandedOnClm('Oh', 3, {-3/7, 4/7, -3/7}))
     Delta2_4f = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, PotentialExpandedOnClm('Oh', 3, {-3/7, -3/7, 4/7}))
 
-    Delta1_4f_i = $Delta1(4f)_i_value * $Delta1(4f)_i_scaling
-    Delta2_4f_i = $Delta2(4f)_i_value * $Delta2(4f)_i_scaling
+    Delta1_4f_i = $Delta1(4f)_i_value
+    Delta2_4f_i = $Delta2(4f)_i_value
 
-    Delta1_4f_f = $Delta1(4f)_f_value * $Delta1(4f)_f_scaling
-    Delta2_4f_f = $Delta2(4f)_f_value * $Delta2(4f)_f_scaling
+    Delta1_4f_f = $Delta1(4f)_f_value
+    Delta2_4f_f = $Delta2(4f)_f_value
 
     H_i = H_i
         + Delta1_4f_i * Delta1_4f
@@ -135,7 +135,7 @@ if H_cf == 1 then
 end
 
 --------------------------------------------------------------------------------
--- Define the magnetic field term.
+-- Define the spin and orbital operators.
 --------------------------------------------------------------------------------
 Sx_4f    = NewOperator('Sx'   , NFermions, IndexUp_4f, IndexDn_4f)
 Sy_4f    = NewOperator('Sy'   , NFermions, IndexUp_4f, IndexDn_4f)
@@ -173,20 +173,6 @@ Jz = Jz_4f
 Ssqr = Sx * Sx + Sy * Sy + Sz * Sz
 Lsqr = Lx * Lx + Ly * Ly + Lz * Lz
 Jsqr = Jx * Jx + Jy * Jy + Jz * Jz
-
-Bx = $Bx * EnergyUnits.Tesla.value
-By = $By * EnergyUnits.Tesla.value
-Bz = $Bz * EnergyUnits.Tesla.value
-
-B = Bx * (2 * Sx + Lx)
-  + By * (2 * Sy + Ly)
-  + Bz * (2 * Sz + Lz)
-
-H_i = H_i
-    + B
-
-H_f = H_f
-    + B
 
 --------------------------------------------------------------------------------
 -- Define the restrictions and set the number of initial states.
@@ -288,15 +274,21 @@ io.write(footer)
 --------------------------------------------------------------------------------
 t = math.sqrt(1/2);
 
-Tiso_2p_4f = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_2p, IndexDn_2p, {{2, -2, t * I}, {2, 2, -t * I}}) -- Txy
-           + NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_2p, IndexDn_2p, {{2, -1, t    }, {2, 1, -t    }}) -- Txz
-           + NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_2p, IndexDn_2p, {{2, -1, t * I}, {2, 1,  t * I}}) -- Tyz
-           + NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_2p, IndexDn_2p, {{2, -2, t    }, {2, 2,  t    }}) -- Tx2y2
-           + NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_2p, IndexDn_2p, {{2,  0, 1    }                }) -- Tz2
+Txy_2p_4f   = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_2p, IndexDn_2p, {{2, -2, t * I}, {2, 2, -t * I}})
+Txz_2p_4f   = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_2p, IndexDn_2p, {{2, -1, t    }, {2, 1, -t    }})
+Tyz_2p_4f   = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_2p, IndexDn_2p, {{2, -1, t * I}, {2, 1,  t * I}})
+Tx2y2_2p_4f = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_2p, IndexDn_2p, {{2, -2, t    }, {2, 2,  t    }})
+Tz2_2p_4f   = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_2p, IndexDn_2p, {{2,  0, 1    }                })
 
 --------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
+calculateIso = $calculateIso
+
+if calculateIso == 0 then
+    return
+end
+
 E_gs_i = Psis_i[1] * H_i * Psis_i[1]
 
 Psis_f = Eigensystem(H_f, FinalRestrictions, 1)
@@ -322,15 +314,16 @@ for i, Psi in ipairs(Psis_i) do
         dZ = math.exp(-(E - E_gs_i) / T)
     end
 
-    if (dZ < math.sqrt(epsilon)) then
-        break
-    end
-
     Z = Z + dZ
 
-    Giso = Giso + CreateSpectra(H_f, Tiso_2p_4f, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+    if calculateIso == 1 then
+        Giso = Giso + CreateSpectra(H_f, {Txy_2p_4f, Txz_2p_4f, Tyz_2p_4f, Tx2y2_2p_4f, Tz2_2p_4f}, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+    end
 end
 
-Giso = Giso / Z
-Giso.Print({{'file', '$baseName' .. '_iso.spec'}})
+
+if calculateIso == 1 then
+    Giso = Giso / Z / 15
+    Giso.Print({{'file', '$baseName' .. '_iso.spec'}})
+end
 

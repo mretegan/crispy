@@ -19,15 +19,14 @@
   <property name="minimumSize">
    <size>
     <width>275</width>
-    <height>340</height>
+    <height>350</height>
    </size>
   </property>
   <property name="styleSheet">
    <string notr="true">QToolBox::tab {
     background-color: rgb(75, 75, 75);
     color: white;
-}
-</string>
+}</string>
   </property>
   <property name="features">
    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
@@ -63,6 +62,9 @@
     </property>
     <item>
      <widget class="QToolBox" name="quantyToolBox">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
       <property name="lineWidth">
        <number>0</number>
       </property>
@@ -75,13 +77,16 @@
          <x>0</x>
          <y>0</y>
          <width>275</width>
-         <height>514</height>
+         <height>554</height>
         </rect>
        </property>
        <attribute name="label">
         <string>General Setup</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout">
+        <property name="spacing">
+         <number>6</number>
+        </property>
         <property name="leftMargin">
          <number>6</number>
         </property>
@@ -95,11 +100,17 @@
          <number>3</number>
         </property>
         <item>
-         <widget class="QGroupBox" name="groupBox_3">
+         <widget class="QGroupBox" name="elementGroupBox">
+          <property name="minimumSize">
+           <size>
+            <width>240</width>
+            <height>0</height>
+           </size>
+          </property>
           <property name="title">
            <string>Element and Experiment</string>
           </property>
-          <layout class="QGridLayout" name="gridLayout_3">
+          <layout class="QGridLayout" name="_24">
            <property name="leftMargin">
             <number>6</number>
            </property>
@@ -162,7 +173,13 @@
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="groupBox">
+         <widget class="QGroupBox" name="experimentGroupBox">
+          <property name="minimumSize">
+           <size>
+            <width>240</width>
+            <height>0</height>
+           </size>
+          </property>
           <property name="title">
            <string>Experimental Conditions</string>
           </property>
@@ -207,7 +224,7 @@
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>55</width>
+                 <width>65</width>
                  <height>16777215</height>
                 </size>
                </property>
@@ -222,117 +239,25 @@
             </layout>
            </item>
            <item>
-            <widget class="QLabel" name="magneticFieldLabel">
-             <property name="text">
-              <string>Magnetic Field (T)</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="_4">
+            <layout class="QHBoxLayout" name="_20">
              <item>
-              <widget class="QLabel" name="magneticFieldXLabel">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
+              <widget class="QLabel" name="magneticFieldLabel">
                <property name="text">
-                <string>x</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                <string>Magnetic Field (T)</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="magneticFieldXLineEdit">
+              <widget class="QLineEdit" name="magneticFieldLineEdit">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>55</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>0.0</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="magneticFieldYLabel">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>y</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="magneticFieldYLineEdit">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>55</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>0.0</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="magneticFieldZLabel">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string> z</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="magneticFieldZLineEdit">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="maximumSize">
-                <size>
-                 <width>55</width>
+                 <width>65</width>
                  <height>16777215</height>
                 </size>
                </property>
@@ -356,6 +281,15 @@
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>240</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="focusPolicy">
+           <enum>Qt::NoFocus</enum>
           </property>
           <property name="currentIndex">
            <number>0</number>
@@ -402,7 +336,7 @@
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>55</width>
+                  <width>65</width>
                   <height>16777215</height>
                  </size>
                 </property>
@@ -421,7 +355,7 @@
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>55</width>
+                  <width>65</width>
                   <height>16777215</height>
                  </size>
                 </property>
@@ -451,7 +385,7 @@
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>55</width>
+                  <width>65</width>
                   <height>16777215</height>
                  </size>
                 </property>
@@ -488,7 +422,7 @@
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>55</width>
+                  <width>65</width>
                   <height>16777215</height>
                  </size>
                 </property>
@@ -524,7 +458,7 @@
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>55</width>
+                  <width>65</width>
                   <height>16777215</height>
                  </size>
                 </property>
@@ -533,6 +467,82 @@
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QLabel" name="e1VectorsLabel">
+              <property name="text">
+               <string>Wave and Polarization Vectors</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="_4">
+              <item>
+               <widget class="QLabel" name="kinLabel">
+                <property name="text">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;span style=&quot; font-weight:600;&quot;&gt;k&lt;/span&gt;&lt;span style=&quot; vertical-align:sub;&quot;&gt;in&lt;/span&gt;&lt;span style=&quot; font-weight:600;&quot;/&gt; [x, y, z]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="kinLineEdit">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>110</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>[0, -1, 0]</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="_21">
+              <item>
+               <widget class="QLabel" name="einLabel">
+                <property name="text">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;span style=&quot; font-weight:600;&quot;&gt;ε&lt;/span&gt;&lt;span style=&quot; vertical-align:sub;&quot;&gt;in&lt;/span&gt; [x, y, z]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="einLineEdit">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>110</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>[0, 0, 1]</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
                 </property>
                </widget>
               </item>
@@ -579,7 +589,7 @@
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>55</width>
+                  <width>65</width>
                   <height>16777215</height>
                  </size>
                 </property>
@@ -598,7 +608,7 @@
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>55</width>
+                  <width>65</width>
                   <height>16777215</height>
                  </size>
                 </property>
@@ -634,7 +644,7 @@
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>55</width>
+                  <width>65</width>
                   <height>16777215</height>
                  </size>
                 </property>
@@ -671,7 +681,7 @@
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>55</width>
+                  <width>65</width>
                   <height>16777215</height>
                  </size>
                 </property>
@@ -704,7 +714,7 @@
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>55</width>
+                  <width>65</width>
                   <height>16777215</height>
                  </size>
                 </property>
@@ -718,8 +728,138 @@
               </item>
              </layout>
             </item>
+            <item>
+             <widget class="QLabel" name="e2VectorsLabel">
+              <property name="text">
+               <string>Wave and Polarization Vectors</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="_22">
+              <item>
+               <widget class="QLabel" name="koutLabel">
+                <property name="text">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;span style=&quot; font-weight:600;&quot;&gt;k&lt;/span&gt;&lt;span style=&quot; vertical-align:sub;&quot;&gt;out&lt;/span&gt;&lt;span style=&quot; font-weight:600;&quot;/&gt; [x, y, z]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="koutLineEdit">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>110</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>[0, 0, 0]</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="_23">
+              <item>
+               <widget class="QLabel" name="eoutLabel">
+                <property name="text">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;span style=&quot; font-weight:600;&quot;&gt;ε&lt;/span&gt;&lt;span style=&quot; vertical-align:sub;&quot;&gt;out&lt;/span&gt; [x, y, z]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLineEdit" name="eoutLineEdit">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>110</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>[0, 0, 0]</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
            </layout>
           </widget>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="spectraGroupBox">
+          <property name="toolTip">
+           <string>Select the spectra to be calculated.</string>
+          </property>
+          <property name="title">
+           <string>Spectra</string>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QCheckBox" name="calculateIsoCheckBox">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Isotropic</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="calculateCDCheckBox">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>XMCD</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="calculateLDCheckBox">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>X(M)LD</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
         <item>
@@ -745,8 +885,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>275</width>
-         <height>514</height>
+         <width>272</width>
+         <height>290</height>
         </rect>
        </property>
        <attribute name="label">
@@ -807,13 +947,16 @@
               <layout class="QHBoxLayout" name="_3">
                <item>
                 <widget class="QLabel" name="nPsisLabel">
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Number of initial Hamiltonian states to consider in the calculaltion.&lt;/p&gt;&lt;p&gt;If &lt;span style=&quot; font-weight:600;&quot;&gt;Auto&lt;/span&gt;, their number will be detemined based on the occupancy at the given temperature.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="text">
                   <string>Number of States</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QCheckBox" name="nPsisCheckBox">
+                <widget class="QCheckBox" name="nPsisAutoCheckBox">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -856,9 +999,9 @@
               </layout>
              </item>
              <item>
-              <widget class="QLabel" name="scaleFactorLabel">
+              <widget class="QLabel" name="scaleFactorsLabel">
                <property name="text">
-                <string>Scale Factors for Intergals</string>
+                <string>Scale Factors for the Atomic Integrals</string>
                </property>
               </widget>
              </item>
@@ -1030,14 +1173,17 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>275</width>
-         <height>514</height>
+         <width>90</width>
+         <height>84</height>
         </rect>
        </property>
        <attribute name="label">
         <string>Results</string>
        </attribute>
-       <layout class="QVBoxLayout" name="_7">
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <property name="spacing">
+         <number>6</number>
+        </property>
         <property name="leftMargin">
          <number>6</number>
         </property>
@@ -1086,6 +1232,9 @@
       </property>
       <item>
        <widget class="QPushButton" name="saveInputAsPushButton">
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
         <property name="toolTip">
          <string>Save a Quanty input file</string>
         </property>
@@ -1117,6 +1266,9 @@
           <width>105</width>
           <height>16777215</height>
          </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
         </property>
         <property name="toolTip">
          <string>Run Quanty</string>
@@ -1156,6 +1308,41 @@
    <header>.widgets.combobox</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>elementComboBox</tabstop>
+  <tabstop>chargeComboBox</tabstop>
+  <tabstop>symmetryComboBox</tabstop>
+  <tabstop>experimentComboBox</tabstop>
+  <tabstop>edgeComboBox</tabstop>
+  <tabstop>temperatureLineEdit</tabstop>
+  <tabstop>magneticFieldLineEdit</tabstop>
+  <tabstop>e1MinLineEdit</tabstop>
+  <tabstop>e1MaxLineEdit</tabstop>
+  <tabstop>e1NPointsLineEdit</tabstop>
+  <tabstop>e1LorentzianLineEdit</tabstop>
+  <tabstop>e1GaussianLineEdit</tabstop>
+  <tabstop>kinLineEdit</tabstop>
+  <tabstop>einLineEdit</tabstop>
+  <tabstop>e2MinLineEdit</tabstop>
+  <tabstop>e2MaxLineEdit</tabstop>
+  <tabstop>e2NPointsLineEdit</tabstop>
+  <tabstop>e2LorentzianLineEdit</tabstop>
+  <tabstop>e2GaussianLineEdit</tabstop>
+  <tabstop>koutLineEdit</tabstop>
+  <tabstop>eoutLineEdit</tabstop>
+  <tabstop>calculateIsoCheckBox</tabstop>
+  <tabstop>calculateCDCheckBox</tabstop>
+  <tabstop>calculateLDCheckBox</tabstop>
+  <tabstop>nPsisAutoCheckBox</tabstop>
+  <tabstop>nPsisLineEdit</tabstop>
+  <tabstop>fkLineEdit</tabstop>
+  <tabstop>gkLineEdit</tabstop>
+  <tabstop>zetaLineEdit</tabstop>
+  <tabstop>hamiltonianTermsView</tabstop>
+  <tabstop>hamiltonianParametersView</tabstop>
+  <tabstop>calculationPushButton</tabstop>
+  <tabstop>saveInputAsPushButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

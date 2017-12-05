@@ -138,17 +138,17 @@ if H_cf == 1 then
     Ds_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm('D4h', 2, {-2,  2,  2, -1}))
     Dt_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm('D4h', 2, {-6, -1, -1,  4}))
 
-    Dq_3d_i = $Dq(3d)_i_value * $Dq(3d)_i_scaling
-    Ds_3d_i = $Ds(3d)_i_value * $Ds(3d)_i_scaling
-    Dt_3d_i = $Dt(3d)_i_value * $Dt(3d)_i_scaling
+    Dq_3d_i = $Dq(3d)_i_value
+    Ds_3d_i = $Ds(3d)_i_value
+    Dt_3d_i = $Dt(3d)_i_value
 
-    Dq_3d_m = $Dq(3d)_m_value * $Dq(3d)_m_scaling
-    Ds_3d_m = $Ds(3d)_m_value * $Ds(3d)_m_scaling
-    Dt_3d_m = $Dt(3d)_m_value * $Dt(3d)_m_scaling
+    Dq_3d_m = $Dq(3d)_m_value
+    Ds_3d_m = $Ds(3d)_m_value
+    Dt_3d_m = $Dt(3d)_m_value
 
-    Dq_3d_f = $Dq(3d)_f_value * $Dq(3d)_f_scaling
-    Ds_3d_f = $Ds(3d)_f_value * $Ds(3d)_f_scaling
-    Dt_3d_f = $Dt(3d)_f_value * $Dt(3d)_f_scaling
+    Dq_3d_f = $Dq(3d)_f_value
+    Ds_3d_f = $Ds(3d)_f_value
+    Dt_3d_f = $Dt(3d)_f_value
 
     H_i = H_i
         + Dq_3d_i * Dq_3d
@@ -167,7 +167,7 @@ if H_cf == 1 then
 end
 
 --------------------------------------------------------------------------------
--- Define the magnetic field term.
+-- Define the spin and orbital operators.
 --------------------------------------------------------------------------------
 Sx_3d    = NewOperator('Sx'   , NFermions, IndexUp_3d, IndexDn_3d)
 Sy_3d    = NewOperator('Sy'   , NFermions, IndexUp_3d, IndexDn_3d)
@@ -205,23 +205,6 @@ Jz = Jz_3d
 Ssqr = Sx * Sx + Sy * Sy + Sz * Sz
 Lsqr = Lx * Lx + Ly * Ly + Lz * Lz
 Jsqr = Jx * Jx + Jy * Jy + Jz * Jz
-
-Bx = $Bx * EnergyUnits.Tesla.value
-By = $By * EnergyUnits.Tesla.value
-Bz = $Bz * EnergyUnits.Tesla.value
-
-B = Bx * (2 * Sx + Lx)
-  + By * (2 * Sy + Ly)
-  + Bz * (2 * Sz + Lz)
-
-H_i = H_i
-    + B
-
-H_m = H_m
-    + B
-
-H_f = H_f
-    + B
 
 --------------------------------------------------------------------------------
 -- Define the restrictions and set the number of initial states.
@@ -342,6 +325,12 @@ Tz_3p_1s = NewOperator('CF', NFermions, IndexUp_1s, IndexDn_1s, IndexUp_3p, Inde
 --------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
+calculateIso = $calculateIso
+
+if calculateIso == 0 then
+    return
+end
+
 E_gs_i = Psis_i[1] * H_i * Psis_i[1]
 
 Psis_m = Eigensystem(H_m, IntermediateRestrictions, 1)
@@ -379,19 +368,19 @@ for i, Psi in ipairs(Psis_i) do
         dZ = math.exp(-(E - E_gs_i) / T)
     end
 
-    if (dZ < math.sqrt(epsilon)) then
-        break
-    end
-
     Z = Z + dZ
 
-    for j, OperatorIn in ipairs({Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}) do
-        for k, OperatorOut in ipairs({Tx_3p_1s, Ty_3p_1s, Tz_3p_1s}) do
-            Giso = Giso + CreateResonantSpectra(H_m, H_f, OperatorIn, OperatorOut, Psi, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}}) * dZ
+    if calculateIso == 1 then
+        for j, OperatorIn in ipairs({Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}) do
+            for k, OperatorOut in ipairs({Tx_3p_1s, Ty_3p_1s, Tz_3p_1s}) do
+                Giso = Giso + CreateResonantSpectra(H_m, H_f, OperatorIn, OperatorOut, Psi, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}}) * dZ
+            end
         end
     end
 end
 
-Giso = Giso / Z
-Giso.Print({{'file', '$baseName' .. '_iso.spec'}})
+if calculateIso == 1 then
+    Giso = Giso / Z
+    Giso.Print({{'file', '$baseName' .. '_iso.spec'}})
+end
 

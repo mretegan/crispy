@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '04/10/2017'
+__date__ = '05/12/2017'
 
 
 import collections
@@ -287,6 +287,8 @@ class TreeModel(QAbstractItemModel):
                 self._getModelData(data[key], node)
             else:
                 if isinstance(node.getItemData(2), float):
+                    data[key] = [node.getItemData(1), node.getItemData(2)]
+                elif isinstance(node.getItemData(2), str):
                     data[key] = [node.getItemData(1), node.getItemData(2)]
                 else:
                     data[key] = node.getItemData(1)
