@@ -11,7 +11,7 @@ The easiest way to install crispy is to use the installer provided on the `relea
 
 From Source
 -----------
-First you have to make sure you have a working Python distribution. While crispy works with both Python 2 and Python 3, you should try to install Python 3.5 or greater, as in previous versions some of the dependencies like PyQt5 cannot be easily installed. On macOS and Windows you can install Python using the `official <https://www.python.org/downloads>`_ installers. In particular for Windows you should install the 64-bit version of Python, and make sure that during the installation you select to add Python to system's PATH. On Linux, Python and dependencies (see below) can be installed using the system's package manager (``apt-get``, ``dnf``, ``pacman``, etc.). 
+First you have to make sure you have a working Python distribution. While crispy works with both Python 2 and Python 3, you should try to install Python 3.5 or greater, as in previous versions some of the dependencies like PyQt5 cannot be easily installed using pip. On macOS and Windows you can install Python using the `official <https://www.python.org/downloads>`_ installers. In particular for Windows you should install the 64-bit version of Python, and make sure that during the installation you select to add Python to system's PATH. On Linux, Python and dependencies (see below) can be installed using the system's package manager (``apt-get``, ``dnf``, ``pacman``, etc.).
 
 Crispy depends on the following Python packages:
 
@@ -20,13 +20,13 @@ Crispy depends on the following Python packages:
 * `matplotlib <http://matplotlib.org>`_
 * `silx <http://www.silx.org>`_
 
-The dependencies can be installed using ``pip`` (only for Python 3.5 or greater):: 
+The dependencies can be installed using ``pip`` (only for Python 3.5 or greater)::
 
     pip install -r requirements.txt [--user]
 
 The ``--user`` options is usually only required for Linux or macOS operating systems.
 
-It is possible, although unlikely, that the development version of crispy requires features that are not yet available with the pip installable version of silx. In this case you have to also install silx from source. This is not always a very simple task, especially on Windows, but there is extensive `documentation <http://www.silx.org/doc/silx>`_ on how to do it. 
+It is possible, although unlikely, that the development version of crispy requires features that are not yet available with the pip installable version of silx. In this case you have to also install silx from source. This is not always a very simple task, especially on Windows, but there is extensive `documentation <http://www.silx.org/doc/silx>`_ on how to do it.
 
 Once Python and all dependencies are installed, you can proceed to installing crispy. You can download the source code from GitHub either as an `archive <https://github.com/mretegan/crispy/archive/master.zip>`_ or using ``git``::
 
@@ -45,7 +45,7 @@ If you have used the installers, crispy should be easy to find and launch. For t
 
     crispy
 
-This is a file created during the installation and should be available from the command line if the PATH environment variable was set correctly during the initial Python installation. 
+This is a file created during the installation and should be available from the command line if the PATH environment variable was set correctly during the initial Python installation.
 
 You can also start crispy without installing it by going to the source directory and executing (only for Python 3.5 or greater)::
 

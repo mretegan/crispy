@@ -357,9 +357,9 @@ Gein1 = 0
 Gein2 = 0
 
 io.write(string.format('\nSpectrum calculation for each of the selected states:\n'))
-io.write(string.format('==================\n'))
-io.write(string.format('State Contribution\n'))
-io.write(string.format('==================\n'))
+io.write(string.format('===============\n'))
+io.write(string.format('   i         dZ\n'))
+io.write(string.format('===============\n'))
 
 for i, Psi in ipairs(Psis_i) do
     E = Psi * H_i * Psi
@@ -372,7 +372,7 @@ for i, Psi in ipairs(Psis_i) do
 
     Z = Z + dZ
 
-    io.write(string.format('%5d   %6.4E\n', i, dZ))
+    io.write(string.format('%4d   %3.2E\n', i, dZ))
 
     if calculateIso == 1 then
         Giso = Giso + CreateSpectra(H_f, {Tx_2p_5d, Ty_2p_5d, Tz_2p_5d}, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
@@ -388,7 +388,7 @@ for i, Psi in ipairs(Psis_i) do
         Gein2 = Gein2 + CreateSpectra(H_f, Tein2_2p_5d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
     end
 end
-io.write(string.format('==================\n'))
+io.write(string.format('===============\n'))
 
 if calculateIso == 1 then
     Giso = Giso / Z / 3
