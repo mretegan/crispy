@@ -758,6 +758,7 @@ class QuantyDockWidget(QDockWidget):
             experiment=experiment, edge=edge)
 
         self.updateUi()
+        self.updateMainWindowTitle()
         self.parent().plotWidget.reset()
         self.resultsView.selectionModel().clearSelection()
 
