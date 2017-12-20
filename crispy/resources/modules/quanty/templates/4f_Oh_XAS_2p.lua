@@ -246,7 +246,6 @@ if NPsisAuto == 1 and NPsis ~= 1 then
             NPsis = NPsis + NPsisIncrement
         end
     end
-    Z = 0
 else
         if CalculationRestrictions == nil then
             Psis_i = Eigensystem(H_i, InitialRestrictions, NPsis)
@@ -303,6 +302,8 @@ Emax = $Emax1 - DeltaE
 Gamma = $Gamma1
 NE = $NE1
 
+Z = 0
+
 Giso = 0
 
 for i, Psi in ipairs(Psis_i) do
@@ -317,7 +318,9 @@ for i, Psi in ipairs(Psis_i) do
     Z = Z + dZ
 
     if calculateIso == 1 then
-        Giso = Giso + CreateSpectra(H_f, {Txy_2p_4f, Txz_2p_4f, Tyz_2p_4f, Tx2y2_2p_4f, Tz2_2p_4f}, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+        for j, Operator in ipairs({Txy_2p_4f, Txz_2p_4f, Tyz_2p_4f, Tx2y2_2p_4f, Tz2_2p_4f}) do
+            Giso = Giso + CreateSpectra(H_f, Operator, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+        end
     end
 end
 

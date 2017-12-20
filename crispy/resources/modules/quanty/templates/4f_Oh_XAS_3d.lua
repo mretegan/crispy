@@ -294,7 +294,6 @@ if NPsisAuto == 1 and NPsis ~= 1 then
             NPsis = NPsis + NPsisIncrement
         end
     end
-    Z = 0
 else
         if CalculationRestrictions == nil then
             Psis_i = Eigensystem(H_i, InitialRestrictions, NPsis)
@@ -361,6 +360,8 @@ Emax = $Emax1 - DeltaE
 Gamma = $Gamma1
 NE = $NE1
 
+Z = 0
+
 Giso = 0
 
 Gr = 0
@@ -388,7 +389,9 @@ for i, Psi in ipairs(Psis_i) do
     io.write(string.format('%4d   %3.2E\n', i, dZ))
 
     if calculateIso == 1 then
-        Giso = Giso + CreateSpectra(H_f, {Tx_3d_4f, Ty_3d_4f, Tz_3d_4f}, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+        for j, Operator in ipairs({Tx_3d_4f, Ty_3d_4f, Tz_3d_4f}) do
+            Giso = Giso + CreateSpectra(H_f, Operator, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+        end
     end
 
     if calculateCD == 1 then

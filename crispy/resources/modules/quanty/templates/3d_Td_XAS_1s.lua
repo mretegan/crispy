@@ -427,7 +427,6 @@ if NPsisAuto == 1 and NPsis ~= 1 then
             NPsis = NPsis + NPsisIncrement
         end
     end
-    Z = 0
 else
         if CalculationRestrictions == nil then
             Psis_i = Eigensystem(H_i, InitialRestrictions, NPsis)
@@ -490,6 +489,8 @@ Emax = $Emax1 - DeltaE
 Gamma = $Gamma1
 NE = $NE1
 
+Z = 0
+
 Giso_quad = 0
 Giso_dip = 0
 
@@ -506,10 +507,16 @@ for i, Psi in ipairs(Psis_i) do
 
     if calculateIso == 1 then
         if H_3d_4p_hybridization == 1 then
-            Giso_quad = Giso_quad + CreateSpectra(H_f, {Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}}) * dZ
-            Giso_dip = Giso_dip + CreateSpectra(H_f, {Tx_1s_4p, Ty_1s_4p, Tz_1s_4p}, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}}) * dZ
+            for j, Operator in ipairs({Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}) do
+                Giso_quad = Giso_quad + CreateSpectra(H_f, Operator, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}}) * dZ
+            end
+            for k, Operator in ipairs({Tx_1s_4p, Ty_1s_4p, Tz_1s_4p}) do
+                Giso_dip = Giso_dip + CreateSpectra(H_f, Operator, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}}) * dZ
+            end
         else
-            Giso_quad = Giso_quad + CreateSpectra(H_f, {Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+            for j, Operator in ipairs({Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}) do
+                Giso_quad = Giso_quad + CreateSpectra(H_f, Operator, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}}) * dZ
+            end
         end
     end
 end

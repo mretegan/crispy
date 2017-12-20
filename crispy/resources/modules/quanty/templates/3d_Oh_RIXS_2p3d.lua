@@ -350,7 +350,6 @@ if NPsisAuto == 1 and NPsis ~= 1 then
             NPsis = NPsis + NPsisIncrement
         end
     end
-    Z = 0
 else
         if CalculationRestrictions == nil then
             Psis_i = Eigensystem(H_i, InitialRestrictions, NPsis)

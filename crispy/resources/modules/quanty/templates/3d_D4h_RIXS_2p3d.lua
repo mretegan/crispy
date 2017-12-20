@@ -266,7 +266,6 @@ if NPsisAuto == 1 and NPsis ~= 1 then
             NPsis = NPsis + NPsisIncrement
         end
     end
-    Z = 0
 else
         if CalculationRestrictions == nil then
             Psis_i = Eigensystem(H_i, InitialRestrictions, NPsis)
@@ -336,6 +335,8 @@ Emin2 = $Emin2 - DeltaE2
 Emax2 = $Emax2 - DeltaE2
 Gamma2 = $Gamma2
 NE2 = $NE2
+
+Z = 0
 
 Giso = 0
 
