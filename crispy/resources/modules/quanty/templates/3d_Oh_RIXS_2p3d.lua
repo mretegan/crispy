@@ -420,6 +420,8 @@ Emax2 = $Emax2 - DeltaE2
 Gamma2 = $Gamma2
 NE2 = $NE2
 
+Z = 0
+
 Giso = 0
 
 for i, Psi in ipairs(Psis_i) do
