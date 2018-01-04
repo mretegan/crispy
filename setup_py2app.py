@@ -131,7 +131,7 @@ def main():
 
     options = {
         'py2app': {
-            'iconfile': 'icons/crispy.icns',
+            'iconfile': 'assets/crispy.icns',
             'bdist_base': build_dir,
             'dist_dir': dist_dir,
             'packages': packages,

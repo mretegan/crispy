@@ -80,7 +80,7 @@ def main():
         Executable(
             'scripts/crispy',
             base=base,
-            icon='icons/crispy.ico',
+            icon='assets/crispy.ico',
             ),
         ]
 
