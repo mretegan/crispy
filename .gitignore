@@ -55,3 +55,6 @@ docs/_build/
 
 # Visual Studio Code
 .vscode
+
+# Quanty binaries
+crispy/resources/modules/quanty/bin/

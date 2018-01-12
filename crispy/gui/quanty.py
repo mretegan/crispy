@@ -40,6 +40,7 @@ try:
     import cPickle as pickle
 except ImportError:
     import pickle
+import platform
 import subprocess
 import sys
 import uuid
@@ -783,6 +784,12 @@ class QuantyDockWidget(QDockWidget):
         self.updateMainWindowTitle()
 
     def runCalculation(self):
+        arch = '64-bit' if '64' in platform.machine() else '32-bit'
+        path = resourceFileName(
+            'crispy:' + os.path.join(
+                'modules', 'quanty', 'bin', sys.platform, arch))
+        os.environ['PATH'] = '{};{}'.format(path, os.environ['PATH'])
+
         if 'win32' in sys.platform:
             self.command = 'Quanty.exe'
         else:
