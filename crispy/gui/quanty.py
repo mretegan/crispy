@@ -33,7 +33,6 @@ __date__ = '06/12/2017'
 import collections
 import copy
 import datetime
-import functools
 import json
 import numpy as np
 import os
@@ -335,7 +334,7 @@ class QuantyCalculation(object):
         with open(self.baseName + '.lua', 'w') as f:
             f.write(self.template)
 
-        self.uuid = uuid.uuid4().hex
+        self.uuid = uuid.uuid4().hex[:4]
 
         self.label = '{} | {} | {} | {} | {}'.format(
             self.element, self.charge, self.symmetry, self.experiment,
@@ -412,6 +411,10 @@ class QuantyDockWidget(QDockWidget):
         self.fkLineEdit.editingFinished.connect(self.updateScalingFactors)
         self.gkLineEdit.editingFinished.connect(self.updateScalingFactors)
         self.zetaLineEdit.editingFinished.connect(self.updateScalingFactors)
+
+        self.plotIsoCheckBox.toggled.connect(self.plotSelectedCalculations)
+        self.plotCDCheckBox.toggled.connect(self.plotSelectedCalculations)
+        self.plotLDCheckBox.toggled.connect(self.plotSelectedCalculations)
 
         self.saveInputAsPushButton.clicked.connect(self.saveInputAs)
         self.calculationPushButton.clicked.connect(self.runCalculation)
@@ -889,8 +892,10 @@ class QuantyDockWidget(QDockWidget):
         spectra = list()
         if c.calculateIso:
             spectra.append(('Isotropic', '_iso.spec'))
+
         if c.calculateCD:
             spectra.append(('XMCD', '_cd.spec'))
+
         if c.calculateLD:
             spectra.append(('X(M)LD', '_ld.spec'))
 
@@ -915,12 +920,15 @@ class QuantyDockWidget(QDockWidget):
         # Open the results page.
         self.quantyToolBox.setCurrentWidget(self.resultsPage)
 
-    def plot(self):
+    def plot(self, spectrumName):
         plotWidget = self.parent().plotWidget
         statusBar = self.parent().statusBar()
 
         c = self.calculation
-        data = c.spectra[self.currentSpectrum]
+        try:
+            data = c.spectra[spectrumName]
+        except KeyError:
+            return
 
         if 'RIXS' in c.experiment:
             plotWidget.setGraphXLabel('Incident Energy (eV)')
@@ -952,15 +960,17 @@ class QuantyDockWidget(QDockWidget):
         else:
             # Check if the data is valid.
             if np.max(np.abs(data)) < np.finfo(np.float32).eps:
-                message = 'Spectrum has very low intensity.'
+                message = 'The {} spectrum has very low intensity.'.format(
+                    spectrumName)
                 statusBar.showMessage(message)
 
             plotWidget.setGraphXLabel('Absorption Energy (eV)')
             plotWidget.setGraphYLabel('Absorption Cross Section (a.u.)')
 
-            legend = c.label + ' | ' + c.uuid
-            x = np.linspace(c.e1Min, c.e1Max, c.e1NPoints + 1)
+            legend = '{} | {} | id: {}'.format(c.label, spectrumName, c.uuid)
             scale = (c.e1Max - c.e1Min) / c.e1NPoints
+
+            x = np.linspace(c.e1Min, c.e1Max, c.e1NPoints + 1)
             y = data
 
             if c.e1Gaussian > 0.:
@@ -1004,11 +1014,6 @@ class QuantyDockWidget(QDockWidget):
             triggered=self.loadCalculations)
 
         self.itemsContextMenu = QMenu('Items Context Menu', self)
-        icon = QIcon(resourceFileName(
-            'crispy:' + os.path.join('gui', 'icons', 'area-chart.svg')))
-        self.spectraMenu = self.itemsContextMenu.addMenu(
-            icon, 'Select Spectrum to Plot')
-        self.itemsContextMenu.addSeparator()
         self.itemsContextMenu.addAction(self.saveSelectedCalculationsAsAction)
         self.itemsContextMenu.addAction(self.removeCalculationsAction)
 
@@ -1035,52 +1040,28 @@ class QuantyDockWidget(QDockWidget):
         return calculations
 
     def selectedCalculationsChanged(self):
-        # Reset the plot widget.
-        self.parent().plotWidget.reset()
-        self.updateSpectraMenu()
         self.plotSelectedCalculations()
         self.updateUi()
 
-    def plotSelectedCalculations(self, spectrum=None):
-        if self.spectraMenu.isEmpty():
-            return
+    def plotSelectedCalculations(self):
+        # Reset the plot widget.
+        self.parent().plotWidget.reset()
 
-        spectra = [action.text() for action in self.spectraMenu.actions()]
+        spectraName = list()
+        if self.plotIsoCheckBox.isChecked():
+            spectraName.append('Isotropic')
 
-        if not spectrum:
-            spectrum = spectra[0]
-            if (not hasattr(self, 'currentSpectrum') or
-                    self.currentSpectrum not in spectra):
-                self.currentSpectrum = spectrum
-        else:
-            self.currentSpectrum = spectrum
+        # Maybe add the left and right polarizations.
+        if self.plotCDCheckBox.isChecked():
+            spectraName.append('XMCD')
+
+        if self.plotLDCheckBox.isChecked():
+            spectraName.append('X(M)LD')
 
         for calculation in self.selectedCalculations():
             self.calculation = copy.deepcopy(calculation)
-            self.plot()
-
-    def updateSpectraMenu(self):
-        self.spectraMenu.clear()
-
-        # Get the spectra available for the individual calculations.
-        spectra = list()
-        for calculation in self.selectedCalculations():
-            spectra.append((set(calculation.spectra.keys())))
-
-        # Find the common spectra among the calculations.
-        try:
-            spectra = sorted(set.intersection(*spectra))
-        except TypeError:
-            return
-
-        if len(spectra) == 0:
-            return
-
-        for spectrum in spectra:
-            action = QAction(spectrum, self)
-            self.spectraMenu.addAction(action)
-            action.triggered.connect(
-                functools.partial(self.plotSelectedCalculations, spectrum))
+            for spectrumName in spectraName:
+                self.plot(spectrumName)
 
     def updateResultsViewSelection(self):
         self.resultsView.selectionModel().clearSelection()

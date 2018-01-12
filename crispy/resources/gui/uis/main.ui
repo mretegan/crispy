@@ -16,6 +16,14 @@
   <property name="styleSheet">
    <string notr="true">QMainWindow::separator {
   width: 1px;
+}
+
+QToolButton {
+	font-size: 13px;
+}
+
+QToolButton::menu-indicator{
+  width: 0px;
 }</string>
   </property>
   <widget class="QWidget" name="centralWidget">
@@ -36,6 +44,9 @@
      <widget class="QSplitter" name="splitter">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
+      </property>
+      <property name="handleWidth">
+       <number>0</number>
       </property>
       <widget class="QFrame" name="frame">
        <property name="frameShape">

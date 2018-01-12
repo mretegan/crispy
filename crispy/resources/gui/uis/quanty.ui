@@ -782,12 +782,12 @@
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="spectraGroupBox">
+         <widget class="QGroupBox" name="calculateGroupBox">
           <property name="toolTip">
            <string>Select the spectra to be calculated.</string>
           </property>
           <property name="title">
-           <string>Spectra</string>
+           <string>Spectra to Calculate</string>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
@@ -1137,7 +1137,7 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <property name="spacing">
-         <number>6</number>
+         <number>0</number>
         </property>
         <property name="leftMargin">
          <number>6</number>
@@ -1162,6 +1162,60 @@
           <property name="alternatingRowColors">
            <bool>true</bool>
           </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="plotGroupBox">
+          <property name="toolTip">
+           <string>Select the spectra to be calculated.</string>
+          </property>
+          <property name="title">
+           <string>Spectra to Plot</string>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <item>
+            <widget class="QCheckBox" name="plotIsoCheckBox">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Isotropic</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="plotCDCheckBox">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>XMCD</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="plotLDCheckBox">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>X(M)LD</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
