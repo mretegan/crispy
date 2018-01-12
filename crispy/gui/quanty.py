@@ -679,7 +679,7 @@ class QuantyDockWidget(QDockWidget):
                         terms[term][configuration][parameter] = (value, c.zeta)
                     else:
                         continue
-        self.updateUi()
+        self.updateHamiltonian()
 
     def saveInput(self):
         self.updateCalculation()
