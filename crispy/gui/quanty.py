@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '12/01/2018'
+__date__ = '15/01/2018'
 
 
 import collections
@@ -46,7 +46,7 @@ import sys
 import uuid
 
 from PyQt5.QtCore import QItemSelectionModel, QProcess, Qt, QPoint
-from PyQt5.QtGui import QIcon, QCursor, QIntValidator, QDoubleValidator
+from PyQt5.QtGui import QIcon, QCursor
 from PyQt5.QtWidgets import (
     QAbstractItemView, QDockWidget, QFileDialog, QAction, QMenu,
     QWidget)
@@ -243,7 +243,29 @@ class QuantyCalculation(object):
         replacements['$Emax1'] = self.e1Max
         replacements['$NE1'] = self.e1NPoints
         replacements['$Eedge1'] = self.e1Edge
-        replacements['$Gamma1'] = self.e1Lorentzian
+
+        subshell = self.configurations[0][1][:2]
+        if len(self.e1Lorentzian) == 1:
+            if self.edge == 'L2,3 (2p)' and subshell == '3d':
+                replacements['$Gamma1'] = '0.1'
+                replacements['$Gmin1'] = self.e1Lorentzian[0]
+                replacements['$Gmax1'] = self.e1Lorentzian[0]
+                replacements['$Egamma1'] = (
+                    (self.e1Max - self.e1Min) / 2 + self.e1Min)
+            else:
+                replacements['$Gamma1'] = self.e1Lorentzian[0]
+        else:
+            if self.edge == 'L2,3 (2p)' and subshell == '3d':
+                replacements['$Gamma1'] = 0.1
+                replacements['$Gmin1'] = self.e1Lorentzian[0]
+                replacements['$Gmax1'] = self.e1Lorentzian[1]
+                if len(self.e1Lorentzian) == 2:
+                    replacements['$Egamma1'] = (
+                        (self.e1Max - self.e1Min) / 2 + self.e1Min)
+                else:
+                    replacements['$Egamma1'] = self.e1Lorentzian[2]
+            else:
+                pass
 
         s = '{{{0:.6g}, {1:.6g}, {2:.6g}}}'
         u = self.kin / np.linalg.norm(self.kin)
@@ -357,26 +379,6 @@ class QuantyDockWidget(QDockWidget):
         self.updateUi()
 
     def setUi(self):
-        self.temperatureLineEdit.setValidator(QDoubleValidator(self))
-        self.magneticFieldLineEdit.setValidator(QDoubleValidator(self))
-
-        self.e1MinLineEdit.setValidator(QDoubleValidator(self))
-        self.e1MaxLineEdit.setValidator(QDoubleValidator(self))
-        self.e1NPointsLineEdit.setValidator(QIntValidator(self))
-        self.e1LorentzianLineEdit.setValidator(QDoubleValidator(self))
-        self.e1GaussianLineEdit.setValidator(QDoubleValidator(self))
-
-        self.e2MinLineEdit.setValidator(QDoubleValidator(self))
-        self.e2MaxLineEdit.setValidator(QDoubleValidator(self))
-        self.e2NPointsLineEdit.setValidator(QIntValidator(self))
-        self.e2LorentzianLineEdit.setValidator(QDoubleValidator(self))
-        self.e2GaussianLineEdit.setValidator(QDoubleValidator(self))
-
-        self.nPsisLineEdit.setValidator(QIntValidator(self))
-        self.fkLineEdit.setValidator(QDoubleValidator(self))
-        self.gkLineEdit.setValidator(QDoubleValidator(self))
-        self.zetaLineEdit.setValidator(QDoubleValidator(self))
-
         # Create the results model and assign it to the view.
         self.resultsModel = ListModel()
 
@@ -429,8 +431,8 @@ class QuantyDockWidget(QDockWidget):
         self.experimentComboBox.setItems(c.experiments, c.experiment)
         self.edgeComboBox.setItems(c.edges, c.edge)
 
-        self.temperatureLineEdit.setText(str(c.temperature))
-        self.magneticFieldLineEdit.setText(str(c.magneticField))
+        self.temperatureLineEdit.setValue(c.temperature)
+        self.magneticFieldLineEdit.setValue(c.magneticField)
 
         if c.needsCompleteUiEnabled:
             self.magneticFieldLineEdit.setEnabled(True)
@@ -447,37 +449,37 @@ class QuantyDockWidget(QDockWidget):
             self.calculateCDCheckBox.setEnabled(False)
             self.calculateLDCheckBox.setEnabled(False)
 
-        self.kinLineEdit.setText(self.vectorToString(c.kin))
-        self.einLineEdit.setText(self.vectorToString(c.ein))
+        self.kinLineEdit.setVector(c.kin)
+        self.einLineEdit.setVector(c.ein)
 
         self.calculateIsoCheckBox.setChecked(c.calculateIso)
         self.calculateCDCheckBox.setChecked(c.calculateCD)
         self.calculateLDCheckBox.setChecked(c.calculateLD)
 
-        self.nPsisLineEdit.setText(str(c.nPsis))
+        self.nPsisLineEdit.setValue(c.nPsis)
         self.nPsisAutoCheckBox.setChecked(c.nPsisAuto)
 
-        self.fkLineEdit.setText(str(c.fk))
-        self.gkLineEdit.setText(str(c.gk))
-        self.zetaLineEdit.setText(str(c.zeta))
+        self.fkLineEdit.setValue(c.fk)
+        self.gkLineEdit.setValue(c.gk)
+        self.zetaLineEdit.setValue(c.zeta)
 
         self.energiesTabWidget.setTabText(0, str(c.e1Label))
-        self.e1MinLineEdit.setText(str(c.e1Min))
-        self.e1MaxLineEdit.setText(str(c.e1Max))
-        self.e1NPointsLineEdit.setText(str(c.e1NPoints))
-        self.e1LorentzianLineEdit.setText(str(c.e1Lorentzian))
-        self.e1GaussianLineEdit.setText(str(c.e1Gaussian))
+        self.e1MinLineEdit.setValue(c.e1Min)
+        self.e1MaxLineEdit.setValue(c.e1Max)
+        self.e1NPointsLineEdit.setValue(c.e1NPoints)
+        self.e1LorentzianLineEdit.setList(c.e1Lorentzian)
+        self.e1GaussianLineEdit.setValue(c.e1Gaussian)
 
         if 'RIXS' in c.experiment:
             if self.energiesTabWidget.count() == 1:
                 tab = self.energiesTabWidget.findChild(QWidget, 'e2Tab')
                 self.energiesTabWidget.addTab(tab, tab.objectName())
                 self.energiesTabWidget.setTabText(1, c.e2Label)
-            self.e2MinLineEdit.setText(str(c.e2Min))
-            self.e2MaxLineEdit.setText(str(c.e2Max))
-            self.e2NPointsLineEdit.setText(str(c.e2NPoints))
-            self.e2LorentzianLineEdit.setText(str(c.e2Lorentzian))
-            self.e2GaussianLineEdit.setText(str(c.e2Gaussian))
+            self.e2MinLineEdit.setValue(c.e2Min)
+            self.e2MaxLineEdit.setValue(c.e2Max)
+            self.e2NPointsLineEdit.setValue(c.e2NPoints)
+            self.e2LorentzianLineEdit.setList(c.e2Lorentzian)
+            self.e2GaussianLineEdit.setValue(c.e2Gaussian)
         else:
             self.energiesTabWidget.removeTab(1)
 
@@ -563,7 +565,7 @@ class QuantyDockWidget(QDockWidget):
     def updateMagneticField(self):
         c = self.calculation
 
-        magneticField = float(self.magneticFieldLineEdit.text())
+        magneticField = self.magneticFieldLineEdit.getValue()
 
         if magneticField == 0:
             c.hamiltonianState['Magnetic Field'] = 0
@@ -572,7 +574,7 @@ class QuantyDockWidget(QDockWidget):
             c.hamiltonianState['Magnetic Field'] = 2
             self.calculateCDCheckBox.setChecked(True)
 
-        kin = self.stringToVector(self.kinLineEdit.text())
+        kin = self.kinLineEdit.getVector()
         kin = kin / np.linalg.norm(kin)
         configurations = c.hamiltonianData['Magnetic Field']
         for configuration in configurations:
@@ -595,9 +597,9 @@ class QuantyDockWidget(QDockWidget):
         except IndexError:
             return
         else:
-            c.e1Gaussian = float(self.e1GaussianLineEdit.text())
+            c.e1Gaussian = self.e1GaussianLineEdit.getValue()
             if 'RIXS' in c.experiment:
-                c.e2Gaussian = float(self.e2GaussianLineEdit.text())
+                c.e2Gaussian = self.e2GaussianLineEdit.getValue()
             self.resultsModel.replaceItem(index, c)
             self.plotSelectedCalculations()
 
@@ -606,7 +608,7 @@ class QuantyDockWidget(QDockWidget):
         statusBar = self.parent().statusBar()
 
         try:
-            kin = self.stringToVector(self.kinLineEdit.text())
+            kin = self.kinLineEdit.getVector()
         except InvalidVectorError:
             message = 'Wrong expression given for the wave vector.'
             statusBar.showMessage(message)
@@ -617,7 +619,7 @@ class QuantyDockWidget(QDockWidget):
             statusBar.showMessage(message)
             return
 
-        ein = self.stringToVector(self.einLineEdit.text())
+        ein = self.einLineEdit.getVector()
         # Check if the wave and polarization vectors are perpendicular.
         if np.dot(kin, ein) != 0:
             # Determine a possible perpendicular vector.
@@ -625,7 +627,7 @@ class QuantyDockWidget(QDockWidget):
                 ein = np.array([kin[2], kin[2], -kin[0] - kin[1]])
             else:
                 ein = np.array([-kin[2] - kin[1], kin[0], kin[0]])
-        self.einLineEdit.setText(self.vectorToString(ein))
+        self.einLineEdit.setVector(ein)
 
         self.updateMagneticField()
 
@@ -633,7 +635,7 @@ class QuantyDockWidget(QDockWidget):
         statusBar = self.parent().statusBar()
 
         try:
-            ein = self.stringToVector(self.einLineEdit.text())
+            ein = self.einLineEdit.getVector()
         except:
             message = 'Wrong expression given for the polarization vector.'
             statusBar.showMessage(message)
@@ -644,7 +646,7 @@ class QuantyDockWidget(QDockWidget):
             statusBar.showMessage(message)
             return
 
-        kin = self.stringToVector(self.kinLineEdit.text())
+        kin = self.kinLineEdit.getVector()
         if np.dot(kin, ein) != 0:
             message = ('The wave and polarization vectors need to be '
                        'perpendicular.')
@@ -659,9 +661,9 @@ class QuantyDockWidget(QDockWidget):
     def updateScalingFactors(self):
         c = self.calculation
 
-        c.fk = float(self.fkLineEdit.text())
-        c.gk = float(self.gkLineEdit.text())
-        c.zeta = float(self.zetaLineEdit.text())
+        c.fk = self.fkLineEdit.getValue()
+        c.gk = self.gkLineEdit.getValue()
+        c.zeta = self.zetaLineEdit.getValue()
 
         terms = c.hamiltonianData
 
@@ -717,30 +719,30 @@ class QuantyDockWidget(QDockWidget):
     def updateCalculation(self):
         c = copy.deepcopy(self.calculation)
 
-        c.temperature = float(self.temperatureLineEdit.text())
-        c.magneticField = float(self.magneticFieldLineEdit.text())
+        c.temperature = self.temperatureLineEdit.getValue()
+        c.magneticField = self.magneticFieldLineEdit.getValue()
 
-        c.kin = self.stringToVector(self.kinLineEdit.text())
-        c.ein = self.stringToVector(self.einLineEdit.text())
+        c.kin = self.kinLineEdit.getVector()
+        c.ein = self.einLineEdit.getVector()
 
         c.calculateIso = int(self.calculateIsoCheckBox.isChecked())
         c.calculateCD = int(self.calculateCDCheckBox.isChecked())
         c.calculateLD = int(self.calculateLDCheckBox.isChecked())
 
-        c.e1Min = float(self.e1MinLineEdit.text())
-        c.e1Max = float(self.e1MaxLineEdit.text())
-        c.e1NPoints = int(self.e1NPointsLineEdit.text())
-        c.e1Lorentzian = float(self.e1LorentzianLineEdit.text())
-        c.e1Gaussian = float(self.e1GaussianLineEdit.text())
+        c.e1Min = self.e1MinLineEdit.getValue()
+        c.e1Max = self.e1MaxLineEdit.getValue()
+        c.e1NPoints = self.e1NPointsLineEdit.getValue()
+        c.e1Lorentzian = self.e1LorentzianLineEdit.getList()
+        c.e1Gaussian = self.e1GaussianLineEdit.getValue()
 
         if 'RIXS' in c.experiment:
-            c.e2Min = float(self.e2MinLineEdit.text())
-            c.e2Max = float(self.e2MaxLineEdit.text())
-            c.e2NPoints = int(self.e2NPointsLineEdit.text())
-            c.e2Lorentzian = float(self.e2LorentzianLineEdit.text())
-            c.e2Gaussian = float(self.e2GaussianLineEdit.text())
+            c.e2Min = self.e2MinLineEdit.getValue()
+            c.e2Max = self.e2MaxLineEdit.getValue()
+            c.e2NPoints = self.e2NPointsLineEdit.getValue()
+            c.e2Lorentzian = self.e2LorentzianLineEdit.getList()
+            c.e2Gaussian = self.e2GaussianLineEdit.getValue()
 
-        c.nPsis = int(self.nPsisLineEdit.text())
+        c.nPsis = self.nPsisLineEdit.getValue()
         c.nPsisAuto = int(self.nPsisAutoCheckBox.isChecked())
 
         c.hamiltonianData = self.hamiltonianModel.getModelData()
@@ -1093,21 +1095,6 @@ class QuantyDockWidget(QDockWidget):
         c = self.calculation
         title = 'Crispy - {}'.format(c.baseName + '.lua')
         self.parent().setWindowTitle(title)
-
-    @staticmethod
-    def vectorToString(v):
-        return('[{0:.1g}, {1:.1g}, {2:.1g}]'.format(v[0], v[1], v[2]))
-
-    @staticmethod
-    def stringToVector(s):
-        # Remove the square brakets and split the string.
-        tokens = s[1:-1].split(',')
-        try:
-            v = np.array([tokens[0], tokens[1], tokens[2]], dtype=np.float64)
-        except (ValueError, IndexError):
-            raise(InvalidVectorError)
-        else:
-            return(v)
 
 
 if __name__ == '__main__':

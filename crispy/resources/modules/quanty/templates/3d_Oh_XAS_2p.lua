@@ -462,8 +462,13 @@ for i, Psi in ipairs(Psis_i) do
 end
 io.write(string.format('===============\n'))
 
+Gmin1 = $Gmin1 - Gamma
+Gmax1 = $Gmax1 - Gamma
+Egamma1 = $Egamma1 - DeltaE
+
 if calculateIso == 1 then
     Giso = Giso / Z / 3
+    Giso.Broaden(0, {{Emin, Gmin1}, {Egamma1, Gmin1}, {Egamma1, Gmax1}, {Emax, Gmax1}})
     Giso.Print({{'file', '$baseName' .. '_iso.spec'}})
 end
 
@@ -471,6 +476,7 @@ if calculateCD == 1 then
     Gr = Gr / Z
     Gl = Gl / Z
     Gcd = Gr - Gl
+    Gcd.Broaden(0, {{Emin, Gmin1}, {Egamma1, Gmin1}, {Egamma1, Gmax1}, {Emax, Gmax1}})
     Gcd.Print({{'file', '$baseName' .. '_cd.spec'}})
 end
 
@@ -478,6 +484,7 @@ if calculateLD == 1 then
     Gein1 = Gein1 / Z
     Gein2 = Gein2 / Z
     Gld = Gein1 - Gein2
+    Gld.Broaden(0, {{Emin, Gmin1}, {Egamma1, Gmin1}, {Egamma1, Gmax1}, {Emax, Gmax1}})
     Gld.Print({{'file', '$baseName' .. '_ld.spec'}})
 end
 

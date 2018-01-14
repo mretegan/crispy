@@ -215,7 +215,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="temperatureLineEdit">
+              <widget class="DoubleLineEdit" name="temperatureLineEdit">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -245,7 +245,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="magneticFieldLineEdit">
+              <widget class="DoubleLineEdit" name="magneticFieldLineEdit">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -321,7 +321,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="e1MinLineEdit">
+               <widget class="DoubleLineEdit" name="e1MinLineEdit">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -340,7 +340,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="e1MaxLineEdit">
+               <widget class="DoubleLineEdit" name="e1MaxLineEdit">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -370,7 +370,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="e1NPointsLineEdit">
+               <widget class="IntLineEdit" name="e1NPointsLineEdit">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -407,7 +407,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="e1LorentzianLineEdit">
+               <widget class="ListLineEdit" name="e1LorentzianLineEdit">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -440,7 +440,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="e1GaussianLineEdit">
+               <widget class="DoubleLineEdit" name="e1GaussianLineEdit">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -477,7 +477,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="kinLineEdit">
+               <widget class="VectorLineEdit" name="kinLineEdit">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -507,7 +507,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="einLineEdit">
+               <widget class="VectorLineEdit" name="einLineEdit">
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
@@ -562,7 +562,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="e2MinLineEdit">
+               <widget class="DoubleLineEdit" name="e2MinLineEdit">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -581,7 +581,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="e2MaxLineEdit">
+               <widget class="DoubleLineEdit" name="e2MaxLineEdit">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -617,7 +617,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="e2NPointsLineEdit">
+               <widget class="IntLineEdit" name="e2NPointsLineEdit">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -654,7 +654,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="e2LorentzianLineEdit">
+               <widget class="DoubleLineEdit" name="e2LorentzianLineEdit">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -663,7 +663,7 @@
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>65</width>
+                  <width>110</width>
                   <height>16777215</height>
                  </size>
                 </property>
@@ -684,7 +684,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="e2GaussianLineEdit">
+               <widget class="DoubleLineEdit" name="e2GaussianLineEdit">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -693,7 +693,7 @@
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>65</width>
+                  <width>110</width>
                   <height>16777215</height>
                  </size>
                 </property>
@@ -721,7 +721,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="koutLineEdit">
+               <widget class="VectorLineEdit" name="koutLineEdit">
                 <property name="enabled">
                  <bool>false</bool>
                 </property>
@@ -754,7 +754,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="eoutLineEdit">
+               <widget class="VectorLineEdit" name="eoutLineEdit">
                 <property name="enabled">
                  <bool>false</bool>
                 </property>
@@ -939,7 +939,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="nPsisLineEdit">
+                <widget class="IntLineEdit" name="nPsisLineEdit">
                  <property name="enabled">
                   <bool>false</bool>
                  </property>
@@ -988,7 +988,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="fkLineEdit">
+                <widget class="DoubleLineEdit" name="fkLineEdit">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -1017,7 +1017,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="gkLineEdit">
+                <widget class="DoubleLineEdit" name="gkLineEdit">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -1046,7 +1046,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="zetaLineEdit">
+                <widget class="DoubleLineEdit" name="zetaLineEdit">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -1315,6 +1315,26 @@
    <class>ComboBox</class>
    <extends>QComboBox</extends>
    <header>.widgets.combobox</header>
+  </customwidget>
+  <customwidget>
+   <class>IntLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>.widgets.lineedit</header>
+  </customwidget>
+  <customwidget>
+   <class>DoubleLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>.widgets.lineedit</header>
+  </customwidget>
+  <customwidget>
+   <class>VectorLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>.widgets.lineedit</header>
+  </customwidget>
+  <customwidget>
+   <class>ListLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>.widgets.lineedit</header>
   </customwidget>
  </customwidgets>
  <tabstops>
