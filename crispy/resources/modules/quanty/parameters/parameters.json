@@ -53,30 +53,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d0": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d0": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -666,6 +642,34 @@
                         "P2(1s,3d)": "0.00124"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "388.7",
+                          "428.7",
+                          "1000",
+                          "398.7",
+                          [
+                            "0.19",
+                            "0.19"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d0"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d1"
+                        ]
+                      ],
+                      "number of states": "1",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -703,6 +707,34 @@
                         "P2(1s,3d)": "0.00124"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "388.7",
+                          "428.7",
+                          "1000",
+                          "398.7",
+                          [
+                            "0.19",
+                            "0.19"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d0"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d1"
+                        ]
+                      ],
+                      "number of states": "1",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
@@ -765,30 +797,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d2": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d2": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -1454,6 +1462,34 @@
                         "P2(1s,3d)": "0.00108"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "443.8",
+                          "483.8",
+                          "1000",
+                          "453.8",
+                          [
+                            "0.22",
+                            "0.24"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d2"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d3"
+                        ]
+                      ],
+                      "number of states": "45",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -1491,6 +1527,34 @@
                         "P2(1s,3d)": "0.00108"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "443.8",
+                          "483.8",
+                          "1000",
+                          "453.8",
+                          [
+                            "0.22",
+                            "0.24"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d2"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d3"
+                        ]
+                      ],
+                      "number of states": "45",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
@@ -1549,30 +1613,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d1": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d1": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -2238,6 +2278,34 @@
                         "P2(1s,3d)": "0.00119"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "443.8",
+                          "483.8",
+                          "1000",
+                          "453.8",
+                          [
+                            "0.22",
+                            "0.24"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d1"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d2"
+                        ]
+                      ],
+                      "number of states": "10",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -2275,6 +2343,34 @@
                         "P2(1s,3d)": "0.00119"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "443.8",
+                          "483.8",
+                          "1000",
+                          "453.8",
+                          [
+                            "0.22",
+                            "0.24"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d1"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d2"
+                        ]
+                      ],
+                      "number of states": "10",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
@@ -2333,30 +2429,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d0": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d0": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -3022,6 +3094,34 @@
                         "P2(1s,3d)": "0.00129"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "443.8",
+                          "483.8",
+                          "1000",
+                          "453.8",
+                          [
+                            "0.22",
+                            "0.24"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d0"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d1"
+                        ]
+                      ],
+                      "number of states": "1",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -3059,6 +3159,34 @@
                         "P2(1s,3d)": "0.00129"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "443.8",
+                          "483.8",
+                          "1000",
+                          "453.8",
+                          [
+                            "0.22",
+                            "0.24"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d0"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d1"
+                        ]
+                      ],
+                      "number of states": "1",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
@@ -3121,30 +3249,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d3": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d3": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -3810,6 +3914,34 @@
                         "P2(1s,3d)": "0.00104"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "502.1",
+                          "542.1",
+                          "1000",
+                          "512.1",
+                          [
+                            "0.24",
+                            "0.26"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d3"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d4"
+                        ]
+                      ],
+                      "number of states": "120",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -3847,6 +3979,34 @@
                         "P2(1s,3d)": "0.00104"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "502.1",
+                          "542.1",
+                          "1000",
+                          "512.1",
+                          [
+                            "0.24",
+                            "0.26"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d3"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d4"
+                        ]
+                      ],
+                      "number of states": "120",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
@@ -3905,30 +4065,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d2": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d2": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -4594,6 +4730,34 @@
                         "P2(1s,3d)": "0.00113"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "502.1",
+                          "542.1",
+                          "1000",
+                          "512.1",
+                          [
+                            "0.24",
+                            "0.26"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d2"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d3"
+                        ]
+                      ],
+                      "number of states": "45",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -4631,6 +4795,34 @@
                         "P2(1s,3d)": "0.00113"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "502.1",
+                          "542.1",
+                          "1000",
+                          "512.1",
+                          [
+                            "0.24",
+                            "0.26"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d2"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d3"
+                        ]
+                      ],
+                      "number of states": "45",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
@@ -4689,30 +4881,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d1": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d1": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -5378,6 +5546,34 @@
                         "P2(1s,3d)": "0.00121"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "502.1",
+                          "542.1",
+                          "1000",
+                          "512.1",
+                          [
+                            "0.24",
+                            "0.26"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d1"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d2"
+                        ]
+                      ],
+                      "number of states": "10",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -5415,6 +5611,34 @@
                         "P2(1s,3d)": "0.00121"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "502.1",
+                          "542.1",
+                          "1000",
+                          "512.1",
+                          [
+                            "0.24",
+                            "0.26"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d1"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d2"
+                        ]
+                      ],
+                      "number of states": "10",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
@@ -5473,30 +5697,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d0": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d0": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -6162,6 +6362,34 @@
                         "P2(1s,3d)": "0.0013"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "502.1",
+                          "542.1",
+                          "1000",
+                          "512.1",
+                          [
+                            "0.24",
+                            "0.26"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d0"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d1"
+                        ]
+                      ],
+                      "number of states": "1",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -6199,6 +6427,34 @@
                         "P2(1s,3d)": "0.0013"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "502.1",
+                          "542.1",
+                          "1000",
+                          "512.1",
+                          [
+                            "0.24",
+                            "0.26"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d0"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d1"
+                        ]
+                      ],
+                      "number of states": "1",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
@@ -6261,30 +6517,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d4": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d4": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -6950,6 +7182,34 @@
                         "P2(1s,3d)": "0.001"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "564.1",
+                          "604.1",
+                          "1000",
+                          "574.1",
+                          [
+                            "0.27",
+                            "0.29"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d4"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d5"
+                        ]
+                      ],
+                      "number of states": "210",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -6987,6 +7247,34 @@
                         "P2(1s,3d)": "0.001"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "564.1",
+                          "604.1",
+                          "1000",
+                          "574.1",
+                          [
+                            "0.27",
+                            "0.29"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d4"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d5"
+                        ]
+                      ],
+                      "number of states": "210",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
@@ -7045,30 +7333,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d3": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d3": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -7734,6 +7998,34 @@
                         "P2(1s,3d)": "0.00107"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "564.1",
+                          "604.1",
+                          "1000",
+                          "574.1",
+                          [
+                            "0.27",
+                            "0.29"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d3"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d4"
+                        ]
+                      ],
+                      "number of states": "120",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -7771,6 +8063,34 @@
                         "P2(1s,3d)": "0.00107"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "564.1",
+                          "604.1",
+                          "1000",
+                          "574.1",
+                          [
+                            "0.27",
+                            "0.29"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d3"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d4"
+                        ]
+                      ],
+                      "number of states": "120",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
@@ -7829,30 +8149,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d2": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d2": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -8518,6 +8814,34 @@
                         "P2(1s,3d)": "0.00114"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "564.1",
+                          "604.1",
+                          "1000",
+                          "574.1",
+                          [
+                            "0.27",
+                            "0.29"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d2"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d3"
+                        ]
+                      ],
+                      "number of states": "45",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -8555,6 +8879,34 @@
                         "P2(1s,3d)": "0.00114"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "564.1",
+                          "604.1",
+                          "1000",
+                          "574.1",
+                          [
+                            "0.27",
+                            "0.29"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d2"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d3"
+                        ]
+                      ],
+                      "number of states": "45",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
@@ -8613,30 +8965,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d1": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d1": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -9302,6 +9630,34 @@
                         "P2(1s,3d)": "0.00122"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "564.1",
+                          "604.1",
+                          "1000",
+                          "574.1",
+                          [
+                            "0.27",
+                            "0.29"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d1"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d2"
+                        ]
+                      ],
+                      "number of states": "10",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -9339,6 +9695,34 @@
                         "P2(1s,3d)": "0.00122"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "564.1",
+                          "604.1",
+                          "1000",
+                          "574.1",
+                          [
+                            "0.27",
+                            "0.29"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d1"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d2"
+                        ]
+                      ],
+                      "number of states": "10",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
@@ -9401,30 +9785,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d5": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d5": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -10090,6 +10450,34 @@
                         "P2(1s,3d)": "0.00095"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "628.7",
+                          "668.7",
+                          "1000",
+                          "638.7",
+                          [
+                            "0.32",
+                            "0.34"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d5"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d6"
+                        ]
+                      ],
+                      "number of states": "252",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -10127,6 +10515,34 @@
                         "P2(1s,3d)": "0.00095"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "628.7",
+                          "668.7",
+                          "1000",
+                          "638.7",
+                          [
+                            "0.32",
+                            "0.34"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d5"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d6"
+                        ]
+                      ],
+                      "number of states": "252",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
@@ -10185,30 +10601,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d4": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d4": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -10874,6 +11266,34 @@
                         "P2(1s,3d)": "0.00101"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "628.7",
+                          "668.7",
+                          "1000",
+                          "638.7",
+                          [
+                            "0.32",
+                            "0.34"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d4"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d5"
+                        ]
+                      ],
+                      "number of states": "210",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -10911,6 +11331,34 @@
                         "P2(1s,3d)": "0.00101"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "628.7",
+                          "668.7",
+                          "1000",
+                          "638.7",
+                          [
+                            "0.32",
+                            "0.34"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d4"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d5"
+                        ]
+                      ],
+                      "number of states": "210",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
@@ -10969,30 +11417,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d3": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d3": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -11658,6 +12082,34 @@
                         "P2(1s,3d)": "0.00107"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "628.7",
+                          "668.7",
+                          "1000",
+                          "638.7",
+                          [
+                            "0.32",
+                            "0.34"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d3"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d4"
+                        ]
+                      ],
+                      "number of states": "120",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -11695,6 +12147,34 @@
                         "P2(1s,3d)": "0.00107"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "628.7",
+                          "668.7",
+                          "1000",
+                          "638.7",
+                          [
+                            "0.32",
+                            "0.34"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d3"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d4"
+                        ]
+                      ],
+                      "number of states": "120",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
@@ -11753,30 +12233,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d2": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d2": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -12442,6 +12898,34 @@
                         "P2(1s,3d)": "0.00114"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "628.7",
+                          "668.7",
+                          "1000",
+                          "638.7",
+                          [
+                            "0.32",
+                            "0.34"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d2"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d3"
+                        ]
+                      ],
+                      "number of states": "45",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -12479,6 +12963,34 @@
                         "P2(1s,3d)": "0.00114"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "628.7",
+                          "668.7",
+                          "1000",
+                          "638.7",
+                          [
+                            "0.32",
+                            "0.34"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d2"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d3"
+                        ]
+                      ],
+                      "number of states": "45",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
@@ -12537,30 +13049,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d1": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d1": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -13226,6 +13714,34 @@
                         "P2(1s,3d)": "0.0012"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "628.7",
+                          "668.7",
+                          "1000",
+                          "638.7",
+                          [
+                            "0.32",
+                            "0.34"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d1"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d2"
+                        ]
+                      ],
+                      "number of states": "10",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -13263,6 +13779,34 @@
                         "P2(1s,3d)": "0.0012"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "628.7",
+                          "668.7",
+                          "1000",
+                          "638.7",
+                          [
+                            "0.32",
+                            "0.34"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d1"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d2"
+                        ]
+                      ],
+                      "number of states": "10",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
@@ -13321,30 +13865,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d0": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d0": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -14010,6 +14530,34 @@
                         "P2(1s,3d)": "0.00127"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "628.7",
+                          "668.7",
+                          "1000",
+                          "638.7",
+                          [
+                            "0.32",
+                            "0.34"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d0"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d1"
+                        ]
+                      ],
+                      "number of states": "1",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -14047,6 +14595,34 @@
                         "P2(1s,3d)": "0.00127"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "628.7",
+                          "668.7",
+                          "1000",
+                          "638.7",
+                          [
+                            "0.32",
+                            "0.34"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d0"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d1"
+                        ]
+                      ],
+                      "number of states": "1",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
@@ -14109,30 +14685,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d6": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d6": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -14798,6 +15350,34 @@
                         "P2(1s,3d)": "0.0009"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "696.8",
+                          "736.8",
+                          "1000",
+                          "706.8",
+                          [
+                            "0.36",
+                            "0.37"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d6"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d7"
+                        ]
+                      ],
+                      "number of states": "210",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -14835,6 +15415,34 @@
                         "P2(1s,3d)": "0.0009"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "696.8",
+                          "736.8",
+                          "1000",
+                          "706.8",
+                          [
+                            "0.36",
+                            "0.37"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d6"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d7"
+                        ]
+                      ],
+                      "number of states": "210",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
@@ -14893,30 +15501,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d5": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d5": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -15582,6 +16166,34 @@
                         "P2(1s,3d)": "0.00096"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "696.8",
+                          "736.8",
+                          "1000",
+                          "706.8",
+                          [
+                            "0.36",
+                            "0.37"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d5"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d6"
+                        ]
+                      ],
+                      "number of states": "252",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -15619,6 +16231,34 @@
                         "P2(1s,3d)": "0.00096"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "696.8",
+                          "736.8",
+                          "1000",
+                          "706.8",
+                          [
+                            "0.36",
+                            "0.37"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d5"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d6"
+                        ]
+                      ],
+                      "number of states": "252",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
@@ -15677,30 +16317,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d4": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d4": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -16366,6 +16982,34 @@
                         "P2(1s,3d)": "0.00101"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "696.8",
+                          "736.8",
+                          "1000",
+                          "706.8",
+                          [
+                            "0.36",
+                            "0.37"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d4"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d5"
+                        ]
+                      ],
+                      "number of states": "210",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -16403,6 +17047,34 @@
                         "P2(1s,3d)": "0.00101"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "696.8",
+                          "736.8",
+                          "1000",
+                          "706.8",
+                          [
+                            "0.36",
+                            "0.37"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d4"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d5"
+                        ]
+                      ],
+                      "number of states": "210",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
@@ -16461,30 +17133,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d3": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d3": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -17150,6 +17798,34 @@
                         "P2(1s,3d)": "0.00107"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "696.8",
+                          "736.8",
+                          "1000",
+                          "706.8",
+                          [
+                            "0.36",
+                            "0.37"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d3"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d4"
+                        ]
+                      ],
+                      "number of states": "120",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -17187,6 +17863,34 @@
                         "P2(1s,3d)": "0.00107"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "696.8",
+                          "736.8",
+                          "1000",
+                          "706.8",
+                          [
+                            "0.36",
+                            "0.37"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d3"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d4"
+                        ]
+                      ],
+                      "number of states": "120",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
@@ -17245,30 +17949,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d2": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d2": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -17934,6 +18614,34 @@
                         "P2(1s,3d)": "0.00112"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "696.8",
+                          "736.8",
+                          "1000",
+                          "706.8",
+                          [
+                            "0.36",
+                            "0.37"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d2"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d3"
+                        ]
+                      ],
+                      "number of states": "45",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -17971,6 +18679,34 @@
                         "P2(1s,3d)": "0.00112"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "696.8",
+                          "736.8",
+                          "1000",
+                          "706.8",
+                          [
+                            "0.36",
+                            "0.37"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d2"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d3"
+                        ]
+                      ],
+                      "number of states": "45",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
@@ -18033,30 +18769,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d7": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d7": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -18722,6 +19434,34 @@
                         "P2(1s,3d)": "0.00086"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "768.1",
+                          "808.1",
+                          "1000",
+                          "778.1",
+                          [
+                            "0.43",
+                            "0.43"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d7"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d8"
+                        ]
+                      ],
+                      "number of states": "120",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -18759,6 +19499,34 @@
                         "P2(1s,3d)": "0.00086"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "768.1",
+                          "808.1",
+                          "1000",
+                          "778.1",
+                          [
+                            "0.43",
+                            "0.43"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d7"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d8"
+                        ]
+                      ],
+                      "number of states": "120",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
@@ -18817,30 +19585,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d6": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d6": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -19506,6 +20250,34 @@
                         "P2(1s,3d)": "0.00091"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "768.1",
+                          "808.1",
+                          "1000",
+                          "778.1",
+                          [
+                            "0.43",
+                            "0.43"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d6"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d7"
+                        ]
+                      ],
+                      "number of states": "210",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -19543,6 +20315,34 @@
                         "P2(1s,3d)": "0.00091"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "768.1",
+                          "808.1",
+                          "1000",
+                          "778.1",
+                          [
+                            "0.43",
+                            "0.43"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d6"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d7"
+                        ]
+                      ],
+                      "number of states": "210",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
@@ -19601,30 +20401,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d5": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d5": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -20290,6 +21066,34 @@
                         "P2(1s,3d)": "0.00095"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "768.1",
+                          "808.1",
+                          "1000",
+                          "778.1",
+                          [
+                            "0.43",
+                            "0.43"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d5"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d6"
+                        ]
+                      ],
+                      "number of states": "252",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -20327,6 +21131,34 @@
                         "P2(1s,3d)": "0.00095"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "768.1",
+                          "808.1",
+                          "1000",
+                          "778.1",
+                          [
+                            "0.43",
+                            "0.43"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d5"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d6"
+                        ]
+                      ],
+                      "number of states": "252",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
@@ -20385,30 +21217,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d4": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d4": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -21074,6 +21882,34 @@
                         "P2(1s,3d)": "0.001"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "768.1",
+                          "808.1",
+                          "1000",
+                          "778.1",
+                          [
+                            "0.43",
+                            "0.43"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d4"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d5"
+                        ]
+                      ],
+                      "number of states": "210",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -21111,6 +21947,34 @@
                         "P2(1s,3d)": "0.001"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "768.1",
+                          "808.1",
+                          "1000",
+                          "778.1",
+                          [
+                            "0.43",
+                            "0.43"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d4"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d5"
+                        ]
+                      ],
+                      "number of states": "210",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
@@ -21173,30 +22037,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d8": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d8": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -21862,6 +22702,34 @@
                         "P2(1s,3d)": "0.00082"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "842.7",
+                          "882.7",
+                          "1000",
+                          "852.7",
+                          [
+                            "0.48",
+                            "0.52"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d8"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d9"
+                        ]
+                      ],
+                      "number of states": "45",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -21899,6 +22767,34 @@
                         "P2(1s,3d)": "0.00082"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "842.7",
+                          "882.7",
+                          "1000",
+                          "852.7",
+                          [
+                            "0.48",
+                            "0.52"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d8"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d9"
+                        ]
+                      ],
+                      "number of states": "45",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
@@ -21957,30 +22853,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d7": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d7": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -22646,6 +23518,34 @@
                         "P2(1s,3d)": "0.00086"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "842.7",
+                          "882.7",
+                          "1000",
+                          "852.7",
+                          [
+                            "0.48",
+                            "0.52"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d7"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d8"
+                        ]
+                      ],
+                      "number of states": "120",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -22683,6 +23583,34 @@
                         "P2(1s,3d)": "0.00086"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "842.7",
+                          "882.7",
+                          "1000",
+                          "852.7",
+                          [
+                            "0.48",
+                            "0.52"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d7"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d8"
+                        ]
+                      ],
+                      "number of states": "120",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
@@ -22741,30 +23669,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d6": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d6": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -23430,6 +24334,34 @@
                         "P2(1s,3d)": "0.0009"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "842.7",
+                          "882.7",
+                          "1000",
+                          "852.7",
+                          [
+                            "0.48",
+                            "0.52"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d6"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d7"
+                        ]
+                      ],
+                      "number of states": "210",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -23467,6 +24399,34 @@
                         "P2(1s,3d)": "0.0009"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "842.7",
+                          "882.7",
+                          "1000",
+                          "852.7",
+                          [
+                            "0.48",
+                            "0.52"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d6"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d7"
+                        ]
+                      ],
+                      "number of states": "210",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
@@ -23529,30 +24489,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d9": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d9": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -24218,6 +25154,34 @@
                         "P2(1s,3d)": "0.00078"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "922.7",
+                          "962.7",
+                          "1000",
+                          "932.7",
+                          [
+                            "0.56",
+                            "0.62"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d9"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d10"
+                        ]
+                      ],
+                      "number of states": "10",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -24255,6 +25219,34 @@
                         "P2(1s,3d)": "0.00078"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "922.7",
+                          "962.7",
+                          "1000",
+                          "932.7",
+                          [
+                            "0.56",
+                            "0.62"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d9"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d10"
+                        ]
+                      ],
+                      "number of states": "10",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
@@ -24313,30 +25305,6 @@
                   "Hx": 0.0,
                   "Hy": 0.0,
                   "Hz": 0.0
-                },
-                "3d-4p Hybridization Term": {
-                  "Td": {
-                    "3d8": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Vt2(3d,4p)": 0.0
-                    }
-                  },
-                  "C3v": {
-                    "3d8": {
-                      "\u0394(3d,4p)": 0.0,
-                      "F2(3d,4p)": 0.0,
-                      "G1(3d,4p)": 0.0,
-                      "G3(3d,4p)": 0.0,
-                      "\u03b6(4p)": 0.0,
-                      "Va1(3d,4p)": 0.0,
-                      "Ve(eg)(3d,4p)": 0.0,
-                      "Ve(t2g)(3d,4p)": 0.0
-                    }
-                  }
                 }
               }
             },
@@ -25002,6 +25970,34 @@
                         "P2(1s,3d)": "0.00081"
                       },
                       "template name": "3d_Td_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "922.7",
+                          "962.7",
+                          "1000",
+                          "932.7",
+                          [
+                            "0.56",
+                            "0.62"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d8"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d9"
+                        ]
+                      ],
+                      "number of states": "45",
+                      "template name": "3d_Td_XAS_2p.lua"
                     }
                   }
                 }
@@ -25039,6 +26035,34 @@
                         "P2(1s,3d)": "0.00081"
                       },
                       "template name": "3d_C3v_XAS_1s.lua"
+                    },
+                    "L2,3 (2p)": {
+                      "energies": [
+                        [
+                          "Absorbtion Energy",
+                          "922.7",
+                          "962.7",
+                          "1000",
+                          "932.7",
+                          [
+                            "0.56",
+                            "0.62"
+                          ],
+                          "0.1"
+                        ]
+                      ],
+                      "configurations": [
+                        [
+                          "Initial",
+                          "3d8"
+                        ],
+                        [
+                          "Final",
+                          "2p5,3d9"
+                        ]
+                      ],
+                      "number of states": "45",
+                      "template name": "3d_C3v_XAS_2p.lua"
                     }
                   }
                 }
