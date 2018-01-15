@@ -272,7 +272,7 @@ if H_3d_4p_hybridization == 1 then
                                              {'00 1111111111 000000', NElectrons_3d + 1, NElectrons_3d + 1},
                                              {'00 0000000000 111111', NElectrons_4p, NElectrons_4p}}
 
-    CalculationRestrictions ={NFermions, NBosons, {'00 0000000000 111111', NElectrons_4p, NElectrons_4p + 1}}
+    CalculationRestrictions = {NFermions, NBosons, {'00 0000000000 111111', NElectrons_4p, NElectrons_4p + 1}}
 end
 
 Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_1s, N_3d}
@@ -435,7 +435,7 @@ for i, Psi in ipairs(Psis_i) do
             end
         else
             for j, Operator in ipairs({Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}) do
-                Giso_quad = Giso_quad + CreateSpectra(H_f, Operator, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}}) * dZ
+                Giso_quad = Giso_quad + CreateSpectra(H_f, Operator, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
             end
         end
     end
