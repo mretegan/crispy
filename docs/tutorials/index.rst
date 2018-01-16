@@ -7,3 +7,4 @@ This page provides a series of tutorials to help get you started with Crispy.
     :maxdepth: 1
 
     ti_l23_xas.rst
+    fe_spin_transition

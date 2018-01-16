@@ -9,23 +9,12 @@ Crispy is a modern graphical user interface to simulate core-level spectra using
 Installation
 ============
 
-Windows and macOS
------------------
-The easiest way to install Crispy is to use the installers provided on the project `download <http://www.esrf.eu/computing/scientific/crispy>`_ page. The installers bundle Python, the required dependencies, and Crispy. However, because they are only created when a new release is published, they might lack newly implemented features. If you want to use the latest development version, follow the instructions on how to install from source.
-
-All Operating Systems
----------------------
-
-Using pip
-*********
-If you already have Python and all dependencies installed, you can install Crispy using ``pip``::
-
-$ pip install crispy
-
-Just as in the case of using the package installers, this will install the latest release. 
+Windows
+-------
+The easiest way to install Crispy is to use the installer provided on the project `download <http://www.esrf.eu/computing/scientific/crispy/download.html>`_ page. The installer bundles Python, the required dependencies, and Crispy. However, because it is only created when a new release is published, it might lack newly implemented features. If you want to use the latest development version, follow the instructions on how to install from source.
 
 From Source
-***********
+-----------
 First you have to make sure you have a working Python distribution. If this is not the case, you will need to install it. While Crispy works with both Python 2 and Python 3, you should try to install Python 3.5 or greater, as in previous versions some of the dependencies like PyQt5 cannot be easily installed using ``pip``. On macOS and Windows you can install Python using the `official <https://www.python.org/downloads>`_ installers. In particular for Windows you should install the 64-bit version of Python, and make sure that during the installation you select to add Python to system's ``PATH``. On Linux, Python and dependencies (see below) can be installed using the system's package manager (``apt-get``, ``dnf``, ``pacman``, etc.).
 
 Crispy depends on the following Python packages:
