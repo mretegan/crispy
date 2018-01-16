@@ -826,8 +826,11 @@ class QuantyDockWidget(QDockWidget):
             'Running "{} {}" in {}.'.format(
                 self.command, c.baseName + '.lua', os.getcwd()))
 
+        if 'win32' in sys.platform and self.process.waitForStarted():
+                self.updateCalculationPushButton()
+        else:
+            self.process.started.connect(self.updateCalculationPushButton)
         self.process.readyReadStandardOutput.connect(self.handleOutputLogging)
-        self.process.started.connect(self.updateCalculationPushButton)
         self.process.finished.connect(self.processCalculation)
 
     def updateCalculationPushButton(self):
