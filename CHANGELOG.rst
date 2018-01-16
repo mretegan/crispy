@@ -1,5 +1,8 @@
-v0.3.0: 2017/10/10
-------------------
+Changelog
+=========
+
+v0.3.0 (2017-10-10)
+-------------------
 What's new:
 
 * support for L2,3 (2p) XAS, L2,3-M4,5 (2p3d) and L2,3-N4,5 (2p4d) RIXS Quanty simulations for 4f elements
@@ -12,8 +15,8 @@ Changes:
 
 * refactoring of the Quanty module by separating a class dealing with the simulation details from the widget class
 
-v0.2.0: 2017/04/25
-------------------
+v0.2.0 (2017-04-25)
+-------------------
 What's new:
 
 * support for K-L2,3 (1s2p) and L2,3-M4,5 (2p3d) RIXS Quanty simulations 
@@ -21,8 +24,8 @@ What's new:
 * context menu for the simulations panel
 * serialization of the simulations
 
-v0.1.0: 2017/08/21
-------------------
+v0.1.0 (2016-08-21)
+-------------------
 First release of crispy:
 
 * support for the simulation of core-level spectra using Quanty, including:
