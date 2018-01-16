@@ -2,7 +2,7 @@ Crispy is a modern graphical user interface to simulate core-level spectra using
 
 .. first_marker
 
-.. image:: doc/images/main_window.png
+.. image:: docs/assets/main_window.png
 
 .. second_marker
 
