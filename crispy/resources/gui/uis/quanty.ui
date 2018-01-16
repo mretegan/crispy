@@ -286,7 +286,7 @@
            <enum>Qt::NoFocus</enum>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <property name="movable">
            <bool>true</bool>
@@ -654,7 +654,7 @@
                </widget>
               </item>
               <item>
-               <widget class="DoubleLineEdit" name="e2LorentzianLineEdit">
+               <widget class="ListLineEdit" name="e2LorentzianLineEdit">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                   <horstretch>0</horstretch>
