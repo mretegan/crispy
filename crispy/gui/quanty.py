@@ -221,6 +221,9 @@ class QuantyCalculation(object):
                 else:
                     self.hamiltonianState[term] = 0
 
+                if 'Crystal Field' in term and subshell == '4f':
+                    self.hamiltonianState[term] = 0
+
     def saveInput(self):
         templatePath = resourceFileName(
             'crispy:' + os.path.join('modules', 'quanty', 'templates',
@@ -246,7 +249,8 @@ class QuantyCalculation(object):
 
         subshell = self.configurations[0][1][:2]
         if len(self.e1Lorentzian) == 1:
-            if self.edge == 'L2,3 (2p)' and subshell == '3d':
+            if ((subshell == '3d' and self.edge == 'L2,3 (2p)')
+                    or (subshell == '4f' and self.edge == 'M4,5 (3d)')):
                 replacements['$Gamma1'] = '0.1'
                 replacements['$Gmin1'] = self.e1Lorentzian[0]
                 replacements['$Gmax1'] = self.e1Lorentzian[0]
@@ -255,7 +259,8 @@ class QuantyCalculation(object):
             else:
                 replacements['$Gamma1'] = self.e1Lorentzian[0]
         else:
-            if self.edge == 'L2,3 (2p)' and subshell == '3d':
+            if ((subshell == '3d' and self.edge == 'L2,3 (2p)')
+                    or (subshell == '4f' and self.edge == 'M4,5 (3d)')):
                 replacements['$Gamma1'] = 0.1
                 replacements['$Gmin1'] = self.e1Lorentzian[0]
                 replacements['$Gmax1'] = self.e1Lorentzian[1]
@@ -827,7 +832,7 @@ class QuantyDockWidget(QDockWidget):
                 self.command, c.baseName + '.lua', os.getcwd()))
 
         if 'win32' in sys.platform and self.process.waitForStarted():
-                self.updateCalculationPushButton()
+            self.updateCalculationPushButton()
         else:
             self.process.started.connect(self.updateCalculationPushButton)
         self.process.readyReadStandardOutput.connect(self.handleOutputLogging)
