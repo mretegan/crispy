@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '04/10/2017'
+__date__ = '22/01/2018'
 
 
 import os
@@ -74,6 +74,8 @@ class MainWindow(QMainWindow):
             self.quantyDockWidget.loadCalculations)
         self.quantyRemoveAllCalculations.triggered.connect(
             self.quantyDockWidget.removeAllCalculations)
+        self.quantySetPath.triggered.connect(
+            self.quantyDockWidget.setQuantyPath)
 
         self.quantyModuleShowAction.triggered.connect(self.quantyModuleShow)
         self.quantyModuleHideAction.triggered.connect(self.quantyModuleHide)

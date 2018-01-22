@@ -115,13 +115,15 @@ QToolButton::menu-indicator{
      <property name="title">
       <string>&amp;Quanty</string>
      </property>
-     <addaction name="quantyModuleHideAction"/>
+     <addaction name="quantySetPath"/>
      <addaction name="separator"/>
      <addaction name="quantySaveInputAction"/>
      <addaction name="quantySaveAsInputAction"/>
      <addaction name="separator"/>
      <addaction name="quantyLoadCalculations"/>
      <addaction name="quantyRemoveAllCalculations"/>
+     <addaction name="separator"/>
+     <addaction name="quantyModuleHideAction"/>
     </widget>
     <addaction name="menuModulesQuanty"/>
    </widget>
@@ -147,7 +149,7 @@ QToolButton::menu-indicator{
   </action>
   <action name="quantyModuleShowAction">
    <property name="text">
-    <string>Show</string>
+    <string>Show Module</string>
    </property>
    <property name="toolTip">
     <string>Show the Quanty Module</string>
@@ -155,7 +157,7 @@ QToolButton::menu-indicator{
   </action>
   <action name="quantyModuleHideAction">
    <property name="text">
-    <string>Hide</string>
+    <string>Hide Module</string>
    </property>
    <property name="toolTip">
     <string>Hide the Quanty Module</string>
@@ -174,6 +176,14 @@ QToolButton::menu-indicator{
   <action name="quantyRemoveAllCalculations">
    <property name="text">
     <string>Remove All Calculations</string>
+   </property>
+  </action>
+  <action name="quantySetPath">
+   <property name="text">
+    <string>Set Path...</string>
+   </property>
+   <property name="toolTip">
+    <string>Set Path to Quanty</string>
    </property>
   </action>
  </widget>

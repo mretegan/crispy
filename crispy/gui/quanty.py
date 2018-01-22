@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '15/01/2018'
+__date__ = '22/01/2018'
 
 
 import collections
@@ -40,12 +40,12 @@ try:
     import cPickle as pickle
 except ImportError:
     import pickle
-import platform
 import subprocess
 import sys
 import uuid
 
-from PyQt5.QtCore import QItemSelectionModel, QProcess, Qt, QPoint
+from PyQt5.QtCore import (
+    QItemSelectionModel, QProcess, Qt, QPoint, QStandardPaths)
 from PyQt5.QtGui import QIcon, QCursor
 from PyQt5.QtWidgets import (
     QAbstractItemView, QDockWidget, QFileDialog, QAction, QMenu,
@@ -96,7 +96,7 @@ class QuantyCalculation(object):
         'startingTime': None,
         'endingTime': None,
         'verbosity': '0x0000',
-        'needsCompleteUiEnabled': False
+        'needsCompleteUiEnabled': False,
     }
 
     def __init__(self, **kwargs):
@@ -380,6 +380,8 @@ class QuantyDockWidget(QDockWidget):
         loadUi(path, baseinstance=self, package='crispy.gui')
 
         self.calculation = QuantyCalculation()
+        self.quantyPath = None
+        self.fileDialogStartingPath = os.path.expanduser('~')
         self.setUi()
         self.updateUi()
 
@@ -701,10 +703,12 @@ class QuantyDockWidget(QDockWidget):
     def saveInputAs(self):
         c = self.calculation
         path, _ = QFileDialog.getSaveFileName(
-            self, 'Save Quanty Input', '{}'.format(c.baseName + '.lua'),
-            'Quanty Input File (*.lua)')
+            self, 'Save Quanty Input',
+            os.path.join(self.fileDialogStartingPath, '{}.lua'.format(
+                c.baseName)), 'Quanty Input File (*.lua)')
 
         if path:
+            self.fileDialogStartingPath = os.path.dirname(path)
             self.calculation.baseName, _ = os.path.splitext(
                     os.path.basename(path))
             self.updateMainWindowTitle()
@@ -713,8 +717,12 @@ class QuantyDockWidget(QDockWidget):
 
     def saveSelectedCalculationsAs(self):
         path, _ = QFileDialog.getSaveFileName(
-            self, 'Save Calculations', 'untitled.pkl', 'Pickle File (*.pkl)')
+            self, 'Save Calculations',
+            os.path.join(self.fileDialogStartingPath, 'untitled.pkl'),
+            'Pickle File (*.pkl)')
+
         if path:
+            self.fileDialogStartingPath = os.path.dirname(path)
             os.chdir(os.path.dirname(path))
             calculations = self.selectedCalculations()
             calculations.reverse()
@@ -783,34 +791,74 @@ class QuantyDockWidget(QDockWidget):
 
     def loadCalculations(self):
         path, _ = QFileDialog.getOpenFileName(
-            self, 'Load Calculations', '', 'Pickle File (*.pkl)')
+            self, 'Load Calculations',
+            self.fileDialogStartingPath, 'Pickle File (*.pkl)')
+
         if path:
+            self.fileDialogStartingPath = os.path.dirname(path)
             with open(path, 'rb') as p:
                 self.resultsModel.appendItems(pickle.load(p))
         self.updateResultsViewSelection()
         self.updateMainWindowTitle()
 
-    def runCalculation(self):
-        arch = '64-bit' if '64' in platform.machine() else '32-bit'
-        path = resourceFileName(
-            'crispy:' + os.path.join(
-                'modules', 'quanty', 'bin', sys.platform, arch))
-        os.environ['PATH'] = '{};{}'.format(path, os.environ['PATH'])
+    def setQuantyPath(self):
+        path, _ = QFileDialog.getOpenFileName(
+            self, 'Select File', self.fileDialogStartingPath)
 
+        if path:
+            self.quantyPath = os.path.dirname(path)
+            statusBar = self.parent().statusBar()
+            statusBar.showMessage(
+                'The path to Quanty was set to {}'.format(self.quantyPath))
+
+    def getQuantyPath(self):
+        if self.quantyPath:
+            return None
+
+        # Look for Quanty in the PATH environment variable.
+        path = QStandardPaths.findExecutable(self.quantyExecutable)
+        if path:
+            self.quantyPath = os.path.dirname(path)
+            return
+
+        # Look if Quanty's binaries are included locally.
+        path = QStandardPaths.findExecutable(
+            self.quantyExecutable,
+            [resourceFileName(
+                'crispy:' + os.path.join('modules', 'quanty', 'bin'))])
+        if path:
+            self.quantyPath = os.path.dirname(path)
+            return
+
+    def runCalculation(self):
+        # Set the name of the Quanty executable.
         if 'win32' in sys.platform:
-            self.command = 'Quanty.exe'
+            self.quantyExecutable = 'Quanty.exe'
         else:
-            self.command = 'Quanty'
+            self.quantyExecutable = 'Quanty'
+
+        self.getQuantyPath()
 
         statusBar = self.parent().statusBar()
+        if not self.quantyPath:
+            statusBar.showMessage(
+                'Could not find the Quanty executable. Please set its path in '
+                'the "Modules" menu.')
+            return
+
+        command = os.path.join(self.quantyPath, self.quantyExecutable)
+        # Test the executable.
         with open(os.devnull, 'w') as f:
             try:
-                subprocess.call(self.command, stdout=f, stderr=f)
+                subprocess.call(command, stdout=f, stderr=f)
             except:
                 statusBar.showMessage(
-                    'Could not find Quanty. Please install '
-                    'it and set the PATH environment variable.')
+                    'The Quanty executable is not working properly. Please '
+                    'reinstall it.')
                 return
+
+        # Change to the working directory.
+        os.chdir(self.fileDialogStartingPath)
 
         # Write the input file to disk.
         self.saveInput()
@@ -826,10 +874,10 @@ class QuantyDockWidget(QDockWidget):
         # Run Quanty using QProcess.
         self.process = QProcess()
 
-        self.process.start(self.command, (c.baseName + '.lua', ))
+        self.process.start(command, (c.baseName + '.lua', ))
         statusBar.showMessage(
             'Running "{} {}" in {}.'.format(
-                self.command, c.baseName + '.lua', os.getcwd()))
+                self.quantyExecutable, c.baseName + '.lua', os.getcwd()))
 
         if 'win32' in sys.platform and self.process.waitForStarted():
             self.updateCalculationPushButton()
@@ -900,7 +948,7 @@ class QuantyDockWidget(QDockWidget):
                 'Quanty has finished unsuccessfully. '
                 'Check the logging window for more details.'), timeout)
             return
-        # exitCode is platform dependend; exitStatus is always 1.
+        # exitCode is platform dependent; exitStatus is always 1.
         elif exitStatus == 1:
             message = 'Quanty was stopped.'
             statusBar.showMessage(message, timeout)
