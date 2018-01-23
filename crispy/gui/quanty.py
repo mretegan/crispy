@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '22/01/2018'
+__date__ = '23/01/2018'
 
 
 import collections
@@ -727,7 +727,7 @@ class QuantyDockWidget(QDockWidget):
             calculations = self.selectedCalculations()
             calculations.reverse()
             with open(path, 'wb') as p:
-                pickle.dump(calculations, p)
+                pickle.dump(calculations, p, pickle.HIGHEST_PROTOCOL)
 
     def updateCalculation(self):
         c = copy.deepcopy(self.calculation)
