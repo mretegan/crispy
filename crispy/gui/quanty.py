@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '24/01/2018'
+__date__ = '26/01/2018'
 
 
 import collections
@@ -985,6 +985,10 @@ class QuantyDockWidget(QDockWidget):
         # Should this be a signal?
         self.updateResultsViewSelection()
 
+        # If the "Hamiltonian Setup" page is currently selected, when the
+        # current widget is set to the "Results Page", the former is not
+        # displayed. To avoid this I switch first to the "General Setup" page.
+        self.quantyToolBox.setCurrentWidget(self.generalPage)
         # Open the results page.
         self.quantyToolBox.setCurrentWidget(self.resultsPage)
 
