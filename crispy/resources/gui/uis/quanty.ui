@@ -83,7 +83,7 @@
        <attribute name="label">
         <string>General Setup</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout">
+       <layout class="QVBoxLayout" name="_25">
         <property name="spacing">
          <number>6</number>
         </property>
@@ -286,7 +286,7 @@
            <enum>Qt::NoFocus</enum>
           </property>
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <property name="movable">
            <bool>true</bool>
@@ -1135,7 +1135,7 @@
        <attribute name="label">
         <string>Results</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
+       <layout class="QVBoxLayout" name="_7">
         <property name="spacing">
          <number>0</number>
         </property>

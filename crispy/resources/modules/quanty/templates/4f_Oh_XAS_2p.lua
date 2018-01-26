@@ -109,29 +109,38 @@ end
 --------------------------------------------------------------------------------
 if H_cf == 1 then
     -- PotentialExpandedOnClm('Oh', 3, {Ea2u, Et1u, Et2u})
-    -- Et1u - Ea2u = Delta1
-    -- Et2u - Ea2u = Delta2
-    -- Ea2u + 3*Et1u + 3*Et2u = 0
-    --
-    -- Ea2u = -3/7*Delta1 - 3/7*Delta2
-    -- Et1u =  4/7*Delta1 - 3/7*Delta2
-    -- Et2u = -3/7*Delta1 + 4/7*Delta2
-    Delta1_4f = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, PotentialExpandedOnClm('Oh', 3, {-3/7, 4/7, -3/7}))
-    Delta2_4f = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, PotentialExpandedOnClm('Oh', 3, {-3/7, -3/7, 4/7}))
+    Ea2u_4f = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, PotentialExpandedOnClm('Oh', 3, {1, 0, 0}))
+    Et2u_4f = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, PotentialExpandedOnClm('Oh', 3, {0, 1, 0}))
+    Et1u_4f = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, PotentialExpandedOnClm('Oh', 3, {0, 0, 1}))
 
-    Delta1_4f_i = $Delta1(4f)_i_value
-    Delta2_4f_i = $Delta2(4f)_i_value
+    Ea2u_4f_i = $Ea2u(4f)_i_value
+    Et2u_4f_i = $Et2u(4f)_i_value
+    Et1u_4f_i = $Et1u(4f)_i_value
 
-    Delta1_4f_f = $Delta1(4f)_f_value
-    Delta2_4f_f = $Delta2(4f)_f_value
+    Ea2u_4f_f = $Ea2u(4f)_f_value
+    Et2u_4f_f = $Et2u(4f)_f_value
+    Et1u_4f_f = $Et1u(4f)_f_value
+
+    -- Set to zero the barycenter of the orbital energies.
+    E_4f_i = (Ea2u_4f_i + 3 * Et2u_4f_i + 3 * Et1u_4f_i) / 7
+    Ea2u_4f_i = Ea2u_4f_i - E_4f_i
+    Et2u_4f_i = Et2u_4f_i - E_4f_i
+    Et1u_4f_i = Et1u_4f_i - E_4f_i
+
+    E_4f_f = (Ea2u_4f_f + 3 * Et2u_4f_f + 3 * Et1u_4f_f) / 7
+    Ea2u_4f_f = Ea2u_4f_f - E_4f_f
+    Et2u_4f_f = Et2u_4f_f - E_4f_f
+    Et1u_4f_f = Et1u_4f_f - E_4f_f
 
     H_i = H_i
-        + Delta1_4f_i * Delta1_4f
-        + Delta2_4f_i * Delta2_4f
+        + Ea2u_4f_i * Ea2u_4f
+        + Et2u_4f_i * Et2u_4f
+        + Et1u_4f_i * Et1u_4f
 
     H_f = H_f
-        + Delta1_4f_f * Delta1_4f
-        + Delta2_4f_f * Delta2_4f
+        + Ea2u_4f_f * Ea2u_4f
+        + Et2u_4f_f * Et2u_4f
+        + Et1u_4f_f * Et1u_4f
 end
 
 --------------------------------------------------------------------------------
