@@ -217,12 +217,9 @@ class QuantyCalculation(object):
                     self.hamiltonianData[term][label][parameter] = (
                         parameters[parameter], scaling)
 
-                if 'Atomic' in term or 'Crystal Field' in term:
+                if 'Atomic' in term:
                     self.hamiltonianState[term] = 2
                 else:
-                    self.hamiltonianState[term] = 0
-
-                if 'Crystal Field' in term and subshell == '4f':
                     self.hamiltonianState[term] = 0
 
     def saveInput(self):
