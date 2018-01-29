@@ -31,7 +31,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '23/10/2017'
+__date__ = '26/01/2018'
 
 import crispy
 import os
@@ -48,8 +48,7 @@ def get_version():
 
 def main():
     root = os.path.dirname(os.getcwd())
-    build_dir = os.path.join(root, 'build', 'Windows')
-    # TODO: does this work in Windows?
+    build_dir = os.path.join(root, 'build')
     shutil.rmtree(build_dir, ignore_errors=True)
 
     packages = ['matplotlib', 'PyQt5.QtPrintSupport']
@@ -80,7 +79,7 @@ def main():
         Executable(
             'scripts/crispy',
             base=base,
-            icon='assets/crispy.ico',
+            icon=os.path.join('assets', 'crispy.ico'),
             ),
         ]
 

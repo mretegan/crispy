@@ -2,7 +2,7 @@
 # coding: utf-8
 # /*##########################################################################
 #
-# Copyright (c) 2016-2017 European Synchrotron Radiation Facility
+# Copyright (c) 2016-2018 European Synchrotron Radiation Facility
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '23/10/2017'
+__date__ = '25/01/2018'
 
 import os
 import sys
@@ -67,6 +67,10 @@ def prune_app(root):
         'QtPositioning',
         'QtQml',
         'QtQuick',
+        'QtQuickControls2',
+        'QtQuickParticles',
+        'QtQuickTemplates2',
+        'QtQuickTest',
         'QtQuickWidgets',
         'QtSensors',
         'QtSerialPort',
@@ -83,24 +87,17 @@ def prune_app(root):
 
     # TODO: detect the Python version
     pyqt_dir = os.path.join(
-        root, 'dist', 'macOS', 'Crispy.app', 'Contents', 'Resources', 'lib',
-        'python3.6', 'PyQt5')
+        root, 'dist', 'Crispy.app', 'Contents', 'Resources', 'lib',
+        'python3.5', 'PyQt5')
 
     for module in modules:
-        os.remove(os.path.join(pyqt_dir, module + '.so'))
+        try:
+            os.remove(os.path.join(pyqt_dir, module + '.so'))
+        except OSError:
+            pass
 
         shutil.rmtree(
             os.path.join(pyqt_dir, 'Qt', 'lib', module + '.framework'))
-
-
-def make_dmg(root, dist_dir):
-    dmg_name = 'Crispy-{}.dmg'.format(get_version())
-    dmg_path = os.path.join(root, 'downloads', dmg_name)
-
-    command = (
-        'hdiutil create {} -volname Crispy -fs HFS+ -srcfolder {}'.format(
-         dmg_path, dist_dir))
-    os.system(command)
 
 
 def main():
@@ -109,11 +106,12 @@ def main():
 
     # Define the root folder and corresponding subfolders.
     root = os.path.dirname(os.getcwd())
-    dist_dir = os.path.join(root, 'dist', 'macOS')
-    build_dir = os.path.join(root, 'build', 'macOS')
+    dist_dir = os.path.join(root, 'dist')
+    build_dir = os.path.join(root, 'build')
+    artifacts_dir = os.path.join(root, 'artifacts')
 
     # Remove previously built application.
-    clean_folders([build_dir, os.path.join(dist_dir, 'Crispy.app')])
+    clean_folders([build_dir, dist_dir, artifacts_dir])
 
     packages = ['matplotlib', 'silx', 'crispy']
 
@@ -124,14 +122,14 @@ def main():
         'CFBundleGetInfoString': 'Crispy',
         'LSTypeIsPackage': True,
         'LSArchitecturePriority': 'x86_64',
-        'LSMinimumSystemVersion': '10.9.0',
+        'LSMinimumSystemVersion': '10.10.0',
         'NSHumanReadableCopyright': 'MIT',
         'NSHighResolutionCapable': True,
         }
 
     options = {
         'py2app': {
-            'iconfile': 'assets/crispy.icns',
+            'iconfile': os.path.join('assets', 'crispy.icns'),
             'bdist_base': build_dir,
             'dist_dir': dist_dir,
             'packages': packages,
@@ -151,9 +149,6 @@ def main():
 
     # Remove unused modules.
     prune_app(root)
-
-    # Package the application.
-    make_dmg(root, dist_dir)
 
 
 if __name__ == '__main__':

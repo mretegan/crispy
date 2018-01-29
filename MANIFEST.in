@@ -1,8 +1,7 @@
-include LICENSE
+include LICENSE.txt
 include README.rst
 include MANIFEST.in
-imclude version.py
-recursive-include assets *
+include version.py
 recursive-include crispy *.py
 recursive-include crispy/resources/gui/uis *.ui
 recursive-include crispy/resources/gui/icons *.svg
