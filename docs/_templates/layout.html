@@ -1,2 +1,15 @@
 {% extends "!layout.html" %}
 {% set script_files = script_files + ["_static/mathjax_conf.js"] %}
+
+{% block footer %}
+{{ super() }}
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-59996610-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-59996610-2');
+</script>
+{% endblock %}

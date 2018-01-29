@@ -1,2 +1,3 @@
 .. include:: ../README.rst
-    :start-after: second_marker
+    :start-after: second-marker
+    :end-before: third-marker

@@ -5,8 +5,8 @@ a. Write down the electronic configuration of |Fe3+|. Show that there are two wa
 
 b. Run two K-edge simulations for |Fe3+| in an octahedral crystal field, one with 10Dq set to 2.0 eV and 3.3 eV. What differences do you observe between the two spectra? Based on the two simulations what can you say about the spin state of |Fe3+| in the experimental spectrum below.
 
-.. figure:: assets/westre_2.png
-    :width: 300 px
+.. figure:: assets/westre_fig2.png
+    :width: 60 %
     :align: center
 
 c. Change the 10Dq value from 2.6 to 3.6 eV in steps of 0.1 eV. At what value do you observe the spin transition?
