@@ -28,7 +28,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '26/01/2018'
+__date__ = '29/01/2018'
 
 import os
 import sys
@@ -44,7 +44,7 @@ def get_readme():
     long_description = ''
     with open(os.path.join(_dir, 'README.rst')) as f:
         for line in f:
-            if 'image::' not in line:
+            if 'main_window' not in line:
                 long_description += line
     return long_description
 
