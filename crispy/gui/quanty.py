@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '26/01/2018'
+__date__ = '02/02/2018'
 
 
 import collections
@@ -296,7 +296,7 @@ class QuantyCalculation(object):
             replacements['$Emax2'] = self.e2Max
             replacements['$NE2'] = self.e2NPoints
             replacements['$Eedge2'] = self.e2Edge
-            replacements['$Gamma2'] = self.e2Lorentzian
+            replacements['$Gamma2'] = self.e2Lorentzian[0]
 
         replacements['$NPsisAuto'] = self.nPsisAuto
         replacements['$NPsis'] = self.nPsis
