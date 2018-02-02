@@ -1,6 +1,10 @@
 Changelog
 =========
 
+v0.4.2 (2018-02-02)
+-------------------
+This is a bug fix release.
+
 v0.4.0 (2018-01-28)
 -------------------
 What's new:
@@ -11,7 +15,6 @@ What's new:
 * spectra are shifted by the experimental edge energy
 * updated core-hole lifetimes
 * energy dependent broadening for L2,3 and M4,5 edges
-
 
 v0.3.0 (2017-10-10)
 -------------------
