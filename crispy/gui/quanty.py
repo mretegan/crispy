@@ -968,7 +968,7 @@ class QuantyDockWidget(QDockWidget):
             try:
                 f = '{0:s}{1:s}'.format(c.baseName, suffix)
                 data = np.loadtxt(f, skiprows=5)
-            except FileNotFoundError:
+            except IOError:
                 continue
 
             if 'RIXS' in c.experiment:
@@ -1157,13 +1157,9 @@ class QuantyDockWidget(QDockWidget):
         self.parent().setWindowTitle(title)
 
     def getAppConfigLocation(self):
-        path = QStandardPaths.standardLocations(
-            QStandardPaths.AppConfigLocation)[0]
+        root = QStandardPaths.standardLocations(
+            QStandardPaths.GenericConfigLocation)[0]
 
-        # The path returned above points to different locations on the same
-        # platform depending if the application is run in development mode
-        # or as an app. This should take care of that.
-        root = os.path.dirname(path)
         if sys.platform in ('win32', 'darwin'):
             path = os.path.join(root, 'Crispy')
         else:
@@ -1196,7 +1192,7 @@ class QuantyDockWidget(QDockWidget):
             with open(settingsPath, 'r') as p:
                 self.settings = json.loads(
                     p.read(), object_pairs_hook=collections.OrderedDict)
-        except FileNotFoundError:
+        except IOError:
             self.settings = OrderedDict()
             self.settings['quantyPath'] = None
             self.settings['currentPath'] = os.path.expanduser('~')
