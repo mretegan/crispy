@@ -1,10 +1,12 @@
 Downloads
 =========
 
+Due to a bug in version 0.4.0, all RIXS calculations will fail. Please update to the latest version below.
+
 +----------------------------------+------------------------------+-----------------------------+
 | |Windows|                        | |macOS|                      | |Linux|                     |
 +----------------------------------+------------------------------+-----------------------------+
-| `Crispy-0.4.0-x64.exe (64-bit)`_ | `Crispy-0.4.0.dmg (64-bit)`_ | see the :doc:`installation` |
+| `Crispy-0.4.2-x64.exe (64-bit)`_ | `Crispy-0.4.2.dmg (64-bit)`_ | see the :doc:`installation` |
 |                                  |                              |                             |
 | The installer includes:          | The application includes:    | page for details.           |
 |   - Python 3.5.4                 |   - Python 3.5.4             |                             |
@@ -32,6 +34,6 @@ Downloads
     :width: 90pt
     :align: middle
 
-.. _Crispy-0.4.0-x64.exe (64-bit): https://github.com/mretegan/crispy/releases/download/v0.4.0/Crispy-0.4.0-x64.exe
+.. _Crispy-0.4.2-x64.exe (64-bit): https://github.com/mretegan/crispy/releases/download/v0.4.2/Crispy-0.4.2-x64.exe
 
-.. _Crispy-0.4.0.dmg (64-bit): https://github.com/mretegan/crispy/releases/download/v0.4.0/Crispy-0.4.0.dmg
+.. _Crispy-0.4.2.dmg (64-bit): https://github.com/mretegan/crispy/releases/download/v0.4.2/Crispy-0.4.2.dmg

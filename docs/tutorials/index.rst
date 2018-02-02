@@ -25,7 +25,7 @@ The Quanty module panel has a vertical tab structure. The *General Setup* tab is
     :align: center
     :width: 35 %
 
-Depending on the type of experiment selected above, the panel below will display a single tab with the parameters of the *Absorbtion Energy* for a XAS calculation, or two tabs, *Incident Energy* and *Energy Transfer*, for a RIXS calculation. 
+Depending on the type of experiment selected above, the panel below will display a single tab with the parameters of the *Absorption Energy* for a XAS calculation, or two tabs, *Incident Energy* and *Energy Transfer*, for a RIXS calculation. 
 
 .. figure:: assets/absorption_energy.png
     :align: center
