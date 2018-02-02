@@ -692,8 +692,8 @@ class QuantyDockWidget(QDockWidget):
         statusBar = self.parent().statusBar()
         try:
             self.calculation.saveInput()
-        except PermissionError:
-            message = 'Permission denied to write Quanty input file.'
+        except (IOError, OSError) as e:
+            message = 'Cannot write the Quanty input file.'
             statusBar.showMessage(message)
             return
 
