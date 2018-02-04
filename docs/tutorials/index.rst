@@ -8,6 +8,7 @@ On this page you will find links to a series of tutorials to help get you starte
 
     ti_l23_xas.rst
     fe_spin_transition
+    ni_ligand_field
 
 Crispy's main window is divided in three parts: the plotting panel (1), the logging panel (2), and the Quanty module panel (3), as shown in the figure below.
 
