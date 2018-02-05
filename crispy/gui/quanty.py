@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '02/02/2018'
+__date__ = '05/02/2018'
 
 
 import collections
@@ -171,34 +171,21 @@ class QuantyCalculation(object):
 
         branch = tree['elements'][self.element]['charges'][self.charge]
 
+        # Get the Hamiltonian terms from the second configuration.
+        configuration = self.configurations[1][1]
+        terms = branch['configurations'][configuration]['terms']
+
         for label, configuration in self.configurations:
             label = '{} Hamiltonian'.format(label)
-            terms = branch['configurations'][configuration]['terms']
 
             for term in terms:
-                # Hack to include the magnetic and exchange terms only for
-                # selected calculations.
-                subshell = self.configurations[0][1][:2]
-                if not ((subshell == '4f' and self.edge == 'M4,5 (3d)') or
-                        (subshell == '3d' and self.edge == 'L2,3 (2p)') or
-                        (subshell == '4d' and self.edge == 'L2,3 (2p)') or
-                        (subshell == '5d' and self.edge == 'L2,3 (2p)')):
-                    if 'Magnetic' in term or 'Exchange' in term:
-                        continue
-
                 if 'Magnetic' in term or 'Exchange' in term:
                     self.needsCompleteUiEnabled = True
                 else:
                     self.needsCompleteUiEnabled = False
 
-                if ('Atomic' in term or 'Magnetic' in term or
-                        'Exchange' in term):
+                if 'Atomic' in term or 'Magnetic' in term or 'Exch' in term:
                     parameters = terms[term]
-                elif '3d-4p Hybridization' in term:
-                    try:
-                        parameters = terms[term][self.symmetry][configuration]
-                    except KeyError:
-                        continue
                 else:
                     try:
                         parameters = terms[term][self.symmetry]
@@ -672,6 +659,8 @@ class QuantyDockWidget(QDockWidget):
         terms = c.hamiltonianData
 
         for term in terms:
+            if 'Atomic' not in term:
+                continue
             configurations = terms[term]
             for configuration in configurations:
                 parameters = configurations[configuration]
