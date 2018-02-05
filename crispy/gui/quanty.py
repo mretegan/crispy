@@ -836,12 +836,13 @@ class QuantyDockWidget(QDockWidget):
         with open(os.devnull, 'w') as f:
             try:
                 subprocess.call(command, stdout=f, stderr=f)
-            except:
-                message = (
-                    'The Quanty executable was not found or is not working '
-                    'properly.')
-                statusBar.showMessage(message)
-                return
+            except OSError as e:
+                if e.errno == os.errno.ENOENT:
+                    message = 'The Quanty executable was not found.'
+                    statusBar.showMessage(message)
+                    return
+                else:
+                    raise
 
         # Change to the working directory.
         os.chdir(self.settings['currentPath'])
@@ -957,7 +958,7 @@ class QuantyDockWidget(QDockWidget):
             try:
                 f = '{0:s}{1:s}'.format(c.baseName, suffix)
                 data = np.loadtxt(f, skiprows=5)
-            except IOError:
+            except IOError as e:
                 continue
 
             if 'RIXS' in c.experiment:
@@ -1181,7 +1182,7 @@ class QuantyDockWidget(QDockWidget):
             with open(settingsPath, 'r') as p:
                 self.settings = json.loads(
                     p.read(), object_pairs_hook=collections.OrderedDict)
-        except IOError:
+        except IOError as e:
             self.settings = OrderedDict()
             self.settings['quantyPath'] = None
             self.settings['currentPath'] = os.path.expanduser('~')
