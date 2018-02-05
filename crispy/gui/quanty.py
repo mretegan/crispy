@@ -1019,6 +1019,8 @@ class QuantyDockWidget(QDockWidget):
             plotWidget.addImage(z, origin=origin, scale=scale, reset=False)
 
         else:
+            # Keep the aspect ratio for RIXS plots.
+            plotWidget.setKeepDataAspectRatio(flag=False)
             # Check if the data is valid.
             if np.max(np.abs(data)) < np.finfo(np.float32).eps:
                 message = 'The {} spectrum has very low intensity.'.format(
