@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '05/02/2018'
+__date__ = '08/02/2018'
 
 
 import collections
@@ -63,10 +63,6 @@ class OrderedDict(collections.OrderedDict):
     def __missing__(self, key):
         value = self[key] = type(self)()
         return value
-
-
-class InvalidVectorError(Exception):
-    pass
 
 
 class QuantyCalculation(object):
@@ -565,7 +561,8 @@ class QuantyDockWidget(QDockWidget):
             c.hamiltonianState['Magnetic Field'] = 2
             self.calculateCDCheckBox.setChecked(True)
 
-        kin = self.kinLineEdit.getVector()
+        kin = c.kin
+
         kin = kin / np.linalg.norm(kin)
         configurations = c.hamiltonianData['Magnetic Field']
         for configuration in configurations:
@@ -595,22 +592,28 @@ class QuantyDockWidget(QDockWidget):
             self.plotSelectedCalculations()
 
     def updateIncidentWaveVector(self):
-        # TODO: Write proper validators.
+        c = self.calculation
         statusBar = self.parent().statusBar()
 
         try:
             kin = self.kinLineEdit.getVector()
-        except InvalidVectorError:
+        except ValueError:
             message = 'Wrong expression given for the wave vector.'
             statusBar.showMessage(message)
             return
 
+        timeout = 4000
+
         if np.all(kin == 0):
             message = 'The wave vector cannot be null.'
-            statusBar.showMessage(message)
+            statusBar.showMessage(message, timeout)
             return
+        else:
+            c.kin = kin
 
-        ein = self.einLineEdit.getVector()
+        self.updateIncidentPolarizationVector()
+        ein = c.ein
+
         # Check if the wave and polarization vectors are perpendicular.
         if np.dot(kin, ein) != 0:
             # Determine a possible perpendicular vector.
@@ -618,30 +621,35 @@ class QuantyDockWidget(QDockWidget):
                 ein = np.array([kin[2], kin[2], -kin[0] - kin[1]])
             else:
                 ein = np.array([-kin[2] - kin[1], kin[0], kin[0]])
-        self.einLineEdit.setVector(ein)
 
+        self.einLineEdit.setVector(ein)
         self.updateMagneticField()
 
     def updateIncidentPolarizationVector(self):
+        c = self.calculation
         statusBar = self.parent().statusBar()
 
         try:
             ein = self.einLineEdit.getVector()
-        except:
+        except ValueError:
             message = 'Wrong expression given for the polarization vector.'
             statusBar.showMessage(message)
             return
 
+        kin = c.kin
+        timeout = 4000
+
         if np.all(ein == 0):
             message = 'The polarization vector cannot be null.'
-            statusBar.showMessage(message)
+            statusBar.showMessage(message, timeout)
             return
-
-        kin = self.kinLineEdit.getVector()
-        if np.dot(kin, ein) != 0:
+        elif np.dot(kin, ein) != 0:
             message = ('The wave and polarization vectors need to be '
                        'perpendicular.')
-            statusBar.showMessage(message)
+            statusBar.showMessage(message, timeout)
+            return
+        else:
+            c.ein = ein
 
     def updateNPsisLineEditState(self):
         if self.nPsisAutoCheckBox.isChecked():
@@ -825,7 +833,7 @@ class QuantyDockWidget(QDockWidget):
 
         statusBar = self.parent().statusBar()
         if not self.settings['quantyPath']:
-            message = 'The path to the Quanty executable is not set.'
+            message = 'The path of the Quanty executable is not set.'
             statusBar.showMessage(message)
             return
 

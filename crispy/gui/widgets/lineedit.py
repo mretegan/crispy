@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '14/01/2018'
+__date__ = '08/02/2018'
 
 import numpy as np
 
@@ -64,8 +64,13 @@ class VectorLineEdit(QLineEdit):
         super(VectorLineEdit, self).__init__(*args, **kwargs)
 
     def getVector(self):
-        vector = np.fromstring(self.text()[1:-1], sep=',', dtype=np.float64)
-        return(vector)
+        try:
+            vector = np.fromstring(
+                self.text()[1:-1], sep=',', dtype=np.float64)
+        except ValueError:
+            raise
+        else:
+            return(vector)
 
     def setVector(self, array, separator=', ', fmt='{:.2g}'):
         formatter = {'float_kind': lambda x: fmt.format(x)}
