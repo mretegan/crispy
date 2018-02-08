@@ -167,28 +167,29 @@ class QuantyCalculation(object):
 
         branch = tree['elements'][self.element]['charges'][self.charge]
 
-        # Get the Hamiltonian terms from the second configuration.
+        # Get the name of the Hamiltonian terms from the second configuration.
         configuration = self.configurations[1][1]
         terms = branch['configurations'][configuration]['terms']
 
+        if 'Magnetic Field' in terms or 'Exchange Field' in terms:
+            self.needsCompleteUiEnabled = True
+        else:
+            self.needsCompleteUiEnabled = False
+
         for label, configuration in self.configurations:
             label = '{} Hamiltonian'.format(label)
+            parameters = branch['configurations'][configuration]['terms']
 
             for term in terms:
-                if 'Magnetic' in term or 'Exchange' in term:
-                    self.needsCompleteUiEnabled = True
-                else:
-                    self.needsCompleteUiEnabled = False
-
                 if 'Atomic' in term or 'Magnetic' in term or 'Exch' in term:
-                    parameters = terms[term]
+                    termParameters = parameters[term]
                 else:
                     try:
-                        parameters = terms[term][self.symmetry]
+                        termParameters = parameters[term][self.symmetry]
                     except KeyError:
                         continue
 
-                for parameter in parameters:
+                for parameter in termParameters:
                     if 'Atomic' in term:
                         if parameter[0] in ('F', 'G'):
                             scaling = 0.8
@@ -198,7 +199,7 @@ class QuantyCalculation(object):
                         scaling = str()
 
                     self.hamiltonianData[term][label][parameter] = (
-                        parameters[parameter], scaling)
+                        termParameters[parameter], scaling)
 
                 if 'Atomic' in term:
                     self.hamiltonianState[term] = 2
