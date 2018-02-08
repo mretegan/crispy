@@ -64,13 +64,14 @@ class VectorLineEdit(QLineEdit):
         super(VectorLineEdit, self).__init__(*args, **kwargs)
 
     def getVector(self):
+        # Using np.fromstring gives some weird results.
+        string = self.text()[1:-1].split(',')
         try:
-            vector = np.fromstring(
-                self.text()[1:-1], sep=',', dtype=np.float64)
+            vector = list(map(float, string))
         except ValueError:
             raise
         else:
-            return(vector)
+            return(np.array(vector))
 
     def setVector(self, array, separator=', ', fmt='{:.2g}'):
         formatter = {'float_kind': lambda x: fmt.format(x)}

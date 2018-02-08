@@ -592,14 +592,14 @@ class QuantyDockWidget(QDockWidget):
         c = self.calculation
         statusBar = self.parent().statusBar()
 
+        timeout = 4000
+
         try:
             kin = self.kinLineEdit.getVector()
         except ValueError:
             message = 'Wrong expression given for the wave vector.'
-            statusBar.showMessage(message)
+            statusBar.showMessage(message, timeout)
             return
-
-        timeout = 4000
 
         if np.all(kin == 0):
             message = 'The wave vector cannot be null.'
@@ -608,8 +608,9 @@ class QuantyDockWidget(QDockWidget):
         else:
             c.kin = kin
 
-        self.updateIncidentPolarizationVector()
-        ein = c.ein
+        # No need for a try/except block. The polarization vector must be
+        # correct.
+        ein = self.einLineEdit.getVector()
 
         # Check if the wave and polarization vectors are perpendicular.
         if np.dot(kin, ein) != 0:
@@ -625,16 +626,16 @@ class QuantyDockWidget(QDockWidget):
     def updateIncidentPolarizationVector(self):
         c = self.calculation
         statusBar = self.parent().statusBar()
+        timeout = 4000
 
         try:
             ein = self.einLineEdit.getVector()
         except ValueError:
             message = 'Wrong expression given for the polarization vector.'
-            statusBar.showMessage(message)
+            statusBar.showMessage(message, timeout)
             return
 
         kin = c.kin
-        timeout = 4000
 
         if np.all(ein == 0):
             message = 'The polarization vector cannot be null.'
@@ -725,9 +726,6 @@ class QuantyDockWidget(QDockWidget):
 
         c.temperature = self.temperatureLineEdit.getValue()
         c.magneticField = self.magneticFieldLineEdit.getValue()
-
-        c.kin = self.kinLineEdit.getVector()
-        c.ein = self.einLineEdit.getVector()
 
         c.calculateIso = int(self.calculateIsoCheckBox.isChecked())
         c.calculateCD = int(self.calculateCDCheckBox.isChecked())
@@ -928,7 +926,7 @@ class QuantyDockWidget(QDockWidget):
         # Evaluate the exit code and status of the process.
         exitStatus = self.process.exitStatus()
         exitCode = self.process.exitCode()
-        timeout = 10000
+        timeout = 8000
         statusBar = self.parent().statusBar()
         if exitStatus == 0 and exitCode == 0:
             message = ('Quanty has finished successfully in ')
