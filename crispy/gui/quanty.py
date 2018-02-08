@@ -346,10 +346,6 @@ class QuantyCalculation(object):
 
         self.uuid = uuid.uuid4().hex[:4]
 
-        self.label = '{} | {} | {} | {} | {}'.format(
-            self.element, self.charge, self.symmetry, self.experiment,
-            self.edge)
-
 
 class QuantyDockWidget(QDockWidget):
 
@@ -867,6 +863,13 @@ class QuantyDockWidget(QDockWidget):
         c = self.calculation
         c.startingTime = datetime.datetime.now()
 
+        if not hasattr(self, 'counter'):
+            self.counter = 1
+
+        c.label = '{} | {} | {} | {} | {}'.format(
+            c.element, c.charge, c.symmetry, c.experiment,
+            c.edge)
+
         # Run Quanty using QProcess.
         self.process = QProcess()
 
@@ -952,6 +955,8 @@ class QuantyDockWidget(QDockWidget):
             message = 'Quanty was stopped.'
             statusBar.showMessage(message, timeout)
             return
+
+        self.counter += 1
 
         spectra = list()
         if c.calculateIso:
