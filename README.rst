@@ -20,7 +20,7 @@ Using pip
 *********
 If you already have Python and all dependencies installed, you can install Crispy using ``pip``::
 
-$ pip install crispy
+    $ pip install crispy
 
 Just as in the case of using the package installers, this will install the latest release, and not the development version.
 
@@ -58,17 +58,20 @@ To build and install the package, run::
 
 Usage
 =====
+
+.. forth-marker
+
 If you have used the installers, Crispy should be easy to find and launch. For the installation using ``pip`` and from source you can start Crispy from the command prompt using::
 
     $ crispy
 
-This is a file created during the installation and should be available from the command line if the ``PATH`` environment variable was set correctly during the initial Python installation.
+This  a file created during the installation that should be available from the command line if the ``PATH`` environment variable was set correctly during the initial Python installation.
 
 You can also start Crispy without installing it by going to the source directory and executing (only for Python 3)::
 
     $ python -m crispy
 
-.. forth-marker
+.. fifth-marker
 
 Citation
 ========
@@ -79,7 +82,7 @@ Crispy is a scientific software. If you use it for a scientific publication, ple
 .. |ZENODO| image:: https://zenodo.org/badge/53660512.svg
    :target: https://zenodo.org/badge/latestdoi/53660512
 
-.. fifth-marker
+.. sixth-marker
 
 License
 =======
