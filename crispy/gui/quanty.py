@@ -167,29 +167,31 @@ class QuantyCalculation(object):
 
         branch = tree['elements'][self.element]['charges'][self.charge]
 
-        # Get the name of the Hamiltonian terms from the second configuration.
-        configuration = self.configurations[1][1]
-        terms = branch['configurations'][configuration]['terms']
-
-        if 'Magnetic Field' in terms or 'Exchange Field' in terms:
-            self.needsCompleteUiEnabled = True
-        else:
-            self.needsCompleteUiEnabled = False
-
         for label, configuration in self.configurations:
             label = '{} Hamiltonian'.format(label)
-            parameters = branch['configurations'][configuration]['terms']
+            terms = branch['configurations'][configuration]['terms']
 
             for term in terms:
-                if 'Atomic' in term or 'Magnetic' in term or 'Exch' in term:
-                    termParameters = parameters[term]
+                # Hack to include the magnetic and exchange terms only for
+                # selected type calculations.
+                subshell = self.configurations[0][1][:2]
+                if 'Magnetic' in term or 'Exchange' in term:
+                    if (('f' in subshell and 'M4,5 (3d)' in self.edge)
+                            or ('d' in subshell and 'L2,3 (2p)' in self.edge)):
+                        self.needsCompleteUiEnabled = True
+                    else:
+                        continue
+
+                if ('Atomic' in term or 'Magnetic' in term
+                        or 'Exchange' in term):
+                    parameters = terms[term]
                 else:
                     try:
-                        termParameters = parameters[term][self.symmetry]
+                        parameters = terms[term][self.symmetry]
                     except KeyError:
                         continue
 
-                for parameter in termParameters:
+                for parameter in parameters:
                     if 'Atomic' in term:
                         if parameter[0] in ('F', 'G'):
                             scaling = 0.8
@@ -199,7 +201,7 @@ class QuantyCalculation(object):
                         scaling = str()
 
                     self.hamiltonianData[term][label][parameter] = (
-                        termParameters[parameter], scaling)
+                        parameters[parameter], scaling)
 
                 if 'Atomic' in term:
                     self.hamiltonianState[term] = 2
@@ -344,7 +346,7 @@ class QuantyCalculation(object):
         with open(self.baseName + '.lua', 'w') as f:
             f.write(self.template)
 
-        self.uuid = uuid.uuid4().hex[:4]
+        self.uuid = uuid.uuid4().hex[:8]
 
 
 class QuantyDockWidget(QDockWidget):
@@ -866,10 +868,6 @@ class QuantyDockWidget(QDockWidget):
         if not hasattr(self, 'counter'):
             self.counter = 1
 
-        c.label = '{} | {} | {} | {} | {}'.format(
-            c.element, c.charge, c.symmetry, c.experiment,
-            c.edge)
-
         # Run Quanty using QProcess.
         self.process = QProcess()
 
@@ -955,6 +953,10 @@ class QuantyDockWidget(QDockWidget):
             message = 'Quanty was stopped.'
             statusBar.showMessage(message, timeout)
             return
+
+        c.label = '#{} | {} | {} | {} | {} | {}'.format(
+            self.counter, c.element, c.charge, c.symmetry, c.experiment,
+            c.edge)
 
         self.counter += 1
 
@@ -1044,7 +1046,8 @@ class QuantyDockWidget(QDockWidget):
             plotWidget.setGraphXLabel('Absorption Energy (eV)')
             plotWidget.setGraphYLabel('Absorption Cross Section (a.u.)')
 
-            legend = '{} | {} | id: {}'.format(c.label, spectrumName, c.uuid)
+            legend = '{} | {} | {}'.format(
+                c.label.split()[0], spectrumName, c.uuid)
             scale = (c.e1Max - c.e1Min) / c.e1NPoints
 
             x = np.linspace(c.e1Min, c.e1Max, c.e1NPoints + 1)

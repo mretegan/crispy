@@ -27,39 +27,71 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '04/10/2017'
+__date__ = '14/02/2018'
 
 
 from silx.gui.plot import PlotWindow
-# from silx.gui.plot.PlotTools import PositionInfo
 from PyQt5.QtWidgets import QComboBox
-# from PyQt5.QtCore import Qt
+from silx.gui.plot.backends.BackendMatplotlib import (
+    BackendMatplotlibQt as _BackendMatplotlibQt)
+
+
+class BackendMatplotlibQt(_BackendMatplotlibQt):
+
+    def __init__(self, plot, parent=None):
+        super(BackendMatplotlibQt, self).__init__(plot, parent)
+        self._items = dict()
+
+    def addCurve(self, x, y, legend, *args, **kwargs):
+        container = super(BackendMatplotlibQt, self).addCurve(
+                x, y, legend, *args, **kwargs)
+
+        # Remove the unique identifier from the legend.
+        legend = legend[:-11]
+        curve = container.get_children()[0]
+        self._items[curve] = legend
+        self._updateLegends()
+
+        return container
+
+    def remove(self, container):
+        super(BackendMatplotlibQt, self).remove(container)
+        try:
+            curve = container.get_children()[0]
+            try:
+                self._items.pop(curve)
+            except KeyError:
+                pass
+        except IndexError:
+            pass
+        self._updateLegends()
+
+    def _updateLegends(self):
+        curves = list()
+        legends = list()
+
+        for curve in self._items:
+            curves.append(curve)
+            legends.append(self._items[curve])
+
+        legend = self.ax.legend(curves, legends)
+        frame = legend.get_frame()
+        frame.set_edgecolor('white')
+        self.postRedisplay()
 
 
 class PlotWidget(PlotWindow):
     def __init__(self, *args):
         super(PlotWidget, self).__init__(
             logScale=False, grid=True, yInverted=False,
-            roi=False, mask=False, print_=False)
-        self.setActiveCurveHandling(True)
+            roi=False, mask=False, print_=False, backend=BackendMatplotlibQt)
+
+        self.setActiveCurveHandling(False)
         self.setGraphGrid('both')
 
         self.spectraComboBox = QComboBox()
         self.spectraComboBox.setMinimumWidth(150)
-
-        # toolBar = self.toolBar()
-        # toolBar = QToolBar()
-        # self.addToolBar(Qt.TopToolBarArea, toolBar)
-        # toolBar.addSeparator()
-        # position = PositionInfo(plot=self)
-        # toolBar.addWidget(position)
-
-        # limitsToolBar = LimitsToolBar(plot=self)
-        # self.addToolBar(Qt.BottomToolBarArea, limitsToolBar)
-
-        # toolbar = self.toolBar()
-        # toolbar.addSeparator()
-        # toolbar.addWidget(self.spectraComboBox)
+        self.setDataMargins(0, 0, 0.05, 0.05)
 
     def reset(self):
         self.clear()
@@ -68,4 +100,4 @@ class PlotWidget(PlotWindow):
         self.setGraphXLimits(0, 100)
         self.setGraphYLabel('Y')
         self.setGraphYLimits(0, 100)
-        # self.keepDataAspectRatio(False)
+        self.keepDataAspectRatio(False)

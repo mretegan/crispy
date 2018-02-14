@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '14/02/2017'
+__date__ = '14/02/2018'
 
 
 from PyQt5.QtCore import Qt, QAbstractListModel, QModelIndex
