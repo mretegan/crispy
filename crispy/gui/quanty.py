@@ -601,13 +601,16 @@ class QuantyDockWidget(QDockWidget):
         try:
             kin = self.kinLineEdit.getVector()
         except ValueError:
-            message = 'Wrong expression given for the wave vector.'
+            message = ('Wrong expression given for the wave vector. '
+                       'Resetting the previous value.')
             statusBar.showMessage(message, timeout)
+            self.kinLineEdit.setVector(c.kin)
             return
 
         if np.all(kin == 0):
             message = 'The wave vector cannot be null.'
             statusBar.showMessage(message, timeout)
+            self.kinLineEdit.setVector(c.kin)
             return
         else:
             c.kin = kin
@@ -635,8 +638,10 @@ class QuantyDockWidget(QDockWidget):
         try:
             ein = self.einLineEdit.getVector()
         except ValueError:
-            message = 'Wrong expression given for the polarization vector.'
+            message = ('Wrong expression given for the polarization vector. '
+                       'Resetting the previous value.')
             statusBar.showMessage(message, timeout)
+            self.einLineEdit.setVector(c.ein)
             return
 
         kin = c.kin
@@ -644,11 +649,13 @@ class QuantyDockWidget(QDockWidget):
         if np.all(ein == 0):
             message = 'The polarization vector cannot be null.'
             statusBar.showMessage(message, timeout)
+            self.einLineEdit.setVector(c.ein)
             return
         elif np.dot(kin, ein) != 0:
             message = ('The wave and polarization vectors need to be '
                        'perpendicular.')
             statusBar.showMessage(message, timeout)
+            self.einLineEdit.setVector(c.ein)
             return
         else:
             c.ein = ein
