@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '04/10/2017'
+__date__ = '14/02/2017'
 
 
 from PyQt5.QtCore import Qt, QAbstractListModel, QModelIndex
@@ -54,9 +54,26 @@ class ListModel(QAbstractListModel):
         index."""
         if not index.isValid():
             return
+        row = index.row()
         if role == Qt.DisplayRole or role == Qt.EditRole:
-            label = self.data[index.row()].label
+            label = self.data[row].label
             return label
+
+    def setData(self, index, value, role):
+        """Set the role data for the item at index to value."""
+        if not index.isValid():
+            return
+        row = index.row()
+        if role == Qt.EditRole:
+            self.data[row].label = value
+        self.dataChanged.emit(index, index)
+        return True
+
+    def flags(self, index):
+        """Return the active flags for the given index"""
+        activeFlags = (
+            Qt.ItemIsEnabled | Qt.ItemIsSelectable | Qt.ItemIsEditable)
+        return activeFlags
 
     def insertItems(self, position, items, parent=QModelIndex()):
         """Insert items at a given position in the model."""

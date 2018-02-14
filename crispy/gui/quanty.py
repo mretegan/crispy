@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '08/02/2018'
+__date__ = '14/02/2018'
 
 
 import collections
@@ -405,6 +405,8 @@ class QuantyDockWidget(QDockWidget):
 
         self.saveInputAsPushButton.clicked.connect(self.saveInputAs)
         self.calculationPushButton.clicked.connect(self.runCalculation)
+
+        self.resultsModel.dataChanged.connect(self.plotSelectedCalculations)
 
     def updateUi(self):
         c = self.calculation
