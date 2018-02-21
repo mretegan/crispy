@@ -709,6 +709,7 @@ class QuantyDockWidget(QDockWidget):
         # No idea why this is needed. The view should update after the above
         # function call.
         self.hamiltonianParametersView.viewport().repaint()
+        self.hamiltonianTermsView.viewport().repaint()
 
     def updateNPsisLineEditState(self):
         nPsisMax = self.calculation.nPsisMax
