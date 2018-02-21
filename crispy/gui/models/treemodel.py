@@ -146,6 +146,23 @@ class TreeModel(QAbstractItemModel):
 
         return parentIndex
 
+    def siblings(self, index):
+        node = self.getNode(index)
+
+        parentIndex = self.parent(index)
+        parentNode = self.getNode(parentIndex)
+
+        siblingIndices = list()
+        for child in parentNode.children:
+            if child is node:
+                continue
+            else:
+                row = child.row()
+                siblingIndex = self.index(row, 0, parentIndex)
+                siblingIndices.append(siblingIndex)
+
+        return siblingIndices
+
     def rowCount(self, parentIndex):
         """Return the number of rows under the given parent. When the
         parentIndex is valid, rowCount() returns the number of children
@@ -209,13 +226,26 @@ class TreeModel(QAbstractItemModel):
         column = index.column()
 
         if role == Qt.DisplayRole or role == Qt.EditRole:
-            if column > 0 and not node.childCount():
-                try:
-                    node.setItemData(column, float(value))
-                except ValueError:
-                    return False
-            else:
-                node.setItemData(column, value)
+            nodes = list()
+            nodes.append(node)
+
+            if self.sync:
+                parentIndex = self.parent(index)
+                # Iterate over the siblings of the parent index.
+                for sibling in self.siblings(parentIndex):
+                    siblingNode = self.getNode(sibling)
+                    for child in siblingNode.children:
+                        if child.getItemData(0) == node.getItemData(0):
+                            nodes.append(child)
+
+            for node in nodes:
+                if column > 0 and not node.childCount():
+                    try:
+                        node.setItemData(column, float(value))
+                    except ValueError:
+                        return False
+                else:
+                    node.setItemData(column, value)
 
         elif role == Qt.CheckStateRole:
             node.setCheckState(value)
@@ -226,6 +256,9 @@ class TreeModel(QAbstractItemModel):
         self.dataChanged.emit(index, index)
 
         return True
+
+    def setSyncState(self, flag):
+        self.sync = flag
 
     def flags(self, index):
         """Return the active flags for the given index. Add editable

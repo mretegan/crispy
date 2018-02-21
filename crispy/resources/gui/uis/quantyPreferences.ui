@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>300</width>
-    <height>123</height>
+    <width>480</width>
+    <height>89</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,155 +18,98 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>300</width>
+    <width>480</width>
     <height>0</height>
    </size>
   </property>
   <property name="windowTitle">
    <string>Preferences</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <property name="spacing">
-    <number>6</number>
-   </property>
-   <property name="leftMargin">
-    <number>6</number>
-   </property>
-   <property name="topMargin">
-    <number>6</number>
-   </property>
-   <property name="rightMargin">
-    <number>6</number>
-   </property>
-   <property name="bottomMargin">
-    <number>6</number>
-   </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <widget class="QGroupBox" name="pathGroupBox">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
+    <layout class="QFormLayout" name="preferencesFormLayout">
+     <property name="fieldGrowthPolicy">
+      <enum>QFormLayout::ExpandingFieldsGrow</enum>
      </property>
-     <property name="title">
-      <string>Quanty Executable Path</string>
+     <property name="labelAlignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <property name="spacing">
-       <number>6</number>
-      </property>
-      <property name="leftMargin">
-       <number>6</number>
-      </property>
-      <property name="topMargin">
-       <number>6</number>
-      </property>
-      <property name="rightMargin">
-       <number>6</number>
-      </property>
-      <property name="bottomMargin">
-       <number>6</number>
-      </property>
-      <item>
-       <widget class="QLineEdit" name="pathLineEdit">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="toolTip">
-         <string>Current path for the Quanty executable.</string>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pathBrowsePushButton">
-        <property name="text">
-         <string>Browse</string>
-        </property>
-        <property name="autoDefault">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="advancedPreferencesGroupBox">
-     <property name="title">
-      <string>Advanced Preferences</string>
-     </property>
-     <layout class="QVBoxLayout">
-      <property name="spacing">
-       <number>6</number>
-      </property>
-      <property name="leftMargin">
-       <number>6</number>
-      </property>
-      <property name="topMargin">
-       <number>6</number>
-      </property>
-      <property name="rightMargin">
-       <number>6</number>
-      </property>
-      <property name="bottomMargin">
-       <number>6</number>
-      </property>
-      <item>
-       <layout class="QHBoxLayout" name="_3">
-        <item>
-         <widget class="QLabel" name="verbosityLabel">
-          <property name="toolTip">
-           <string>Verbosity of the Quanty calculation. </string>
-          </property>
-          <property name="text">
-           <string>Runtime Verbosity</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="verbosityLineEdit">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>65</width>
-            <height>20</height>
-           </size>
-          </property>
-          <property name="toolTip">
-           <string>Acceptable values in increasing verbosity: 0x0000, 0x00FF, 0xFFFF.</string>
-          </property>
-          <property name="text">
-           <string>0x0000</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </widget>
+     <item row="0" column="0">
+      <widget class="QLabel" name="pathLabel">
+       <property name="text">
+        <string>Path</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <layout class="QHBoxLayout" name="pathHorizontalLayout">
+       <item>
+        <widget class="QLineEdit" name="pathLineEdit">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="toolTip">
+          <string>Current path for the Quanty executable.</string>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pathBrowsePushButton">
+         <property name="text">
+          <string>Browse</string>
+         </property>
+         <property name="autoDefault">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="verbosityLabel">
+       <property name="toolTip">
+        <string>Verbosity of the Quanty calculation. </string>
+       </property>
+       <property name="text">
+        <string>Verbosity</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="verbosityLineEdit">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>65</width>
+         <height>20</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Acceptable values in increasing verbosity: 0x0000, 0x00FF, 0xFFFF.</string>
+       </property>
+       <property name="text">
+        <string>0x0000</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
- <tabstops>
-  <tabstop>pathLineEdit</tabstop>
-  <tabstop>pathBrowsePushButton</tabstop>
-  <tabstop>verbosityLineEdit</tabstop>
- </tabstops>
  <resources/>
  <connections/>
 </ui>

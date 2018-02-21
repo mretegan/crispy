@@ -407,6 +407,9 @@ class QuantyDockWidget(QDockWidget):
         self.gkLineEdit.editingFinished.connect(self.updateScalingFactors)
         self.zetaLineEdit.editingFinished.connect(self.updateScalingFactors)
 
+        self.syncParametersCheckBox.toggled.connect(
+            self.updateSyncParametersState)
+
         self.nPsisAutoCheckBox.toggled.connect(self.updateNPsisLineEditState)
         self.nConfigurationsLineEdit.editingFinished.connect(
             self.updateConfigurations)
@@ -491,6 +494,10 @@ class QuantyDockWidget(QDockWidget):
         self.hamiltonianModel = TreeModel(
             ('Parameter', 'Value', 'Scaling'), c.hamiltonianData)
         self.hamiltonianModel.setNodesCheckState(c.hamiltonianState)
+        if self.syncParametersCheckBox.isChecked():
+            self.hamiltonianModel.setSyncState(True)
+        else:
+            self.hamiltonianModel.setSyncState(False)
         self.hamiltonianModel.nodeCheckStateChanged.connect(
             self.updateConfigurations)
 
@@ -706,7 +713,7 @@ class QuantyDockWidget(QDockWidget):
                     else:
                         continue
         self.hamiltonianModel.updateModelData(c.hamiltonianData)
-        # No idea why this is needed. The view should update after the above
+        # No idea why this is needed. Both views should update after the above
         # function call.
         self.hamiltonianParametersView.viewport().repaint()
         self.hamiltonianTermsView.viewport().repaint()
@@ -719,6 +726,9 @@ class QuantyDockWidget(QDockWidget):
             self.nPsisLineEdit.setText(nPsisMax)
         else:
             self.nPsisLineEdit.setEnabled(True)
+
+    def updateSyncParametersState(self, flag):
+        self.hamiltonianModel.setSyncState(flag)
 
     def updateConfigurations(self, *args):
         nConfigurations = self.nConfigurationsLineEdit.getValue()
