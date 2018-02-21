@@ -1,5 +1,6 @@
 --------------------------------------------------------------------------------
--- Quanty input file generated using Crispy.
+-- Quanty input file generated using Crispy. If you use this file please cite
+-- the following reference: 10.5281/zenodo.1008184.
 --
 -- elements: lathanides
 -- symmetry: Oh
@@ -347,11 +348,11 @@ Tl_3d_4f = -t * (Tein1_3d_4f + I * Tein2_3d_4f)
 --------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
-calculateIso = $calculateIso
-calculateCD  = $calculateCD
-calculateLD  = $calculateLD
+CalculateIso = $calculateIso
+CalculateCD  = $calculateCD
+CalculateLD  = $calculateLD
 
-if calculateIso == 0 and calculateCD == 0 and calculateLD == 0 then
+if CalculateIso == 0 and CalculateCD == 0 and CalculateLD == 0 then
     return
 end
 
@@ -397,18 +398,18 @@ for i, Psi in ipairs(Psis_i) do
 
     io.write(string.format('%4d   %3.2E\n', i, dZ))
 
-    if calculateIso == 1 then
+    if CalculateIso == 1 then
         for j, Operator in ipairs({Tx_3d_4f, Ty_3d_4f, Tz_3d_4f}) do
             Giso = Giso + CreateSpectra(H_f, Operator, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
         end
     end
 
-    if calculateCD == 1 then
+    if CalculateCD == 1 then
         Gr = Gr + CreateSpectra(H_f, Tr_3d_4f, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
         Gl = Gl + CreateSpectra(H_f, Tl_3d_4f, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
     end
 
-    if calculateLD == 1 then
+    if CalculateLD == 1 then
         Gein1 = Gein1 + CreateSpectra(H_f, Tein1_3d_4f, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
         Gein2 = Gein2 + CreateSpectra(H_f, Tein2_3d_4f, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
     end
@@ -419,13 +420,13 @@ Gmin1 = $Gmin1 - Gamma
 Gmax1 = $Gmax1 - Gamma
 Egamma1 = $Egamma1 - DeltaE
 
-if calculateIso == 1 then
+if CalculateIso == 1 then
     Giso = Giso / Z / 3
     Giso.Broaden(0, {{Emin, Gmin1}, {Egamma1, Gmin1}, {Egamma1, Gmax1}, {Emax, Gmax1}})
     Giso.Print({{'file', '$baseName' .. '_iso.spec'}})
 end
 
-if calculateCD == 1 then
+if CalculateCD == 1 then
     Gr = Gr / Z
     Gl = Gl / Z
     Gcd = Gr - Gl
@@ -433,7 +434,7 @@ if calculateCD == 1 then
     Gcd.Print({{'file', '$baseName' .. '_cd.spec'}})
 end
 
-if calculateLD == 1 then
+if CalculateLD == 1 then
     Gein1 = Gein1 / Z
     Gein2 = Gein2 / Z
     Gld = Gein1 - Gein2

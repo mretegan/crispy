@@ -1,5 +1,6 @@
 --------------------------------------------------------------------------------
--- Quanty input file generated using Crispy.
+-- Quanty input file generated using Crispy. If you use this file please cite
+-- the following reference: 10.5281/zenodo.1008184.
 --
 -- elements: 3d transition metals
 -- symmetry: C3v
@@ -254,6 +255,8 @@ Ssqr = Sx * Sx + Sy * Sy + Sz * Sz
 Lsqr = Lx * Lx + Ly * Ly + Lz * Lz
 Jsqr = Jx * Jx + Jy * Jy + Jz * Jz
 
+NConfigurations = $NConfigurations
+
 --------------------------------------------------------------------------------
 -- Define the restrictions and set the number of initial states.
 --------------------------------------------------------------------------------
@@ -389,15 +392,20 @@ end
 --------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
-calculateIso = $calculateIso
+CalculateIso = $calculateIso
 
-if calculateIso == 0 then
+if CalculateIso == 0 then
     return
 end
 
 E_gs_i = Psis_i[1] * H_i * Psis_i[1]
 
-Psis_f = Eigensystem(H_f, FinalRestrictions, 1)
+if CalculationRestrictions == nil then
+    Psis_f = Eigensystem(H_f, FinalRestrictions, 1)
+else
+    Psis_f = Eigensystem(H_f, FinalRestrictions, 1, {{'restrictions', CalculationRestrictions}})
+end
+
 Psis_f = {Psis_f}
 E_gs_f = Psis_f[1] * H_f * Psis_f[1]
 
@@ -425,17 +433,18 @@ for i, Psi in ipairs(Psis_i) do
 
     Z = Z + dZ
 
-    if calculateIso == 1 then
-        if H_3d_4p_hybridization == 1 then
-            for j, Operator in ipairs({Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}) do
+    if CalculateIso == 1 then
+        for j, Operator in ipairs({Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}) do
+            if CalculationRestrictions == nil then
+                Giso_quad = Giso_quad + CreateSpectra(H_f, Operator, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+            else
                 Giso_quad = Giso_quad + CreateSpectra(H_f, Operator, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}}) * dZ
             end
+        end
+
+        if H_3d_4p_hybridization == 1 then
             for k, Operator in ipairs({Tx_1s_4p, Ty_1s_4p, Tz_1s_4p}) do
                 Giso_dip = Giso_dip + CreateSpectra(H_f, Operator, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}}) * dZ
-            end
-        else
-            for j, Operator in ipairs({Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}) do
-                Giso_quad = Giso_quad + CreateSpectra(H_f, Operator, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
             end
         end
     end
@@ -451,7 +460,7 @@ P2_1s_3d = $P2(1s,3d)
 
 Iedge1 = 1e-5 -- edge jump
 
-if calculateIso == 1 then
+if CalculateIso == 1 then
     if H_3d_4p_hybridization == 1 then
         Giso_quad = (4 * math.pi^2 * alpha * a0^4 / (2 * hbar * c)^2 * P2_1s_3d^2 * Eedge1^3 / Iedge1 / math.pi) * Giso_quad / Z / 15
         Giso_dip  = (4 * math.pi^2 * alpha * a0^2                    * P1_1s_4p^2 * Eedge1   / Iedge1 / math.pi) * Giso_dip / Z / 3

@@ -1,5 +1,6 @@
 --------------------------------------------------------------------------------
--- Quanty input file generated using Crispy.
+-- Quanty input file generated using Crispy. If you use this file please cite
+-- the following reference: 10.5281/zenodo.1008184.
 --
 -- elements: 3d transition metals
 -- symmetry: D4h
@@ -157,6 +158,8 @@ Ssqr = Sx * Sx + Sy * Sy + Sz * Sz
 Lsqr = Lx * Lx + Ly * Ly + Lz * Lz
 Jsqr = Jx * Jx + Jy * Jy + Jz * Jz
 
+NConfigurations = $NConfigurations
+
 --------------------------------------------------------------------------------
 -- Define the restrictions and set the number of initial states.
 --------------------------------------------------------------------------------
@@ -265,9 +268,9 @@ Tz2_1s_3d   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, I
 --------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
-calculateIso = $calculateIso
+CalculateIso = $calculateIso
 
-if calculateIso == 0 then
+if CalculateIso == 0 then
     return
 end
 
@@ -300,14 +303,14 @@ for i, Psi in ipairs(Psis_i) do
 
     Z = Z + dZ
 
-    if calculateIso == 1 then
+    if CalculateIso == 1 then
         for j, Operator in ipairs({Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}) do
             Giso = Giso + CreateSpectra(H_f, Operator, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
         end
     end
 end
 
-if calculateIso == 1 then
+if CalculateIso == 1 then
     Giso = Giso / Z / 15
     Giso.Print({{'file', '$baseName' .. '_iso.spec'}})
 end

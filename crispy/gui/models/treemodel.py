@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '05/12/2017'
+__date__ = '20/02/2018'
 
 
 import collections
@@ -104,7 +104,7 @@ class TreeModel(QAbstractItemModel):
     also reimplemented to control the way the header is presented.
     """
 
-    nodeCheckStateChanged = pyqtSignal(QModelIndex)
+    nodeCheckStateChanged = pyqtSignal(QModelIndex, Qt.CheckState)
 
     def __init__(self, header, data, parent=None):
         super(TreeModel, self).__init__(parent)
@@ -219,8 +219,9 @@ class TreeModel(QAbstractItemModel):
 
         elif role == Qt.CheckStateRole:
             node.setCheckState(value)
-            if value == Qt.Checked:
-                self.nodeCheckStateChanged.emit(index)
+            if value == Qt.Unchecked or value == Qt.Checked:
+                state = value
+                self.nodeCheckStateChanged.emit(index, state)
 
         self.dataChanged.emit(index, index)
 
@@ -249,7 +250,7 @@ class TreeModel(QAbstractItemModel):
             return self.header[section]
 
     def getNode(self, index):
-        if not index.isValid():
+        if index is None or not index.isValid():
             return self.rootNode
 
         return index.internalPointer()
@@ -274,6 +275,28 @@ class TreeModel(QAbstractItemModel):
                     node = TreeNode([key, value[0], value[1]], parentNode)
                 else:
                     return
+
+    def updateModelData(self, data, parentIndex=None):
+        parentNode = self.getNode(parentIndex)
+
+        if parentNode.childCount():
+            for child in parentNode.children:
+                key = child.data[0]
+                childData = data[key]
+                childIndex = self.index(child.row(), 0, parentIndex)
+                self.updateModelData(childData, childIndex)
+        else:
+            # Here, the parentNode is the actual node.
+            key, value, scaling = parentNode.data
+            newValue, newScaling = data
+            if value != newValue:
+                parentNode.setItemData(1, newValue)
+            elif scaling != newScaling:
+                parentNode.setItemData(2, newScaling)
+            else:
+                pass
+            self.dataChanged.emit(parentIndex, parentIndex)
+            return True
 
     def _getModelData(self, data, parentNode=None):
         """Return the data contained in the model."""

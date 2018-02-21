@@ -1,5 +1,6 @@
 --------------------------------------------------------------------------------
--- Quanty input file generated using Crispy.
+-- Quanty input file generated using Crispy. If you use this file please cite
+-- the following reference: 10.5281/zenodo.1008184.
 --
 -- elements: lathanides
 -- symmetry: Oh
@@ -291,9 +292,9 @@ Tz2_2p_4f   = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_2p, I
 --------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
-calculateIso = $calculateIso
+CalculateIso = $calculateIso
 
-if calculateIso == 0 then
+if CalculateIso == 0 then
     return
 end
 
@@ -326,7 +327,7 @@ for i, Psi in ipairs(Psis_i) do
 
     Z = Z + dZ
 
-    if calculateIso == 1 then
+    if CalculateIso == 1 then
         for j, Operator in ipairs({Txy_2p_4f, Txz_2p_4f, Tyz_2p_4f, Tx2y2_2p_4f, Tz2_2p_4f}) do
             Giso = Giso + CreateSpectra(H_f, Operator, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
         end
@@ -334,7 +335,7 @@ for i, Psi in ipairs(Psis_i) do
 end
 
 
-if calculateIso == 1 then
+if CalculateIso == 1 then
     Giso = Giso / Z / 15
     Giso.Print({{'file', '$baseName' .. '_iso.spec'}})
 end

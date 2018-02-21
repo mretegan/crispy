@@ -1,5 +1,6 @@
 --------------------------------------------------------------------------------
--- Quanty input file generated using Crispy.
+-- Quanty input file generated using Crispy. If you use this file please cite
+-- the following reference: 10.5281/zenodo.1008184.
 --
 -- elements: 3d transition metals
 -- symmetry: Oh
@@ -261,6 +262,8 @@ if H_exchange_field == 1 then
         + Hz_f * Sz
 end
 
+NConfigurations = $NConfigurations
+
 --------------------------------------------------------------------------------
 -- Define the restrictions and set the number of initial states.
 --------------------------------------------------------------------------------
@@ -272,10 +275,14 @@ FinalRestrictions = {NFermions, NBosons, {'111111 0000000000', NElectrons_2p - 1
 
 if H_3d_Ld_hybridization == 1 then
     InitialRestrictions = {NFermions, NBosons, {'111111 0000000000 0000000000', NElectrons_2p, NElectrons_2p},
-                                               {'000000 1111111111 1111111111', NElectrons_3d + NElectrons_Ld, NElectrons_3d + NElectrons_Ld}}
+                                               {'000000 1111111111 0000000000', NElectrons_3d, NElectrons_3d},
+                                               {'000000 0000000000 1111111111', NElectrons_Ld, NElectrons_Ld}}
 
     FinalRestrictions = {NFermions, NBosons, {'111111 0000000000 0000000000', NElectrons_2p - 1, NElectrons_2p - 1},
-                                             {'000000 1111111111 1111111111', NElectrons_3d + NElectrons_Ld + 1, NElectrons_3d + NElectrons_Ld + 1}}
+                                             {'000000 1111111111 0000000000', NElectrons_3d + 1, NElectrons_3d + 1},
+                                             {'000000 0000000000 1111111111', NElectrons_Ld, NElectrons_Ld}}
+
+    CalculationRestrictions = {NFermions, NBosons, {'000000 0000000000 1111111111', NElectrons_Ld - (NConfigurations - 1), NElectrons_Ld}}
 end
 
 Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_2p, N_3d}
@@ -394,17 +401,22 @@ Tl_2p_3d = -t * (Tein1_2p_3d + I * Tein2_2p_3d)
 --------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
-calculateIso = $calculateIso
-calculateCD  = $calculateCD
-calculateLD  = $calculateLD
+CalculateIso = $calculateIso
+CalculateCD  = $calculateCD
+CalculateLD  = $calculateLD
 
-if calculateIso == 0 and calculateCD == 0 and calculateLD == 0 then
+if CalculateIso == 0 and CalculateCD == 0 and CalculateLD == 0 then
     return
 end
 
 E_gs_i = Psis_i[1] * H_i * Psis_i[1]
 
-Psis_f = Eigensystem(H_f, FinalRestrictions, 1)
+if CalculationRestrictions == nil then
+    Psis_f = Eigensystem(H_f, FinalRestrictions, 1)
+else
+    Psis_f = Eigensystem(H_f, FinalRestrictions, 1, {{'restrictions', CalculationRestrictions}})
+end
+
 Psis_f = {Psis_f}
 E_gs_f = Psis_f[1] * H_f * Psis_f[1]
 
@@ -444,20 +456,34 @@ for i, Psi in ipairs(Psis_i) do
 
     io.write(string.format('%4d   %3.2E\n', i, dZ))
 
-    if calculateIso == 1 then
+    if CalculateIso == 1 then
         for j, Operator in ipairs({Tx_2p_3d, Ty_2p_3d, Tz_2p_3d}) do
-            Giso = Giso + CreateSpectra(H_f, Operator, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+            if CalculationRestrictions == nil then
+                Giso = Giso + CreateSpectra(H_f, Operator, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+            else
+                Giso = Giso + CreateSpectra(H_f, Operator, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}}) * dZ
+            end
         end
     end
 
-    if calculateCD == 1 then
-        Gr = Gr + CreateSpectra(H_f, Tr_2p_3d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
-        Gl = Gl + CreateSpectra(H_f, Tl_2p_3d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+    if CalculateCD == 1 then
+        if CalculationRestrictions == nil then
+            Gr = Gr + CreateSpectra(H_f, Tr_2p_3d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+            Gl = Gl + CreateSpectra(H_f, Tl_2p_3d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+        else
+            Gr = Gr + CreateSpectra(H_f, Tr_2p_3d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}}) * dZ
+            Gl = Gl + CreateSpectra(H_f, Tl_2p_3d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}}) * dZ
+        end
     end
 
-    if calculateLD == 1 then
-        Gein1 = Gein1 + CreateSpectra(H_f, Tein1_2p_3d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
-        Gein2 = Gein2 + CreateSpectra(H_f, Tein2_2p_3d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+    if CalculateLD == 1 then
+        if CalculationRestrictions == nil then
+            Gein1 = Gein1 + CreateSpectra(H_f, Tein1_2p_3d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+            Gein2 = Gein2 + CreateSpectra(H_f, Tein2_2p_3d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+        else
+            Gein1 = Gein1 + CreateSpectra(H_f, Tein1_2p_3d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}}) * dZ
+            Gein2 = Gein2 + CreateSpectra(H_f, Tein2_2p_3d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}}) * dZ
+        end
     end
 end
 io.write(string.format('===============\n'))
@@ -466,13 +492,13 @@ Gmin1 = $Gmin1 - Gamma
 Gmax1 = $Gmax1 - Gamma
 Egamma1 = $Egamma1 - DeltaE
 
-if calculateIso == 1 then
+if CalculateIso == 1 then
     Giso = Giso / Z / 3
     Giso.Broaden(0, {{Emin, Gmin1}, {Egamma1, Gmin1}, {Egamma1, Gmax1}, {Emax, Gmax1}})
     Giso.Print({{'file', '$baseName' .. '_iso.spec'}})
 end
 
-if calculateCD == 1 then
+if CalculateCD == 1 then
     Gr = Gr / Z
     Gl = Gl / Z
     Gcd = Gr - Gl
@@ -480,7 +506,7 @@ if calculateCD == 1 then
     Gcd.Print({{'file', '$baseName' .. '_cd.spec'}})
 end
 
-if calculateLD == 1 then
+if CalculateLD == 1 then
     Gein1 = Gein1 / Z
     Gein2 = Gein2 / Z
     Gld = Gein1 - Gein2

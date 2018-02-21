@@ -115,7 +115,7 @@ QToolButton::menu-indicator{
      <property name="title">
       <string>&amp;Quanty</string>
      </property>
-     <addaction name="quantySetPath"/>
+     <addaction name="quantyOpenPreferencesDialog"/>
      <addaction name="separator"/>
      <addaction name="quantySaveInputAction"/>
      <addaction name="quantySaveAsInputAction"/>
@@ -184,6 +184,11 @@ QToolButton::menu-indicator{
    </property>
    <property name="toolTip">
     <string>Set Path to Quanty</string>
+   </property>
+  </action>
+  <action name="quantyOpenPreferencesDialog">
+   <property name="text">
+    <string>Preferences...</string>
    </property>
   </action>
  </widget>

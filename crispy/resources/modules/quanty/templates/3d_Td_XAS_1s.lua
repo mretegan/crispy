@@ -1,5 +1,6 @@
 --------------------------------------------------------------------------------
--- Quanty input file generated using Crispy.
+-- Quanty input file generated using Crispy. If you use this file please cite
+-- the following reference: 10.5281/zenodo.1008184.
 --
 -- elements: 3d transition metals
 -- symmetry: Td
@@ -36,7 +37,18 @@ IndexUp_1s = {1}
 IndexDn_3d = {2, 4, 6, 8, 10}
 IndexUp_3d = {3, 5, 7, 9, 11}
 
-if H_3d_Ld_hybridization == 1 then
+if H_3d_Ld_hybridization == 1 and H_3d_4p_hybridization == 1 then
+    NFermions = 28
+
+    NElectrons_4p = 0
+    NElectrons_Ld = 10
+
+    IndexDn_Ld = {12, 14, 16, 18, 20}
+    IndexUp_Ld = {13, 15, 17, 19, 21}
+    IndexDn_4p = {22, 24, 26}
+    IndexUp_4p = {23, 25, 27}
+
+elseif H_3d_Ld_hybridization == 1 then
     NFermions = 22
 
     NElectrons_Ld = 10
@@ -52,16 +64,6 @@ elseif H_3d_4p_hybridization == 1 then
     IndexDn_4p = {12, 14, 16}
     IndexUp_4p = {13, 15, 17}
 
-elseif H_3d_Ld_hybridization == 1 and H_3d_4p_hybridization == 1 then
-    NFermions = 28
-
-    NElectrons_4p = 0
-    NElectrons_Ld = 10
-
-    IndexDn_Ld = {12, 14, 16, 18, 20}
-    IndexUp_Ld = {13, 15, 17, 19, 21}
-    IndexDn_4p = {22, 24, 26}
-    IndexUp_4p = {23, 25, 27}
 end
 
 --------------------------------------------------------------------------------
@@ -199,7 +201,6 @@ if H_3d_4p_hybridization == 1 then
     G3_3d_4p = NewOperator('U', NFermions, IndexUp_4p, IndexDn_4p, IndexUp_3d, IndexDn_3d, {0, 0}, {0, 1})
     G1_1s_4p = NewOperator('U', NFermions, IndexUp_1s, IndexDn_1s, IndexUp_4p, IndexDn_4p, {0}, {1})
 
-
     F2_3d_4p_i = $F2(3d,4p)_i_value
     G1_3d_4p_i = $G1(3d,4p)_i_value
     G3_3d_4p_i = $G3(3d,4p)_i_value
@@ -302,6 +303,8 @@ Ssqr = Sx * Sx + Sy * Sy + Sz * Sz
 Lsqr = Lx * Lx + Ly * Ly + Lz * Lz
 Jsqr = Jx * Jx + Jy * Jy + Jz * Jz
 
+NConfigurations = $NConfigurations
+
 --------------------------------------------------------------------------------
 -- Define the restrictions and set the number of initial states.
 --------------------------------------------------------------------------------
@@ -311,12 +314,29 @@ InitialRestrictions = {NFermions, NBosons, {'11 0000000000', NElectrons_1s, NEle
 FinalRestrictions = {NFermions, NBosons, {'11 0000000000', NElectrons_1s - 1, NElectrons_1s - 1},
                                          {'00 1111111111', NElectrons_3d + 1, NElectrons_3d + 1}}
 
-if H_3d_Ld_hybridization == 1 then
+if H_3d_Ld_hybridization == 1 and H_3d_4p_hybridization == 1 then
+    InitialRestrictions = {NFermions, NBosons, {'11 0000000000 0000000000 000000', NElectrons_1s, NElectrons_1s},
+                                               {'00 1111111111 0000000000 000000', NElectrons_3d, NElectrons_3d},
+                                               {'00 0000000000 1111111111 000000', NElectrons_Ld, NElectrons_Ld},
+                                               {'00 0000000000 0000000000 111111', NElectrons_4p, NElectrons_4p}}
+
+    FinalRestrictions = {NFermions, NBosons, {'11 0000000000 0000000000 000000', NElectrons_1s - 1, NElectrons_1s - 1},
+                                             {'00 1111111111 0000000000 000000', NElectrons_3d + 1, NElectrons_3d + 1},
+                                             {'00 0000000000 1111111111 000000', NElectrons_Ld, NElectrons_Ld},
+                                             {'00 0000000000 0000000000 111111', NElectrons_4p, NElectrons_4p}}
+
+    CalculationRestrictions = {NFermions, NBosons, {'00 0000000000 1111111111 000000', NElectrons_Ld - (NConfigurations - 1), NElectrons_Ld},
+                                                   {'00 0000000000 0000000000 111111', NElectrons_4p, NElectrons_4p + 1}}
+elseif H_3d_Ld_hybridization == 1 then
     InitialRestrictions = {NFermions, NBosons, {'11 0000000000 0000000000', NElectrons_1s, NElectrons_1s},
-                                               {'00 1111111111 1111111111', NElectrons_3d + NElectrons_Ld, NElectrons_3d + NElectrons_Ld}}
+                                               {'00 1111111111 0000000000', NElectrons_3d, NElectrons_3d},
+                                               {'00 0000000000 1111111111', NElectrons_Ld, NElectrons_Ld}}
 
     FinalRestrictions = {NFermions, NBosons, {'11 0000000000 0000000000', NElectrons_1s - 1, NElectrons_1s - 1},
-                                             {'00 1111111111 1111111111', NElectrons_3d + NElectrons_Ld + 1, NElectrons_3d + NElectrons_Ld + 1}}
+                                             {'00 1111111111 0000000000', NElectrons_3d + 1, NElectrons_3d + 1},
+                                             {'00 0000000000 1111111111', NElectrons_Ld, NElectrons_Ld}}
+
+    CalculationRestrictions = {NFermions, NBosons, {'00 0000000000 1111111111', NElectrons_Ld - (NConfigurations - 1), NElectrons_Ld}}
 elseif H_3d_4p_hybridization == 1 then
     InitialRestrictions = {NFermions, NBosons, {'11 0000000000 000000', NElectrons_1s, NElectrons_1s},
                                                {'00 1111111111 000000', NElectrons_3d, NElectrons_3d},
@@ -327,16 +347,6 @@ elseif H_3d_4p_hybridization == 1 then
                                              {'00 0000000000 111111', NElectrons_4p, NElectrons_4p}}
 
     CalculationRestrictions = {NFermions, NBosons, {'00 0000000000 111111', NElectrons_4p, NElectrons_4p + 1}}
-elseif H_3d_Ld_hybridization == 1 and H_3d_4p_hybridization == 1 then
-    InitialRestrictions = {NFermions, NBosons, {'11 0000000000 0000000000 000000', NElectrons_1s, NElectrons_1s},
-                                               {'00 1111111111 1111111111 000000', NElectrons_3d + NElectrons_Ld, NElectrons_3d + NElectrons_Ld},
-                                               {'00 0000000000 0000000000 111111', NElectrons_4p, NElectrons_4p}}
-
-    FinalRestrictions = {NFermions, NBosons, {'11 0000000000 0000000000 000000', NElectrons_1s - 1, NElectrons_1s - 1},
-                                             {'00 1111111111 1111111111 000000', NElectrons_3d + NElectrons_Ld + 1, NElectrons_3d + NElectrons_Ld + 1},
-                                             {'00 0000000000 0000000000 111111', NElectrons_4p, NElectrons_4p}}
-
-    CalculationRestrictions = {NFermions, NBosons, {'00 0000000000 0000000000 111111', NElectrons_4p, NElectrons_4p + 1}}
 end
 
 Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_1s, N_3d}
@@ -346,7 +356,14 @@ header = header .. '   i       <E>     <S^2>     <L^2>     <J^2>      <Sz>      
 header = header .. '==============================================================================================\n'
 footer = '==============================================================================================\n'
 
-if H_3d_Ld_hybridization == 1 then
+if H_3d_Ld_hybridization == 1 and H_3d_4p_hybridization == 1 then
+    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_1s, N_3d, N_4p, N_Ld}
+    header = 'Analysis of the initial Hamiltonian:\n'
+    header = header .. '==================================================================================================================\n'
+    header = header .. '   i       <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>    <N_1s>    <N_3d>    <N_4p>    <N_Ld>\n'
+    header = header .. '==================================================================================================================\n'
+    footer = '===================================================================================================================\n'
+elseif H_3d_Ld_hybridization == 1 then
     Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_1s, N_3d, N_Ld}
     header = 'Analysis of the initial Hamiltonian:\n'
     header = header .. '========================================================================================================\n'
@@ -361,14 +378,6 @@ elseif H_3d_4p_hybridization == 1 then
     header = header .. '   i       <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>    <N_1s>    <N_3d>    <N_4p>\n'
     header = header .. '========================================================================================================\n'
     footer = '========================================================================================================\n'
-
-elseif H_3d_Ld_hybridization == 1 and H_3d_4p_hybridization == 1 then
-    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_1s, N_3d, N_4p, N_Ld}
-    header = 'Analysis of the initial Hamiltonian:\n'
-    header = header .. '==================================================================================================================\n'
-    header = header .. '   i       <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>    <N_1s>    <N_3d>    <N_4p>    <N_Ld>\n'
-    header = header .. '==================================================================================================================\n'
-    footer = '===================================================================================================================\n'
 end
 
 -- Define the temperature.
@@ -469,15 +478,20 @@ end
 --------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
-calculateIso = $calculateIso
+CalculateIso = $calculateIso
 
-if calculateIso == 0 then
+if CalculateIso == 0 then
     return
 end
 
 E_gs_i = Psis_i[1] * H_i * Psis_i[1]
 
-Psis_f = Eigensystem(H_f, FinalRestrictions, 1)
+if CalculationRestrictions == nil then
+    Psis_f = Eigensystem(H_f, FinalRestrictions, 1)
+else
+    Psis_f = Eigensystem(H_f, FinalRestrictions, 1, {{'restrictions', CalculationRestrictions}})
+end
+
 Psis_f = {Psis_f}
 E_gs_f = Psis_f[1] * H_f * Psis_f[1]
 
@@ -505,17 +519,18 @@ for i, Psi in ipairs(Psis_i) do
 
     Z = Z + dZ
 
-    if calculateIso == 1 then
-        if H_3d_4p_hybridization == 1 then
-            for j, Operator in ipairs({Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}) do
+    if CalculateIso == 1 then
+        for j, Operator in ipairs({Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}) do
+            if CalculationRestrictions == nil then
+                Giso_quad = Giso_quad + CreateSpectra(H_f, Operator, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+            else
                 Giso_quad = Giso_quad + CreateSpectra(H_f, Operator, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}}) * dZ
             end
+        end
+
+        if H_3d_4p_hybridization == 1 then
             for k, Operator in ipairs({Tx_1s_4p, Ty_1s_4p, Tz_1s_4p}) do
                 Giso_dip = Giso_dip + CreateSpectra(H_f, Operator, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}}) * dZ
-            end
-        else
-            for j, Operator in ipairs({Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}) do
-                Giso_quad = Giso_quad + CreateSpectra(H_f, Operator, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
             end
         end
     end
@@ -531,7 +546,7 @@ P2_1s_3d = $P2(1s,3d)
 
 Iedge1 = 1e-5 -- edge jump
 
-if calculateIso == 1 then
+if CalculateIso == 1 then
     if H_3d_4p_hybridization == 1 then
         Giso_quad = (4 * math.pi^2 * alpha * a0^4 / (2 * hbar * c)^2 * P2_1s_3d^2 * Eedge1^3 / Iedge1 / math.pi) * Giso_quad / Z / 15
         Giso_dip  = (4 * math.pi^2 * alpha * a0^2                    * P1_1s_4p^2 * Eedge1   / Iedge1 / math.pi) * Giso_dip / Z / 3

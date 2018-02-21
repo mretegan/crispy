@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '14/02/2018'
+__date__ = '20/02/2018'
 
 
 import collections
@@ -50,7 +50,7 @@ from PyQt5.QtCore import (
 from PyQt5.QtGui import QIcon, QCursor
 from PyQt5.QtWidgets import (
     QAbstractItemView, QDockWidget, QFileDialog, QAction, QMenu,
-    QWidget)
+    QWidget, QDialog)
 from PyQt5.uic import loadUi
 from silx.resources import resource_filename as resourceFileName
 
@@ -84,6 +84,7 @@ class QuantyCalculation(object):
         'calculateCD': 0,
         'calculateLD': 0,
         'nPsisAuto': 1,
+        'nConfigurations': 1,
         'fk': 0.8,
         'gk': 0.8,
         'zeta': 1.0,
@@ -92,7 +93,7 @@ class QuantyCalculation(object):
         'uuid': None,
         'startingTime': None,
         'endingTime': None,
-        'verbosity': '0x0000',
+        'verbosity': None,
         'needsCompleteUiEnabled': False,
     }
 
@@ -139,6 +140,7 @@ class QuantyCalculation(object):
 
         self.configurations = branch['configurations']
         self.nPsis = branch['number of states']
+        self.nPsisMax = self.nPsis
         try:
             self.monoElectronicRadialME = (branch[
                 'monoelectronic radial matrix elements'])
@@ -219,6 +221,7 @@ class QuantyCalculation(object):
         replacements = collections.OrderedDict()
 
         replacements['$verbosity'] = self.verbosity
+        replacements['$NConfigurations'] = self.nConfigurations
 
         subshell = self.configurations[0][1][:2]
         subshell_occupation = self.configurations[0][1][2:]
@@ -378,6 +381,10 @@ class QuantyDockWidget(QDockWidget):
         self.resultsView.customContextMenuRequested[QPoint].connect(
             self.showResultsContextMenu)
 
+        # Add the preferences dialog.
+        self.preferencesDialog = QuantyPreferencesDialog()
+        self.preferencesDialog.setModal(True)
+
         # Enable actions.
         self.elementComboBox.currentTextChanged.connect(self.resetCalculation)
         self.chargeComboBox.currentTextChanged.connect(self.resetCalculation)
@@ -396,10 +403,13 @@ class QuantyDockWidget(QDockWidget):
         self.einLineEdit.editingFinished.connect(
             self.updateIncidentPolarizationVector)
 
-        self.nPsisAutoCheckBox.toggled.connect(self.updateNPsisLineEditState)
         self.fkLineEdit.editingFinished.connect(self.updateScalingFactors)
         self.gkLineEdit.editingFinished.connect(self.updateScalingFactors)
         self.zetaLineEdit.editingFinished.connect(self.updateScalingFactors)
+
+        self.nPsisAutoCheckBox.toggled.connect(self.updateNPsisLineEditState)
+        self.nConfigurationsLineEdit.editingFinished.connect(
+            self.updateConfigurations)
 
         self.plotIsoCheckBox.toggled.connect(self.plotSelectedCalculations)
         self.plotCDCheckBox.toggled.connect(self.plotSelectedCalculations)
@@ -409,6 +419,9 @@ class QuantyDockWidget(QDockWidget):
         self.calculationPushButton.clicked.connect(self.runCalculation)
 
         self.resultsModel.dataChanged.connect(self.plotSelectedCalculations)
+
+        self.preferencesDialog.pathBrowsePushButton.clicked.connect(
+            self.setQuantyPath)
 
     def updateUi(self):
         c = self.calculation
@@ -444,12 +457,15 @@ class QuantyDockWidget(QDockWidget):
         self.calculateCDCheckBox.setChecked(c.calculateCD)
         self.calculateLDCheckBox.setChecked(c.calculateLD)
 
-        self.nPsisLineEdit.setValue(c.nPsis)
-        self.nPsisAutoCheckBox.setChecked(c.nPsisAuto)
-
         self.fkLineEdit.setValue(c.fk)
         self.gkLineEdit.setValue(c.gk)
         self.zetaLineEdit.setValue(c.zeta)
+
+        self.nPsisLineEdit.setValue(c.nPsis)
+        self.nPsisAutoCheckBox.setChecked(c.nPsisAuto)
+        self.nConfigurationsLineEdit.setValue(c.nConfigurations)
+        if c.nConfigurations == 1:
+            self.nConfigurationsLineEdit.setEnabled(False)
 
         self.energiesTabWidget.setTabText(0, str(c.e1Label))
         self.e1MinLineEdit.setValue(c.e1Min)
@@ -471,15 +487,12 @@ class QuantyDockWidget(QDockWidget):
         else:
             self.energiesTabWidget.removeTab(1)
 
-        self.updateHamiltonian()
-
-    def updateHamiltonian(self):
-        c = self.calculation
-
         # Create a Hamiltonian model.
         self.hamiltonianModel = TreeModel(
             ('Parameter', 'Value', 'Scaling'), c.hamiltonianData)
         self.hamiltonianModel.setNodesCheckState(c.hamiltonianState)
+        self.hamiltonianModel.nodeCheckStateChanged.connect(
+            self.updateConfigurations)
 
         # Assign the Hamiltonian model to the Hamiltonian terms view.
         self.hamiltonianTermsView.setModel(self.hamiltonianModel)
@@ -497,7 +510,7 @@ class QuantyDockWidget(QDockWidget):
             self.hamiltonianTermsView.currentIndex())
 
         # Set the sizes of the two views.
-        self.hamiltonianSplitter.setSizes((130, 300))
+        self.hamiltonianSplitter.setSizes((150, 300))
 
     def setUiEnabled(self, flag=True):
         self.elementComboBox.setEnabled(flag)
@@ -535,14 +548,19 @@ class QuantyDockWidget(QDockWidget):
             self.calculateCDCheckBox.setEnabled(False)
             self.calculateLDCheckBox.setEnabled(False)
 
+        self.fkLineEdit.setEnabled(flag)
+        self.gkLineEdit.setEnabled(flag)
+        self.zetaLineEdit.setEnabled(flag)
+
         self.nPsisAutoCheckBox.setEnabled(flag)
         if self.nPsisAutoCheckBox.isChecked():
             self.nPsisLineEdit.setEnabled(False)
         else:
             self.nPsisLineEdit.setEnabled(True)
-        self.fkLineEdit.setEnabled(flag)
-        self.gkLineEdit.setEnabled(flag)
-        self.zetaLineEdit.setEnabled(flag)
+
+        nConfigurations = self.nConfigurationsLineEdit.getValue()
+        if nConfigurations > 1:
+            self.nConfigurationsLineEdit.setEnabled(flag)
 
         self.hamiltonianTermsView.setEnabled(flag)
         self.hamiltonianParametersView.setEnabled(flag)
@@ -573,7 +591,8 @@ class QuantyDockWidget(QDockWidget):
                 if abs(value) == 0.0:
                     value = 0.0
                 configurations[configuration][parameter] = (value, str())
-        self.updateHamiltonian()
+        self.hamiltonianModel.updateModelData(c.hamiltonianData)
+        self.hamiltonianModel.setNodesCheckState(c.hamiltonianState)
 
     def updateBroadening(self):
         c = self.calculation
@@ -660,12 +679,6 @@ class QuantyDockWidget(QDockWidget):
         else:
             c.ein = ein
 
-    def updateNPsisLineEditState(self):
-        if self.nPsisAutoCheckBox.isChecked():
-            self.nPsisLineEdit.setEnabled(False)
-        else:
-            self.nPsisLineEdit.setEnabled(True)
-
     def updateScalingFactors(self):
         c = self.calculation
 
@@ -691,7 +704,44 @@ class QuantyDockWidget(QDockWidget):
                         terms[term][configuration][parameter] = (value, c.zeta)
                     else:
                         continue
-        self.updateHamiltonian()
+        self.hamiltonianModel.updateModelData(c.hamiltonianData)
+        # No idea why this is needed. The view should update after the above
+        # function call.
+        self.hamiltonianParametersView.viewport().repaint()
+
+    def updateNPsisLineEditState(self):
+        nPsisMax = self.calculation.nPsisMax
+
+        if self.nPsisAutoCheckBox.isChecked():
+            self.nPsisLineEdit.setEnabled(False)
+            self.nPsisLineEdit.setText(nPsisMax)
+        else:
+            self.nPsisLineEdit.setEnabled(True)
+
+    def updateConfigurations(self, *args):
+        nConfigurations = self.nConfigurationsLineEdit.getValue()
+
+        if args:
+            index, state = args
+            if '3d-Ligands' in index.data():
+                if state == 0:
+                    nConfigurations = 1
+                    self.nConfigurationsLineEdit.setEnabled(False)
+                elif state == 2:
+                    nConfigurations = 2
+                    self.nConfigurationsLineEdit.setEnabled(True)
+        else:
+            configurations = self.calculation.configurations
+            subshell = configurations[0][1][:2]
+            electrons = int(configurations[0][1][-1:])
+            if 'd' in subshell:
+                nConfigurationsMax = 10 - electrons + 1
+            elif 'f' in subshell:
+                nConfigurationsMax = 14 - electrons + 1
+            if nConfigurations > nConfigurationsMax:
+                nConfigurations = nConfigurationsMax
+
+        self.nConfigurationsLineEdit.setValue(nConfigurations)
 
     def saveInput(self):
         self.updateCalculation()
@@ -757,11 +807,14 @@ class QuantyDockWidget(QDockWidget):
 
         c.nPsis = self.nPsisLineEdit.getValue()
         c.nPsisAuto = int(self.nPsisAutoCheckBox.isChecked())
+        c.nConfigurations = self.nConfigurationsLineEdit.getValue()
 
         c.hamiltonianData = self.hamiltonianModel.getModelData()
         c.hamiltonianState = self.hamiltonianModel.getNodesCheckState()
 
         c.spectra = dict()
+
+        c.verbosity = self.preferencesDialog.verbosityLineEdit.text()
 
         self.calculation = copy.deepcopy(c)
 
@@ -811,7 +864,9 @@ class QuantyDockWidget(QDockWidget):
             self, 'Select File', quantyPath)
 
         if path:
-            self.updateSettings('quantyPath', os.path.dirname(path))
+            path = os.path.dirname(path)
+            self.updateSettings('quantyPath', path)
+            self.preferencesDialog.pathLineEdit.setText(path)
 
     def getQuantyPath(self):
         if self.settings['quantyPath']:
@@ -1220,6 +1275,21 @@ class QuantyDockWidget(QDockWidget):
     def updateSettings(self, setting, value):
         self.settings[setting] = value
         self.saveSettings()
+
+    def openPreferencesDialog(self):
+        quantyPath = self.settings['quantyPath']
+        self.preferencesDialog.pathLineEdit.setText(quantyPath)
+        self.preferencesDialog.show()
+
+
+class QuantyPreferencesDialog(QDialog):
+
+    def __init__(self, parent=None):
+        super(QuantyPreferencesDialog, self).__init__()
+
+        path = resourceFileName(
+            'crispy:' + os.path.join('gui', 'uis', 'quantyPreferences.ui'))
+        loadUi(path, baseinstance=self, package='crispy.gui')
 
 
 if __name__ == '__main__':

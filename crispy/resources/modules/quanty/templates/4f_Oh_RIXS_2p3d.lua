@@ -1,5 +1,6 @@
 --------------------------------------------------------------------------------
--- Quanty input file generated using Crispy.
+-- Quanty input file generated using Crispy. If you use this file please cite
+-- the following reference: 10.5281/zenodo.1008184.
 --
 -- elements: lathanides
 -- symmetry: Oh
@@ -363,9 +364,9 @@ Tz_3d_2p = NewOperator('CF', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_3d, Inde
 --------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
-calculateIso = $calculateIso
+CalculateIso = $calculateIso
 
-if calculateIso == 0 then
+if CalculateIso == 0 then
     return
 end
 
@@ -410,7 +411,7 @@ for i, Psi in ipairs(Psis_i) do
 
     Z = Z + dZ
 
-    if calculateIso == 1 then
+    if CalculateIso == 1 then
         for j, OperatorIn in ipairs({Txy_2p_4f, Txz_2p_4f, Tyz_2p_4f, Tx2y2_2p_4f, Tz2_2p_4f}) do
             for k, OperatorOut in ipairs({Tx_3d_2p, Ty_3d_2p, Tz_3d_2p}) do
                 Giso = Giso + CreateResonantSpectra(H_m, H_f, OperatorIn, OperatorOut, Psi, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}})
@@ -419,7 +420,7 @@ for i, Psi in ipairs(Psis_i) do
     end
 end
 
-if calculateIso == 1 then
+if CalculateIso == 1 then
     Giso = Giso / Z
     Giso.Print({{'file', '$baseName' .. '_iso.spec'}})
 end
