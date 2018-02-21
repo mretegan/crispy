@@ -205,7 +205,7 @@ class QuantyCalculation(object):
                     self.hamiltonianData[term][label][parameter] = (
                         parameters[parameter], scaling)
 
-                if 'Atomic' in term:
+                if 'Atomic' in term or 'Crystal Field' in term:
                     self.hamiltonianState[term] = 2
                 else:
                     self.hamiltonianState[term] = 0
@@ -220,7 +220,7 @@ class QuantyCalculation(object):
 
         replacements = collections.OrderedDict()
 
-        replacements['$verbosity'] = self.verbosity
+        replacements['$Verbosity'] = self.verbosity
         replacements['$NConfigurations'] = self.nConfigurations
 
         subshell = self.configurations[0][1][:2]
