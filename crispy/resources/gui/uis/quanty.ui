@@ -77,7 +77,7 @@
          <x>0</x>
          <y>0</y>
          <width>280</width>
-         <height>554</height>
+         <height>534</height>
         </rect>
        </property>
        <attribute name="label">
@@ -100,7 +100,7 @@
          <number>3</number>
         </property>
         <item>
-         <widget class="QGroupBox" name="elementGroupBox">
+         <widget class="QGroupBox" name="elementanExperimentGroupBox">
           <property name="minimumSize">
            <size>
             <width>240</width>
@@ -134,6 +134,9 @@
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="toolTip">
+              <string>Symmetry</string>
+             </property>
             </widget>
            </item>
            <item row="0" column="0">
@@ -143,6 +146,9 @@
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
+             </property>
+             <property name="toolTip">
+              <string>Element</string>
              </property>
             </widget>
            </item>
@@ -154,6 +160,9 @@
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="toolTip">
+              <string>Charge</string>
+             </property>
             </widget>
            </item>
            <item row="1" column="0">
@@ -164,10 +173,17 @@
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="toolTip">
+              <string>Experiment</string>
+             </property>
             </widget>
            </item>
            <item row="1" column="1" colspan="2">
-            <widget class="ComboBox" name="edgeComboBox"/>
+            <widget class="ComboBox" name="edgeComboBox">
+             <property name="toolTip">
+              <string>Edge</string>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -200,7 +216,7 @@
             <number>6</number>
            </property>
            <item>
-            <layout class="QHBoxLayout" name="_6">
+            <layout class="QHBoxLayout" name="temperatureHBoxLayout">
              <item>
               <widget class="QLabel" name="temperatureLabel">
                <property name="sizePolicy">
@@ -236,7 +252,7 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="_20">
+            <layout class="QHBoxLayout" name="magneticFieldHBoxLayout">
              <item>
               <widget class="QLabel" name="magneticFieldLabel">
                <property name="text">
@@ -286,7 +302,7 @@
            <enum>Qt::NoFocus</enum>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <property name="movable">
            <bool>true</bool>
@@ -312,7 +328,7 @@
              <number>6</number>
             </property>
             <item>
-             <layout class="QHBoxLayout" name="_10">
+             <layout class="QHBoxLayout" name="e1RangeHBoxLayout">
               <item>
                <widget class="QLabel" name="e1RangeLabel">
                 <property name="text">
@@ -361,7 +377,7 @@
              </layout>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="_11">
+             <layout class="QHBoxLayout" name="e1NPointsHBoxLayout">
               <item>
                <widget class="QLabel" name="e1NPointslabel">
                 <property name="text">
@@ -398,7 +414,7 @@
              </widget>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="_12">
+             <layout class="QHBoxLayout" name="e1LorentzianHBoxLayout">
               <item>
                <widget class="QLabel" name="e1LorentzianLabel">
                 <property name="text">
@@ -431,7 +447,7 @@
              </layout>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="_13">
+             <layout class="QHBoxLayout" name="e1GaussianHBoxLayout">
               <item>
                <widget class="QLabel" name="e1GaussianLabel">
                 <property name="text">
@@ -468,7 +484,7 @@
              </widget>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="_4">
+             <layout class="QHBoxLayout" name="kinHBoxLayout">
               <item>
                <widget class="QLabel" name="kinLabel">
                 <property name="text">
@@ -498,7 +514,7 @@
              </layout>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="_21">
+             <layout class="QHBoxLayout" name="einHBoxLayout">
               <item>
                <widget class="QLabel" name="einLabel">
                 <property name="text">
@@ -553,7 +569,7 @@
              <number>6</number>
             </property>
             <item>
-             <layout class="QHBoxLayout" name="_14">
+             <layout class="QHBoxLayout" name="e2RangeHBoxLayout">
               <item>
                <widget class="QLabel" name="e2RangeLabel">
                 <property name="text">
@@ -602,7 +618,7 @@
              </layout>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="_17">
+             <layout class="QHBoxLayout" name="e2NPointsHBoxLayout">
               <item>
                <widget class="QLabel" name="e2NPointsLabel">
                 <property name="minimumSize">
@@ -645,7 +661,7 @@
              </widget>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="_18">
+             <layout class="QHBoxLayout" name="e2LorentzianHBoxLayout">
               <item>
                <widget class="QLabel" name="e2LorentzianLabel">
                 <property name="text">
@@ -675,7 +691,7 @@
              </layout>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="_19">
+             <layout class="QHBoxLayout" name="e2GaussianHBoxLayout">
               <item>
                <widget class="QLabel" name="e2GaussianLabel">
                 <property name="text">
@@ -712,7 +728,7 @@
              </widget>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="_22">
+             <layout class="QHBoxLayout" name="koutHBoxLayout">
               <item>
                <widget class="QLabel" name="koutLabel">
                 <property name="text">
@@ -745,7 +761,7 @@
              </layout>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="_23">
+             <layout class="QHBoxLayout" name="eoutHBoxLayout">
               <item>
                <widget class="QLabel" name="eoutLabel">
                 <property name="text">
@@ -880,6 +896,9 @@
         </property>
         <item>
          <widget class="QGroupBox" name="scalingGroupBox">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use the input boxes to change the scale factors for a specific type of atomic integrals; Slater radial integrals (direct and exchange), and spin-orbit coupling integrals.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="title">
            <string>Scale Factors for the Atomic Integrals</string>
           </property>
@@ -900,7 +919,7 @@
             <number>6</number>
            </property>
            <item>
-            <layout class="QHBoxLayout" name="_26">
+            <layout class="QHBoxLayout" name="scalingHBoxLayout">
              <item>
               <widget class="QLabel" name="gkLabel">
                <property name="sizePolicy">
@@ -1009,7 +1028,7 @@
             <bool>true</bool>
            </property>
            <property name="toolTip">
-            <string>Left-click to display the parameters of a Hamiltonian term.</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use the check boxes to select the Hamiltonian terms included in the calculation. Left-click on the term's name to display its parameters in the view below. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="frameShape">
             <enum>QFrame::StyledPanel</enum>
@@ -1026,7 +1045,7 @@
           </widget>
           <widget class="TreeView" name="hamiltonianParametersView">
            <property name="toolTip">
-            <string>Double-click to edit the value or the scaling of a parameter.</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Double-click to edit the value or the scale factor of a parameter.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="frameShape">
             <enum>QFrame::StyledPanel</enum>
@@ -1039,7 +1058,7 @@
            </property>
           </widget>
           <widget class="QWidget" name="horizontalLayoutWidget">
-           <layout class="QHBoxLayout" name="_2">
+           <layout class="QHBoxLayout" name="syncParametersHBoxLayout">
             <item>
              <widget class="QCheckBox" name="syncParametersCheckBox">
               <property name="text">
@@ -1076,11 +1095,11 @@
             <number>3</number>
            </property>
            <item>
-            <layout class="QHBoxLayout" name="_8">
+            <layout class="QHBoxLayout" name="nPsisHBoxLayout">
              <item>
               <widget class="QLabel" name="nPsisLabel">
                <property name="toolTip">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Number of initial Hamiltonian states to consider in the calculation.&lt;/p&gt;&lt;p&gt;If &lt;span style=&quot; font-weight:600;&quot;&gt;Auto&lt;/span&gt;, their number will be detemined based on the occupancy at the given temperature.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use the input box to change the number of states of the initial Hamiltonian included in the calculation. If &lt;span style=&quot; font-weight:600;&quot;&gt;Auto&lt;/span&gt; is checked, the number will be detemined based on the Boltzmann factor at the given temperature.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
                <property name="text">
                 <string>Number of States        </string>
@@ -1125,7 +1144,7 @@
             </layout>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="_29">
+            <layout class="QHBoxLayout" name="nConfigurationsHBoxLayout">
              <property name="leftMargin">
               <number>0</number>
              </property>
@@ -1138,7 +1157,7 @@
              <item>
               <widget class="QLabel" name="nConfigurationsLabel">
                <property name="toolTip">
-                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Number of configurations to include in configuration interaction calculations, e.g. ligand field calculation.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use the input box to change the number of configurations to include in configuration interaction (CI) calculations. The option is only available for calculations where ligands are included.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
                <property name="text">
                 <string>Number of Configurations</string>
@@ -1177,7 +1196,7 @@
          <x>0</x>
          <y>0</y>
          <width>280</width>
-         <height>554</height>
+         <height>534</height>
         </rect>
        </property>
        <attribute name="label">
@@ -1201,6 +1220,9 @@
         </property>
         <item>
          <widget class="QListView" name="resultsView">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Double-click on the name of a calculation to rename it. Right-click to display the context menu.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="frameShape">
            <enum>QFrame::StyledPanel</enum>
           </property>
@@ -1215,7 +1237,7 @@
         <item>
          <widget class="QGroupBox" name="plotGroupBox">
           <property name="toolTip">
-           <string>Select the spectra to be calculated.</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the spectra to be plotted.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="title">
            <string>Spectra to Plot</string>
@@ -1271,7 +1293,7 @@
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="buttonsLayout">
+     <layout class="QHBoxLayout" name="buttonsHBoxLayout">
       <property name="spacing">
        <number>6</number>
       </property>
@@ -1293,7 +1315,7 @@
          <enum>Qt::NoFocus</enum>
         </property>
         <property name="toolTip">
-         <string>Save a Quanty input file</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Save the Quanty input file.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>Save Input As...</string>
@@ -1328,7 +1350,7 @@
          <enum>Qt::NoFocus</enum>
         </property>
         <property name="toolTip">
-         <string>Run Quanty</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Run Quanty.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>Run</string>
@@ -1410,8 +1432,19 @@
   <tabstop>calculateIsoCheckBox</tabstop>
   <tabstop>calculateCDCheckBox</tabstop>
   <tabstop>calculateLDCheckBox</tabstop>
+  <tabstop>fkLineEdit</tabstop>
+  <tabstop>gkLineEdit</tabstop>
+  <tabstop>zetaLineEdit</tabstop>
   <tabstop>hamiltonianTermsView</tabstop>
   <tabstop>hamiltonianParametersView</tabstop>
+  <tabstop>syncParametersCheckBox</tabstop>
+  <tabstop>nPsisAutoCheckBox</tabstop>
+  <tabstop>nPsisLineEdit</tabstop>
+  <tabstop>nConfigurationsLineEdit</tabstop>
+  <tabstop>resultsView</tabstop>
+  <tabstop>plotIsoCheckBox</tabstop>
+  <tabstop>plotCDCheckBox</tabstop>
+  <tabstop>plotLDCheckBox</tabstop>
   <tabstop>calculationPushButton</tabstop>
   <tabstop>saveInputAsPushButton</tabstop>
  </tabstops>

@@ -517,7 +517,7 @@ class QuantyDockWidget(QDockWidget):
             self.hamiltonianTermsView.currentIndex())
 
         # Set the sizes of the two views.
-        self.hamiltonianSplitter.setSizes((150, 300))
+        self.hamiltonianSplitter.setSizes((150, 300, 0))
 
     def setUiEnabled(self, flag=True):
         self.elementComboBox.setEnabled(flag)
