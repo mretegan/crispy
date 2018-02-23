@@ -31,7 +31,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '02/02/2018'
+__date__ = '23/02/2018'
 
 import crispy
 import os
@@ -42,7 +42,7 @@ from cx_Freeze import setup, Executable
 
 
 def get_version():
-    import version
+    from crispy import version
     return version.strictversion
 
 
