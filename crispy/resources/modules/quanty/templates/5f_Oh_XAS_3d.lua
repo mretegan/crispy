@@ -2,7 +2,7 @@
 -- Quanty input file generated using Crispy. If you use this file please cite
 -- the following reference: 10.5281/zenodo.1008184.
 --
--- elements: 4f
+-- elements: 5f
 -- symmetry: Oh
 -- experiment: XAS
 -- edge: M4,5 (3d)
@@ -30,12 +30,12 @@ NFermions = 24
 NBosons = 0
 
 NElectrons_3d = 10
-NElectrons_4f = $NElectrons_4f
+NElectrons_5f = $NElectrons_5f
 
 IndexDn_3d = {0, 2, 4, 6, 8}
 IndexUp_3d = {1, 3, 5, 7, 9}
-IndexDn_4f = {10, 12, 14, 16, 18, 20, 22}
-IndexUp_4f = {11, 13, 15, 17, 19, 21, 23}
+IndexDn_5f = {10, 12, 14, 16, 18, 20, 22}
+IndexUp_5f = {11, 13, 15, 17, 19, 21, 23}
 
 --------------------------------------------------------------------------------
 -- Define the atomic term.
@@ -43,73 +43,73 @@ IndexUp_4f = {11, 13, 15, 17, 19, 21, 23}
 N_3d = NewOperator('Number', NFermions, IndexUp_3d, IndexUp_3d, {1, 1, 1, 1, 1})
      + NewOperator('Number', NFermions, IndexDn_3d, IndexDn_3d, {1, 1, 1, 1, 1})
 
-N_4f = NewOperator('Number', NFermions, IndexUp_4f, IndexUp_4f, {1, 1, 1, 1, 1, 1, 1})
-     + NewOperator('Number', NFermions, IndexDn_4f, IndexDn_4f, {1, 1, 1, 1, 1, 1, 1})
+N_5f = NewOperator('Number', NFermions, IndexUp_5f, IndexUp_5f, {1, 1, 1, 1, 1, 1, 1})
+     + NewOperator('Number', NFermions, IndexDn_5f, IndexDn_5f, {1, 1, 1, 1, 1, 1, 1})
 
 if H_atomic == 1 then
-    F0_4f_4f = NewOperator('U', NFermions, IndexUp_4f, IndexDn_4f, {1, 0, 0, 0})
-    F2_4f_4f = NewOperator('U', NFermions, IndexUp_4f, IndexDn_4f, {0, 1, 0, 0})
-    F4_4f_4f = NewOperator('U', NFermions, IndexUp_4f, IndexDn_4f, {0, 0, 1, 0})
-    F6_4f_4f = NewOperator('U', NFermions, IndexUp_4f, IndexDn_4f, {0, 0, 0, 1})
+    F0_5f_5f = NewOperator('U', NFermions, IndexUp_5f, IndexDn_5f, {1, 0, 0, 0})
+    F2_5f_5f = NewOperator('U', NFermions, IndexUp_5f, IndexDn_5f, {0, 1, 0, 0})
+    F4_5f_5f = NewOperator('U', NFermions, IndexUp_5f, IndexDn_5f, {0, 0, 1, 0})
+    F6_5f_5f = NewOperator('U', NFermions, IndexUp_5f, IndexDn_5f, {0, 0, 0, 1})
 
-    F0_3d_4f = NewOperator('U', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_4f, IndexDn_4f, {1, 0, 0}, {0, 0, 0});
-    F2_3d_4f = NewOperator('U', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_4f, IndexDn_4f, {0, 1, 0}, {0, 0, 0});
-    F4_3d_4f = NewOperator('U', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_4f, IndexDn_4f, {0, 0, 1}, {0, 0, 0});
-    G1_3d_4f = NewOperator('U', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_4f, IndexDn_4f, {0, 0, 0}, {1, 0, 0});
-    G3_3d_4f = NewOperator('U', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_4f, IndexDn_4f, {0, 0, 0}, {0, 1, 0});
-    G5_3d_4f = NewOperator('U', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_4f, IndexDn_4f, {0, 0, 0}, {0, 0, 1});
+    F0_3d_5f = NewOperator('U', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_5f, IndexDn_5f, {1, 0, 0}, {0, 0, 0});
+    F2_3d_5f = NewOperator('U', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_5f, IndexDn_5f, {0, 1, 0}, {0, 0, 0});
+    F4_3d_5f = NewOperator('U', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_5f, IndexDn_5f, {0, 0, 1}, {0, 0, 0});
+    G1_3d_5f = NewOperator('U', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_5f, IndexDn_5f, {0, 0, 0}, {1, 0, 0});
+    G3_3d_5f = NewOperator('U', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_5f, IndexDn_5f, {0, 0, 0}, {0, 1, 0});
+    G5_3d_5f = NewOperator('U', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_5f, IndexDn_5f, {0, 0, 0}, {0, 0, 1});
 
-    U_4f_4f_i  = $U(4f,4f)_i_value * $U(4f,4f)_i_scaling
-    F2_4f_4f_i = $F2(4f,4f)_i_value * $F2(4f,4f)_i_scaling
-    F4_4f_4f_i = $F4(4f,4f)_i_value * $F4(4f,4f)_i_scaling
-    F6_4f_4f_i = $F6(4f,4f)_i_value * $F6(4f,4f)_i_scaling
-    F0_4f_4f_i = U_4f_4f_i + 4 / 195 * F2_4f_4f_i + 2 / 143 * F4_4f_4f_i + 100 / 5577 * F6_4f_4f_i
+    U_5f_5f_i  = $U(5f,5f)_i_value * $U(5f,5f)_i_scaling
+    F2_5f_5f_i = $F2(5f,5f)_i_value * $F2(5f,5f)_i_scaling
+    F4_5f_5f_i = $F4(5f,5f)_i_value * $F4(5f,5f)_i_scaling
+    F6_5f_5f_i = $F6(5f,5f)_i_value * $F6(5f,5f)_i_scaling
+    F0_5f_5f_i = U_5f_5f_i + 4 / 195 * F2_5f_5f_i + 2 / 143 * F4_5f_5f_i + 100 / 5577 * F6_5f_5f_i
 
-    U_4f_4f_f  = $U(4f,4f)_f_value * $U(4f,4f)_f_scaling
-    F2_4f_4f_f = $F2(4f,4f)_f_value * $F2(4f,4f)_f_scaling
-    F4_4f_4f_f = $F4(4f,4f)_f_value * $F4(4f,4f)_f_scaling
-    F6_4f_4f_f = $F6(4f,4f)_f_value * $F6(4f,4f)_f_scaling
-    F0_4f_4f_f = U_4f_4f_f + 4 / 195 * F2_4f_4f_f + 2 / 143 * F4_4f_4f_f + 100 / 5577 * F6_4f_4f_f
-    U_3d_4f_f  = $U(3d,4f)_f_value * $U(3d,4f)_f_scaling
-    F2_3d_4f_f = $F2(3d,4f)_f_value * $F2(3d,4f)_f_scaling
-    F4_3d_4f_f = $F4(3d,4f)_f_value * $F4(3d,4f)_f_scaling
-    G1_3d_4f_f = $G1(3d,4f)_f_value * $G1(3d,4f)_f_scaling
-    G3_3d_4f_f = $G3(3d,4f)_f_value * $G3(3d,4f)_f_scaling
-    G5_3d_4f_f = $G5(3d,4f)_f_value * $G5(3d,4f)_f_scaling
-    F0_3d_4f_f = U_3d_4f_f + 3 / 70 * G1_3d_4f_f + 2 / 105 * G3_3d_4f_f + 5 / 231 * G5_3d_4f_f
+    U_5f_5f_f  = $U(5f,5f)_f_value * $U(5f,5f)_f_scaling
+    F2_5f_5f_f = $F2(5f,5f)_f_value * $F2(5f,5f)_f_scaling
+    F4_5f_5f_f = $F4(5f,5f)_f_value * $F4(5f,5f)_f_scaling
+    F6_5f_5f_f = $F6(5f,5f)_f_value * $F6(5f,5f)_f_scaling
+    F0_5f_5f_f = U_5f_5f_f + 4 / 195 * F2_5f_5f_f + 2 / 143 * F4_5f_5f_f + 100 / 5577 * F6_5f_5f_f
+    U_3d_5f_f  = $U(3d,5f)_f_value * $U(3d,5f)_f_scaling
+    F2_3d_5f_f = $F2(3d,5f)_f_value * $F2(3d,5f)_f_scaling
+    F4_3d_5f_f = $F4(3d,5f)_f_value * $F4(3d,5f)_f_scaling
+    G1_3d_5f_f = $G1(3d,5f)_f_value * $G1(3d,5f)_f_scaling
+    G3_3d_5f_f = $G3(3d,5f)_f_value * $G3(3d,5f)_f_scaling
+    G5_3d_5f_f = $G5(3d,5f)_f_value * $G5(3d,5f)_f_scaling
+    F0_3d_5f_f = U_3d_5f_f + 3 / 70 * G1_3d_5f_f + 2 / 105 * G3_3d_5f_f + 5 / 231 * G5_3d_5f_f
 
     H_i = H_i
-        + F0_4f_4f_i * F0_4f_4f
-        + F2_4f_4f_i * F2_4f_4f
-        + F4_4f_4f_i * F4_4f_4f
-        + F6_4f_4f_i * F6_4f_4f
+        + F0_5f_5f_i * F0_5f_5f
+        + F2_5f_5f_i * F2_5f_5f
+        + F4_5f_5f_i * F4_5f_5f
+        + F6_5f_5f_i * F6_5f_5f
 
     H_f = H_f
-        + F0_4f_4f_f * F0_4f_4f
-        + F2_4f_4f_f * F2_4f_4f
-        + F4_4f_4f_f * F4_4f_4f
-        + F6_4f_4f_f * F6_4f_4f
-        + F0_3d_4f_f * F0_3d_4f
-        + F2_3d_4f_f * F2_3d_4f
-        + F4_3d_4f_f * F4_3d_4f
-        + G1_3d_4f_f * G1_3d_4f
-        + G3_3d_4f_f * G3_3d_4f
-        + G5_3d_4f_f * G5_3d_4f
+        + F0_5f_5f_f * F0_5f_5f
+        + F2_5f_5f_f * F2_5f_5f
+        + F4_5f_5f_f * F4_5f_5f
+        + F6_5f_5f_f * F6_5f_5f
+        + F0_3d_5f_f * F0_3d_5f
+        + F2_3d_5f_f * F2_3d_5f
+        + F4_3d_5f_f * F4_3d_5f
+        + G1_3d_5f_f * G1_3d_5f
+        + G3_3d_5f_f * G3_3d_5f
+        + G5_3d_5f_f * G5_3d_5f
 
-    ldots_4f = NewOperator('ldots', NFermions, IndexUp_4f, IndexDn_4f)
+    ldots_5f = NewOperator('ldots', NFermions, IndexUp_5f, IndexDn_5f)
 
     ldots_3d = NewOperator('ldots', NFermions, IndexUp_3d, IndexDn_3d)
 
-    zeta_4f_i = $zeta(4f)_i_value * $zeta(4f)_i_scaling
+    zeta_5f_i = $zeta(5f)_i_value * $zeta(5f)_i_scaling
 
-    zeta_4f_f = $zeta(4f)_f_value * $zeta(4f)_f_scaling
+    zeta_5f_f = $zeta(5f)_f_value * $zeta(5f)_f_scaling
     zeta_3d_f = $zeta(3d)_f_value * $zeta(3d)_f_scaling
 
     H_i = H_i
-        + zeta_4f_i * ldots_4f
+        + zeta_5f_i * ldots_5f
 
     H_f = H_f
-        + zeta_4f_f * ldots_4f
+        + zeta_5f_f * ldots_5f
         + zeta_3d_f * ldots_3d
 end
 
@@ -118,75 +118,75 @@ end
 --------------------------------------------------------------------------------
 if H_cf == 1 then
     -- PotentialExpandedOnClm('Oh', 3, {Ea2u, Et1u, Et2u})
-    Ea2u_4f = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, PotentialExpandedOnClm('Oh', 3, {1, 0, 0}))
-    Et2u_4f = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, PotentialExpandedOnClm('Oh', 3, {0, 1, 0}))
-    Et1u_4f = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, PotentialExpandedOnClm('Oh', 3, {0, 0, 1}))
+    Ea2u_5f = NewOperator('CF', NFermions, IndexUp_5f, IndexDn_5f, PotentialExpandedOnClm('Oh', 3, {1, 0, 0}))
+    Et2u_5f = NewOperator('CF', NFermions, IndexUp_5f, IndexDn_5f, PotentialExpandedOnClm('Oh', 3, {0, 1, 0}))
+    Et1u_5f = NewOperator('CF', NFermions, IndexUp_5f, IndexDn_5f, PotentialExpandedOnClm('Oh', 3, {0, 0, 1}))
 
-    Ea2u_4f_i = $Ea2u(4f)_i_value
-    Et2u_4f_i = $Et2u(4f)_i_value
-    Et1u_4f_i = $Et1u(4f)_i_value
+    Ea2u_5f_i = $Ea2u(5f)_i_value
+    Et2u_5f_i = $Et2u(5f)_i_value
+    Et1u_5f_i = $Et1u(5f)_i_value
 
-    Ea2u_4f_f = $Ea2u(4f)_f_value
-    Et2u_4f_f = $Et2u(4f)_f_value
-    Et1u_4f_f = $Et1u(4f)_f_value
+    Ea2u_5f_f = $Ea2u(5f)_f_value
+    Et2u_5f_f = $Et2u(5f)_f_value
+    Et1u_5f_f = $Et1u(5f)_f_value
 
     -- Set to zero the barycenter of the orbital energies.
-    E_4f_i = (Ea2u_4f_i + 3 * Et2u_4f_i + 3 * Et1u_4f_i) / 7
-    Ea2u_4f_i = Ea2u_4f_i - E_4f_i
-    Et2u_4f_i = Et2u_4f_i - E_4f_i
-    Et1u_4f_i = Et1u_4f_i - E_4f_i
+    E_5f_i = (Ea2u_5f_i + 3 * Et2u_5f_i + 3 * Et1u_5f_i) / 7
+    Ea2u_5f_i = Ea2u_5f_i - E_5f_i
+    Et2u_5f_i = Et2u_5f_i - E_5f_i
+    Et1u_5f_i = Et1u_5f_i - E_5f_i
 
-    E_4f_f = (Ea2u_4f_f + 3 * Et2u_4f_f + 3 * Et1u_4f_f) / 7
-    Ea2u_4f_f = Ea2u_4f_f - E_4f_f
-    Et2u_4f_f = Et2u_4f_f - E_4f_f
-    Et1u_4f_f = Et1u_4f_f - E_4f_f
+    E_5f_f = (Ea2u_5f_f + 3 * Et2u_5f_f + 3 * Et1u_5f_f) / 7
+    Ea2u_5f_f = Ea2u_5f_f - E_5f_f
+    Et2u_5f_f = Et2u_5f_f - E_5f_f
+    Et1u_5f_f = Et1u_5f_f - E_5f_f
 
     H_i = H_i
-        + Ea2u_4f_i * Ea2u_4f
-        + Et2u_4f_i * Et2u_4f
-        + Et1u_4f_i * Et1u_4f
+        + Ea2u_5f_i * Ea2u_5f
+        + Et2u_5f_i * Et2u_5f
+        + Et1u_5f_i * Et1u_5f
 
     H_f = H_f
-        + Ea2u_4f_f * Ea2u_4f
-        + Et2u_4f_f * Et2u_4f
-        + Et1u_4f_f * Et1u_4f
+        + Ea2u_5f_f * Ea2u_5f
+        + Et2u_5f_f * Et2u_5f
+        + Et1u_5f_f * Et1u_5f
 end
 
 --------------------------------------------------------------------------------
 -- Define the magnetic field and exchange field terms.
 --------------------------------------------------------------------------------
-Sx_4f    = NewOperator('Sx'   , NFermions, IndexUp_4f, IndexDn_4f)
-Sy_4f    = NewOperator('Sy'   , NFermions, IndexUp_4f, IndexDn_4f)
-Sz_4f    = NewOperator('Sz'   , NFermions, IndexUp_4f, IndexDn_4f)
-Ssqr_4f  = NewOperator('Ssqr' , NFermions, IndexUp_4f, IndexDn_4f)
-Splus_4f = NewOperator('Splus', NFermions, IndexUp_4f, IndexDn_4f)
-Smin_4f  = NewOperator('Smin' , NFermions, IndexUp_4f, IndexDn_4f)
+Sx_5f    = NewOperator('Sx'   , NFermions, IndexUp_5f, IndexDn_5f)
+Sy_5f    = NewOperator('Sy'   , NFermions, IndexUp_5f, IndexDn_5f)
+Sz_5f    = NewOperator('Sz'   , NFermions, IndexUp_5f, IndexDn_5f)
+Ssqr_5f  = NewOperator('Ssqr' , NFermions, IndexUp_5f, IndexDn_5f)
+Splus_5f = NewOperator('Splus', NFermions, IndexUp_5f, IndexDn_5f)
+Smin_5f  = NewOperator('Smin' , NFermions, IndexUp_5f, IndexDn_5f)
 
-Lx_4f    = NewOperator('Lx'   , NFermions, IndexUp_4f, IndexDn_4f)
-Ly_4f    = NewOperator('Ly'   , NFermions, IndexUp_4f, IndexDn_4f)
-Lz_4f    = NewOperator('Lz'   , NFermions, IndexUp_4f, IndexDn_4f)
-Lsqr_4f  = NewOperator('Lsqr' , NFermions, IndexUp_4f, IndexDn_4f)
-Lplus_4f = NewOperator('Lplus', NFermions, IndexUp_4f, IndexDn_4f)
-Lmin_4f  = NewOperator('Lmin' , NFermions, IndexUp_4f, IndexDn_4f)
+Lx_5f    = NewOperator('Lx'   , NFermions, IndexUp_5f, IndexDn_5f)
+Ly_5f    = NewOperator('Ly'   , NFermions, IndexUp_5f, IndexDn_5f)
+Lz_5f    = NewOperator('Lz'   , NFermions, IndexUp_5f, IndexDn_5f)
+Lsqr_5f  = NewOperator('Lsqr' , NFermions, IndexUp_5f, IndexDn_5f)
+Lplus_5f = NewOperator('Lplus', NFermions, IndexUp_5f, IndexDn_5f)
+Lmin_5f  = NewOperator('Lmin' , NFermions, IndexUp_5f, IndexDn_5f)
 
-Jx_4f    = NewOperator('Jx'   , NFermions, IndexUp_4f, IndexDn_4f)
-Jy_4f    = NewOperator('Jy'   , NFermions, IndexUp_4f, IndexDn_4f)
-Jz_4f    = NewOperator('Jz'   , NFermions, IndexUp_4f, IndexDn_4f)
-Jsqr_4f  = NewOperator('Jsqr' , NFermions, IndexUp_4f, IndexDn_4f)
-Jplus_4f = NewOperator('Jplus', NFermions, IndexUp_4f, IndexDn_4f)
-Jmin_4f  = NewOperator('Jmin' , NFermions, IndexUp_4f, IndexDn_4f)
+Jx_5f    = NewOperator('Jx'   , NFermions, IndexUp_5f, IndexDn_5f)
+Jy_5f    = NewOperator('Jy'   , NFermions, IndexUp_5f, IndexDn_5f)
+Jz_5f    = NewOperator('Jz'   , NFermions, IndexUp_5f, IndexDn_5f)
+Jsqr_5f  = NewOperator('Jsqr' , NFermions, IndexUp_5f, IndexDn_5f)
+Jplus_5f = NewOperator('Jplus', NFermions, IndexUp_5f, IndexDn_5f)
+Jmin_5f  = NewOperator('Jmin' , NFermions, IndexUp_5f, IndexDn_5f)
 
-Sx = Sx_4f
-Sy = Sy_4f
-Sz = Sz_4f
+Sx = Sx_5f
+Sy = Sy_5f
+Sz = Sz_5f
 
-Lx = Lx_4f
-Ly = Ly_4f
-Lz = Lz_4f
+Lx = Lx_5f
+Ly = Ly_5f
+Lz = Lz_5f
 
-Jx = Jx_4f
-Jy = Jy_4f
-Jz = Jz_4f
+Jx = Jx_5f
+Jy = Jy_5f
+Jz = Jz_5f
 
 Ssqr = Sx * Sx + Sy * Sy + Sz * Sz
 Lsqr = Lx * Lx + Ly * Ly + Lz * Lz
@@ -236,15 +236,15 @@ end
 -- Define the restrictions and set the number of initial states.
 --------------------------------------------------------------------------------
 InitialRestrictions = {NFermions, NBosons, {'1111111111 00000000000000', NElectrons_3d, NElectrons_3d},
-                                           {'0000000000 11111111111111', NElectrons_4f, NElectrons_4f}}
+                                           {'0000000000 11111111111111', NElectrons_5f, NElectrons_5f}}
 
 FinalRestrictions = {NFermions, NBosons, {'1111111111 00000000000000', NElectrons_3d - 1, NElectrons_3d - 1},
-                                         {'0000000000 11111111111111', NElectrons_4f + 1, NElectrons_4f + 1}}
+                                         {'0000000000 11111111111111', NElectrons_5f + 1, NElectrons_5f + 1}}
 
-Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_3d, N_4f}
+Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_3d, N_5f}
 header = 'Analysis of the initial Hamiltonian:\n'
 header = header .. '==============================================================================================\n'
-header = header .. '   i       <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>    <N_3d>    <N_4f>\n'
+header = header .. '   i       <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>    <N_3d>    <N_5f>\n'
 header = header .. '==============================================================================================\n'
 footer = '==============================================================================================\n'
 
@@ -335,15 +335,15 @@ kin = $kin
 ein1 = $ein1
 ein2 = $ein2
 
-Tx_3d_4f = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_3d, IndexDn_3d, {{1, -1, t    }, {1, 1, -t    }})
-Ty_3d_4f = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_3d, IndexDn_3d, {{1, -1, t * I}, {1, 1,  t * I}})
-Tz_3d_4f = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_3d, IndexDn_3d, {{1,  0, 1    }                })
+Tx_3d_5f = NewOperator('CF', NFermions, IndexUp_5f, IndexDn_5f, IndexUp_3d, IndexDn_3d, {{1, -1, t    }, {1, 1, -t    }})
+Ty_3d_5f = NewOperator('CF', NFermions, IndexUp_5f, IndexDn_5f, IndexUp_3d, IndexDn_3d, {{1, -1, t * I}, {1, 1,  t * I}})
+Tz_3d_5f = NewOperator('CF', NFermions, IndexUp_5f, IndexDn_5f, IndexUp_3d, IndexDn_3d, {{1,  0, 1    }                })
 
-Tein1_3d_4f = ein1[1] * Tx_3d_4f + ein1[2] * Ty_3d_4f + ein1[3] * Tz_3d_4f
-Tein2_3d_4f = ein2[1] * Tx_3d_4f + ein2[2] * Ty_3d_4f + ein2[3] * Tz_3d_4f
+Tein1_3d_5f = ein1[1] * Tx_3d_5f + ein1[2] * Ty_3d_5f + ein1[3] * Tz_3d_5f
+Tein2_3d_5f = ein2[1] * Tx_3d_5f + ein2[2] * Ty_3d_5f + ein2[3] * Tz_3d_5f
 
-Tr_3d_4f =  t * (Tein1_3d_4f - I * Tein2_3d_4f)
-Tl_3d_4f = -t * (Tein1_3d_4f + I * Tein2_3d_4f)
+Tr_3d_5f =  t * (Tein1_3d_5f - I * Tein2_3d_5f)
+Tl_3d_5f = -t * (Tein1_3d_5f + I * Tein2_3d_5f)
 
 --------------------------------------------------------------------------------
 -- Calculate and save the spectra.
@@ -399,19 +399,19 @@ for i, Psi in ipairs(Psis_i) do
     io.write(string.format('%4d   %3.2E\n', i, dZ))
 
     if CalculateIso == 1 then
-        for j, Operator in ipairs({Tx_3d_4f, Ty_3d_4f, Tz_3d_4f}) do
+        for j, Operator in ipairs({Tx_3d_5f, Ty_3d_5f, Tz_3d_5f}) do
             Giso = Giso + CreateSpectra(H_f, Operator, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
         end
     end
 
     if CalculateCD == 1 then
-        Gr = Gr + CreateSpectra(H_f, Tr_3d_4f, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
-        Gl = Gl + CreateSpectra(H_f, Tl_3d_4f, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+        Gr = Gr + CreateSpectra(H_f, Tr_3d_5f, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+        Gl = Gl + CreateSpectra(H_f, Tl_3d_5f, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
     end
 
     if CalculateLD == 1 then
-        Gein1 = Gein1 + CreateSpectra(H_f, Tein1_3d_4f, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
-        Gein2 = Gein2 + CreateSpectra(H_f, Tein2_3d_4f, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+        Gein1 = Gein1 + CreateSpectra(H_f, Tein1_3d_5f, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+        Gein2 = Gein2 + CreateSpectra(H_f, Tein2_3d_5f, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
     end
 end
 io.write(string.format('===============\n'))

@@ -2,7 +2,7 @@
 -- Quanty input file generated using Crispy. If you use this file please cite
 -- the following reference: 10.5281/zenodo.1008184.
 --
--- elements: lathanides
+-- elements: 4f
 -- symmetry: Oh
 -- experiment: RIXS
 -- edge: L2,3-M4,5 (2p3d)

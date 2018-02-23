@@ -237,8 +237,8 @@ class QuantyCalculation(object):
 
         subshell = self.configurations[0][1][:2]
         if len(self.e1Lorentzian) == 1:
-            if ((subshell == '3d' and self.edge == 'L2,3 (2p)')
-                    or (subshell == '4f' and self.edge == 'M4,5 (3d)')):
+            if (('d' in subshell and 'L2,3 (2p)' in self.edge)
+                    or ('f' in subshell and 'M4,5 (3d)' in self.edge)):
                 replacements['$Gamma1'] = '0.1'
                 replacements['$Gmin1'] = self.e1Lorentzian[0]
                 replacements['$Gmax1'] = self.e1Lorentzian[0]
@@ -247,8 +247,8 @@ class QuantyCalculation(object):
             else:
                 replacements['$Gamma1'] = self.e1Lorentzian[0]
         else:
-            if ((subshell == '3d' and self.edge == 'L2,3 (2p)')
-                    or (subshell == '4f' and self.edge == 'M4,5 (3d)')):
+            if (('d' in subshell and 'L2,3 (2p)' in self.edge)
+                    or ('f' in subshell and 'M4,5 (3d)' in self.edge)):
                 replacements['$Gamma1'] = 0.1
                 replacements['$Gmin1'] = self.e1Lorentzian[0]
                 replacements['$Gmax1'] = self.e1Lorentzian[1]
