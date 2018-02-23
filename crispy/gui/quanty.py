@@ -34,6 +34,7 @@ import collections
 import copy
 import datetime
 import errno
+import gzip
 import json
 import numpy as np
 import os
@@ -103,9 +104,9 @@ class QuantyCalculation(object):
 
         path = resourceFileName(
             'crispy:' + os.path.join('modules', 'quanty', 'parameters',
-                                     'parameters.json'))
+                                     'parameters.json.gz'))
 
-        with open(path) as p:
+        with gzip.open(path, 'rb') as p:
             tree = json.loads(
                 p.read(), object_pairs_hook=collections.OrderedDict)
 
