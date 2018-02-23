@@ -31,6 +31,9 @@
   <property name="windowTitle">
    <string>About Crispy</string>
   </property>
+  <property name="modal">
+   <bool>true</bool>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QHBoxLayout" name="iconHBoxLayout">
