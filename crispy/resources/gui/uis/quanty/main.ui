@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>280</width>
+    <width>275</width>
     <height>680</height>
    </rect>
   </property>
@@ -76,7 +76,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>280</width>
+         <width>275</width>
          <height>534</height>
         </rect>
        </property>
@@ -302,7 +302,7 @@
            <enum>Qt::NoFocus</enum>
           </property>
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <property name="movable">
            <bool>true</bool>
@@ -871,7 +871,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>280</width>
+         <width>275</width>
          <height>534</height>
         </rect>
        </property>
@@ -1096,15 +1096,31 @@
            </property>
            <item>
             <layout class="QHBoxLayout" name="nPsisHBoxLayout">
+             <property name="spacing">
+              <number>6</number>
+             </property>
              <item>
               <widget class="QLabel" name="nPsisLabel">
                <property name="toolTip">
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use the input box to change the number of states of the initial Hamiltonian included in the calculation. If &lt;span style=&quot; font-weight:600;&quot;&gt;Auto&lt;/span&gt; is checked, the number will be detemined based on the Boltzmann factor at the given temperature.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
                <property name="text">
-                <string>Number of States        </string>
+                <string>Number of States</string>
                </property>
               </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
              </item>
              <item>
               <widget class="QCheckBox" name="nPsisAutoCheckBox">
@@ -1195,7 +1211,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>280</width>
+         <width>275</width>
          <height>534</height>
         </rect>
        </property>
