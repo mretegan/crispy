@@ -39,8 +39,6 @@ from PyQt5.uic import loadUi
 from silx.resources import resource_filename as resourceFileName
 
 from .quanty import QuantyDockWidget
-# import sys
-# sys.path.append('..')
 from ..version import version
 
 
@@ -53,11 +51,8 @@ class MainWindow(QMainWindow):
         loadUi(uiPath, baseinstance=self, package='crispy.gui')
 
         self.setWindowTitle('Crispy - untitled.lua')
-
         self.splitter.setSizes((600, 0))
-
         self.statusbar.showMessage('Ready')
-
         self.aboutDialog = AboutDialog()
 
         font = QFontDatabase.systemFont(QFontDatabase.FixedFont)

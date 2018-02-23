@@ -1322,7 +1322,7 @@
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>../icons/save.svg</normaloff>../icons/save.svg</iconset>
+          <normaloff>../../icons/save.svg</normaloff>../../icons/save.svg</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -1357,7 +1357,7 @@
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>../icons/play.svg</normaloff>../icons/play.svg</iconset>
+          <normaloff>../../icons/play.svg</normaloff>../../icons/play.svg</iconset>
         </property>
         <property name="iconSize">
          <size>
