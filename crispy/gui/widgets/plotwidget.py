@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '14/02/2018'
+__date__ = '23/02/2018'
 
 
 from collections import OrderedDict
@@ -74,7 +74,7 @@ class BackendMatplotlibQt(_BackendMatplotlibQt):
             curves.append(curve)
             legends.append(self._legends[curve])
 
-        legend = self.ax.legend(curves, legends)
+        legend = self.ax.legend(curves, legends, prop={'size': 'medium'})
         frame = legend.get_frame()
         frame.set_edgecolor('white')
         self.postRedisplay()
