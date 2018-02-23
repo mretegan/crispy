@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '21/02/2018'
+__date__ = '22/02/2018'
 
 
 import collections
@@ -359,7 +359,7 @@ class QuantyDockWidget(QDockWidget):
 
         # Load the external .ui file for the widget.
         path = resourceFileName(
-            'crispy:' + os.path.join('gui', 'uis', 'quanty.ui'))
+            'crispy:' + os.path.join('gui', 'uis', 'quanty', 'main.ui'))
         loadUi(path, baseinstance=self, package='crispy.gui')
 
         self.calculation = QuantyCalculation()
@@ -1300,7 +1300,7 @@ class QuantyPreferencesDialog(QDialog):
         super(QuantyPreferencesDialog, self).__init__()
 
         path = resourceFileName(
-            'crispy:' + os.path.join('gui', 'uis', 'quantyPreferences.ui'))
+            'crispy:' + os.path.join('gui', 'uis', 'quanty', 'preferences.ui'))
         loadUi(path, baseinstance=self, package='crispy.gui')
 
 

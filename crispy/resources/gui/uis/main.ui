@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>980</width>
+    <width>1000</width>
     <height>680</height>
    </rect>
   </property>
@@ -69,8 +69,8 @@ QToolButton::menu-indicator{
          <widget class="PlotWidget" name="plotWidget" native="true">
           <property name="minimumSize">
            <size>
-            <width>400</width>
-            <height>300</height>
+            <width>500</width>
+            <height>400</height>
            </size>
           </property>
          </widget>
@@ -103,7 +103,7 @@ QToolButton::menu-indicator{
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>980</width>
+     <width>1000</width>
      <height>22</height>
     </rect>
    </property>
@@ -115,19 +115,26 @@ QToolButton::menu-indicator{
      <property name="title">
       <string>&amp;Quanty</string>
      </property>
-     <addaction name="quantyOpenPreferencesDialog"/>
+     <addaction name="quantyOpenPreferencesDialogAction"/>
      <addaction name="separator"/>
      <addaction name="quantySaveInputAction"/>
      <addaction name="quantySaveAsInputAction"/>
      <addaction name="separator"/>
-     <addaction name="quantyLoadCalculations"/>
-     <addaction name="quantyRemoveAllCalculations"/>
+     <addaction name="quantyLoadCalculationsAction"/>
+     <addaction name="quantyRemoveAllCalculationsAction"/>
      <addaction name="separator"/>
      <addaction name="quantyModuleHideAction"/>
     </widget>
     <addaction name="menuModulesQuanty"/>
    </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="openAboutDialogAction"/>
+   </widget>
    <addaction name="menuModules"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar">
    <property name="enabled">
@@ -163,7 +170,7 @@ QToolButton::menu-indicator{
     <string>Hide the Quanty Module</string>
    </property>
   </action>
-  <action name="quantyLoadCalculations">
+  <action name="quantyLoadCalculationsAction">
    <property name="text">
     <string>Load Calculations</string>
    </property>
@@ -173,7 +180,7 @@ QToolButton::menu-indicator{
     <string>Run</string>
    </property>
   </action>
-  <action name="quantyRemoveAllCalculations">
+  <action name="quantyRemoveAllCalculationsAction">
    <property name="text">
     <string>Remove All Calculations</string>
    </property>
@@ -186,9 +193,14 @@ QToolButton::menu-indicator{
     <string>Set Path to Quanty</string>
    </property>
   </action>
-  <action name="quantyOpenPreferencesDialog">
+  <action name="quantyOpenPreferencesDialogAction">
    <property name="text">
     <string>Preferences...</string>
+   </property>
+  </action>
+  <action name="openAboutDialogAction">
+   <property name="text">
+    <string>About</string>
    </property>
   </action>
  </widget>

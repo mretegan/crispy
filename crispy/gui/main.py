@@ -33,12 +33,15 @@ __date__ = '20/02/2018'
 import os
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QMainWindow, QPlainTextEdit
+from PyQt5.QtWidgets import QMainWindow, QPlainTextEdit, QDialog
 from PyQt5.QtGui import QFontDatabase
 from PyQt5.uic import loadUi
 from silx.resources import resource_filename as resourceFileName
 
 from .quanty import QuantyDockWidget
+# import sys
+# sys.path.append('..')
+from ..version import version
 
 
 class MainWindow(QMainWindow):
@@ -55,6 +58,8 @@ class MainWindow(QMainWindow):
 
         self.statusbar.showMessage('Ready')
 
+        self.aboutDialog = AboutDialog()
+
         font = QFontDatabase.systemFont(QFontDatabase.FixedFont)
         font.setPointSize(font.pointSize() + 1)
         self.loggerWidget.setFont(font)
@@ -70,15 +75,17 @@ class MainWindow(QMainWindow):
             self.quantyDockWidget.saveInput)
         self.quantySaveAsInputAction.triggered.connect(
             self.quantyDockWidget.saveInputAs)
-        self.quantyLoadCalculations.triggered.connect(
+        self.quantyLoadCalculationsAction.triggered.connect(
             self.quantyDockWidget.loadCalculations)
-        self.quantyRemoveAllCalculations.triggered.connect(
+        self.quantyRemoveAllCalculationsAction.triggered.connect(
             self.quantyDockWidget.removeAllCalculations)
-        self.quantyOpenPreferencesDialog.triggered.connect(
+        self.quantyOpenPreferencesDialogAction.triggered.connect(
             self.quantyDockWidget.openPreferencesDialog)
 
         self.quantyModuleShowAction.triggered.connect(self.quantyModuleShow)
         self.quantyModuleHideAction.triggered.connect(self.quantyModuleHide)
+
+        self.openAboutDialogAction.triggered.connect(self.openAboutDialog)
 
         # ORCA
         # self.orcaDockWidget = QDockWidget()
@@ -96,3 +103,18 @@ class MainWindow(QMainWindow):
         self.menuModulesQuanty.insertAction(
             self.quantyModuleHideAction, self.quantyModuleShowAction)
         self.menuModulesQuanty.removeAction(self.quantyModuleHideAction)
+
+    def openAboutDialog(self):
+        self.aboutDialog.show()
+
+
+class AboutDialog(QDialog):
+
+    def __init__(self, parent=None):
+        super(AboutDialog, self).__init__()
+
+        path = resourceFileName(
+            'crispy:' + os.path.join('gui', 'uis', 'about.ui'))
+        loadUi(path, baseinstance=self, package='crispy.gui')
+
+        self.nameLabel.setText('Crispy {}'.format(version))
