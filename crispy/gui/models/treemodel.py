@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '20/02/2018'
+__date__ = '28/02/2018'
 
 
 import collections
@@ -225,7 +225,7 @@ class TreeModel(QAbstractItemModel):
         node = self.getNode(index)
         column = index.column()
 
-        if role == Qt.DisplayRole or role == Qt.EditRole:
+        if role == Qt.EditRole:
             nodes = list()
             nodes.append(node)
 
@@ -239,13 +239,14 @@ class TreeModel(QAbstractItemModel):
                             nodes.append(child)
 
             for node in nodes:
-                if column > 0 and not node.childCount():
+                columnData = str(node.getItemData(column))
+                if columnData and columnData != value:
                     try:
                         node.setItemData(column, float(value))
                     except ValueError:
                         return False
                 else:
-                    node.setItemData(column, value)
+                    return False
 
         elif role == Qt.CheckStateRole:
             node.setCheckState(value)
