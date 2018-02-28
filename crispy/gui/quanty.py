@@ -95,7 +95,6 @@ class QuantyCalculation(object):
         'startingTime': None,
         'endingTime': None,
         'verbosity': None,
-        'needsCompleteUiEnabled': False,
     }
 
     def __init__(self, **kwargs):
@@ -140,6 +139,8 @@ class QuantyCalculation(object):
         self.templateName = branch['template name']
 
         self.configurations = branch['configurations']
+        self.block = self.configurations[0][1][:2]
+        self.nElectrons = int(self.configurations[0][1][2:])
         self.nPsis = branch['number of states']
         self.nPsisMax = self.nPsis
         try:
@@ -177,12 +178,9 @@ class QuantyCalculation(object):
             for term in terms:
                 # Include the magnetic and exchange terms only for
                 # selected type of calculations.
-                subshell = self.configurations[0][1][:2]
                 if 'Magnetic Field' in term or 'Exchange Field' in term:
-                    if (('f' in subshell and 'M4,5 (3d)' in self.edge)
-                            or ('d' in subshell and 'L2,3 (2p)' in self.edge)):
-                        self.needsCompleteUiEnabled = True
-                    else:
+                    if (('M4,5 (3d)' in self.edge and 'f' not in self.block) or
+                       ('L2,3 (2p)' in self.edge and 'd' not in self.block)):
                         continue
 
                 # Include the p-d hybridization term only for K-edges.
@@ -240,10 +238,9 @@ class QuantyCalculation(object):
         replacements['$NE1'] = self.e1NPoints
         replacements['$Eedge1'] = self.e1Edge
 
-        subshell = self.configurations[0][1][:2]
         if len(self.e1Lorentzian) == 1:
-            if (('d' in subshell and 'L2,3 (2p)' in self.edge)
-                    or ('f' in subshell and 'M4,5 (3d)' in self.edge)):
+            if (('L2,3 (2p)' in self.edge and 'd' in self.block) or
+               ('M4,5 (3d)' in self.edge and 'f' in self.block)):
                 replacements['$Gamma1'] = '0.1'
                 replacements['$Gmin1'] = self.e1Lorentzian[0]
                 replacements['$Gmax1'] = self.e1Lorentzian[0]
@@ -252,8 +249,8 @@ class QuantyCalculation(object):
             else:
                 replacements['$Gamma1'] = self.e1Lorentzian[0]
         else:
-            if (('d' in subshell and 'L2,3 (2p)' in self.edge)
-                    or ('f' in subshell and 'M4,5 (3d)' in self.edge)):
+            if (('L2,3 (2p)' in self.edge and 'd' in self.block) or
+               ('M4,5 (3d)' in self.edge and 'f' in self.block)):
                 replacements['$Gamma1'] = 0.1
                 replacements['$Gmin1'] = self.e1Lorentzian[0]
                 replacements['$Gmax1'] = self.e1Lorentzian[1]
@@ -444,7 +441,8 @@ class QuantyDockWidget(QDockWidget):
         self.temperatureLineEdit.setValue(c.temperature)
         self.magneticFieldLineEdit.setValue(c.magneticField)
 
-        if c.needsCompleteUiEnabled:
+        if (('L2,3 (2p)' in c.edge and 'd' in c.block) or
+           ('M4,5 (3d)' in c.edge and 'f' in c.block)):
             self.magneticFieldLineEdit.setEnabled(True)
             self.kinLineEdit.setEnabled(True)
             self.einLineEdit.setEnabled(True)
@@ -473,8 +471,15 @@ class QuantyDockWidget(QDockWidget):
         self.nPsisLineEdit.setValue(c.nPsis)
         self.nPsisAutoCheckBox.setChecked(c.nPsisAuto)
         self.nConfigurationsLineEdit.setValue(c.nConfigurations)
-        if c.hamiltonianState['3d-Ligands Hybridization'] == 0:
-            self.nConfigurationsLineEdit.setEnabled(False)
+        try:
+            termState = c.hamiltonianState['3d-Ligands Hybridization']
+        except KeyError:
+            pass
+        else:
+            if termState != 0:
+                self.nConfigurationsLineEdit.setEnabled(True)
+            else:
+                self.nConfigurationsLineEdit.setEnabled(False)
 
         self.energiesTabWidget.setTabText(0, str(c.e1Label))
         self.e1MinLineEdit.setValue(c.e1Min)
@@ -525,7 +530,7 @@ class QuantyDockWidget(QDockWidget):
         # Set the sizes of the two views.
         self.hamiltonianSplitter.setSizes((150, 300, 0))
 
-    def setUiEnabled(self, flag=True):
+    def enableUi(self, flag=True):
         self.elementComboBox.setEnabled(flag)
         self.chargeComboBox.setEnabled(flag)
         self.symmetryComboBox.setEnabled(flag)
@@ -548,7 +553,8 @@ class QuantyDockWidget(QDockWidget):
         self.e2GaussianLineEdit.setEnabled(flag)
 
         c = self.calculation
-        if c.needsCompleteUiEnabled:
+        if (('L2,3 (2p)' in c.edge and 'd' in c.block) or
+           ('M4,5 (3d)' in c.edge and 'f' in c.block)):
             self.kinLineEdit.setEnabled(flag)
             self.einLineEdit.setEnabled(flag)
             self.calculateIsoCheckBox.setEnabled(flag)
@@ -571,8 +577,7 @@ class QuantyDockWidget(QDockWidget):
         else:
             self.nPsisLineEdit.setEnabled(True)
 
-        if c.hamiltonianState['3d-Ligands Hybridization'] != 0:
-            self.nConfigurationsLineEdit.setEnabled(flag)
+        self.nConfigurationsLineEdit.setEnabled(flag)
 
         self.hamiltonianTermsView.setEnabled(flag)
         self.hamiltonianParametersView.setEnabled(flag)
@@ -737,6 +742,7 @@ class QuantyDockWidget(QDockWidget):
         self.hamiltonianModel.setSyncState(flag)
 
     def updateConfigurations(self, *args):
+        c = self.calculation
         nConfigurations = self.nConfigurationsLineEdit.getValue()
 
         if args:
@@ -749,16 +755,14 @@ class QuantyDockWidget(QDockWidget):
                     nConfigurations = 2
                     self.nConfigurationsLineEdit.setEnabled(True)
         else:
-            configurations = self.calculation.configurations
-            subshell = configurations[0][1][:2]
-            electrons = int(configurations[0][1][-1:])
-            if 'd' in subshell:
-                nConfigurationsMax = 10 - electrons + 1
-            elif 'f' in subshell:
-                nConfigurationsMax = 14 - electrons + 1
+            if 'd' in c.block:
+                nConfigurationsMax = 10 - c.nElectrons + 1
+            elif 'f' in c.block:
+                nConfigurationsMax = 14 - c.nElectrons + 1
             if nConfigurations > nConfigurationsMax:
                 nConfigurations = nConfigurationsMax
 
+        c.nConfigurations = nConfigurations
         self.nConfigurationsLineEdit.setValue(nConfigurations)
 
     def saveInput(self):
@@ -943,7 +947,7 @@ class QuantyDockWidget(QDockWidget):
         self.parent().splitter.setSizes((450, 150))
 
         # Disable the UI while the calculation is running.
-        self.setUiEnabled(False)
+        self.enableUi(False)
 
         c = self.calculation
         c.startingTime = datetime.datetime.now()
@@ -992,7 +996,7 @@ class QuantyDockWidget(QDockWidget):
 
     def stopCalculation(self):
         self.process.kill()
-        self.setUiEnabled(True)
+        self.enableUi(True)
 
     def processCalculation(self):
         c = self.calculation
@@ -1004,7 +1008,7 @@ class QuantyDockWidget(QDockWidget):
         self.resetCalculationPushButton()
 
         # Re-enable the UI if the calculation has finished.
-        self.setUiEnabled(True)
+        self.enableUi(True)
 
         # Evaluate the exit code and status of the process.
         exitStatus = self.process.exitStatus()
