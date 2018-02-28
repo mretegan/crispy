@@ -589,8 +589,8 @@ class QuantyDockWidget(QDockWidget):
             self.calculateCDCheckBox.setChecked(True)
 
         kin = c.kin
-
         kin = kin / np.linalg.norm(kin)
+
         configurations = c.hamiltonianData['Magnetic Field']
         for configuration in configurations:
             parameters = configurations[configuration]
@@ -621,8 +621,8 @@ class QuantyDockWidget(QDockWidget):
 
     def updateIncidentWaveVector(self):
         c = self.calculation
-        statusBar = self.parent().statusBar()
 
+        statusBar = self.parent().statusBar()
         timeout = 4000
 
         try:
@@ -654,6 +654,7 @@ class QuantyDockWidget(QDockWidget):
             else:
                 ein = np.array([-kin[2] - kin[1], kin[0], kin[0]])
 
+        c.ein = ein
         self.einLineEdit.setVector(ein)
         self.updateMagneticField()
 
@@ -810,6 +811,9 @@ class QuantyDockWidget(QDockWidget):
         c.e1NPoints = self.e1NPointsLineEdit.getValue()
         c.e1Lorentzian = self.e1LorentzianLineEdit.getList()
         c.e1Gaussian = self.e1GaussianLineEdit.getValue()
+
+        c.kin = self.kinLineEdit.getVector()
+        c.ein = self.einLineEdit.getVector()
 
         if 'RIXS' in c.experiment:
             c.e2Min = self.e2MinLineEdit.getValue()
