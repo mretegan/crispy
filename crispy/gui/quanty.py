@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '22/02/2018'
+__date__ = '28/02/2018'
 
 
 import collections
@@ -175,18 +175,23 @@ class QuantyCalculation(object):
             terms = branch['configurations'][configuration]['terms']
 
             for term in terms:
-                # Hack to include the magnetic and exchange terms only for
-                # selected type calculations.
+                # Include the magnetic and exchange terms only for
+                # selected type of calculations.
                 subshell = self.configurations[0][1][:2]
-                if 'Magnetic' in term or 'Exchange' in term:
+                if 'Magnetic Field' in term or 'Exchange Field' in term:
                     if (('f' in subshell and 'M4,5 (3d)' in self.edge)
                             or ('d' in subshell and 'L2,3 (2p)' in self.edge)):
                         self.needsCompleteUiEnabled = True
                     else:
                         continue
 
-                if ('Atomic' in term or 'Magnetic' in term
-                        or 'Exchange' in term):
+                # Include the p-d hybridization term only for K-edges.
+                if '3d-4p Hybridization' in term:
+                    if 'K (1s)' not in self.edge:
+                        continue
+
+                if ('Atomic' in term or 'Magnetic Field' in term
+                        or 'Exchange Field' in term):
                     parameters = terms[term]
                 else:
                     try:
