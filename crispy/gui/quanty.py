@@ -473,7 +473,7 @@ class QuantyDockWidget(QDockWidget):
         self.nPsisLineEdit.setValue(c.nPsis)
         self.nPsisAutoCheckBox.setChecked(c.nPsisAuto)
         self.nConfigurationsLineEdit.setValue(c.nConfigurations)
-        if c.nConfigurations == 1:
+        if c.hamiltonianState['3d-Ligands Hybridization'] == 0:
             self.nConfigurationsLineEdit.setEnabled(False)
 
         self.energiesTabWidget.setTabText(0, str(c.e1Label))
@@ -571,8 +571,7 @@ class QuantyDockWidget(QDockWidget):
         else:
             self.nPsisLineEdit.setEnabled(True)
 
-        nConfigurations = self.nConfigurationsLineEdit.getValue()
-        if nConfigurations > 1:
+        if c.hamiltonianState['3d-Ligands Hybridization'] != 0:
             self.nConfigurationsLineEdit.setEnabled(flag)
 
         self.hamiltonianTermsView.setEnabled(flag)
@@ -742,7 +741,7 @@ class QuantyDockWidget(QDockWidget):
 
         if args:
             index, state = args
-            if '3d-Ligands' in index.data():
+            if '3d-Ligands Hybridization' in index.data():
                 if state == 0:
                     nConfigurations = 1
                     self.nConfigurationsLineEdit.setEnabled(False)
@@ -1091,7 +1090,7 @@ class QuantyDockWidget(QDockWidget):
 
         if 'RIXS' in c.experiment:
             # Keep the aspect ratio for RIXS plots.
-            plotWidget.setKeepDataAspectRatio()
+            plotWidget.setKeepDataAspectRatio(flag=True)
             plotWidget.setGraphXLabel('Incident Energy (eV)')
             plotWidget.setGraphYLabel('Energy Transfer (eV)')
 
@@ -1119,7 +1118,6 @@ class QuantyDockWidget(QDockWidget):
             plotWidget.addImage(z, origin=origin, scale=scale, reset=False)
 
         else:
-            # Keep the aspect ratio for RIXS plots.
             plotWidget.setKeepDataAspectRatio(flag=False)
             # Check if the data is valid.
             if np.max(np.abs(data)) < np.finfo(np.float32).eps:
@@ -1146,9 +1144,6 @@ class QuantyDockWidget(QDockWidget):
             except AssertionError:
                 message = 'The x and y arrays have different lengths.'
                 statusBar.showMessage(message)
-
-        # TODO: Work on saving the calculation data to different formats.
-        # self.saveSelectedCalculationsAsAction.setEnabled(False)
 
     def selectedHamiltonianTermChanged(self):
         index = self.hamiltonianTermsView.currentIndex()
