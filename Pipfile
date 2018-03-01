@@ -1,0 +1,17 @@
+[[source]]
+
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+
+[packages]
+
+"PyQt5" = "*"
+numpy = "*"
+matplotlib = ">=1.2.0"
+silx = ">=0.6.1"
+
+
+[dev-packages]
+

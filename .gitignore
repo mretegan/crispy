@@ -59,3 +59,6 @@ docs/_drafts
 
 # Quanty binaries
 crispy/resources/modules/quanty/bin/
+
+# Pipenv
+Pipfile.lock
