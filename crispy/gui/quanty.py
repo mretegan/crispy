@@ -575,7 +575,7 @@ class QuantyDockWidget(QDockWidget):
         if self.nPsisAutoCheckBox.isChecked():
             self.nPsisLineEdit.setEnabled(False)
         else:
-            self.nPsisLineEdit.setEnabled(True)
+            self.nPsisLineEdit.setEnabled(flag)
 
         self.nConfigurationsLineEdit.setEnabled(flag)
 
