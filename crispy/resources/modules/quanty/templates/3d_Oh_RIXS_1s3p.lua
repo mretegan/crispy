@@ -304,7 +304,7 @@ if H_3d_Ld_hybridization == 1 then
 
     FinalRestrictions = {NFermions, NBosons, {'11 000000 0000000000 0000000000', NElectrons_1s, NElectrons_1s},
                                              {'00 111111 0000000000 0000000000', NElectrons_3p - 1, NElectrons_3p - 1},
-                                             {'00 000000 1111111111 0000000000', NElectrons_3d, NElectrons_3d},
+                                             {'00 000000 1111111111 0000000000', NElectrons_3d + 1, NElectrons_3d + 1},
                                              {'00 000000 0000000000 1111111111', NElectrons_Ld, NElectrons_Ld}}
 
     CalculationRestrictions = {NFermions, NBosons, {'00 000000 0000000000 1111111111', NElectrons_Ld - (NConfigurations - 1), NElectrons_Ld}}
