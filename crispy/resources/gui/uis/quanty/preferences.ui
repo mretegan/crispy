@@ -52,7 +52,7 @@
           </sizepolicy>
          </property>
          <property name="toolTip">
-          <string>Current path for the Quanty executable.</string>
+          <string>Path to the Quanty executable.</string>
          </property>
          <property name="readOnly">
           <bool>true</bool>
@@ -73,9 +73,6 @@
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="verbosityLabel">
-       <property name="toolTip">
-        <string>Verbosity of the Quanty calculation. </string>
-       </property>
        <property name="text">
         <string>Verbosity</string>
        </property>
@@ -96,7 +93,7 @@
         </size>
        </property>
        <property name="toolTip">
-        <string>Acceptable values in increasing verbosity: 0x0000, 0x00FF, 0xFFFF.</string>
+        <string>Verbosity of the Quanty calculation. Acceptable values in increasing verbosity: 0x0000, 0x00FF, 0xFFFF.</string>
        </property>
        <property name="text">
         <string>0x0000</string>
