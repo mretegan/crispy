@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '28/02/2018'
+__date__ = '09/03/2018'
 
 
 import collections
@@ -790,6 +790,20 @@ class QuantyDockWidget(QDockWidget):
             os.chdir(os.path.dirname(path))
             self.saveInput()
 
+    def saveCalculationsAs(self):
+        path, _ = QFileDialog.getSaveFileName(
+            self, 'Save Calculations',
+            os.path.join(self.settings['currentPath'], 'untitled.pkl'),
+            'Pickle File (*.pkl)')
+
+        if path:
+            self.updateSettings('currentPath', os.path.dirname(path))
+            os.chdir(os.path.dirname(path))
+            calculations = copy.deepcopy(self.resultsModel.getData())
+            calculations.reverse()
+            with open(path, 'wb') as p:
+                pickle.dump(calculations, p, pickle.HIGHEST_PROTOCOL)
+
     def saveSelectedCalculationsAs(self):
         path, _ = QFileDialog.getSaveFileName(
             self, 'Save Calculations',
@@ -863,7 +877,7 @@ class QuantyDockWidget(QDockWidget):
         self.resultsModel.removeItems(self.resultsView.selectedIndexes())
         self.updateResultsViewSelection()
 
-    def removeAllCalculations(self):
+    def removeCalculations(self):
         self.resultsModel.reset()
         self.parent().plotWidget.reset()
 
@@ -1160,15 +1174,18 @@ class QuantyDockWidget(QDockWidget):
         self.saveSelectedCalculationsAsAction = QAction(
             icon, 'Save Selected Calculations As...', self,
             triggered=self.saveSelectedCalculationsAs)
+        self.saveCalculationsAsAction = QAction(
+            icon, 'Save Calculations As...', self,
+            triggered=self.saveCalculationsAs)
 
         icon = QIcon(resourceFileName(
             'crispy:' + os.path.join('gui', 'icons', 'trash.svg')))
-        self.removeCalculationsAction = QAction(
+        self.removeSelectedCalculationsAction = QAction(
             icon, 'Remove Selected Calculations', self,
             triggered=self.removeSelectedCalculations)
-        self.removeAllCalculationsAction = QAction(
-            icon, 'Remove All Calculations', self,
-            triggered=self.removeAllCalculations)
+        self.removeCalculationsAction = QAction(
+            icon, 'Remove Calculations', self,
+            triggered=self.removeCalculations)
 
         icon = QIcon(resourceFileName(
             'crispy:' + os.path.join('gui', 'icons', 'folder-open.svg')))
@@ -1178,11 +1195,12 @@ class QuantyDockWidget(QDockWidget):
 
         self.itemsContextMenu = QMenu('Items Context Menu', self)
         self.itemsContextMenu.addAction(self.saveSelectedCalculationsAsAction)
-        self.itemsContextMenu.addAction(self.removeCalculationsAction)
+        self.itemsContextMenu.addAction(self.removeSelectedCalculationsAction)
 
         self.viewContextMenu = QMenu('View Context Menu', self)
+        self.viewContextMenu.addAction(self.saveCalculationsAsAction)
+        self.viewContextMenu.addAction(self.removeCalculationsAction)
         self.viewContextMenu.addAction(self.loadCalculationsAction)
-        self.viewContextMenu.addAction(self.removeAllCalculationsAction)
 
     def showResultsContextMenu(self, position):
         selection = self.resultsView.selectionModel().selection()

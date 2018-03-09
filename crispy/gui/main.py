@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '20/02/2018'
+__date__ = '09/03/2018'
 
 
 import os
@@ -68,12 +68,14 @@ class MainWindow(QMainWindow):
             self.quantyDockWidget.runCalculation)
         self.quantySaveInputAction.triggered.connect(
             self.quantyDockWidget.saveInput)
-        self.quantySaveAsInputAction.triggered.connect(
+        self.quantySaveInputAsAction.triggered.connect(
             self.quantyDockWidget.saveInputAs)
+        self.quantySaveCalculationsAsAction.triggered.connect(
+            self.quantyDockWidget.saveCalculationsAs)
+        self.quantyRemoveCalculationsAction.triggered.connect(
+            self.quantyDockWidget.removeCalculations)
         self.quantyLoadCalculationsAction.triggered.connect(
             self.quantyDockWidget.loadCalculations)
-        self.quantyRemoveAllCalculationsAction.triggered.connect(
-            self.quantyDockWidget.removeAllCalculations)
         self.quantyOpenPreferencesDialogAction.triggered.connect(
             self.quantyDockWidget.openPreferencesDialog)
 

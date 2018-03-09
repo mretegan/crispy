@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '14/02/2018'
+__date__ = '09/03/2018'
 
 
 from PyQt5.QtCore import Qt, QAbstractListModel, QModelIndex
@@ -40,13 +40,13 @@ class ListModel(QAbstractListModel):
     and to get data stored at a given index.
     """
 
-    def __init__(self, parent=None, data=list()):
+    def __init__(self, parent=None, modelData=list()):
         super(ListModel, self).__init__(parent)
-        self.data = data
+        self.modelData = modelData
 
     def rowCount(self, parent=QModelIndex()):
         """Return the number of rows in the model."""
-        length = len(self.data)
+        length = len(self.modelData)
         return length
 
     def data(self, index, role):
@@ -56,7 +56,7 @@ class ListModel(QAbstractListModel):
             return
         row = index.row()
         if role == Qt.DisplayRole or role == Qt.EditRole:
-            label = self.data[row].label
+            label = self.modelData[row].label
             return label
 
     def setData(self, index, value, role):
@@ -65,9 +65,12 @@ class ListModel(QAbstractListModel):
             return
         row = index.row()
         if role == Qt.EditRole:
-            self.data[row].label = value
+            self.modelData[row].label = value
         self.dataChanged.emit(index, index)
         return True
+
+    def getData(self):
+        return self.modelData
 
     def flags(self, index):
         """Return the active flags for the given index"""
@@ -81,7 +84,7 @@ class ListModel(QAbstractListModel):
         last = position + len(items) - 1
         self.beginInsertRows(QModelIndex(), first, last)
         for item in items:
-            self.data.insert(position, item)
+            self.modelData.insert(position, item)
         self.endInsertRows()
         return True
 
@@ -92,7 +95,7 @@ class ListModel(QAbstractListModel):
         last = max(rows)
         self.beginRemoveRows(QModelIndex(), first, last)
         for row in sorted(rows, reverse=True):
-            del self.data[row]
+            del self.modelData[row]
         self.endRemoveRows()
         return True
 
@@ -106,17 +109,17 @@ class ListModel(QAbstractListModel):
 
     def replaceItem(self, index, item):
         row = index.row()
-        self.data[row] = item
+        self.modelData[row] = item
         self.dataChanged.emit(index, index)
 
     def getIndexData(self, index):
         """Return the data stored in the model at the given index."""
         if not index.isValid():
             return
-        data = self.data[index.row()]
+        data = self.modelData[index.row()]
         return data
 
     def reset(self):
         self.beginResetModel()
-        self.data = list()
+        self.modelData = list()
         self.endResetModel()
