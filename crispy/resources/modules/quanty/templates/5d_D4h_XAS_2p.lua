@@ -131,6 +131,82 @@ if H_cf == 1 then
 end
 
 --------------------------------------------------------------------------------
+-- Define the 5d-Ld hybridization term.
+--------------------------------------------------------------------------------
+if H_5d_Ld_hybridization == 1 then
+    N_Ld = NewOperator('Number', NFermions, IndexUp_Ld, IndexUp_Ld, {1, 1, 1, 1, 1})
+         + NewOperator('Number', NFermions, IndexDn_Ld, IndexDn_Ld, {1, 1, 1, 1, 1})
+
+    Delta_5d_Ld_i = $Delta(5d,Ld)_i_value
+    e_5d_i  = (10 * Delta_5d_Ld_i - NElectrons_5d * (19 + NElectrons_5d) * U_5d_5d_i / 2) / (10 + NElectrons_5d)
+    e_Ld_i  = NElectrons_5d * ((1 + NElectrons_5d) * U_5d_5d_i / 2 - Delta_5d_Ld_i) / (10 + NElectrons_5d)
+
+    Delta_5d_Ld_f = $Delta(5d,Ld)_f_value
+    e_2p_f = (10 * Delta_5d_Ld_f + (1 + NElectrons_5d) * (NElectrons_5d * U_5d_5d_f / 2 - (10 + NElectrons_5d) * U_2p_5d_f)) / (16 + NElectrons_5d)
+    e_5d_f = (10 * Delta_5d_Ld_f - NElectrons_5d * (31 + NElectrons_5d) * U_5d_5d_f / 2 - 90 * U_2p_5d_f) / (16 + NElectrons_5d)
+    e_Ld_f = ((1 + NElectrons_5d) * (NElectrons_5d * U_5d_5d_f / 2 + 6 * U_2p_5d_f) - (6 + NElectrons_5d) * Delta_5d_Ld_f) / (16 + NElectrons_5d)
+
+    H_i = H_i
+        + e_5d_i * N_5d
+        + e_Ld_i * N_Ld
+
+    H_f = H_f
+        + e_2p_f * N_2p
+        + e_5d_f * N_5d
+        + e_Ld_f * N_Ld
+
+    Dq_Ld = NewOperator('CF', NFermions, IndexUp_Ld, IndexDn_Ld, PotentialExpandedOnClm('D4h', 2, { 6,  6, -4, -4}))
+    Ds_Ld = NewOperator('CF', NFermions, IndexUp_Ld, IndexDn_Ld, PotentialExpandedOnClm('D4h', 2, {-2,  2,  2, -1}))
+    Dt_Ld = NewOperator('CF', NFermions, IndexUp_Ld, IndexDn_Ld, PotentialExpandedOnClm('D4h', 2, {-6, -1, -1,  4}))
+
+    Va1g_5d_Ld = NewOperator('CF', NFermions, IndexUp_Ld, IndexDn_Ld, IndexUp_5d, IndexDn_5d, PotentialExpandedOnClm('D4h', 2, {1, 0, 0, 0}))
+               + NewOperator('CF', NFermions, IndexUp_5d, IndexDn_5d, IndexUp_Ld, IndexDn_Ld, PotentialExpandedOnClm('D4h', 2, {1, 0, 0, 0}))
+
+    Vb1g_5d_Ld = NewOperator('CF', NFermions, IndexUp_Ld, IndexDn_Ld, IndexUp_5d, IndexDn_5d, PotentialExpandedOnClm('D4h', 2, {0, 1, 0, 0}))
+               + NewOperator('CF', NFermions, IndexUp_5d, IndexDn_5d, IndexUp_Ld, IndexDn_Ld, PotentialExpandedOnClm('D4h', 2, {0, 1, 0, 0}))
+
+    Vb2g_5d_Ld = NewOperator('CF', NFermions, IndexUp_Ld, IndexDn_Ld, IndexUp_5d, IndexDn_5d, PotentialExpandedOnClm('D4h', 2, {0, 0, 1, 0}))
+               + NewOperator('CF', NFermions, IndexUp_5d, IndexDn_5d, IndexUp_Ld, IndexDn_Ld, PotentialExpandedOnClm('D4h', 2, {0, 0, 1, 0}))
+
+    Veg_5d_Ld = NewOperator('CF', NFermions, IndexUp_Ld, IndexDn_Ld, IndexUp_5d, IndexDn_5d, PotentialExpandedOnClm('D4h', 2, {0, 0, 0, 1}))
+              + NewOperator('CF', NFermions, IndexUp_5d, IndexDn_5d, IndexUp_Ld, IndexDn_Ld, PotentialExpandedOnClm('D4h', 2, {0, 0, 0, 1}))
+
+    Dq_Ld_i = $Dq(Ld)_i_value
+    Ds_Ld_i = $Ds(Ld)_i_value
+    Dt_Ld_i = $Dt(Ld)_i_value
+    Va1g_5d_Ld_i  = $Va1g(5d,Ld)_i_value
+    Vb1g_5d_Ld_i  = $Vb1g(5d,Ld)_i_value
+    Vb2g_5d_Ld_i  = $Vb2g(5d,Ld)_i_value
+    Veg_5d_Ld_i  = $Veg(5d,Ld)_i_value
+
+    Dq_Ld_f = $Dq(Ld)_f_value
+    Ds_Ld_f = $Ds(Ld)_f_value
+    Dt_Ld_f = $Dt(Ld)_f_value
+    Va1g_5d_Ld_f  = $Va1g(5d,Ld)_f_value
+    Vb1g_5d_Ld_f  = $Vb1g(5d,Ld)_f_value
+    Vb2g_5d_Ld_f  = $Vb2g(5d,Ld)_f_value
+    Veg_5d_Ld_f  = $Veg(5d,Ld)_f_value
+
+    H_i = H_i
+        + Dq_Ld_i      * Dq_Ld
+        + Ds_Ld_i      * Ds_Ld
+        + Dt_Ld_i      * Dt_Ld
+        + Va1g_5d_Ld_i * Va1g_5d_Ld
+        + Vb1g_5d_Ld_i * Vb1g_5d_Ld
+        + Vb2g_5d_Ld_i * Vb2g_5d_Ld
+        + Veg_5d_Ld_i  * Veg_5d_Ld
+
+    H_f = H_f
+        + Dq_Ld_f      * Dq_Ld
+        + Ds_Ld_f      * Ds_Ld
+        + Dt_Ld_f      * Dt_Ld
+        + Va1g_5d_Ld_f * Va1g_5d_Ld
+        + Vb1g_5d_Ld_f * Vb1g_5d_Ld
+        + Vb2g_5d_Ld_f * Vb2g_5d_Ld
+        + Veg_5d_Ld_f  * Veg_5d_Ld
+end
+
+--------------------------------------------------------------------------------
 -- Define the magnetic field and exchange field terms.
 --------------------------------------------------------------------------------
 Sx_5d    = NewOperator('Sx'   , NFermions, IndexUp_5d, IndexDn_5d)

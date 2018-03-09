@@ -131,6 +131,82 @@ if H_cf == 1 then
 end
 
 --------------------------------------------------------------------------------
+-- Define the 4d-Ld hybridization term.
+--------------------------------------------------------------------------------
+if H_4d_Ld_hybridization == 1 then
+    N_Ld = NewOperator('Number', NFermions, IndexUp_Ld, IndexUp_Ld, {1, 1, 1, 1, 1})
+         + NewOperator('Number', NFermions, IndexDn_Ld, IndexDn_Ld, {1, 1, 1, 1, 1})
+
+    Delta_4d_Ld_i = $Delta(4d,Ld)_i_value
+    e_4d_i  = (10 * Delta_4d_Ld_i - NElectrons_4d * (19 + NElectrons_4d) * U_4d_4d_i / 2) / (10 + NElectrons_4d)
+    e_Ld_i  = NElectrons_4d * ((1 + NElectrons_4d) * U_4d_4d_i / 2 - Delta_4d_Ld_i) / (10 + NElectrons_4d)
+
+    Delta_4d_Ld_f = $Delta(4d,Ld)_f_value
+    e_2p_f = (10 * Delta_4d_Ld_f + (1 + NElectrons_4d) * (NElectrons_4d * U_4d_4d_f / 2 - (10 + NElectrons_4d) * U_2p_4d_f)) / (16 + NElectrons_4d)
+    e_4d_f = (10 * Delta_4d_Ld_f - NElectrons_4d * (31 + NElectrons_4d) * U_4d_4d_f / 2 - 90 * U_2p_4d_f) / (16 + NElectrons_4d)
+    e_Ld_f = ((1 + NElectrons_4d) * (NElectrons_4d * U_4d_4d_f / 2 + 6 * U_2p_4d_f) - (6 + NElectrons_4d) * Delta_4d_Ld_f) / (16 + NElectrons_4d)
+
+    H_i = H_i
+        + e_4d_i * N_4d
+        + e_Ld_i * N_Ld
+
+    H_f = H_f
+        + e_2p_f * N_2p
+        + e_4d_f * N_4d
+        + e_Ld_f * N_Ld
+
+    Dq_Ld = NewOperator('CF', NFermions, IndexUp_Ld, IndexDn_Ld, PotentialExpandedOnClm('D4h', 2, { 6,  6, -4, -4}))
+    Ds_Ld = NewOperator('CF', NFermions, IndexUp_Ld, IndexDn_Ld, PotentialExpandedOnClm('D4h', 2, {-2,  2,  2, -1}))
+    Dt_Ld = NewOperator('CF', NFermions, IndexUp_Ld, IndexDn_Ld, PotentialExpandedOnClm('D4h', 2, {-6, -1, -1,  4}))
+
+    Va1g_4d_Ld = NewOperator('CF', NFermions, IndexUp_Ld, IndexDn_Ld, IndexUp_4d, IndexDn_4d, PotentialExpandedOnClm('D4h', 2, {1, 0, 0, 0}))
+               + NewOperator('CF', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_Ld, IndexDn_Ld, PotentialExpandedOnClm('D4h', 2, {1, 0, 0, 0}))
+
+    Vb1g_4d_Ld = NewOperator('CF', NFermions, IndexUp_Ld, IndexDn_Ld, IndexUp_4d, IndexDn_4d, PotentialExpandedOnClm('D4h', 2, {0, 1, 0, 0}))
+               + NewOperator('CF', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_Ld, IndexDn_Ld, PotentialExpandedOnClm('D4h', 2, {0, 1, 0, 0}))
+
+    Vb2g_4d_Ld = NewOperator('CF', NFermions, IndexUp_Ld, IndexDn_Ld, IndexUp_4d, IndexDn_4d, PotentialExpandedOnClm('D4h', 2, {0, 0, 1, 0}))
+               + NewOperator('CF', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_Ld, IndexDn_Ld, PotentialExpandedOnClm('D4h', 2, {0, 0, 1, 0}))
+
+    Veg_4d_Ld = NewOperator('CF', NFermions, IndexUp_Ld, IndexDn_Ld, IndexUp_4d, IndexDn_4d, PotentialExpandedOnClm('D4h', 2, {0, 0, 0, 1}))
+              + NewOperator('CF', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_Ld, IndexDn_Ld, PotentialExpandedOnClm('D4h', 2, {0, 0, 0, 1}))
+
+    Dq_Ld_i = $Dq(Ld)_i_value
+    Ds_Ld_i = $Ds(Ld)_i_value
+    Dt_Ld_i = $Dt(Ld)_i_value
+    Va1g_4d_Ld_i  = $Va1g(4d,Ld)_i_value
+    Vb1g_4d_Ld_i  = $Vb1g(4d,Ld)_i_value
+    Vb2g_4d_Ld_i  = $Vb2g(4d,Ld)_i_value
+    Veg_4d_Ld_i  = $Veg(4d,Ld)_i_value
+
+    Dq_Ld_f = $Dq(Ld)_f_value
+    Ds_Ld_f = $Ds(Ld)_f_value
+    Dt_Ld_f = $Dt(Ld)_f_value
+    Va1g_4d_Ld_f  = $Va1g(4d,Ld)_f_value
+    Vb1g_4d_Ld_f  = $Vb1g(4d,Ld)_f_value
+    Vb2g_4d_Ld_f  = $Vb2g(4d,Ld)_f_value
+    Veg_4d_Ld_f  = $Veg(4d,Ld)_f_value
+
+    H_i = H_i
+        + Dq_Ld_i      * Dq_Ld
+        + Ds_Ld_i      * Ds_Ld
+        + Dt_Ld_i      * Dt_Ld
+        + Va1g_4d_Ld_i * Va1g_4d_Ld
+        + Vb1g_4d_Ld_i * Vb1g_4d_Ld
+        + Vb2g_4d_Ld_i * Vb2g_4d_Ld
+        + Veg_4d_Ld_i  * Veg_4d_Ld
+
+    H_f = H_f
+        + Dq_Ld_f      * Dq_Ld
+        + Ds_Ld_f      * Ds_Ld
+        + Dt_Ld_f      * Dt_Ld
+        + Va1g_4d_Ld_f * Va1g_4d_Ld
+        + Vb1g_4d_Ld_f * Vb1g_4d_Ld
+        + Vb2g_4d_Ld_f * Vb2g_4d_Ld
+        + Veg_4d_Ld_f  * Veg_4d_Ld
+end
+
+--------------------------------------------------------------------------------
 -- Define the magnetic field and exchange field terms.
 --------------------------------------------------------------------------------
 Sx_4d    = NewOperator('Sx'   , NFermions, IndexUp_4d, IndexDn_4d)
