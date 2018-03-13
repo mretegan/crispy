@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '09/03/2018'
+__date__ = '13/03/2018'
 
 
 import collections
@@ -48,7 +48,7 @@ import uuid
 
 from PyQt5.QtCore import (
     QItemSelectionModel, QProcess, Qt, QPoint, QStandardPaths)
-from PyQt5.QtGui import QIcon, QCursor
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (
     QAbstractItemView, QDockWidget, QFileDialog, QAction, QMenu,
     QWidget, QDialog)
@@ -380,7 +380,6 @@ class QuantyDockWidget(QDockWidget):
             self.selectedCalculationsChanged)
         # Add a context menu.
         self.resultsView.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.createResultsContextMenu()
         self.resultsView.customContextMenuRequested[QPoint].connect(
             self.showResultsContextMenu)
 
@@ -421,7 +420,14 @@ class QuantyDockWidget(QDockWidget):
         self.plotCDCheckBox.toggled.connect(self.plotSelectedCalculations)
         self.plotLDCheckBox.toggled.connect(self.plotSelectedCalculations)
 
+        icon = QIcon(resourceFileName(
+            'crispy:' + os.path.join('gui', 'icons', 'save.svg')))
+        self.saveInputAsPushButton.setIcon(icon)
         self.saveInputAsPushButton.clicked.connect(self.saveInputAs)
+
+        icon = QIcon(resourceFileName(
+            'crispy:' + os.path.join('gui', 'icons', 'play.svg')))
+        self.calculationPushButton.setIcon(icon)
         self.calculationPushButton.clicked.connect(self.runCalculation)
 
         self.resultsModel.dataChanged.connect(self.plotSelectedCalculations)
@@ -986,27 +992,32 @@ class QuantyDockWidget(QDockWidget):
         self.process.readyReadStandardOutput.connect(self.handleOutputLogging)
         self.process.finished.connect(self.processCalculation)
 
-    def updateCalculationPushButton(self):
+    def updateCalculationPushButton(self, type='stop'):
+        types = {
+            'stop': {
+                'iconName': 'stop.svg',
+                'buttonText': 'Stop',
+                'buttonToolTip': 'Stop Quanty.'},
+            'run': {
+                'iconName': 'play.svg',
+                'buttonText': 'Run',
+                'buttonToolTip': 'Run Quanty.'},
+        }
+
         icon = QIcon(resourceFileName(
-            'crispy:' + os.path.join('gui', 'icons', 'stop.svg')))
+            'crispy:' + os.path.join('gui', 'icons', types[type]['iconName'])))
         self.calculationPushButton.setIcon(icon)
 
-        self.calculationPushButton.setText('Stop')
-        self.calculationPushButton.setToolTip('Stop Quanty')
+        self.calculationPushButton.setText(types[type]['buttonText'])
+        self.calculationPushButton.setToolTip(types[type]['buttonToolTip'])
 
         self.calculationPushButton.disconnect()
-        self.calculationPushButton.clicked.connect(self.stopCalculation)
-
-    def resetCalculationPushButton(self):
-        icon = QIcon(resourceFileName(
-            'crispy:' + os.path.join('gui', 'icons', 'play.svg')))
-        self.calculationPushButton.setIcon(icon)
-
-        self.calculationPushButton.setText('Run')
-        self.calculationPushButton.setToolTip('Run Quanty')
-
-        self.calculationPushButton.disconnect()
-        self.calculationPushButton.clicked.connect(self.runCalculation)
+        if type == 'stop':
+            self.calculationPushButton.clicked.connect(self.stopCalculation)
+        elif type == 'run':
+            self.calculationPushButton.clicked.connect(self.runCalculation)
+        else:
+            pass
 
     def stopCalculation(self):
         self.process.kill()
@@ -1019,7 +1030,7 @@ class QuantyDockWidget(QDockWidget):
         c.endingTime = datetime.datetime.now()
 
         # Reset the calculation button.
-        self.resetCalculationPushButton()
+        self.updateCalculationPushButton('run')
 
         # Re-enable the UI if the calculation has finished.
         self.enableUi(True)
@@ -1167,8 +1178,7 @@ class QuantyDockWidget(QDockWidget):
         index = self.hamiltonianTermsView.currentIndex()
         self.hamiltonianParametersView.setRootIndex(index)
 
-    # Results view related methods.
-    def createResultsContextMenu(self):
+    def showResultsContextMenu(self, position):
         icon = QIcon(resourceFileName(
             'crispy:' + os.path.join('gui', 'icons', 'save.svg')))
         self.saveSelectedCalculationsAsAction = QAction(
@@ -1193,25 +1203,25 @@ class QuantyDockWidget(QDockWidget):
             icon, 'Load Calculations', self,
             triggered=self.loadCalculations)
 
-        self.itemsContextMenu = QMenu('Items Context Menu', self)
-        self.itemsContextMenu.addAction(self.saveSelectedCalculationsAsAction)
-        self.itemsContextMenu.addAction(self.removeSelectedCalculationsAction)
+        self.resultsContextMenu = QMenu('Results Context Menu', self)
+        self.resultsContextMenu.addAction(
+            self.saveSelectedCalculationsAsAction)
+        self.resultsContextMenu.addAction(
+            self.removeSelectedCalculationsAction)
+        self.resultsContextMenu.addSeparator()
+        self.resultsContextMenu.addAction(self.saveCalculationsAsAction)
+        self.resultsContextMenu.addAction(self.removeCalculationsAction)
+        self.resultsContextMenu.addAction(self.loadCalculationsAction)
 
-        self.viewContextMenu = QMenu('View Context Menu', self)
-        self.viewContextMenu.addAction(self.saveCalculationsAsAction)
-        self.viewContextMenu.addAction(self.removeCalculationsAction)
-        self.viewContextMenu.addAction(self.loadCalculationsAction)
+        if not self.resultsView.selectedIndexes():
+            self.removeSelectedCalculationsAction.setEnabled(False)
+            self.saveSelectedCalculationsAsAction.setEnabled(False)
 
-    def showResultsContextMenu(self, position):
-        selection = self.resultsView.selectionModel().selection()
-        selectedItemsRegion = self.resultsView.visualRegionForSelection(
-            selection)
-        cursorPosition = self.resultsView.mapFromGlobal(QCursor.pos())
+        if not self.resultsModel.getData():
+            self.saveCalculationsAsAction.setEnabled(False)
+            self.removeCalculationsAction.setEnabled(False)
 
-        if selectedItemsRegion.contains(cursorPosition):
-            self.itemsContextMenu.exec_(self.resultsView.mapToGlobal(position))
-        else:
-            self.viewContextMenu.exec_(self.resultsView.mapToGlobal(position))
+        self.resultsContextMenu.exec_(self.resultsView.mapToGlobal(position))
 
     def selectedCalculations(self):
         calculations = list()
@@ -1249,6 +1259,11 @@ class QuantyDockWidget(QDockWidget):
         index = self.resultsModel.index(self.resultsModel.rowCount() - 1)
         self.resultsView.selectionModel().select(
             index, QItemSelectionModel.Select)
+        # Update available actions in the main menu.
+        if not self.resultsModel.getData():
+            self.parent().updateMenuModulesQuanty(False)
+        else:
+            self.parent().updateMenuModulesQuanty(True)
 
     def handleOutputLogging(self):
         self.process.setReadChannel(QProcess.StandardOutput)

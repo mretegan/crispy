@@ -27,14 +27,14 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '09/03/2018'
+__date__ = '13/03/2018'
 
 
 import os
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMainWindow, QPlainTextEdit, QDialog
-from PyQt5.QtGui import QFontDatabase
+from PyQt5.QtGui import QFontDatabase, QIcon
 from PyQt5.uic import loadUi
 from silx.resources import resource_filename as resourceFileName
 
@@ -60,34 +60,57 @@ class MainWindow(QMainWindow):
         self.loggerWidget.setFont(font)
         self.loggerWidget.setLineWrapMode(QPlainTextEdit.NoWrap)
 
-        # Quanty
+        # Quanty dock widget and menu.
         self.quantyDockWidget = QuantyDockWidget()
         self.addDockWidget(Qt.RightDockWidgetArea, self.quantyDockWidget)
         self.quantyDockWidget.setVisible(True)
-        self.quantyRunCalculationAction.triggered.connect(
-            self.quantyDockWidget.runCalculation)
+
+        icon = QIcon(resourceFileName(
+            'crispy:' + os.path.join('gui', 'icons', 'cog.svg')))
+        self.quantyOpenPreferencesDialogAction.setIcon(icon)
+        self.quantyOpenPreferencesDialogAction.triggered.connect(
+            self.quantyDockWidget.openPreferencesDialog)
+
+        icon = QIcon(resourceFileName(
+            'crispy:' + os.path.join('gui', 'icons', 'save.svg')))
+        self.quantySaveInputAction.setIcon(icon)
         self.quantySaveInputAction.triggered.connect(
             self.quantyDockWidget.saveInput)
         self.quantySaveInputAsAction.triggered.connect(
             self.quantyDockWidget.saveInputAs)
+
+        self.quantySaveCalculationsAsAction.setIcon(icon)
         self.quantySaveCalculationsAsAction.triggered.connect(
             self.quantyDockWidget.saveCalculationsAs)
+
+        icon = QIcon(resourceFileName(
+            'crispy:' + os.path.join('gui', 'icons', 'trash.svg')))
+        self.quantyRemoveCalculationsAction.setIcon(icon)
         self.quantyRemoveCalculationsAction.triggered.connect(
             self.quantyDockWidget.removeCalculations)
+
+        icon = QIcon(resourceFileName(
+            'crispy:' + os.path.join('gui', 'icons', 'folder-open.svg')))
+        self.quantyLoadCalculationsAction.setIcon(icon)
         self.quantyLoadCalculationsAction.triggered.connect(
             self.quantyDockWidget.loadCalculations)
-        self.quantyOpenPreferencesDialogAction.triggered.connect(
-            self.quantyDockWidget.openPreferencesDialog)
+
+        self.quantyRunCalculationAction.triggered.connect(
+            self.quantyDockWidget.runCalculation)
+        self.quantySaveInputAction.triggered.connect(
+            self.quantyDockWidget.saveInput)
 
         self.quantyModuleShowAction.triggered.connect(self.quantyModuleShow)
         self.quantyModuleHideAction.triggered.connect(self.quantyModuleHide)
 
-        self.openAboutDialogAction.triggered.connect(self.openAboutDialog)
+        self.updateMenuModulesQuanty(False)
 
         # ORCA
         # self.orcaDockWidget = QDockWidget()
         # self.addDockWidget(Qt.RightDockWidgetArea, self.orcaDockWidget)
         # self.orcaDockWidget.setVisible(False)
+
+        self.openAboutDialogAction.triggered.connect(self.openAboutDialog)
 
     def quantyModuleShow(self):
         self.quantyDockWidget.setVisible(True)
@@ -100,6 +123,10 @@ class MainWindow(QMainWindow):
         self.menuModulesQuanty.insertAction(
             self.quantyModuleHideAction, self.quantyModuleShowAction)
         self.menuModulesQuanty.removeAction(self.quantyModuleHideAction)
+
+    def updateMenuModulesQuanty(self, flag=True):
+        self.quantySaveCalculationsAsAction.setEnabled(flag)
+        self.quantyRemoveCalculationsAction.setEnabled(flag)
 
     def openAboutDialog(self):
         self.aboutDialog.show()
