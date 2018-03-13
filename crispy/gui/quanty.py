@@ -898,6 +898,7 @@ class QuantyDockWidget(QDockWidget):
                 self.resultsModel.appendItems(pickle.load(p))
             self.updateResultsViewSelection()
             self.updateMainWindowTitle()
+            self.quantyToolBox.setCurrentWidget(self.resultsPage)
 
     def setQuantyPath(self):
         if not self.settings['quantyPath']:
