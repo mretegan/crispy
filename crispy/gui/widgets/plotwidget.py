@@ -27,10 +27,10 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '23/02/2018'
+__date__ = '13/03/2018'
 
 
-from collections import OrderedDict
+from collections import OrderedDict as odict
 from silx.gui.plot import PlotWindow
 from silx.gui.plot.backends.BackendMatplotlib import (
     BackendMatplotlibQt as _BackendMatplotlibQt)
@@ -40,7 +40,7 @@ class BackendMatplotlibQt(_BackendMatplotlibQt):
 
     def __init__(self, plot, parent=None):
         super(BackendMatplotlibQt, self).__init__(plot, parent)
-        self._legends = OrderedDict()
+        self._legends = odict()
 
     def addCurve(self, x, y, legend, *args, **kwargs):
         container = super(BackendMatplotlibQt, self).addCurve(

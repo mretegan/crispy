@@ -27,10 +27,10 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '28/02/2018'
+__date__ = '13/03/2018'
 
 
-import collections
+from collections import OrderedDict as odict
 
 from PyQt5.QtCore import Qt, QAbstractItemModel, QModelIndex, pyqtSignal
 
@@ -340,7 +340,7 @@ class TreeModel(QAbstractItemModel):
         for node in parentNode.getChildren():
             key = node.getItemData(0)
             if node.childCount():
-                data[key] = collections.OrderedDict()
+                data[key] = odict()
                 self._getModelData(data[key], node)
             else:
                 if isinstance(node.getItemData(2), float):
@@ -351,7 +351,7 @@ class TreeModel(QAbstractItemModel):
                     data[key] = node.getItemData(1)
 
     def getModelData(self):
-        data = collections.OrderedDict()
+        data = odict()
         self._getModelData(data)
         self.data = data
         return self.data
@@ -376,7 +376,7 @@ class TreeModel(QAbstractItemModel):
         if parentNode is None:
             parentNode = self.rootNode
 
-        data = collections.OrderedDict()
+        data = odict()
         children = parentNode.getChildren()
 
         for child in children:

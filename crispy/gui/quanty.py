@@ -60,7 +60,7 @@ from .models.listmodel import ListModel
 from ..utils.broaden import broaden
 
 
-class OrderedDict(collections.OrderedDict):
+class odict(collections.OrderedDict):
     def __missing__(self, key):
         value = self[key] = type(self)()
         return value
@@ -107,7 +107,7 @@ class QuantyCalculation(object):
 
         with gzip.open(path, 'rb') as p:
             tree = json.loads(
-                p.read(), object_pairs_hook=collections.OrderedDict)
+                p.read(), object_pairs_hook=odict)
 
         branch = tree['elements']
         self.elements = list(branch)
@@ -166,8 +166,8 @@ class QuantyCalculation(object):
             self.e2Lorentzian = branch['energies'][1][5]
             self.e2Gaussian = branch['energies'][1][6]
 
-        self.hamiltonianData = OrderedDict()
-        self.hamiltonianState = OrderedDict()
+        self.hamiltonianData = odict()
+        self.hamiltonianState = odict()
 
         branch = tree['elements'][self.element]['charges'][self.charge]
 
@@ -222,7 +222,7 @@ class QuantyCalculation(object):
         with open(templatePath) as p:
             self.template = p.read()
 
-        replacements = collections.OrderedDict()
+        replacements = odict()
 
         replacements['$Verbosity'] = self.verbosity
         replacements['$NConfigurations'] = self.nConfigurations
@@ -1316,9 +1316,9 @@ class QuantyDockWidget(QDockWidget):
         try:
             with open(settingsPath, 'r') as p:
                 self.settings = json.loads(
-                    p.read(), object_pairs_hook=collections.OrderedDict)
+                    p.read(), object_pairs_hook=odict)
         except IOError as e:
-            self.settings = OrderedDict()
+            self.settings = odict()
             self.settings['quantyPath'] = None
             self.settings['currentPath'] = os.path.expanduser('~')
             if sys.platform in 'win32':
