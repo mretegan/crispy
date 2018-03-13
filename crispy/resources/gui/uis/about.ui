@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>260</width>
+    <width>270</width>
     <height>420</height>
    </rect>
   </property>
@@ -18,13 +18,13 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>260</width>
+    <width>270</width>
     <height>420</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>260</width>
+    <width>270</width>
     <height>420</height>
    </size>
   </property>
@@ -232,7 +232,8 @@ font-weight: bold;</string>
       <string notr="true">font-size: 12px;</string>
      </property>
      <property name="text">
-      <string>© Copyright 2016–2018, European Synchrotron Radiation Facility. </string>
+      <string>© Copyright 2016–2018,
+European Synchrotron Radiation Facility.</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
