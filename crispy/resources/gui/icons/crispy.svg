@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'>
+<svg clip-rule="evenodd" fill-rule="evenodd" version="1.1" viewBox="0 0 1007 1007" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+    <g transform="translate(-1367.2 -1940.2)">
+        <g transform="scale(4.1667)">
+            <g transform="translate(-.69718 165.43)">
+                <path d="m548.6 421c0 54.672-44.32 98.991-98.992 98.991-54.671 0-98.991-44.319-98.991-98.991 0-54.671 44.32-98.991 98.991-98.991 54.672 0 98.992 44.32 98.992 98.991" fill="#1f78b4" fill-rule="nonzero"/>
+            </g>
+        </g>
+        <g transform="scale(4.1667)">
+            <g transform="matrix(0 -1.2379 -1.2379 -0 970.07 1143)">
+                <ellipse cx="449.61" cy="421" rx="77.588" ry="77.589" fill="none" stroke="#a6cee3" stroke-width="9.69px"/>
+            </g>
+        </g>
+        <g transform="scale(4.1667)">
+            <g transform="matrix(.42909 .42909 -.42909 .42909 450.8 -507.87)">
+                <path d="m1273.1 1171.7c-58.34 0-105.63 47.29-105.63 105.63 0 58.29 47.33 105.62 105.63 105.62 58.33 0 105.63-47.29 105.63-105.62" fill="none" stroke="#2fa037" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1.5" stroke-width="16.48px"/>
+            </g>
+        </g>
+        <g transform="scale(4.1667)">
+            <g transform="matrix(.30605 .30605 -.30605 .30605 450.58 -194.15)">
+                <path d="m1273.1 1171.7c-58.34 0-105.63 47.29-105.63 105.63 0 58.29 47.33 105.62 105.63 105.62 58.33 0 105.63-47.29 105.63-105.62" fill="none" stroke="#b3d388" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1.5" stroke-width="23.1px"/>
+            </g>
+        </g>
+        <g transform="scale(4.1667)">
+            <g transform="matrix(.42567 0 0 .42567 -253.21 87.72)">
+                <circle cx="1662.6" cy="1278.6" r="24.667" fill="#b3d388"/>
+            </g>
+        </g>
+        <g transform="scale(4.1667)">
+            <g transform="matrix(.42567 0 0 .42567 -290.06 -13.085)">
+                <circle cx="1662.6" cy="1278.6" r="24.667" fill="#2fa037"/>
+            </g>
+        </g>
+    </g>
+</svg>

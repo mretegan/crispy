@@ -77,7 +77,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap>../../../../assets/crispy.ico</pixmap>
+        <pixmap>../icons/crispy.svg</pixmap>
        </property>
        <property name="scaledContents">
         <bool>true</bool>
