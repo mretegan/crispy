@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '13/03/2018'
+__date__ = '22/03/2018'
 
 
 import collections
@@ -671,7 +671,6 @@ class QuantyDockWidget(QDockWidget):
 
         c.ein = ein
         self.einLineEdit.setVector(ein)
-        self.updateMagneticField()
 
     def updateIncidentPolarizationVector(self):
         c = self.calculation
