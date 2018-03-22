@@ -107,7 +107,7 @@ class QuantyCalculation(object):
 
         with gzip.open(path, 'rb') as p:
             tree = json.loads(
-                p.read(), object_pairs_hook=odict)
+                p.read().decode('utf-8'), object_pairs_hook=odict)
 
         branch = tree['elements']
         self.elements = list(branch)
