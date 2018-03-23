@@ -169,6 +169,12 @@ class QuantyCalculation(object):
         self.hamiltonianData = odict()
         self.hamiltonianState = odict()
 
+        if (('L2,3 (2p)' in self.edge and 'd' in self.block) or
+           ('M4,5 (3d)' in self.edge and 'f' in self.block)):
+            self.hasPolarization = True
+        else:
+            self.hasPolarization = False
+
         branch = tree['elements'][self.element]['charges'][self.charge]
 
         for label, configuration in self.configurations:
@@ -179,14 +185,12 @@ class QuantyCalculation(object):
                 # Include the magnetic and exchange terms only for
                 # selected type of calculations.
                 if 'Magnetic Field' in term or 'Exchange Field' in term:
-                    if not (('L2,3 (2p)' in self.edge and 'd' in self.block) or
-                       ('M4,5 (3d)' in self.edge and 'f' in self.block)):
-                            continue
+                    if not self.hasPolarization:
+                        continue
 
                 # Include the p-d hybridization term only for K-edges.
-                if '3d-4p Hybridization' in term:
-                    if 'K (1s)' not in self.edge:
-                        continue
+                if '3d-4p Hybridization' in term and 'K (1s)' not in self.edge:
+                    continue
 
                 if ('Atomic' in term or 'Magnetic Field' in term
                         or 'Exchange Field' in term):
@@ -239,8 +243,7 @@ class QuantyCalculation(object):
         replacements['$Eedge1'] = self.e1Edge
 
         if len(self.e1Lorentzian) == 1:
-            if (('L2,3 (2p)' in self.edge and 'd' in self.block) or
-               ('M4,5 (3d)' in self.edge and 'f' in self.block)):
+            if self.hasPolarization:
                 replacements['$Gamma1'] = '0.1'
                 replacements['$Gmin1'] = self.e1Lorentzian[0]
                 replacements['$Gmax1'] = self.e1Lorentzian[0]
@@ -249,8 +252,7 @@ class QuantyCalculation(object):
             else:
                 replacements['$Gamma1'] = self.e1Lorentzian[0]
         else:
-            if (('L2,3 (2p)' in self.edge and 'd' in self.block) or
-               ('M4,5 (3d)' in self.edge and 'f' in self.block)):
+            if self.hasPolarization:
                 replacements['$Gamma1'] = 0.1
                 replacements['$Gmin1'] = self.e1Lorentzian[0]
                 replacements['$Gmax1'] = self.e1Lorentzian[1]
@@ -447,8 +449,7 @@ class QuantyDockWidget(QDockWidget):
         self.temperatureLineEdit.setValue(c.temperature)
         self.magneticFieldLineEdit.setValue(c.magneticField)
 
-        if (('L2,3 (2p)' in c.edge and 'd' in c.block) or
-           ('M4,5 (3d)' in c.edge and 'f' in c.block)):
+        if c.hasPolarization:
             self.magneticFieldLineEdit.setEnabled(True)
             self.kinLineEdit.setEnabled(True)
             self.einLineEdit.setEnabled(True)
@@ -557,8 +558,7 @@ class QuantyDockWidget(QDockWidget):
         self.e2GaussianLineEdit.setEnabled(flag)
 
         c = self.calculation
-        if (('L2,3 (2p)' in c.edge and 'd' in c.block) or
-           ('M4,5 (3d)' in c.edge and 'f' in c.block)):
+        if c.hasPolarization:
             self.kinLineEdit.setEnabled(flag)
             self.einLineEdit.setEnabled(flag)
             self.calculateIsoCheckBox.setEnabled(flag)
