@@ -20,7 +20,6 @@ H_f = 0
 --------------------------------------------------------------------------------
 H_atomic              = $H_atomic
 H_cf                  = $H_cf
-H_3d_Ld_hybridization = $H_3d_Ld_hybridization
 H_3d_4p_hybridization = $H_3d_4p_hybridization
 
 --------------------------------------------------------------------------------
@@ -37,33 +36,13 @@ IndexUp_1s = {1}
 IndexDn_3d = {2, 4, 6, 8, 10}
 IndexUp_3d = {3, 5, 7, 9, 11}
 
-if H_3d_Ld_hybridization == 1 and H_3d_4p_hybridization == 1 then
-    NFermions = 28
-
-    NElectrons_4p = 0
-    NElectrons_Ld = 10
-
-    IndexDn_Ld = {12, 14, 16, 18, 20}
-    IndexUp_Ld = {13, 15, 17, 19, 21}
-    IndexDn_4p = {22, 24, 26}
-    IndexUp_4p = {23, 25, 27}
-
-elseif H_3d_Ld_hybridization == 1 then
-    NFermions = 22
-
-    NElectrons_Ld = 10
-
-    IndexDn_Ld = {12, 14, 16, 18, 20}
-    IndexUp_Ld = {13, 15, 17, 19, 21}
-
-elseif H_3d_4p_hybridization == 1 then
+if H_3d_4p_hybridization == 1 then
     NFermions = 18
 
     NElectrons_4p = 0
 
     IndexDn_4p = {12, 14, 16}
     IndexUp_4p = {13, 15, 17}
-
 end
 
 --------------------------------------------------------------------------------
@@ -83,18 +62,15 @@ if H_atomic == 1 then
     F0_1s_3d = NewOperator('U', NFermions, IndexUp_1s, IndexDn_1s, IndexUp_3d, IndexDn_3d, {1}, {0})
     G2_1s_3d = NewOperator('U', NFermions, IndexUp_1s, IndexDn_1s, IndexUp_3d, IndexDn_3d, {0}, {1})
 
-    U_3d_3d_i  = $U(3d,3d)_i_value * $U(3d,3d)_i_scaling
     F2_3d_3d_i = $F2(3d,3d)_i_value * $F2(3d,3d)_i_scaling
     F4_3d_3d_i = $F4(3d,3d)_i_value * $F4(3d,3d)_i_scaling
-    F0_3d_3d_i = U_3d_3d_i + 2 / 63 * F2_3d_3d_i + 2 / 63 * F4_3d_3d_i
+    F0_3d_3d_i = 2 / 63 * F2_3d_3d_i + 2 / 63 * F4_3d_3d_i
 
-    U_3d_3d_f  = $U(3d,3d)_f_value * $U(3d,3d)_f_scaling
     F2_3d_3d_f = $F2(3d,3d)_f_value * $F2(3d,3d)_f_scaling
     F4_3d_3d_f = $F4(3d,3d)_f_value * $F4(3d,3d)_f_scaling
-    F0_3d_3d_f = U_3d_3d_f + 2 / 63 * F2_3d_3d_f + 2 / 63 * F4_3d_3d_f
-    U_1s_3d_f  = $U(1s,3d)_f_value * $U(1s,3d)_f_scaling
+    F0_3d_3d_f = 2 / 63 * F2_3d_3d_f + 2 / 63 * F4_3d_3d_f
     G2_1s_3d_f = $G2(1s,3d)_f_value * $G2(1s,3d)_f_scaling
-    F0_1s_3d_f = U_1s_3d_f + 1 / 10 * G2_1s_3d_f
+    F0_1s_3d_f = 1 / 10 * G2_1s_3d_f
 
     H_i = H_i
         + F0_3d_3d_i * F0_3d_3d
@@ -147,21 +123,27 @@ if H_3d_Ld_hybridization == 1 then
          + NewOperator('Number', NFermions, IndexDn_Ld, IndexDn_Ld, {1, 1, 1, 1, 1})
 
     Delta_3d_Ld_i = $Delta(3d,Ld)_i_value
+    U_3d_3d_i = $U(3d,3d)_i_value
     e_3d_i  = (10 * Delta_3d_Ld_i - NElectrons_3d * (19 + NElectrons_3d) * U_3d_3d_i / 2) / (10 + NElectrons_3d)
     e_Ld_i  = NElectrons_3d * ((1 + NElectrons_3d) * U_3d_3d_i / 2 - Delta_3d_Ld_i) / (10 + NElectrons_3d)
 
     Delta_3d_Ld_f = $Delta(3d,Ld)_f_value
-    e_1s_f = (10 * Delta_3d_Ld_f + (1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_f / 2 - (10 + NElectrons_3d) * U_1s_3d_f)) / (12 + NElectrons_3d)
+    U_3d_3d_f = $U(3d,3d)_f_value
+    U_1s_3d_f = $U(1s,3d)_f_value
     e_3d_f = (10 * Delta_3d_Ld_f - NElectrons_3d * (23 + NElectrons_3d) * U_3d_3d_f / 2 - 22 * U_1s_3d_f) / (12 + NElectrons_3d)
+    e_1s_f = (10 * Delta_3d_Ld_f + (1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_f / 2 - (10 + NElectrons_3d) * U_1s_3d_f)) / (12 + NElectrons_3d)
     e_Ld_f = ((1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_f / 2 + 2 * U_1s_3d_f) - (2 + NElectrons_3d) * Delta_3d_Ld_f) / (12 + NElectrons_3d)
 
     H_i = H_i
+        + U_3d_3d_i * F0_3d_3d
         + e_3d_i * N_3d
         + e_Ld_i * N_Ld
 
     H_f = H_f
-        + e_1s_f * N_1s
+        + U_3d_3d_f * F0_3d_3d
+        + U_1s_3d_f * F0_1s_3d
         + e_3d_f * N_3d
+        + e_1s_f * N_1s
         + e_Ld_f * N_Ld
 
     tenDq_Ld = NewOperator('CF', NFermions, IndexUp_Ld, IndexDn_Ld, PotentialExpandedOnClm('Td', 2, {-0.6, 0.4}))
@@ -314,30 +296,7 @@ InitialRestrictions = {NFermions, NBosons, {'11 0000000000', NElectrons_1s, NEle
 FinalRestrictions = {NFermions, NBosons, {'11 0000000000', NElectrons_1s - 1, NElectrons_1s - 1},
                                          {'00 1111111111', NElectrons_3d + 1, NElectrons_3d + 1}}
 
-if H_3d_Ld_hybridization == 1 and H_3d_4p_hybridization == 1 then
-    InitialRestrictions = {NFermions, NBosons, {'11 0000000000 0000000000 000000', NElectrons_1s, NElectrons_1s},
-                                               {'00 1111111111 0000000000 000000', NElectrons_3d, NElectrons_3d},
-                                               {'00 0000000000 1111111111 000000', NElectrons_Ld, NElectrons_Ld},
-                                               {'00 0000000000 0000000000 111111', NElectrons_4p, NElectrons_4p}}
-
-    FinalRestrictions = {NFermions, NBosons, {'11 0000000000 0000000000 000000', NElectrons_1s - 1, NElectrons_1s - 1},
-                                             {'00 1111111111 0000000000 000000', NElectrons_3d + 1, NElectrons_3d + 1},
-                                             {'00 0000000000 1111111111 000000', NElectrons_Ld, NElectrons_Ld},
-                                             {'00 0000000000 0000000000 111111', NElectrons_4p, NElectrons_4p}}
-
-    CalculationRestrictions = {NFermions, NBosons, {'00 0000000000 1111111111 000000', NElectrons_Ld - (NConfigurations - 1), NElectrons_Ld},
-                                                   {'00 0000000000 0000000000 111111', NElectrons_4p, NElectrons_4p + 1}}
-elseif H_3d_Ld_hybridization == 1 then
-    InitialRestrictions = {NFermions, NBosons, {'11 0000000000 0000000000', NElectrons_1s, NElectrons_1s},
-                                               {'00 1111111111 0000000000', NElectrons_3d, NElectrons_3d},
-                                               {'00 0000000000 1111111111', NElectrons_Ld, NElectrons_Ld}}
-
-    FinalRestrictions = {NFermions, NBosons, {'11 0000000000 0000000000', NElectrons_1s - 1, NElectrons_1s - 1},
-                                             {'00 1111111111 0000000000', NElectrons_3d + 1, NElectrons_3d + 1},
-                                             {'00 0000000000 1111111111', NElectrons_Ld, NElectrons_Ld}}
-
-    CalculationRestrictions = {NFermions, NBosons, {'00 0000000000 1111111111', NElectrons_Ld - (NConfigurations - 1), NElectrons_Ld}}
-elseif H_3d_4p_hybridization == 1 then
+if H_3d_4p_hybridization == 1 then
     InitialRestrictions = {NFermions, NBosons, {'11 0000000000 000000', NElectrons_1s, NElectrons_1s},
                                                {'00 1111111111 000000', NElectrons_3d, NElectrons_3d},
                                                {'00 0000000000 111111', NElectrons_4p, NElectrons_4p}}
@@ -356,22 +315,7 @@ header = header .. '   i       <E>     <S^2>     <L^2>     <J^2>      <Sz>      
 header = header .. '==============================================================================================\n'
 footer = '==============================================================================================\n'
 
-if H_3d_Ld_hybridization == 1 and H_3d_4p_hybridization == 1 then
-    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_1s, N_3d, N_4p, N_Ld}
-    header = 'Analysis of the initial Hamiltonian:\n'
-    header = header .. '==================================================================================================================\n'
-    header = header .. '   i       <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>    <N_1s>    <N_3d>    <N_4p>    <N_Ld>\n'
-    header = header .. '==================================================================================================================\n'
-    footer = '===================================================================================================================\n'
-elseif H_3d_Ld_hybridization == 1 then
-    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_1s, N_3d, N_Ld}
-    header = 'Analysis of the initial Hamiltonian:\n'
-    header = header .. '========================================================================================================\n'
-    header = header .. '   i       <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>    <N_1s>    <N_3d>    <N_Ld>\n'
-    header = header .. '========================================================================================================\n'
-    footer = '========================================================================================================\n'
-
-elseif H_3d_4p_hybridization == 1 then
+if H_3d_4p_hybridization == 1 then
     Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_1s, N_3d, N_4p}
     header = 'Analysis of the initial Hamiltonian:\n'
     header = header .. '========================================================================================================\n'

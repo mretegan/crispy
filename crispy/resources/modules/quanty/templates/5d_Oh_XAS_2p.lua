@@ -66,20 +66,17 @@ if H_atomic == 1 then
     G1_2p_5d = NewOperator('U', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_5d, IndexDn_5d, {0, 0}, {1, 0})
     G3_2p_5d = NewOperator('U', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_5d, IndexDn_5d, {0, 0}, {0, 1})
 
-    U_5d_5d_i  = $U(5d,5d)_i_value * $U(5d,5d)_i_scaling
     F2_5d_5d_i = $F2(5d,5d)_i_value * $F2(5d,5d)_i_scaling
     F4_5d_5d_i = $F4(5d,5d)_i_value * $F4(5d,5d)_i_scaling
-    F0_5d_5d_i = U_5d_5d_i + 2 / 63 * F2_5d_5d_i + 2 / 63 * F4_5d_5d_i
+    F0_5d_5d_i = 2 / 63 * F2_5d_5d_i + 2 / 63 * F4_5d_5d_i
 
-    U_5d_5d_f  = $U(5d,5d)_f_value * $U(5d,5d)_f_scaling
     F2_5d_5d_f = $F2(5d,5d)_f_value * $F2(5d,5d)_f_scaling
     F4_5d_5d_f = $F4(5d,5d)_f_value * $F4(5d,5d)_f_scaling
-    F0_5d_5d_f = U_5d_5d_f + 2 / 63 * F2_5d_5d_f + 2 / 63 * F4_5d_5d_f
-    U_2p_5d_f  = $U(2p,5d)_f_value * $U(2p,5d)_f_scaling
+    F0_5d_5d_f = 2 / 63 * F2_5d_5d_f + 2 / 63 * F4_5d_5d_f
     F2_2p_5d_f = $F2(2p,5d)_f_value * $F2(2p,5d)_f_scaling
     G1_2p_5d_f = $G1(2p,5d)_f_value * $G1(2p,5d)_f_scaling
     G3_2p_5d_f = $G3(2p,5d)_f_value * $G3(2p,5d)_f_scaling
-    F0_2p_5d_f = U_2p_5d_f + 1 / 15 * G1_2p_5d_f + 3 / 70 * G3_2p_5d_f
+    F0_2p_5d_f = 1 / 15 * G1_2p_5d_f + 3 / 70 * G3_2p_5d_f
 
     H_i = H_i
         + F0_5d_5d_i * F0_5d_5d
@@ -138,21 +135,27 @@ if H_5d_Ld_hybridization == 1 then
          + NewOperator('Number', NFermions, IndexDn_Ld, IndexDn_Ld, {1, 1, 1, 1, 1})
 
     Delta_5d_Ld_i = $Delta(5d,Ld)_i_value
+    U_5d_5d_i = $U(5d,5d)_i_value
     e_5d_i  = (10 * Delta_5d_Ld_i - NElectrons_5d * (19 + NElectrons_5d) * U_5d_5d_i / 2) / (10 + NElectrons_5d)
     e_Ld_i  = NElectrons_5d * ((1 + NElectrons_5d) * U_5d_5d_i / 2 - Delta_5d_Ld_i) / (10 + NElectrons_5d)
 
     Delta_5d_Ld_f = $Delta(5d,Ld)_f_value
-    e_2p_f = (10 * Delta_5d_Ld_f + (1 + NElectrons_5d) * (NElectrons_5d * U_5d_5d_f / 2 - (10 + NElectrons_5d) * U_2p_5d_f)) / (16 + NElectrons_5d)
+    U_5d_5d_f = $U(5d,5d)_f_value
+    U_2p_5d_f = $U(2p,5d)_f_value
     e_5d_f = (10 * Delta_5d_Ld_f - NElectrons_5d * (31 + NElectrons_5d) * U_5d_5d_f / 2 - 90 * U_2p_5d_f) / (16 + NElectrons_5d)
+    e_2p_f = (10 * Delta_5d_Ld_f + (1 + NElectrons_5d) * (NElectrons_5d * U_5d_5d_f / 2 - (10 + NElectrons_5d) * U_2p_5d_f)) / (16 + NElectrons_5d)
     e_Ld_f = ((1 + NElectrons_5d) * (NElectrons_5d * U_5d_5d_f / 2 + 6 * U_2p_5d_f) - (6 + NElectrons_5d) * Delta_5d_Ld_f) / (16 + NElectrons_5d)
 
     H_i = H_i
+        + U_5d_5d_i * F0_5d_5d
         + e_5d_i * N_5d
         + e_Ld_i * N_Ld
 
     H_f = H_f
-        + e_2p_f * N_2p
+        + U_5d_5d_f * F0_5d_5d
+        + U_2p_5d_f * F0_2p_5d
         + e_5d_f * N_5d
+        + e_2p_f * N_2p
         + e_Ld_f * N_Ld
 
     tenDq_Ld = NewOperator('CF', NFermions, IndexUp_Ld, IndexDn_Ld, PotentialExpandedOnClm('Oh', 2, {0.6, -0.4}))

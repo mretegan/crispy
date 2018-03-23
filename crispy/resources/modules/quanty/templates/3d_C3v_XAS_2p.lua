@@ -56,20 +56,17 @@ if H_atomic == 1 then
     G1_2p_3d = NewOperator('U', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_3d, IndexDn_3d, {0, 0}, {1, 0})
     G3_2p_3d = NewOperator('U', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_3d, IndexDn_3d, {0, 0}, {0, 1})
 
-    U_3d_3d_i  = $U(3d,3d)_i_value * $U(3d,3d)_i_scaling
     F2_3d_3d_i = $F2(3d,3d)_i_value * $F2(3d,3d)_i_scaling
     F4_3d_3d_i = $F4(3d,3d)_i_value * $F4(3d,3d)_i_scaling
-    F0_3d_3d_i = U_3d_3d_i + 2 / 63 * F2_3d_3d_i + 2 / 63 * F4_3d_3d_i
+    F0_3d_3d_i = 2 / 63 * F2_3d_3d_i + 2 / 63 * F4_3d_3d_i
 
-    U_3d_3d_f  = $U(3d,3d)_f_value * $U(3d,3d)_f_scaling
     F2_3d_3d_f = $F2(3d,3d)_f_value * $F2(3d,3d)_f_scaling
     F4_3d_3d_f = $F4(3d,3d)_f_value * $F4(3d,3d)_f_scaling
-    F0_3d_3d_f = U_3d_3d_f + 2 / 63 * F2_3d_3d_f + 2 / 63 * F4_3d_3d_f
-    U_2p_3d_f  = $U(2p,3d)_f_value * $U(2p,3d)_f_scaling
+    F0_3d_3d_f = 2 / 63 * F2_3d_3d_f + 2 / 63 * F4_3d_3d_f
     F2_2p_3d_f = $F2(2p,3d)_f_value * $F2(2p,3d)_f_scaling
     G1_2p_3d_f = $G1(2p,3d)_f_value * $G1(2p,3d)_f_scaling
     G3_2p_3d_f = $G3(2p,3d)_f_value * $G3(2p,3d)_f_scaling
-    F0_2p_3d_f = U_2p_3d_f + 1 / 15 * G1_2p_3d_f + 3 / 70 * G3_2p_3d_f
+    F0_2p_3d_f = 1 / 15 * G1_2p_3d_f + 3 / 70 * G3_2p_3d_f
 
     H_i = H_i
         + F0_3d_3d_i * F0_3d_3d

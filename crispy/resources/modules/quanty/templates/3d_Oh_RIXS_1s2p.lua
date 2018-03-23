@@ -74,28 +74,23 @@ if H_atomic == 1 then
     F0_1s_3d = NewOperator('U', NFermions, IndexUp_1s, IndexDn_1s, IndexUp_3d, IndexDn_3d, {1}, {0})
     G2_1s_3d = NewOperator('U', NFermions, IndexUp_1s, IndexDn_1s, IndexUp_3d, IndexDn_3d, {0}, {1})
 
-    U_3d_3d_i  = $U(3d,3d)_i_value * $U(3d,3d)_i_scaling
     F2_3d_3d_i = $F2(3d,3d)_i_value * $F2(3d,3d)_i_scaling
     F4_3d_3d_i = $F4(3d,3d)_i_value * $F4(3d,3d)_i_scaling
-    F0_3d_3d_i = U_3d_3d_i + 2 / 63 * F2_3d_3d_i + 2 / 63 * F4_3d_3d_i
+    F0_3d_3d_i = 2 / 63 * F2_3d_3d_i + 2 / 63 * F4_3d_3d_i
 
-    U_3d_3d_m  = $U(3d,3d)_m_value * $U(3d,3d)_m_scaling
     F2_3d_3d_m = $F2(3d,3d)_m_value * $F2(3d,3d)_m_scaling
     F4_3d_3d_m = $F4(3d,3d)_m_value * $F4(3d,3d)_m_scaling
-    F0_3d_3d_m = U_3d_3d_m + 2 / 63 * F2_3d_3d_m + 2 / 63 * F4_3d_3d_m
-    U_1s_3d_m  = $U(1s,3d)_m_value * $U(1s,3d)_m_scaling
+    F0_3d_3d_m = 2 / 63 * F2_3d_3d_m + 2 / 63 * F4_3d_3d_m
     G2_1s_3d_m = $G2(1s,3d)_m_value * $G2(1s,3d)_m_scaling
-    F0_1s_3d_m = U_1s_3d_m + 1 / 10 * G2_1s_3d_m
+    F0_1s_3d_m = 1 / 10 * G2_1s_3d_m
 
-    U_3d_3d_f  = $U(3d,3d)_f_value * $U(3d,3d)_f_scaling
     F2_3d_3d_f = $F2(3d,3d)_f_value * $F2(3d,3d)_f_scaling
     F4_3d_3d_f = $F4(3d,3d)_f_value * $F4(3d,3d)_f_scaling
-    F0_3d_3d_f = U_3d_3d_f + 2 / 63 * F2_3d_3d_f + 2 / 63 * F4_3d_3d_f
-    U_2p_3d_f  = $U(2p,3d)_f_value * $U(2p,3d)_f_scaling
+    F0_3d_3d_f = 2 / 63 * F2_3d_3d_f + 2 / 63 * F4_3d_3d_f
     F2_2p_3d_f = $F2(2p,3d)_f_value * $F2(2p,3d)_f_scaling
     G1_2p_3d_f = $G1(2p,3d)_f_value * $G1(2p,3d)_f_scaling
     G3_2p_3d_f = $G3(2p,3d)_f_value * $G3(2p,3d)_f_scaling
-    F0_2p_3d_f = U_2p_3d_f + 1 / 15 * G1_2p_3d_f + 3 / 70 * G3_2p_3d_f
+    F0_2p_3d_f = 1 / 15 * G1_2p_3d_f + 3 / 70 * G3_2p_3d_f
 
     H_i = H_i
         + F0_3d_3d_i * F0_3d_3d
@@ -171,31 +166,41 @@ if H_3d_Ld_hybridization == 1 then
          + NewOperator('Number', NFermions, IndexDn_Ld, IndexDn_Ld, {1, 1, 1, 1, 1})
 
     Delta_3d_Ld_i = $Delta(3d,Ld)_i_value
+    U_3d_3d_i = $U(3d,3d)_i_value
     e_3d_i  = (10 * Delta_3d_Ld_i - NElectrons_3d * (19 + NElectrons_3d) * U_3d_3d_i / 2) / (10 + NElectrons_3d)
     e_Ld_i  = NElectrons_3d * ((1 + NElectrons_3d) * U_3d_3d_i / 2 - Delta_3d_Ld_i) / (10 + NElectrons_3d)
 
     Delta_3d_Ld_m = $Delta(3d,Ld)_m_value
-    e_1s_m = (10 * Delta_3d_Ld_m + (1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_m / 2 - (10 + NElectrons_3d) * U_1s_3d_m)) / (12 + NElectrons_3d)
+    U_3d_3d_m = $U(3d,3d)_m_value
+    U_1s_3d_m = $U(1s,3d)_m_value
     e_3d_m = (10 * Delta_3d_Ld_m - NElectrons_3d * (23 + NElectrons_3d) * U_3d_3d_m / 2 - 22 * U_1s_3d_m) / (12 + NElectrons_3d)
+    e_1s_m = (10 * Delta_3d_Ld_m + (1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_m / 2 - (10 + NElectrons_3d) * U_1s_3d_m)) / (12 + NElectrons_3d)
     e_Ld_m = ((1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_m / 2 + 2 * U_1s_3d_m) - (2 + NElectrons_3d) * Delta_3d_Ld_m) / (12 + NElectrons_3d)
 
     Delta_3d_Ld_f = $Delta(3d,Ld)_f_value
-    e_2p_f = (10 * Delta_3d_Ld_f + (1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_f / 2 - (10 + NElectrons_3d) * U_2p_3d_f)) / (16 + NElectrons_3d)
+    U_3d_3d_f = $U(3d,3d)_f_value
+    U_2p_3d_f = $U(2p,3d)_f_value
     e_3d_f = (10 * Delta_3d_Ld_f - NElectrons_3d * (31 + NElectrons_3d) * U_3d_3d_f / 2 - 90 * U_2p_3d_f) / (16 + NElectrons_3d)
+    e_2p_f = (10 * Delta_3d_Ld_f + (1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_f / 2 - (10 + NElectrons_3d) * U_2p_3d_f)) / (16 + NElectrons_3d)
     e_Ld_f = ((1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_f / 2 + 6 * U_2p_3d_f) - (6 + NElectrons_3d) * Delta_3d_Ld_f) / (16 + NElectrons_3d)
 
     H_i = H_i
+        + U_3d_3d_i * F0_3d_3d
         + e_3d_i * N_3d
         + e_Ld_i * N_Ld
 
     H_m = H_m
-        + e_1s_m * N_1s
+        + U_3d_3d_m * F0_3d_3d
+        + U_1s_3d_m * F0_1s_3d
         + e_3d_m * N_3d
+        + e_1s_m * N_1s
         + e_Ld_m * N_Ld
 
     H_f = H_f
-        + e_2p_f * N_2p
+        + U_3d_3d_f * F0_3d_3d
+        + U_2p_3d_f * F0_2p_3d
         + e_3d_f * N_3d
+        + e_2p_f * N_2p
         + e_Ld_f * N_Ld
 
     tenDq_Ld = NewOperator('CF', NFermions, IndexUp_Ld, IndexDn_Ld, PotentialExpandedOnClm('Oh', 2, {0.6, -0.4}))

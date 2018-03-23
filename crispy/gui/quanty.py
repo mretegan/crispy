@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '22/03/2018'
+__date__ = '23/03/2018'
 
 
 import collections
@@ -179,9 +179,9 @@ class QuantyCalculation(object):
                 # Include the magnetic and exchange terms only for
                 # selected type of calculations.
                 if 'Magnetic Field' in term or 'Exchange Field' in term:
-                    if (('M4,5 (3d)' in self.edge and 'f' not in self.block) or
-                       ('L2,3 (2p)' in self.edge and 'd' not in self.block)):
-                        continue
+                    if not (('L2,3 (2p)' in self.edge and 'd' in self.block) or
+                       ('M4,5 (3d)' in self.edge and 'f' in self.block)):
+                            continue
 
                 # Include the p-d hybridization term only for K-edges.
                 if '3d-4p Hybridization' in term:
@@ -477,15 +477,13 @@ class QuantyDockWidget(QDockWidget):
         self.nPsisLineEdit.setValue(c.nPsis)
         self.nPsisAutoCheckBox.setChecked(c.nPsisAuto)
         self.nConfigurationsLineEdit.setValue(c.nConfigurations)
-        try:
-            termState = c.hamiltonianState['3d-Ligands Hybridization']
-        except KeyError:
-            pass
-        else:
+
+        self.nConfigurationsLineEdit.setEnabled(False)
+        termName = '{}-Ligands Hybridization'.format(c.block)
+        if termName in c.hamiltonianData:
+            termState = c.hamiltonianState[termName]
             if termState != 0:
                 self.nConfigurationsLineEdit.setEnabled(True)
-            else:
-                self.nConfigurationsLineEdit.setEnabled(False)
 
         self.energiesTabWidget.setTabText(0, str(c.e1Label))
         self.e1MinLineEdit.setValue(c.e1Min)
@@ -752,7 +750,7 @@ class QuantyDockWidget(QDockWidget):
 
         if args:
             index, state = args
-            if '3d-Ligands Hybridization' in index.data():
+            if '{}-Ligands Hybridization'.format(c.block) in index.data():
                 if state == 0:
                     nConfigurations = 1
                     self.nConfigurationsLineEdit.setEnabled(False)

@@ -66,20 +66,17 @@ if H_atomic == 1 then
     G1_2p_4d = NewOperator('U', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_4d, IndexDn_4d, {0, 0}, {1, 0})
     G3_2p_4d = NewOperator('U', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_4d, IndexDn_4d, {0, 0}, {0, 1})
 
-    U_4d_4d_i  = $U(4d,4d)_i_value * $U(4d,4d)_i_scaling
     F2_4d_4d_i = $F2(4d,4d)_i_value * $F2(4d,4d)_i_scaling
     F4_4d_4d_i = $F4(4d,4d)_i_value * $F4(4d,4d)_i_scaling
-    F0_4d_4d_i = U_4d_4d_i + 2 / 63 * F2_4d_4d_i + 2 / 63 * F4_4d_4d_i
+    F0_4d_4d_i = 2 / 63 * F2_4d_4d_i + 2 / 63 * F4_4d_4d_i
 
-    U_4d_4d_f  = $U(4d,4d)_f_value * $U(4d,4d)_f_scaling
     F2_4d_4d_f = $F2(4d,4d)_f_value * $F2(4d,4d)_f_scaling
     F4_4d_4d_f = $F4(4d,4d)_f_value * $F4(4d,4d)_f_scaling
-    F0_4d_4d_f = U_4d_4d_f + 2 / 63 * F2_4d_4d_f + 2 / 63 * F4_4d_4d_f
-    U_2p_4d_f  = $U(2p,4d)_f_value * $U(2p,4d)_f_scaling
+    F0_4d_4d_f = 2 / 63 * F2_4d_4d_f + 2 / 63 * F4_4d_4d_f
     F2_2p_4d_f = $F2(2p,4d)_f_value * $F2(2p,4d)_f_scaling
     G1_2p_4d_f = $G1(2p,4d)_f_value * $G1(2p,4d)_f_scaling
     G3_2p_4d_f = $G3(2p,4d)_f_value * $G3(2p,4d)_f_scaling
-    F0_2p_4d_f = U_2p_4d_f + 1 / 15 * G1_2p_4d_f + 3 / 70 * G3_2p_4d_f
+    F0_2p_4d_f = 1 / 15 * G1_2p_4d_f + 3 / 70 * G3_2p_4d_f
 
     H_i = H_i
         + F0_4d_4d_i * F0_4d_4d
@@ -138,21 +135,27 @@ if H_4d_Ld_hybridization == 1 then
          + NewOperator('Number', NFermions, IndexDn_Ld, IndexDn_Ld, {1, 1, 1, 1, 1})
 
     Delta_4d_Ld_i = $Delta(4d,Ld)_i_value
+    U_4d_4d_i = $U(4d,4d)_i_value
     e_4d_i  = (10 * Delta_4d_Ld_i - NElectrons_4d * (19 + NElectrons_4d) * U_4d_4d_i / 2) / (10 + NElectrons_4d)
     e_Ld_i  = NElectrons_4d * ((1 + NElectrons_4d) * U_4d_4d_i / 2 - Delta_4d_Ld_i) / (10 + NElectrons_4d)
 
     Delta_4d_Ld_f = $Delta(4d,Ld)_f_value
-    e_2p_f = (10 * Delta_4d_Ld_f + (1 + NElectrons_4d) * (NElectrons_4d * U_4d_4d_f / 2 - (10 + NElectrons_4d) * U_2p_4d_f)) / (16 + NElectrons_4d)
+    U_4d_4d_f = $U(4d,4d)_f_value
+    U_2p_4d_f = $U(2p,4d)_f_value
     e_4d_f = (10 * Delta_4d_Ld_f - NElectrons_4d * (31 + NElectrons_4d) * U_4d_4d_f / 2 - 90 * U_2p_4d_f) / (16 + NElectrons_4d)
+    e_2p_f = (10 * Delta_4d_Ld_f + (1 + NElectrons_4d) * (NElectrons_4d * U_4d_4d_f / 2 - (10 + NElectrons_4d) * U_2p_4d_f)) / (16 + NElectrons_4d)
     e_Ld_f = ((1 + NElectrons_4d) * (NElectrons_4d * U_4d_4d_f / 2 + 6 * U_2p_4d_f) - (6 + NElectrons_4d) * Delta_4d_Ld_f) / (16 + NElectrons_4d)
 
     H_i = H_i
+        + U_4d_4d_i * F0_4d_4d
         + e_4d_i * N_4d
         + e_Ld_i * N_Ld
 
     H_f = H_f
-        + e_2p_f * N_2p
+        + U_4d_4d_f * F0_4d_4d
+        + U_2p_4d_f * F0_2p_4d
         + e_4d_f * N_4d
+        + e_2p_f * N_2p
         + e_Ld_f * N_Ld
 
     tenDq_Ld = NewOperator('CF', NFermions, IndexUp_Ld, IndexDn_Ld, PotentialExpandedOnClm('Oh', 2, {0.6, -0.4}))

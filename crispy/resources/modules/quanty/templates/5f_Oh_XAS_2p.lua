@@ -55,22 +55,19 @@ if H_atomic == 1 then
     G2_2p_5f = NewOperator('U', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_5f, IndexDn_5f, {0, 0}, {1, 0})
     G4_2p_5f = NewOperator('U', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_5f, IndexDn_5f, {0, 0}, {0, 1})
 
-    U_5f_5f_i  = $U(5f,5f)_i_value * $U(5f,5f)_i_scaling
     F2_5f_5f_i = $F2(5f,5f)_i_value * $F2(5f,5f)_i_scaling
     F4_5f_5f_i = $F4(5f,5f)_i_value * $F4(5f,5f)_i_scaling
     F6_5f_5f_i = $F6(5f,5f)_i_value * $F6(5f,5f)_i_scaling
-    F0_5f_5f_i = U_5f_5f_i + 4 / 195 * F2_5f_5f_i + 2 / 143 * F4_5f_5f_i + 100 / 5577 * F6_5f_5f_i
+    F0_5f_5f_i = 4 / 195 * F2_5f_5f_i + 2 / 143 * F4_5f_5f_i + 100 / 5577 * F6_5f_5f_i
 
-    U_5f_5f_f  = $U(5f,5f)_f_value * $U(5f,5f)_f_scaling
     F2_5f_5f_f = $F2(5f,5f)_f_value * $F2(5f,5f)_f_scaling
     F4_5f_5f_f = $F4(5f,5f)_f_value * $F4(5f,5f)_f_scaling
     F6_5f_5f_f = $F6(5f,5f)_f_value * $F6(5f,5f)_f_scaling
-    F0_5f_5f_f = U_5f_5f_f + 4 / 195 * F2_5f_5f_f + 2 / 143 * F4_5f_5f_f + 100 / 5577 * F6_5f_5f_f
-    U_2p_5f_f  = $U(2p,5f)_f_value * $U(2p,5f)_f_scaling
+    F0_5f_5f_f = 4 / 195 * F2_5f_5f_f + 2 / 143 * F4_5f_5f_f + 100 / 5577 * F6_5f_5f_f
     F2_2p_5f_f = $F2(2p,5f)_f_value * $F2(2p,5f)_f_scaling
     G2_2p_5f_f = $G2(2p,5f)_f_value * $G2(2p,5f)_f_scaling
     G4_2p_5f_f = $G4(2p,5f)_f_value * $G4(2p,5f)_f_scaling
-    F0_2p_5f_f = U_2p_5f_f + 3 / 70 * G2_2p_5f_f + 2 / 63 * G4_2p_5f_f
+    F0_2p_5f_f = 3 / 70 * G2_2p_5f_f + 2 / 63 * G4_2p_5f_f
 
     H_i = H_i
         + F0_5f_5f_i * F0_5f_5f

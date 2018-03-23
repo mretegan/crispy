@@ -18,10 +18,11 @@ H_f = 0
 --------------------------------------------------------------------------------
 -- Toggle the Hamiltonian terms.
 --------------------------------------------------------------------------------
-H_atomic         = $H_atomic
-H_cf             = $H_cf
-H_magnetic_field = $H_magnetic_field
-H_exchange_field = $H_exchange_field
+H_atomic              = $H_atomic
+H_cf                  = $H_cf
+H_5d_Ld_hybridization = $H_5d_Ld_hybridization
+H_magnetic_field      = $H_magnetic_field
+H_exchange_field      = $H_exchange_field
 
 --------------------------------------------------------------------------------
 -- Define the number of electrons, shells, etc.
@@ -36,6 +37,15 @@ IndexDn_2p = {0, 2, 4}
 IndexUp_2p = {1, 3, 5}
 IndexDn_5d = {6, 8, 10, 12, 14}
 IndexUp_5d = {7, 9, 11, 13, 15}
+
+if H_5d_Ld_hybridization == 1 then
+    NFermions = 26
+
+    NElectrons_Ld = 10
+
+    IndexDn_Ld = {16, 18, 20, 22, 24}
+    IndexUp_Ld = {17, 19, 21, 23, 25}
+end
 
 --------------------------------------------------------------------------------
 -- Define the atomic term.
@@ -56,20 +66,17 @@ if H_atomic == 1 then
     G1_2p_5d = NewOperator('U', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_5d, IndexDn_5d, {0, 0}, {1, 0})
     G3_2p_5d = NewOperator('U', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_5d, IndexDn_5d, {0, 0}, {0, 1})
 
-    U_5d_5d_i  = $U(5d,5d)_i_value * $U(5d,5d)_i_scaling
     F2_5d_5d_i = $F2(5d,5d)_i_value * $F2(5d,5d)_i_scaling
     F4_5d_5d_i = $F4(5d,5d)_i_value * $F4(5d,5d)_i_scaling
-    F0_5d_5d_i = U_5d_5d_i + 2 / 63 * F2_5d_5d_i + 2 / 63 * F4_5d_5d_i
+    F0_5d_5d_i = 2 / 63 * F2_5d_5d_i + 2 / 63 * F4_5d_5d_i
 
-    U_5d_5d_f  = $U(5d,5d)_f_value * $U(5d,5d)_f_scaling
     F2_5d_5d_f = $F2(5d,5d)_f_value * $F2(5d,5d)_f_scaling
     F4_5d_5d_f = $F4(5d,5d)_f_value * $F4(5d,5d)_f_scaling
-    F0_5d_5d_f = U_5d_5d_f + 2 / 63 * F2_5d_5d_f + 2 / 63 * F4_5d_5d_f
-    U_2p_5d_f  = $U(2p,5d)_f_value * $U(2p,5d)_f_scaling
+    F0_5d_5d_f = 2 / 63 * F2_5d_5d_f + 2 / 63 * F4_5d_5d_f
     F2_2p_5d_f = $F2(2p,5d)_f_value * $F2(2p,5d)_f_scaling
     G1_2p_5d_f = $G1(2p,5d)_f_value * $G1(2p,5d)_f_scaling
     G3_2p_5d_f = $G3(2p,5d)_f_value * $G3(2p,5d)_f_scaling
-    F0_2p_5d_f = U_2p_5d_f + 1 / 15 * G1_2p_5d_f + 3 / 70 * G3_2p_5d_f
+    F0_2p_5d_f = 1 / 15 * G1_2p_5d_f + 3 / 70 * G3_2p_5d_f
 
     H_i = H_i
         + F0_5d_5d_i * F0_5d_5d
@@ -138,21 +145,27 @@ if H_5d_Ld_hybridization == 1 then
          + NewOperator('Number', NFermions, IndexDn_Ld, IndexDn_Ld, {1, 1, 1, 1, 1})
 
     Delta_5d_Ld_i = $Delta(5d,Ld)_i_value
+    U_5d_5d_i = $U(5d,5d)_i_value
     e_5d_i  = (10 * Delta_5d_Ld_i - NElectrons_5d * (19 + NElectrons_5d) * U_5d_5d_i / 2) / (10 + NElectrons_5d)
     e_Ld_i  = NElectrons_5d * ((1 + NElectrons_5d) * U_5d_5d_i / 2 - Delta_5d_Ld_i) / (10 + NElectrons_5d)
 
     Delta_5d_Ld_f = $Delta(5d,Ld)_f_value
-    e_2p_f = (10 * Delta_5d_Ld_f + (1 + NElectrons_5d) * (NElectrons_5d * U_5d_5d_f / 2 - (10 + NElectrons_5d) * U_2p_5d_f)) / (16 + NElectrons_5d)
+    U_5d_5d_f = $U(5d,5d)_f_value
+    U_2p_5d_f = $U(2p,5d)_f_value
     e_5d_f = (10 * Delta_5d_Ld_f - NElectrons_5d * (31 + NElectrons_5d) * U_5d_5d_f / 2 - 90 * U_2p_5d_f) / (16 + NElectrons_5d)
+    e_2p_f = (10 * Delta_5d_Ld_f + (1 + NElectrons_5d) * (NElectrons_5d * U_5d_5d_f / 2 - (10 + NElectrons_5d) * U_2p_5d_f)) / (16 + NElectrons_5d)
     e_Ld_f = ((1 + NElectrons_5d) * (NElectrons_5d * U_5d_5d_f / 2 + 6 * U_2p_5d_f) - (6 + NElectrons_5d) * Delta_5d_Ld_f) / (16 + NElectrons_5d)
 
     H_i = H_i
+        + U_5d_5d_i * F0_5d_5d
         + e_5d_i * N_5d
         + e_Ld_i * N_Ld
 
     H_f = H_f
-        + e_2p_f * N_2p
+        + U_5d_5d_f * F0_5d_5d
+        + U_2p_5d_f * F0_2p_5d
         + e_5d_f * N_5d
+        + e_2p_f * N_2p
         + e_Ld_f * N_Ld
 
     Dq_Ld = NewOperator('CF', NFermions, IndexUp_Ld, IndexDn_Ld, PotentialExpandedOnClm('D4h', 2, { 6,  6, -4, -4}))
@@ -174,17 +187,17 @@ if H_5d_Ld_hybridization == 1 then
     Dq_Ld_i = $Dq(Ld)_i_value
     Ds_Ld_i = $Ds(Ld)_i_value
     Dt_Ld_i = $Dt(Ld)_i_value
-    Va1g_5d_Ld_i  = $Va1g(5d,Ld)_i_value
-    Vb1g_5d_Ld_i  = $Vb1g(5d,Ld)_i_value
-    Vb2g_5d_Ld_i  = $Vb2g(5d,Ld)_i_value
+    Va1g_5d_Ld_i = $Va1g(5d,Ld)_i_value
+    Vb1g_5d_Ld_i = $Vb1g(5d,Ld)_i_value
+    Vb2g_5d_Ld_i = $Vb2g(5d,Ld)_i_value
     Veg_5d_Ld_i  = $Veg(5d,Ld)_i_value
 
     Dq_Ld_f = $Dq(Ld)_f_value
     Ds_Ld_f = $Ds(Ld)_f_value
     Dt_Ld_f = $Dt(Ld)_f_value
-    Va1g_5d_Ld_f  = $Va1g(5d,Ld)_f_value
-    Vb1g_5d_Ld_f  = $Vb1g(5d,Ld)_f_value
-    Vb2g_5d_Ld_f  = $Vb2g(5d,Ld)_f_value
+    Va1g_5d_Ld_f = $Va1g(5d,Ld)_f_value
+    Vb1g_5d_Ld_f = $Vb1g(5d,Ld)_f_value
+    Vb2g_5d_Ld_f = $Vb2g(5d,Ld)_f_value
     Veg_5d_Ld_f  = $Veg(5d,Ld)_f_value
 
     H_i = H_i
@@ -297,12 +310,33 @@ InitialRestrictions = {NFermions, NBosons, {'111111 0000000000', NElectrons_2p, 
 FinalRestrictions = {NFermions, NBosons, {'111111 0000000000', NElectrons_2p - 1, NElectrons_2p - 1},
                                          {'000000 1111111111', NElectrons_5d + 1, NElectrons_5d + 1}}
 
+if H_5d_Ld_hybridization == 1 then
+    InitialRestrictions = {NFermions, NBosons, {'111111 0000000000 0000000000', NElectrons_2p, NElectrons_2p},
+                                               {'000000 1111111111 0000000000', NElectrons_5d, NElectrons_5d},
+                                               {'000000 0000000000 1111111111', NElectrons_Ld, NElectrons_Ld}}
+
+    FinalRestrictions = {NFermions, NBosons, {'111111 0000000000 0000000000', NElectrons_2p - 1, NElectrons_2p - 1},
+                                             {'000000 1111111111 0000000000', NElectrons_5d + 1, NElectrons_5d + 1},
+                                             {'000000 0000000000 1111111111', NElectrons_Ld, NElectrons_Ld}}
+
+    CalculationRestrictions = {NFermions, NBosons, {'000000 0000000000 1111111111', NElectrons_Ld - (NConfigurations - 1), NElectrons_Ld}}
+end
+
 Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_2p, N_5d}
 header = 'Analysis of the initial Hamiltonian:\n'
 header = header .. '==============================================================================================\n'
 header = header .. '   i       <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>    <N_2p>    <N_5d>\n'
 header = header .. '==============================================================================================\n'
 footer = '==============================================================================================\n'
+
+if H_5d_Ld_hybridization == 1 then
+    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_2p, N_5d, N_Ld}
+    header = 'Analysis of the initial Hamiltonian:\n'
+    header = header .. '========================================================================================================\n'
+    header = header .. '   i       <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>    <N_2p>    <N_5d>    <N_Ld>\n'
+    header = header .. '========================================================================================================\n'
+    footer = '========================================================================================================\n'
+end
 
 -- Define the temperature.
 T = $T * EnergyUnits.Kelvin.value
@@ -414,7 +448,12 @@ end
 
 E_gs_i = Psis_i[1] * H_i * Psis_i[1]
 
-Psis_f = Eigensystem(H_f, FinalRestrictions, 1)
+if CalculationRestrictions == nil then
+    Psis_f = Eigensystem(H_f, FinalRestrictions, 1)
+else
+    Psis_f = Eigensystem(H_f, FinalRestrictions, 1, {{'restrictions', CalculationRestrictions}})
+end
+
 Psis_f = {Psis_f}
 E_gs_f = Psis_f[1] * H_f * Psis_f[1]
 
@@ -456,18 +495,32 @@ for i, Psi in ipairs(Psis_i) do
 
     if CalculateIso == 1 then
         for j, Operator in ipairs({Tx_2p_5d, Ty_2p_5d, Tz_2p_5d}) do
-            Giso = Giso + CreateSpectra(H_f, Operator, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+            if CalculationRestrictions == nil then
+                Giso = Giso + CreateSpectra(H_f, Operator, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+            else
+                Giso = Giso + CreateSpectra(H_f, Operator, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}}) * dZ
+            end
         end
     end
 
     if CalculateCD == 1 then
-        Gr = Gr + CreateSpectra(H_f, Tr_2p_5d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
-        Gl = Gl + CreateSpectra(H_f, Tl_2p_5d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+        if CalculationRestrictions == nil then
+            Gr = Gr + CreateSpectra(H_f, Tr_2p_5d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+            Gl = Gl + CreateSpectra(H_f, Tl_2p_5d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+        else
+            Gr = Gr + CreateSpectra(H_f, Tr_2p_5d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}}) * dZ
+            Gl = Gl + CreateSpectra(H_f, Tl_2p_5d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}}) * dZ
+        end
     end
 
     if CalculateLD == 1 then
-        Gein1 = Gein1 + CreateSpectra(H_f, Tein1_2p_5d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
-        Gein2 = Gein2 + CreateSpectra(H_f, Tein2_2p_5d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+        if CalculationRestrictions == nil then
+            Gein1 = Gein1 + CreateSpectra(H_f, Tein1_2p_5d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+            Gein2 = Gein2 + CreateSpectra(H_f, Tein2_2p_5d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+        else
+            Gein1 = Gein1 + CreateSpectra(H_f, Tein1_2p_5d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}}) * dZ
+            Gein2 = Gein2 + CreateSpectra(H_f, Tein2_2p_5d, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}}) * dZ
+        end
     end
 end
 io.write(string.format('===============\n'))

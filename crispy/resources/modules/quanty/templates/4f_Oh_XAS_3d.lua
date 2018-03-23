@@ -59,24 +59,21 @@ if H_atomic == 1 then
     G3_3d_4f = NewOperator('U', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_4f, IndexDn_4f, {0, 0, 0}, {0, 1, 0});
     G5_3d_4f = NewOperator('U', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_4f, IndexDn_4f, {0, 0, 0}, {0, 0, 1});
 
-    U_4f_4f_i  = $U(4f,4f)_i_value * $U(4f,4f)_i_scaling
     F2_4f_4f_i = $F2(4f,4f)_i_value * $F2(4f,4f)_i_scaling
     F4_4f_4f_i = $F4(4f,4f)_i_value * $F4(4f,4f)_i_scaling
     F6_4f_4f_i = $F6(4f,4f)_i_value * $F6(4f,4f)_i_scaling
-    F0_4f_4f_i = U_4f_4f_i + 4 / 195 * F2_4f_4f_i + 2 / 143 * F4_4f_4f_i + 100 / 5577 * F6_4f_4f_i
+    F0_4f_4f_i = 4 / 195 * F2_4f_4f_i + 2 / 143 * F4_4f_4f_i + 100 / 5577 * F6_4f_4f_i
 
-    U_4f_4f_f  = $U(4f,4f)_f_value * $U(4f,4f)_f_scaling
     F2_4f_4f_f = $F2(4f,4f)_f_value * $F2(4f,4f)_f_scaling
     F4_4f_4f_f = $F4(4f,4f)_f_value * $F4(4f,4f)_f_scaling
     F6_4f_4f_f = $F6(4f,4f)_f_value * $F6(4f,4f)_f_scaling
-    F0_4f_4f_f = U_4f_4f_f + 4 / 195 * F2_4f_4f_f + 2 / 143 * F4_4f_4f_f + 100 / 5577 * F6_4f_4f_f
-    U_3d_4f_f  = $U(3d,4f)_f_value * $U(3d,4f)_f_scaling
+    F0_4f_4f_f = 4 / 195 * F2_4f_4f_f + 2 / 143 * F4_4f_4f_f + 100 / 5577 * F6_4f_4f_f
     F2_3d_4f_f = $F2(3d,4f)_f_value * $F2(3d,4f)_f_scaling
     F4_3d_4f_f = $F4(3d,4f)_f_value * $F4(3d,4f)_f_scaling
     G1_3d_4f_f = $G1(3d,4f)_f_value * $G1(3d,4f)_f_scaling
     G3_3d_4f_f = $G3(3d,4f)_f_value * $G3(3d,4f)_f_scaling
     G5_3d_4f_f = $G5(3d,4f)_f_value * $G5(3d,4f)_f_scaling
-    F0_3d_4f_f = U_3d_4f_f + 3 / 70 * G1_3d_4f_f + 2 / 105 * G3_3d_4f_f + 5 / 231 * G5_3d_4f_f
+    F0_3d_4f_f = 3 / 70 * G1_3d_4f_f + 2 / 105 * G3_3d_4f_f + 5 / 231 * G5_3d_4f_f
 
     H_i = H_i
         + F0_4f_4f_i * F0_4f_4f
