@@ -24,11 +24,11 @@
 #
 # ###########################################################################*/
 
-from __future__ import absolute_import, division, unicode_literals
+from __future__ import absolute_import, division
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '23/02/2018'
+__date__ = '23/03/2018'
 
 import os
 import sys
@@ -95,8 +95,9 @@ def main():
         package_data={
             'crispy.resources': [
                 'gui/uis/*.ui',
+                'gui/uis/quanty/*.ui',
                 'gui/icons/*.svg',
-                'modules/quanty/parameters/*.json',
+                'modules/quanty/parameters/*.json.gz',
                 'modules/quanty/templates/*.lua',
                 ],
             },

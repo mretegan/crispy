@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>280</width>
+    <width>290</width>
     <height>680</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>280</width>
+    <width>290</width>
     <height>350</height>
    </size>
   </property>
@@ -76,7 +76,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>280</width>
+         <width>290</width>
          <height>534</height>
         </rect>
        </property>
@@ -871,7 +871,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>275</width>
+         <width>290</width>
          <height>534</height>
         </rect>
        </property>
@@ -900,7 +900,7 @@
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use the input boxes to change the scale factors for a specific type of atomic integrals; Slater radial integrals (direct and exchange), and spin-orbit coupling integrals.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="title">
-           <string>Scale Factors for the Atomic Integrals</string>
+           <string>Scale Factors</string>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_5">
            <property name="spacing">
@@ -1211,7 +1211,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>275</width>
+         <width>290</width>
          <height>534</height>
         </rect>
        </property>
@@ -1336,6 +1336,12 @@
         <property name="text">
          <string>Save Input As...</string>
         </property>
+        <property name="iconSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
+        </property>
        </widget>
       </item>
       <item>
@@ -1354,6 +1360,12 @@
         </property>
         <property name="text">
          <string>Run</string>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
         </property>
         <property name="checkable">
          <bool>false</bool>

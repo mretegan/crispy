@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '23/03/2018'
+__date__ = '26/03/2018'
 
 
 import collections
@@ -1231,6 +1231,7 @@ class QuantyDockWidget(QDockWidget):
     def selectedCalculationsChanged(self):
         self.plotSelectedCalculations()
         self.updateUi()
+        self.updateMainWindowTitle()
 
     def plotSelectedCalculations(self):
         # Reset the plot widget.
@@ -1276,6 +1277,7 @@ class QuantyDockWidget(QDockWidget):
 
     def updateMainWindowTitle(self):
         c = self.calculation
+        print(c.baseName)
         title = 'Crispy - {}'.format(c.baseName + '.lua')
         self.parent().setWindowTitle(title)
 

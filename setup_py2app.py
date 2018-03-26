@@ -32,7 +32,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '23/02/2018'
+__date__ = '26/03/2018'
 
 import os
 import sys

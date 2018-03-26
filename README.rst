@@ -1,4 +1,4 @@
-Crispy is a modern graphical user interface to simulate core-level spectra using the semi-empirical multiplet approaches implemented in `Quanty <http://quanty.org>`_. The interface provides a set of tools to generate input files, submit calculations, and plot the resulting spectra.
+Crispy is a modern graphical user interface to calculate core-level spectra using the semi-empirical multiplet approaches implemented in `Quanty <http://quanty.org>`_. The interface provides a set of tools to generate input files, submit calculations, and plot the resulting spectra.
 
 .. first-marker
 
