@@ -31,8 +31,6 @@ __date__ = '05/12/2017'
 
 
 def main():
-    # import qtmodern.styles
-    # import qtmodern.windows
     import sys
     from PyQt5.QtWidgets import QApplication
     from PyQt5.QtCore import Qt, QLocale
@@ -47,10 +45,6 @@ def main():
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
-
-    # qtmodern.styles.dark(app)
-    # mw = qtmodern.windows.ModernWindow(window)
-    # mw.show()
 
     app.setAttribute(Qt.AA_UseHighDpiPixmaps)
     sys.exit(app.exec_())
