@@ -15,7 +15,7 @@ c. Compare the previous observation with the changes in the experimental spectra
     :width: 60 %
     :align: center
 
-    van der Laan et al., J. Phys. Rev. B, 1986, 33, 6.
+    van der Laan et al., J. Phys. Rev. B, 1986, 33 (6), 4253--4263.
 
 
 d. For what reduction factor do you get the best agreement with the experiment spectrum of NiF. Is it reasonable to have to use this scaling factor?

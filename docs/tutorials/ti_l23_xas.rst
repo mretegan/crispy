@@ -7,7 +7,7 @@ In this tutorial, the calculation of the |L2,3| absorption spectrum of |Ti4+|, r
     :width: 60 %
     :align: center
 
-    de Groot et al., Phys. Rev. B., 1990, 41, 928.
+    de Groot et al., Phys. Rev. B., 1990, 41 (2), 928--937.
 
 1. Atomic Multiplet
 -------------------

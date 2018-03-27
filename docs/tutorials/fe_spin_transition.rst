@@ -11,7 +11,7 @@ b. Run two K pre-edge calculations for |Fe3+| in an octahedral crystal field, on
     :width: 60 %
     :align: center
 
-    Westre et al., J. Am. Chem. Soc., 1997, 119, 6297.
+    Westre et al., J. Am. Chem. Soc., 1997, 119 (27), 6297--6314.
 
 
 c. Change the 10Dq value from 2.6 to 3.6 eV in steps of 0.1 eV. At what value do you observe the spin transition?
