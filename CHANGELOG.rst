@@ -10,7 +10,7 @@ What's new:
 * preferences and about dialogs
 * simplified context menu for the results tab
 * new set of icons
-* support for M4,5 (3d) XAS calculations for 5f elements
+* support for the first half of the 5f elements
 
 v0.4.2 (2018-02-02)
 -------------------
@@ -25,7 +25,7 @@ What's new:
 * support for polarization dependence
 * spectra are shifted by the experimental edge energy
 * updated core-hole lifetimes
-* energy dependent broadening for L2,3 and M4,5 edges
+* energy dependent broadening for L2,3 (2p) and M4,5 (3d) edges
 
 v0.3.0 (2017-10-10)
 -------------------

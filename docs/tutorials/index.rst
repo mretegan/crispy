@@ -7,8 +7,8 @@ On this page you will find links to a series of tutorials to help get you starte
     :maxdepth: 1
 
     ti_l23_xas.rst
-    fe_spin_transition
     ni_ligand_field
+    fe_spin_transition
 
 Crispy's main window is divided in three parts: the plotting panel (1), the logging panel (2), and the Quanty module panel (3), as shown in the figure below.
 
@@ -40,17 +40,21 @@ At the bottom of the *General Setup* tab you can select the spectra to be calcul
     :align: center
     :width: 35 %
 
-In the *Hamiltonian Setup* tab you can change the parameters of the semi-empirical model used in the calculation. It is possible to specify the number of initial Hamitonian states to consider in the calculation. The maximum number is equal to the number of states for the initial electronic configuration, e.g. 1 state for a |d0| configuration, 10 states for a |d1| configuration etc. By default the number of states considered is automatically determined based on the value of Boltzmann factors at the selected temperature, i.e. only states which will have a significant occupation at this temperature will be considered.
+In the *Hamiltonian Setup* tab you can change the parameters of the semi-empirical model used in the calculation. The scale factors for the Coulomb, exchange, and spin-orbit coupling integrals can be changed using a set of three input boxes. Note that the scale factors are used to alter the Hartree---Fock values of the integrals.
 
-.. figure:: assets/states.png
+.. figure:: assets/scale_factors.png
     :align: center
     :width: 35 %
 
-The scaling factors for the Coulomb, exchange, and spin-orbit coupling integrals can be changed using a set of three input boxes. Note that the scaling factors are used to alter the Hartree---Fock values of the integrals.
-
-The bottom half of the tab contains two panels displaying the list of Hamiltonian terms and parameters. The terms can be enabled using the tick box placed in front of the name. Selecting a term will display the parameters associated with it in the panel below. Double-click on the *Value* or the *Scaling* column of a parameter to change it.
+Below are two panels displaying the list of Hamiltonian terms and parameters. The terms can be enabled using the tick box placed in front of the name. Selecting the name of a term will display the parameters associated with it in the panel below. Double-click on the *Value* or the *Scaling* column of a parameter to change it.
 
 .. figure:: assets/hamiltonian_parameters.png
+    :align: center
+    :width: 35 %
+
+At the bottom of the panel is possible to specify the number of initial Hamitonian states to consider in the calculation. The maximum number is equal to the number of states for the initial electronic configuration, e.g. 1 state for a |d0| configuration, 10 states for a |d1| configuration etc. By default the number of states considered is automatically determined based on the value of Boltzmann factors at the selected temperature, i.e. only states which will have a significant occupation at this temperature will be considered. Finally, for multiconfigurational calculations it is possible to specify the number of electronic configurations to consider.
+
+.. figure:: assets/states_and_configurations.png
     :align: center
     :width: 35 %
 
