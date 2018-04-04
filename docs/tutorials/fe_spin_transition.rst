@@ -16,7 +16,7 @@ b. Run two K pre-edge calculations for |Fe3+| in an octahedral crystal field, on
 
 c. Change the 10Dq value from 2.6 to 3.6 eV in steps of 0.1 eV. At what value do you observe the spin transition?
 
-d. Is is possible to induce a low spin to high spin transition by changing the scaling factors of the Slater integrals while keeping the 10Dq set to 3.3 eV?
+d. Is it possible to induce a low spin to high spin transition by changing the scaling factors of the Slater integrals while keeping the 10Dq set to 3.3 eV?
 
 .. |Fe3+| replace:: Fe\ :sup:`3+`\
 
