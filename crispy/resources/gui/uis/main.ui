@@ -186,14 +186,6 @@ QToolButton::menu-indicator{
     <string>Remove Calculations</string>
    </property>
   </action>
-  <action name="quantySetPath">
-   <property name="text">
-    <string>Set Path...</string>
-   </property>
-   <property name="toolTip">
-    <string>Set Path to Quanty</string>
-   </property>
-  </action>
   <action name="quantyOpenPreferencesDialogAction">
    <property name="text">
     <string>Preferences...</string>

@@ -27,13 +27,11 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '27/03/2018'
+__date__ = '10/04/2018'
 
 
-import collections
 import copy
 import datetime
-import errno
 import gzip
 import json
 import numpy as np
@@ -46,24 +44,17 @@ import subprocess
 import sys
 import uuid
 
-from PyQt5.QtCore import (
-    QItemSelectionModel, QProcess, Qt, QPoint, QStandardPaths)
+from PyQt5.QtCore import QItemSelectionModel, QProcess, Qt, QPoint
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (
-    QAbstractItemView, QDockWidget, QFileDialog, QAction, QMenu,
-    QWidget, QDialog)
+    QAbstractItemView, QDockWidget, QFileDialog, QAction, QMenu, QWidget)
 from PyQt5.uic import loadUi
 from silx.resources import resource_filename as resourceFileName
 
 from .models.treemodel import TreeModel
 from .models.listmodel import ListModel
 from ..utils.broaden import broaden
-
-
-class odict(collections.OrderedDict):
-    def __missing__(self, key):
-        value = self[key] = type(self)()
-        return value
+from ..utils.odict import odict
 
 
 class QuantyCalculation(object):
@@ -359,18 +350,24 @@ class QuantyCalculation(object):
 
 class QuantyDockWidget(QDockWidget):
 
-    def __init__(self):
-        super(QuantyDockWidget, self).__init__()
+    def __init__(self, parent):
+        super(QuantyDockWidget, self).__init__(parent)
 
         # Load the external .ui file for the widget.
         path = resourceFileName(
             'crispy:' + os.path.join('gui', 'uis', 'quanty', 'main.ui'))
         loadUi(path, baseinstance=self, package='crispy.gui')
 
+        # MainWindow objects.
+        self.statusBar = self.parent().statusBar()
+        self.plotWidget = self.parent().plotWidget
+        self.splitter = self.parent().splitter
+        self.loggerWidget = self.parent().loggerWidget
+        self.settings = self.parent().settings
+
         self.calculation = QuantyCalculation()
         self.setUi()
         self.updateUi()
-        self.loadSettings()
 
     def setUi(self):
         # Create the results model and assign it to the view.
@@ -384,10 +381,6 @@ class QuantyDockWidget(QDockWidget):
         self.resultsView.setContextMenuPolicy(Qt.CustomContextMenu)
         self.resultsView.customContextMenuRequested[QPoint].connect(
             self.showResultsContextMenu)
-
-        # Add the preferences dialog.
-        self.preferencesDialog = QuantyPreferencesDialog()
-        self.preferencesDialog.setModal(True)
 
         # Enable actions.
         self.elementComboBox.currentTextChanged.connect(self.resetCalculation)
@@ -433,9 +426,6 @@ class QuantyDockWidget(QDockWidget):
         self.calculationPushButton.clicked.connect(self.runCalculation)
 
         self.resultsModel.dataChanged.connect(self.plotSelectedCalculations)
-
-        self.preferencesDialog.pathBrowsePushButton.clicked.connect(
-            self.setQuantyPath)
 
     def updateUi(self):
         c = self.calculation
@@ -635,7 +625,6 @@ class QuantyDockWidget(QDockWidget):
     def updateIncidentWaveVector(self):
         c = self.calculation
 
-        statusBar = self.parent().statusBar()
         timeout = 4000
 
         try:
@@ -643,13 +632,13 @@ class QuantyDockWidget(QDockWidget):
         except ValueError:
             message = ('Wrong expression given for the wave vector. '
                        'Resetting the previous value.')
-            statusBar.showMessage(message, timeout)
+            self.statusBar.showMessage(message, timeout)
             self.kinLineEdit.setVector(c.kin)
             return
 
         if np.all(kin == 0):
             message = 'The wave vector cannot be null.'
-            statusBar.showMessage(message, timeout)
+            self.statusBar.showMessage(message, timeout)
             self.kinLineEdit.setVector(c.kin)
             return
         else:
@@ -672,7 +661,6 @@ class QuantyDockWidget(QDockWidget):
 
     def updateIncidentPolarizationVector(self):
         c = self.calculation
-        statusBar = self.parent().statusBar()
         timeout = 4000
 
         try:
@@ -680,7 +668,7 @@ class QuantyDockWidget(QDockWidget):
         except ValueError:
             message = ('Wrong expression given for the polarization vector. '
                        'Resetting the previous value.')
-            statusBar.showMessage(message, timeout)
+            self.statusBar.showMessage(message, timeout)
             self.einLineEdit.setVector(c.ein)
             return
 
@@ -688,13 +676,13 @@ class QuantyDockWidget(QDockWidget):
 
         if np.all(ein == 0):
             message = 'The polarization vector cannot be null.'
-            statusBar.showMessage(message, timeout)
+            self.statusBar.showMessage(message, timeout)
             self.einLineEdit.setVector(c.ein)
             return
         elif np.dot(kin, ein) != 0:
             message = ('The wave and polarization vectors need to be '
                        'perpendicular.')
-            statusBar.showMessage(message, timeout)
+            self.statusBar.showMessage(message, timeout)
             self.einLineEdit.setVector(c.ein)
             return
         else:
@@ -729,8 +717,8 @@ class QuantyDockWidget(QDockWidget):
         self.hamiltonianModel.updateModelData(c.hamiltonianData)
         # No idea why this is needed. Both views should update after the above
         # function call.
-        self.hamiltonianParametersView.viewport().repaint()
         self.hamiltonianTermsView.viewport().repaint()
+        self.hamiltonianParametersView.viewport().repaint()
 
     def updateNPsisLineEditState(self):
         nPsisMax = self.calculation.nPsisMax
@@ -770,12 +758,11 @@ class QuantyDockWidget(QDockWidget):
 
     def saveInput(self):
         self.updateCalculation()
-        statusBar = self.parent().statusBar()
         try:
             self.calculation.saveInput()
         except (IOError, OSError) as e:
             message = 'Cannot write the Quanty input file.'
-            statusBar.showMessage(message)
+            self.statusBar.showMessage(message)
             return
 
     def saveInputAs(self):
@@ -856,7 +843,7 @@ class QuantyDockWidget(QDockWidget):
 
         c.spectra = dict()
 
-        c.verbosity = self.preferencesDialog.verbosityLineEdit.text()
+        c.verbosity = self.settings['quanty.verbosity']
 
         self.calculation = copy.deepcopy(c)
 
@@ -873,7 +860,7 @@ class QuantyDockWidget(QDockWidget):
 
         self.updateUi()
         self.updateMainWindowTitle()
-        self.parent().plotWidget.reset()
+        self.plotWidget.reset()
         self.resultsView.selectionModel().clearSelection()
 
     def removeSelectedCalculations(self):
@@ -882,7 +869,7 @@ class QuantyDockWidget(QDockWidget):
 
     def removeCalculations(self):
         self.resultsModel.reset()
-        self.parent().plotWidget.reset()
+        self.plotWidget.reset()
 
     def loadCalculations(self):
         path, _ = QFileDialog.getOpenFileName(
@@ -897,52 +884,14 @@ class QuantyDockWidget(QDockWidget):
             self.updateMainWindowTitle()
             self.quantyToolBox.setCurrentWidget(self.resultsPage)
 
-    def setQuantyPath(self):
-        if not self.settings['quantyPath']:
-            quantyPath = os.path.expanduser('~')
-        else:
-            quantyPath = self.settings['quantyPath']
-
-        path, _ = QFileDialog.getOpenFileName(
-            self, 'Select File', quantyPath)
-
-        if path:
-            path = os.path.dirname(path)
-            self.updateSettings('quantyPath', path)
-            self.preferencesDialog.pathLineEdit.setText(path)
-
-    def getQuantyPath(self):
-        if self.settings['quantyPath']:
-            return
-
-        # Check if Quanty is in the paths defined in the $PATH.
-        path = QStandardPaths.findExecutable(self.settings['quantyExecutable'])
-        if path:
-            self.settings['quantyPath'] = os.path.dirname(path)
-            self.updateSettings('quantyPath', os.path.dirname(path))
-            return
-
-        # Check if Quanty is bundled with Crispy.
-        path = QStandardPaths.findExecutable(
-            self.settings['quantyExecutable'],
-            [resourceFileName(
-                'crispy:' + os.path.join('modules', 'quanty', 'bin'))])
-        if path:
-            self.settings['quantyPath'] = os.path.dirname(path)
-            self.updateSettings('quantyPath', os.path.dirname(path))
-            return
-
     def runCalculation(self):
-        self.getQuantyPath()
-
-        statusBar = self.parent().statusBar()
-        if not self.settings['quantyPath']:
+        if not self.settings['quanty.path']:
             message = 'The path of the Quanty executable is not set.'
-            statusBar.showMessage(message)
+            self.statusBar.showMessage(message)
             return
 
         command = os.path.join(
-            self.settings['quantyPath'], self.settings['quantyExecutable'])
+            self.settings['quanty.path'], self.settings['quanty.executable'])
 
         # Test the executable.
         with open(os.devnull, 'w') as f:
@@ -951,7 +900,7 @@ class QuantyDockWidget(QDockWidget):
             except OSError as e:
                 if e.errno == os.errno.ENOENT:
                     message = 'The Quanty executable was not found.'
-                    statusBar.showMessage(message)
+                    self.statusBar.showMessage(message)
                     return
                 else:
                     raise
@@ -962,7 +911,7 @@ class QuantyDockWidget(QDockWidget):
         # Write the input file to disk.
         self.saveInput()
 
-        self.parent().splitter.setSizes((450, 150))
+        self.splitter.setSizes((450, 150))
 
         # Disable the UI while the calculation is running.
         self.enableUi(False)
@@ -979,9 +928,9 @@ class QuantyDockWidget(QDockWidget):
         self.process.start(command, (c.baseName + '.lua', ))
         message = (
             'Running "{} {}" in {}.'.format(
-                self.settings['quantyExecutable'],
+                self.settings['quanty.executable'],
                 c.baseName + '.lua', os.getcwd()))
-        statusBar.showMessage(message)
+        self.statusBar.showMessage(message)
 
         if sys.platform in 'win32' and self.process.waitForStarted():
             self.updateCalculationPushButton()
@@ -1037,7 +986,6 @@ class QuantyDockWidget(QDockWidget):
         exitStatus = self.process.exitStatus()
         exitCode = self.process.exitCode()
         timeout = 8000
-        statusBar = self.parent().statusBar()
         if exitStatus == 0 and exitCode == 0:
             message = ('Quanty has finished successfully in ')
             delta = int((c.endingTime - c.startingTime).total_seconds())
@@ -1050,18 +998,18 @@ class QuantyDockWidget(QDockWidget):
                 message += '{} minutes and {} seconds.'.format(minutes, hours)
             else:
                 message += '{} seconds.'.format(seconds)
-            statusBar.showMessage(message, timeout)
+            self.statusBar.showMessage(message, timeout)
         elif exitStatus == 0 and exitCode == 1:
             self.handleErrorLogging()
             message = (
                 'Quanty has finished unsuccessfully. '
                 'Check the logging window for more details.')
-            statusBar.showMessage(message, timeout)
+            self.statusBar.showMessage(message, timeout)
             return
         # exitCode is platform dependent; exitStatus is always 1.
         elif exitStatus == 1:
             message = 'Quanty was stopped.'
-            statusBar.showMessage(message, timeout)
+            self.statusBar.showMessage(message, timeout)
             return
 
         c.label = '#{} | {} | {} | {} | {} | {}'.format(
@@ -1106,9 +1054,6 @@ class QuantyDockWidget(QDockWidget):
         self.quantyToolBox.setCurrentWidget(self.resultsPage)
 
     def plot(self, spectrumName):
-        plotWidget = self.parent().plotWidget
-        statusBar = self.parent().statusBar()
-
         c = self.calculation
         try:
             data = c.spectra[spectrumName]
@@ -1117,13 +1062,13 @@ class QuantyDockWidget(QDockWidget):
 
         if 'RIXS' in c.experiment:
             # Keep the aspect ratio for RIXS plots.
-            plotWidget.setKeepDataAspectRatio(flag=True)
-            plotWidget.setGraphXLabel('Incident Energy (eV)')
-            plotWidget.setGraphYLabel('Energy Transfer (eV)')
+            self.plotWidget.setKeepDataAspectRatio(flag=True)
+            self.plotWidget.setGraphXLabel('Incident Energy (eV)')
+            self.plotWidget.setGraphYLabel('Energy Transfer (eV)')
 
             colormap = {'name': 'viridis', 'normalization': 'linear',
                                 'autoscale': True, 'vmin': 0.0, 'vmax': 1.0}
-            plotWidget.setDefaultColormap(colormap)
+            self.plotWidget.setDefaultColormap(colormap)
 
             xScale = (c.e1Max - c.e1Min) / c.e1NPoints
             yScale = (c.e2Max - c.e2Min) / c.e2NPoints
@@ -1142,18 +1087,19 @@ class QuantyDockWidget(QDockWidget):
                 fwhm = [xFwhm, yFwhm]
                 z = broaden(z, fwhm, 'gaussian')
 
-            plotWidget.addImage(z, origin=origin, scale=scale, reset=False)
+            self.plotWidget.addImage(
+                z, origin=origin, scale=scale, reset=False)
 
         else:
-            plotWidget.setKeepDataAspectRatio(flag=False)
+            self.plotWidget.setKeepDataAspectRatio(flag=False)
             # Check if the data is valid.
             if np.max(np.abs(data)) < np.finfo(np.float32).eps:
                 message = 'The {} spectrum has very low intensity.'.format(
                     spectrumName)
-                statusBar.showMessage(message)
+                self.statusBar.showMessage(message)
 
-            plotWidget.setGraphXLabel('Absorption Energy (eV)')
-            plotWidget.setGraphYLabel('Absorption Cross Section (a.u.)')
+            self.plotWidget.setGraphXLabel('Absorption Energy (eV)')
+            self.plotWidget.setGraphYLabel('Absorption Cross Section (a.u.)')
 
             legend = '{} | {} | {}'.format(
                 c.label.split()[0], spectrumName, c.uuid)
@@ -1167,10 +1113,10 @@ class QuantyDockWidget(QDockWidget):
                 y = broaden(y, fwhm, 'gaussian')
 
             try:
-                plotWidget.addCurve(x, y, legend)
+                self.plotWidget.addCurve(x, y, legend)
             except AssertionError:
                 message = 'The x and y arrays have different lengths.'
-                statusBar.showMessage(message)
+                self.statusBar.showMessage(message)
 
     def selectedHamiltonianTermChanged(self):
         index = self.hamiltonianTermsView.currentIndex()
@@ -1235,7 +1181,7 @@ class QuantyDockWidget(QDockWidget):
 
     def plotSelectedCalculations(self):
         # Reset the plot widget.
-        self.parent().plotWidget.reset()
+        self.plotWidget.reset()
 
         spectraName = list()
         if self.plotIsoCheckBox.isChecked():
@@ -1260,89 +1206,34 @@ class QuantyDockWidget(QDockWidget):
             index, QItemSelectionModel.Select)
         # Update available actions in the main menu.
         if not self.resultsModel.getData():
-            self.parent().updateMenuModulesQuanty(False)
+            self.updateMenu(False)
         else:
-            self.parent().updateMenuModulesQuanty(True)
+            self.updateMenu(True)
 
     def handleOutputLogging(self):
         self.process.setReadChannel(QProcess.StandardOutput)
         data = self.process.readAllStandardOutput().data()
         data = data.decode('utf-8').rstrip()
-        self.parent().loggerWidget.appendPlainText(data)
+        self.loggerWidget.appendPlainText(data)
 
     def handleErrorLogging(self):
         self.process.setReadChannel(QProcess.StandardError)
         data = self.process.readAllStandardError().data()
-        self.parent().loggerWidget.appendPlainText(data.decode('utf-8'))
+        self.loggerWidget.appendPlainText(data.decode('utf-8'))
 
     def updateMainWindowTitle(self):
         c = self.calculation
         title = 'Crispy - {}'.format(c.baseName + '.lua')
+        self.setMainWindowTitle(title)
+
+    def updateMenu(self, flag):
+        self.parent().quantyMenuUpdate(flag)
+
+    def setMainWindowTitle(self, title):
         self.parent().setWindowTitle(title)
 
-    def getAppConfigLocation(self):
-        root = QStandardPaths.standardLocations(
-            QStandardPaths.GenericConfigLocation)[0]
-
-        if sys.platform in ('win32', 'darwin'):
-            path = os.path.join(root, 'Crispy')
-        else:
-            path = os.path.join(root, 'crispy')
-
-        return path
-
-    def saveSettings(self):
-        if not hasattr(self, 'settings'):
-            return
-
-        path = self.getAppConfigLocation()
-
-        try:
-            os.makedirs(path, mode=0o755)
-        except OSError as e:
-            if e.errno != errno.EEXIST:
-                raise
-
-        settingsPath = os.path.join(path, 'settings.json')
-
-        with open(settingsPath, 'w') as p:
-            json.dump(self.settings, p)
-
-    def loadSettings(self):
-        settingsPath = os.path.join(
-            self.getAppConfigLocation(), 'settings.json')
-
-        try:
-            with open(settingsPath, 'r') as p:
-                self.settings = json.loads(
-                    p.read(), object_pairs_hook=odict)
-        except IOError as e:
-            self.settings = odict()
-            self.settings['quantyPath'] = None
-            self.settings['currentPath'] = os.path.expanduser('~')
-            if sys.platform in 'win32':
-                self.settings['quantyExecutable'] = 'Quanty.exe'
-            else:
-                self.settings['quantyExecutable'] = 'Quanty'
-
     def updateSettings(self, setting, value):
-        self.settings[setting] = value
-        self.saveSettings()
-
-    def openPreferencesDialog(self):
-        quantyPath = self.settings['quantyPath']
-        self.preferencesDialog.pathLineEdit.setText(quantyPath)
-        self.preferencesDialog.show()
-
-
-class QuantyPreferencesDialog(QDialog):
-
-    def __init__(self, parent=None):
-        super(QuantyPreferencesDialog, self).__init__()
-
-        path = resourceFileName(
-            'crispy:' + os.path.join('gui', 'uis', 'quanty', 'preferences.ui'))
-        loadUi(path, baseinstance=self, package='crispy.gui')
+        self.parent().updateSettings(setting, value)
 
 
 if __name__ == '__main__':

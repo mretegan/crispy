@@ -27,49 +27,69 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '13/03/2018'
+__date__ = '10/04/2018'
 
 
+import errno
+import json
 import os
+import sys
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QMainWindow, QPlainTextEdit, QDialog
+from PyQt5.QtCore import Qt, QStandardPaths
+from PyQt5.QtWidgets import QMainWindow, QPlainTextEdit, QDialog, QFileDialog
 from PyQt5.QtGui import QFontDatabase, QIcon
 from PyQt5.uic import loadUi
 from silx.resources import resource_filename as resourceFileName
 
 from .quanty import QuantyDockWidget
 from ..version import version
+from ..utils.odict import odict
 
 
 class MainWindow(QMainWindow):
 
     def __init__(self):
         super(MainWindow, self).__init__()
+
+        # Load the settings from file or use defaults if this is not available.
+        self.loadSettings()
+
         uiPath = resourceFileName(
             'crispy:' + os.path.join('gui', 'uis', 'main.ui'))
         loadUi(uiPath, baseinstance=self, package='crispy.gui')
 
+        # Main window default elements.
         self.setWindowTitle('Crispy - untitled.lua')
-        self.splitter.setSizes((600, 0))
         self.statusbar.showMessage('Ready')
-        self.aboutDialog = AboutDialog()
 
+        # Splitter.
+        self.splitter.setSizes((600, 0))
+
+        # Logger widget.
         font = QFontDatabase.systemFont(QFontDatabase.FixedFont)
         font.setPointSize(font.pointSize() + 1)
         self.loggerWidget.setFont(font)
         self.loggerWidget.setLineWrapMode(QPlainTextEdit.NoWrap)
 
-        # Quanty dock widget and menu.
-        self.quantyDockWidget = QuantyDockWidget()
+        # About dialog.
+        self.aboutDialog = AboutDialog()
+        self.openAboutDialogAction.triggered.connect(self.openAboutDialog)
+
+        # Quanty module.
+        self.quantyModuleInit()
+
+    def quantyModuleInit(self):
+        # Load components related to the Quanty module.
+        self.quantyDockWidget = QuantyDockWidget(self)
         self.addDockWidget(Qt.RightDockWidgetArea, self.quantyDockWidget)
         self.quantyDockWidget.setVisible(True)
 
+        # Menu.
         icon = QIcon(resourceFileName(
             'crispy:' + os.path.join('gui', 'icons', 'cog.svg')))
         self.quantyOpenPreferencesDialogAction.setIcon(icon)
         self.quantyOpenPreferencesDialogAction.triggered.connect(
-            self.quantyDockWidget.openPreferencesDialog)
+            self.quantyOpenPreferencesDialog)
 
         icon = QIcon(resourceFileName(
             'crispy:' + os.path.join('gui', 'icons', 'save.svg')))
@@ -100,17 +120,25 @@ class MainWindow(QMainWindow):
         self.quantySaveInputAction.triggered.connect(
             self.quantyDockWidget.saveInput)
 
+        self.quantyMenuUpdate(False)
+
         self.quantyModuleShowAction.triggered.connect(self.quantyModuleShow)
         self.quantyModuleHideAction.triggered.connect(self.quantyModuleHide)
 
-        self.updateMenuModulesQuanty(False)
+        # Preferences dialog.
+        # TODO: Add buttons?
+        self.preferencesDialog = QuantyPreferencesDialog()
+        self.preferencesDialog.setModal(True)
+        self.preferencesDialog.pathLineEdit.setText(
+            self.settings['quanty.path'])
+        self.preferencesDialog.verbosityLineEdit.setText(
+            self.settings['quanty.verbosity'])
+        self.preferencesDialog.pathBrowsePushButton.clicked.connect(
+            self.quantySetPath)
 
-        # ORCA
-        # self.orcaDockWidget = QDockWidget()
-        # self.addDockWidget(Qt.RightDockWidgetArea, self.orcaDockWidget)
-        # self.orcaDockWidget.setVisible(False)
-
-        self.openAboutDialogAction.triggered.connect(self.openAboutDialog)
+    def quantyMenuUpdate(self, flag=True):
+        self.quantySaveCalculationsAsAction.setEnabled(flag)
+        self.quantyRemoveCalculationsAction.setEnabled(flag)
 
     def quantyModuleShow(self):
         self.quantyDockWidget.setVisible(True)
@@ -124,12 +152,110 @@ class MainWindow(QMainWindow):
             self.quantyModuleHideAction, self.quantyModuleShowAction)
         self.menuModulesQuanty.removeAction(self.quantyModuleHideAction)
 
-    def updateMenuModulesQuanty(self, flag=True):
-        self.quantySaveCalculationsAsAction.setEnabled(flag)
-        self.quantyRemoveCalculationsAction.setEnabled(flag)
+    def quantyOpenPreferencesDialog(self):
+        self.preferencesDialog.show()
+
+    def quantySetPath(self):
+        path, _ = QFileDialog.getOpenFileName(
+            self, 'Select File', os.path.expanduser('~'))
+
+        if path:
+            path = os.path.dirname(path)
+            self.updateSettings('quanty.path', path)
+            self.preferencesDialog.pathLineEdit.setText(path)
+
+    def quantyGetPath(self):
+        if sys.platform in 'win32':
+            executable = 'Quanty.exe'
+        else:
+            executable = 'Quanty'
+
+        envPath = QStandardPaths.findExecutable(executable)
+        localPath = QStandardPaths.findExecutable(
+            executable, [resourceFileName(
+                'crispy:' + os.path.join('modules', 'quanty', 'bin'))])
+
+        # Check if Quanty is in the paths defined in the $PATH.
+        if envPath:
+            path = os.path.dirname(envPath)
+        # Check if Quanty is bundled with Crispy.
+        elif localPath:
+            path = os.path.dirname(localPath)
+        else:
+            path = None
+
+        return path, executable
 
     def openAboutDialog(self):
         self.aboutDialog.show()
+
+    def getConfigLocation(self):
+        configLocation = QStandardPaths.GenericConfigLocation
+        root = QStandardPaths.standardLocations(configLocation)[0]
+
+        if sys.platform in ('win32', 'darwin'):
+            path = os.path.join(root, 'Crispy')
+        else:
+            path = os.path.join(root, 'crispy')
+
+        return path
+
+    def saveSettings(self):
+        if not hasattr(self, 'settings'):
+            return
+
+        path = self.getConfigLocation()
+
+        try:
+            os.makedirs(path, mode=0o755)
+        except OSError as e:
+            if e.errno != errno.EEXIST:
+                raise
+
+        settingsPath = os.path.join(path, 'settings.json')
+
+        with open(settingsPath, 'w') as p:
+            json.dump(self.settings, p)
+
+    def updateSettings(self, setting, value):
+        self.settings[setting] = value
+        self.saveSettings()
+
+    def loadSettings(self, defaults=False):
+        if defaults:
+            self.settings = odict()
+            path, executable = self.quantyGetPath()
+            self.settings['quanty.path'] = path
+            self.settings['quanty.executable'] = executable
+            self.settings['quanty.verbosity'] = '0x0000'
+            self.settings['currentPath'] = os.path.expanduser('~')
+            self.settings['version'] = version
+            self.saveSettings()
+            return
+
+        settingsPath = os.path.join(
+            self.getConfigLocation(), 'settings.json')
+
+        try:
+            with open(settingsPath, 'r') as p:
+                self.settings = json.loads(
+                    p.read(), object_pairs_hook=odict)
+        except IOError as e:
+            self.loadSettings(defaults=True)
+
+        # Overwrite settings file written by previous versions of Crispy.
+        if 'version' not in self.settings:
+            self.loadSettings(defaults=True)
+
+
+class QuantyPreferencesDialog(QDialog):
+
+    def __init__(self, parent=None):
+        super(QuantyPreferencesDialog, self).__init__()
+
+        path = resourceFileName(
+            'crispy:' + os.path.join('gui', 'uis', 'quanty', 'preferences.ui'))
+        loadUi(path, baseinstance=self, package='crispy.gui')
 
 
 class AboutDialog(QDialog):
