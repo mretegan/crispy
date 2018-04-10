@@ -358,6 +358,9 @@ class QuantyDockWidget(QDockWidget):
             'crispy:' + os.path.join('gui', 'uis', 'quanty', 'main.ui'))
         loadUi(path, baseinstance=self, package='crispy.gui')
 
+        self.timeout = 4000
+        self.counter = 1
+
         # MainWindow objects.
         self.statusBar = self.parent().statusBar()
         self.plotWidget = self.parent().plotWidget
@@ -625,20 +628,18 @@ class QuantyDockWidget(QDockWidget):
     def updateIncidentWaveVector(self):
         c = self.calculation
 
-        timeout = 4000
-
         try:
             kin = self.kinLineEdit.getVector()
         except ValueError:
             message = ('Wrong expression given for the wave vector. '
                        'Resetting the previous value.')
-            self.statusBar.showMessage(message, timeout)
+            self.statusBar.showMessage(message, self.timeout)
             self.kinLineEdit.setVector(c.kin)
             return
 
         if np.all(kin == 0):
             message = 'The wave vector cannot be null.'
-            self.statusBar.showMessage(message, timeout)
+            self.statusBar.showMessage(message, self.timeout)
             self.kinLineEdit.setVector(c.kin)
             return
         else:
@@ -661,14 +662,13 @@ class QuantyDockWidget(QDockWidget):
 
     def updateIncidentPolarizationVector(self):
         c = self.calculation
-        timeout = 4000
 
         try:
             ein = self.einLineEdit.getVector()
         except ValueError:
             message = ('Wrong expression given for the polarization vector. '
                        'Resetting the previous value.')
-            self.statusBar.showMessage(message, timeout)
+            self.statusBar.showMessage(message, self.timeout)
             self.einLineEdit.setVector(c.ein)
             return
 
@@ -676,13 +676,13 @@ class QuantyDockWidget(QDockWidget):
 
         if np.all(ein == 0):
             message = 'The polarization vector cannot be null.'
-            self.statusBar.showMessage(message, timeout)
+            self.statusBar.showMessage(message, self.timeout)
             self.einLineEdit.setVector(c.ein)
             return
         elif np.dot(kin, ein) != 0:
             message = ('The wave and polarization vectors need to be '
                        'perpendicular.')
-            self.statusBar.showMessage(message, timeout)
+            self.statusBar.showMessage(message, self.timeout)
             self.einLineEdit.setVector(c.ein)
             return
         else:
@@ -919,9 +919,6 @@ class QuantyDockWidget(QDockWidget):
         c = self.calculation
         c.startingTime = datetime.datetime.now()
 
-        if not hasattr(self, 'counter'):
-            self.counter = 1
-
         # Run Quanty using QProcess.
         self.process = QProcess()
 
@@ -985,7 +982,7 @@ class QuantyDockWidget(QDockWidget):
         # Evaluate the exit code and status of the process.
         exitStatus = self.process.exitStatus()
         exitCode = self.process.exitCode()
-        timeout = 8000
+
         if exitStatus == 0 and exitCode == 0:
             message = ('Quanty has finished successfully in ')
             delta = int((c.endingTime - c.startingTime).total_seconds())
@@ -998,18 +995,18 @@ class QuantyDockWidget(QDockWidget):
                 message += '{} minutes and {} seconds.'.format(minutes, hours)
             else:
                 message += '{} seconds.'.format(seconds)
-            self.statusBar.showMessage(message, timeout)
+            self.statusBar.showMessage(message, self.timeout)
         elif exitStatus == 0 and exitCode == 1:
             self.handleErrorLogging()
             message = (
                 'Quanty has finished unsuccessfully. '
                 'Check the logging window for more details.')
-            self.statusBar.showMessage(message, timeout)
+            self.statusBar.showMessage(message, self.timeout)
             return
         # exitCode is platform dependent; exitStatus is always 1.
         elif exitStatus == 1:
             message = 'Quanty was stopped.'
-            self.statusBar.showMessage(message, timeout)
+            self.statusBar.showMessage(message, self.timeout)
             return
 
         c.label = '#{} | {} | {} | {} | {} | {}'.format(
