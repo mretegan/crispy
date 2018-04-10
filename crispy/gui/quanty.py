@@ -568,6 +568,8 @@ class QuantyDockWidget(QDockWidget):
         self.gkLineEdit.setEnabled(flag)
         self.zetaLineEdit.setEnabled(flag)
 
+        self.syncParametersCheckBox.setEnabled(flag)
+
         self.nPsisAutoCheckBox.setEnabled(flag)
         if self.nPsisAutoCheckBox.isChecked():
             self.nPsisLineEdit.setEnabled(False)
