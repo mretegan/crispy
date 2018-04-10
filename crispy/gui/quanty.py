@@ -605,6 +605,9 @@ class QuantyDockWidget(QDockWidget):
                 if abs(value) == 0.0:
                     value = 0.0
                 configurations[configuration][parameter] = (value, str())
+
+        c.magneticField = magneticField
+
         self.hamiltonianModel.updateModelData(c.hamiltonianData)
         self.hamiltonianModel.setNodesCheckState(c.hamiltonianState)
 
@@ -812,7 +815,6 @@ class QuantyDockWidget(QDockWidget):
         c = copy.deepcopy(self.calculation)
 
         c.temperature = self.temperatureLineEdit.getValue()
-        c.magneticField = self.magneticFieldLineEdit.getValue()
 
         c.calculateIso = int(self.calculateIsoCheckBox.isChecked())
         c.calculateCD = int(self.calculateCDCheckBox.isChecked())
