@@ -1089,11 +1089,11 @@ class QuantyDockWidget(QDockWidget):
                 self.calculation.baseName)), 'Quanty Input File (*.lua)')
 
         if path:
+            self.setCurrentPath(path)
             self.saveInput()
             basename = os.path.basename(path)
             self.calculation.baseName, _ = os.path.splitext(basename)
             self.updateMainWindowTitle()
-            self.setCurrentPath(path)
 
     def saveCalculationsAs(self):
         path, _ = QFileDialog.getSaveFileName(
@@ -1102,11 +1102,11 @@ class QuantyDockWidget(QDockWidget):
                 self.calculation.baseName)), 'Pickle File (*.pkl)')
 
         if path:
+            self.setCurrentPath(path)
             calculations = copy.deepcopy(self.resultsModel.getData())
             calculations.reverse()
             with open(path, 'wb') as p:
                 pickle.dump(calculations, p, pickle.HIGHEST_PROTOCOL)
-            self.setCurrentPath(path)
 
     def saveSelectedCalculationsAs(self):
         path, _ = QFileDialog.getSaveFileName(
@@ -1115,11 +1115,11 @@ class QuantyDockWidget(QDockWidget):
                 self.calculation.baseName)), 'Pickle File (*.pkl)')
 
         if path:
+            self.setCurrentPath(path)
             calculations = self.getSelectedCalculationsData()
             calculations.reverse()
             with open(path, 'wb') as p:
                 pickle.dump(calculations, p, pickle.HIGHEST_PROTOCOL)
-            self.setCurrentPath(path)
 
     def resetCalculation(self):
         element = self.elementComboBox.currentText()
@@ -1151,12 +1151,12 @@ class QuantyDockWidget(QDockWidget):
             self.getCurrentPath(), 'Pickle File (*.pkl)')
 
         if path:
+            self.setCurrentPath(path)
             with open(path, 'rb') as p:
                 self.resultsModel.appendItems(pickle.load(p))
             self.updateResultsViewSelection()
             self.updateMainWindowTitle()
             self.quantyToolBox.setCurrentWidget(self.resultsPage)
-            self.setCurrentPath(path)
 
     def runCalculation(self):
         if not self.getQuantyPath():
