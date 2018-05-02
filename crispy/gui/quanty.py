@@ -1065,14 +1065,22 @@ class QuantyDockWidget(QDockWidget):
         self.calculation.verbosity = self.getVerbosity()
 
         path = self.getCurrentPath()
-        os.chdir(path)
+        try:
+            os.chdir(path)
+        except OSError:
+            message = ('The specified folder doesn\'t exist. Use the \'Save '
+                       'Input As...\' button to save the input file to an '
+                       'alternative location.')
+            self.getStatusBar().showMessage(message, 2 * self.timeout)
+            raise
 
         try:
             self.calculation.saveInput()
+            print('Finished writing')
         except (IOError, OSError) as e:
             message = 'Cannot write the Quanty input file.'
-            self.getStatusBar().showMessage(message)
-            return
+            self.getStatusBar().showMessage(message, self.timeout)
+            raise
 
     def saveInputAs(self):
         path, _ = QFileDialog.getSaveFileName(
@@ -1171,7 +1179,10 @@ class QuantyDockWidget(QDockWidget):
                     raise
 
         # Write the input file to disk.
-        self.saveInput()
+        try:
+            self.saveInput()
+        except (IOError, OSError) as e:
+            return
 
         # Disable the UI while the calculation is running.
         self.enableUi(False)
