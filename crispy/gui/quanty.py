@@ -1076,7 +1076,6 @@ class QuantyDockWidget(QDockWidget):
 
         try:
             self.calculation.saveInput()
-            print('Finished writing')
         except (IOError, OSError) as e:
             message = 'Cannot write the Quanty input file.'
             self.getStatusBar().showMessage(message, self.timeout)
