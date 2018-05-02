@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '13/03/2018'
+__date__ = '30/04/2018'
 
 
 from collections import OrderedDict as odict
@@ -88,7 +88,7 @@ class PlotWidget(PlotWindow):
 
         self.setActiveCurveHandling(False)
         self.setGraphGrid('both')
-        self.setDataMargins(0, 0, 0.05, 0.05)
+        # self.setDataMargins(0, 0, 0.05, 0.05)
 
     def reset(self):
         self.clear()

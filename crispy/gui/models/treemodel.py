@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '13/03/2018'
+__date__ = '30/04/2018'
 
 
 from collections import OrderedDict as odict
@@ -320,7 +320,6 @@ class TreeModel(QAbstractItemModel):
                 childIndex = self.index(child.row(), 0, parentIndex)
                 self.updateModelData(childData, childIndex)
         else:
-            # Here, the parentNode is the actual node.
             key, value, scaling = parentNode.data
             newValue, newScaling = data
             if value != newValue:

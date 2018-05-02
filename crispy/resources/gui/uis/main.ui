@@ -49,6 +49,12 @@ QToolButton::menu-indicator{
        <number>0</number>
       </property>
       <widget class="QFrame" name="frame">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="frameShape">
         <enum>QFrame::NoFrame</enum>
        </property>
@@ -122,6 +128,7 @@ QToolButton::menu-indicator{
      <addaction name="separator"/>
      <addaction name="quantySaveCalculationsAsAction"/>
      <addaction name="quantyRemoveCalculationsAction"/>
+     <addaction name="separator"/>
      <addaction name="quantyLoadCalculationsAction"/>
      <addaction name="separator"/>
      <addaction name="quantyModuleHideAction"/>

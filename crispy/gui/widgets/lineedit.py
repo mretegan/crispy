@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '08/02/2018'
+__date__ = '30/04/2018'
 
 import numpy as np
 
@@ -71,7 +71,7 @@ class VectorLineEdit(QLineEdit):
         except ValueError:
             raise
         else:
-            return(np.array(vector))
+            return np.array(vector)
 
     def setVector(self, array, separator=', ', fmt='{:.2g}'):
         formatter = {'float_kind': lambda x: fmt.format(x)}
@@ -79,15 +79,19 @@ class VectorLineEdit(QLineEdit):
         self.setText(text)
 
 
-class ListLineEdit(QLineEdit):
+class DoubleListLineEdit(QLineEdit):
     def __init__(self, *args, **kwargs):
-        super(ListLineEdit, self).__init__(*args, **kwargs)
+        super(DoubleListLineEdit, self).__init__(*args, **kwargs)
 
     def getList(self):
-        values = [value.strip() for value in self.text().split(',')]
-        return(values)
+        try:
+            values = list(map(float, self.text().split(',')))
+        except ValueError:
+            raise
+        else:
+            return values
 
     def setList(self, values):
         if not isinstance(values, list):
             values = [values]
-        self.setText(', '.join(values))
+        self.setText(', '.join(map(str, values)))
