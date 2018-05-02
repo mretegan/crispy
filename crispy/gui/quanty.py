@@ -607,6 +607,11 @@ class QuantyDockWidget(QDockWidget):
             self.getStatusBar().showMessage(message, self.timeout)
             self.temperatureLineEdit.setValue(self.calculation.temperature)
             return
+        elif temperature == 0:
+            self.nPsisAutoCheckBox.setChecked(False)
+            self.updateNPsisAuto()
+            self.nPsisLineEdit.setValue(1)
+            self.updateNPsis()
 
         self.calculation.temperature = temperature
 
