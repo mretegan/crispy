@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '02/05/2018'
+__date__ = '03/05/2018'
 
 
 import copy
@@ -1074,12 +1074,13 @@ class QuantyDockWidget(QDockWidget):
             self.getStatusBar().showMessage(message, 2 * self.timeout)
             raise
 
+        # The folder might exist, but is not writable.
         try:
             self.calculation.saveInput()
         except (IOError, OSError) as e:
             message = 'Cannot write the Quanty input file.'
             self.getStatusBar().showMessage(message, self.timeout)
-            raise
+            raise e
 
     def saveInputAs(self):
         path, _ = QFileDialog.getSaveFileName(
@@ -1088,10 +1089,10 @@ class QuantyDockWidget(QDockWidget):
                 self.calculation.baseName)), 'Quanty Input File (*.lua)')
 
         if path:
-            self.setCurrentPath(path)
-            self.saveInput()
             basename = os.path.basename(path)
             self.calculation.baseName, _ = os.path.splitext(basename)
+            self.setCurrentPath(path)
+            self.saveInput()
             self.updateMainWindowTitle()
 
     def saveCalculationsAs(self):
@@ -1158,12 +1159,15 @@ class QuantyDockWidget(QDockWidget):
             self.quantyToolBox.setCurrentWidget(self.resultsPage)
 
     def runCalculation(self):
-        if not self.getQuantyPath():
-            message = 'The path of the Quanty executable is not set.'
-            self.getStatusBar().showMessage(message)
-            return
+        path, executable = self.getQuantyPath()
 
-        command = self.getQuantyPath()
+        if path:
+            command = os.path.join(path, executable)
+        else:
+            message = ('The path to the Quanty executable is not set. '
+                       'Please use the preferences menu to set it.')
+            self.getStatusBar().showMessage(message, 2 * self.timeout)
+            return
 
         # Test the executable.
         with open(os.devnull, 'w') as f:
@@ -1171,8 +1175,9 @@ class QuantyDockWidget(QDockWidget):
                 subprocess.call(command, stdout=f, stderr=f)
             except OSError as e:
                 if e.errno == os.errno.ENOENT:
-                    message = 'The Quanty executable was not found.'
-                    self.getStatusBar().showMessage(message)
+                    message = ('The Quanty executable is not working '
+                               'properly. Is the path set correctly?')
+                    self.getStatusBar().showMessage(message, 2 * self.timeout)
                     return
                 else:
                     raise
@@ -1540,7 +1545,7 @@ class QuantyDockWidget(QDockWidget):
     def getQuantyPath(self):
         path = self.parent().settings['quanty.path']
         executable = self.parent().settings['quanty.executable']
-        return os.path.join(path, executable)
+        return path, executable
 
     def getVerbosity(self):
         return self.parent().settings['quanty.verbosity']
