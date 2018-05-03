@@ -70,8 +70,10 @@ class QuantyCalculation(object):
         'magneticField': 0.0,
         'kin': np.array([0.0, 0.0, -1.0]),
         'ein1': np.array([0.0, 1.0, 0.0]),
+        'ein2': np.array([-1.0, 0.0, 0.0]),
         'kout': np.array([0.0, 0.0, 0.0]),
         'eout1': np.array([0.0, 0.0, 0.0]),
+        'eout2': np.array([0.0, 0.0, 0.0]),
         'calculateIso': 1,
         'calculateCD': 0,
         'calculateLD': 0,
@@ -255,17 +257,14 @@ class QuantyCalculation(object):
                 pass
 
         s = '{{{0:.6g}, {1:.6g}, {2:.6g}}}'
+
         u = self.kin / np.linalg.norm(self.kin)
         replacements['$kin'] = s.format(u[0], u[1], u[2])
 
         v = self.ein1 / np.linalg.norm(self.ein1)
         replacements['$ein1'] = s.format(v[0], v[1], v[2])
 
-        # Generate a second, perpendicular, polarization vector to the plane
-        # defined by the wave vector and the first polarization vector.
-        # TODO: Move this to the Quanty widget.
-        w = np.cross(v, u)
-        w = w / np.linalg.norm(w)
+        w = self.ein2 / np.linalg.norm(self.ein2)
         replacements['$ein2'] = s.format(w[0], w[1], w[2])
 
         replacements['$calculateIso'] = self.calculateIso
@@ -399,7 +398,7 @@ class QuantyDockWidget(QDockWidget):
         self.e1GaussianLineEdit.editingFinished.connect(self.updateE1Gaussian)
         self.kinLineEdit.editingFinished.connect(self.updateIncidentWaveVector)
         self.ein1LineEdit.editingFinished.connect(
-            self.updateIncidentPolarizationVector)
+            self.updateIncidentPolarizationVectors)
 
         self.e2MinLineEdit.editingFinished.connect(self.updateE2Min)
         self.e2MaxLineEdit.editingFinished.connect(self.updateE2Max)
@@ -472,6 +471,11 @@ class QuantyDockWidget(QDockWidget):
 
         self.kinLineEdit.setVector(self.calculation.kin)
         self.ein1LineEdit.setVector(self.calculation.ein1)
+        self.ein2LineEdit.setVector(self.calculation.ein2)
+
+        self.koutLineEdit.setVector(self.calculation.kout)
+        self.eout1LineEdit.setVector(self.calculation.eout1)
+        self.eout2LineEdit.setVector(self.calculation.eout2)
 
         self.calculateIsoCheckBox.setChecked(self.calculation.calculateIso)
         self.calculateCDCheckBox.setChecked(self.calculation.calculateCD)
@@ -575,7 +579,7 @@ class QuantyDockWidget(QDockWidget):
         else:
             self.kinLineEdit.setEnabled(False)
             self.ein1LineEdit.setEnabled(False)
-            self.calculateIsoCheckBox.setEnabled(False)
+            self.calculateIsoCheckBox.setEnabled(flag)
             self.calculateCDCheckBox.setEnabled(False)
             self.calculateLDCheckBox.setEnabled(False)
 
@@ -792,11 +796,18 @@ class QuantyDockWidget(QDockWidget):
                 ein1 = np.array([kin[2], kin[2], -kin[0] - kin[1]])
             else:
                 ein1 = np.array([-kin[2] - kin[1], kin[0], kin[0]])
-            self.ein1LineEdit.setVector(ein1)
 
+        self.ein1LineEdit.setVector(ein1)
         self.calculation.ein1 = ein1
 
-    def updateIncidentPolarizationVector(self):
+        # Generate a second, perpendicular, polarization vector to the plane
+        # defined by the wave vector and the first polarization vector.
+        ein2 = np.cross(ein1, kin)
+
+        self.ein2LineEdit.setVector(ein2)
+        self.calculation.ein2 = ein2
+
+    def updateIncidentPolarizationVectors(self):
         try:
             ein1 = self.ein1LineEdit.getVector()
         except ValueError:
@@ -820,6 +831,13 @@ class QuantyDockWidget(QDockWidget):
             return
 
         self.calculation.ein1 = ein1
+
+        # Generate a second, perpendicular, polarization vector to the plane
+        # defined by the wave vector and the first polarization vector.
+        ein2 = np.cross(ein1, kin)
+
+        self.ein2LineEdit.setVector(ein2)
+        self.calculation.ein2 = ein2
 
     def updateE2Min(self):
         e2Min = self.e2MinLineEdit.getValue()
@@ -967,7 +985,7 @@ class QuantyDockWidget(QDockWidget):
         self.calculation.gk = gk
         self.calculation.zeta = zeta
 
-        # FIXME: This should be already updated to the most recent data.
+        # TODO: This should be already updated to the most recent data.
         # self.calculation.hamiltonianData = self.hamiltonianModel.getModelData() # noqa
         terms = self.calculation.hamiltonianData
 
@@ -1073,6 +1091,10 @@ class QuantyDockWidget(QDockWidget):
                        'alternative location.')
             self.getStatusBar().showMessage(message, 2 * self.timeout)
             raise
+
+        # TODO: In some cases the latest values are not read from the widgets.
+        # It might be a good idea to read the lastest values before saving the
+        # input file.
 
         # The folder might exist, but is not writable.
         try:
