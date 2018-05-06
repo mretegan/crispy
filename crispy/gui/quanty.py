@@ -168,8 +168,6 @@ class QuantyCalculation(object):
         else:
             self.hasPolarization = False
 
-        self.isStored = False
-
         branch = tree['elements'][self.element]['charges'][self.charge]
 
         for label, configuration in self.configurations:
@@ -549,9 +547,6 @@ class QuantyDockWidget(QDockWidget):
 
         # Set the sizes of the two views.
         self.hamiltonianSplitter.setSizes((150, 300, 0))
-
-        # Update the calculation label.
-        self.updateLabel()
 
     def enableUi(self, flag=True):
         self.elementComboBox.setEnabled(flag)
@@ -1085,12 +1080,6 @@ class QuantyDockWidget(QDockWidget):
 
         self.calculation.nConfigurations = nConfigurations
 
-    def updateLabel(self):
-        self.calculation.label = '#{} | {} | {} | {} | {} | {}'.format(
-            self.counter, self.calculation.element, self.calculation.charge,
-            self.calculation.symmetry, self.calculation.experiment,
-            self.calculation.edge)
-
     def saveInput(self):
         # Set the verbosity of the calculation.
         self.calculation.verbosity = self.getVerbosity()
@@ -1108,21 +1097,6 @@ class QuantyDockWidget(QDockWidget):
         # TODO: In some cases the latest values are not read from the widgets.
         # It might be a good idea to read the lastest values before saving the
         # input file.
-
-        # TODO: The isStored state must be changed if some parameters are
-        # updated. Maybe a function that compares self.calculation with the
-        # data from the resultsModel.
-        if not self.calculation.isStored:
-            self.resultsModel.appendItems([self.calculation])
-            self.counter += 1
-            self.calculation.isStored = True
-        else:
-            try:
-                index = list(self.resultsView.selectedIndexes())[-1]
-            except IndexError:
-                return
-            else:
-                self.resultsModel.replaceItem(index,  self.calculation)
 
         # The folder might exist, but is not writable.
         try:
@@ -1235,7 +1209,7 @@ class QuantyDockWidget(QDockWidget):
         # Write the input file to disk.
         try:
             self.saveInput()
-        except (IOError, OSError):
+        except (IOError, OSError) as e:
             return
 
         # Disable the UI while the calculation is running.
@@ -1337,6 +1311,13 @@ class QuantyDockWidget(QDockWidget):
             self.getStatusBar().showMessage(message, self.timeout)
             return
 
+        self.calculation.label = '#{} | {} | {} | {} | {} | {}'.format(
+            self.counter, self.calculation.element, self.calculation.charge,
+            self.calculation.symmetry, self.calculation.experiment,
+            self.calculation.edge)
+
+        self.counter += 1
+
         spectraAttributes = list()
         if self.calculateIsoCheckBox.isChecked():
             spectraAttributes.append(('Isotropic', '_iso'))
@@ -1348,13 +1329,8 @@ class QuantyDockWidget(QDockWidget):
         for spectrumName, spectrumSuffix in spectraAttributes:
             self.readSpectrumData(spectrumName, spectrumSuffix)
 
-        # Update the calculation in the model.
-        try:
-            index = list(self.resultsView.selectedIndexes())[-1]
-        except IndexError:
-            return
-        else:
-            self.resultsModel.replaceItem(index,  self.calculation)
+        # Store the calculation in the model.
+        self.resultsModel.appendItems([self.calculation])
 
         # Should this be a signal?
         self.updateResultsViewSelection()
@@ -1370,7 +1346,7 @@ class QuantyDockWidget(QDockWidget):
         f = '{0:s}{1:s}.spec'.format(self.calculation.baseName, spectrumSuffix)
         try:
             data = np.loadtxt(f, skiprows=5)
-        except IOError:
+        except IOError as e:
             return
 
         if 'RIXS' in self.calculation.experiment:
@@ -1379,9 +1355,9 @@ class QuantyDockWidget(QDockWidget):
             self.calculation.spectra[spectrumName] = -data[:, 2::2][:, 0]
 
     def plot(self, spectrumName):
-        try:
+        if spectrumName in self.calculation.spectra:
             data = self.calculation.spectra[spectrumName]
-        except (KeyError, TypeError):
+        else:
             return
 
         # Check if the data is valid.
