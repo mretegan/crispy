@@ -1029,8 +1029,10 @@ class QuantyDockWidget(QDockWidget):
             message = 'The number of states must be larger than zero.'
             self.getStatusBar().showMessage(message, self.timeout)
             self.nPsisLineEdit.setValue(self.calculation.nPsis)
-        elif nPsis > self.calculation.nPsisMax:
-            message = 'The selected number of states exceeds the maximum'
+            return
+
+        if nPsis > self.calculation.nPsisMax:
+            message = 'The selected number of states exceeds the maximum.'
             self.getStatusBar().showMessage(message, self.timeout)
             self.nPsisLineEdit.setValue(self.calculation.nPsisMax)
             nPsis = self.calculation.nPsisMax
