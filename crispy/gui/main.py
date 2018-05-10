@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '06/05/2018'
+__date__ = '10/05/2018'
 
 
 import errno
@@ -36,7 +36,8 @@ import os
 import sys
 
 from PyQt5.QtCore import Qt, QStandardPaths
-from PyQt5.QtWidgets import QMainWindow, QPlainTextEdit, QDialog, QFileDialog
+from PyQt5.QtWidgets import (QMainWindow, QPlainTextEdit, QDialog, QFileDialog,
+                             QDialogButtonBox)
 from PyQt5.QtGui import QFontDatabase, QIcon
 from PyQt5.uic import loadUi
 from silx.resources import resource_filename as resourceFileName
@@ -51,14 +52,15 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
 
-        # Load the settings from file or use defaults if this is not available.
+        # Load the settings from file or use defaults if the file is not
+        # available.
         self.loadSettings()
 
         uiPath = resourceFileName(
             'crispy:' + os.path.join('gui', 'uis', 'main.ui'))
         loadUi(uiPath, baseinstance=self, package='crispy.gui')
 
-        # Main window default elements.
+        # Default elements of the main window.
         self.setWindowTitle('Crispy - untitled.lua')
         self.statusbar.showMessage('Ready')
 
@@ -74,7 +76,7 @@ class MainWindow(QMainWindow):
         self.loggerWidget.setLineWrapMode(QPlainTextEdit.NoWrap)
 
         # About dialog.
-        self.aboutDialog = AboutDialog()
+        self.aboutDialog = AboutDialog(self)
         self.openAboutDialogAction.triggered.connect(self.openAboutDialog)
 
         # Quanty module.
@@ -126,15 +128,7 @@ class MainWindow(QMainWindow):
         self.quantyModuleHideAction.triggered.connect(self.quantyModuleHide)
 
         # Preferences dialog.
-        # TODO: Add buttons?
-        self.preferencesDialog = QuantyPreferencesDialog()
-        self.preferencesDialog.setModal(True)
-        self.preferencesDialog.pathLineEdit.setText(
-            self.settings['quanty.path'])
-        self.preferencesDialog.verbosityLineEdit.setText(
-            self.settings['quanty.verbosity'])
-        self.preferencesDialog.pathBrowsePushButton.clicked.connect(
-            self.quantySetPath)
+        self.preferencesDialog = QuantyPreferencesDialog(self)
 
     def quantyMenuUpdate(self, flag=True):
         self.quantySaveCalculationsAsAction.setEnabled(flag)
@@ -155,16 +149,7 @@ class MainWindow(QMainWindow):
     def quantyOpenPreferencesDialog(self):
         self.preferencesDialog.show()
 
-    def quantySetPath(self):
-        path, _ = QFileDialog.getOpenFileName(
-            self, 'Select File', os.path.expanduser('~'))
-
-        if path:
-            path = os.path.dirname(path)
-            self.updateSettings('quanty.path', path)
-            self.preferencesDialog.pathLineEdit.setText(path)
-
-    def quantyGetPath(self):
+    def quantyFindPath(self):
         if sys.platform in 'win32':
             executable = 'Quanty.exe'
         else:
@@ -200,6 +185,10 @@ class MainWindow(QMainWindow):
 
         return path
 
+    def updateSetting(self, setting, value):
+        self.settings[setting] = value
+        self.saveSettings()
+
     def saveSettings(self):
         if not hasattr(self, 'settings'):
             return
@@ -217,14 +206,10 @@ class MainWindow(QMainWindow):
         with open(settingsPath, 'w') as p:
             json.dump(self.settings, p)
 
-    def updateSettings(self, setting, value):
-        self.settings[setting] = value
-        self.saveSettings()
-
     def loadSettings(self, defaults=False):
         if defaults:
             self.settings = odict()
-            path, executable = self.quantyGetPath()
+            path, executable = self.quantyFindPath()
             self.settings['quanty.path'] = path
             self.settings['quanty.executable'] = executable
             self.settings['quanty.verbosity'] = '0x0000'
@@ -250,18 +235,65 @@ class MainWindow(QMainWindow):
 
 class QuantyPreferencesDialog(QDialog):
 
-    def __init__(self, parent=None):
-        super(QuantyPreferencesDialog, self).__init__()
+    def __init__(self, parent):
+        super(QuantyPreferencesDialog, self).__init__(parent)
 
         path = resourceFileName(
             'crispy:' + os.path.join('gui', 'uis', 'quanty', 'preferences.ui'))
         loadUi(path, baseinstance=self, package='crispy.gui')
 
+        self.loadParentSettings()
+
+        self._settings = odict()
+
+        self.pathBrowsePushButton.clicked.connect(self.setExecutablePath)
+
+        apply = self.buttonBox.button(QDialogButtonBox.Apply)
+        apply.clicked.connect(self.applySettings)
+
+        ok = self.buttonBox.button(QDialogButtonBox.Ok)
+        ok.clicked.connect(self.acceptSettings)
+
+        cancel = self.buttonBox.button(QDialogButtonBox.Cancel)
+        cancel.clicked.connect(self.rejectSettings)
+
+    def saveParentSettings(self):
+        self.parent().settings.update(self._settings)
+        self.parent().saveSettings()
+
+    def loadParentSettings(self):
+        settings = self.parent().settings
+        self.pathLineEdit.setText(settings['quanty.path'])
+        self.verbosityLineEdit.setText(settings['quanty.verbosity'])
+
+    def applySettings(self):
+        path = self.pathLineEdit.text()
+        self._settings['quanty.path'] = path
+        verbosity = self.verbosityLineEdit.text()
+        self._settings['quanty.verbosity'] = verbosity
+
+    def acceptSettings(self):
+        self.applySettings()
+        self.saveParentSettings()
+        self.close()
+
+    def rejectSettings(self):
+        self.loadParentSettings()
+        self.close()
+
+    def setExecutablePath(self):
+        path, _ = QFileDialog.getOpenFileName(
+            self, 'Select File', os.path.expanduser('~'))
+
+        if path:
+            path = os.path.dirname(path)
+            self.pathLineEdit.setText(path)
+
 
 class AboutDialog(QDialog):
 
-    def __init__(self, parent=None):
-        super(AboutDialog, self).__init__()
+    def __init__(self, parent):
+        super(AboutDialog, self).__init__(parent)
 
         path = resourceFileName(
             'crispy:' + os.path.join('gui', 'uis', 'about.ui'))

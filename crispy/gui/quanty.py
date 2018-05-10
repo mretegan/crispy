@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '06/05/2018'
+__date__ = '10/05/2018'
 
 
 import copy
@@ -361,10 +361,9 @@ class QuantyDockWidget(QDockWidget):
         self.counter = 1
 
         self.calculation = QuantyCalculation()
-        self.setUi()
-        self.populateUi()
 
-    def setUi(self):
+        # TODO: Move the results model/view outside of this class to allow
+        # users to load experimental results.
         # Create the results model and assign it to the view.
         self.resultsModel = ListModel()
 
@@ -372,7 +371,8 @@ class QuantyDockWidget(QDockWidget):
         self.resultsView.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.resultsView.selectionModel().selectionChanged.connect(
             self.selectedCalculationsChanged)
-        # Add a context menu.
+
+        # Add a context menu to the view.
         self.resultsView.setContextMenuPolicy(Qt.CustomContextMenu)
         self.resultsView.customContextMenuRequested[QPoint].connect(
             self.showResultsContextMenu)
@@ -439,7 +439,9 @@ class QuantyDockWidget(QDockWidget):
 
         self.resultsModel.dataChanged.connect(self.plotSelectedCalculations)
 
-    def populateUi(self):
+        self.updateWidget()
+
+    def updateWidget(self):
         self.elementComboBox.setItems(
             self.calculation.elements, self.calculation.element)
         self.chargeComboBox.setItems(
@@ -1156,7 +1158,7 @@ class QuantyDockWidget(QDockWidget):
             element=element, charge=charge, symmetry=symmetry,
             experiment=experiment, edge=edge)
 
-        self.populateUi()
+        self.updateWidget()
         self.updateMainWindowTitle()
         self.getPlotWidget().reset()
         self.resultsView.selectionModel().clearSelection()
@@ -1498,7 +1500,7 @@ class QuantyDockWidget(QDockWidget):
 
     def selectedCalculationsChanged(self):
         self.plotSelectedCalculations()
-        self.populateUi()
+        self.updateWidget()
         self.updateMainWindowTitle()
 
     def plotSelectedCalculations(self):
@@ -1561,7 +1563,7 @@ class QuantyDockWidget(QDockWidget):
 
     def setCurrentPath(self, path):
         dirname, _ = os.path.split(path)
-        self.parent().updateSettings('currentPath', dirname)
+        self.parent().updateSetting('currentPath', dirname)
 
     def getCurrentPath(self):
         return self.parent().settings['currentPath']
