@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '10/05/2018'
+__date__ = '18/05/2018'
 
 
 import copy
@@ -51,6 +51,7 @@ from PyQt5.QtWidgets import (
 from PyQt5.uic import loadUi
 from silx.resources import resource_filename as resourceFileName
 
+from .config import Config
 from .models.treemodel import TreeModel
 from .models.listmodel import ListModel
 from ..utils.broaden import broaden
@@ -1562,19 +1563,21 @@ class QuantyDockWidget(QDockWidget):
         return self.parent().loggerWidget
 
     def setCurrentPath(self, path):
-        dirname, _ = os.path.split(path)
-        self.parent().updateSetting('currentPath', dirname)
+        dirName, _ = os.path.split(path)
+        config = Config()
+        config.setSetting('currentPath', dirName)
+        config.saveSettings()
 
     def getCurrentPath(self):
-        return self.parent().settings['currentPath']
+        return Config().getSetting('currentPath')
 
     def getQuantyPath(self):
-        path = self.parent().settings['quanty.path']
-        executable = self.parent().settings['quanty.executable']
+        path = Config().getSetting('quanty.path')
+        executable = Config().getSetting('quanty.executable')
         return path, executable
 
     def getVerbosity(self):
-        return self.parent().settings['quanty.verbosity']
+        return Config().getSetting('quanty.verbosity')
 
 
 if __name__ == '__main__':

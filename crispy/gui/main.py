@@ -1,7 +1,7 @@
 # coding: utf-8
 # /*##########################################################################
 #
-# Copyright (c) 2016-2017 European Synchrotron Radiation Facility
+# Copyright (c) 2016-2018 European Synchrotron Radiation Facility
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -27,34 +27,27 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '10/05/2018'
+__date__ = '18/05/2018'
 
 
-import errno
-import json
 import os
-import sys
 
-from PyQt5.QtCore import Qt, QStandardPaths
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QMainWindow, QPlainTextEdit, QDialog, QFileDialog,
                              QDialogButtonBox)
 from PyQt5.QtGui import QFontDatabase, QIcon
 from PyQt5.uic import loadUi
 from silx.resources import resource_filename as resourceFileName
 
+from .config import Config
 from .quanty import QuantyDockWidget
 from ..version import version
-from ..utils.odict import odict
 
 
 class MainWindow(QMainWindow):
 
     def __init__(self):
         super(MainWindow, self).__init__()
-
-        # Load the settings from file or use defaults if the file is not
-        # available.
-        self.loadSettings()
 
         uiPath = resourceFileName(
             'crispy:' + os.path.join('gui', 'uis', 'main.ui'))
@@ -149,88 +142,8 @@ class MainWindow(QMainWindow):
     def quantyOpenPreferencesDialog(self):
         self.preferencesDialog.show()
 
-    def quantyFindPath(self):
-        if sys.platform in 'win32':
-            executable = 'Quanty.exe'
-        else:
-            executable = 'Quanty'
-
-        envPath = QStandardPaths.findExecutable(executable)
-        localPath = QStandardPaths.findExecutable(
-            executable, [resourceFileName(
-                'crispy:' + os.path.join('modules', 'quanty', 'bin'))])
-
-        # Check if Quanty is in the paths defined in the $PATH.
-        if envPath:
-            path = os.path.dirname(envPath)
-        # Check if Quanty is bundled with Crispy.
-        elif localPath:
-            path = os.path.dirname(localPath)
-        else:
-            path = None
-
-        return path, executable
-
     def openAboutDialog(self):
         self.aboutDialog.show()
-
-    def getConfigLocation(self):
-        configLocation = QStandardPaths.GenericConfigLocation
-        root = QStandardPaths.standardLocations(configLocation)[0]
-
-        if sys.platform in ('win32', 'darwin'):
-            path = os.path.join(root, 'Crispy')
-        else:
-            path = os.path.join(root, 'crispy')
-
-        return path
-
-    def updateSetting(self, setting, value):
-        self.settings[setting] = value
-        self.saveSettings()
-
-    def saveSettings(self):
-        if not hasattr(self, 'settings'):
-            return
-
-        path = self.getConfigLocation()
-
-        try:
-            os.makedirs(path, mode=0o755)
-        except OSError as e:
-            if e.errno != errno.EEXIST:
-                raise
-
-        settingsPath = os.path.join(path, 'settings.json')
-
-        with open(settingsPath, 'w') as p:
-            json.dump(self.settings, p)
-
-    def loadSettings(self, defaults=False):
-        if defaults:
-            self.settings = odict()
-            path, executable = self.quantyFindPath()
-            self.settings['quanty.path'] = path
-            self.settings['quanty.executable'] = executable
-            self.settings['quanty.verbosity'] = '0x0000'
-            self.settings['currentPath'] = os.path.expanduser('~')
-            self.settings['version'] = version
-            self.saveSettings()
-            return
-
-        settingsPath = os.path.join(
-            self.getConfigLocation(), 'settings.json')
-
-        try:
-            with open(settingsPath, 'r') as p:
-                self.settings = json.loads(
-                    p.read(), object_pairs_hook=odict)
-        except IOError as e:
-            self.loadSettings(defaults=True)
-
-        # Overwrite settings file written by previous versions of Crispy.
-        if 'version' not in self.settings:
-            self.loadSettings(defaults=True)
 
 
 class QuantyPreferencesDialog(QDialog):
@@ -242,14 +155,9 @@ class QuantyPreferencesDialog(QDialog):
             'crispy:' + os.path.join('gui', 'uis', 'quanty', 'preferences.ui'))
         loadUi(path, baseinstance=self, package='crispy.gui')
 
-        self.loadParentSettings()
-
-        self._settings = odict()
+        self.updateWidgetWithConfigSettings()
 
         self.pathBrowsePushButton.clicked.connect(self.setExecutablePath)
-
-        apply = self.buttonBox.button(QDialogButtonBox.Apply)
-        apply.clicked.connect(self.applySettings)
 
         ok = self.buttonBox.button(QDialogButtonBox.Ok)
         ok.clicked.connect(self.acceptSettings)
@@ -257,28 +165,24 @@ class QuantyPreferencesDialog(QDialog):
         cancel = self.buttonBox.button(QDialogButtonBox.Cancel)
         cancel.clicked.connect(self.rejectSettings)
 
-    def saveParentSettings(self):
-        self.parent().settings.update(self._settings)
-        self.parent().saveSettings()
-
-    def loadParentSettings(self):
-        settings = self.parent().settings
-        self.pathLineEdit.setText(settings['quanty.path'])
-        self.verbosityLineEdit.setText(settings['quanty.verbosity'])
-
-    def applySettings(self):
-        path = self.pathLineEdit.text()
-        self._settings['quanty.path'] = path
-        verbosity = self.verbosityLineEdit.text()
-        self._settings['quanty.verbosity'] = verbosity
+    def updateWidgetWithConfigSettings(self):
+        config = Config()
+        path = config.getSetting('quanty.path')
+        verbosity = config.getSetting('quanty.verbosity')
+        self.pathLineEdit.setText(path)
+        self.verbosityLineEdit.setText(verbosity)
 
     def acceptSettings(self):
-        self.applySettings()
-        self.saveParentSettings()
+        config = Config()
+        path = self.pathLineEdit.text()
+        verbosity = self.verbosityLineEdit.text()
+        config.setSetting('quanty.path', path)
+        config.setSetting('quanty.verbosity', verbosity)
+        config.saveSettings()
         self.close()
 
     def rejectSettings(self):
-        self.loadParentSettings()
+        self.updateWidgetWithConfigSettings()
         self.close()
 
     def setExecutablePath(self):
