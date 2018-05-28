@@ -126,8 +126,8 @@ QToolButton::menu-indicator{
      <addaction name="quantySaveInputAction"/>
      <addaction name="quantySaveInputAsAction"/>
      <addaction name="separator"/>
-     <addaction name="quantySaveCalculationsAsAction"/>
-     <addaction name="quantyRemoveCalculationsAction"/>
+     <addaction name="quantySaveAllCalculationsAsAction"/>
+     <addaction name="quantyRemoveAllCalculationsAction"/>
      <addaction name="separator"/>
      <addaction name="quantyLoadCalculationsAction"/>
      <addaction name="separator"/>
@@ -188,9 +188,9 @@ QToolButton::menu-indicator{
     <string>Run</string>
    </property>
   </action>
-  <action name="quantyRemoveCalculationsAction">
+  <action name="quantyRemoveAllCalculationsAction">
    <property name="text">
-    <string>Remove Calculations</string>
+    <string>Remove All Calculations</string>
    </property>
   </action>
   <action name="quantyOpenPreferencesDialogAction">
@@ -203,9 +203,9 @@ QToolButton::menu-indicator{
     <string>About</string>
    </property>
   </action>
-  <action name="quantySaveCalculationsAsAction">
+  <action name="quantySaveAllCalculationsAsAction">
    <property name="text">
-    <string>Save Calculations As...</string>
+    <string>Save All Calculations As...</string>
    </property>
   </action>
  </widget>

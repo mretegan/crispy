@@ -35,7 +35,7 @@ import os
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QMainWindow, QPlainTextEdit, QDialog, QFileDialog,
                              QDialogButtonBox)
-from PyQt5.QtGui import QFontDatabase, QIcon
+from PyQt5.QtGui import QFontDatabase
 from PyQt5.uic import loadUi
 from silx.resources import resource_filename as resourceFileName
 
@@ -82,33 +82,20 @@ class MainWindow(QMainWindow):
         self.quantyDockWidget.setVisible(True)
 
         # Menu.
-        icon = QIcon(resourceFileName(
-            'crispy:' + os.path.join('gui', 'icons', 'cog.svg')))
-        self.quantyOpenPreferencesDialogAction.setIcon(icon)
         self.quantyOpenPreferencesDialogAction.triggered.connect(
             self.quantyOpenPreferencesDialog)
 
-        icon = QIcon(resourceFileName(
-            'crispy:' + os.path.join('gui', 'icons', 'save.svg')))
-        self.quantySaveInputAction.setIcon(icon)
         self.quantySaveInputAction.triggered.connect(
             self.quantyDockWidget.saveInput)
         self.quantySaveInputAsAction.triggered.connect(
             self.quantyDockWidget.saveInputAs)
 
-        self.quantySaveCalculationsAsAction.setIcon(icon)
-        self.quantySaveCalculationsAsAction.triggered.connect(
-            self.quantyDockWidget.saveCalculationsAs)
+        self.quantySaveAllCalculationsAsAction.triggered.connect(
+            self.quantyDockWidget.saveAllCalculationsAs)
 
-        icon = QIcon(resourceFileName(
-            'crispy:' + os.path.join('gui', 'icons', 'trash.svg')))
-        self.quantyRemoveCalculationsAction.setIcon(icon)
-        self.quantyRemoveCalculationsAction.triggered.connect(
-            self.quantyDockWidget.removeCalculations)
+        self.quantyRemoveAllCalculationsAction.triggered.connect(
+            self.quantyDockWidget.removeAllCalculations)
 
-        icon = QIcon(resourceFileName(
-            'crispy:' + os.path.join('gui', 'icons', 'folder-open.svg')))
-        self.quantyLoadCalculationsAction.setIcon(icon)
         self.quantyLoadCalculationsAction.triggered.connect(
             self.quantyDockWidget.loadCalculations)
 
@@ -124,8 +111,8 @@ class MainWindow(QMainWindow):
         self.preferencesDialog = QuantyPreferencesDialog(self)
 
     def quantyMenuUpdate(self, flag=True):
-        self.quantySaveCalculationsAsAction.setEnabled(flag)
-        self.quantyRemoveCalculationsAction.setEnabled(flag)
+        self.quantySaveAllCalculationsAsAction.setEnabled(flag)
+        self.quantyRemoveAllCalculationsAction.setEnabled(flag)
 
     def quantyModuleShow(self):
         self.quantyDockWidget.setVisible(True)

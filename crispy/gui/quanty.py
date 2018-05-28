@@ -1123,7 +1123,7 @@ class QuantyDockWidget(QDockWidget):
             self.saveInput()
             self.updateMainWindowTitle()
 
-    def saveCalculationsAs(self):
+    def saveAllCalculationsAs(self):
         path, _ = QFileDialog.getSaveFileName(
             self, 'Save Calculations',
             os.path.join(self.getCurrentPath(), '{}.pkl'.format(
@@ -1169,7 +1169,7 @@ class QuantyDockWidget(QDockWidget):
         self.resultsModel.removeItems(self.resultsView.selectedIndexes())
         self.updateResultsViewSelection()
 
-    def removeCalculations(self):
+    def removeAllCalculations(self):
         self.resultsModel.reset()
         self.getPlotWidget().reset()
 
@@ -1452,18 +1452,18 @@ class QuantyDockWidget(QDockWidget):
         self.saveSelectedCalculationsAsAction = QAction(
             icon, 'Save Selected Calculations As...', self,
             triggered=self.saveSelectedCalculationsAs)
-        self.saveCalculationsAsAction = QAction(
-            icon, 'Save Calculations As...', self,
-            triggered=self.saveCalculationsAs)
+        self.saveAllCalculationsAsAction = QAction(
+            icon, 'Save All Calculations As...', self,
+            triggered=self.saveAllCalculationsAs)
 
         icon = QIcon(resourceFileName(
             'crispy:' + os.path.join('gui', 'icons', 'trash.svg')))
         self.removeSelectedCalculationsAction = QAction(
             icon, 'Remove Selected Calculations', self,
             triggered=self.removeSelectedCalculations)
-        self.removeCalculationsAction = QAction(
-            icon, 'Remove Calculations', self,
-            triggered=self.removeCalculations)
+        self.removeAllCalculationsAction = QAction(
+            icon, 'Remove All Calculations', self,
+            triggered=self.removeAllCalculations)
 
         icon = QIcon(resourceFileName(
             'crispy:' + os.path.join('gui', 'icons', 'folder-open.svg')))
@@ -1477,8 +1477,8 @@ class QuantyDockWidget(QDockWidget):
         self.resultsContextMenu.addAction(
             self.removeSelectedCalculationsAction)
         self.resultsContextMenu.addSeparator()
-        self.resultsContextMenu.addAction(self.saveCalculationsAsAction)
-        self.resultsContextMenu.addAction(self.removeCalculationsAction)
+        self.resultsContextMenu.addAction(self.saveAllCalculationsAsAction)
+        self.resultsContextMenu.addAction(self.removeAllCalculationsAction)
         self.resultsContextMenu.addSeparator()
         self.resultsContextMenu.addAction(self.loadCalculationsAction)
 
@@ -1487,8 +1487,8 @@ class QuantyDockWidget(QDockWidget):
             self.saveSelectedCalculationsAsAction.setEnabled(False)
 
         if not self.resultsModel.getData():
-            self.saveCalculationsAsAction.setEnabled(False)
-            self.removeCalculationsAction.setEnabled(False)
+            self.saveAllCalculationsAsAction.setEnabled(False)
+            self.removeAllCalculationsAction.setEnabled(False)
 
         self.resultsContextMenu.exec_(self.resultsView.mapToGlobal(position))
 
