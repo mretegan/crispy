@@ -1063,6 +1063,7 @@ class QuantyDockWidget(QDockWidget):
                 self.nConfigurationsLineEdit.setEnabled(True)
 
             self.nConfigurationsLineEdit.setValue(nConfigurations)
+            self.calculation.nConfigurations = nConfigurations
 
     def updateConfigurations(self, *args):
         nConfigurations = self.nConfigurationsLineEdit.getValue()
