@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '18/05/2018'
+__date__ = '29/05/2018'
 
 
 import errno
@@ -106,11 +106,12 @@ class Config(object):
         if defaults:
             self._settings = odict()
             path, executable = self.quantyFindPath()
-            self._settings['quanty.path'] = path
-            self._settings['quanty.executable'] = executable
-            self._settings['quanty.verbosity'] = '0x0000'
+            self._settings['quantyPath'] = path
+            self._settings['quantyExecutable'] = executable
+            self._settings['quantyVerbosity'] = '0x0000'
             self._settings['currentPath'] = os.path.expanduser('~')
             self._settings['version'] = version
+            self._settings['updateCheck'] = True
             return
 
         configPath = os.path.join(self.getConfigLocation(), 'settings.json')

@@ -27,12 +27,19 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '18/05/2018'
+__date__ = '29/05/2018'
 
 
 import os
+import json
+try:
+    from urllib.request import urlopen
+    from urllib.error import URLError
+except ImportError:
+    from urllib2 import urlopen
+    from urllib2 import URLError
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QThread, pyqtSignal
 from PyQt5.QtWidgets import (QMainWindow, QPlainTextEdit, QDialog, QFileDialog,
                              QDialogButtonBox)
 from PyQt5.QtGui import QFontDatabase
@@ -154,8 +161,8 @@ class QuantyPreferencesDialog(QDialog):
 
     def updateWidgetWithConfigSettings(self):
         config = Config()
-        path = config.getSetting('quanty.path')
-        verbosity = config.getSetting('quanty.verbosity')
+        path = config.getSetting('quantyPath')
+        verbosity = config.getSetting('quantyVerbosity')
         self.pathLineEdit.setText(path)
         self.verbosityLineEdit.setText(verbosity)
 
@@ -163,8 +170,8 @@ class QuantyPreferencesDialog(QDialog):
         config = Config()
         path = self.pathLineEdit.text()
         verbosity = self.verbosityLineEdit.text()
-        config.setSetting('quanty.path', path)
-        config.setSetting('quanty.verbosity', verbosity)
+        config.setSetting('quantyPath', path)
+        config.setSetting('quantyVerbosity', verbosity)
         config.saveSettings()
         self.close()
 
@@ -181,6 +188,44 @@ class QuantyPreferencesDialog(QDialog):
             self.pathLineEdit.setText(path)
 
 
+class CheckUpdateThread(QThread):
+
+    updateAvailable = pyqtSignal()
+
+    def __init__(self, parent):
+        super(CheckUpdateThread, self).__init__(parent)
+
+    def _getSiteVersion(self):
+        url = 'http://www.esrf.eu/computing/scientific/crispy/version.json'
+
+        try:
+            response = urlopen(url, timeout=5)
+        except URLError:
+            return
+
+        data = json.loads(response.read().decode('utf-8'))
+        version = data['version']
+
+        return version
+
+    def run(self):
+        seconds = 5
+        self.sleep(seconds)
+        siteVersion = self._getSiteVersion()
+        if siteVersion and version < siteVersion:
+            self.updateAvailable.emit()
+
+
+class UpdateAvailableDialog(QDialog):
+
+    def __init__(self, parent):
+        super(UpdateAvailableDialog, self).__init__(parent)
+
+        path = resourceFileName(
+            'crispy:' + os.path.join('gui', 'uis', 'update.ui'))
+        loadUi(path, baseinstance=self, package='crispy.gui')
+
+
 class AboutDialog(QDialog):
 
     def __init__(self, parent):
@@ -191,3 +236,28 @@ class AboutDialog(QDialog):
         loadUi(path, baseinstance=self, package='crispy.gui')
 
         self.nameLabel.setText('Crispy {}'.format(version))
+
+        self.config = Config()
+        updateCheck = self.config.getSetting('updateCheck')
+        self.updateCheckBox.setChecked(updateCheck)
+        self.updateCheckBox.stateChanged.connect(
+            self.updateCheckBoxStateChanged)
+
+        # Check for updates if requested.
+        self.runUpdateCheck()
+
+    def updateCheckBoxStateChanged(self):
+        updateCheck = self.updateCheckBox.isChecked()
+        self.config.setSetting('updateCheck', updateCheck)
+        self.config.saveSettings()
+        self.runUpdateCheck()
+
+    def runUpdateCheck(self):
+        if self.updateCheckBox.isChecked():
+            thread = CheckUpdateThread(self)
+            thread.start()
+            thread.updateAvailable.connect(self.informAboutAvailableUpdate)
+
+    def informAboutAvailableUpdate(self):
+        updateAvailableDialog = UpdateAvailableDialog(self.parent())
+        updateAvailableDialog.show()

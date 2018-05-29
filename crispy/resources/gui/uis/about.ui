@@ -31,9 +31,6 @@
   <property name="windowTitle">
    <string>About Crispy</string>
   </property>
-  <property name="modal">
-   <bool>true</bool>
-  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QHBoxLayout" name="iconHBoxLayout">
@@ -225,6 +222,46 @@ font-weight: bold;</string>
       </size>
      </property>
     </spacer>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="updateHorizontalLayout">
+     <item>
+      <spacer name="updateLeftSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="updateCheckBox">
+       <property name="text">
+        <string>Check for Updates</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="updateRightSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
    </item>
    <item>
     <widget class="QLabel" name="copyrightLabel">

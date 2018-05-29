@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '18/05/2018'
+__date__ = '29/05/2018'
 
 
 import copy
@@ -1573,12 +1573,12 @@ class QuantyDockWidget(QDockWidget):
         return Config().getSetting('currentPath')
 
     def getQuantyPath(self):
-        path = Config().getSetting('quanty.path')
-        executable = Config().getSetting('quanty.executable')
+        path = Config().getSetting('quantyPath')
+        executable = Config().getSetting('quantyExecutable')
         return path, executable
 
     def getVerbosity(self):
-        return Config().getSetting('quanty.verbosity')
+        return Config().getSetting('quantyVerbosity')
 
 
 if __name__ == '__main__':

@@ -416,9 +416,25 @@
             <item>
              <layout class="QHBoxLayout" name="e1LorentzianHBoxLayout">
               <item>
+               <spacer name="e1LorentzianLeftSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
                <widget class="QLabel" name="e1LorentzianLabel">
                 <property name="text">
-                 <string>        Lorentzian</string>
+                 <string>Lorentzian</string>
                 </property>
                </widget>
               </item>
@@ -449,9 +465,25 @@
             <item>
              <layout class="QHBoxLayout" name="e1GaussianHBoxLayout">
               <item>
+               <spacer name="e1GaussianLeftSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
                <widget class="QLabel" name="e1GaussianLabel">
                 <property name="text">
-                 <string>        Gaussian</string>
+                 <string>Gaussian</string>
                 </property>
                </widget>
               </item>
@@ -486,13 +518,25 @@
             <item>
              <layout class="QHBoxLayout" name="kinHBoxLayout">
               <item>
+               <spacer name="kinLeftSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
                <widget class="QLabel" name="kinLabel">
                 <property name="text">
-                 <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;         &lt;span style=&quot; font-weight:600;&quot;&gt;k&lt;/span&gt;&lt;span style=&quot; vertical-align:sub;&quot;&gt;in&lt;/span&gt; [x, y, z]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;k&lt;/span&gt;&lt;span style=&quot; vertical-align:sub;&quot;&gt;in&lt;/span&gt; [x, y, z]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
               </item>
@@ -520,13 +564,25 @@ p, li { white-space: pre-wrap; }
             <item>
              <layout class="QHBoxLayout" name="ein1HBoxLayout">
               <item>
+               <spacer name="ein1LeftSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
                <widget class="QLabel" name="ein1Label">
                 <property name="text">
-                 <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;         &lt;span style=&quot; font-weight:600;&quot;&gt;ε&lt;/span&gt;&lt;span style=&quot; vertical-align:sub;&quot;&gt;in1&lt;/span&gt; [x, y, z]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;ε&lt;/span&gt;&lt;span style=&quot; vertical-align:sub;&quot;&gt;in1&lt;/span&gt; [x, y, z]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
               </item>
@@ -557,13 +613,25 @@ p, li { white-space: pre-wrap; }
             <item>
              <layout class="QHBoxLayout" name="ein2HBoxLayout">
               <item>
+               <spacer name="ein2LeftSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
                <widget class="QLabel" name="ein2Label">
                 <property name="text">
-                 <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;         &lt;span style=&quot; font-weight:600;&quot;&gt;ε&lt;/span&gt;&lt;span style=&quot; vertical-align:sub;&quot;&gt;in2&lt;/span&gt; [x, y, z]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;ε&lt;/span&gt;&lt;span style=&quot; vertical-align:sub;&quot;&gt;in2&lt;/span&gt; [x, y, z]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
               </item>
@@ -708,9 +776,25 @@ p, li { white-space: pre-wrap; }
             <item>
              <layout class="QHBoxLayout" name="e2LorentzianHBoxLayout">
               <item>
+               <spacer name="e2LorentzianLeftSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
                <widget class="QLabel" name="e2LorentzianLabel">
                 <property name="text">
-                 <string>        Lorentzian</string>
+                 <string>Lorentzian</string>
                 </property>
                </widget>
               </item>
@@ -738,9 +822,25 @@ p, li { white-space: pre-wrap; }
             <item>
              <layout class="QHBoxLayout" name="e2GaussianHBoxLayout">
               <item>
+               <spacer name="e2GaussianLeftSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
                <widget class="QLabel" name="e2GaussianLabel">
                 <property name="text">
-                 <string>        Gaussian</string>
+                 <string>Gaussian</string>
                 </property>
                </widget>
               </item>
@@ -775,13 +875,25 @@ p, li { white-space: pre-wrap; }
             <item>
              <layout class="QHBoxLayout" name="koutHBoxLayout">
               <item>
+               <spacer name="koutLeftSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
                <widget class="QLabel" name="koutLabel">
                 <property name="text">
-                 <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;         &lt;span style=&quot; font-weight:600;&quot;&gt;k&lt;/span&gt;&lt;span style=&quot; vertical-align:sub;&quot;&gt;out&lt;/span&gt; [x, y, z]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;k&lt;/span&gt;&lt;span style=&quot; vertical-align:sub;&quot;&gt;out&lt;/span&gt; [x, y, z]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
               </item>
@@ -812,13 +924,25 @@ p, li { white-space: pre-wrap; }
             <item>
              <layout class="QHBoxLayout" name="eout1HBoxLayout">
               <item>
+               <spacer name="eout1LeftSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
                <widget class="QLabel" name="eout1Label">
                 <property name="text">
-                 <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;         &lt;span style=&quot; font-weight:600;&quot;&gt;ε&lt;/span&gt;&lt;span style=&quot; vertical-align:sub;&quot;&gt;out1&lt;/span&gt; [x, y, z]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;ε&lt;/span&gt;&lt;span style=&quot; vertical-align:sub;&quot;&gt;out1&lt;/span&gt; [x, y, z]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
               </item>
@@ -849,13 +973,25 @@ p, li { white-space: pre-wrap; }
             <item>
              <layout class="QHBoxLayout" name="eout2HBoxLayout">
               <item>
+               <spacer name="eout2LeftSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
                <widget class="QLabel" name="eout2Label">
                 <property name="text">
-                 <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;         &lt;span style=&quot; font-weight:600;&quot;&gt;ε&lt;/span&gt;&lt;span style=&quot; vertical-align:sub;&quot;&gt;out2&lt;/span&gt; [x, y, z]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;ε&lt;/span&gt;&lt;span style=&quot; vertical-align:sub;&quot;&gt;out2&lt;/span&gt; [x, y, z]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
               </item>
