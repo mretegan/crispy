@@ -33,11 +33,10 @@ __date__ = '29/05/2018'
 import os
 import json
 try:
-    from urllib.request import urlopen
+    from urllib.request import urlopen, Request
     from urllib.error import URLError
 except ImportError:
-    from urllib2 import urlopen
-    from urllib2 import URLError
+    from urllib2 import urlopen, Request, URLError
 
 from PyQt5.QtCore import Qt, QThread, pyqtSignal
 from PyQt5.QtWidgets import (QMainWindow, QPlainTextEdit, QDialog, QFileDialog,
@@ -198,8 +197,11 @@ class CheckUpdateThread(QThread):
     def _getSiteVersion(self):
         url = 'http://www.esrf.eu/computing/scientific/crispy/version.json'
 
+        request = Request(url)
+        request.add_header('Cache-Control', 'max-age=0')
+
         try:
-            response = urlopen(url, timeout=5)
+            response = urlopen(request, timeout=5)
         except URLError:
             return
 
