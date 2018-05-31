@@ -3,8 +3,8 @@
 -- the following reference: 10.5281/zenodo.1008184.
 --
 -- elements: 4f
--- symmetry: Oh
--- experiment: XAS
+-- symmetry: XAS
+-- experiment: #experiment
 -- edge: L2,3 (2p)
 --------------------------------------------------------------------------------
 Verbosity($Verbosity)
@@ -19,7 +19,7 @@ H_f = 0
 -- Toggle the Hamiltonian terms.
 --------------------------------------------------------------------------------
 H_atomic = $H_atomic
-H_cf     = $H_cf
+H_cf = $H_cf
 
 --------------------------------------------------------------------------------
 -- Define the number of electrons, shells, etc.
@@ -69,21 +69,21 @@ if H_atomic == 1 then
     G4_2p_4f_f = $G4(2p,4f)_f_value * $G4(2p,4f)_f_scaling
     F0_2p_4f_f = 3 / 70 * G2_2p_4f_f + 2 / 63 * G4_2p_4f_f
 
-    H_i = H_i
-        + F0_4f_4f_i * F0_4f_4f
+    H_i = H_i + Chop(
+          F0_4f_4f_i * F0_4f_4f
         + F2_4f_4f_i * F2_4f_4f
         + F4_4f_4f_i * F4_4f_4f
-        + F6_4f_4f_i * F6_4f_4f
+        + F6_4f_4f_i * F6_4f_4f)
 
-    H_f = H_f
-        + F0_4f_4f_f * F0_4f_4f
+    H_f = H_f + Chop(
+          F0_4f_4f_f * F0_4f_4f
         + F2_4f_4f_f * F2_4f_4f
         + F4_4f_4f_f * F4_4f_4f
         + F6_4f_4f_f * F6_4f_4f
         + F0_2p_4f_f * F0_2p_4f
         + F2_2p_4f_f * F2_2p_4f
         + G2_2p_4f_f * G2_2p_4f
-        + G4_2p_4f_f * G4_2p_4f
+        + G4_2p_4f_f * G4_2p_4f)
 
     ldots_4f = NewOperator('ldots', NFermions, IndexUp_4f, IndexDn_4f)
 
@@ -94,12 +94,12 @@ if H_atomic == 1 then
     zeta_4f_f = $zeta(4f)_f_value * $zeta(4f)_f_scaling
     zeta_2p_f = $zeta(2p)_f_value * $zeta(2p)_f_scaling
 
-    H_i = H_i
-        + zeta_4f_i * ldots_4f
+    H_i = H_i + Chop(
+          zeta_4f_i * ldots_4f)
 
-    H_f = H_f
-        + zeta_4f_f * ldots_4f
-        + zeta_2p_f * ldots_2p
+    H_f = H_f + Chop(
+          zeta_4f_f * ldots_4f
+        + zeta_2p_f * ldots_2p)
 end
 
 --------------------------------------------------------------------------------
@@ -130,40 +130,40 @@ if H_cf == 1 then
     Et2u_4f_f = Et2u_4f_f - E_4f_f
     Et1u_4f_f = Et1u_4f_f - E_4f_f
 
-    H_i = H_i
-        + Ea2u_4f_i * Ea2u_4f
+    H_i = H_i + Chop(
+          Ea2u_4f_i * Ea2u_4f
         + Et2u_4f_i * Et2u_4f
-        + Et1u_4f_i * Et1u_4f
+        + Et1u_4f_i * Et1u_4f)
 
-    H_f = H_f
-        + Ea2u_4f_f * Ea2u_4f
+    H_f = H_f + Chop(
+          Ea2u_4f_f * Ea2u_4f
         + Et2u_4f_f * Et2u_4f
-        + Et1u_4f_f * Et1u_4f
+        + Et1u_4f_f * Et1u_4f)
 end
 
 --------------------------------------------------------------------------------
 -- Define the spin and orbital operators.
 --------------------------------------------------------------------------------
-Sx_4f    = NewOperator('Sx'   , NFermions, IndexUp_4f, IndexDn_4f)
-Sy_4f    = NewOperator('Sy'   , NFermions, IndexUp_4f, IndexDn_4f)
-Sz_4f    = NewOperator('Sz'   , NFermions, IndexUp_4f, IndexDn_4f)
-Ssqr_4f  = NewOperator('Ssqr' , NFermions, IndexUp_4f, IndexDn_4f)
+Sx_4f = NewOperator('Sx', NFermions, IndexUp_4f, IndexDn_4f)
+Sy_4f = NewOperator('Sy', NFermions, IndexUp_4f, IndexDn_4f)
+Sz_4f = NewOperator('Sz', NFermions, IndexUp_4f, IndexDn_4f)
+Ssqr_4f = NewOperator('Ssqr', NFermions, IndexUp_4f, IndexDn_4f)
 Splus_4f = NewOperator('Splus', NFermions, IndexUp_4f, IndexDn_4f)
-Smin_4f  = NewOperator('Smin' , NFermions, IndexUp_4f, IndexDn_4f)
+Smin_4f = NewOperator('Smin', NFermions, IndexUp_4f, IndexDn_4f)
 
-Lx_4f    = NewOperator('Lx'   , NFermions, IndexUp_4f, IndexDn_4f)
-Ly_4f    = NewOperator('Ly'   , NFermions, IndexUp_4f, IndexDn_4f)
-Lz_4f    = NewOperator('Lz'   , NFermions, IndexUp_4f, IndexDn_4f)
-Lsqr_4f  = NewOperator('Lsqr' , NFermions, IndexUp_4f, IndexDn_4f)
+Lx_4f = NewOperator('Lx', NFermions, IndexUp_4f, IndexDn_4f)
+Ly_4f = NewOperator('Ly', NFermions, IndexUp_4f, IndexDn_4f)
+Lz_4f = NewOperator('Lz', NFermions, IndexUp_4f, IndexDn_4f)
+Lsqr_4f = NewOperator('Lsqr', NFermions, IndexUp_4f, IndexDn_4f)
 Lplus_4f = NewOperator('Lplus', NFermions, IndexUp_4f, IndexDn_4f)
-Lmin_4f  = NewOperator('Lmin' , NFermions, IndexUp_4f, IndexDn_4f)
+Lmin_4f = NewOperator('Lmin', NFermions, IndexUp_4f, IndexDn_4f)
 
-Jx_4f    = NewOperator('Jx'   , NFermions, IndexUp_4f, IndexDn_4f)
-Jy_4f    = NewOperator('Jy'   , NFermions, IndexUp_4f, IndexDn_4f)
-Jz_4f    = NewOperator('Jz'   , NFermions, IndexUp_4f, IndexDn_4f)
-Jsqr_4f  = NewOperator('Jsqr' , NFermions, IndexUp_4f, IndexDn_4f)
+Jx_4f = NewOperator('Jx', NFermions, IndexUp_4f, IndexDn_4f)
+Jy_4f = NewOperator('Jy', NFermions, IndexUp_4f, IndexDn_4f)
+Jz_4f = NewOperator('Jz', NFermions, IndexUp_4f, IndexDn_4f)
+Jsqr_4f = NewOperator('Jsqr', NFermions, IndexUp_4f, IndexDn_4f)
 Jplus_4f = NewOperator('Jplus', NFermions, IndexUp_4f, IndexDn_4f)
-Jmin_4f  = NewOperator('Jmin' , NFermions, IndexUp_4f, IndexDn_4f)
+Jmin_4f = NewOperator('Jmin', NFermions, IndexUp_4f, IndexDn_4f)
 
 Sx = Sx_4f
 Sy = Sy_4f
@@ -190,28 +190,28 @@ InitialRestrictions = {NFermions, NBosons, {'111111 00000000000000', NElectrons_
 FinalRestrictions = {NFermions, NBosons, {'111111 00000000000000', NElectrons_2p - 1, NElectrons_2p - 1},
                                          {'000000 11111111111111', NElectrons_4f + 1, NElectrons_4f + 1}}
 
-Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_2p, N_4f}
+Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_2p, N_4f, 'dZ'}
 header = 'Analysis of the initial Hamiltonian:\n'
-header = header .. '==============================================================================================\n'
-header = header .. '   i       <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>    <N_2p>    <N_4f>\n'
-header = header .. '==============================================================================================\n'
-footer = '==============================================================================================\n'
+header = header .. '=============================================================================================================\n'
+header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>    <N_2p>    <N_4f>          dZ\n'
+header = header .. '=============================================================================================================\n'
+footer = '=============================================================================================================\n'
 
 -- Define the temperature.
 T = $T * EnergyUnits.Kelvin.value
 
  -- Approximate machine epsilon.
 epsilon = 2.22e-16
-Z = 0
 
 NPsis = $NPsis
 NPsisAuto = $NPsisAuto
 
+dZ = {}
+
 if NPsisAuto == 1 and NPsis ~= 1 then
-    NPsis = 1
+    NPsis = 4
     NPsisIncrement = 8
     NPsisIsConverged = false
-    dZ = {}
 
     while not NPsisIsConverged do
         if CalculationRestrictions == nil then
@@ -225,6 +225,8 @@ if NPsisAuto == 1 and NPsis ~= 1 then
         end
 
         E_gs_i = Psis_i[1] * H_i * Psis_i[1]
+
+        Z = 0
 
         for i, Psi in ipairs(Psis_i) do
             E = Psi * H_i * Psi
@@ -254,22 +256,48 @@ if NPsisAuto == 1 and NPsis ~= 1 then
         end
     end
 else
-        if CalculationRestrictions == nil then
-            Psis_i = Eigensystem(H_i, InitialRestrictions, NPsis)
-        else
-            Psis_i = Eigensystem(H_i, InitialRestrictions, NPsis, {{'restrictions', CalculationRestrictions}})
-        end
+    if CalculationRestrictions == nil then
+        Psis_i = Eigensystem(H_i, InitialRestrictions, NPsis)
+    else
+        Psis_i = Eigensystem(H_i, InitialRestrictions, NPsis, {{'restrictions', CalculationRestrictions}})
+    end
 
     if not (type(Psis_i) == 'table') then
         Psis_i = {Psis_i}
     end
+        E_gs_i = Psis_i[1] * H_i * Psis_i[1]
+
+    Z = 0
+
+    for i, Psi in ipairs(Psis_i) do
+        E = Psi * H_i * Psi
+
+        if math.abs(E - E_gs_i) < epsilon then
+            dZ[i] = 1
+        else
+            dZ[i] = math.exp(-(E - E_gs_i) / T)
+        end
+
+        Z = Z + dZ[i]
+    end
+end
+
+-- Normalize dZ to unity.
+for i in ipairs(dZ) do
+    dZ[i] = dZ[i] / Z
 end
 
 io.write(header)
 for i, Psi in ipairs(Psis_i) do
-    io.write(string.format('%4d', i))
+    io.write(string.format('%5d', i))
     for j, Operator in ipairs(Operators) do
-        io.write(string.format('%10.4f', Complex.Re(Psi * Operator * Psi)))
+        if j == 1 then
+            io.write(string.format('%12.6f', Complex.Re(Psi * Operator * Psi)))
+        elseif Operator == 'dZ' then
+            io.write(string.format('%12.2E', dZ[i]))
+        else
+            io.write(string.format('%10.4f', Complex.Re(Psi * Operator * Psi)))
+        end
     end
     io.write('\n')
 end
@@ -286,18 +314,19 @@ Tyz_2p_4f   = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_2p, I
 Tx2y2_2p_4f = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_2p, IndexDn_2p, {{2, -2, t    }, {2, 2,  t    }})
 Tz2_2p_4f   = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_2p, IndexDn_2p, {{2,  0, 1    }                })
 
---------------------------------------------------------------------------------
--- Calculate and save the spectra.
---------------------------------------------------------------------------------
-CalculateIso = $calculateIso
+T_2p_4f = {Txy_2p_4f, Txz_2p_4f, Tyz_2p_4f, Tx2y2_2p_4f, Tz2_2p_4f}
 
-if CalculateIso == 0 then
-    return
-end
-
+--------------------------------------------------------------------------------
+-- Calculate and save the spectrum.
+--------------------------------------------------------------------------------
 E_gs_i = Psis_i[1] * H_i * Psis_i[1]
 
-Psis_f = Eigensystem(H_f, FinalRestrictions, 1)
+if CalculationRestrictions == nil then
+    Psis_f = Eigensystem(H_f, FinalRestrictions, 1)
+else
+    Psis_f = Eigensystem(H_f, FinalRestrictions, 1, {{'restrictions', CalculationRestrictions}})
+end
+
 Psis_f = {Psis_f}
 E_gs_f = Psis_f[1] * H_f * Psis_f[1]
 
@@ -309,31 +338,26 @@ Emax = $Emax1 - DeltaE
 Gamma = $Gamma1
 NE = $NE1
 
-Z = 0
+if CalculationRestrictions == nil then
+    G = CreateSpectra(H_f, T_2p_4f, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}})
+else
+    G = CreateSpectra(H_f, T_2p_4f, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}})
+end
 
-Giso = 0
-
-for i, Psi in ipairs(Psis_i) do
-    E = Psi * H_i * Psi
-
-    if math.abs(E - E_gs_i) < epsilon then
-        dZ = 1
-    else
-        dZ = math.exp(-(E - E_gs_i) / T)
-    end
-
-    Z = Z + dZ
-
-    if CalculateIso == 1 then
-        for j, Operator in ipairs({Txy_2p_4f, Txz_2p_4f, Tyz_2p_4f, Tx2y2_2p_4f, Tz2_2p_4f}) do
-            Giso = Giso + CreateSpectra(H_f, Operator, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
-        end
+IndicesToSum = {}
+for i in ipairs(T_2p_4f) do
+    for j in ipairs(Psis_i) do
+        table.insert(IndicesToSum, dZ[j] / 15)
     end
 end
 
+G = Spectra.Sum(G, IndicesToSum)
+G = G / (2 * math.pi)
 
-if CalculateIso == 1 then
-    Giso = Giso / Z / 15
-    Giso.Print({{'file', '$baseName' .. '_iso.spec'}})
-end
+Gmin1 = $Gmin1 - Gamma
+Gmax1 = $Gmax1 - Gamma
+Egamma1 = $Egamma1 - DeltaE
+G.Broaden(0, {{Emin, Gmin1}, {Egamma1, Gmin1}, {Egamma1, Gmax1}, {Emax, Gmax1}})
+
+G.Print({{'file', '$BaseName.spec'}})
 

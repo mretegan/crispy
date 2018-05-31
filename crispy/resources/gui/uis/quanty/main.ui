@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>290</width>
-    <height>680</height>
+    <height>700</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -77,7 +77,7 @@
          <x>0</x>
          <y>0</y>
          <width>290</width>
-         <height>534</height>
+         <height>554</height>
         </rect>
        </property>
        <attribute name="label">
@@ -278,6 +278,26 @@
                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                </property>
               </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="sampleHBoxLayout">
+             <item>
+              <widget class="QLabel" name="sampleLabel">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Sample</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="ComboBox" name="sampleComboBox"/>
              </item>
             </layout>
            </item>
@@ -516,9 +536,9 @@
              </widget>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="kinHBoxLayout">
+             <layout class="QHBoxLayout" name="k1HBoxLayout">
               <item>
-               <spacer name="kinLeftSpacer">
+               <spacer name="k1LeftSpacer">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
                 </property>
@@ -534,14 +554,14 @@
                </spacer>
               </item>
               <item>
-               <widget class="QLabel" name="kinLabel">
+               <widget class="QLabel" name="k1Label">
                 <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;k&lt;/span&gt;&lt;span style=&quot; vertical-align:sub;&quot;&gt;in&lt;/span&gt; [x, y, z]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;k&lt;/span&gt; (x, y, z)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="VectorLineEdit" name="kinLineEdit">
+               <widget class="VectorLineEdit" name="k1LineEdit">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -562,9 +582,9 @@
              </layout>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="ein1HBoxLayout">
+             <layout class="QHBoxLayout" name="eps11HBoxLayout">
               <item>
-               <spacer name="ein1LeftSpacer">
+               <spacer name="eps11LeftSpacer">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
                 </property>
@@ -580,14 +600,14 @@
                </spacer>
               </item>
               <item>
-               <widget class="QLabel" name="ein1Label">
+               <widget class="QLabel" name="eps11Label">
                 <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;ε&lt;/span&gt;&lt;span style=&quot; vertical-align:sub;&quot;&gt;in1&lt;/span&gt; [x, y, z]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;ε&lt;/span&gt;&lt;span style=&quot; vertical-align:sub;&quot;&gt;V&lt;/span&gt; (x, y, z)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="VectorLineEdit" name="ein1LineEdit">
+               <widget class="VectorLineEdit" name="eps11LineEdit">
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
@@ -611,9 +631,9 @@
              </layout>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="ein2HBoxLayout">
+             <layout class="QHBoxLayout" name="eps12HBoxLayout">
               <item>
-               <spacer name="ein2LeftSpacer">
+               <spacer name="eps12LeftSpacer">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
                 </property>
@@ -629,14 +649,14 @@
                </spacer>
               </item>
               <item>
-               <widget class="QLabel" name="ein2Label">
+               <widget class="QLabel" name="eps12Label">
                 <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;ε&lt;/span&gt;&lt;span style=&quot; vertical-align:sub;&quot;&gt;in2&lt;/span&gt; [x, y, z]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;ε&lt;/span&gt;&lt;span style=&quot; vertical-align:sub;&quot;&gt;H&lt;/span&gt; (x, y, z)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="VectorLineEdit" name="ein2LineEdit">
+               <widget class="VectorLineEdit" name="eps12LineEdit">
                 <property name="enabled">
                  <bool>false</bool>
                 </property>
@@ -873,9 +893,9 @@
              </widget>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="koutHBoxLayout">
+             <layout class="QHBoxLayout" name="k2HBoxLayout">
               <item>
-               <spacer name="koutLeftSpacer">
+               <spacer name="k2LeftSpacer">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
                 </property>
@@ -891,14 +911,14 @@
                </spacer>
               </item>
               <item>
-               <widget class="QLabel" name="koutLabel">
+               <widget class="QLabel" name="k2Label">
                 <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;k&lt;/span&gt;&lt;span style=&quot; vertical-align:sub;&quot;&gt;out&lt;/span&gt; [x, y, z]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;k&lt;/span&gt;' (x, y, z)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="VectorLineEdit" name="koutLineEdit">
+               <widget class="VectorLineEdit" name="k2LineEdit">
                 <property name="enabled">
                  <bool>false</bool>
                 </property>
@@ -922,9 +942,9 @@
              </layout>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="eout1HBoxLayout">
+             <layout class="QHBoxLayout" name="eps21HBoxLayout">
               <item>
-               <spacer name="eout1LeftSpacer">
+               <spacer name="eps21LeftSpacer">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
                 </property>
@@ -940,14 +960,14 @@
                </spacer>
               </item>
               <item>
-               <widget class="QLabel" name="eout1Label">
+               <widget class="QLabel" name="eps21Label">
                 <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;ε&lt;/span&gt;&lt;span style=&quot; vertical-align:sub;&quot;&gt;out1&lt;/span&gt; [x, y, z]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;ε&lt;/span&gt;'&lt;span style=&quot; vertical-align:sub;&quot;&gt;σ&lt;/span&gt; (x, y, z)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="VectorLineEdit" name="eout1LineEdit">
+               <widget class="VectorLineEdit" name="eps21LineEdit">
                 <property name="enabled">
                  <bool>false</bool>
                 </property>
@@ -971,9 +991,9 @@
              </layout>
             </item>
             <item>
-             <layout class="QHBoxLayout" name="eout2HBoxLayout">
+             <layout class="QHBoxLayout" name="eps22HBoxLayout">
               <item>
-               <spacer name="eout2LeftSpacer">
+               <spacer name="eps22LeftSpacer">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
                 </property>
@@ -989,14 +1009,14 @@
                </spacer>
               </item>
               <item>
-               <widget class="QLabel" name="eout2Label">
+               <widget class="QLabel" name="eps22Label">
                 <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;ε&lt;/span&gt;&lt;span style=&quot; vertical-align:sub;&quot;&gt;out2&lt;/span&gt; [x, y, z]&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;ε&lt;/span&gt;'&lt;span style=&quot; vertical-align:sub;&quot;&gt;π&lt;/span&gt; (x, y, z)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="VectorLineEdit" name="eout2LineEdit">
+               <widget class="VectorLineEdit" name="eps22LineEdit">
                 <property name="enabled">
                  <bool>false</bool>
                 </property>
@@ -1024,57 +1044,6 @@
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="calculateGroupBox">
-          <property name="toolTip">
-           <string>Select the spectra to be calculated.</string>
-          </property>
-          <property name="title">
-           <string>Spectra to Calculate</string>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout">
-           <item>
-            <widget class="QCheckBox" name="calculateIsoCheckBox">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Isotropic</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="calculateCDCheckBox">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>XMCD</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="calculateLDCheckBox">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>X(M)LD</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
          <spacer name="spacer">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -1098,7 +1067,7 @@
          <x>0</x>
          <y>0</y>
          <width>290</width>
-         <height>534</height>
+         <height>554</height>
         </rect>
        </property>
        <attribute name="label">
@@ -1438,7 +1407,7 @@
          <x>0</x>
          <y>0</y>
          <width>290</width>
-         <height>534</height>
+         <height>554</height>
         </rect>
        </property>
        <attribute name="label">
@@ -1474,60 +1443,6 @@
           <property name="alternatingRowColors">
            <bool>true</bool>
           </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QGroupBox" name="plotGroupBox">
-          <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the spectra to be plotted.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-          <property name="title">
-           <string>Spectra to Plot</string>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
-           <item>
-            <widget class="QCheckBox" name="plotIsoCheckBox">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Isotropic</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="plotCDCheckBox">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>XMCD</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="plotLDCheckBox">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>X(M)LD</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
          </widget>
         </item>
        </layout>
@@ -1648,18 +1563,15 @@
   <tabstop>e1NPointsLineEdit</tabstop>
   <tabstop>e1LorentzianLineEdit</tabstop>
   <tabstop>e1GaussianLineEdit</tabstop>
-  <tabstop>kinLineEdit</tabstop>
-  <tabstop>ein1LineEdit</tabstop>
+  <tabstop>k1LineEdit</tabstop>
+  <tabstop>eps11LineEdit</tabstop>
   <tabstop>e2MinLineEdit</tabstop>
   <tabstop>e2MaxLineEdit</tabstop>
   <tabstop>e2NPointsLineEdit</tabstop>
   <tabstop>e2LorentzianLineEdit</tabstop>
   <tabstop>e2GaussianLineEdit</tabstop>
-  <tabstop>koutLineEdit</tabstop>
-  <tabstop>eout1LineEdit</tabstop>
-  <tabstop>calculateIsoCheckBox</tabstop>
-  <tabstop>calculateCDCheckBox</tabstop>
-  <tabstop>calculateLDCheckBox</tabstop>
+  <tabstop>k2LineEdit</tabstop>
+  <tabstop>eps21LineEdit</tabstop>
   <tabstop>fkLineEdit</tabstop>
   <tabstop>gkLineEdit</tabstop>
   <tabstop>zetaLineEdit</tabstop>
@@ -1670,9 +1582,6 @@
   <tabstop>nPsisLineEdit</tabstop>
   <tabstop>nConfigurationsLineEdit</tabstop>
   <tabstop>resultsView</tabstop>
-  <tabstop>plotIsoCheckBox</tabstop>
-  <tabstop>plotCDCheckBox</tabstop>
-  <tabstop>plotLDCheckBox</tabstop>
   <tabstop>calculationPushButton</tabstop>
   <tabstop>saveInputAsPushButton</tabstop>
  </tabstops>

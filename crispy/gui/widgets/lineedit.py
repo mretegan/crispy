@@ -27,9 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '30/04/2018'
-
-import numpy as np
+__date__ = '31/05/2018'
 
 from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtGui import QIntValidator, QDoubleValidator
@@ -64,18 +62,26 @@ class VectorLineEdit(QLineEdit):
         super(VectorLineEdit, self).__init__(*args, **kwargs)
 
     def getVector(self):
-        # Using np.fromstring gives some weird results.
-        string = self.text()[1:-1].split(',')
-        try:
-            vector = list(map(float, string))
-        except ValueError:
-            raise
-        else:
-            return np.array(vector)
+        text = self.text()
+        if '(' not in text or ')' not in text:
+            raise ValueError
 
-    def setVector(self, array, separator=', ', fmt='{:.2g}'):
-        formatter = {'float_kind': lambda x: fmt.format(x)}
-        text = np.array2string(array, separator=separator, formatter=formatter)
+        text = text[1:-1].split(',')
+
+        try:
+            vector = list(map(int, text))
+        except ValueError:
+            try:
+                vector = list(map(float, text))
+            except ValueError:
+                raise
+            else:
+                return vector
+        else:
+            return vector
+
+    def setVector(self, vector):
+        text = str(tuple(vector))
         self.setText(text)
 
 
@@ -84,8 +90,9 @@ class DoubleListLineEdit(QLineEdit):
         super(DoubleListLineEdit, self).__init__(*args, **kwargs)
 
     def getList(self):
+        text = self.text().split(',')
         try:
-            values = list(map(float, self.text().split(',')))
+            values = list(map(float, text))
         except ValueError:
             raise
         else:

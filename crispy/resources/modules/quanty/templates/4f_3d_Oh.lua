@@ -4,7 +4,7 @@
 --
 -- elements: 4f
 -- symmetry: Oh
--- experiment: XAS
+-- experiment: XAS, XMCD, X(M)LD
 -- edge: M4,5 (3d)
 --------------------------------------------------------------------------------
 Verbosity($Verbosity)
@@ -75,14 +75,14 @@ if H_atomic == 1 then
     G5_3d_4f_f = $G5(3d,4f)_f_value * $G5(3d,4f)_f_scaling
     F0_3d_4f_f = 3 / 70 * G1_3d_4f_f + 2 / 105 * G3_3d_4f_f + 5 / 231 * G5_3d_4f_f
 
-    H_i = H_i
-        + F0_4f_4f_i * F0_4f_4f
+    H_i = H_i + Chop(
+          F0_4f_4f_i * F0_4f_4f
         + F2_4f_4f_i * F2_4f_4f
         + F4_4f_4f_i * F4_4f_4f
-        + F6_4f_4f_i * F6_4f_4f
+        + F6_4f_4f_i * F6_4f_4f)
 
-    H_f = H_f
-        + F0_4f_4f_f * F0_4f_4f
+    H_f = H_f + Chop(
+          F0_4f_4f_f * F0_4f_4f
         + F2_4f_4f_f * F2_4f_4f
         + F4_4f_4f_f * F4_4f_4f
         + F6_4f_4f_f * F6_4f_4f
@@ -91,7 +91,7 @@ if H_atomic == 1 then
         + F4_3d_4f_f * F4_3d_4f
         + G1_3d_4f_f * G1_3d_4f
         + G3_3d_4f_f * G3_3d_4f
-        + G5_3d_4f_f * G5_3d_4f
+        + G5_3d_4f_f * G5_3d_4f)
 
     ldots_4f = NewOperator('ldots', NFermions, IndexUp_4f, IndexDn_4f)
 
@@ -102,12 +102,12 @@ if H_atomic == 1 then
     zeta_4f_f = $zeta(4f)_f_value * $zeta(4f)_f_scaling
     zeta_3d_f = $zeta(3d)_f_value * $zeta(3d)_f_scaling
 
-    H_i = H_i
-        + zeta_4f_i * ldots_4f
+    H_i = H_i + Chop(
+          zeta_4f_i * ldots_4f)
 
-    H_f = H_f
-        + zeta_4f_f * ldots_4f
-        + zeta_3d_f * ldots_3d
+    H_f = H_f + Chop(
+          zeta_4f_f * ldots_4f
+        + zeta_3d_f * ldots_3d)
 end
 
 --------------------------------------------------------------------------------
@@ -138,40 +138,40 @@ if H_cf == 1 then
     Et2u_4f_f = Et2u_4f_f - E_4f_f
     Et1u_4f_f = Et1u_4f_f - E_4f_f
 
-    H_i = H_i
-        + Ea2u_4f_i * Ea2u_4f
+    H_i = H_i + Chop(
+          Ea2u_4f_i * Ea2u_4f
         + Et2u_4f_i * Et2u_4f
-        + Et1u_4f_i * Et1u_4f
+        + Et1u_4f_i * Et1u_4f)
 
-    H_f = H_f
-        + Ea2u_4f_f * Ea2u_4f
+    H_f = H_f + Chop(
+          Ea2u_4f_f * Ea2u_4f
         + Et2u_4f_f * Et2u_4f
-        + Et1u_4f_f * Et1u_4f
+        + Et1u_4f_f * Et1u_4f)
 end
 
 --------------------------------------------------------------------------------
 -- Define the magnetic field and exchange field terms.
 --------------------------------------------------------------------------------
-Sx_4f    = NewOperator('Sx'   , NFermions, IndexUp_4f, IndexDn_4f)
-Sy_4f    = NewOperator('Sy'   , NFermions, IndexUp_4f, IndexDn_4f)
-Sz_4f    = NewOperator('Sz'   , NFermions, IndexUp_4f, IndexDn_4f)
-Ssqr_4f  = NewOperator('Ssqr' , NFermions, IndexUp_4f, IndexDn_4f)
+Sx_4f = NewOperator('Sx', NFermions, IndexUp_4f, IndexDn_4f)
+Sy_4f = NewOperator('Sy', NFermions, IndexUp_4f, IndexDn_4f)
+Sz_4f = NewOperator('Sz', NFermions, IndexUp_4f, IndexDn_4f)
+Ssqr_4f = NewOperator('Ssqr', NFermions, IndexUp_4f, IndexDn_4f)
 Splus_4f = NewOperator('Splus', NFermions, IndexUp_4f, IndexDn_4f)
-Smin_4f  = NewOperator('Smin' , NFermions, IndexUp_4f, IndexDn_4f)
+Smin_4f = NewOperator('Smin', NFermions, IndexUp_4f, IndexDn_4f)
 
-Lx_4f    = NewOperator('Lx'   , NFermions, IndexUp_4f, IndexDn_4f)
-Ly_4f    = NewOperator('Ly'   , NFermions, IndexUp_4f, IndexDn_4f)
-Lz_4f    = NewOperator('Lz'   , NFermions, IndexUp_4f, IndexDn_4f)
-Lsqr_4f  = NewOperator('Lsqr' , NFermions, IndexUp_4f, IndexDn_4f)
+Lx_4f = NewOperator('Lx', NFermions, IndexUp_4f, IndexDn_4f)
+Ly_4f = NewOperator('Ly', NFermions, IndexUp_4f, IndexDn_4f)
+Lz_4f = NewOperator('Lz', NFermions, IndexUp_4f, IndexDn_4f)
+Lsqr_4f = NewOperator('Lsqr', NFermions, IndexUp_4f, IndexDn_4f)
 Lplus_4f = NewOperator('Lplus', NFermions, IndexUp_4f, IndexDn_4f)
-Lmin_4f  = NewOperator('Lmin' , NFermions, IndexUp_4f, IndexDn_4f)
+Lmin_4f = NewOperator('Lmin', NFermions, IndexUp_4f, IndexDn_4f)
 
-Jx_4f    = NewOperator('Jx'   , NFermions, IndexUp_4f, IndexDn_4f)
-Jy_4f    = NewOperator('Jy'   , NFermions, IndexUp_4f, IndexDn_4f)
-Jz_4f    = NewOperator('Jz'   , NFermions, IndexUp_4f, IndexDn_4f)
-Jsqr_4f  = NewOperator('Jsqr' , NFermions, IndexUp_4f, IndexDn_4f)
+Jx_4f = NewOperator('Jx', NFermions, IndexUp_4f, IndexDn_4f)
+Jy_4f = NewOperator('Jy', NFermions, IndexUp_4f, IndexDn_4f)
+Jz_4f = NewOperator('Jz', NFermions, IndexUp_4f, IndexDn_4f)
+Jsqr_4f = NewOperator('Jsqr', NFermions, IndexUp_4f, IndexDn_4f)
 Jplus_4f = NewOperator('Jplus', NFermions, IndexUp_4f, IndexDn_4f)
-Jmin_4f  = NewOperator('Jmin' , NFermions, IndexUp_4f, IndexDn_4f)
+Jmin_4f = NewOperator('Jmin', NFermions, IndexUp_4f, IndexDn_4f)
 
 Sx = Sx_4f
 Sy = Sy_4f
@@ -198,15 +198,15 @@ if H_magnetic_field == 1 then
     By_f = $By_f_value * EnergyUnits.Tesla.value
     Bz_f = $Bz_f_value * EnergyUnits.Tesla.value
 
-    H_i = H_i
-        + Bx_i * (2 * Sx + Lx)
+    H_i = H_i + Chop(
+          Bx_i * (2 * Sx + Lx)
         + By_i * (2 * Sy + Ly)
-        + Bz_i * (2 * Sz + Lz)
+        + Bz_i * (2 * Sz + Lz))
 
-    H_f = H_f
-        + Bx_f * (2 * Sx + Lx)
+    H_f = H_f + Chop(
+          Bx_f * (2 * Sx + Lx)
         + By_f * (2 * Sy + Ly)
-        + Bz_f * (2 * Sz + Lz)
+        + Bz_f * (2 * Sz + Lz))
 end
 
 if H_exchange_field == 1 then
@@ -218,15 +218,15 @@ if H_exchange_field == 1 then
     Hy_f = $Hy_f_value
     Hz_f = $Hz_f_value
 
-    H_i = H_i
-        + Hx_i * Sx
+    H_i = H_i + Chop(
+          Hx_i * Sx
         + Hy_i * Sy
-        + Hz_i * Sz
+        + Hz_i * Sz)
 
-    H_f = H_f
-        + Hx_f * Sx
+    H_f = H_f + Chop(
+          Hx_f * Sx
         + Hy_f * Sy
-        + Hz_f * Sz
+        + Hz_f * Sz)
 end
 
 --------------------------------------------------------------------------------
@@ -238,28 +238,28 @@ InitialRestrictions = {NFermions, NBosons, {'1111111111 00000000000000', NElectr
 FinalRestrictions = {NFermions, NBosons, {'1111111111 00000000000000', NElectrons_3d - 1, NElectrons_3d - 1},
                                          {'0000000000 11111111111111', NElectrons_4f + 1, NElectrons_4f + 1}}
 
-Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_3d, N_4f}
+Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_3d, N_4f, 'dZ'}
 header = 'Analysis of the initial Hamiltonian:\n'
-header = header .. '==============================================================================================\n'
-header = header .. '   i       <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>    <N_3d>    <N_4f>\n'
-header = header .. '==============================================================================================\n'
-footer = '==============================================================================================\n'
+header = header .. '=============================================================================================================\n'
+header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>    <N_3d>    <N_4f>          dZ\n'
+header = header .. '=============================================================================================================\n'
+footer = '=============================================================================================================\n'
 
 -- Define the temperature.
 T = $T * EnergyUnits.Kelvin.value
 
  -- Approximate machine epsilon.
 epsilon = 2.22e-16
-Z = 0
 
 NPsis = $NPsis
 NPsisAuto = $NPsisAuto
 
+dZ = {}
+
 if NPsisAuto == 1 and NPsis ~= 1 then
-    NPsis = 1
+    NPsis = 4
     NPsisIncrement = 8
     NPsisIsConverged = false
-    dZ = {}
 
     while not NPsisIsConverged do
         if CalculationRestrictions == nil then
@@ -273,6 +273,8 @@ if NPsisAuto == 1 and NPsis ~= 1 then
         end
 
         E_gs_i = Psis_i[1] * H_i * Psis_i[1]
+
+        Z = 0
 
         for i, Psi in ipairs(Psis_i) do
             E = Psi * H_i * Psi
@@ -302,22 +304,48 @@ if NPsisAuto == 1 and NPsis ~= 1 then
         end
     end
 else
-        if CalculationRestrictions == nil then
-            Psis_i = Eigensystem(H_i, InitialRestrictions, NPsis)
-        else
-            Psis_i = Eigensystem(H_i, InitialRestrictions, NPsis, {{'restrictions', CalculationRestrictions}})
-        end
+    if CalculationRestrictions == nil then
+        Psis_i = Eigensystem(H_i, InitialRestrictions, NPsis)
+    else
+        Psis_i = Eigensystem(H_i, InitialRestrictions, NPsis, {{'restrictions', CalculationRestrictions}})
+    end
 
     if not (type(Psis_i) == 'table') then
         Psis_i = {Psis_i}
     end
+        E_gs_i = Psis_i[1] * H_i * Psis_i[1]
+
+    Z = 0
+
+    for i, Psi in ipairs(Psis_i) do
+        E = Psi * H_i * Psi
+
+        if math.abs(E - E_gs_i) < epsilon then
+            dZ[i] = 1
+        else
+            dZ[i] = math.exp(-(E - E_gs_i) / T)
+        end
+
+        Z = Z + dZ[i]
+    end
+end
+
+-- Normalize dZ to unity.
+for i in ipairs(dZ) do
+    dZ[i] = dZ[i] / Z
 end
 
 io.write(header)
 for i, Psi in ipairs(Psis_i) do
-    io.write(string.format('%4d', i))
+    io.write(string.format('%5d', i))
     for j, Operator in ipairs(Operators) do
-        io.write(string.format('%10.4f', Complex.Re(Psi * Operator * Psi)))
+        if j == 1 then
+            io.write(string.format('%12.6f', Complex.Re(Psi * Operator * Psi)))
+        elseif Operator == 'dZ' then
+            io.write(string.format('%12.2E', dZ[i]))
+        else
+            io.write(string.format('%10.4f', Complex.Re(Psi * Operator * Psi)))
+        end
     end
     io.write('\n')
 end
@@ -328,34 +356,53 @@ io.write(footer)
 --------------------------------------------------------------------------------
 t = math.sqrt(1/2);
 
-kin = $kin
-ein1 = $ein1
-ein2 = $ein2
-
 Tx_3d_4f = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_3d, IndexDn_3d, {{1, -1, t    }, {1, 1, -t    }})
 Ty_3d_4f = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_3d, IndexDn_3d, {{1, -1, t * I}, {1, 1,  t * I}})
 Tz_3d_4f = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_3d, IndexDn_3d, {{1,  0, 1    }                })
 
-Tein1_3d_4f = ein1[1] * Tx_3d_4f + ein1[2] * Ty_3d_4f + ein1[3] * Tz_3d_4f
-Tein2_3d_4f = ein2[1] * Tx_3d_4f + ein2[2] * Ty_3d_4f + ein2[3] * Tz_3d_4f
+k1 = $k1
+eps11 = $eps11
+eps12 = $eps12
 
-Tr_3d_4f =  t * (Tein1_3d_4f - I * Tein2_3d_4f)
-Tl_3d_4f = -t * (Tein1_3d_4f + I * Tein2_3d_4f)
+Tk1_3d_4f = k1[1] * Tx_3d_4f + k1[2] * Ty_3d_4f + k1[3] * Tz_3d_4f
+Teps11_3d_4f = eps11[1] * Tx_3d_4f + eps11[2] * Ty_3d_4f + eps11[3] * Tz_3d_4f
+Teps12_3d_4f = eps12[1] * Tx_3d_4f + eps12[2] * Ty_3d_4f + eps12[3] * Tz_3d_4f
 
---------------------------------------------------------------------------------
--- Calculate and save the spectra.
---------------------------------------------------------------------------------
-CalculateIso = $calculateIso
-CalculateCD  = $calculateCD
-CalculateLD  = $calculateLD
+Tr_3d_4f =  t * (Teps11_3d_4f - I * Teps12_3d_4f)
+Tl_3d_4f = -t * (Teps11_3d_4f + I * Teps12_3d_4f)
 
-if CalculateIso == 0 and CalculateCD == 0 and CalculateLD == 0 then
-    return
+Experiment = '$Experiment'
+SingleCrystalSample = $SingleCrystalSample
+
+if SingleCrystalSample == 1 then
+    if Experiment == 'XAS' then
+        T_3d_4f = {Tk1_3d_4f}
+    elseif Experiment == 'X(M)LD' then
+        T_3d_4f = {Teps11_3d_4f, Teps12_3d_4f}
+    elseif Experiment == 'XMCD' then
+        T_3d_4f = {Tr_3d_4f, Tl_3d_4f}
+    else
+        return
+    end
+else
+    if Experiment ==  'XAS' then
+        T_3d_4f = {Tx_3d_4f, Ty_3d_4f, Tz_3d_4f}
+    else
+        return
+    end
 end
 
+--------------------------------------------------------------------------------
+-- Calculate and save the spectrum.
+--------------------------------------------------------------------------------
 E_gs_i = Psis_i[1] * H_i * Psis_i[1]
 
-Psis_f = Eigensystem(H_f, FinalRestrictions, 1)
+if CalculationRestrictions == nil then
+    Psis_f = Eigensystem(H_f, FinalRestrictions, 1)
+else
+    Psis_f = Eigensystem(H_f, FinalRestrictions, 1, {{'restrictions', CalculationRestrictions}})
+end
+
 Psis_f = {Psis_f}
 E_gs_f = Psis_f[1] * H_f * Psis_f[1]
 
@@ -367,75 +414,38 @@ Emax = $Emax1 - DeltaE
 Gamma = $Gamma1
 NE = $NE1
 
-Z = 0
+if CalculationRestrictions == nil then
+    G = CreateSpectra(H_f, T_3d_4f, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}})
+else
+    G = CreateSpectra(H_f, T_3d_4f, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}})
+end
 
-Giso = 0
-
-Gr = 0
-Gl = 0
-
-Gein1 = 0
-Gein2 = 0
-
-io.write(string.format('\nSpectrum calculation for each of the selected states:\n'))
-io.write(string.format('===============\n'))
-io.write(string.format('   i         dZ\n'))
-io.write(string.format('===============\n'))
-
-for i, Psi in ipairs(Psis_i) do
-    E = Psi * H_i * Psi
-
-    if math.abs(E - E_gs_i) < epsilon then
-        dZ = 1
-    else
-        dZ = math.exp(-(E - E_gs_i) / T)
-    end
-
-    Z = Z + dZ
-
-    io.write(string.format('%4d   %3.2E\n', i, dZ))
-
-    if CalculateIso == 1 then
-        for j, Operator in ipairs({Tx_3d_4f, Ty_3d_4f, Tz_3d_4f}) do
-            Giso = Giso + CreateSpectra(H_f, Operator, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
+IndicesToSum = {}
+for i in ipairs(T_3d_4f) do
+    for j in ipairs(Psis_i) do
+        if Experiment == 'XAS' then
+            if SingleCrystalSample == 1 then
+                table.insert(IndicesToSum, dZ[j])
+            else
+                table.insert(IndicesToSum, dZ[j] / 3)
+            end
+        elseif Experiment == 'XMCD' or Experiment == 'X(M)LD)' then
+            if i == 1 then
+                table.insert(IndicesToSum, dZ[j])
+            else
+                table.insert(IndicesToSum, -dZ[j])
+            end
         end
     end
-
-    if CalculateCD == 1 then
-        Gr = Gr + CreateSpectra(H_f, Tr_3d_4f, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
-        Gl = Gl + CreateSpectra(H_f, Tl_3d_4f, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
-    end
-
-    if CalculateLD == 1 then
-        Gein1 = Gein1 + CreateSpectra(H_f, Tein1_3d_4f, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
-        Gein2 = Gein2 + CreateSpectra(H_f, Tein2_3d_4f, Psi, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}}) * dZ
-    end
 end
-io.write(string.format('===============\n'))
+
+G = Spectra.Sum(G, IndicesToSum)
+G = G / (2 * math.pi)
 
 Gmin1 = $Gmin1 - Gamma
 Gmax1 = $Gmax1 - Gamma
 Egamma1 = $Egamma1 - DeltaE
+G.Broaden(0, {{Emin, Gmin1}, {Egamma1, Gmin1}, {Egamma1, Gmax1}, {Emax, Gmax1}})
 
-if CalculateIso == 1 then
-    Giso = Giso / Z / 3
-    Giso.Broaden(0, {{Emin, Gmin1}, {Egamma1, Gmin1}, {Egamma1, Gmax1}, {Emax, Gmax1}})
-    Giso.Print({{'file', '$baseName' .. '_iso.spec'}})
-end
-
-if CalculateCD == 1 then
-    Gr = Gr / Z
-    Gl = Gl / Z
-    Gcd = Gr - Gl
-    Gcd.Broaden(0, {{Emin, Gmin1}, {Egamma1, Gmin1}, {Egamma1, Gmax1}, {Emax, Gmax1}})
-    Gcd.Print({{'file', '$baseName' .. '_cd.spec'}})
-end
-
-if CalculateLD == 1 then
-    Gein1 = Gein1 / Z
-    Gein2 = Gein2 / Z
-    Gld = Gein1 - Gein2
-    Gld.Broaden(0, {{Emin, Gmin1}, {Egamma1, Gmin1}, {Egamma1, Gmax1}, {Emax, Gmax1}})
-    Gld.Print({{'file', '$baseName' .. '_ld.spec'}})
-end
+G.Print({{'file', '$BaseName.spec'}})
 

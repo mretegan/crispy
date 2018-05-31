@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '29/05/2018'
+__date__ = '31/05/2018'
 
 
 import copy
@@ -40,6 +40,7 @@ try:
     import cPickle as pickle
 except ImportError:
     import pickle
+import re
 import subprocess
 import sys
 import uuid
@@ -56,45 +57,59 @@ from .models.treemodel import TreeModel
 from .models.listmodel import ListModel
 from ..utils.broaden import broaden
 from ..utils.odict import odict
+from ..version import version
 
 
 class QuantyCalculation(object):
 
-    # Parameters not loaded from external files should have defaults.
-    _defaults = {
-        'element': 'Ni',
-        'charge': '2+',
-        'symmetry': 'Oh',
-        'experiment': 'XAS',
-        'edge': 'L2,3 (2p)',
-        'temperature': 10.0,
-        'magneticField': 0.0,
-        'kin': np.array([0.0, 0.0, -1.0]),
-        'ein1': np.array([0.0, 1.0, 0.0]),
-        'ein2': np.array([-1.0, 0.0, 0.0]),
-        'kout': np.array([0.0, 0.0, 0.0]),
-        'eout1': np.array([0.0, 0.0, 0.0]),
-        'eout2': np.array([0.0, 0.0, 0.0]),
-        'calculateIso': 1,
-        'calculateCD': 0,
-        'calculateLD': 0,
-        'nPsisAuto': 1,
-        'nConfigurations': 1,
-        'fk': 0.8,
-        'gk': 0.8,
-        'zeta': 1.0,
-        'baseName': 'untitled',
-        'spectra': None,
-        'uuid': None,
-        'startingTime': None,
-        'endingTime': None,
-        'verbosity': None,
-    }
+    _defaults = odict(
+        [
+            ('version', version),
+            ('element', 'Ni'),
+            ('charge', '2+'),
+            ('symmetry', 'Oh'),
+            ('experiment', 'XAS'),
+            ('edge', 'L2,3 (2p)'),
+            ('temperature', 10.0),
+            ('magneticField', 0.0),
+            ('sample', 'Single Crystal'),
+            ('e1Min', None),
+            ('e1Max', None),
+            ('e1NPoints', None),
+            ('e1Lorentzian', None),
+            ('e1Gaussian', None),
+            ('k1', [0, 0, -1]),
+            ('eps11', [0, 1, 0]),
+            ('eps12', [-1, 0, 0]),
+            ('e2Min', None),
+            ('e2Max', None),
+            ('e2NPoints', None),
+            ('e2Lorentzian', None),
+            ('e2Gaussian', None),
+            ('k2', [0, 0, 0]),
+            ('eps21', [0, 0, 0]),
+            ('eps22', [0, 0, 0]),
+            ('nPsisAuto', 1),
+            ('nConfigurations', 1),
+            ('fk', 0.8),
+            ('gk', 0.8),
+            ('zeta', 1.0),
+            ('hamiltonianData', None),
+            ('hamiltonianState', None),
+            ('baseName', 'untitled'),
+            ('spectrum', None),
+            ('uuid', None),
+            ('startingTime', None),
+            ('endingTime', None),
+            ('verbosity', None),
+        ]
+    )
 
     def __init__(self, **kwargs):
         self.__dict__.update(self._defaults)
         self.__dict__.update(kwargs)
 
+        # This is read in less than a milliseconds.
         path = resourceFileName(
             'crispy:' + os.path.join('modules', 'quanty', 'parameters',
                                      'parameters.json.gz'))
@@ -163,11 +178,18 @@ class QuantyCalculation(object):
         self.hamiltonianData = odict()
         self.hamiltonianState = odict()
 
-        if (('L2,3 (2p)' in self.edge and 'd' in self.block) or
-           ('M4,5 (3d)' in self.edge and 'f' in self.block)):
-            self.hasPolarization = True
+        self.samples = list()
+        if 'XAS' in self.experiment:
+            self.samples.append('Powder / Amorphous')
+            if (('L2,3 (2p)' in self.edge and 'd' in self.block) or
+                    ('M4,5 (3d)' in self.edge and 'f' in self.block)):
+                self.samples.append('Single Crystal')
+        elif 'XMCD' in self.experiment or 'X(M)LD' in self.experiment:
+            self.samples.append('Single Crystal')
+        elif 'RIXS' in self.experiment:
+            self.samples.append('Powder / Amorphous')
         else:
-            self.hasPolarization = False
+            pass
 
         branch = tree['elements'][self.element]['charges'][self.charge]
 
@@ -179,7 +201,7 @@ class QuantyCalculation(object):
                 # Include the magnetic and exchange terms only for
                 # selected type of calculations.
                 if 'Magnetic Field' in term or 'Exchange Field' in term:
-                    if not self.hasPolarization:
+                    if 'Single Crystal' not in self.samples:
                         continue
 
                 # Include the p-d hybridization term only for K-edges.
@@ -195,18 +217,17 @@ class QuantyCalculation(object):
                     except KeyError:
                         continue
 
-                # TODO: Use a list? to hold the default scalings.
                 for parameter in parameters:
                     if 'Atomic' in term:
                         if parameter[0] in ('F', 'G'):
                             scaling = 0.8
                         else:
                             scaling = 1.0
+                        data = [parameters[parameter], scaling]
                     else:
-                        scaling = str()
+                        data = parameters[parameter]
 
-                    self.hamiltonianData[term][label][parameter] = (
-                        parameters[parameter], scaling)
+                    self.hamiltonianData[term][label][parameter] = data
 
                 if 'Atomic' in term or 'Crystal Field' in term:
                     self.hamiltonianState[term] = 2
@@ -238,39 +259,32 @@ class QuantyCalculation(object):
         replacements['$Eedge1'] = self.e1Edge
 
         if len(self.e1Lorentzian) == 1:
-            if self.hasPolarization:
-                replacements['$Gamma1'] = '0.1'
-                replacements['$Gmin1'] = self.e1Lorentzian[0]
-                replacements['$Gmax1'] = self.e1Lorentzian[0]
+            replacements['$Gamma1'] = 0.1
+            replacements['$Gmin1'] = self.e1Lorentzian[0]
+            replacements['$Gmax1'] = self.e1Lorentzian[0]
+            replacements['$Egamma1'] = (self.e1Min + self.e1Max) / 2
+        else:
+            replacements['$Gamma1'] = 0.1
+            replacements['$Gmin1'] = self.e1Lorentzian[0]
+            replacements['$Gmax1'] = self.e1Lorentzian[1]
+            if len(self.e1Lorentzian) == 2:
                 replacements['$Egamma1'] = (self.e1Min + self.e1Max) / 2
             else:
-                replacements['$Gamma1'] = self.e1Lorentzian[0]
-        else:
-            if self.hasPolarization:
-                replacements['$Gamma1'] = 0.1
-                replacements['$Gmin1'] = self.e1Lorentzian[0]
-                replacements['$Gmax1'] = self.e1Lorentzian[1]
-                if len(self.e1Lorentzian) == 2:
-                    replacements['$Egamma1'] = (self.e1Min + self.e1Max) / 2
-                else:
-                    replacements['$Egamma1'] = self.e1Lorentzian[2]
-            else:
-                pass
+                replacements['$Egamma1'] = self.e1Lorentzian[2]
 
-        s = '{{{0:.6g}, {1:.6g}, {2:.6g}}}'
+        s = '{{{0:.8g}, {1:.8g}, {2:.8g}}}'
 
-        u = self.kin / np.linalg.norm(self.kin)
-        replacements['$kin'] = s.format(u[0], u[1], u[2])
+        u = np.array(self.k1)
+        u = u / np.linalg.norm(u)
+        replacements['$k1'] = s.format(u[0], u[1], u[2])
 
-        v = self.ein1 / np.linalg.norm(self.ein1)
-        replacements['$ein1'] = s.format(v[0], v[1], v[2])
+        v = np.array(self.eps11)
+        v = v / np.linalg.norm(v)
+        replacements['$eps11'] = s.format(v[0], v[1], v[2])
 
-        w = self.ein2 / np.linalg.norm(self.ein2)
-        replacements['$ein2'] = s.format(w[0], w[1], w[2])
-
-        replacements['$calculateIso'] = self.calculateIso
-        replacements['$calculateCD'] = self.calculateCD
-        replacements['$calculateLD'] = self.calculateLD
+        w = np.array(self.eps12)
+        w = w / np.linalg.norm(w)
+        replacements['$eps12'] = s.format(w[0], w[1], w[2])
 
         if 'RIXS' in self.experiment:
             # The Lorentzian broadening along the incident axis cannot be
@@ -314,16 +328,21 @@ class QuantyCalculation(object):
                     suffix = 'm'
                 elif 'Final' in configuration:
                     suffix = 'f'
-                for parameter, (value, scaling) in parameters.items():
+                for parameter, data in parameters.items():
                     # Convert to parameters name from Greek letters.
                     parameter = parameter.replace('ζ', 'zeta')
                     parameter = parameter.replace('Δ', 'Delta')
                     parameter = parameter.replace('σ', 'sigma')
                     parameter = parameter.replace('τ', 'tau')
+                    try:
+                        value, scaling = data
+                    except TypeError:
+                        value = data
                     key = '${}_{}_value'.format(parameter, suffix)
                     replacements[key] = '{}'.format(value)
-                    key = '${}_{}_scaling'.format(parameter, suffix)
-                    replacements[key] = '{}'.format(scaling)
+                    if scaling:
+                        key = '${}_{}_scaling'.format(parameter, suffix)
+                        replacements[key] = '{}'.format(scaling)
 
             checkState = self.hamiltonianState[term]
             if checkState > 0:
@@ -336,7 +355,13 @@ class QuantyCalculation(object):
                 value = self.monoElectronicRadialME[parameter]
                 replacements['${}'.format(parameter)] = value
 
-        replacements['$baseName'] = self.baseName
+        replacements['$Experiment'] = self.experiment
+        if 'Single Crystal' in self.sample:
+            replacements['$SingleCrystalSample'] = 1
+        else:
+            replacements['$SingleCrystalSample'] = 0
+
+        replacements['$BaseName'] = self.baseName
 
         for replacement in replacements:
             self.template = self.template.replace(
@@ -390,6 +415,7 @@ class QuantyDockWidget(QDockWidget):
             self.updateTemperature)
         self.magneticFieldLineEdit.editingFinished.connect(
             self.updateMagneticField)
+        self.sampleComboBox.currentTextChanged.connect(self.updateSample)
 
         self.e1MinLineEdit.editingFinished.connect(self.updateE1Min)
         self.e1MaxLineEdit.editingFinished.connect(self.updateE1Max)
@@ -397,8 +423,8 @@ class QuantyDockWidget(QDockWidget):
         self.e1LorentzianLineEdit.editingFinished.connect(
             self.updateE1Lorentzian)
         self.e1GaussianLineEdit.editingFinished.connect(self.updateE1Gaussian)
-        self.kinLineEdit.editingFinished.connect(self.updateIncidentWaveVector)
-        self.ein1LineEdit.editingFinished.connect(
+        self.k1LineEdit.editingFinished.connect(self.updateIncidentWaveVector)
+        self.eps11LineEdit.editingFinished.connect(
             self.updateIncidentPolarizationVectors)
 
         self.e2MinLineEdit.editingFinished.connect(self.updateE2Min)
@@ -407,11 +433,6 @@ class QuantyDockWidget(QDockWidget):
         self.e2LorentzianLineEdit.editingFinished.connect(
             self.updateE2Lorentzian)
         self.e2GaussianLineEdit.editingFinished.connect(self.updateE2Gaussian)
-
-        self.calculateIsoCheckBox.toggled.connect(
-            self.updateSpectraToCalculate)
-        self.calculateCDCheckBox.toggled.connect(self.updateSpectraToCalculate)
-        self.calculateLDCheckBox.toggled.connect(self.updateSpectraToCalculate)
 
         self.fkLineEdit.editingFinished.connect(self.updateScalingFactors)
         self.gkLineEdit.editingFinished.connect(self.updateScalingFactors)
@@ -423,10 +444,6 @@ class QuantyDockWidget(QDockWidget):
         self.nPsisLineEdit.editingFinished.connect(self.updateNPsis)
         self.nConfigurationsLineEdit.editingFinished.connect(
             self.updateConfigurations)
-
-        self.plotIsoCheckBox.toggled.connect(self.plotSelectedCalculations)
-        self.plotCDCheckBox.toggled.connect(self.plotSelectedCalculations)
-        self.plotLDCheckBox.toggled.connect(self.plotSelectedCalculations)
 
         icon = QIcon(resourceFileName(
             'crispy:' + os.path.join('gui', 'icons', 'save.svg')))
@@ -456,33 +473,25 @@ class QuantyDockWidget(QDockWidget):
 
         self.temperatureLineEdit.setValue(self.calculation.temperature)
         self.magneticFieldLineEdit.setValue(self.calculation.magneticField)
+        self.sampleComboBox.setItems(
+            self.calculation.samples, self.calculation.sample)
 
-        if self.calculation.hasPolarization:
-            self.magneticFieldLineEdit.setEnabled(True)
-            self.kinLineEdit.setEnabled(True)
-            self.ein1LineEdit.setEnabled(True)
-            self.calculateIsoCheckBox.setEnabled(True)
-            self.calculateCDCheckBox.setEnabled(True)
-            self.calculateLDCheckBox.setEnabled(True)
-        else:
+        self.k1LineEdit.setVector(self.calculation.k1)
+        self.eps11LineEdit.setVector(self.calculation.eps11)
+        self.eps12LineEdit.setVector(self.calculation.eps12)
+
+        if 'Single Crystal' not in self.calculation.samples:
             self.magneticFieldLineEdit.setEnabled(False)
-            self.kinLineEdit.setEnabled(False)
-            self.ein1LineEdit.setEnabled(False)
-            self.calculateIsoCheckBox.setEnabled(True)
-            self.calculateCDCheckBox.setEnabled(False)
-            self.calculateLDCheckBox.setEnabled(False)
+            self.k1LineEdit.setEnabled(False)
+            self.eps11LineEdit.setEnabled(False)
+        else:
+            self.magneticFieldLineEdit.setEnabled(True)
+            self.k1LineEdit.setEnabled(True)
+            self.eps11LineEdit.setEnabled(True)
 
-        self.kinLineEdit.setVector(self.calculation.kin)
-        self.ein1LineEdit.setVector(self.calculation.ein1)
-        self.ein2LineEdit.setVector(self.calculation.ein2)
-
-        self.koutLineEdit.setVector(self.calculation.kout)
-        self.eout1LineEdit.setVector(self.calculation.eout1)
-        self.eout2LineEdit.setVector(self.calculation.eout2)
-
-        self.calculateIsoCheckBox.setChecked(self.calculation.calculateIso)
-        self.calculateCDCheckBox.setChecked(self.calculation.calculateCD)
-        self.calculateLDCheckBox.setChecked(self.calculation.calculateLD)
+        self.k2LineEdit.setVector(self.calculation.k2)
+        self.eps21LineEdit.setVector(self.calculation.eps21)
+        self.eps22LineEdit.setVector(self.calculation.eps22)
 
         self.fkLineEdit.setValue(self.calculation.fk)
         self.gkLineEdit.setValue(self.calculation.gk)
@@ -516,8 +525,20 @@ class QuantyDockWidget(QDockWidget):
             self.e2NPointsLineEdit.setValue(self.calculation.e2NPoints)
             self.e2LorentzianLineEdit.setList(self.calculation.e2Lorentzian)
             self.e2GaussianLineEdit.setValue(self.calculation.e2Gaussian)
+            text = self.eps11Label.text()
+            text = re.sub('[Vσ]', 'σ', text)
+            self.eps11Label.setText(text)
+            text = self.eps12Label.text()
+            text = re.sub('[Hπ]', 'π', text)
+            self.eps12Label.setText(text)
         else:
             self.energiesTabWidget.removeTab(1)
+            text = self.eps11Label.text()
+            text = re.sub('[Vσ]', 'V', text)
+            self.eps11Label.setText(text)
+            text = self.eps12Label.text()
+            text = re.sub('[Hπ]', 'H', text)
+            self.eps12Label.setText(text)
 
         # Create a Hamiltonian model.
         self.hamiltonianModel = TreeModel(
@@ -559,7 +580,6 @@ class QuantyDockWidget(QDockWidget):
         self.edgeComboBox.setEnabled(flag)
 
         self.temperatureLineEdit.setEnabled(flag)
-        self.magneticFieldLineEdit.setEnabled(flag)
 
         self.e1MinLineEdit.setEnabled(flag)
         self.e1MaxLineEdit.setEnabled(flag)
@@ -573,18 +593,17 @@ class QuantyDockWidget(QDockWidget):
         self.e2LorentzianLineEdit.setEnabled(flag)
         self.e2GaussianLineEdit.setEnabled(flag)
 
-        if self.calculation.hasPolarization:
-            self.kinLineEdit.setEnabled(flag)
-            self.ein1LineEdit.setEnabled(flag)
-            self.calculateIsoCheckBox.setEnabled(flag)
-            self.calculateCDCheckBox.setEnabled(flag)
-            self.calculateLDCheckBox.setEnabled(flag)
+        self.magneticFieldLineEdit.setEnabled(flag)
+        self.sampleComboBox.setEnabled(flag)
+
+        if 'Single Crystal' not in self.calculation.samples:
+            self.magneticFieldLineEdit.setEnabled(False)
+            self.k1LineEdit.setEnabled(False)
+            self.eps11LineEdit.setEnabled(False)
         else:
-            self.kinLineEdit.setEnabled(False)
-            self.ein1LineEdit.setEnabled(False)
-            self.calculateIsoCheckBox.setEnabled(flag)
-            self.calculateCDCheckBox.setEnabled(False)
-            self.calculateLDCheckBox.setEnabled(False)
+            self.magneticFieldLineEdit.setEnabled(flag)
+            self.k1LineEdit.setEnabled(flag)
+            self.eps11LineEdit.setEnabled(flag)
 
         self.fkLineEdit.setEnabled(flag)
         self.gkLineEdit.setEnabled(flag)
@@ -627,28 +646,29 @@ class QuantyDockWidget(QDockWidget):
 
         if magneticField == 0:
             self.calculation.hamiltonianState['Magnetic Field'] = 0
-            self.calculateCDCheckBox.setChecked(False)
         else:
             self.calculation.hamiltonianState['Magnetic Field'] = 2
-            self.calculateCDCheckBox.setChecked(True)
         self.hamiltonianModel.setNodesCheckState(
             self.calculation.hamiltonianState)
 
         # Normalize the current incident vector.
-        kin = self.calculation.kin
-        kin = kin / np.linalg.norm(kin)
+        k1 = np.array(self.calculation.k1)
+        k1 = k1 / np.linalg.norm(k1)
 
         configurations = self.calculation.hamiltonianData['Magnetic Field']
         for configuration in configurations:
             parameters = configurations[configuration]
             for i, parameter in enumerate(parameters):
-                value = magneticField * -kin[i]
+                value = float(magneticField * -k1[i])
                 if abs(value) == 0.0:
                     value = 0.0
-                configurations[configuration][parameter] = (value, str())
+                configurations[configuration][parameter] = value
         self.hamiltonianModel.updateModelData(self.calculation.hamiltonianData)
 
         self.calculation.magneticField = magneticField
+
+    def updateSample(self):
+        self.calculation.sample = self.sampleComboBox.currentText()
 
     def updateE1Min(self):
         e1Min = self.e1MinLineEdit.getValue()
@@ -759,88 +779,86 @@ class QuantyDockWidget(QDockWidget):
 
         self.calculation.e1Gaussian = e1Gaussian
 
-        # TODO: Move this to the spectra dialog.
-        if not self.calculation.spectra:
-            return
-
         try:
             index = list(self.resultsView.selectedIndexes())[-1]
         except IndexError:
             return
         else:
-            self.resultsModel.replaceItem(index,  self.calculation)
+            self.resultsModel.replaceItem(index, self.calculation)
             self.plotSelectedCalculations()
 
     def updateIncidentWaveVector(self):
         try:
-            kin = self.kinLineEdit.getVector()
+            k1 = self.k1LineEdit.getVector()
         except ValueError:
             message = 'Invalid data for the wave vector.'
             self.getStatusBar().showMessage(message, self.timeout)
-            self.kinLineEdit.setVector(self.calculation.kin)
+            self.k1LineEdit.setVector(self.calculation.k1)
             return
 
-        if np.all(kin == 0):
+        if np.all(np.array(k1) == 0):
             message = 'The wave vector cannot be null.'
             self.getStatusBar().showMessage(message, self.timeout)
-            self.kinLineEdit.setVector(self.calculation.kin)
+            self.k1LineEdit.setVector(self.calculation.k1)
             return
 
-        # The kin value should be fine; save it.
-        self.calculation.kin = kin
+        # The k1 value should be fine; save it.
+        self.calculation.k1 = k1
 
         # The polarization vector must be correct.
-        ein1 = self.ein1LineEdit.getVector()
+        eps11 = self.eps11LineEdit.getVector()
 
         # If the wave and polarization vectors are not perpendicular, select a
         # new perpendicular vector for the polarization.
-        if np.dot(kin, ein1) != 0:
-            if kin[2] != 0 or (-kin[0] - kin[1]) != 0:
-                ein1 = np.array([kin[2], kin[2], -kin[0] - kin[1]])
+        if np.dot(np.array(k1), np.array(eps11)) != 0:
+            if k1[2] != 0 or (-k1[0] - k1[1]) != 0:
+                eps11 = (k1[2], k1[2], -k1[0] - k1[1])
             else:
-                ein1 = np.array([-kin[2] - kin[1], kin[0], kin[0]])
+                eps11 = (-k1[2] - k1[1], k1[0], k1[0])
 
-        self.ein1LineEdit.setVector(ein1)
-        self.calculation.ein1 = ein1
+        self.eps11LineEdit.setVector(eps11)
+        self.calculation.eps11 = eps11
 
         # Generate a second, perpendicular, polarization vector to the plane
         # defined by the wave vector and the first polarization vector.
-        ein2 = np.cross(ein1, kin)
+        eps12 = np.cross(np.array(eps11), np.array(k1))
+        eps12 = eps12.tolist()
 
-        self.ein2LineEdit.setVector(ein2)
-        self.calculation.ein2 = ein2
+        self.eps12LineEdit.setVector(eps12)
+        self.calculation.eps12 = eps12
 
     def updateIncidentPolarizationVectors(self):
         try:
-            ein1 = self.ein1LineEdit.getVector()
+            eps11 = self.eps11LineEdit.getVector()
         except ValueError:
             message = 'Invalid data for the polarization vector.'
             self.getStatusBar().showMessage(message, self.timeout)
-            self.ein1LineEdit.setVector(self.calculation.ein1)
+            self.eps11LineEdit.setVector(self.calculation.eps11)
             return
 
-        if np.all(ein1 == 0):
+        if np.all(np.array(eps11) == 0):
             message = 'The polarization vector cannot be null.'
             self.getStatusBar().showMessage(message, self.timeout)
-            self.ein1LineEdit.setVector(self.calculation.ein1)
+            self.eps11LineEdit.setVector(self.calculation.eps11)
             return
 
-        kin = self.calculation.kin
-        if np.dot(kin, ein1) != 0:
+        k1 = self.calculation.k1
+        if np.dot(np.array(k1), np.array(eps11)) != 0:
             message = ('The wave and polarization vectors need to be '
                        'perpendicular.')
             self.getStatusBar().showMessage(message, self.timeout)
-            self.ein1LineEdit.setVector(self.calculation.ein1)
+            self.eps11LineEdit.setVector(self.calculation.eps11)
             return
 
-        self.calculation.ein1 = ein1
+        self.calculation.eps11 = eps11
 
         # Generate a second, perpendicular, polarization vector to the plane
         # defined by the wave vector and the first polarization vector.
-        ein2 = np.cross(ein1, kin)
+        eps12 = np.cross(np.array(eps11), np.array(k1))
+        eps12 = eps12.tolist()
 
-        self.ein2LineEdit.setVector(ein2)
-        self.calculation.ein2 = ein2
+        self.eps12LineEdit.setVector(eps12)
+        self.calculation.eps12 = eps12
 
     def updateE2Min(self):
         e2Min = self.e2MinLineEdit.getValue()
@@ -951,10 +969,6 @@ class QuantyDockWidget(QDockWidget):
 
         self.calculation.e2Gaussian = e2Gaussian
 
-        # TODO: Move this to the spectra dialog.
-        if not self.calculation.spectra:
-            return
-
         try:
             index = list(self.resultsView.selectedIndexes())[-1]
         except IndexError:
@@ -962,14 +976,6 @@ class QuantyDockWidget(QDockWidget):
         else:
             self.resultsModel.replaceItem(index,  self.calculation)
             self.plotSelectedCalculations()
-
-    def updateSpectraToCalculate(self):
-        self.calculation.calculateIso = int(
-            self.calculateIsoCheckBox.isChecked())
-        self.calculation.calculateCD = int(
-            self.calculateCDCheckBox.isChecked())
-        self.calculation.calculateLD = int(
-            self.calculateLDCheckBox.isChecked())
 
     def updateScalingFactors(self):
         fk = self.fkLineEdit.getValue()
@@ -1001,11 +1007,11 @@ class QuantyDockWidget(QDockWidget):
                 for parameter in parameters:
                     value, scaling = parameters[parameter]
                     if parameter.startswith('F'):
-                        terms[term][configuration][parameter] = (value, fk)
+                        terms[term][configuration][parameter] = [value, fk]
                     elif parameter.startswith('G'):
-                        terms[term][configuration][parameter] = (value, gk)
+                        terms[term][configuration][parameter] = [value, gk]
                     elif parameter.startswith('ζ'):
-                        terms[term][configuration][parameter] = (value, zeta)
+                        terms[term][configuration][parameter] = [value, zeta]
                     else:
                         continue
         self.hamiltonianModel.updateModelData(self.calculation.hamiltonianData)
@@ -1098,9 +1104,29 @@ class QuantyDockWidget(QDockWidget):
             self.getStatusBar().showMessage(message, 2 * self.timeout)
             raise
 
-        # TODO: In some cases the latest values are not read from the widgets.
-        # It might be a good idea to read the lastest values before saving the
-        # input file.
+        # If the user changes a value in a widget without pressing Return or
+        # without interacting with another part of the GUI before running the
+        # calculation, the latests values are not updated.
+        # TODO: There must be a nicer way to do this.
+        self.updateTemperature()
+        self.updateMagneticField()
+        self.updateE1Min()
+        self.updateE1Max()
+        self.updateE1NPoints()
+        self.updateE1Gaussian()
+        self.updateE1Lorentzian()
+        self.updateIncidentWaveVector()
+        self.updateIncidentPolarizationVectors()
+        if 'RIXS' in self.calculation.experiment:
+            self.updateE2Min()
+            self.updateE2Max()
+            self.updateE2NPoints()
+            self.updateE2Gaussian()
+            self.updateE2Lorentzian()
+        self.updateScalingFactors()
+        self.updateNPsis()
+        self.updateConfigurations()
+        self.updateHamiltonianData()
 
         # The folder might exist, but is not writable.
         try:
@@ -1120,7 +1146,10 @@ class QuantyDockWidget(QDockWidget):
             basename = os.path.basename(path)
             self.calculation.baseName, _ = os.path.splitext(basename)
             self.setCurrentPath(path)
-            self.saveInput()
+            try:
+                self.saveInput()
+            except (IOError, OSError) as e:
+                return
             self.updateMainWindowTitle()
 
     def saveAllCalculationsAs(self):
@@ -1219,9 +1248,6 @@ class QuantyDockWidget(QDockWidget):
         # Disable the UI while the calculation is running.
         self.enableUi(False)
 
-        # Initialize the dictionary holding the spectra.
-        self.calculation.spectra = odict()
-
         self.calculation.startingTime = datetime.datetime.now()
 
         # Run Quanty using QProcess.
@@ -1291,7 +1317,7 @@ class QuantyDockWidget(QDockWidget):
         if exitStatus == 0 and exitCode == 0:
             message = ('Quanty has finished successfully in ')
             delta = int((endingTime - startingTime).total_seconds())
-            hours, reminder = divmod(delta, 60)
+            hours, reminder = divmod(delta, 3600)
             minutes, seconds = divmod(reminder, 60)
             if hours > 0:
                 message += '{} hours {} minutes and {} seconds.'.format(
@@ -1322,16 +1348,19 @@ class QuantyDockWidget(QDockWidget):
 
         self.counter += 1
 
-        spectraAttributes = list()
-        if self.calculateIsoCheckBox.isChecked():
-            spectraAttributes.append(('Isotropic', '_iso'))
-        if self.calculateCDCheckBox.isChecked():
-            spectraAttributes.append(('XMCD', '_cd'))
-        if self.calculateLDCheckBox.isChecked():
-            spectraAttributes.append(('X(M)LD', '_ld'))
+        # Read the spectrum.
+        f = '{0:s}.spec'.format(self.calculation.baseName)
+        try:
+            data = np.loadtxt(f, skiprows=5)
+        except IOError as e:
+            message = 'Failed to read the spectrum file from disk.'
+            self.getStatusBar().showMessage(message, self.timeout)
+            return
 
-        for spectrumName, spectrumSuffix in spectraAttributes:
-            self.readSpectrumData(spectrumName, spectrumSuffix)
+        if 'RIXS' in self.calculation.experiment:
+            self.calculation.spectrum = -data[:, 2::2]
+        else:
+            self.calculation.spectrum = -data[:, 2::2][:, 0]
 
         # Store the calculation in the model.
         self.resultsModel.appendItems([self.calculation])
@@ -1343,33 +1372,17 @@ class QuantyDockWidget(QDockWidget):
         # current widget is set to the "Results Page", the former is not
         # displayed. To avoid this I switch first to the "General Setup" page.
         self.quantyToolBox.setCurrentWidget(self.generalPage)
-        # Open the results page.
         self.quantyToolBox.setCurrentWidget(self.resultsPage)
 
-    def readSpectrumData(self, spectrumName, spectrumSuffix):
-        f = '{0:s}{1:s}.spec'.format(self.calculation.baseName, spectrumSuffix)
-        try:
-            data = np.loadtxt(f, skiprows=5)
-        except IOError as e:
-            return
-
-        if 'RIXS' in self.calculation.experiment:
-            self.calculation.spectra[spectrumName] = -data[:, 2::2]
-        else:
-            self.calculation.spectra[spectrumName] = -data[:, 2::2][:, 0]
-
-    def plot(self, spectrumName):
-        if spectrumName in self.calculation.spectra:
-            data = self.calculation.spectra[spectrumName]
-        else:
-            return
+    def plot(self):
+        data = self.calculation.spectrum
 
         # Check if the data is valid.
-        if np.max(np.abs(data)) < np.finfo(np.float32).eps:
-            message = 'The {} spectrum has very low intensity.'.format(
-                spectrumName)
+        if np.max(np.abs(data)) < 1e-4:
+            message = 'The spectrum has very low intensity.'
             self.getStatusBar().showMessage(message, self.timeout)
-            return
+            if 'RIXS' not in self.calculation.experiment:
+                data = np.zeros_like(data)
 
         if 'RIXS' in self.calculation.experiment:
             # Keep the aspect ratio for RIXS plots.
@@ -1432,9 +1445,8 @@ class QuantyDockWidget(QDockWidget):
             fwhm = e1Gaussian / scale
             y = broaden(y, fwhm, 'gaussian')
 
-            legend = '{} | {} | {}'.format(
-                self.calculation.label.split()[0], spectrumName,
-                self.calculation.uuid)
+            legend = '{} | {}'.format(
+                self.calculation.label.split()[0], self.calculation.uuid)
 
             try:
                 self.getPlotWidget().addCurve(x, y, legend)
@@ -1507,20 +1519,10 @@ class QuantyDockWidget(QDockWidget):
 
     def plotSelectedCalculations(self):
         self.getPlotWidget().reset()
-
-        spectraName = list()
-        if self.plotIsoCheckBox.isChecked():
-            spectraName.append('Isotropic')
-        if self.plotCDCheckBox.isChecked():
-            spectraName.append('XMCD')
-        if self.plotLDCheckBox.isChecked():
-            spectraName.append('XMLD')
-
         calculations = self.getSelectedCalculationsData()
         for calculation in calculations:
             self.calculation = calculation
-            for spectrumName in spectraName:
-                self.plot(spectrumName)
+            self.plot()
 
     def updateResultsViewSelection(self):
         self.resultsView.selectionModel().clearSelection()

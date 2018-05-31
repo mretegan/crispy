@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '30/04/2018'
+__date__ = '30/05/2018'
 
 
 from collections import OrderedDict as odict
@@ -305,10 +305,8 @@ class TreeModel(QAbstractItemModel):
                     node = TreeNode([key, value], parentNode)
                 elif isinstance(value, list):
                     node = TreeNode([key, value[0], value[1]], parentNode)
-                elif isinstance(value, tuple):
-                    node = TreeNode([key, value[0], value[1]], parentNode)
                 else:
-                    return
+                    raise TypeError
 
     def updateModelData(self, data, parentIndex=None):
         parentNode = self.getNode(parentIndex)
@@ -320,14 +318,14 @@ class TreeModel(QAbstractItemModel):
                 childIndex = self.index(child.row(), 0, parentIndex)
                 self.updateModelData(childData, childIndex)
         else:
-            key, value, scaling = parentNode.data
-            newValue, newScaling = data
-            if value != newValue:
-                parentNode.setItemData(1, newValue)
-            elif scaling != newScaling:
-                parentNode.setItemData(2, newScaling)
+            if isinstance(data, float):
+                parentNode.setItemData(1, data)
+            elif isinstance(data, list):
+                value, scaling = data
+                parentNode.setItemData(1, value)
+                parentNode.setItemData(2, scaling)
             else:
-                pass
+                raise TypeError
             self.dataChanged.emit(parentIndex, parentIndex)
             return True
 
@@ -343,8 +341,6 @@ class TreeModel(QAbstractItemModel):
                 self._getModelData(data[key], node)
             else:
                 if isinstance(node.getItemData(2), float):
-                    data[key] = [node.getItemData(1), node.getItemData(2)]
-                elif isinstance(node.getItemData(2), str):
                     data[key] = [node.getItemData(1), node.getItemData(2)]
                 else:
                     data[key] = node.getItemData(1)
