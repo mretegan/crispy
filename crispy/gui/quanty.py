@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '31/05/2018'
+__date__ = '02/06/2018'
 
 
 import copy
@@ -72,7 +72,6 @@ class QuantyCalculation(object):
             ('edge', 'L2,3 (2p)'),
             ('temperature', 10.0),
             ('magneticField', 0.0),
-            ('sample', 'Single Crystal'),
             ('e1Min', None),
             ('e1Max', None),
             ('e1NPoints', None),
@@ -109,7 +108,6 @@ class QuantyCalculation(object):
         self.__dict__.update(self._defaults)
         self.__dict__.update(kwargs)
 
-        # This is read in less than a milliseconds.
         path = resourceFileName(
             'crispy:' + os.path.join('modules', 'quanty', 'parameters',
                                      'parameters.json.gz'))
@@ -178,19 +176,6 @@ class QuantyCalculation(object):
         self.hamiltonianData = odict()
         self.hamiltonianState = odict()
 
-        self.samples = list()
-        if 'XAS' in self.experiment:
-            self.samples.append('Powder / Amorphous')
-            if (('L2,3 (2p)' in self.edge and 'd' in self.block) or
-                    ('M4,5 (3d)' in self.edge and 'f' in self.block)):
-                self.samples.append('Single Crystal')
-        elif 'XMCD' in self.experiment or 'X(M)LD' in self.experiment:
-            self.samples.append('Single Crystal')
-        elif 'RIXS' in self.experiment:
-            self.samples.append('Powder / Amorphous')
-        else:
-            pass
-
         branch = tree['elements'][self.element]['charges'][self.charge]
 
         for label, configuration in self.configurations:
@@ -198,18 +183,11 @@ class QuantyCalculation(object):
             terms = branch['configurations'][configuration]['terms']
 
             for term in terms:
-                # Include the magnetic and exchange terms only for
-                # selected type of calculations.
-                if 'Magnetic Field' in term or 'Exchange Field' in term:
-                    if 'Single Crystal' not in self.samples:
-                        continue
-
                 # Include the p-d hybridization term only for K-edges.
-                if '3d-4p Hybridization' in term and 'K (1s)' not in self.edge:
+                if term in '3d-4p Hybridization' and self.edge not in 'K (1s)':
                     continue
 
-                if ('Atomic' in term or 'Magnetic Field' in term
-                        or 'Exchange Field' in term):
+                if term in ('Atomic', 'Magnetic Field', 'Exchange Field'):
                     parameters = terms[term]
                 else:
                     try:
@@ -218,7 +196,7 @@ class QuantyCalculation(object):
                         continue
 
                 for parameter in parameters:
-                    if 'Atomic' in term:
+                    if term in 'Atomic':
                         if parameter[0] in ('F', 'G'):
                             scaling = 0.8
                         else:
@@ -229,7 +207,7 @@ class QuantyCalculation(object):
 
                     self.hamiltonianData[term][label][parameter] = data
 
-                if 'Atomic' in term or 'Crystal Field' in term:
+                if term in ('Atomic', 'Crystal Field'):
                     self.hamiltonianState[term] = 2
                 else:
                     self.hamiltonianState[term] = 0
@@ -300,26 +278,20 @@ class QuantyCalculation(object):
         replacements['$NPsisAuto'] = self.nPsisAuto
         replacements['$NPsis'] = self.nPsis
 
-        for term in self.hamiltonianData:
-            if 'Atomic' in term:
-                name = 'H_atomic'
-            elif 'Crystal Field' in term:
-                name = 'H_cf'
-            elif '3d-Ligands Hybridization' in term:
-                name = 'H_3d_Ld_hybridization'
-            elif '3d-4p Hybridization' in term:
-                name = 'H_3d_4p_hybridization'
-            elif '4d-Ligands Hybridization' in term:
-                name = 'H_4d_Ld_hybridization'
-            elif '5d-Ligands Hybridization' in term:
-                name = 'H_5d_Ld_hybridization'
-            elif 'Magnetic Field' in term:
-                name = 'H_magnetic_field'
-            elif 'Exchange Field' in term:
-                name = 'H_exchange_field'
-            else:
-                pass
+        aliases = odict(
+            [
+                ('Atomic', 'H_atomic'),
+                ('Crystal Field', 'H_cf'),
+                ('3d-Ligands Hybridization', 'H_3d_Ld_hybridization'),
+                ('4d-Ligands Hybridization', 'H_4d_Ld_hybridization'),
+                ('5d-Ligands Hybridization', 'H_5d_Ld_hybridization'),
+                ('3d-4p Hybridization', 'H_3d_4p_hybridization'),
+                ('Magnetic Field', 'H_magnetic_field'),
+                ('Exchange Field', 'H_exchange_field'),
+            ]
+        )
 
+        for term in self.hamiltonianData:
             configurations = self.hamiltonianData[term]
             for configuration, parameters in configurations.items():
                 if 'Initial' in configuration:
@@ -348,7 +320,8 @@ class QuantyCalculation(object):
             if checkState > 0:
                 checkState = 1
 
-            replacements['${}'.format(name)] = checkState
+            alias = aliases[term]
+            replacements['${}'.format(alias)] = checkState
 
         if self.monoElectronicRadialME:
             for parameter in self.monoElectronicRadialME:
@@ -356,11 +329,6 @@ class QuantyCalculation(object):
                 replacements['${}'.format(parameter)] = value
 
         replacements['$Experiment'] = self.experiment
-        if 'Single Crystal' in self.sample:
-            replacements['$SingleCrystalSample'] = 1
-        else:
-            replacements['$SingleCrystalSample'] = 0
-
         replacements['$BaseName'] = self.baseName
 
         for replacement in replacements:
@@ -415,7 +383,6 @@ class QuantyDockWidget(QDockWidget):
             self.updateTemperature)
         self.magneticFieldLineEdit.editingFinished.connect(
             self.updateMagneticField)
-        self.sampleComboBox.currentTextChanged.connect(self.updateSample)
 
         self.e1MinLineEdit.editingFinished.connect(self.updateE1Min)
         self.e1MaxLineEdit.editingFinished.connect(self.updateE1Max)
@@ -473,21 +440,19 @@ class QuantyDockWidget(QDockWidget):
 
         self.temperatureLineEdit.setValue(self.calculation.temperature)
         self.magneticFieldLineEdit.setValue(self.calculation.magneticField)
-        self.sampleComboBox.setItems(
-            self.calculation.samples, self.calculation.sample)
 
         self.k1LineEdit.setVector(self.calculation.k1)
         self.eps11LineEdit.setVector(self.calculation.eps11)
         self.eps12LineEdit.setVector(self.calculation.eps12)
 
-        if 'Single Crystal' not in self.calculation.samples:
-            self.magneticFieldLineEdit.setEnabled(False)
-            self.k1LineEdit.setEnabled(False)
-            self.eps11LineEdit.setEnabled(False)
-        else:
+        if self.calculation.experiment in ('XMCD', 'X(M)LD'):
             self.magneticFieldLineEdit.setEnabled(True)
             self.k1LineEdit.setEnabled(True)
             self.eps11LineEdit.setEnabled(True)
+        else:
+            self.magneticFieldLineEdit.setEnabled(False)
+            self.k1LineEdit.setEnabled(False)
+            self.eps11LineEdit.setEnabled(False)
 
         self.k2LineEdit.setVector(self.calculation.k2)
         self.eps21LineEdit.setVector(self.calculation.eps21)
@@ -594,16 +559,15 @@ class QuantyDockWidget(QDockWidget):
         self.e2GaussianLineEdit.setEnabled(flag)
 
         self.magneticFieldLineEdit.setEnabled(flag)
-        self.sampleComboBox.setEnabled(flag)
 
-        if 'Single Crystal' not in self.calculation.samples:
-            self.magneticFieldLineEdit.setEnabled(False)
-            self.k1LineEdit.setEnabled(False)
-            self.eps11LineEdit.setEnabled(False)
-        else:
+        if self.calculation.experiment in ('XMCD', 'X(M)LD'):
             self.magneticFieldLineEdit.setEnabled(flag)
             self.k1LineEdit.setEnabled(flag)
             self.eps11LineEdit.setEnabled(flag)
+        else:
+            self.magneticFieldLineEdit.setEnabled(False)
+            self.k1LineEdit.setEnabled(False)
+            self.eps11LineEdit.setEnabled(False)
 
         self.fkLineEdit.setEnabled(flag)
         self.gkLineEdit.setEnabled(flag)
@@ -666,9 +630,6 @@ class QuantyDockWidget(QDockWidget):
         self.hamiltonianModel.updateModelData(self.calculation.hamiltonianData)
 
         self.calculation.magneticField = magneticField
-
-    def updateSample(self):
-        self.calculation.sample = self.sampleComboBox.currentText()
 
     def updateE1Min(self):
         e1Min = self.e1MinLineEdit.getValue()
@@ -779,13 +740,13 @@ class QuantyDockWidget(QDockWidget):
 
         self.calculation.e1Gaussian = e1Gaussian
 
-        try:
-            index = list(self.resultsView.selectedIndexes())[-1]
-        except IndexError:
-            return
-        else:
-            self.resultsModel.replaceItem(index, self.calculation)
-            self.plotSelectedCalculations()
+        # try:
+        #     index = list(self.resultsView.selectedIndexes())[-1]
+        # except IndexError:
+        #     return
+        # else:
+        #     self.resultsModel.replaceItem(index, self.calculation)
+        #     self.plotSelectedCalculations()
 
     def updateIncidentWaveVector(self):
         try:
@@ -826,6 +787,8 @@ class QuantyDockWidget(QDockWidget):
 
         self.eps12LineEdit.setVector(eps12)
         self.calculation.eps12 = eps12
+
+        self.updateMagneticField()
 
     def updateIncidentPolarizationVectors(self):
         try:
@@ -1108,12 +1071,13 @@ class QuantyDockWidget(QDockWidget):
         # without interacting with another part of the GUI before running the
         # calculation, the latests values are not updated.
         # TODO: There must be a nicer way to do this.
+        # FIXME: Updating the Gaussian replaces the
         self.updateTemperature()
         self.updateMagneticField()
         self.updateE1Min()
         self.updateE1Max()
         self.updateE1NPoints()
-        self.updateE1Gaussian()
+        # self.updateE1Gaussian()
         self.updateE1Lorentzian()
         self.updateIncidentWaveVector()
         self.updateIncidentPolarizationVectors()
@@ -1121,7 +1085,7 @@ class QuantyDockWidget(QDockWidget):
             self.updateE2Min()
             self.updateE2Max()
             self.updateE2NPoints()
-            self.updateE2Gaussian()
+            # self.updateE2Gaussian()
             self.updateE2Lorentzian()
         self.updateScalingFactors()
         self.updateNPsis()
@@ -1244,6 +1208,9 @@ class QuantyDockWidget(QDockWidget):
             self.saveInput()
         except (IOError, OSError) as e:
             return
+
+        self.getPlotWidget().reset()
+        self.resultsView.selectionModel().clearSelection()
 
         # Disable the UI while the calculation is running.
         self.enableUi(False)
@@ -1378,7 +1345,7 @@ class QuantyDockWidget(QDockWidget):
         data = self.calculation.spectrum
 
         # Check if the data is valid.
-        if np.max(np.abs(data)) < 1e-4:
+        if np.max(np.abs(data)) < 1e-6:
             message = 'The spectrum has very low intensity.'
             self.getStatusBar().showMessage(message, self.timeout)
             if 'RIXS' not in self.calculation.experiment:

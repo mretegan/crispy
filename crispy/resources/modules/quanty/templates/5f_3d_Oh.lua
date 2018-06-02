@@ -4,7 +4,7 @@
 --
 -- elements: 5f
 -- symmetry: Oh
--- experiment: XAS, XMCD, X(M)LD
+-- experiment: XAS, XPS, XMCD, X(M)LD
 -- edge: M4,5 (3d)
 --------------------------------------------------------------------------------
 Verbosity($Verbosity)
@@ -18,8 +18,8 @@ H_f = 0
 --------------------------------------------------------------------------------
 -- Toggle the Hamiltonian terms.
 --------------------------------------------------------------------------------
-H_atomic         = $H_atomic
-H_cf             = $H_cf
+H_atomic = $H_atomic
+H_cf = $H_cf
 H_magnetic_field = $H_magnetic_field
 H_exchange_field = $H_exchange_field
 
@@ -229,6 +229,9 @@ if H_exchange_field == 1 then
         + Hz_f * Sz)
 end
 
+NConfigurations = $NConfigurations
+Experiment = '$Experiment'
+
 --------------------------------------------------------------------------------
 -- Define the restrictions and set the number of initial states.
 --------------------------------------------------------------------------------
@@ -238,6 +241,11 @@ InitialRestrictions = {NFermions, NBosons, {'1111111111 00000000000000', NElectr
 FinalRestrictions = {NFermions, NBosons, {'1111111111 00000000000000', NElectrons_3d - 1, NElectrons_3d - 1},
                                          {'0000000000 11111111111111', NElectrons_5f + 1, NElectrons_5f + 1}}
 
+if Experiment == 'XPS' then
+    FinalRestrictions = {NFermions, NBosons, {'1111111111 00000000000000', NElectrons_3d - 1, NElectrons_3d - 1},
+                                             {'0000000000 11111111111111', NElectrons_5f, NElectrons_5f}}
+end
+
 Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_3d, N_5f, 'dZ'}
 header = 'Analysis of the initial Hamiltonian:\n'
 header = header .. '=============================================================================================================\n'
@@ -245,7 +253,6 @@ header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sz>   
 header = header .. '=============================================================================================================\n'
 footer = '=============================================================================================================\n'
 
--- Define the temperature.
 T = $T * EnergyUnits.Kelvin.value
 
  -- Approximate machine epsilon.
@@ -364,32 +371,30 @@ k1 = $k1
 eps11 = $eps11
 eps12 = $eps12
 
-Tk1_3d_5f = k1[1] * Tx_3d_5f + k1[2] * Ty_3d_5f + k1[3] * Tz_3d_5f
-Teps11_3d_5f = eps11[1] * Tx_3d_5f + eps11[2] * Ty_3d_5f + eps11[3] * Tz_3d_5f
-Teps12_3d_5f = eps12[1] * Tx_3d_5f + eps12[2] * Ty_3d_5f + eps12[3] * Tz_3d_5f
+Tk1_3d_5f = Chop(k1[1] * Tx_3d_5f + k1[2] * Ty_3d_5f + k1[3] * Tz_3d_5f)
+Teps11_3d_5f = Chop(eps11[1] * Tx_3d_5f + eps11[2] * Ty_3d_5f + eps11[3] * Tz_3d_5f)
+Teps12_3d_5f = Chop(eps12[1] * Tx_3d_5f + eps12[2] * Ty_3d_5f + eps12[3] * Tz_3d_5f)
 
-Tr_3d_5f =  t * (Teps11_3d_5f - I * Teps12_3d_5f)
-Tl_3d_5f = -t * (Teps11_3d_5f + I * Teps12_3d_5f)
+Tr_3d_5f = Chop(t * (Teps11_3d_5f - I * Teps12_3d_5f))
+Tl_3d_5f = Chop(-t * (Teps11_3d_5f + I * Teps12_3d_5f))
 
-Experiment = '$Experiment'
-SingleCrystalSample = $SingleCrystalSample
+Ta_3d = {}
+for i = 1, NElectrons_3d / 2 do
+    Ta_3d[2*i - 1] = NewOperator('An', NFermions, IndexDn_3d[i])
+    Ta_3d[2*i]     = NewOperator('An', NFermions, IndexUp_3d[i])
+end
 
-if SingleCrystalSample == 1 then
-    if Experiment == 'XAS' then
-        T_3d_5f = {Tk1_3d_5f}
-    elseif Experiment == 'X(M)LD' then
-        T_3d_5f = {Teps11_3d_5f, Teps12_3d_5f}
-    elseif Experiment == 'XMCD' then
-        T_3d_5f = {Tr_3d_5f, Tl_3d_5f}
-    else
-        return
-    end
+T = {}
+if Experiment == 'XAS' then
+    T = {Tx_3d_5f, Ty_3d_5f, Tz_3d_5f}
+elseif Experiment == 'XPS' then
+    T = Ta_3d
+elseif Experiment == 'X(M)LD' then
+    T = {Teps11_3d_5f, Teps12_3d_5f}
+elseif Experiment == 'XMCD' then
+    T = {Tr_3d_5f, Tl_3d_5f}
 else
-    if Experiment ==  'XAS' then
-        T_3d_5f = {Tx_3d_5f, Ty_3d_5f, Tz_3d_5f}
-    else
         return
-    end
 end
 
 --------------------------------------------------------------------------------
@@ -415,21 +420,19 @@ Gamma = $Gamma1
 NE = $NE1
 
 if CalculationRestrictions == nil then
-    G = CreateSpectra(H_f, T_3d_5f, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}})
+    G = CreateSpectra(H_f, T, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}})
 else
-    G = CreateSpectra(H_f, T_3d_5f, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}})
+    G = CreateSpectra(H_f, T, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}})
 end
 
 IndicesToSum = {}
-for i in ipairs(T_3d_5f) do
+for i in ipairs(T) do
     for j in ipairs(Psis_i) do
         if Experiment == 'XAS' then
-            if SingleCrystalSample == 1 then
-                table.insert(IndicesToSum, dZ[j])
-            else
-                table.insert(IndicesToSum, dZ[j] / 3)
-            end
-        elseif Experiment == 'XMCD' or Experiment == 'X(M)LD)' then
+            table.insert(IndicesToSum, dZ[j] / #T)
+        elseif Experiment == 'XPS' then
+            table.insert(IndicesToSum, dZ[j] / #T)
+        elseif Experiment == 'XMCD' or Experiment == 'X(M)LD' then
             if i == 1 then
                 table.insert(IndicesToSum, dZ[j])
             else

@@ -22,6 +22,8 @@ H_f = 0
 H_atomic = $H_atomic
 H_cf = $H_cf
 H_3d_Ld_hybridization = $H_3d_Ld_hybridization
+H_magnetic_field = $H_magnetic_field
+H_exchange_field = $H_exchange_field
 
 --------------------------------------------------------------------------------
 -- Define the number of electrons, shells, etc.
@@ -223,7 +225,7 @@ if H_3d_Ld_hybridization == 1 then
 end
 
 --------------------------------------------------------------------------------
--- Define the spin and orbital operators.
+-- Define the magnetic field and exchange field terms.
 --------------------------------------------------------------------------------
 Sx_3d = NewOperator('Sx', NFermions, IndexUp_3d, IndexDn_3d)
 Sy_3d = NewOperator('Sy', NFermions, IndexUp_3d, IndexDn_3d)
@@ -262,7 +264,66 @@ Ssqr = Sx * Sx + Sy * Sy + Sz * Sz
 Lsqr = Lx * Lx + Ly * Ly + Lz * Lz
 Jsqr = Jx * Jx + Jy * Jy + Jz * Jz
 
+if H_magnetic_field == 1 then
+    Bx_i = $Bx_i_value * EnergyUnits.Tesla.value
+    By_i = $By_i_value * EnergyUnits.Tesla.value
+    Bz_i = $Bz_i_value * EnergyUnits.Tesla.value
+
+    Bx_m = $Bx_m_value * EnergyUnits.Tesla.value
+    By_m = $By_m_value * EnergyUnits.Tesla.value
+    Bz_m = $Bz_m_value * EnergyUnits.Tesla.value
+
+    Bx_f = $Bx_f_value * EnergyUnits.Tesla.value
+    By_f = $By_f_value * EnergyUnits.Tesla.value
+    Bz_f = $Bz_f_value * EnergyUnits.Tesla.value
+
+    H_i = H_i + Chop(
+          Bx_i * (2 * Sx + Lx)
+        + By_i * (2 * Sy + Ly)
+        + Bz_i * (2 * Sz + Lz))
+
+    H_m = H_m + Chop(
+          Bx_m * (2 * Sx + Lx)
+        + By_m * (2 * Sy + Ly)
+        + Bz_m * (2 * Sz + Lz))
+
+    H_f = H_f + Chop(
+          Bx_f * (2 * Sx + Lx)
+        + By_f * (2 * Sy + Ly)
+        + Bz_f * (2 * Sz + Lz))
+end
+
+if H_exchange_field == 1 then
+    Hx_i = $Hx_i_value
+    Hy_i = $Hy_i_value
+    Hz_i = $Hz_i_value
+
+    Hx_m = $Hx_m_value
+    Hy_m = $Hy_m_value
+    Hz_m = $Hz_m_value
+
+    Hx_f = $Hx_f_value
+    Hy_f = $Hy_f_value
+    Hz_f = $Hz_f_value
+
+    H_i = H_i + Chop(
+          Hx_i * Sx
+        + Hy_i * Sy
+        + Hz_i * Sz)
+
+    H_m = H_m + Chop(
+          Hx_m * Sx
+        + Hy_m * Sy
+        + Hz_m * Sz)
+
+    H_f = H_f + Chop(
+          Hx_f * Sx
+        + Hy_f * Sy
+        + Hz_f * Sz)
+end
+
 NConfigurations = $NConfigurations
+Experiment = '$Experiment'
 
 --------------------------------------------------------------------------------
 -- Define the restrictions and set the number of initial states.
@@ -305,7 +366,6 @@ if H_3d_Ld_hybridization == 1 then
     footer = '=======================================================================================================================\n'
 end
 
--- Define the temperature.
 T = $T * EnergyUnits.Kelvin.value
 
  -- Approximate machine epsilon.
@@ -404,8 +464,8 @@ for i, Psi in ipairs(Psis_i) do
         elseif Operator == 'dZ' then
             io.write(string.format('%12.2E', dZ[i]))
         else
-        io.write(string.format('%10.4f', Complex.Re(Psi * Operator * Psi)))
-    end
+            io.write(string.format('%10.4f', Complex.Re(Psi * Operator * Psi)))
+        end
     end
     io.write('\n')
 end
@@ -423,9 +483,6 @@ Tz_2p_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_2p, Inde
 Tx_3d_2p = NewOperator('CF', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_3d, IndexDn_3d, {{1, -1, t    }, {1, 1, -t    }})
 Ty_3d_2p = NewOperator('CF', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_3d, IndexDn_3d, {{1, -1, t * I}, {1, 1,  t * I}})
 Tz_3d_2p = NewOperator('CF', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_3d, IndexDn_3d, {{1,  0, 1    }                })
-
-T_2p_3d = {Tx_2p_3d, Ty_2p_3d, Tz_2p_3d}
-T_3d_2p = {Tx_3d_2p, Ty_3d_2p, Tz_3d_2p}
 
 --------------------------------------------------------------------------------
 -- Calculate and save the spectrum.
@@ -458,17 +515,17 @@ NE2 = $NE2
 
 G = 0
 
-totalCalculations = #Psis_i * #T_2p_3d * #T_3d_2p
+totalCalculations = 3 * 3 * #Psis_i
 calculation = 1
 
 for i, Psi in ipairs(Psis_i) do
-    for j, OperatorIn in ipairs(T_2p_3d) do
-        for k, OperatorOut in ipairs(T_3d_2p) do
+    for j, T_in in ipairs({Tx_2p_3d, Ty_2p_3d, Tz_2p_3d}) do
+        for k, T_out in ipairs({Tx_3d_2p, Ty_3d_2p, Tz_3d_2p}) do
             io.write(string.format('Running calculation %d of %d.\n', calculation, totalCalculations))
             if CalculationRestrictions == nil then
-                G = G + CreateResonantSpectra(H_m, H_f, OperatorIn, OperatorOut, Psi, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}}) * dZ[i]
+                G = G + CreateResonantSpectra(H_m, H_f, T_in, T_out, Psi, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}}) * dZ[i]
             else
-                G = G + CreateResonantSpectra(H_m, H_f, OperatorIn, OperatorOut, Psi, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}, {'restrictions1', CalculationRestrictions}}) * dZ[i]
+                G = G + CreateResonantSpectra(H_m, H_f, T_in, T_out, Psi, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}, {'restrictions1', CalculationRestrictions}}) * dZ[i]
             end
             calculation = calculation + 1
         end

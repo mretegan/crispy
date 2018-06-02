@@ -4,7 +4,7 @@
 --
 -- elements: 3d
 -- symmetry: Td
--- experiment: XAS, XMCD, X(M)LD
+-- experiment: XAS, XPS, XMCD, X(M)LD
 -- edge: L2,3 (2p)
 --------------------------------------------------------------------------------
 Verbosity($Verbosity)
@@ -117,63 +117,6 @@ if H_cf == 1 then
           tenDq_3d_f * tenDq_3d)
 end
 
---------------------------------------------------------------------------------
--- Define the 3d-Ld hybridization term.
---------------------------------------------------------------------------------
-if H_3d_Ld_hybridization == 1 then
-    N_Ld = NewOperator('Number', NFermions, IndexUp_Ld, IndexUp_Ld, {1, 1, 1, 1, 1})
-         + NewOperator('Number', NFermions, IndexDn_Ld, IndexDn_Ld, {1, 1, 1, 1, 1})
-
-    Delta_3d_Ld_i = $Delta(3d,Ld)_i_value
-    U_3d_3d_i = $U(3d,3d)_i_value
-    e_3d_i = (10 * Delta_3d_Ld_i - NElectrons_3d * (19 + NElectrons_3d) * U_3d_3d_i / 2) / (10 + NElectrons_3d)
-    e_Ld_i = NElectrons_3d * ((1 + NElectrons_3d) * U_3d_3d_i / 2 - Delta_3d_Ld_i) / (10 + NElectrons_3d)
-
-    Delta_3d_Ld_f = $Delta(3d,Ld)_f_value
-    U_3d_3d_f = $U(3d,3d)_f_value
-    U_2p_3d_f = $U(2p,3d)_f_value
-    e_2p_f = (10 * Delta_3d_Ld_f + (1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_f / 2 - (10 + NElectrons_3d) * U_2p_3d_f)) / (16 + NElectrons_3d)
-    e_3d_f = (10 * Delta_3d_Ld_f - NElectrons_3d * (31 + NElectrons_3d) * U_3d_3d_f / 2 - 90 * U_2p_3d_f) / (16 + NElectrons_3d)
-    e_Ld_f = ((1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_f / 2 + 6 * U_2p_3d_f) - (6 + NElectrons_3d) * Delta_3d_Ld_f) / (16 + NElectrons_3d)
-
-    H_i = H_i + Chop(
-          U_3d_3d_i * F0_3d_3d
-        + e_3d_i * N_3d
-        + e_Ld_i * N_Ld)
-
-    H_f = H_f + Chop(
-          U_3d_3d_f * F0_3d_3d
-        + U_2p_3d_f * F0_2p_3d
-        + e_2p_f * N_2p
-        + e_3d_f * N_3d
-        + e_Ld_f * N_Ld)
-
-    tenDq_Ld = NewOperator('CF', NFermions, IndexUp_Ld, IndexDn_Ld, PotentialExpandedOnClm('Td', 2, {-0.6, 0.4}))
-
-    Vt2_3d_Ld = NewOperator('CF', NFermions, IndexUp_Ld, IndexDn_Ld, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm('Td', 2, {0, 1}))
-              + NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_Ld, IndexDn_Ld, PotentialExpandedOnClm('Td', 2, {0, 1}))
-
-    Ve_3d_Ld = NewOperator('CF', NFermions, IndexUp_Ld, IndexDn_Ld, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm('Td', 2, {1, 0}))
-             + NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_Ld, IndexDn_Ld, PotentialExpandedOnClm('Td', 2, {1, 0}))
-
-    tenDq_Ld_i = $10Dq(Ld)_i_value
-    Ve_3d_Ld_i = $Ve(3d,Ld)_i_value
-    Vt2_3d_Ld_i = $Vt2(3d,Ld)_i_value
-
-    tenDq_Ld_f = $10Dq(Ld)_f_value
-    Ve_3d_Ld_f = $Ve(3d,Ld)_f_value
-    Vt2_3d_Ld_f = $Vt2(3d,Ld)_f_value
-
-    H_i = H_i + Chop(
-          tenDq_Ld_i  * tenDq_Ld
-        + Ve_3d_Ld_i  * Ve_3d_Ld
-        + Vt2_3d_Ld_i * Vt2_3d_Ld)
-
-    H_f = H_f + Chop(
-          tenDq_Ld_f  * tenDq_Ld
-        + Ve_3d_Ld_f  * Ve_3d_Ld
-        + Vt2_3d_Ld_f * Vt2_3d_Ld)
-end
 
 --------------------------------------------------------------------------------
 -- Define the magnetic field and exchange field terms.
@@ -256,6 +199,7 @@ if H_exchange_field == 1 then
 end
 
 NConfigurations = $NConfigurations
+Experiment = '$Experiment'
 
 --------------------------------------------------------------------------------
 -- Define the restrictions and set the number of initial states.
@@ -266,6 +210,11 @@ InitialRestrictions = {NFermions, NBosons, {'111111 0000000000', NElectrons_2p, 
 FinalRestrictions = {NFermions, NBosons, {'111111 0000000000', NElectrons_2p - 1, NElectrons_2p - 1},
                                          {'000000 1111111111', NElectrons_3d + 1, NElectrons_3d + 1}}
 
+if Experiment == 'XPS' then
+    FinalRestrictions = {NFermions, NBosons, {'111111 0000000000', NElectrons_2p - 1, NElectrons_2p - 1},
+                                             {'000000 1111111111', NElectrons_3d, NElectrons_3d}}
+end
+
 Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_2p, N_3d, 'dZ'}
 header = 'Analysis of the initial Hamiltonian:\n'
 header = header .. '=============================================================================================================\n'
@@ -273,7 +222,6 @@ header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sz>   
 header = header .. '=============================================================================================================\n'
 footer = '=============================================================================================================\n'
 
--- Define the temperature.
 T = $T * EnergyUnits.Kelvin.value
 
  -- Approximate machine epsilon.
@@ -399,25 +347,23 @@ Teps12_2p_3d = Chop(eps12[1] * Tx_2p_3d + eps12[2] * Ty_2p_3d + eps12[3] * Tz_2p
 Tr_2p_3d = Chop(t * (Teps11_2p_3d - I * Teps12_2p_3d))
 Tl_2p_3d = Chop(-t * (Teps11_2p_3d + I * Teps12_2p_3d))
 
-Experiment = '$Experiment'
-SingleCrystalSample = $SingleCrystalSample
+Ta_2p = {}
+for i = 1, NElectrons_2p / 2 do
+    Ta_2p[2*i - 1] = NewOperator('An', NFermions, IndexDn_2p[i])
+    Ta_2p[2*i]     = NewOperator('An', NFermions, IndexUp_2p[i])
+end
 
-if SingleCrystalSample == 1 then
-    if Experiment == 'XAS' then
-        T_2p_3d = {Tk1_2p_3d}
-    elseif Experiment == 'X(M)LD' then
-        T_2p_3d = {Teps11_2p_3d, Teps12_2p_3d}
-    elseif Experiment == 'XMCD' then
-        T_2p_3d = {Tr_2p_3d, Tl_2p_3d}
-    else
-        return
-    end
+T = {}
+if Experiment == 'XAS' then
+    T = {Tx_2p_3d, Ty_2p_3d, Tz_2p_3d}
+elseif Experiment == 'XPS' then
+    T = Ta_2p
+elseif Experiment == 'X(M)LD' then
+    T = {Teps11_2p_3d, Teps12_2p_3d}
+elseif Experiment == 'XMCD' then
+    T = {Tr_2p_3d, Tl_2p_3d}
 else
-    if Experiment ==  'XAS' then
-        T_2p_3d = {Tx_2p_3d, Ty_2p_3d, Tz_2p_3d}
-    else
-        return
-    end
+    return
 end
 
 --------------------------------------------------------------------------------
@@ -443,20 +389,18 @@ Gamma = $Gamma1
 NE = $NE1
 
 if CalculationRestrictions == nil then
-    G = CreateSpectra(H_f, T_2p_3d, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}})
+    G = CreateSpectra(H_f, T, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}})
 else
-    G = CreateSpectra(H_f, T_2p_3d, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}})
+    G = CreateSpectra(H_f, T, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}})
 end
 
 IndicesToSum = {}
-for i in ipairs(T_2p_3d) do
+for i in ipairs(T) do
     for j in ipairs(Psis_i) do
         if Experiment == 'XAS' then
-            if SingleCrystalSample == 1 then
-                table.insert(IndicesToSum, dZ[j])
-            else
-                table.insert(IndicesToSum, dZ[j] / 3)
-            end
+            table.insert(IndicesToSum, dZ[j] / #T)
+        elseif Experiment == 'XPS' then
+            table.insert(IndicesToSum, dZ[j] / #T)
         elseif Experiment == 'XMCD' or Experiment == 'X(M)LD' then
             if i == 1 then
                 table.insert(IndicesToSum, dZ[j])

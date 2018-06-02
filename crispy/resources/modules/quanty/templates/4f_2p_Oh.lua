@@ -3,8 +3,8 @@
 -- the following reference: 10.5281/zenodo.1008184.
 --
 -- elements: 4f
--- symmetry: XAS
--- experiment: #experiment
+-- symmetry: Oh
+-- experiment: XAS, XPS
 -- edge: L2,3 (2p)
 --------------------------------------------------------------------------------
 Verbosity($Verbosity)
@@ -20,6 +20,8 @@ H_f = 0
 --------------------------------------------------------------------------------
 H_atomic = $H_atomic
 H_cf = $H_cf
+H_magnetic_field = $H_magnetic_field
+H_exchange_field = $H_exchange_field
 
 --------------------------------------------------------------------------------
 -- Define the number of electrons, shells, etc.
@@ -142,7 +144,7 @@ if H_cf == 1 then
 end
 
 --------------------------------------------------------------------------------
--- Define the spin and orbital operators.
+-- Define the magnetic field and exchange field terms.
 --------------------------------------------------------------------------------
 Sx_4f = NewOperator('Sx', NFermions, IndexUp_4f, IndexDn_4f)
 Sy_4f = NewOperator('Sy', NFermions, IndexUp_4f, IndexDn_4f)
@@ -181,6 +183,49 @@ Ssqr = Sx * Sx + Sy * Sy + Sz * Sz
 Lsqr = Lx * Lx + Ly * Ly + Lz * Lz
 Jsqr = Jx * Jx + Jy * Jy + Jz * Jz
 
+if H_magnetic_field == 1 then
+    Bx_i = $Bx_i_value * EnergyUnits.Tesla.value
+    By_i = $By_i_value * EnergyUnits.Tesla.value
+    Bz_i = $Bz_i_value * EnergyUnits.Tesla.value
+
+    Bx_f = $Bx_f_value * EnergyUnits.Tesla.value
+    By_f = $By_f_value * EnergyUnits.Tesla.value
+    Bz_f = $Bz_f_value * EnergyUnits.Tesla.value
+
+    H_i = H_i + Chop(
+          Bx_i * (2 * Sx + Lx)
+        + By_i * (2 * Sy + Ly)
+        + Bz_i * (2 * Sz + Lz))
+
+    H_f = H_f + Chop(
+          Bx_f * (2 * Sx + Lx)
+        + By_f * (2 * Sy + Ly)
+        + Bz_f * (2 * Sz + Lz))
+end
+
+if H_exchange_field == 1 then
+    Hx_i = $Hx_i_value
+    Hy_i = $Hy_i_value
+    Hz_i = $Hz_i_value
+
+    Hx_f = $Hx_f_value
+    Hy_f = $Hy_f_value
+    Hz_f = $Hz_f_value
+
+    H_i = H_i + Chop(
+          Hx_i * Sx
+        + Hy_i * Sy
+        + Hz_i * Sz)
+
+    H_f = H_f + Chop(
+          Hx_f * Sx
+        + Hy_f * Sy
+        + Hz_f * Sz)
+end
+
+NConfigurations = $NConfigurations
+Experiment = '$Experiment'
+
 --------------------------------------------------------------------------------
 -- Define the restrictions and set the number of initial states.
 --------------------------------------------------------------------------------
@@ -190,6 +235,11 @@ InitialRestrictions = {NFermions, NBosons, {'111111 00000000000000', NElectrons_
 FinalRestrictions = {NFermions, NBosons, {'111111 00000000000000', NElectrons_2p - 1, NElectrons_2p - 1},
                                          {'000000 11111111111111', NElectrons_4f + 1, NElectrons_4f + 1}}
 
+if Experiment == 'XPS' then
+    FinalRestrictions = {NFermions, NBosons, {'111111 00000000000000', NElectrons_2p - 1, NElectrons_2p - 1},
+                                             {'000000 11111111111111', NElectrons_4f, NElectrons_4f}}
+end
+
 Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_2p, N_4f, 'dZ'}
 header = 'Analysis of the initial Hamiltonian:\n'
 header = header .. '=============================================================================================================\n'
@@ -197,7 +247,6 @@ header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sz>   
 header = header .. '=============================================================================================================\n'
 footer = '=============================================================================================================\n'
 
--- Define the temperature.
 T = $T * EnergyUnits.Kelvin.value
 
  -- Approximate machine epsilon.
@@ -314,7 +363,20 @@ Tyz_2p_4f   = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_2p, I
 Tx2y2_2p_4f = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_2p, IndexDn_2p, {{2, -2, t    }, {2, 2,  t    }})
 Tz2_2p_4f   = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_2p, IndexDn_2p, {{2,  0, 1    }                })
 
-T_2p_4f = {Txy_2p_4f, Txz_2p_4f, Tyz_2p_4f, Tx2y2_2p_4f, Tz2_2p_4f}
+Ta_2p = {}
+for i = 1, NElectrons_2p / 2 do
+    Ta_2p[2*i - 1] = NewOperator('An', NFermions, IndexDn_2p[i])
+    Ta_2p[2*i]     = NewOperator('An', NFermions, IndexUp_2p[i])
+end
+
+T = {}
+if Experiment == 'XAS' then
+    T = {Txy_2p_4f, Txz_2p_4f, Tyz_2p_4f, Tx2y2_2p_4f, Tz2_2p_4f}
+elseif Experiment == 'XPS' then
+    T = Ta_2p
+else
+    return
+end
 
 --------------------------------------------------------------------------------
 -- Calculate and save the spectrum.
@@ -339,15 +401,19 @@ Gamma = $Gamma1
 NE = $NE1
 
 if CalculationRestrictions == nil then
-    G = CreateSpectra(H_f, T_2p_4f, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}})
+    G = CreateSpectra(H_f, T, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}})
 else
-    G = CreateSpectra(H_f, T_2p_4f, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}})
+    G = CreateSpectra(H_f, T, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}})
 end
 
 IndicesToSum = {}
-for i in ipairs(T_2p_4f) do
+for i in ipairs(T) do
     for j in ipairs(Psis_i) do
-        table.insert(IndicesToSum, dZ[j] / 15)
+        if Experiment == 'XAS' then
+            table.insert(IndicesToSum, dZ[j] / #T / 3)
+        elseif Experiment == 'XPS' then
+            table.insert(IndicesToSum, dZ[j] / #T)
+        end
     end
 end
 

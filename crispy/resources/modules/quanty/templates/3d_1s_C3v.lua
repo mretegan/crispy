@@ -4,7 +4,7 @@
 --
 -- elements: 3d
 -- symmetry: C3v
--- experiment: XAS
+-- experiment: XAS, XPS
 -- edge: K (1s)
 --------------------------------------------------------------------------------
 Verbosity($Verbosity)
@@ -21,6 +21,8 @@ H_f = 0
 H_atomic = $H_atomic
 H_cf = $H_cf
 H_3d_4p_hybridization = $H_3d_4p_hybridization
+H_magnetic_field = $H_magnetic_field
+H_exchange_field = $H_exchange_field
 
 --------------------------------------------------------------------------------
 -- Define the number of electrons, shells, etc.
@@ -223,28 +225,28 @@ if H_3d_4p_hybridization == 1 then
 end
 
 --------------------------------------------------------------------------------
--- Define the spin and orbital operators.
+-- Define the magnetic field and exchange field terms.
 --------------------------------------------------------------------------------
 Sx_3d = NewOperator('Sx', NFermions, IndexUp_3d, IndexDn_3d)
 Sy_3d = NewOperator('Sy', NFermions, IndexUp_3d, IndexDn_3d)
 Sz_3d = NewOperator('Sz', NFermions, IndexUp_3d, IndexDn_3d)
-Ssqr_3d = NewOperator('Ssqr' , NFermions, IndexUp_3d, IndexDn_3d)
+Ssqr_3d = NewOperator('Ssqr', NFermions, IndexUp_3d, IndexDn_3d)
 Splus_3d = NewOperator('Splus', NFermions, IndexUp_3d, IndexDn_3d)
-Smin_3d = NewOperator('Smin' , NFermions, IndexUp_3d, IndexDn_3d)
+Smin_3d = NewOperator('Smin', NFermions, IndexUp_3d, IndexDn_3d)
 
 Lx_3d = NewOperator('Lx', NFermions, IndexUp_3d, IndexDn_3d)
 Ly_3d = NewOperator('Ly', NFermions, IndexUp_3d, IndexDn_3d)
 Lz_3d = NewOperator('Lz', NFermions, IndexUp_3d, IndexDn_3d)
-Lsqr_3d = NewOperator('Lsqr' , NFermions, IndexUp_3d, IndexDn_3d)
+Lsqr_3d = NewOperator('Lsqr', NFermions, IndexUp_3d, IndexDn_3d)
 Lplus_3d = NewOperator('Lplus', NFermions, IndexUp_3d, IndexDn_3d)
-Lmin_3d = NewOperator('Lmin' , NFermions, IndexUp_3d, IndexDn_3d)
+Lmin_3d = NewOperator('Lmin', NFermions, IndexUp_3d, IndexDn_3d)
 
 Jx_3d = NewOperator('Jx', NFermions, IndexUp_3d, IndexDn_3d)
 Jy_3d = NewOperator('Jy', NFermions, IndexUp_3d, IndexDn_3d)
 Jz_3d = NewOperator('Jz', NFermions, IndexUp_3d, IndexDn_3d)
-Jsqr_3d = NewOperator('Jsqr' , NFermions, IndexUp_3d, IndexDn_3d)
+Jsqr_3d = NewOperator('Jsqr', NFermions, IndexUp_3d, IndexDn_3d)
 Jplus_3d = NewOperator('Jplus', NFermions, IndexUp_3d, IndexDn_3d)
-Jmin_3d = NewOperator('Jmin' , NFermions, IndexUp_3d, IndexDn_3d)
+Jmin_3d = NewOperator('Jmin', NFermions, IndexUp_3d, IndexDn_3d)
 
 Sx = Sx_3d
 Sy = Sy_3d
@@ -262,7 +264,48 @@ Ssqr = Sx * Sx + Sy * Sy + Sz * Sz
 Lsqr = Lx * Lx + Ly * Ly + Lz * Lz
 Jsqr = Jx * Jx + Jy * Jy + Jz * Jz
 
+if H_magnetic_field == 1 then
+    Bx_i = $Bx_i_value * EnergyUnits.Tesla.value
+    By_i = $By_i_value * EnergyUnits.Tesla.value
+    Bz_i = $Bz_i_value * EnergyUnits.Tesla.value
+
+    Bx_f = $Bx_f_value * EnergyUnits.Tesla.value
+    By_f = $By_f_value * EnergyUnits.Tesla.value
+    Bz_f = $Bz_f_value * EnergyUnits.Tesla.value
+
+    H_i = H_i + Chop(
+          Bx_i * (2 * Sx + Lx)
+        + By_i * (2 * Sy + Ly)
+        + Bz_i * (2 * Sz + Lz))
+
+    H_f = H_f + Chop(
+          Bx_f * (2 * Sx + Lx)
+        + By_f * (2 * Sy + Ly)
+        + Bz_f * (2 * Sz + Lz))
+end
+
+if H_exchange_field == 1 then
+    Hx_i = $Hx_i_value
+    Hy_i = $Hy_i_value
+    Hz_i = $Hz_i_value
+
+    Hx_f = $Hx_f_value
+    Hy_f = $Hy_f_value
+    Hz_f = $Hz_f_value
+
+    H_i = H_i + Chop(
+          Hx_i * Sx
+        + Hy_i * Sy
+        + Hz_i * Sz)
+
+    H_f = H_f + Chop(
+          Hx_f * Sx
+        + Hy_f * Sy
+        + Hz_f * Sz)
+end
+
 NConfigurations = $NConfigurations
+Experiment = '$Experiment'
 
 --------------------------------------------------------------------------------
 -- Define the restrictions and set the number of initial states.
@@ -273,6 +316,11 @@ InitialRestrictions = {NFermions, NBosons, {'11 0000000000', NElectrons_1s, NEle
 FinalRestrictions = {NFermions, NBosons, {'11 0000000000', NElectrons_1s - 1, NElectrons_1s - 1},
                                          {'00 1111111111', NElectrons_3d + 1, NElectrons_3d + 1}}
 
+if Experiment == 'XPS' then
+    FinalRestrictions = {NFermions, NBosons, {'11 0000000000', NElectrons_1s - 1, NElectrons_1s - 1},
+                                             {'00 1111111111', NElectrons_3d, NElectrons_3d}}
+end
+
 if H_3d_4p_hybridization == 1 then
     InitialRestrictions = {NFermions, NBosons, {'11 0000000000 000000', NElectrons_1s, NElectrons_1s},
                                                {'00 1111111111 000000', NElectrons_3d, NElectrons_3d},
@@ -281,6 +329,12 @@ if H_3d_4p_hybridization == 1 then
     FinalRestrictions = {NFermions, NBosons, {'11 0000000000 000000', NElectrons_1s - 1, NElectrons_1s - 1},
                                              {'00 1111111111 000000', NElectrons_3d + 1, NElectrons_3d + 1},
                                              {'00 0000000000 111111', NElectrons_4p, NElectrons_4p}}
+
+    if Experiment == 'XPS' then
+        FinalRestrictions = {NFermions, NBosons, {'11 0000000000 000000', NElectrons_1s - i, NElectrons_1s - i},
+                                                 {'00 1111111111 000000', NElectrons_3d, NElectrons_3d},
+                                                 {'00 0000000000 111111', NElectrons_4p, NElectrons_4p}}
+    end
 
     CalculationRestrictions = {NFermions, NBosons, {'00 0000000000 111111', NElectrons_4p, NElectrons_4p + 1}}
 end
@@ -301,7 +355,6 @@ if H_3d_4p_hybridization == 1 then
     footer = '=======================================================================================================================\n'
 end
 
--- Define the temperature.
 T = $T * EnergyUnits.Kelvin.value
 
  -- Approximate machine epsilon.
@@ -418,14 +471,27 @@ Tyz_1s_3d   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, I
 Tx2y2_1s_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -2, t    }, {2, 2,  t    }})
 Tz2_1s_3d   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2,  0, 1    }                })
 
-T_1s_3d = {Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}
+Ta_1s = {}
+for i = 1, NElectrons_1s / 2 do
+    Ta_1s[2*i - 1] = NewOperator('An', NFermions, IndexDn_1s[i])
+    Ta_1s[2*i]     = NewOperator('An', NFermions, IndexUp_1s[i])
+end
+
+T = {}
+if Experiment == 'XAS' then
+    T = {Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}
+elseif Experiment == 'XPS' then
+    T = Ta_1s
+else
+    return
+end
 
 if H_3d_4p_hybridization == 1 then
     Tx_1s_4p = NewOperator('CF', NFermions, IndexUp_4p, IndexDn_4p, IndexUp_1s, IndexDn_1s, {{1, -1, t    }, {1, 1, -t    }})
     Ty_1s_4p = NewOperator('CF', NFermions, IndexUp_4p, IndexDn_4p, IndexUp_1s, IndexDn_1s, {{1, -1, t * I}, {1, 1,  t * I}})
     Tz_1s_4p = NewOperator('CF', NFermions, IndexUp_4p, IndexDn_4p, IndexUp_1s, IndexDn_1s, {{1,  0, 1    }                })
 
-    T_1s_4p = {Tx_1s_4p, Ty_1s_4p, Tz_1s_4p}
+    T_dip = {Tx_1s_4p, Ty_1s_4p, Tz_1s_4p}
 end
 
 --------------------------------------------------------------------------------
@@ -451,29 +517,33 @@ Gamma = $Gamma1
 NE = $NE1
 
 if CalculationRestrictions == nil then
-    G = CreateSpectra(H_f, T_1s_3d, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}})
+    G = CreateSpectra(H_f, T, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}})
 else
-    G = CreateSpectra(H_f, T_1s_3d, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}})
+    G = CreateSpectra(H_f, T, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}})
 end
 
 IndicesToSum = {}
-for i in ipairs(T_1s_3d) do
+for i in ipairs(T) do
     for j in ipairs(Psis_i) do
-        table.insert(IndicesToSum, dZ[j] / 15)
+        if Experiment == 'XAS' then
+            table.insert(IndicesToSum, dZ[j] / #T / 3)
+        elseif Experiment == 'XPS' then
+            table.insert(IndicesToSum, dZ[j] / #T)
+        end
     end
 end
 
 G = Spectra.Sum(G, IndicesToSum)
 G = G / (2 * math.pi)
 
-if H_3d_4p_hybridization == 1 then
+if H_3d_4p_hybridization == 1 and Experiment == 'XAS' then
     G_quad = 2 * math.pi * G
-    G_dip = CreateSpectra(H_f, T_1s_4p, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}})
+    G_dip = CreateSpectra(H_f, T_dip, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}})
 
     IndicesToSum = {}
-    for i in ipairs(T_1s_4p) do
+    for i in ipairs(T_dip) do
         for j in ipairs(Psis_i) do
-            table.insert(IndicesToSum, dZ[j] / 3)
+            table.insert(IndicesToSum, dZ[j] / #T_dip)
         end
     end
 

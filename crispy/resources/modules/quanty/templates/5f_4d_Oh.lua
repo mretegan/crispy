@@ -3,9 +3,9 @@
 -- the following reference: 10.5281/zenodo.1008184.
 --
 -- elements: 5f
--- symmetry: XAS
--- experiment: #experiment
--- edge: L2,3 (2p)
+-- symmetry: Oh
+-- experiment: XAS, XPS, XMCD, X(M)LD
+-- edge: N4,5 (4d)
 --------------------------------------------------------------------------------
 Verbosity($Verbosity)
 
@@ -20,26 +20,28 @@ H_f = 0
 --------------------------------------------------------------------------------
 H_atomic = $H_atomic
 H_cf = $H_cf
+H_magnetic_field = $H_magnetic_field
+H_exchange_field = $H_exchange_field
 
 --------------------------------------------------------------------------------
 -- Define the number of electrons, shells, etc.
 --------------------------------------------------------------------------------
-NFermions = 20
+NFermions = 24
 NBosons = 0
 
-NElectrons_2p = 6
+NElectrons_4d = 10
 NElectrons_5f = $NElectrons_5f
 
-IndexDn_2p = {0, 2, 4}
-IndexUp_2p = {1, 3, 5}
-IndexDn_5f = {6, 8, 10, 12, 14, 16, 18}
-IndexUp_5f = {7, 9, 11, 13, 15, 17, 19}
+IndexDn_4d = {0, 2, 4, 6, 8}
+IndexUp_4d = {1, 3, 5, 7, 9}
+IndexDn_5f = {10, 12, 14, 16, 18, 20, 22}
+IndexUp_5f = {11, 13, 15, 17, 19, 21, 23}
 
 --------------------------------------------------------------------------------
 -- Define the atomic term.
 --------------------------------------------------------------------------------
-N_2p = NewOperator('Number', NFermions, IndexUp_2p, IndexUp_2p, {1, 1, 1})
-     + NewOperator('Number', NFermions, IndexDn_2p, IndexDn_2p, {1, 1, 1})
+N_4d = NewOperator('Number', NFermions, IndexUp_4d, IndexUp_4d, {1, 1, 1, 1, 1})
+     + NewOperator('Number', NFermions, IndexDn_4d, IndexDn_4d, {1, 1, 1, 1, 1})
 
 N_5f = NewOperator('Number', NFermions, IndexUp_5f, IndexUp_5f, {1, 1, 1, 1, 1, 1, 1})
      + NewOperator('Number', NFermions, IndexDn_5f, IndexDn_5f, {1, 1, 1, 1, 1, 1, 1})
@@ -50,10 +52,12 @@ if H_atomic == 1 then
     F4_5f_5f = NewOperator('U', NFermions, IndexUp_5f, IndexDn_5f, {0, 0, 1, 0})
     F6_5f_5f = NewOperator('U', NFermions, IndexUp_5f, IndexDn_5f, {0, 0, 0, 1})
 
-    F0_2p_5f = NewOperator('U', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_5f, IndexDn_5f, {1, 0}, {0, 0})
-    F2_2p_5f = NewOperator('U', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_5f, IndexDn_5f, {0, 1}, {0, 0})
-    G2_2p_5f = NewOperator('U', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_5f, IndexDn_5f, {0, 0}, {1, 0})
-    G4_2p_5f = NewOperator('U', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_5f, IndexDn_5f, {0, 0}, {0, 1})
+    F0_4d_5f = NewOperator('U', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_5f, IndexDn_5f, {1, 0, 0}, {0, 0, 0});
+    F2_4d_5f = NewOperator('U', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_5f, IndexDn_5f, {0, 1, 0}, {0, 0, 0});
+    F4_4d_5f = NewOperator('U', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_5f, IndexDn_5f, {0, 0, 1}, {0, 0, 0});
+    G1_4d_5f = NewOperator('U', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_5f, IndexDn_5f, {0, 0, 0}, {1, 0, 0});
+    G3_4d_5f = NewOperator('U', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_5f, IndexDn_5f, {0, 0, 0}, {0, 1, 0});
+    G5_4d_5f = NewOperator('U', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_5f, IndexDn_5f, {0, 0, 0}, {0, 0, 1});
 
     F2_5f_5f_i = $F2(5f,5f)_i_value * $F2(5f,5f)_i_scaling
     F4_5f_5f_i = $F4(5f,5f)_i_value * $F4(5f,5f)_i_scaling
@@ -64,10 +68,12 @@ if H_atomic == 1 then
     F4_5f_5f_f = $F4(5f,5f)_f_value * $F4(5f,5f)_f_scaling
     F6_5f_5f_f = $F6(5f,5f)_f_value * $F6(5f,5f)_f_scaling
     F0_5f_5f_f = 4 / 195 * F2_5f_5f_f + 2 / 143 * F4_5f_5f_f + 100 / 5577 * F6_5f_5f_f
-    F2_2p_5f_f = $F2(2p,5f)_f_value * $F2(2p,5f)_f_scaling
-    G2_2p_5f_f = $G2(2p,5f)_f_value * $G2(2p,5f)_f_scaling
-    G4_2p_5f_f = $G4(2p,5f)_f_value * $G4(2p,5f)_f_scaling
-    F0_2p_5f_f = 3 / 70 * G2_2p_5f_f + 2 / 63 * G4_2p_5f_f
+    F2_4d_5f_f = $F2(4d,5f)_f_value * $F2(4d,5f)_f_scaling
+    F4_4d_5f_f = $F4(4d,5f)_f_value * $F4(4d,5f)_f_scaling
+    G1_4d_5f_f = $G1(4d,5f)_f_value * $G1(4d,5f)_f_scaling
+    G3_4d_5f_f = $G3(4d,5f)_f_value * $G3(4d,5f)_f_scaling
+    G5_4d_5f_f = $G5(4d,5f)_f_value * $G5(4d,5f)_f_scaling
+    F0_4d_5f_f = 3 / 70 * G1_4d_5f_f + 2 / 105 * G3_4d_5f_f + 5 / 231 * G5_4d_5f_f
 
     H_i = H_i + Chop(
           F0_5f_5f_i * F0_5f_5f
@@ -80,26 +86,28 @@ if H_atomic == 1 then
         + F2_5f_5f_f * F2_5f_5f
         + F4_5f_5f_f * F4_5f_5f
         + F6_5f_5f_f * F6_5f_5f
-        + F0_2p_5f_f * F0_2p_5f
-        + F2_2p_5f_f * F2_2p_5f
-        + G2_2p_5f_f * G2_2p_5f
-        + G4_2p_5f_f * G4_2p_5f)
+        + F0_4d_5f_f * F0_4d_5f
+        + F2_4d_5f_f * F2_4d_5f
+        + F4_4d_5f_f * F4_4d_5f
+        + G1_4d_5f_f * G1_4d_5f
+        + G3_4d_5f_f * G3_4d_5f
+        + G5_4d_5f_f * G5_4d_5f)
 
     ldots_5f = NewOperator('ldots', NFermions, IndexUp_5f, IndexDn_5f)
 
-    ldots_2p = NewOperator('ldots', NFermions, IndexUp_2p, IndexDn_2p)
+    ldots_4d = NewOperator('ldots', NFermions, IndexUp_4d, IndexDn_4d)
 
     zeta_5f_i = $zeta(5f)_i_value * $zeta(5f)_i_scaling
 
     zeta_5f_f = $zeta(5f)_f_value * $zeta(5f)_f_scaling
-    zeta_2p_f = $zeta(2p)_f_value * $zeta(2p)_f_scaling
+    zeta_4d_f = $zeta(4d)_f_value * $zeta(4d)_f_scaling
 
     H_i = H_i + Chop(
           zeta_5f_i * ldots_5f)
 
     H_f = H_f + Chop(
           zeta_5f_f * ldots_5f
-        + zeta_2p_f * ldots_2p)
+        + zeta_4d_f * ldots_4d)
 end
 
 --------------------------------------------------------------------------------
@@ -142,7 +150,7 @@ if H_cf == 1 then
 end
 
 --------------------------------------------------------------------------------
--- Define the spin and orbital operators.
+-- Define the magnetic field and exchange field terms.
 --------------------------------------------------------------------------------
 Sx_5f = NewOperator('Sx', NFermions, IndexUp_5f, IndexDn_5f)
 Sy_5f = NewOperator('Sy', NFermions, IndexUp_5f, IndexDn_5f)
@@ -181,23 +189,70 @@ Ssqr = Sx * Sx + Sy * Sy + Sz * Sz
 Lsqr = Lx * Lx + Ly * Ly + Lz * Lz
 Jsqr = Jx * Jx + Jy * Jy + Jz * Jz
 
+if H_magnetic_field == 1 then
+    Bx_i = $Bx_i_value * EnergyUnits.Tesla.value
+    By_i = $By_i_value * EnergyUnits.Tesla.value
+    Bz_i = $Bz_i_value * EnergyUnits.Tesla.value
+
+    Bx_f = $Bx_f_value * EnergyUnits.Tesla.value
+    By_f = $By_f_value * EnergyUnits.Tesla.value
+    Bz_f = $Bz_f_value * EnergyUnits.Tesla.value
+
+    H_i = H_i + Chop(
+          Bx_i * (2 * Sx + Lx)
+        + By_i * (2 * Sy + Ly)
+        + Bz_i * (2 * Sz + Lz))
+
+    H_f = H_f + Chop(
+          Bx_f * (2 * Sx + Lx)
+        + By_f * (2 * Sy + Ly)
+        + Bz_f * (2 * Sz + Lz))
+end
+
+if H_exchange_field == 1 then
+    Hx_i = $Hx_i_value
+    Hy_i = $Hy_i_value
+    Hz_i = $Hz_i_value
+
+    Hx_f = $Hx_f_value
+    Hy_f = $Hy_f_value
+    Hz_f = $Hz_f_value
+
+    H_i = H_i + Chop(
+          Hx_i * Sx
+        + Hy_i * Sy
+        + Hz_i * Sz)
+
+    H_f = H_f + Chop(
+          Hx_f * Sx
+        + Hy_f * Sy
+        + Hz_f * Sz)
+end
+
+NConfigurations = $NConfigurations
+Experiment = '$Experiment'
+
 --------------------------------------------------------------------------------
 -- Define the restrictions and set the number of initial states.
 --------------------------------------------------------------------------------
-InitialRestrictions = {NFermions, NBosons, {'111111 00000000000000', NElectrons_2p, NElectrons_2p},
-                                           {'000000 11111111111111', NElectrons_5f, NElectrons_5f}}
+InitialRestrictions = {NFermions, NBosons, {'1111111111 00000000000000', NElectrons_4d, NElectrons_4d},
+                                           {'0000000000 11111111111111', NElectrons_5f, NElectrons_5f}}
 
-FinalRestrictions = {NFermions, NBosons, {'111111 00000000000000', NElectrons_2p - 1, NElectrons_2p - 1},
-                                         {'000000 11111111111111', NElectrons_5f + 1, NElectrons_5f + 1}}
+FinalRestrictions = {NFermions, NBosons, {'1111111111 00000000000000', NElectrons_4d - 1, NElectrons_4d - 1},
+                                         {'0000000000 11111111111111', NElectrons_5f + 1, NElectrons_5f + 1}}
 
-Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_2p, N_5f, 'dZ'}
+if Experiment == 'XPS' then
+    FinalRestrictions = {NFermions, NBosons, {'1111111111 00000000000000', NElectrons_4d - 1, NElectrons_4d - 1},
+                                             {'0000000000 11111111111111', NElectrons_5f, NElectrons_5f}}
+end
+
+Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_4d, N_5f, 'dZ'}
 header = 'Analysis of the initial Hamiltonian:\n'
 header = header .. '=============================================================================================================\n'
-header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>    <N_2p>    <N_5f>          dZ\n'
+header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>    <N_4d>    <N_5f>          dZ\n'
 header = header .. '=============================================================================================================\n'
 footer = '=============================================================================================================\n'
 
--- Define the temperature.
 T = $T * EnergyUnits.Kelvin.value
 
  -- Approximate machine epsilon.
@@ -308,13 +363,39 @@ io.write(footer)
 --------------------------------------------------------------------------------
 t = math.sqrt(1/2);
 
-Txy_2p_5f   = NewOperator('CF', NFermions, IndexUp_5f, IndexDn_5f, IndexUp_2p, IndexDn_2p, {{2, -2, t * I}, {2, 2, -t * I}})
-Txz_2p_5f   = NewOperator('CF', NFermions, IndexUp_5f, IndexDn_5f, IndexUp_2p, IndexDn_2p, {{2, -1, t    }, {2, 1, -t    }})
-Tyz_2p_5f   = NewOperator('CF', NFermions, IndexUp_5f, IndexDn_5f, IndexUp_2p, IndexDn_2p, {{2, -1, t * I}, {2, 1,  t * I}})
-Tx2y2_2p_5f = NewOperator('CF', NFermions, IndexUp_5f, IndexDn_5f, IndexUp_2p, IndexDn_2p, {{2, -2, t    }, {2, 2,  t    }})
-Tz2_2p_5f   = NewOperator('CF', NFermions, IndexUp_5f, IndexDn_5f, IndexUp_2p, IndexDn_2p, {{2,  0, 1    }                })
+Tx_4d_5f = NewOperator('CF', NFermions, IndexUp_5f, IndexDn_5f, IndexUp_4d, IndexDn_4d, {{1, -1, t    }, {1, 1, -t    }})
+Ty_4d_5f = NewOperator('CF', NFermions, IndexUp_5f, IndexDn_5f, IndexUp_4d, IndexDn_4d, {{1, -1, t * I}, {1, 1,  t * I}})
+Tz_4d_5f = NewOperator('CF', NFermions, IndexUp_5f, IndexDn_5f, IndexUp_4d, IndexDn_4d, {{1,  0, 1    }                })
 
-T_2p_5f = {Txy_2p_5f, Txz_2p_5f, Tyz_2p_5f, Tx2y2_2p_5f, Tz2_2p_5f}
+k1 = $k1
+eps11 = $eps11
+eps12 = $eps12
+
+Tk1_4d_5f = Chop(k1[1] * Tx_4d_5f + k1[2] * Ty_4d_5f + k1[3] * Tz_4d_5f)
+Teps11_4d_5f = Chop(eps11[1] * Tx_4d_5f + eps11[2] * Ty_4d_5f + eps11[3] * Tz_4d_5f)
+Teps12_4d_5f = Chop(eps12[1] * Tx_4d_5f + eps12[2] * Ty_4d_5f + eps12[3] * Tz_4d_5f)
+
+Tr_4d_5f = Chop(t * (Teps11_4d_5f - I * Teps12_4d_5f))
+Tl_4d_5f = Chop(-t * (Teps11_4d_5f + I * Teps12_4d_5f))
+
+Ta_4d = {}
+for i = 1, NElectrons_4d / 2 do
+    Ta_4d[2*i - 1] = NewOperator('An', NFermions, IndexDn_4d[i])
+    Ta_4d[2*i]     = NewOperator('An', NFermions, IndexUp_4d[i])
+end
+
+T = {}
+if Experiment == 'XAS' then
+    T = {Tx_4d_5f, Ty_4d_5f, Tz_4d_5f}
+elseif Experiment == 'XPS' then
+    T = Ta_4d
+elseif Experiment == 'X(M)LD' then
+    T = {Teps11_4d_5f, Teps12_4d_5f}
+elseif Experiment == 'XMCD' then
+    T = {Tr_4d_5f, Tl_4d_5f}
+else
+        return
+end
 
 --------------------------------------------------------------------------------
 -- Calculate and save the spectrum.
@@ -339,15 +420,25 @@ Gamma = $Gamma1
 NE = $NE1
 
 if CalculationRestrictions == nil then
-    G = CreateSpectra(H_f, T_2p_5f, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}})
+    G = CreateSpectra(H_f, T, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}})
 else
-    G = CreateSpectra(H_f, T_2p_5f, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}})
+    G = CreateSpectra(H_f, T, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}})
 end
 
 IndicesToSum = {}
-for i in ipairs(T_2p_5f) do
+for i in ipairs(T) do
     for j in ipairs(Psis_i) do
-        table.insert(IndicesToSum, dZ[j] / 15)
+        if Experiment == 'XAS' then
+            table.insert(IndicesToSum, dZ[j] / #T)
+        elseif Experiment == 'XPS' then
+            table.insert(IndicesToSum, dZ[j] / #T)
+        elseif Experiment == 'XMCD' or Experiment == 'X(M)LD' then
+            if i == 1 then
+                table.insert(IndicesToSum, dZ[j])
+            else
+                table.insert(IndicesToSum, -dZ[j])
+            end
+        end
     end
 end
 

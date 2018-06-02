@@ -281,26 +281,6 @@
              </item>
             </layout>
            </item>
-           <item>
-            <layout class="QHBoxLayout" name="sampleHBoxLayout">
-             <item>
-              <widget class="QLabel" name="sampleLabel">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>Sample</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="ComboBox" name="sampleComboBox"/>
-             </item>
-            </layout>
-           </item>
           </layout>
          </widget>
         </item>

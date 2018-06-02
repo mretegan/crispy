@@ -4,7 +4,7 @@
 --
 -- elements: 4d
 -- symmetry: C3v
--- experiment: XAS, XMCD, X(M)LD
+-- experiment: XAS, XPS, XMCD, X(M)LD
 -- edge: L2,3 (2p)
 --------------------------------------------------------------------------------
 Verbosity($Verbosity)
@@ -207,6 +207,7 @@ if H_exchange_field == 1 then
 end
 
 NConfigurations = $NConfigurations
+Experiment = '$Experiment'
 
 --------------------------------------------------------------------------------
 -- Define the restrictions and set the number of initial states.
@@ -217,6 +218,11 @@ InitialRestrictions = {NFermions, NBosons, {'111111 0000000000', NElectrons_2p, 
 FinalRestrictions = {NFermions, NBosons, {'111111 0000000000', NElectrons_2p - 1, NElectrons_2p - 1},
                                          {'000000 1111111111', NElectrons_4d + 1, NElectrons_4d + 1}}
 
+if Experiment == 'XPS' then
+    FinalRestrictions = {NFermions, NBosons, {'111111 0000000000', NElectrons_2p - 1, NElectrons_2p - 1},
+                                             {'000000 1111111111', NElectrons_4d, NElectrons_4d}}
+end
+
 Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_2p, N_4d, 'dZ'}
 header = 'Analysis of the initial Hamiltonian:\n'
 header = header .. '=============================================================================================================\n'
@@ -224,7 +230,6 @@ header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sz>   
 header = header .. '=============================================================================================================\n'
 footer = '=============================================================================================================\n'
 
--- Define the temperature.
 T = $T * EnergyUnits.Kelvin.value
 
  -- Approximate machine epsilon.
@@ -350,25 +355,23 @@ Teps12_2p_4d = Chop(eps12[1] * Tx_2p_4d + eps12[2] * Ty_2p_4d + eps12[3] * Tz_2p
 Tr_2p_4d = Chop(t * (Teps11_2p_4d - I * Teps12_2p_4d))
 Tl_2p_4d = Chop(-t * (Teps11_2p_4d + I * Teps12_2p_4d))
 
-Experiment = '$Experiment'
-SingleCrystalSample = $SingleCrystalSample
+Ta_2p = {}
+for i = 1, NElectrons_2p / 2 do
+    Ta_2p[2*i - 1] = NewOperator('An', NFermions, IndexDn_2p[i])
+    Ta_2p[2*i]     = NewOperator('An', NFermions, IndexUp_2p[i])
+end
 
-if SingleCrystalSample == 1 then
-    if Experiment == 'XAS' then
-        T_2p_4d = {Tk1_2p_4d}
-    elseif Experiment == 'X(M)LD' then
-        T_2p_4d = {Teps11_2p_4d, Teps12_2p_4d}
-    elseif Experiment == 'XMCD' then
-        T_2p_4d = {Tr_2p_4d, Tl_2p_4d}
-    else
-        return
-    end
+T = {}
+if Experiment == 'XAS' then
+    T = {Tx_2p_4d, Ty_2p_4d, Tz_2p_4d}
+elseif Experiment == 'XPS' then
+    T = Ta_2p
+elseif Experiment == 'X(M)LD' then
+    T = {Teps11_2p_4d, Teps12_2p_4d}
+elseif Experiment == 'XMCD' then
+    T = {Tr_2p_4d, Tl_2p_4d}
 else
-    if Experiment ==  'XAS' then
-        T_2p_4d = {Tx_2p_4d, Ty_2p_4d, Tz_2p_4d}
-    else
-        return
-    end
+    return
 end
 
 --------------------------------------------------------------------------------
@@ -394,20 +397,18 @@ Gamma = $Gamma1
 NE = $NE1
 
 if CalculationRestrictions == nil then
-    G = CreateSpectra(H_f, T_2p_4d, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}})
+    G = CreateSpectra(H_f, T, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}})
 else
-    G = CreateSpectra(H_f, T_2p_4d, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}})
+    G = CreateSpectra(H_f, T, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}})
 end
 
 IndicesToSum = {}
-for i in ipairs(T_2p_4d) do
+for i in ipairs(T) do
     for j in ipairs(Psis_i) do
         if Experiment == 'XAS' then
-            if SingleCrystalSample == 1 then
-                table.insert(IndicesToSum, dZ[j])
-            else
-                table.insert(IndicesToSum, dZ[j] / 3)
-            end
+            table.insert(IndicesToSum, dZ[j] / #T)
+        elseif Experiment == 'XPS' then
+            table.insert(IndicesToSum, dZ[j] / #T)
         elseif Experiment == 'XMCD' or Experiment == 'X(M)LD' then
             if i == 1 then
                 table.insert(IndicesToSum, dZ[j])
