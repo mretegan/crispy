@@ -740,13 +740,13 @@ class QuantyDockWidget(QDockWidget):
 
         self.calculation.e1Gaussian = e1Gaussian
 
-        # try:
-        #     index = list(self.resultsView.selectedIndexes())[-1]
-        # except IndexError:
-        #     return
-        # else:
-        #     self.resultsModel.replaceItem(index, self.calculation)
-        #     self.plotSelectedCalculations()
+        try:
+            index = list(self.resultsView.selectedIndexes())[-1]
+        except IndexError:
+            return
+        else:
+            self.resultsModel.replaceItem(index, self.calculation)
+            self.plotSelectedCalculations()
 
     def updateIncidentWaveVector(self):
         try:
