@@ -693,8 +693,8 @@ class QuantyDockWidget(QDockWidget):
         except IndexError:
             pass
         else:
-            if e1LorentzianMin < 0:
-                message = 'The broadening cannot be negative.'
+            if e1LorentzianMin < 0.1:
+                message = 'The broadening cannot be smaller than 0.1.'
                 self.getStatusBar().showMessage(message, self.timeout)
                 self.e1LorentzianLineEdit.setList(
                     self.calculation.e1Lorentzian)
@@ -705,8 +705,8 @@ class QuantyDockWidget(QDockWidget):
         except IndexError:
             pass
         else:
-            if e1LorentzianMax < 0:
-                message = 'The broadening cannot be negative.'
+            if e1LorentzianMax < 0.1:
+                message = 'The broadening cannot be smaller than 0.1.'
                 self.getStatusBar().showMessage(message, self.timeout)
                 self.e1LorentzianLineEdit.setList(
                     self.calculation.e1Lorentzian)
@@ -885,8 +885,8 @@ class QuantyDockWidget(QDockWidget):
         except IndexError:
             pass
         else:
-            if e2LorentzianMin < 0:
-                message = 'The broadening cannot be negative.'
+            if e2LorentzianMin < 0.1:
+                message = 'The broadening cannot be smaller than 0.1.'
                 self.getStatusBar().showMessage(message, self.timeout)
                 self.e2LorentzianLineEdit.setList(
                     self.calculation.e2Lorentzian)
@@ -897,8 +897,8 @@ class QuantyDockWidget(QDockWidget):
         except IndexError:
             pass
         else:
-            if e2LorentzianMax < 0:
-                message = 'The broadening cannot be negative.'
+            if e2LorentzianMax < 0.1:
+                message = 'The broadening cannot be smaller than 0.1.'
                 self.getStatusBar().showMessage(message, self.timeout)
                 self.e2LorentzianLineEdit.setList(
                     self.calculation.e2Lorentzian)
