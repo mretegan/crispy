@@ -1,6 +1,14 @@
 Changelog
 =========
 
+v0.6.0 (2018-06-03)
+-------------------
+What'e new:
+
+* XPS calculations
+* automatic check for updates
+* important changes to Quanty templates 
+
 v0.5.0 (2018-03-26)
 -------------------
 What's new:

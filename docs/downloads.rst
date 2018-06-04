@@ -4,7 +4,7 @@ Downloads
 +----------------------------------+------------------------------+-----------------------------+
 | |Windows|                        | |macOS|                      | |Linux|                     |
 +----------------------------------+------------------------------+-----------------------------+
-| `Crispy-0.5.0-x64.exe (64-bit)`_ | `Crispy-0.5.0.dmg (64-bit)`_ | see the :doc:`installation` |
+| `Crispy-0.6.0-x64.exe (64-bit)`_ | `Crispy-0.6.0.dmg (64-bit)`_ | see the :doc:`installation` |
 |                                  |                              |                             |
 | The installer includes:          | The application includes:    | page for details.           |
 |   - Python 3.5.4                 |   - Python 3.5.4             |                             |
@@ -19,7 +19,7 @@ Downloads
 
 - The files include the latest version of Quanty available at the time when the Crispy release was made. Therefore, if you haven't done so already, please register on the `Quanty <http://quanty.org/start?do=register>`_ website.
 - The macOS application is not signed and you will get an error when you try to launch it the first time. You can grant an exception for Crispy by clicking the "Open Anyway" button in the General pane of Security & Privacy preferences. You can find more about this in the `official documentation <https://support.apple.com/kb/PH25088?locale=en_US>`_.
-- On Windows, some antivirus programs might block the installation of the application and even delete the installer from disk. I assume that this is because the installer is not signed. All releases are scanned using multiple antivirus programs. The report for the latest release can be found `here <https://www.virustotal.com/#/file/ab140d1fbc1059ab9e8671c68911fcb0b91372e3924dac0aa9bfeb461f90bd38/detection>`_.
+- On Windows, some antivirus programs might block the installation of the application and even delete the installer from disk. I assume that this is because the installer is not signed. Please rest assured that all releases are scanned using multiple antivirus programs on `VirusTotal <https://www.virustotal.com>`_. Also please make sure that you first uninstall older versions of Crispy before you proceed with the new installation.
 
 .. |Windows| image:: assets/windows.svg
     :width: 90pt
@@ -33,6 +33,6 @@ Downloads
     :width: 90pt
     :align: middle
 
-.. _Crispy-0.5.0-x64.exe (64-bit): https://github.com/mretegan/crispy/releases/download/v0.5.0/Crispy-0.5.0-x64.exe
+.. _Crispy-0.6.0-x64.exe (64-bit): https://github.com/mretegan/crispy/releases/download/v0.6.0/Crispy-0.6.0-x64.exe
 
-.. _Crispy-0.5.0.dmg (64-bit): https://github.com/mretegan/crispy/releases/download/v0.5.0/Crispy-0.5.0.dmg
+.. _Crispy-0.6.0.dmg (64-bit): https://github.com/mretegan/crispy/releases/download/v0.6.0/Crispy-0.6.0.dmg

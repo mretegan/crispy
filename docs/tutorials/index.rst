@@ -1,7 +1,7 @@
 Tutorials
 =========
 
-On this page you will find links to a series of tutorials to help get you started with Crispy. They are in no particular order, so you can start with the one that interests you. Nevertheless, to make things easier to follow, have a quick look at the tour of the interface below. 
+On this page you will find links to a series of tutorials to help get you started with Crispy. They are largely based on tutorials kindly provided by `Amélie Juhin <http://www-ext.impmc.upmc.fr/~juhin>`_. The tutorials are in no particular order, so you can start with the one that interests you. Nevertheless, to make things easier to follow, have a look at the quick tour of the interface below. 
 
 .. toctree::
     :maxdepth: 1
@@ -18,7 +18,7 @@ Crispy's main window is divided in three parts: the plotting panel (1), the logg
 
 The buttons located on the top of the plotting panel can be used to change the properties of the plot, e.g zoom, scale, aspect ration, color etc. The displayed plots can also be saved using various file formats.
 
-While not visible initially, the logging panel will always be shown once the Quanty calculation has started. The progress of the calculation and eventual errors will be displayed here.
+The progress of the calculation and eventual errors are displayed in the logging panel. 
 
 The Quanty module panel has a vertical tab structure. The *General Setup* tab is located at the top, and will always be displayed when Crispy is started. Here you can select the element, charge, and symmetry of the absorbing site. The type of experiment, edge, temperature, and magnetic field can also be selected here.
 
@@ -32,15 +32,9 @@ Depending on the type of experiment selected above, the panel below will display
     :align: center
     :width: 35 %
 
-The parameters include the energy range and the number of points for the calculated spectrum. Both *Lorentzian* and *Gaussian* functions can be used to broaden the spectrum. In the case of the *Gaussian* broadening, changing the full width at half maximum (FWHM) value after the calculation has finished will trigger a re-broadening of the display spectrum; this is not the case for the *Lorentzian* broadening. This later type of broadening also supports more complex input values. For example an energy dependent broadening can be specify by using two FWHM values, one for lower energy part of the spectrum, and a second one for the high energy part. This feature is only available for |L2,3| and |M4,5| edges. Additionally the energy for the transition point between the two FWHM values can also be specified as a third parameter. This is by default the middle of the absorption energy range. Finally, in the case of |L2,3| and |M4,5| edges the wave and polarization vectors can be specified. 
+The parameters include the energy range and the number of points for the calculated spectrum. Both *Lorentzian* and *Gaussian* functions can be used to broaden the spectrum. In the case of the *Gaussian* broadening, changing the full width at half maximum (FWHM) value after the calculation has finished will trigger a re-broadening of the display spectrum; this is not the case for the *Lorentzian* broadening. This later type of broadening also supports more complex input values. For example an energy dependent broadening can be specify by using two FWHM values, one for lower energy part of the spectrum, and a second one for the high energy part. This feature is only available for some of the available edges. Additionally the energy for the transition point between the two FWHM values can also be specified as a third parameter. This is by default the middle of the absorption energy range. Finally, the wave and polarization vectors can be specified in the case of XMCD and X(M)LD calculations.
 
-At the bottom of the *General Setup* tab you can select the spectra to be calculated. Note that changing the magnetic field value above, will automatically trigger the calculation of the XMCD spectrum.
-
-.. figure:: assets/spectra_to_calculate.png
-    :align: center
-    :width: 35 %
-
-In the *Hamiltonian Setup* tab you can change the parameters of the semi-empirical model used in the calculation. The scale factors for the Coulomb, exchange, and spin-orbit coupling integrals can be changed using a set of three input boxes. Note that the scale factors are used to alter the Hartree---Fock values of the integrals.
+In the *Hamiltonian Setup* tab you can change the parameters of the semi-empirical model used in the calculation. The scale factors for the Coulomb, exchange, and spin-orbit coupling integrals can be changed using a set of three input boxes. Note that the scale factors are used to alter the values of the Hartree---Fock integrals.
 
 .. figure:: assets/scale_factors.png
     :align: center
@@ -64,13 +58,7 @@ Completed calculations are displayed in the *Results* tab. The plotting panel wi
     :align: center
     :width: 35 %
 
-The type of spectra to be plotted can be selected in the bottom panel of the *Results* tab.
-
-.. figure:: assets/spectra_to_plot.png
-    :align: center
-    :width: 35 %
-
-At the bottom of the Quanty module panel and not part of the tab structure present  above there are two buttons. They can be used to save the input file in a different location and/or with a different name, and start the calculation. Once the calculation starts the *Run* button will change into a *Stop* button, which can be used at any time to interrupt Quanty's run.
+At the bottom of the Quanty module panel and not part of the tab structure present above, there are two buttons. They can be used to save the input file in a different location and/or with a different name, and start the calculation. Once the calculation starts the *Run* button will change into a *Stop* button, which can be used at any time to interrupt Quanty's run.
 
 .. figure:: assets/buttons.png
     :align: center
