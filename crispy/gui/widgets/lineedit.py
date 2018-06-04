@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '31/05/2018'
+__date__ = '05/06/2018'
 
 from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtGui import QIntValidator, QDoubleValidator
@@ -48,7 +48,8 @@ class IntLineEdit(QLineEdit):
 class DoubleLineEdit(QLineEdit):
     def __init__(self, *args, **kwargs):
         super(DoubleLineEdit, self).__init__(*args, **kwargs)
-        self.setValidator(QDoubleValidator(self))
+        validator = QDoubleValidator(self)
+        self.setValidator(validator)
 
     def getValue(self):
         return float(self.text())

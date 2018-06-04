@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '02/06/2018'
+__date__ = '05/06/2018'
 
 
 import copy
@@ -535,7 +535,7 @@ class QuantyDockWidget(QDockWidget):
             self.hamiltonianTermsView.currentIndex())
 
         # Set the sizes of the two views.
-        self.hamiltonianSplitter.setSizes((150, 300, 0))
+        self.hamiltonianSplitter.setSizes((150, 300, 10))
 
     def enableUi(self, flag=True):
         self.elementComboBox.setEnabled(flag)
@@ -1069,7 +1069,7 @@ class QuantyDockWidget(QDockWidget):
 
         # If the user changes a value in a widget without pressing Return or
         # without interacting with another part of the GUI before running the
-        # calculation, the latests values are not updated.
+        # calculation, the values are not updated.
         # TODO: There must be a nicer way to do this.
         self.updateTemperature()
         self.updateMagneticField()
@@ -1086,7 +1086,7 @@ class QuantyDockWidget(QDockWidget):
             self.updateE2NPoints()
             # self.updateE2Gaussian()
             self.updateE2Lorentzian()
-        self.updateScalingFactors()
+        # self.updateScalingFactors()
         self.updateNPsis()
         self.updateConfigurations()
         self.updateHamiltonianData()
@@ -1352,7 +1352,7 @@ class QuantyDockWidget(QDockWidget):
 
         if 'RIXS' in self.calculation.experiment:
             # Keep the aspect ratio for RIXS plots.
-            self.getPlotWidget().setKeepDataAspectRatio(flag=True)
+            # self.getPlotWidget().setKeepDataAspectRatio(flag=True)
             self.getPlotWidget().setGraphXLabel('Incident Energy (eV)')
             self.getPlotWidget().setGraphYLabel('Energy Transfer (eV)')
 
@@ -1392,7 +1392,7 @@ class QuantyDockWidget(QDockWidget):
                 z, origin=origin, scale=scale, reset=False)
 
         else:
-            self.getPlotWidget().setKeepDataAspectRatio(flag=False)
+            # self.getPlotWidget().setKeepDataAspectRatio(flag=False)
             self.getPlotWidget().setGraphXLabel('Absorption Energy (eV)')
             self.getPlotWidget().setGraphYLabel(
                 'Absorption Cross Section (a.u.)')
@@ -1485,7 +1485,7 @@ class QuantyDockWidget(QDockWidget):
         self.updateMainWindowTitle()
 
     def plotSelectedCalculations(self):
-        self.getPlotWidget().reset()
+        self.getPlotWidget().clear()
         calculations = self.getSelectedCalculationsData()
         for calculation in calculations:
             self.calculation = calculation

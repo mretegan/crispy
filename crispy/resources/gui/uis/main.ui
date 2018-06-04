@@ -21,10 +21,7 @@
 QToolButton {
 	font-size: 13px;
 }
-
-QToolButton::menu-indicator{
-  width: 0px;
-}</string>
+</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
