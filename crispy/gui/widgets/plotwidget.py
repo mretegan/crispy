@@ -27,13 +27,14 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '30/04/2018'
+__date__ = '05/06/2018'
 
 
 from collections import OrderedDict as odict
 from silx.gui.plot import PlotWindow
 from silx.gui.plot.backends.BackendMatplotlib import (
     BackendMatplotlibQt as _BackendMatplotlibQt)
+from silx.gui.plot.Profile import ProfileToolBar
 
 
 class BackendMatplotlibQt(_BackendMatplotlibQt):
@@ -88,7 +89,12 @@ class PlotWidget(PlotWindow):
 
         self.setActiveCurveHandling(False)
         self.setGraphGrid('both')
-        # self.setDataMargins(0, 0, 0.05, 0.05)
+        profileWindow = PlotWindow(
+            logScale=False, grid=True, yInverted=False, roi=False,
+            mask=False, print_=False)
+        profileWindow.setWindowTitle('')
+        self.profile = ProfileToolBar(plot=self, profileWindow=profileWindow)
+        self.addToolBar(self.profile)
 
     def reset(self):
         self.clear()

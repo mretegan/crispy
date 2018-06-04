@@ -306,13 +306,14 @@ class QuantyCalculation(object):
                     parameter = parameter.replace('Δ', 'Delta')
                     parameter = parameter.replace('σ', 'sigma')
                     parameter = parameter.replace('τ', 'tau')
+                    scaling = None
                     try:
                         value, scaling = data
                     except TypeError:
                         value = data
                     key = '${}_{}_value'.format(parameter, suffix)
                     replacements[key] = '{}'.format(value)
-                    if scaling:
+                    if scaling is not None:
                         key = '${}_{}_scaling'.format(parameter, suffix)
                         replacements[key] = '{}'.format(scaling)
 
