@@ -40,7 +40,9 @@ def main():
     from silx.resources import register_resource_directory
     register_resource_directory('crispy', 'crispy.resources')
 
-    QLocale.setDefault(QLocale.c())
+    locale = QLocale(QLocale.C)
+    locale.setNumberOptions(QLocale.RejectGroupSeparator)
+    QLocale.setDefault(locale)
 
     app = QApplication(sys.argv)
     window = MainWindow()
