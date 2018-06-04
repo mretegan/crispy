@@ -1071,7 +1071,6 @@ class QuantyDockWidget(QDockWidget):
         # without interacting with another part of the GUI before running the
         # calculation, the latests values are not updated.
         # TODO: There must be a nicer way to do this.
-        # FIXME: Updating the Gaussian replaces the
         self.updateTemperature()
         self.updateMagneticField()
         self.updateE1Min()
@@ -1382,7 +1381,7 @@ class QuantyDockWidget(QDockWidget):
             e1Gaussian = self.calculation.e1Gaussian
             e2Gaussian = self.calculation.e2Gaussian
 
-            if e1Gaussian > 0. and e2Gaussian > 0.:
+            if e1Gaussian > 0 and e2Gaussian > 0:
                 xFwhm = e1Gaussian / xScale
                 yFwhm = e2Gaussian / yScale
 
@@ -1409,8 +1408,9 @@ class QuantyDockWidget(QDockWidget):
             x = np.linspace(e1Min, e1Max, e1NPoints + 1)
             y = data
 
-            fwhm = e1Gaussian / scale
-            y = broaden(y, fwhm, 'gaussian')
+            if e1Gaussian > 0:
+                fwhm = e1Gaussian / scale
+                y = broaden(y, fwhm, 'gaussian')
 
             legend = '{} | {}'.format(
                 self.calculation.label.split()[0], self.calculation.uuid)
