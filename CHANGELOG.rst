@@ -3,7 +3,7 @@ Changelog
 
 v0.6.0 (2018-06-03)
 -------------------
-What'e new:
+What's new:
 
 * XPS calculations
 * automatic check for updates
