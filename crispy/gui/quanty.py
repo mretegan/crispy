@@ -1161,6 +1161,8 @@ class QuantyDockWidget(QDockWidget):
     def removeSelectedCalculations(self):
         self.resultsModel.removeItems(self.resultsView.selectedIndexes())
         self.updateResultsViewSelection()
+        if not self.resultsView.selectedIndexes():
+            self.getPlotWidget().reset()
 
     def removeAllCalculations(self):
         self.resultsModel.reset()
