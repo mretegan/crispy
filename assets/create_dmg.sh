@@ -15,7 +15,7 @@ RESOURCES="${ROOT}"/crispy/assets
 ARTIFACTS="${ROOT}"/artifacts
 TEMPLATE="${ARTIFACTS}"/template
 TEMPLATE_DMG="${ARTIFACTS}"/template.dmg
-DMG="${ARTIFACTS}"/Crispy-0.6.0.dmg
+DMG="${ARTIFACTS}"/Crispy-0.6.1.dmg
 
 echo "Removing previous images."
 if [[ -e "${DMG}" ]]; then rm -rf "${DMG}"; fi
