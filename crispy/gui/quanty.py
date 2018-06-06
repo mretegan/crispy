@@ -1055,6 +1055,10 @@ class QuantyDockWidget(QDockWidget):
         self.calculation.nConfigurations = nConfigurations
 
     def saveInput(self):
+        # TODO: If the user changes a value in a widget without pressing Return
+        # or without interacting with another part of the GUI before running
+        # the calculation, the values are not updated.
+
         # Set the verbosity of the calculation.
         self.calculation.verbosity = self.getVerbosity()
 
@@ -1067,30 +1071,6 @@ class QuantyDockWidget(QDockWidget):
                        'alternative location.')
             self.getStatusBar().showMessage(message, 2 * self.timeout)
             raise
-
-        # If the user changes a value in a widget without pressing Return or
-        # without interacting with another part of the GUI before running the
-        # calculation, the values are not updated.
-        # TODO: There must be a nicer way to do this.
-        self.updateTemperature()
-        self.updateMagneticField()
-        self.updateE1Min()
-        self.updateE1Max()
-        self.updateE1NPoints()
-        # self.updateE1Gaussian()
-        self.updateE1Lorentzian()
-        self.updateIncidentWaveVector()
-        self.updateIncidentPolarizationVectors()
-        if 'RIXS' in self.calculation.experiment:
-            self.updateE2Min()
-            self.updateE2Max()
-            self.updateE2NPoints()
-            # self.updateE2Gaussian()
-            self.updateE2Lorentzian()
-        # self.updateScalingFactors()
-        self.updateNPsis()
-        self.updateConfigurations()
-        self.updateHamiltonianData()
 
         # The folder might exist, but is not writable.
         try:
