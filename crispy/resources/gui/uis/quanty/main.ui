@@ -1237,7 +1237,7 @@
             <item>
              <widget class="QCheckBox" name="syncParametersCheckBox">
               <property name="text">
-               <string>Syncronize Hamiltonian Parameters</string>
+               <string>Synchronize Hamiltonian Parameters</string>
               </property>
               <property name="checked">
                <bool>true</bool>
