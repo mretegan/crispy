@@ -22,7 +22,7 @@ If you already have Python and all dependencies installed (see below), you can i
 
 .. code:: sh
 
-    pip install crispy --upgrade [--user]
+    pip install crispy
 
 Just as in the case of using the package installers, this will install the latest release, and not the development version (see below). Also, please note that when you install Crispy using pip, external programs needed to run the calculations have to be installed and their path must be set in the interface (preferred way) or using the PATH environment variable.
 
@@ -41,7 +41,7 @@ The dependencies can be installed using pip (only for Python 3.5 or greater):
 
 .. code:: sh
 
-    pip install -r https://raw.githubusercontent.com/mretegan/crispy/master/requirements.txt [--user]
+    pip install -r https://raw.githubusercontent.com/mretegan/crispy/master/requirements.txt
 
 It is possible, although unlikely, that the development version of Crispy requires features that are not yet available with the pip installable version of silx. In this case you have to also install the development version of silx. This is not always a very simple task, especially on Windows, but there is extensive `documentation <http://www.silx.org/doc/silx/latest>`_ on how to do it.
 
@@ -49,7 +49,7 @@ Once Python and all dependencies are installed, you can proceed to installing Cr
 
 .. code:: sh
 
-    pip install https://github.com/mretegan/crispy/tarball/master --upgrade [--user]
+    pip install https://github.com/mretegan/crispy/tarball/master
 
 .. third-marker
 

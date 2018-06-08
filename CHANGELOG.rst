@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v0.6.2 (2018-06-08)
+-------------------
+What's new:
+
+* the package installers now contain the 2018 Summer version of Quanty
+* speedup of the RIXS calculations
+
 v0.6.1 (2018-06-05)
 -------------------
 This is a bug fix release.
