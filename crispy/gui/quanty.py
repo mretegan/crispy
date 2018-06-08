@@ -1334,8 +1334,6 @@ class QuantyDockWidget(QDockWidget):
                 data = np.zeros_like(data)
 
         if 'RIXS' in self.calculation.experiment:
-            # Keep the aspect ratio for RIXS plots.
-            # self.getPlotWidget().setKeepDataAspectRatio(flag=True)
             self.getPlotWidget().setGraphXLabel('Incident Energy (eV)')
             self.getPlotWidget().setGraphYLabel('Energy Transfer (eV)')
 
@@ -1375,7 +1373,6 @@ class QuantyDockWidget(QDockWidget):
                 z, origin=origin, scale=scale, reset=False)
 
         else:
-            # self.getPlotWidget().setKeepDataAspectRatio(flag=False)
             self.getPlotWidget().setGraphXLabel('Absorption Energy (eV)')
             self.getPlotWidget().setGraphYLabel(
                 'Absorption Cross Section (a.u.)')

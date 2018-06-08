@@ -597,22 +597,31 @@ NE2 = $NE2
 
 G = 0
 
-totalCalculations = 5 * 3 * #Psis_i
+totalCalculations = #Psis_i
 calculation = 1
 
 for i, Psi in ipairs(Psis_i) do
-    for j, T_in in ipairs({Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}) do
-        for k, T_out in ipairs({Tx_3p_1s, Ty_3p_1s, Tz_3p_1s}) do
-            io.write(string.format('Running calculation %d of %d.\n', calculation, totalCalculations))
-            if CalculationRestrictions == nil then
-                G = G + CreateResonantSpectra(H_m, H_f, T_in, T_out, Psi, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}}) * dZ[i]
-            else
-                G = G + CreateResonantSpectra(H_m, H_f, T_in, T_out, Psi, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}, {'restrictions1', CalculationRestrictions}}) * dZ[i]
-            end
-            calculation = calculation + 1
-        end
+    io.write(string.format('Running calculation %d of %d.\n', calculation, totalCalculations))
+    if CalculationRestrictions == nil then
+        G = G + CreateResonantSpectra(H_m, H_f, {Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}, {Tx_3p_1s, Ty_3p_1s, Tz_3p_1s}, Psi, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}}) * dZ[i]
+    else
+        G = G + CreateResonantSpectra(H_m, H_f, {Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}, {Tx_3p_1s, Ty_3p_1s, Tz_3p_1s}, Psi, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}, {'restrictions1', CalculationRestrictions}}) * dZ[i]
     end
+    calculation = calculation + 1
 end
 
-G.Print({{'file', '$BaseName.spec'}})
+Gtot = 0
+ishift = 0
+
+-- The number of operators in times the number of operators out.
+for i = 1, 5 * 3 do
+    Indices = {}
+    for i = 1, NE1 + 1 do
+        table.insert(Indices, i + ishift)
+    end
+    Gtot = Gtot + Spectra.Element(G, Indices)
+    ishift = ishift + NE1 + 1
+end
+
+Gtot.Print({{'file', '$BaseName.spec'}})
 
