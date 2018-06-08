@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '29/05/2018'
+__date__ = '08/06/2018'
 
 
 import errno
@@ -94,7 +94,9 @@ class Config(object):
         try:
             os.makedirs(path, mode=0o755)
         except OSError as e:
-            if e.errno != errno.EEXIST:
+            if e.errno == errno.EEXIST and os.path.isdir(path):
+                pass
+            else:
                 raise
 
         configPath = os.path.join(path, 'settings.json')
