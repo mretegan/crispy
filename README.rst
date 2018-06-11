@@ -33,7 +33,7 @@ The dependencies will be automatically downloaded and installed when run the ins
 
     pip install --upgrade --user crispy
 
-Specifying the *-\\-user* option will install Crispy in your home directory. After the installation finishes, you should be able to start the program from the command line:
+After the installation finishes, you should be able to start the program from the command line:
 
 .. code:: sh
 
