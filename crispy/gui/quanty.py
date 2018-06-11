@@ -183,7 +183,8 @@ class QuantyCalculation(object):
             terms = branch['configurations'][configuration]['terms']
 
             for term in terms:
-                # Include the p-d hybridization term only for K-edges.
+                # Include the p-d hybridization term only for the K-edges of
+                # 3d transition metals.
                 if term in '3d-4p Hybridization' and self.edge not in 'K (1s)':
                     continue
 

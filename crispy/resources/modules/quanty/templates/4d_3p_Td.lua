@@ -20,6 +20,7 @@ H_f = 0
 --------------------------------------------------------------------------------
 H_atomic = $H_atomic
 H_cf = $H_cf
+H_4d_Ld_hybridization = $H_4d_Ld_hybridization
 H_magnetic_field = $H_magnetic_field
 H_exchange_field = $H_exchange_field
 
@@ -36,6 +37,15 @@ IndexDn_3p = {0, 2, 4}
 IndexUp_3p = {1, 3, 5}
 IndexDn_4d = {6, 8, 10, 12, 14}
 IndexUp_4d = {7, 9, 11, 13, 15}
+
+if H_4d_Ld_hybridization == 1 then
+    NFermions = 26
+
+    NElectrons_Ld = 10
+
+    IndexDn_Ld = {16, 18, 20, 22, 24}
+    IndexUp_Ld = {17, 19, 21, 23, 25}
+end
 
 --------------------------------------------------------------------------------
 -- Define the atomic term.
@@ -117,6 +127,63 @@ if H_cf == 1 then
           tenDq_4d_f * tenDq_4d)
 end
 
+--------------------------------------------------------------------------------
+-- Define the 4d-Ld hybridization term.
+--------------------------------------------------------------------------------
+if H_4d_Ld_hybridization == 1 then
+    N_Ld = NewOperator('Number', NFermions, IndexUp_Ld, IndexUp_Ld, {1, 1, 1, 1, 1})
+         + NewOperator('Number', NFermions, IndexDn_Ld, IndexDn_Ld, {1, 1, 1, 1, 1})
+
+    Delta_4d_Ld_i = $Delta(4d,Ld)_i_value
+    U_4d_4d_i = $U(4d,4d)_i_value
+    e_4d_i  = (10 * Delta_4d_Ld_i - NElectrons_4d * (19 + NElectrons_4d) * U_4d_4d_i / 2) / (10 + NElectrons_4d)
+    e_Ld_i  = NElectrons_4d * ((1 + NElectrons_4d) * U_4d_4d_i / 2 - Delta_4d_Ld_i) / (10 + NElectrons_4d)
+
+    Delta_4d_Ld_f = $Delta(4d,Ld)_f_value
+    U_4d_4d_f = $U(4d,4d)_f_value
+    U_3p_4d_f = $U(3p,4d)_f_value
+    e_4d_f = (10 * Delta_4d_Ld_f - NElectrons_4d * (31 + NElectrons_4d) * U_4d_4d_f / 2 - 90 * U_3p_4d_f) / (16 + NElectrons_4d)
+    e_3p_f = (10 * Delta_4d_Ld_f + (1 + NElectrons_4d) * (NElectrons_4d * U_4d_4d_f / 2 - (10 + NElectrons_4d) * U_3p_4d_f)) / (16 + NElectrons_4d)
+    e_Ld_f = ((1 + NElectrons_4d) * (NElectrons_4d * U_4d_4d_f / 2 + 6 * U_3p_4d_f) - (6 + NElectrons_4d) * Delta_4d_Ld_f) / (16 + NElectrons_4d)
+
+    H_i = H_i + Chop(
+          U_4d_4d_i * F0_4d_4d
+        + e_4d_i * N_4d
+        + e_Ld_i * N_Ld)
+
+    H_f = H_f + Chop(
+          U_4d_4d_f * F0_4d_4d
+        + U_3p_4d_f * F0_3p_4d
+        + e_4d_f * N_4d
+        + e_3p_f * N_3p
+        + e_Ld_f * N_Ld)
+
+    tenDq_Ld = NewOperator('CF', NFermions, IndexUp_Ld, IndexDn_Ld, PotentialExpandedOnClm('Td', 2, {-0.6, 0.4}))
+
+    Vt2_4d_Ld = NewOperator('CF', NFermions, IndexUp_Ld, IndexDn_Ld, IndexUp_4d, IndexDn_4d, PotentialExpandedOnClm('Td', 2, {0, 1}))
+              + NewOperator('CF', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_Ld, IndexDn_Ld, PotentialExpandedOnClm('Td', 2, {0, 1}))
+
+    Ve_4d_Ld = NewOperator('CF', NFermions, IndexUp_Ld, IndexDn_Ld, IndexUp_4d, IndexDn_4d, PotentialExpandedOnClm('Td', 2, {1, 0}))
+             + NewOperator('CF', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_Ld, IndexDn_Ld, PotentialExpandedOnClm('Td', 2, {1, 0}))
+
+    tenDq_Ld_i = $10Dq(Ld)_i_value
+    Ve_4d_Ld_i    = $Ve(4d,Ld)_i_value
+    Vt2_4d_Ld_i   = $Vt2(4d,Ld)_i_value
+
+    tenDq_Ld_f = $10Dq(Ld)_f_value
+    Ve_4d_Ld_f    = $Ve(4d,Ld)_f_value
+    Vt2_4d_Ld_f   = $Vt2(4d,Ld)_f_value
+
+    H_i = H_i + Chop(
+          tenDq_Ld_i  * tenDq_Ld
+        + Ve_4d_Ld_i  * Ve_4d_Ld
+        + Vt2_4d_Ld_i * Vt2_4d_Ld)
+
+    H_f = H_f + Chop(
+          tenDq_Ld_f  * tenDq_Ld
+        + Ve_4d_Ld_f  * Ve_4d_Ld
+        + Vt2_4d_Ld_f * Vt2_4d_Ld)
+end
 
 --------------------------------------------------------------------------------
 -- Define the magnetic field and exchange field terms.
@@ -215,12 +282,39 @@ if Experiment == 'XPS' then
                                              {'000000 1111111111', NElectrons_4d, NElectrons_4d}}
 end
 
+if H_4d_Ld_hybridization == 1 then
+    InitialRestrictions = {NFermions, NBosons, {'111111 0000000000 0000000000', NElectrons_3p, NElectrons_3p},
+                                               {'000000 1111111111 0000000000', NElectrons_4d, NElectrons_4d},
+                                               {'000000 0000000000 1111111111', NElectrons_Ld, NElectrons_Ld}}
+
+    FinalRestrictions = {NFermions, NBosons, {'111111 0000000000 0000000000', NElectrons_3p - 1, NElectrons_3p - 1},
+                                             {'000000 1111111111 0000000000', NElectrons_4d + 1, NElectrons_4d + 1},
+                                             {'000000 0000000000 1111111111', NElectrons_Ld, NElectrons_Ld}}
+
+    if Experiment == 'XPS' then
+        FinalRestrictions = {NFermions, NBosons, {'111111 0000000000 0000000000', NElectrons_3p - 1, NElectrons_3p - 1},
+                                                 {'000000 1111111111 0000000000', NElectrons_4d, NElectrons_4d},
+                                                 {'000000 0000000000 1111111111', NElectrons_Ld, NElectrons_Ld}}
+    end
+
+    CalculationRestrictions = {NFermions, NBosons, {'000000 0000000000 1111111111', NElectrons_Ld - (NConfigurations - 1), NElectrons_Ld}}
+end
+
 Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_3p, N_4d, 'dZ'}
 header = 'Analysis of the initial Hamiltonian:\n'
 header = header .. '=============================================================================================================\n'
 header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>    <N_3p>    <N_4d>          dZ\n'
 header = header .. '=============================================================================================================\n'
 footer = '=============================================================================================================\n'
+
+if H_4d_Ld_hybridization == 1 then
+    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_3p, N_4d, N_Ld, 'dZ'}
+    header = 'Analysis of the initial Hamiltonian:\n'
+    header = header .. '=======================================================================================================================\n'
+    header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>    <N_3p>    <N_4d>    <N_Ld>          dZ\n'
+    header = header .. '=======================================================================================================================\n'
+    footer = '=======================================================================================================================\n'
+end
 
 T = $T * EnergyUnits.Kelvin.value
 
