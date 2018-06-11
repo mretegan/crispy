@@ -54,6 +54,12 @@ def get_version():
     return version.strictversion
 
 
+def install_requires():
+    with open('requirements.txt') as fp:
+        install_requires = fp.readlines()
+    return install_requires
+
+
 def main():
     """The main entry point."""
     if sys.version_info < (2, 7):
@@ -72,12 +78,7 @@ def main():
         url='https://github.com/mretegan/crispy',
         download_url='https://github.com/mretegan/crispy/releases',
         keywords='gui, spectroscopy, simulation, synchrotron, science',
-        requires=[
-            'PyQt5',
-            'numpy',
-            'matplotlib',
-            'silx',
-            ],
+        install_requires=install_requires(),
         platforms=[
             'MacOS :: MacOS X',
             'Microsoft :: Windows',
