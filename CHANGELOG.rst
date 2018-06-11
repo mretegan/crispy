@@ -1,6 +1,14 @@
 Changelog
 =========
 
+v0.6.3 (2018-06-11)
+-------------------
+What's new:
+
+* improved documentation
+* removed all loops from RIXS calculations
+* add back the ligand-field term for Td symmetry
+
 v0.6.2 (2018-06-08)
 -------------------
 What's new:

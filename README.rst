@@ -60,7 +60,7 @@ Assuming that you have a working Python distribution (version 3.5 or greater), y
 
 It is possible, although unlikely, that this version requires features that are not yet available with the pip installable version of silx. In this case you have to also install the development version of silx. This is not always a very simple task, especially on Windows, but there is extensive `documentation <http://www.silx.org/doc/silx/latest>`_ on how to do it.
 
-Runnign from Source
+Running from Source
 *******************
 As an alternative to the pip installation above, you can download the source code from GitHub either as an `archive <https://github.com/mretegan/crispy/archive/master.zip>`_ or using git, and run Crispy without installing it:
 

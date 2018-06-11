@@ -65,7 +65,7 @@ RELEASE_LEVEL_VALUE = {'dev': 0,
 
 MAJOR = 0
 MINOR = 6
-MICRO = 2
+MICRO = 3
 RELEV = 'final'  # <16
 SERIAL = 0  # <16
 
