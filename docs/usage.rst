@@ -9,9 +9,15 @@ Local Installation
 
 At the ESRF
 -----------
-Crispy is available on the NICE cluster. Make sure that you connect to the cluster using :code:`ssh -Y rnice.esrf.fr` to enable X11 forwarding; note the :code:`-Y` option.
+Crispy is available on the NICE cluster. Make sure that you connect to the cluster using:
 
-Depending on the levels of approximation used, the calculations can be few seconds long, but they can also easily reach a few hours. Therefore it is **not** advised to run them on the login nodes of the NICE cluster. Instead you need use the OAR scheduler to request cluster resources. Start by opening an interactive session to one of the computing nodes using the command:
+.. code:: sh 
+
+    ssh -Y rnice.esrf.fr 
+
+to enable X11 forwarding; note the *-Y* option.
+
+Depending on the levels of approximation used, the calculations can be few seconds long, but they can also easily reach a few hours. Therefore, it is **not** advised to run them on the login nodes of the NICE cluster. Instead, you need to use the OAR scheduler to request cluster resources. Start by opening an interactive session to one of the computing nodes using the command:
 
 .. code:: sh
 
@@ -23,4 +29,4 @@ This will reserve 4 CPUs on the same node for an hour. After the interactive ses
 
     module load crispy
 
-Now the :code:`crispy` command should be available; just type it in the terminal to start the program.
+Now the *crispy* command should be available; type it in the terminal to start the program.
