@@ -418,30 +418,24 @@ NE2 = $NE2
 
 G = 0
 
-totalCalculations = #Psis_i
-calculation = 1
-
-for i, Psi in ipairs(Psis_i) do
-    io.write(string.format('Running calculation %d of %d.\n', calculation, totalCalculations))
-    if CalculationRestrictions == nil then
-        G = G + CreateResonantSpectra(H_m, H_f, {Tx_2p_3d, Ty_2p_3d, Tz_2p_3d}, {Tx_3d_2p, Ty_3d_2p, Tz_3d_2p}, Psi, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}}) * dZ[i]
-    else
-        G = G + CreateResonantSpectra(H_m, H_f, {Tx_2p_3d, Ty_2p_3d, Tz_2p_3d}, {Tx_3d_2p, Ty_3d_2p, Tz_3d_2p}, Psi, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}, {'restrictions1', CalculationRestrictions}}) * dZ[i]
-    end
-    calculation = calculation + 1
+if CalculationRestrictions == nil then
+    G = G + CreateResonantSpectra(H_m, H_f, {Tx_2p_3d, Ty_2p_3d, Tz_2p_3d}, {Tx_3d_2p, Ty_3d_2p, Tz_3d_2p}, Psis_i, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}})
+else
+    G = G + CreateResonantSpectra(H_m, H_f, {Tx_2p_3d, Ty_2p_3d, Tz_2p_3d}, {Tx_3d_2p, Ty_3d_2p, Tz_3d_2p}, Psis_i, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}, {'restrictions1', CalculationRestrictions}})
 end
 
 Gtot = 0
-ishift = 0
+shift = 0
 
--- The number of operators in times the number of operators out.
-for i = 1, 3 * 3 do
-    Indices = {}
-    for i = 1, NE1 + 1 do
-        table.insert(Indices, i + ishift)
+for i = 1, #Psis_i do
+    for j = 1, 3 * 3 do
+        Indices = {}
+        for k = 1, NE1 + 1 do
+            table.insert(Indices, k + shift)
+        end
+        Gtot = Gtot + Spectra.Element(G, Indices) * dZ[i]
+        shift = shift + NE1 + 1
     end
-    Gtot = Gtot + Spectra.Element(G, Indices)
-    ishift = ishift + NE1 + 1
 end
 
 Gtot.Print({{'file', '$BaseName.spec'}})
