@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------
 -- Quanty input file generated using Crispy. If you use this file please cite
--- the following reference: 10.5281/zenodo.1008184.
+-- the following reference: http://dx.doi.org/10.5281/zenodo.1008184.
 --
 -- elements: 3d
 -- symmetry: Oh

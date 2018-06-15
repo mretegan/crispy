@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------
 -- Quanty input file generated using Crispy. If you use this file please cite
--- the following reference: 10.5281/zenodo.1008184.
+-- the following reference: http://dx.doi.org/10.5281/zenodo.1008184.
 --
 -- elements: 5d
 -- symmetry: C3v
@@ -408,20 +408,22 @@ DeltaE2 = Eedge2
 
 Emin1 = $Emin1 - DeltaE1
 Emax1 = $Emax1 - DeltaE1
-Gamma1 = $Gamma1
 NE1 = $NE1
+Gamma1 = $Gamma1
 
 Emin2 = $Emin2 - DeltaE2
 Emax2 = $Emax2 - DeltaE2
-Gamma2 = $Gamma2
 NE2 = $NE2
+Gamma2 = $Gamma2
+
+DenseBorder = $DenseBorder
 
 G = 0
 
 if CalculationRestrictions == nil then
-    G = G + CreateResonantSpectra(H_m, H_f, {Tx_2p_5d, Ty_2p_5d, Tz_2p_5d}, {Tx_5d_2p, Ty_5d_2p, Tz_5d_2p}, Psis_i, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}})
+    G = G + CreateResonantSpectra(H_m, H_f, {Tx_2p_5d, Ty_2p_5d, Tz_2p_5d}, {Tx_5d_2p, Ty_5d_2p, Tz_5d_2p}, Psis_i, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}, {'DenseBorder', DenseBorder}})
 else
-    G = G + CreateResonantSpectra(H_m, H_f, {Tx_2p_5d, Ty_2p_5d, Tz_2p_5d}, {Tx_5d_2p, Ty_5d_2p, Tz_5d_2p}, Psis_i, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}, {'restrictions1', CalculationRestrictions}, {'restrictions2', CalculationRestrictions}})
+    G = G + CreateResonantSpectra(H_m, H_f, {Tx_2p_5d, Ty_2p_5d, Tz_2p_5d}, {Tx_5d_2p, Ty_5d_2p, Tz_5d_2p}, Psis_i, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}, {'restrictions1', CalculationRestrictions}, {'restrictions2', CalculationRestrictions}, {'DenseBorder', DenseBorder}})
 end
 
 Gtot = 0

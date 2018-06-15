@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------
 -- Quanty input file generated using Crispy. If you use this file please cite
--- the following reference: 10.5281/zenodo.1008184.
+-- the following reference: http://dx.doi.org/10.5281/zenodo.1008184.
 --
 -- elements: 3d
 -- symmetry: Td
@@ -621,13 +621,14 @@ DeltaE = Eedge1 + E_gs_i - E_gs_f
 
 Emin = $Emin1 - DeltaE
 Emax = $Emax1 - DeltaE
-Gamma = $Gamma1
 NE = $NE1
+Gamma = $Gamma1
+DenseBorder = $DenseBorder
 
 if CalculationRestrictions == nil then
-    G = CreateSpectra(H_f, T, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}})
+    G = CreateSpectra(H_f, T, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'DenseBorder', DenseBorder}})
 else
-    G = CreateSpectra(H_f, T, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}})
+    G = CreateSpectra(H_f, T, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}, {'DenseBorder', DenseBorder}})
 end
 
 IndicesToSum = {}
@@ -646,7 +647,7 @@ G = G / (2 * math.pi)
 
 if H_3d_4p_hybridization == 1 and Experiment == 'XAS' then
     G_quad = 2 * math.pi * G
-    G_dip = CreateSpectra(H_f, T_dip, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}})
+    G_dip = CreateSpectra(H_f, T_dip, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}, {'DenseBorder', DenseBorder}})
 
     IndicesToSum = {}
     for i in ipairs(T_dip) do

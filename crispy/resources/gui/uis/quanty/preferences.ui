@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>480</width>
-    <height>129</height>
+    <height>159</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -30,54 +30,39 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <layout class="QFormLayout" name="preferencesFormLayout">
-     <property name="fieldGrowthPolicy">
-      <enum>QFormLayout::ExpandingFieldsGrow</enum>
-     </property>
-     <property name="labelAlignment">
-      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-     </property>
-     <item row="0" column="0">
-      <widget class="QLabel" name="pathLabel">
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="2" column="0">
+      <widget class="QLabel" name="denseBorderLabel">
        <property name="text">
-        <string>Path</string>
+        <string>Dense Border</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <layout class="QHBoxLayout" name="pathHorizontalHBoxLayout">
-       <item>
-        <widget class="QLineEdit" name="pathLineEdit">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="toolTip">
-          <string>Path to the Quanty executable.</string>
-         </property>
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pathBrowsePushButton">
-         <property name="text">
-          <string>Browse</string>
-         </property>
-         <property name="autoDefault">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="verbosityLabel">
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="denseBorderLineEdit">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>65</width>
+         <height>22</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>65</width>
+         <height>22</height>
+        </size>
+       </property>
        <property name="text">
-        <string>Verbosity</string>
+        <string>1513</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
@@ -89,10 +74,16 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="minimumSize">
+        <size>
+         <width>65</width>
+         <height>22</height>
+        </size>
+       </property>
        <property name="maximumSize">
         <size>
          <width>65</width>
-         <height>20</height>
+         <height>22</height>
         </size>
        </property>
        <property name="toolTip">
@@ -103,6 +94,52 @@
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="pathLabel">
+       <property name="text">
+        <string>Path</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="verbosityLabel">
+       <property name="text">
+        <string>Verbosity</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="pathLineEdit">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>22</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Path to the Quanty executable.</string>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QPushButton" name="pathBrowsePushButton">
+       <property name="text">
+        <string>Browse</string>
+       </property>
+       <property name="autoDefault">
+        <bool>false</bool>
        </property>
       </widget>
      </item>
@@ -117,6 +154,12 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>pathLineEdit</tabstop>
+  <tabstop>verbosityLineEdit</tabstop>
+  <tabstop>denseBorderLineEdit</tabstop>
+  <tabstop>pathBrowsePushButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

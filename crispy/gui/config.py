@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '08/06/2018'
+__date__ = '15/06/2018'
 
 
 import errno
@@ -86,7 +86,10 @@ class Config(object):
         self._settings[setting] = value
 
     def getSetting(self, setting):
-        return self._settings[setting]
+        try:
+            return self._settings[setting]
+        except KeyError:
+            return None
 
     def saveSettings(self):
         path = self.getConfigLocation()

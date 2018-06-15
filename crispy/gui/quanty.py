@@ -223,6 +223,13 @@ class QuantyCalculation(object):
 
         replacements = odict()
 
+        # To avoid changing the object attributes and thus brakes
+        # compatibility of with the old .pkl files.
+        # TODO: Make this an object attribute when saving the .pkl file
+        # doesn't brake compatibility.
+        config = Config()
+        denseBorder = config.getSetting('quantyDenseBorder')
+        replacements['$DenseBorder'] = denseBorder
         replacements['$Verbosity'] = self.verbosity
         replacements['$NConfigurations'] = self.nConfigurations
 
@@ -1534,6 +1541,9 @@ class QuantyDockWidget(QDockWidget):
 
     def getVerbosity(self):
         return Config().getSetting('quantyVerbosity')
+
+    def getDenseBorder(self):
+        return Config().getSetting('quantyDenseBorder')
 
 
 if __name__ == '__main__':

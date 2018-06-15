@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '29/05/2018'
+__date__ = '15/06/2018'
 
 
 import os
@@ -148,6 +148,10 @@ class QuantyPreferencesDialog(QDialog):
             'crispy:' + os.path.join('gui', 'uis', 'quanty', 'preferences.ui'))
         loadUi(path, baseinstance=self, package='crispy.gui')
 
+        self._settings = [('quantyPath', self.pathLineEdit),
+                          ('quantyVerbosity', self.verbosityLineEdit),
+                          ('quantyDenseBorder', self.denseBorderLineEdit)]
+
         self.updateWidgetWithConfigSettings()
 
         self.pathBrowsePushButton.clicked.connect(self.setExecutablePath)
@@ -160,17 +164,20 @@ class QuantyPreferencesDialog(QDialog):
 
     def updateWidgetWithConfigSettings(self):
         config = Config()
-        path = config.getSetting('quantyPath')
-        verbosity = config.getSetting('quantyVerbosity')
-        self.pathLineEdit.setText(path)
-        self.verbosityLineEdit.setText(verbosity)
+        for (setting, widget) in self._settings:
+            value = config.getSetting(setting)
+            if value:
+                widget.setText(value)
+            else:
+                value = widget.text()
+                config.setSetting(setting, value)
+                config.saveSettings()
 
     def acceptSettings(self):
         config = Config()
-        path = self.pathLineEdit.text()
-        verbosity = self.verbosityLineEdit.text()
-        config.setSetting('quantyPath', path)
-        config.setSetting('quantyVerbosity', verbosity)
+        for setting, widget in self._settings:
+            value = widget.text()
+            config.setSetting(setting, value)
         config.saveSettings()
         self.close()
 
