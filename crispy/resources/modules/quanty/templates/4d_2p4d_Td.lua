@@ -518,7 +518,7 @@ G = 0
 if CalculationRestrictions == nil then
     G = G + CreateResonantSpectra(H_m, H_f, {Tx_2p_4d, Ty_2p_4d, Tz_2p_4d}, {Tx_4d_2p, Ty_4d_2p, Tz_4d_2p}, Psis_i, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}})
 else
-    G = G + CreateResonantSpectra(H_m, H_f, {Tx_2p_4d, Ty_2p_4d, Tz_2p_4d}, {Tx_4d_2p, Ty_4d_2p, Tz_4d_2p}, Psis_i, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}, {'restrictions1', CalculationRestrictions}})
+    G = G + CreateResonantSpectra(H_m, H_f, {Tx_2p_4d, Ty_2p_4d, Tz_2p_4d}, {Tx_4d_2p, Ty_4d_2p, Tz_4d_2p}, Psis_i, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}, {'restrictions1', CalculationRestrictions}, {'restrictions2', CalculationRestrictions}})
 end
 
 Gtot = 0
