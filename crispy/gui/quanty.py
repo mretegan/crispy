@@ -1477,6 +1477,8 @@ class QuantyDockWidget(QDockWidget):
         self.getPlotWidget().clear()
         calculations = self.getSelectedCalculationsData()
         for calculation in calculations:
+            if len(calculations) > 1 and 'RIXS' in calculation.experiment:
+                continue
             self.calculation = calculation
             self.plot()
 
