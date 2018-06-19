@@ -1345,10 +1345,6 @@ class QuantyDockWidget(QDockWidget):
             self.getPlotWidget().setGraphXLabel('Incident Energy (eV)')
             self.getPlotWidget().setGraphYLabel('Energy Transfer (eV)')
 
-            colormap = {'name': 'viridis', 'normalization': 'linear',
-                                'autoscale': True, 'vmin': 0.0, 'vmax': 1.0}
-            self.getPlotWidget().setDefaultColormap(colormap)
-
             e1Min = self.calculation.e1Min
             e1Max = self.calculation.e1Max
             e1NPoints = self.calculation.e1NPoints

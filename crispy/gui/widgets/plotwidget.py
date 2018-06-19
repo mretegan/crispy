@@ -162,6 +162,11 @@ class MainPlotWidget(BasePlotWidget):
         plotArea.setContextMenuPolicy(Qt.CustomContextMenu)
         plotArea.customContextMenuRequested.connect(self._contextMenu)
 
+        # Use the viridis color map by default.
+        colormap = {'name': 'viridis', 'normalization': 'linear',
+                            'autoscale': True, 'vmin': 0.0, 'vmax': 1.0}
+        self.setDefaultColormap(colormap)
+
     def _contextMenu(self, pos):
         """Handle plot area customContextMenuRequested signal.
 
