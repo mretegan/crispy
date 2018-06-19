@@ -69,7 +69,7 @@ QToolButton {
          <number>0</number>
         </property>
         <item>
-         <widget class="PlotWidget" name="plotWidget" native="true">
+         <widget class="MainPlotWidget" name="plotWidget" native="true">
           <property name="minimumSize">
            <size>
             <width>500</width>
@@ -208,7 +208,7 @@ QToolButton {
  </widget>
  <customwidgets>
   <customwidget>
-   <class>PlotWidget</class>
+   <class>MainPlotWidget</class>
    <extends>QWidget</extends>
    <header>.widgets.plotwidget</header>
    <container>1</container>

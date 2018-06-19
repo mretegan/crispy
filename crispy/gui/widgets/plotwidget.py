@@ -27,17 +27,20 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '05/06/2018'
+__date__ = '18/06/2018'
 
 
 from collections import OrderedDict as odict
-from silx.gui.plot import PlotWindow
-from silx.gui.plot.backends.BackendMatplotlib import (
-    BackendMatplotlibQt as _BackendMatplotlibQt)
+from PyQt5.QtWidgets import QMenu, QToolBar
+from PyQt5.QtCore import Qt
+
+from silx.gui.plot import PlotWidget
+from silx.gui.plot import actions, backends, tools
 from silx.gui.plot.Profile import ProfileToolBar
+from silx.gui.plot.PlotTools import PositionInfo
 
 
-class BackendMatplotlibQt(_BackendMatplotlibQt):
+class BackendMatplotlibQt(backends.BackendMatplotlib.BackendMatplotlibQt):
 
     def __init__(self, plot, parent=None):
         super(BackendMatplotlibQt, self).__init__(plot, parent)
@@ -78,23 +81,103 @@ class BackendMatplotlibQt(_BackendMatplotlibQt):
         legend = self.ax.legend(curves, legends, prop={'size': 'medium'})
         frame = legend.get_frame()
         frame.set_edgecolor('white')
+        if not legends:
+            legend.remove()
         self.postRedisplay()
 
 
-class PlotWidget(PlotWindow):
-    def __init__(self, *args):
-        super(PlotWidget, self).__init__(
-            logScale=False, grid=True, yInverted=False,
-            roi=False, mask=False, print_=False, backend=BackendMatplotlibQt)
+class BasePlotWidget(PlotWidget):
+    def __init__(self, *args, **kwargs):
+        super(BasePlotWidget, self).__init__(*args, **kwargs)
 
         self.setActiveCurveHandling(False)
         self.setGraphGrid('both')
-        profileWindow = PlotWindow(
-            logScale=False, grid=True, yInverted=False, roi=False,
-            mask=False, print_=False)
-        profileWindow.setWindowTitle('')
-        self.profile = ProfileToolBar(plot=self, profileWindow=profileWindow)
-        self.addToolBar(self.profile)
+
+        # Create toolbars.
+        self._interactiveModeToolBar = tools.toolbars.InteractiveModeToolBar(
+            parent=self, plot=self)
+        self.addToolBar(self._interactiveModeToolBar)
+
+        self._toolBar = QToolBar('Curve or Image', parent=self)
+        self._resetZoomAction = actions.control.ResetZoomAction(
+            parent=self, plot=self)
+        self._toolBar.addAction(self._resetZoomAction)
+
+        self._xAxisAutoScaleAction = actions.control.XAxisAutoScaleAction(
+            parent=self, plot=self)
+        self._toolBar.addAction(self._xAxisAutoScaleAction)
+
+        self._yAxisAutoScaleAction = actions.control.YAxisAutoScaleAction(
+            parent=self, plot=self)
+        self._toolBar.addAction(self._yAxisAutoScaleAction)
+
+        self._gridAction = actions.control.GridAction(
+            parent=self, plot=self)
+        self._toolBar.addAction(self._gridAction)
+
+        self._curveStyleAction = actions.control.CurveStyleAction(
+            parent=self, plot=self)
+        self._toolBar.addAction(self._curveStyleAction)
+
+        self._colormapAction = actions.control.ColormapAction(
+            parent=self, plot=self)
+        self._toolBar.addAction(self._colormapAction)
+
+        self._keepAspectRatio = actions.control.KeepAspectRatioAction(
+            parent=self, plot=self)
+        self._toolBar.addAction(self._keepAspectRatio)
+
+        self.addToolBar(self._toolBar)
+
+        self._outputToolBar = tools.toolbars.OutputToolBar(
+            parent=self, plot=self)
+        self.addToolBar(self._outputToolBar)
+
+        # Add the position info.
+        positionInfo = PositionInfo(plot=self)
+        positionInfo.autoSnapToActiveCurve = False
+        self.statusBar().addWidget(positionInfo)
+
+
+class MainPlotWidget(BasePlotWidget):
+    def __init__(self, *args):
+        super(MainPlotWidget, self).__init__(
+            *args, backend=BackendMatplotlibQt)
+
+        # Add a profile toolbar.
+        _profileWindow = BasePlotWidget()
+        _profileWindow.setWindowTitle(str())
+        self._profileToolBar = ProfileToolBar(
+            parent=self, plot=self, profileWindow=_profileWindow)
+        self.addToolBar(self._profileToolBar)
+
+        # Create QAction for the context menu once for all.
+        self._zoomBackAction = actions.control.ZoomBackAction(
+            plot=self, parent=self)
+
+        # Retrieve PlotWidget's plot area widget.
+        plotArea = self.getWidgetHandle()
+
+        # Set plot area custom context menu.
+        plotArea.setContextMenuPolicy(Qt.CustomContextMenu)
+        plotArea.customContextMenuRequested.connect(self._contextMenu)
+
+    def _contextMenu(self, pos):
+        """Handle plot area customContextMenuRequested signal.
+
+        :param QPoint pos: Mouse position relative to plot area
+        """
+        # Create the context menu.
+        menu = QMenu(self)
+        menu.addAction(self._zoomBackAction)
+
+        # Displaying the context menu at the mouse position requires
+        # a global position.
+        # The position received as argument is relative to PlotWidget's
+        # plot area, and thus needs to be converted.
+        plotArea = self.getWidgetHandle()
+        globalPosition = plotArea.mapToGlobal(pos)
+        menu.exec_(globalPosition)
 
     def reset(self):
         self.clear()
