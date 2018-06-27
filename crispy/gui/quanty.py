@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '07/06/2018'
+__date__ = '27/06/2018'
 
 
 import copy
@@ -314,6 +314,8 @@ class QuantyCalculation(object):
                     parameter = parameter.replace('Δ', 'Delta')
                     parameter = parameter.replace('σ', 'sigma')
                     parameter = parameter.replace('τ', 'tau')
+                    parameter = parameter.replace('μ', 'mu')
+                    parameter = parameter.replace('ν', 'nu')
                     scaling = None
                     try:
                         value, scaling = data

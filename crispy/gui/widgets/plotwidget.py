@@ -37,7 +37,7 @@ from PyQt5.QtCore import Qt
 from silx.gui.plot import PlotWidget
 from silx.gui.plot import actions, backends, tools
 from silx.gui.plot.Profile import ProfileToolBar
-from silx.gui.plot.PlotTools import PositionInfo
+# from silx.gui.plot.PlotTools import PositionInfo
 
 
 class BackendMatplotlibQt(backends.BackendMatplotlib.BackendMatplotlibQt):
@@ -134,9 +134,9 @@ class BasePlotWidget(PlotWidget):
         self.addToolBar(self._outputToolBar)
 
         # Add the position info.
-        positionInfo = PositionInfo(plot=self)
-        positionInfo.autoSnapToActiveCurve = False
-        self.statusBar().addWidget(positionInfo)
+        # positionInfo = PositionInfo(plot=self)
+        # positionInfo.setSnappingMode(positionInfo.SNAPPING_CURVE)
+        # self.statusBar().addWidget(positionInfo)
 
 
 class MainPlotWidget(BasePlotWidget):
