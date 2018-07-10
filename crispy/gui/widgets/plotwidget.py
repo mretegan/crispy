@@ -27,12 +27,13 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '18/06/2018'
+__date__ = '10/07/2018'
 
 
+import sys
 from collections import OrderedDict as odict
 from PyQt5.QtWidgets import QMenu, QToolBar
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QSize
 
 from silx.gui.plot import PlotWidget
 from silx.gui.plot import actions, backends, tools
@@ -149,7 +150,13 @@ class MainPlotWidget(BasePlotWidget):
         _profileWindow.setWindowTitle(str())
         self._profileToolBar = ProfileToolBar(
             parent=self, plot=self, profileWindow=_profileWindow)
+        self.removeToolBar(self._outputToolBar)
         self.addToolBar(self._profileToolBar)
+        self.addToolBar(self._outputToolBar)
+        self._outputToolBar.show()
+
+        if sys.platform == 'darwin':
+            self.setIconSize(QSize(24, 24))
 
         # Create QAction for the context menu once for all.
         self._zoomBackAction = actions.control.ZoomBackAction(
