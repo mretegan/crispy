@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '27/06/2018'
+__date__ = '10/07/2018'
 
 
 import copy
@@ -436,6 +436,7 @@ class QuantyDockWidget(QDockWidget):
         self.resultsModel.dataChanged.connect(self.plotSelectedCalculations)
 
         self.updateWidget()
+        self.getPlotWidget().reset()
 
     def updateWidget(self):
         self.elementComboBox.setItems(
@@ -1476,7 +1477,7 @@ class QuantyDockWidget(QDockWidget):
         self.updateMainWindowTitle()
 
     def plotSelectedCalculations(self):
-        self.getPlotWidget().clear()
+        self.getPlotWidget().reset()
         calculations = self.getSelectedCalculationsData()
         for calculation in calculations:
             if len(calculations) > 1 and 'RIXS' in calculation.experiment:

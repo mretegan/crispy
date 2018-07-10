@@ -193,9 +193,9 @@ class MainPlotWidget(BasePlotWidget):
 
     def reset(self):
         self.clear()
+        self.setKeepDataAspectRatio(False)
         self.setGraphTitle()
         self.setGraphXLabel('X')
-        self.setGraphXLimits(0, 100)
+        self.setGraphXLimits(0, 1)
         self.setGraphYLabel('Y')
-        self.setGraphYLimits(0, 100)
-        self.keepDataAspectRatio(False)
+        self.setGraphYLimits(0, 1)
