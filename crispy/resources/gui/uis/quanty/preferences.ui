@@ -128,6 +128,9 @@
        <property name="toolTip">
         <string>Path to the Quanty executable.</string>
        </property>
+       <property name="cursorPosition">
+        <number>0</number>
+       </property>
        <property name="readOnly">
         <bool>true</bool>
        </property>
@@ -156,9 +159,9 @@
  </widget>
  <tabstops>
   <tabstop>pathLineEdit</tabstop>
+  <tabstop>pathBrowsePushButton</tabstop>
   <tabstop>verbosityLineEdit</tabstop>
   <tabstop>denseBorderLineEdit</tabstop>
-  <tabstop>pathBrowsePushButton</tabstop>
  </tabstops>
  <resources/>
  <connections/>

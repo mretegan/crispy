@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '15/06/2018'
+__date__ = '10/07/2018'
 
 
 import os
@@ -37,23 +37,25 @@ try:
     from urllib.error import URLError
 except ImportError:
     from urllib2 import urlopen, Request, URLError
+import sys
 
-from PyQt5.QtCore import Qt, QThread, pyqtSignal
-from PyQt5.QtWidgets import (QMainWindow, QPlainTextEdit, QDialog, QFileDialog,
-                             QDialogButtonBox)
+from PyQt5.QtCore import (
+    Qt, QThread, pyqtSignal, QByteArray, QSize, QPoint, QStandardPaths)
+from PyQt5.QtWidgets import QMainWindow, QPlainTextEdit, QDialog
 from PyQt5.QtGui import QFontDatabase
 from PyQt5.uic import loadUi
 from silx.resources import resource_filename as resourceFileName
 
-from .config import Config
-from .quanty import QuantyDockWidget
+from .quanty import QuantyDockWidget, QuantyPreferencesDialog
 from ..version import version
 
 
 class MainWindow(QMainWindow):
 
-    def __init__(self):
+    def __init__(self, settings=None):
         super(MainWindow, self).__init__()
+
+        self.settings = settings
 
         uiPath = resourceFileName(
             'crispy:' + os.path.join('gui', 'uis', 'main.ui'))
@@ -63,11 +65,6 @@ class MainWindow(QMainWindow):
         self.setWindowTitle('Crispy - untitled.lua')
         self.statusbar.showMessage('Ready')
 
-        # Splitter.
-        upperPanelHeight = 500
-        lowerPanelHeight = 600 - upperPanelHeight
-        self.splitter.setSizes((upperPanelHeight, lowerPanelHeight))
-
         # Logger widget.
         font = QFontDatabase.systemFont(QFontDatabase.FixedFont)
         font.setPointSize(font.pointSize() + 1)
@@ -75,15 +72,94 @@ class MainWindow(QMainWindow):
         self.loggerWidget.setLineWrapMode(QPlainTextEdit.NoWrap)
 
         # About dialog.
-        self.aboutDialog = AboutDialog(self)
+        self.aboutDialog = AboutDialog(parent=self, settings=self.settings)
         self.openAboutDialogAction.triggered.connect(self.openAboutDialog)
 
         # Quanty module.
         self.quantyModuleInit()
 
+        # Remove the old config file.
+        self._removeConfig()
+
+        # Restore the settings from file.
+        self.restoreSettings()
+        self.saveSettings()
+
+    def _removeConfig(self):
+        configLocation = QStandardPaths.GenericConfigLocation
+        root = QStandardPaths.standardLocations(configLocation)[0]
+
+        if sys.platform in ('win32', 'darwin'):
+            path = os.path.join(root, 'Crispy')
+        else:
+            path = os.path.join(root, 'crispy')
+
+        if version < '0.7.0':
+            try:
+                os.remove(os.path.join(path, 'settings.json'))
+                os.rmdir(path)
+            except (IOError, OSError) as e:
+                pass
+
+    def restoreSettings(self):
+        settings = self.settings
+        if settings is None:
+            return
+
+        currentPath = settings.value('CurrentPath')
+        if currentPath is None:
+            path = os.path.expanduser('~')
+        else:
+            path = settings.value('CurrentPath')
+        self.currentPath = path
+
+        settings.beginGroup('MainWindow')
+
+        state = settings.value('State')
+        if state is not None:
+            self.restoreState(QByteArray(state))
+
+        size = settings.value('Size')
+        if size is not None:
+            self.resize(QSize(size))
+
+        pos = settings.value('Position')
+        if pos is not None:
+            self.move(QPoint(pos))
+
+        splitter = settings.value('Splitter')
+        if splitter is not None:
+            sizes = [int(size) for size in splitter]
+        else:
+            sizes = [6, 1]
+        self.splitter.setSizes(sizes)
+        settings.endGroup()
+
+    def saveSettings(self):
+        settings = self.settings
+        if settings is None:
+            return
+
+        settings.setValue('Version', version)
+        settings.setValue('CurrentPath', self.currentPath)
+
+        settings.beginGroup('MainWindow')
+        settings.setValue('State', self.saveState())
+        settings.setValue('Size', self.size())
+        settings.setValue('Position', self.pos())
+        settings.setValue('Splitter', self.splitter.sizes())
+        settings.endGroup()
+
+        settings.sync()
+
+    def closeEvent(self, event):
+        self.saveSettings()
+        event.accept()
+
     def quantyModuleInit(self):
         # Load components related to the Quanty module.
-        self.quantyDockWidget = QuantyDockWidget(self)
+        self.quantyDockWidget = QuantyDockWidget(
+            parent=self, settings=self.settings)
         self.addDockWidget(Qt.RightDockWidgetArea, self.quantyDockWidget)
         self.quantyDockWidget.setVisible(True)
 
@@ -114,7 +190,8 @@ class MainWindow(QMainWindow):
         self.quantyModuleHideAction.triggered.connect(self.quantyModuleHide)
 
         # Preferences dialog.
-        self.preferencesDialog = QuantyPreferencesDialog(self)
+        self.preferencesDialog = QuantyPreferencesDialog(
+            parent=self, settings=self.settings)
 
     def quantyMenuUpdate(self, flag=True):
         self.quantySaveAllCalculationsAsAction.setEnabled(flag)
@@ -139,61 +216,6 @@ class MainWindow(QMainWindow):
         self.aboutDialog.show()
 
 
-class QuantyPreferencesDialog(QDialog):
-
-    def __init__(self, parent):
-        super(QuantyPreferencesDialog, self).__init__(parent)
-
-        path = resourceFileName(
-            'crispy:' + os.path.join('gui', 'uis', 'quanty', 'preferences.ui'))
-        loadUi(path, baseinstance=self, package='crispy.gui')
-
-        self._settings = [('quantyPath', self.pathLineEdit),
-                          ('quantyVerbosity', self.verbosityLineEdit),
-                          ('quantyDenseBorder', self.denseBorderLineEdit)]
-
-        self.updateWidgetWithConfigSettings()
-
-        self.pathBrowsePushButton.clicked.connect(self.setExecutablePath)
-
-        ok = self.buttonBox.button(QDialogButtonBox.Ok)
-        ok.clicked.connect(self.acceptSettings)
-
-        cancel = self.buttonBox.button(QDialogButtonBox.Cancel)
-        cancel.clicked.connect(self.rejectSettings)
-
-    def updateWidgetWithConfigSettings(self):
-        config = Config()
-        for (setting, widget) in self._settings:
-            value = config.getSetting(setting)
-            if value:
-                widget.setText(value)
-            else:
-                value = widget.text()
-                config.setSetting(setting, value)
-                config.saveSettings()
-
-    def acceptSettings(self):
-        config = Config()
-        for setting, widget in self._settings:
-            value = widget.text()
-            config.setSetting(setting, value)
-        config.saveSettings()
-        self.close()
-
-    def rejectSettings(self):
-        self.updateWidgetWithConfigSettings()
-        self.close()
-
-    def setExecutablePath(self):
-        path, _ = QFileDialog.getOpenFileName(
-            self, 'Select File', os.path.expanduser('~'))
-
-        if path:
-            path = os.path.dirname(path)
-            self.pathLineEdit.setText(path)
-
-
 class CheckUpdateThread(QThread):
 
     updateAvailable = pyqtSignal()
@@ -202,9 +224,9 @@ class CheckUpdateThread(QThread):
         super(CheckUpdateThread, self).__init__(parent)
 
     def _getSiteVersion(self):
-        url = 'http://www.esrf.eu/computing/scientific/crispy/version.json'
+        URL = 'http://www.esrf.eu/computing/scientific/crispy/version.json'
 
-        request = Request(url)
+        request = Request(URL)
         request.add_header('Cache-Control', 'max-age=0')
 
         try:
@@ -237,8 +259,10 @@ class UpdateAvailableDialog(QDialog):
 
 class AboutDialog(QDialog):
 
-    def __init__(self, parent):
+    def __init__(self, parent, settings=None):
         super(AboutDialog, self).__init__(parent)
+
+        self.settings = settings
 
         path = resourceFileName(
             'crispy:' + os.path.join('gui', 'uis', 'about.ui'))
@@ -246,19 +270,21 @@ class AboutDialog(QDialog):
 
         self.nameLabel.setText('Crispy {}'.format(version))
 
-        self.config = Config()
-        updateCheck = self.config.getSetting('updateCheck')
-        self.updateCheckBox.setChecked(updateCheck)
-        self.updateCheckBox.stateChanged.connect(
-            self.updateCheckBoxStateChanged)
-
-        # Check for updates if requested.
-        self.runUpdateCheck()
+        if self.settings:
+            updateCheck = self.settings.value('CheckForUpdates')
+            if updateCheck is None:
+                updateCheck = 1
+            self.updateCheckBox.setChecked(int(updateCheck))
+            self.updateCheckBox.stateChanged.connect(
+                self.updateCheckBoxStateChanged)
+            self.settings.setValue('CheckForUpdates', updateCheck)
+            self.settings.sync()
+            self.runUpdateCheck()
 
     def updateCheckBoxStateChanged(self):
-        updateCheck = self.updateCheckBox.isChecked()
-        self.config.setSetting('updateCheck', updateCheck)
-        self.config.saveSettings()
+        updateCheck = int(self.updateCheckBox.isChecked())
+        if self.settings:
+            self.settings.setValue('CheckForUpdates', updateCheck)
         self.runUpdateCheck()
 
     def runUpdateCheck(self):

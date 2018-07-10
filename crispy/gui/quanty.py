@@ -45,14 +45,15 @@ import subprocess
 import sys
 import uuid
 
-from PyQt5.QtCore import QItemSelectionModel, QProcess, Qt, QPoint
+from PyQt5.QtCore import (
+    QItemSelectionModel, QProcess, Qt, QPoint, QStandardPaths)
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (
-    QAbstractItemView, QDockWidget, QFileDialog, QAction, QMenu, QWidget)
+    QAbstractItemView, QDockWidget, QFileDialog, QAction, QMenu, QWidget,
+    QDialog, QDialogButtonBox)
 from PyQt5.uic import loadUi
 from silx.resources import resource_filename as resourceFileName
 
-from .config import Config
 from .models.treemodel import TreeModel
 from .models.listmodel import ListModel
 from ..utils.broaden import broaden
@@ -227,9 +228,7 @@ class QuantyCalculation(object):
         # compatibility of with the old .pkl files.
         # TODO: Make this an object attribute when saving the .pkl file
         # doesn't brake compatibility.
-        config = Config()
-        denseBorder = config.getSetting('quantyDenseBorder')
-        replacements['$DenseBorder'] = denseBorder
+        replacements['$DenseBorder'] = self.denseBorder
         replacements['$Verbosity'] = self.verbosity
         replacements['$NConfigurations'] = self.nConfigurations
 
@@ -354,8 +353,9 @@ class QuantyCalculation(object):
 
 class QuantyDockWidget(QDockWidget):
 
-    def __init__(self, parent):
+    def __init__(self, parent, settings=None):
         super(QuantyDockWidget, self).__init__(parent)
+        self.settings = settings
 
         # Load the external .ui file for the widget.
         path = resourceFileName(
@@ -1072,22 +1072,23 @@ class QuantyDockWidget(QDockWidget):
 
         # Set the verbosity of the calculation.
         self.calculation.verbosity = self.getVerbosity()
+        self.calculation.denseBorder = self.getDenseBorder()
 
         path = self.getCurrentPath()
         try:
             os.chdir(path)
-        except OSError:
+        except OSError as e:
             message = ('The specified folder doesn\'t exist. Use the \'Save '
                        'Input As...\' button to save the input file to an '
                        'alternative location.')
             self.getStatusBar().showMessage(message, 2 * self.timeout)
-            raise
+            raise e
 
         # The folder might exist, but is not writable.
         try:
             self.calculation.saveInput()
         except (IOError, OSError) as e:
-            message = 'Cannot write the Quanty input file.'
+            message = 'Failed to write the Quanty input file.'
             self.getStatusBar().showMessage(message, self.timeout)
             raise e
 
@@ -1173,10 +1174,10 @@ class QuantyDockWidget(QDockWidget):
             self.quantyToolBox.setCurrentWidget(self.resultsPage)
 
     def runCalculation(self):
-        path, executable = self.getQuantyPath()
+        path = self.getQuantyPath()
 
         if path:
-            command = os.path.join(path, executable)
+            command = path
         else:
             message = ('The path to the Quanty executable is not set. '
                        'Please use the preferences menu to set it.')
@@ -1194,7 +1195,7 @@ class QuantyDockWidget(QDockWidget):
                     self.getStatusBar().showMessage(message, 2 * self.timeout)
                     return
                 else:
-                    raise
+                    raise e
 
         # Write the input file to disk.
         try:
@@ -1527,24 +1528,116 @@ class QuantyDockWidget(QDockWidget):
         return self.parent().loggerWidget
 
     def setCurrentPath(self, path):
-        dirName, _ = os.path.split(path)
-        config = Config()
-        config.setSetting('currentPath', dirName)
-        config.saveSettings()
+        path = os.path.dirname(path)
+        self.settings.setValue('CurrentPath', path)
 
     def getCurrentPath(self):
-        return Config().getSetting('currentPath')
+        return self.settings.value('CurrentPath')
 
     def getQuantyPath(self):
-        path = Config().getSetting('quantyPath')
-        executable = Config().getSetting('quantyExecutable')
-        return path, executable
+        return self.settings.value('Quanty/Path')
 
     def getVerbosity(self):
-        return Config().getSetting('quantyVerbosity')
+        return self.settings.value('Quanty/Verbosity')
 
     def getDenseBorder(self):
-        return Config().getSetting('quantyDenseBorder')
+        return self.settings.value('Quanty/DenseBorder')
+
+
+class QuantyPreferencesDialog(QDialog):
+
+    def __init__(self, parent, settings=None):
+        super(QuantyPreferencesDialog, self).__init__(parent)
+
+        path = resourceFileName(
+            'crispy:' + os.path.join('gui', 'uis', 'quanty', 'preferences.ui'))
+        loadUi(path, baseinstance=self, package='crispy.gui')
+
+        self.pathBrowsePushButton.clicked.connect(self.setExecutablePath)
+
+        ok = self.buttonBox.button(QDialogButtonBox.Ok)
+        ok.clicked.connect(self.acceptSettings)
+
+        cancel = self.buttonBox.button(QDialogButtonBox.Cancel)
+        cancel.clicked.connect(self.rejectSettings)
+
+        self.settings = settings
+        self.restoreSettings()
+        self.saveSettings()
+
+    def _findExecutable(self):
+        if sys.platform == 'win32':
+            executable = 'Quanty.exe'
+        else:
+            executable = 'Quanty'
+
+        envPath = QStandardPaths.findExecutable(executable)
+        localPath = QStandardPaths.findExecutable(
+            executable, [resourceFileName(
+                'crispy:' + os.path.join('modules', 'quanty', 'bin'))])
+
+        # Check if Quanty is in the paths defined in the $PATH.
+        if envPath:
+            path = envPath
+        # Check if Quanty is bundled with Crispy.
+        elif localPath:
+            path = localPath
+        else:
+            path = None
+
+        return path
+
+    def restoreSettings(self):
+        settings = self.settings
+        if settings is None:
+            return
+
+        settings.beginGroup('Quanty')
+
+        path = settings.value('Path')
+        if path is None or not path:
+            path = self._findExecutable()
+        self.pathLineEdit.setText(path)
+
+        verbosity = settings.value('Verbosity')
+        if verbosity is None:
+            verbosity = '0x0000'
+        self.verbosityLineEdit.setText(verbosity)
+
+        denseBorder = settings.value('DenseBorder')
+        if denseBorder is None:
+            denseBorder = '50000'
+        self.denseBorderLineEdit.setText(denseBorder)
+
+        settings.endGroup()
+
+    def saveSettings(self):
+        settings = self.settings
+        if settings is None:
+            return
+
+        settings.beginGroup('Quanty')
+        settings.setValue('Path', self.pathLineEdit.text())
+        settings.setValue('Verbosity', self.verbosityLineEdit.text())
+        settings.setValue('DenseBorder', self.denseBorderLineEdit.text())
+        settings.endGroup()
+
+        settings.sync()
+
+    def acceptSettings(self):
+        self.saveSettings()
+        self.close()
+
+    def rejectSettings(self):
+        self.restoreSettings()
+        self.close()
+
+    def setExecutablePath(self):
+        path, _ = QFileDialog.getOpenFileName(
+            self, 'Select File', os.path.expanduser('~'))
+
+        if path:
+            self.pathLineEdit.setText(path)
 
 
 if __name__ == '__main__':

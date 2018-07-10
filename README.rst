@@ -25,6 +25,7 @@ Crispy depends on the following Python packages:
 * `PyQt5 <https://riverbankcomputing.com/software/pyqt/intro>`_
 * `numpy <http://numpy.org>`_
 * `matplotlib <http://matplotlib.org>`_
+* `h5py <https://www.h5py.org>`_
 * `silx <http://www.silx.org>`_
 
 The dependencies will be automatically downloaded and installed when run the installation using pip: 
