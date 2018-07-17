@@ -426,25 +426,24 @@ else
     G = CreateSpectra(H_f, T, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}, {'DenseBorder', DenseBorder}})
 end
 
-IndicesToSum = {}
+Indexes = {}
 for i in ipairs(T) do
     for j in ipairs(Psis_i) do
-        if Experiment == 'XAS' then
-            table.insert(IndicesToSum, dZ[j] / #T)
-        elseif Experiment == 'XPS' then
-            table.insert(IndicesToSum, dZ[j] / #T)
+        if Experiment == 'XAS' or Experiment == 'XPS' then
+            table.insert(Indexes, dZ[j] / #T)
         elseif Experiment == 'XMCD' or Experiment == 'X(M)LD' then
             if i == 1 then
-                table.insert(IndicesToSum, dZ[j])
+                table.insert(Indexes, dZ[j])
             else
-                table.insert(IndicesToSum, -dZ[j])
+                table.insert(Indexes, -dZ[j])
             end
         end
     end
 end
 
-G = Spectra.Sum(G, IndicesToSum)
-G = G / (2 * math.pi)
+G = Spectra.Sum(G, Indexes)
+PclFactor = 3
+G = -1 / math.pi / PclFactor * G
 
 Gmin1 = $Gmin1 - Gamma
 Gmax1 = $Gmax1 - Gamma

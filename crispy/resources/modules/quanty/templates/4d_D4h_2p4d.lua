@@ -574,11 +574,11 @@ shift = 0
 
 for i = 1, #Psis_i do
     for j = 1, 3 * 3 do
-        Indices = {}
+        Indexes = {}
         for k = 1, NE1 + 1 do
-            table.insert(Indices, k + shift)
+            table.insert(Indexes, k + shift)
         end
-        Gtot = Gtot + Spectra.Element(G, Indices) * dZ[i]
+        Gtot = Gtot + Spectra.Element(G, Indexes) * dZ[i]
         shift = shift + NE1 + 1
     end
 end

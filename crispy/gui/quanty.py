@@ -1297,9 +1297,9 @@ class QuantyDockWidget(QDockWidget):
             return
 
         if self.calculation.experiment == 'RIXS':
-            self.calculation.spectrum = -data[:, 2::2]
+            self.calculation.spectrum = data[:, 2::2]
         else:
-            self.calculation.spectrum = -data[:, 2::2][:, 0]
+            self.calculation.spectrum = data[:, 2::2][:, 0]
 
         # Store the calculation in the model.
         self.resultsModel.appendItems([self.calculation])
@@ -1320,8 +1320,9 @@ class QuantyDockWidget(QDockWidget):
         data = self.calculation.spectrum
 
         # Check if the data is valid.
-        if np.max(np.abs(data)) < 1e-6:
-            message = 'The spectrum has very low intensity.'
+        dataMax = np.max(np.abs(data))
+        if dataMax < np.finfo(np.float32).eps:
+            message = 'The spectrum has very low intensity'
             self.getStatusBar().showMessage(message, self.timeout)
             if self.calculation.experiment != 'RIXS':
                 data = np.zeros_like(data)

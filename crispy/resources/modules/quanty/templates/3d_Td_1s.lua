@@ -631,32 +631,33 @@ else
     G = CreateSpectra(H_f, T, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}, {'DenseBorder', DenseBorder}})
 end
 
-IndicesToSum = {}
+Indexes = {}
 for i in ipairs(T) do
     for j in ipairs(Psis_i) do
         if Experiment == 'XAS' then
-            table.insert(IndicesToSum, dZ[j] / #T / 3)
+            table.insert(Indexes, dZ[j] / #T / 3)
         elseif Experiment == 'XPS' then
-            table.insert(IndicesToSum, dZ[j] / #T)
+            table.insert(Indexes, dZ[j] / #T)
         end
     end
 end
 
-G = Spectra.Sum(G, IndicesToSum)
-G = G / (2 * math.pi)
+G = Spectra.Sum(G, Indexes)
+PclFactor = 1
+G = -1 / math.pi / PclFactor * G
 
 if H_3d_4p_hybridization == 1 and Experiment == 'XAS' then
-    G_quad = 2 * math.pi * G
+    G_quad = -(math.pi * PclFactor) * G
     G_dip = CreateSpectra(H_f, T_dip, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}, {'DenseBorder', DenseBorder}})
 
-    IndicesToSum = {}
+    Indexes = {}
     for i in ipairs(T_dip) do
         for j in ipairs(Psis_i) do
-            table.insert(IndicesToSum, dZ[j] / #T_dip)
+            table.insert(Indexes, dZ[j] / #T_dip)
         end
     end
 
-    G_dip = Spectra.Sum(G_dip, IndicesToSum)
+    G_dip = Spectra.Sum(G_dip, Indexes)
 
     alpha = 7.2973525664E-3
     a0 = 5.2917721067E-1
@@ -666,10 +667,10 @@ if H_3d_4p_hybridization == 1 and Experiment == 'XAS' then
     P1_1s_4p = $P1(1s,4p)
     P2_1s_3d = $P2(1s,3d)
 
-    Iedge1 = 1e-5 -- edge jump
+    Iedge1 = 1 -- edge jump
 
-    G_quad = (4 * math.pi^2 * alpha * a0^4 / (2 * hbar * c)^2 * P2_1s_3d^2 * Eedge1^3 / Iedge1 / math.pi) * G_quad
-    G_dip  = (4 * math.pi^2 * alpha * a0^2                    * P1_1s_4p^2 * Eedge1   / Iedge1 / math.pi) * G_dip
+    G_quad = -(4 * math.pi^2 * alpha * a0^4 / (2 * hbar * c)^2 * P2_1s_3d^2 * Eedge1^3 / Iedge1 / math.pi) * G_quad
+    G_dip  = -(4 * math.pi^2 * alpha * a0^2                    * P1_1s_4p^2 * Eedge1   / Iedge1 / math.pi) * G_dip
 
     G = G_quad + G_dip
 end
