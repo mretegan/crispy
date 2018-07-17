@@ -27,10 +27,23 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '05/06/2018'
+__date__ = '17/07/2017'
 
-from PyQt5.QtWidgets import QLineEdit
+
+from PyQt5.QtWidgets import QComboBox, QLineEdit
 from PyQt5.QtGui import QIntValidator, QDoubleValidator
+
+
+class ComboBox(QComboBox):
+    def __init__(self, *args, **kwargs):
+        super(ComboBox, self).__init__(*args, **kwargs)
+
+    def setItems(self, items, currentItem):
+        self.blockSignals(True)
+        self.clear()
+        self.addItems(items)
+        self.setCurrentText(currentItem)
+        self.blockSignals(False)
 
 
 class IntLineEdit(QLineEdit):

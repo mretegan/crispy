@@ -1,7 +1,7 @@
 # coding: utf-8
 # /*##########################################################################
 #
-# Copyright (c) 2016-2017 European Synchrotron Radiation Facility
+# Copyright (c) 2016-2018 European Synchrotron Radiation Facility
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -27,20 +27,106 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '30/05/2018'
-
+__date__ = '17/07/2018'
 
 from collections import OrderedDict as odict
 
-from PyQt5.QtCore import Qt, QAbstractItemModel, QModelIndex, pyqtSignal
+from PyQt5.QtCore import (
+    Qt, QAbstractItemModel, QAbstractListModel, QModelIndex, pyqtSignal)
 
 
-class TreeNode(object):
+class ResultsModel(QAbstractListModel):
+    def __init__(self, parent=None):
+        super(ResultsModel, self).__init__(parent=parent)
+        self.modelData = list()
+
+    def rowCount(self, parent=QModelIndex()):
+        """Return the number of rows in the model."""
+        return len(self.modelData)
+
+    def data(self, index, role):
+        """Return role specific data for the item referred by the
+        index."""
+        if not index.isValid():
+            return
+        row = index.row()
+        if role == Qt.DisplayRole or role == Qt.EditRole:
+            return self.modelData[row].label
+
+    def setData(self, index, value, role):
+        """Set the role data for the item at index to value."""
+        if not index.isValid():
+            return
+        row = index.row()
+        if role == Qt.EditRole:
+            self.modelData[row].label = value
+        self.dataChanged.emit(index, index)
+        return True
+
+    def getData(self):
+        return self.modelData
+
+    def flags(self, index):
+        """Return the active flags for the given index"""
+        if not index.isValid():
+            return
+        activeFlags = (
+            Qt.ItemIsEnabled | Qt.ItemIsSelectable | Qt.ItemIsEditable)
+        return activeFlags
+
+    def insertItems(self, position, items, parent=QModelIndex()):
+        """Insert items at a given position in the model."""
+        first = position
+        last = position + len(items) - 1
+        self.beginInsertRows(QModelIndex(), first, last)
+        for item in items:
+            self.modelData.insert(position, item)
+        self.endInsertRows()
+        return True
+
+    def removeItems(self, indexes, parent=QModelIndex()):
+        """Remove items from the model."""
+        rows = [index.row() for index in indexes]
+        first = min(rows)
+        last = max(rows)
+        self.beginRemoveRows(QModelIndex(), first, last)
+        for row in sorted(rows, reverse=True):
+            del self.modelData[row]
+        self.endRemoveRows()
+        return True
+
+    def appendItems(self, items):
+        """Insert items at the end of model."""
+        position = self.rowCount()
+        firstIndex = self.index(position)
+        lastIndex = self.index(position + len(items) - 1)
+        self.insertItems(position, items)
+        self.dataChanged.emit(firstIndex, lastIndex)
+
+    def replaceItem(self, index, item):
+        row = index.row()
+        self.modelData[row] = item
+        self.dataChanged.emit(index, index)
+
+    def getIndexData(self, index):
+        """Return the data stored in the model at the given index."""
+        if not index.isValid():
+            return
+        return self.modelData[index.row()]
+
+    def reset(self):
+        """Reset the model."""
+        self.beginResetModel()
+        self.modelData = list()
+        self.endResetModel()
+
+
+class HamiltonianNode(object):
     """Class implementing a tree node to be used in a tree model."""
 
-    def __init__(self, data, parent=None):
-        self.data = data
+    def __init__(self, parent=None, nodeData=None):
         self.parent = parent
+        self.nodeData = nodeData
         self.children = []
         self.checkState = None
 
@@ -71,19 +157,19 @@ class TreeNode(object):
         return len(self.children)
 
     def columnCount(self):
-        return len(self.data)
+        return len(self.nodeData)
 
     def getItemData(self, column):
         """Return the data for a given column."""
         try:
-            return self.data[column]
+            return self.nodeData[column]
         except IndexError:
             return str()
 
     def setItemData(self, column, value):
         """Set the data at a given column."""
         try:
-            self.data[column] = value
+            self.nodeData[column] = value
         except IndexError:
             pass
 
@@ -94,8 +180,8 @@ class TreeNode(object):
         self.checkState = checkState
 
 
-class TreeModel(QAbstractItemModel):
-    """Class implementing a basic tree model. It subclasses
+class HamiltonianModel(QAbstractItemModel):
+    """Class implementing the Hamiltonian tree model. It subclasses
     QAbstractItemModel and thus implements: index(), parent(),
     rowCount(), columnCount(), and data().
 
@@ -106,11 +192,10 @@ class TreeModel(QAbstractItemModel):
 
     nodeCheckStateChanged = pyqtSignal(QModelIndex, Qt.CheckState)
 
-    def __init__(self, header, data, parent=None):
-        super(TreeModel, self).__init__(parent)
-        self.header = header
-        self.data = data
-        self.setModelData(self.data)
+    def __init__(self, parent=None):
+        super(HamiltonianModel, self).__init__(parent)
+        self.header = ['Parameter', 'Value', 'Scaling']
+        self.modelData = odict()
 
     def index(self, row, column, parentIndex=None):
         """Return the index of the item in the model specified by the
@@ -191,7 +276,7 @@ class TreeModel(QAbstractItemModel):
         """Return role specific data for the item referred by
         index.column()."""
         if not index.isValid():
-            pass
+            return
 
         node = self.getNode(index)
         column = index.column()
@@ -205,15 +290,12 @@ class TreeModel(QAbstractItemModel):
                     return '{0:8.2f}'.format(value)
             except ValueError:
                 return value
-
-        if role == Qt.EditRole:
+        elif role == Qt.EditRole:
             return str(value)
-
-        if role == Qt.CheckStateRole:
+        elif role == Qt.CheckStateRole:
             if node.parent == self.rootNode and column == 0:
                 return node.getCheckState()
-
-        if role == Qt.TextAlignmentRole:
+        elif role == Qt.TextAlignmentRole:
             if column > 0:
                 return Qt.AlignRight
 
@@ -263,7 +345,7 @@ class TreeModel(QAbstractItemModel):
 
     def flags(self, index):
         """Return the active flags for the given index. Add editable
-        flag to items in the first colum or greater.
+        flag to items other than the first column.
         """
         activeFlags = (Qt.ItemIsEnabled | Qt.ItemIsSelectable |
                        Qt.ItemIsUserCheckable)
@@ -286,42 +368,43 @@ class TreeModel(QAbstractItemModel):
     def getNode(self, index):
         if index is None or not index.isValid():
             return self.rootNode
-
         return index.internalPointer()
 
-    def setModelData(self, data, parentNode=None):
+    def setModelData(self, modelData, parentNode=None):
         if parentNode is None:
-            self.data = data
-            self.rootNode = TreeNode(self.header)
+            self.rootNode = HamiltonianNode(None, self.header)
             parentNode = self.rootNode
 
-        if isinstance(data, dict):
-            for key, value in data.items():
+        if isinstance(modelData, dict):
+            for key, value in modelData.items():
                 if isinstance(value, dict):
-                    node = TreeNode([key], parentNode)
+                    node = HamiltonianNode(parentNode, [key])
                     self.setModelData(value, node)
-                # Not very nice, but works.
                 elif isinstance(value, float):
-                    node = TreeNode([key, value], parentNode)
+                    node = HamiltonianNode(parentNode, [key, value])
                 elif isinstance(value, list):
-                    node = TreeNode([key, value[0], value[1]], parentNode)
+                    node = HamiltonianNode(
+                        parentNode, [key, value[0], value[1]])
                 else:
                     raise TypeError
 
-    def updateModelData(self, data, parentIndex=None):
+    def setHeaderData(self, header):
+        self.header = header
+
+    def updateModelData(self, modelData, parentIndex=None):
         parentNode = self.getNode(parentIndex)
 
         if parentNode.childCount():
             for child in parentNode.children:
-                key = child.data[0]
-                childData = data[key]
+                key = child.nodeData[0]
+                childData = modelData[key]
                 childIndex = self.index(child.row(), 0, parentIndex)
                 self.updateModelData(childData, childIndex)
         else:
-            if isinstance(data, float):
-                parentNode.setItemData(1, data)
-            elif isinstance(data, list):
-                value, scaling = data
+            if isinstance(modelData, float):
+                parentNode.setItemData(1, modelData)
+            elif isinstance(modelData, list):
+                value, scaling = modelData
                 parentNode.setItemData(1, value)
                 parentNode.setItemData(2, scaling)
             else:
@@ -329,7 +412,7 @@ class TreeModel(QAbstractItemModel):
             self.dataChanged.emit(parentIndex, parentIndex)
             return True
 
-    def _getModelData(self, data, parentNode=None):
+    def _getModelData(self, modelData, parentNode=None):
         """Return the data contained in the model."""
         if parentNode is None:
             parentNode = self.rootNode
@@ -337,30 +420,29 @@ class TreeModel(QAbstractItemModel):
         for node in parentNode.getChildren():
             key = node.getItemData(0)
             if node.childCount():
-                data[key] = odict()
-                self._getModelData(data[key], node)
+                modelData[key] = odict()
+                self._getModelData(modelData[key], node)
             else:
                 if isinstance(node.getItemData(2), float):
-                    data[key] = [node.getItemData(1), node.getItemData(2)]
+                    modelData[key] = [node.getItemData(1), node.getItemData(2)]
                 else:
-                    data[key] = node.getItemData(1)
+                    modelData[key] = node.getItemData(1)
 
     def getModelData(self):
-        data = odict()
-        self._getModelData(data)
-        self.data = data
-        return self.data
+        modelData = odict()
+        self._getModelData(modelData)
+        return modelData
 
-    def setNodesCheckState(self, data, parentNode=None):
+    def setNodesCheckState(self, checkState, parentNode=None):
         if parentNode is None:
             parentNode = self.rootNode
 
         children = parentNode.getChildren()
 
         for child in children:
-            childName = child.data[0]
+            childName = child.nodeData[0]
             try:
-                child.setCheckState(data[childName])
+                child.setCheckState(checkState[childName])
             except KeyError:
                 pass
 
@@ -371,10 +453,15 @@ class TreeModel(QAbstractItemModel):
         if parentNode is None:
             parentNode = self.rootNode
 
-        data = odict()
+        checkStates = odict()
         children = parentNode.getChildren()
 
         for child in children:
-            data[child.data[0]] = child.getCheckState()
+            checkStates[child.nodeData[0]] = child.getCheckState()
 
-        return data
+        return checkStates
+
+    def reset(self):
+        self.beginResetModel()
+        self.rootNode = None
+        self.endResetModel()

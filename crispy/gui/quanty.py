@@ -54,8 +54,7 @@ from PyQt5.QtWidgets import (
 from PyQt5.uic import loadUi
 from silx.resources import resource_filename as resourceFileName
 
-from .models.treemodel import TreeModel
-from .models.listmodel import ListModel
+from .models import HamiltonianModel, ResultsModel
 from ..utils.broaden import broaden
 from ..utils.odict import odict
 from ..version import version
@@ -366,27 +365,14 @@ class QuantyDockWidget(QDockWidget):
             'crispy:' + os.path.join('gui', 'uis', 'quanty', 'main.ui'))
         loadUi(path, baseinstance=self, package='crispy.gui')
 
+        self.calculation = QuantyCalculation()
+        self.populateWidget()
+        self.enableActions()
+
         self.timeout = 4000
         self.counter = 1
 
-        self.calculation = QuantyCalculation()
-
-        # TODO: Move the results model/view outside of this class to allow
-        # users to load experimental results.
-        # Create the results model and assign it to the view.
-        self.resultsModel = ListModel()
-
-        self.resultsView.setModel(self.resultsModel)
-        self.resultsView.setSelectionMode(QAbstractItemView.ExtendedSelection)
-        self.resultsView.selectionModel().selectionChanged.connect(
-            self.selectedCalculationsChanged)
-
-        # Add a context menu to the view.
-        self.resultsView.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.resultsView.customContextMenuRequested[QPoint].connect(
-            self.showResultsContextMenu)
-
-        # Enable actions.
+    def enableActions(self):
         self.elementComboBox.currentTextChanged.connect(self.resetCalculation)
         self.chargeComboBox.currentTextChanged.connect(self.resetCalculation)
         self.symmetryComboBox.currentTextChanged.connect(self.resetCalculation)
@@ -439,94 +425,74 @@ class QuantyDockWidget(QDockWidget):
 
         self.resultsModel.dataChanged.connect(self.plotSelectedCalculations)
 
-        self.updateWidget()
-        self.getPlotWidget().reset()
+    def populateWidget(self):
+        """Populate the widget using data stored in the calculation
+        object. The order in which the individual widgets are populated
+        follows the way they are arranged.
 
-    def updateWidget(self):
-        self.elementComboBox.setItems(
-            self.calculation.elements, self.calculation.element)
-        self.chargeComboBox.setItems(
-            self.calculation.charges, self.calculation.charge)
-        self.symmetryComboBox.setItems(
-            self.calculation.symmetries, self.calculation.symmetry)
-        self.experimentComboBox.setItems(
-            self.calculation.experiments, self.calculation.experiment)
-        self.edgeComboBox.setItems(
-            self.calculation.edges, self.calculation.edge)
+        The models are recreated every time the function is called.
+        This might seem to be an overkill, but in practice it is very fast.
+        Don't try to move the model creation outside this function; is not
+        worth the effort, and there is nothing to gain from it.
+        """
+        c = self.calculation
 
-        self.temperatureLineEdit.setValue(self.calculation.temperature)
-        self.magneticFieldLineEdit.setValue(self.calculation.magneticField)
+        self.elementComboBox.setItems(c.elements, c.element)
+        self.chargeComboBox.setItems(c.charges, c.charge)
+        self.symmetryComboBox.setItems(c.symmetries, c.symmetry)
+        self.experimentComboBox.setItems(c.experiments, c.experiment)
+        self.edgeComboBox.setItems(c.edges, c.edge)
 
-        self.k1LineEdit.setVector(self.calculation.k1)
-        self.eps11LineEdit.setVector(self.calculation.eps11)
-        self.eps12LineEdit.setVector(self.calculation.eps12)
+        self.temperatureLineEdit.setValue(c.temperature)
+        self.magneticFieldLineEdit.setValue(c.magneticField)
 
-        if self.calculation.experiment in ('XMCD', 'X(M)LD'):
-            self.magneticFieldLineEdit.setEnabled(True)
-            self.k1LineEdit.setEnabled(True)
-            self.eps11LineEdit.setEnabled(True)
-        else:
-            self.magneticFieldLineEdit.setEnabled(False)
-            self.k1LineEdit.setEnabled(False)
-            self.eps11LineEdit.setEnabled(False)
+        self.energiesTabWidget.setTabText(0, str(c.e1Label))
+        self.e1MinLineEdit.setValue(c.e1Min)
+        self.e1MaxLineEdit.setValue(c.e1Max)
+        self.e1NPointsLineEdit.setValue(c.e1NPoints)
+        self.e1LorentzianLineEdit.setList(c.e1Lorentzian)
+        self.e1GaussianLineEdit.setValue(c.e1Gaussian)
 
-        self.k2LineEdit.setVector(self.calculation.k2)
-        self.eps21LineEdit.setVector(self.calculation.eps21)
-        self.eps22LineEdit.setVector(self.calculation.eps22)
+        self.k1LineEdit.setVector(c.k1)
+        self.eps11LineEdit.setVector(c.eps11)
+        self.eps12LineEdit.setVector(c.eps12)
 
-        self.fkLineEdit.setValue(self.calculation.fk)
-        self.gkLineEdit.setValue(self.calculation.gk)
-        self.zetaLineEdit.setValue(self.calculation.zeta)
-
-        self.nPsisLineEdit.setValue(self.calculation.nPsis)
-        self.nPsisAutoCheckBox.setChecked(self.calculation.nPsisAuto)
-        self.nConfigurationsLineEdit.setValue(self.calculation.nConfigurations)
-
-        self.nConfigurationsLineEdit.setEnabled(False)
-        termName = '{}-Ligands Hybridization'.format(self.calculation.block)
-        if termName in self.calculation.hamiltonianData:
-            termState = self.calculation.hamiltonianState[termName]
-            if termState != 0:
-                self.nConfigurationsLineEdit.setEnabled(True)
-
-        self.energiesTabWidget.setTabText(0, str(self.calculation.e1Label))
-        self.e1MinLineEdit.setValue(self.calculation.e1Min)
-        self.e1MaxLineEdit.setValue(self.calculation.e1Max)
-        self.e1NPointsLineEdit.setValue(self.calculation.e1NPoints)
-        self.e1LorentzianLineEdit.setList(self.calculation.e1Lorentzian)
-        self.e1GaussianLineEdit.setValue(self.calculation.e1Gaussian)
-
-        if 'RIXS' in self.calculation.experiment:
+        if c.experiment == 'RIXS':
             if self.energiesTabWidget.count() == 1:
                 tab = self.energiesTabWidget.findChild(QWidget, 'e2Tab')
                 self.energiesTabWidget.addTab(tab, tab.objectName())
-                self.energiesTabWidget.setTabText(1, self.calculation.e2Label)
-            self.e2MinLineEdit.setValue(self.calculation.e2Min)
-            self.e2MaxLineEdit.setValue(self.calculation.e2Max)
-            self.e2NPointsLineEdit.setValue(self.calculation.e2NPoints)
-            self.e2LorentzianLineEdit.setList(self.calculation.e2Lorentzian)
-            self.e2GaussianLineEdit.setValue(self.calculation.e2Gaussian)
+                self.energiesTabWidget.setTabText(1, c.e2Label)
+            self.e2MinLineEdit.setValue(c.e2Min)
+            self.e2MaxLineEdit.setValue(c.e2Max)
+            self.e2NPointsLineEdit.setValue(c.e2NPoints)
+            self.e2LorentzianLineEdit.setList(c.e2Lorentzian)
+            self.e2GaussianLineEdit.setValue(c.e2Gaussian)
+            self.k2LineEdit.setVector(c.k2)
+            self.eps21LineEdit.setVector(c.eps21)
+            self.eps22LineEdit.setVector(c.eps22)
             text = self.eps11Label.text()
-            text = re.sub('[Vσ]', 'σ', text)
+            text = re.sub('>[vσ]', '>σ', text)
             self.eps11Label.setText(text)
             text = self.eps12Label.text()
-            text = re.sub('[Hπ]', 'π', text)
+            text = re.sub('>[hπ]', '>π', text)
             self.eps12Label.setText(text)
         else:
             self.energiesTabWidget.removeTab(1)
             text = self.eps11Label.text()
-            text = re.sub('[Vσ]', 'V', text)
+            text = re.sub('>[vσ]', '>v', text)
             self.eps11Label.setText(text)
             text = self.eps12Label.text()
-            text = re.sub('[Hπ]', 'H', text)
+            text = re.sub('>[hπ]', '>h', text)
             self.eps12Label.setText(text)
 
-        # Create a Hamiltonian model.
-        self.hamiltonianModel = TreeModel(
-            ('Parameter', 'Value', 'Scaling'),
-            self.calculation.hamiltonianData)
-        self.hamiltonianModel.setNodesCheckState(
-            self.calculation.hamiltonianState)
+        self.fkLineEdit.setValue(c.fk)
+        self.gkLineEdit.setValue(c.gk)
+        self.zetaLineEdit.setValue(c.zeta)
+
+        # Create the Hamiltonian model.
+        self.hamiltonianModel = HamiltonianModel(parent=self)
+        self.hamiltonianModel.setModelData(c.hamiltonianData)
+        self.hamiltonianModel.setNodesCheckState(c.hamiltonianState)
         if self.syncParametersCheckBox.isChecked():
             self.hamiltonianModel.setSyncState(True)
         else:
@@ -550,10 +516,36 @@ class QuantyDockWidget(QDockWidget):
         self.hamiltonianParametersView.setRootIndex(
             self.hamiltonianTermsView.currentIndex())
 
-        # Set the sizes of the two views.
         self.hamiltonianSplitter.setSizes((150, 300, 10))
 
-    def enableUi(self, flag=True):
+        self.nPsisLineEdit.setValue(c.nPsis)
+        self.nPsisAutoCheckBox.setChecked(c.nPsisAuto)
+        self.nConfigurationsLineEdit.setValue(c.nConfigurations)
+
+        self.nConfigurationsLineEdit.setEnabled(False)
+        termName = '{}-Ligands Hybridization'.format(c.block)
+        if termName in c.hamiltonianData:
+            termState = c.hamiltonianState[termName]
+            if termState != 0:
+                self.nConfigurationsLineEdit.setEnabled(True)
+
+        if not hasattr(self, 'resultsModel'):
+            # Create the results model.
+            self.resultsModel = ResultsModel(parent=self)
+
+            # Assign the results model to the results view.
+            self.resultsView.setModel(self.resultsModel)
+            self.resultsView.setSelectionMode(
+                QAbstractItemView.ExtendedSelection)
+            self.resultsView.selectionModel().selectionChanged.connect(
+                self.selectedCalculationsChanged)
+
+            # Add a context menu to the view.
+            self.resultsView.setContextMenuPolicy(Qt.CustomContextMenu)
+            self.resultsView.customContextMenuRequested[QPoint].connect(
+                self.showResultsContextMenu)
+
+    def enableWidget(self, flag=True):
         self.elementComboBox.setEnabled(flag)
         self.chargeComboBox.setEnabled(flag)
         self.symmetryComboBox.setEnabled(flag)
@@ -1149,7 +1141,7 @@ class QuantyDockWidget(QDockWidget):
             element=element, charge=charge, symmetry=symmetry,
             experiment=experiment, edge=edge)
 
-        self.updateWidget()
+        self.populateWidget()
         self.updateMainWindowTitle()
         self.getPlotWidget().reset()
         self.resultsView.selectionModel().clearSelection()
@@ -1211,7 +1203,7 @@ class QuantyDockWidget(QDockWidget):
         self.resultsView.selectionModel().clearSelection()
 
         # Disable the UI while the calculation is running.
-        self.enableUi(False)
+        self.enableWidget(False)
 
         self.calculation.startingTime = datetime.datetime.now()
 
@@ -1260,7 +1252,7 @@ class QuantyDockWidget(QDockWidget):
 
     def stopCalculation(self):
         self.process.kill()
-        self.enableUi(True)
+        self.enableWidget(True)
 
     def processCalculation(self):
         startingTime = self.calculation.startingTime
@@ -1273,7 +1265,7 @@ class QuantyDockWidget(QDockWidget):
         self.updateCalculationPushButton('run')
 
         # Re-enable the UI if the calculation has finished.
-        self.enableUi(True)
+        self.enableWidget(True)
 
         # Evaluate the exit code and status of the process.
         exitStatus = self.process.exitStatus()
@@ -1478,7 +1470,7 @@ class QuantyDockWidget(QDockWidget):
 
     def selectedCalculationsChanged(self):
         self.plotSelectedCalculations()
-        self.updateWidget()
+        self.populateWidget()
         self.updateMainWindowTitle()
 
     def plotSelectedCalculations(self):

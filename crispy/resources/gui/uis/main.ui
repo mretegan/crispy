@@ -42,9 +42,6 @@ QToolButton {
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
-      <property name="handleWidth">
-       <number>0</number>
-      </property>
       <widget class="QFrame" name="frame">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -210,7 +207,7 @@ QToolButton {
   <customwidget>
    <class>MainPlotWidget</class>
    <extends>QWidget</extends>
-   <header>.widgets.plotwidget</header>
+   <header>.plot</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

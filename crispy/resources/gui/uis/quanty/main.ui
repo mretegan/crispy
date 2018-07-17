@@ -582,7 +582,7 @@
               <item>
                <widget class="QLabel" name="eps11Label">
                 <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;ε&lt;/span&gt;&lt;span style=&quot; vertical-align:sub;&quot;&gt;V&lt;/span&gt; (x, y, z)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;ε&lt;/span&gt;&lt;span style=&quot; vertical-align:sub;&quot;&gt;v&lt;/span&gt; (x, y, z)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
               </item>
@@ -631,7 +631,7 @@
               <item>
                <widget class="QLabel" name="eps12Label">
                 <property name="text">
-                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;ε&lt;/span&gt;&lt;span style=&quot; vertical-align:sub;&quot;&gt;H&lt;/span&gt; (x, y, z)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;ε&lt;/span&gt;&lt;span style=&quot; vertical-align:sub;&quot;&gt;h&lt;/span&gt; (x, y, z)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
               </item>
@@ -1054,9 +1054,6 @@
         <string>Hamiltonian Setup</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout">
-        <property name="spacing">
-         <number>6</number>
-        </property>
         <property name="leftMargin">
          <number>6</number>
         </property>
@@ -1077,7 +1074,7 @@
           <property name="title">
            <string>Scale Factors</string>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_5">
+          <layout class="QVBoxLayout" name="_8">
            <property name="spacing">
             <number>6</number>
            </property>
@@ -1097,17 +1094,11 @@
             <layout class="QHBoxLayout" name="scalingHBoxLayout">
              <item>
               <widget class="QLabel" name="gkLabel">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
                <property name="text">
                 <string>Fk</string>
                </property>
                <property name="alignment">
-                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                </property>
               </widget>
              </item>
@@ -1131,12 +1122,25 @@
               </widget>
              </item>
              <item>
+              <spacer name="horizontalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>0</width>
+                 <height>0</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
               <widget class="QLabel" name="fkLabel">
                <property name="text">
                 <string> Gk</string>
                </property>
                <property name="alignment">
-                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                </property>
               </widget>
              </item>
@@ -1160,12 +1164,25 @@
               </widget>
              </item>
              <item>
+              <spacer name="horizontalSpacer_3">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>0</width>
+                 <height>0</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
               <widget class="QLabel" name="zetaLabel">
                <property name="text">
                 <string>ζ</string>
                </property>
                <property name="alignment">
-                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                </property>
               </widget>
              </item>
@@ -1194,58 +1211,76 @@
          </widget>
         </item>
         <item>
-         <widget class="QSplitter" name="hamiltonianSplitter">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
+         <widget class="QGroupBox" name="hamiltonianGroupBox">
+          <property name="title">
+           <string>Hamiltonian Terms and Parameters</string>
           </property>
-          <widget class="QListView" name="hamiltonianTermsView">
-           <property name="enabled">
-            <bool>true</bool>
+          <layout class="QVBoxLayout" name="_4">
+           <property name="spacing">
+            <number>6</number>
            </property>
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use the check boxes to select the Hamiltonian terms included in the calculation. Left-click on the term's name to display its parameters in the view below. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <property name="leftMargin">
+            <number>6</number>
            </property>
-           <property name="frameShape">
-            <enum>QFrame::StyledPanel</enum>
+           <property name="topMargin">
+            <number>6</number>
            </property>
-           <property name="tabKeyNavigation">
-            <bool>true</bool>
+           <property name="rightMargin">
+            <number>6</number>
            </property>
-           <property name="alternatingRowColors">
-            <bool>true</bool>
+           <property name="bottomMargin">
+            <number>6</number>
            </property>
-           <property name="isWrapping" stdset="0">
-            <bool>false</bool>
-           </property>
-          </widget>
-          <widget class="TreeView" name="hamiltonianParametersView">
-           <property name="toolTip">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Double-click to edit the value or the scale factor of a parameter.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-           <property name="frameShape">
-            <enum>QFrame::StyledPanel</enum>
-           </property>
-           <property name="alternatingRowColors">
-            <bool>true</bool>
-           </property>
-           <property name="indentation">
-            <number>15</number>
-           </property>
-          </widget>
-          <widget class="QWidget" name="horizontalLayoutWidget">
-           <layout class="QHBoxLayout" name="syncParametersHBoxLayout">
-            <item>
-             <widget class="QCheckBox" name="syncParametersCheckBox">
-              <property name="text">
-               <string>Synchronize Hamiltonian Parameters</string>
+           <item>
+            <widget class="QSplitter" name="hamiltonianSplitter">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <widget class="QListView" name="hamiltonianTermsView">
+              <property name="enabled">
+               <bool>true</bool>
               </property>
-              <property name="checked">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use the check boxes to select the Hamiltonian terms included in the calculation. Left-click on the term's name to display its parameters in the view below. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="tabKeyNavigation">
+               <bool>true</bool>
+              </property>
+              <property name="alternatingRowColors">
                <bool>true</bool>
               </property>
              </widget>
-            </item>
-           </layout>
-          </widget>
+             <widget class="HamiltonianParametersView" name="hamiltonianParametersView">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Double-click to edit the value or the scale factor of a parameter.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="alternatingRowColors">
+               <bool>true</bool>
+              </property>
+              <property name="indentation">
+               <number>15</number>
+              </property>
+             </widget>
+             <widget class="QWidget" name="horizontalLayoutWidget">
+              <layout class="QHBoxLayout" name="syncParametersHBoxLayout">
+               <item>
+                <widget class="QCheckBox" name="syncParametersCheckBox">
+                 <property name="text">
+                  <string>Synchronize Hamiltonian Parameters</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
         <item>
@@ -1336,15 +1371,6 @@
            </item>
            <item>
             <layout class="QHBoxLayout" name="nConfigurationsHBoxLayout">
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>3</number>
-             </property>
-             <property name="bottomMargin">
-              <number>3</number>
-             </property>
              <item>
               <widget class="QLabel" name="nConfigurationsLabel">
                <property name="toolTip">
@@ -1500,34 +1526,34 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>TreeView</class>
+   <class>HamiltonianParametersView</class>
    <extends>QTreeView</extends>
-   <header>.views.treeview</header>
+   <header>.views</header>
   </customwidget>
   <customwidget>
    <class>ComboBox</class>
    <extends>QComboBox</extends>
-   <header>.widgets.combobox</header>
+   <header>.widgets</header>
   </customwidget>
   <customwidget>
    <class>IntLineEdit</class>
    <extends>QLineEdit</extends>
-   <header>.widgets.lineedit</header>
+   <header>.widgets</header>
   </customwidget>
   <customwidget>
    <class>DoubleLineEdit</class>
    <extends>QLineEdit</extends>
-   <header>.widgets.lineedit</header>
+   <header>.widgets</header>
   </customwidget>
   <customwidget>
    <class>VectorLineEdit</class>
    <extends>QLineEdit</extends>
-   <header>.widgets.lineedit</header>
+   <header>.widgets</header>
   </customwidget>
   <customwidget>
    <class>DoubleListLineEdit</class>
    <extends>QLineEdit</extends>
-   <header>.widgets.lineedit</header>
+   <header>.widgets</header>
   </customwidget>
  </customwidgets>
  <tabstops>
@@ -1552,12 +1578,6 @@
   <tabstop>e2GaussianLineEdit</tabstop>
   <tabstop>k2LineEdit</tabstop>
   <tabstop>eps21LineEdit</tabstop>
-  <tabstop>fkLineEdit</tabstop>
-  <tabstop>gkLineEdit</tabstop>
-  <tabstop>zetaLineEdit</tabstop>
-  <tabstop>hamiltonianTermsView</tabstop>
-  <tabstop>hamiltonianParametersView</tabstop>
-  <tabstop>syncParametersCheckBox</tabstop>
   <tabstop>nPsisAutoCheckBox</tabstop>
   <tabstop>nPsisLineEdit</tabstop>
   <tabstop>nConfigurationsLineEdit</tabstop>
