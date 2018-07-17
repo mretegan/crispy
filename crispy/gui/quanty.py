@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '10/07/2018'
+__date__ = '17/07/2018'
 
 
 import copy
@@ -105,19 +105,23 @@ class QuantyCalculation(object):
         ]
     )
 
+    # Make the parameters a class attribute. This speeds up the creation
+    # of a new calculation object; significantly.
+    path = resourceFileName(
+        'crispy:' + os.path.join('modules', 'quanty', 'parameters',
+                                 'parameters.json.gz'))
+
+    with gzip.open(path, 'rb') as p:
+        parameters = json.loads(
+            p.read().decode('utf-8'), object_pairs_hook=odict)
+
     def __init__(self, **kwargs):
         self.__dict__.update(self._defaults)
         self.__dict__.update(kwargs)
 
-        path = resourceFileName(
-            'crispy:' + os.path.join('modules', 'quanty', 'parameters',
-                                     'parameters.json.gz'))
+        parameters = self.parameters
 
-        with gzip.open(path, 'rb') as p:
-            tree = json.loads(
-                p.read().decode('utf-8'), object_pairs_hook=odict)
-
-        branch = tree['elements']
+        branch = parameters['elements']
         self.elements = list(branch)
         if self.element not in self.elements:
             self.element = self.elements[0]
@@ -177,7 +181,7 @@ class QuantyCalculation(object):
         self.hamiltonianData = odict()
         self.hamiltonianState = odict()
 
-        branch = tree['elements'][self.element]['charges'][self.charge]
+        branch = parameters['elements'][self.element]['charges'][self.charge]
 
         for label, configuration in self.configurations:
             label = '{} Hamiltonian'.format(label)

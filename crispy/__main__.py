@@ -27,20 +27,17 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '10/07/2018'
+__date__ = '17/07/2018'
 
 import sys
 
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import Qt, QLocale, QSettings
-from silx.resources import register_resource_directory
 
 from .gui.main import MainWindow
 
 
 def main():
-    register_resource_directory(name='crispy', package_name='crispy.resources')
-
     locale = QLocale(QLocale.C)
     locale.setNumberOptions(QLocale.RejectGroupSeparator)
     QLocale.setDefault(locale)
