@@ -168,7 +168,7 @@ class QuantyCalculation(object):
         self.e1Lorentzian = branch['energies'][0][5]
         self.e1Gaussian = branch['energies'][0][6]
 
-        if 'RIXS' in self.experiment:
+        if self.experiment == 'RIXS':
             self.e2Label = branch['energies'][1][0]
             self.e2Min = branch['energies'][1][1]
             self.e2Max = branch['energies'][1][2]
