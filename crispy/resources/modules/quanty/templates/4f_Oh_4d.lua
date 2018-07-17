@@ -190,13 +190,13 @@ Lsqr = Lx * Lx + Ly * Ly + Lz * Lz
 Jsqr = Jx * Jx + Jy * Jy + Jz * Jz
 
 if H_magnetic_field == 1 then
-    Bx_i = $Bx_i_value * EnergyUnits.Tesla.value
-    By_i = $By_i_value * EnergyUnits.Tesla.value
-    Bz_i = $Bz_i_value * EnergyUnits.Tesla.value
+    Bx_i = $Bx_i_value
+    By_i = $By_i_value
+    Bz_i = $Bz_i_value
 
-    Bx_f = $Bx_f_value * EnergyUnits.Tesla.value
-    By_f = $By_f_value * EnergyUnits.Tesla.value
-    Bz_f = $Bz_f_value * EnergyUnits.Tesla.value
+    Bx_f = $Bx_f_value
+    By_f = $By_f_value
+    Bz_f = $Bz_f_value
 
     H_i = H_i + Chop(
           Bx_i * (2 * Sx + Lx)
@@ -367,16 +367,16 @@ Tx_4d_4f = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_4d, Inde
 Ty_4d_4f = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_4d, IndexDn_4d, {{1, -1, t * I}, {1, 1,  t * I}})
 Tz_4d_4f = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_4d, IndexDn_4d, {{1,  0, 1    }                })
 
-k1 = $k1
-eps11 = $eps11
-eps12 = $eps12
+k = $k1
+ev = $eps11
+eh = $eps12
 
-Tk1_4d_4f = Chop(k1[1] * Tx_4d_4f + k1[2] * Ty_4d_4f + k1[3] * Tz_4d_4f)
-Teps11_4d_4f = Chop(eps11[1] * Tx_4d_4f + eps11[2] * Ty_4d_4f + eps11[3] * Tz_4d_4f)
-Teps12_4d_4f = Chop(eps12[1] * Tx_4d_4f + eps12[2] * Ty_4d_4f + eps12[3] * Tz_4d_4f)
+Tk1_4d_4f = Chop(k[1] * Tx_4d_4f + k[2] * Ty_4d_4f + k[3] * Tz_4d_4f)
+Tv_4d_4f = Chop(ev[1] * Tx_4d_4f + ev[2] * Ty_4d_4f + ev[3] * Tz_4d_4f)
+Th_4d_4f = Chop(eh[1] * Tx_4d_4f + eh[2] * Ty_4d_4f + eh[3] * Tz_4d_4f)
 
-Tr_4d_4f = Chop(t * (Teps11_4d_4f - I * Teps12_4d_4f))
-Tl_4d_4f = Chop(-t * (Teps11_4d_4f + I * Teps12_4d_4f))
+Tr_4d_4f = Chop(t * (Th_4d_4f - I * Tv_4d_4f))
+Tl_4d_4f = Chop(-t * (Th_4d_4f + I * Tv_4d_4f))
 
 Ta_4d = {}
 for i = 1, NElectrons_4d / 2 do
@@ -390,11 +390,11 @@ if Experiment == 'XAS' then
 elseif Experiment == 'XPS' then
     T = Ta_4d
 elseif Experiment == 'X(M)LD' then
-    T = {Teps11_4d_4f, Teps12_4d_4f}
+    T = {Tv_4d_4f, Th_4d_4f}
 elseif Experiment == 'XMCD' then
     T = {Tr_4d_4f, Tl_4d_4f}
 else
-        return
+    return
 end
 
 --------------------------------------------------------------------------------

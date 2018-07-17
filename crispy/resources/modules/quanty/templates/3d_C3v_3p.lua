@@ -167,13 +167,13 @@ Lsqr = Lx * Lx + Ly * Ly + Lz * Lz
 Jsqr = Jx * Jx + Jy * Jy + Jz * Jz
 
 if H_magnetic_field == 1 then
-    Bx_i = $Bx_i_value * EnergyUnits.Tesla.value
-    By_i = $By_i_value * EnergyUnits.Tesla.value
-    Bz_i = $Bz_i_value * EnergyUnits.Tesla.value
+    Bx_i = $Bx_i_value
+    By_i = $By_i_value
+    Bz_i = $Bz_i_value
 
-    Bx_f = $Bx_f_value * EnergyUnits.Tesla.value
-    By_f = $By_f_value * EnergyUnits.Tesla.value
-    Bz_f = $Bz_f_value * EnergyUnits.Tesla.value
+    Bx_f = $Bx_f_value
+    By_f = $By_f_value
+    Bz_f = $Bz_f_value
 
     H_i = H_i + Chop(
           Bx_i * (2 * Sx + Lx)
@@ -344,16 +344,16 @@ Tx_3p_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_3p, Inde
 Ty_3p_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_3p, IndexDn_3p, {{1, -1, t * I}, {1, 1,  t * I}})
 Tz_3p_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_3p, IndexDn_3p, {{1,  0, 1    }                })
 
-k1 = $k1
-eps11 = $eps11
-eps12 = $eps12
+k = $k1
+ev = $eps11
+eh = $eps12
 
-Tk1_3p_3d = Chop(k1[1] * Tx_3p_3d + k1[2] * Ty_3p_3d + k1[3] * Tz_3p_3d)
-Teps11_3p_3d = Chop(eps11[1] * Tx_3p_3d + eps11[2] * Ty_3p_3d + eps11[3] * Tz_3p_3d)
-Teps12_3p_3d = Chop(eps12[1] * Tx_3p_3d + eps12[2] * Ty_3p_3d + eps12[3] * Tz_3p_3d)
+Tk1_3p_3d = Chop(k[1] * Tx_3p_3d + k[2] * Ty_3p_3d + k[3] * Tz_3p_3d)
+Tv_3p_3d = Chop(ev[1] * Tx_3p_3d + ev[2] * Ty_3p_3d + ev[3] * Tz_3p_3d)
+Th_3p_3d = Chop(eh[1] * Tx_3p_3d + eh[2] * Ty_3p_3d + eh[3] * Tz_3p_3d)
 
-Tr_3p_3d = Chop(t * (Teps11_3p_3d - I * Teps12_3p_3d))
-Tl_3p_3d = Chop(-t * (Teps11_3p_3d + I * Teps12_3p_3d))
+Tr_3p_3d = Chop(t * (Th_3p_3d - I * Tv_3p_3d))
+Tl_3p_3d = Chop(-t * (Th_3p_3d + I * Tv_3p_3d))
 
 Ta_3p = {}
 for i = 1, NElectrons_3p / 2 do
@@ -367,7 +367,7 @@ if Experiment == 'XAS' then
 elseif Experiment == 'XPS' then
     T = Ta_3p
 elseif Experiment == 'X(M)LD' then
-    T = {Teps11_3p_3d, Teps12_3p_3d}
+    T = {Tv_3p_3d, Th_3p_3d}
 elseif Experiment == 'XMCD' then
     T = {Tr_3p_3d, Tl_3p_3d}
 else

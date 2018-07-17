@@ -285,13 +285,20 @@ class HamiltonianModel(QAbstractItemModel):
         if role == Qt.DisplayRole:
             try:
                 if column == 1:
-                    return '{0:8.3f}'.format(value)
+                    # Display small values using scientific notation.
+                    if abs(float(value)) < 1e-3 and float(value) != 0.0:
+                        return '{0:8.1e}'.format(value)
+                    else:
+                        return '{0:8.3f}'.format(value)
                 else:
                     return '{0:8.2f}'.format(value)
             except ValueError:
                 return value
         elif role == Qt.EditRole:
-            return str(value)
+            if abs(float(value)) < 1e-3 and float(value) != 0.0:
+                return str('{0:8.1e}'.format(float(value)))
+            else:
+                return str(value)
         elif role == Qt.CheckStateRole:
             if node.parent == self.rootNode and column == 0:
                 return node.getCheckState()

@@ -77,9 +77,9 @@ class QuantyCalculation(object):
             ('e1NPoints', None),
             ('e1Lorentzian', None),
             ('e1Gaussian', None),
-            ('k1', [0, 0, -1]),
+            ('k1', [0, 0, 1]),
             ('eps11', [0, 1, 0]),
-            ('eps12', [-1, 0, 0]),
+            ('eps12', [1, 0, 0]),
             ('e2Min', None),
             ('e2Max', None),
             ('e2NPoints', None),
@@ -607,6 +607,8 @@ class QuantyDockWidget(QDockWidget):
         self.hamiltonianModel.setNodesCheckState(
             self.calculation.hamiltonianState)
 
+        TESLA_TO_EV = 5.788e-05
+
         # Normalize the current incident vector.
         k1 = np.array(self.calculation.k1)
         k1 = k1 / np.linalg.norm(k1)
@@ -615,7 +617,7 @@ class QuantyDockWidget(QDockWidget):
         for configuration in configurations:
             parameters = configurations[configuration]
             for i, parameter in enumerate(parameters):
-                value = float(magneticField * -k1[i])
+                value = float(magneticField * np.abs(k1[i]) * TESLA_TO_EV)
                 if abs(value) == 0.0:
                     value = 0.0
                 configurations[configuration][parameter] = value
