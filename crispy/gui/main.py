@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '10/07/2018'
+__date__ = '17/07/2018'
 
 
 import os
@@ -67,7 +67,8 @@ class MainWindow(QMainWindow):
 
         # Logger widget.
         font = QFontDatabase.systemFont(QFontDatabase.FixedFont)
-        font.setPointSize(font.pointSize() + 1)
+        if sys.platform == 'darwin':
+            font.setPointSize(font.pointSize() + 1)
         self.loggerWidget.setFont(font)
         self.loggerWidget.setLineWrapMode(QPlainTextEdit.NoWrap)
 
