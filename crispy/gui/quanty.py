@@ -177,8 +177,11 @@ class QuantyCalculation(object):
             self.e2Lorentzian = branch['energies'][1][5]
             self.e2Gaussian = branch['energies'][1][6]
 
-        self.hamiltonianData = odict()
-        self.hamiltonianState = odict()
+        if self.hamiltonianData is None:
+            self.hamiltonianData = odict()
+
+        if self.hamiltonianState is None:
+            self.hamiltonianState = odict()
 
         branch = parameters['elements'][self.element]['charges'][self.charge]
 
@@ -189,7 +192,7 @@ class QuantyCalculation(object):
             for term in terms:
                 # Include the p-d hybridization term only for the K-edges of
                 # 3d transition metals.
-                if term in '3d-4p Hybridization' and self.edge not in 'K (1s)':
+                if term == '3d-4p Hybridization' and self.edge != 'K (1s)':
                     continue
 
                 if term in ('Atomic', 'Magnetic Field', 'Exchange Field'):
@@ -227,8 +230,6 @@ class QuantyCalculation(object):
 
         replacements = odict()
 
-        # To avoid changing the object attributes and thus brakes
-        # compatibility of with the old .pkl files.
         # TODO: Make this an object attribute when saving the .pkl file
         # doesn't brake compatibility.
         replacements['$DenseBorder'] = self.denseBorder
@@ -274,7 +275,7 @@ class QuantyCalculation(object):
         w = w / np.linalg.norm(w)
         replacements['$eps12'] = s.format(w[0], w[1], w[2])
 
-        if 'RIXS' in self.experiment:
+        if self.experiment == 'RIXS':
             # The Lorentzian broadening along the incident axis cannot be
             # changed in the interface, and must therefore be set to the
             # final value before the start of the calculation.
@@ -356,8 +357,8 @@ class QuantyCalculation(object):
 
 class QuantyDockWidget(QDockWidget):
 
-    def __init__(self, parent, settings=None):
-        super(QuantyDockWidget, self).__init__(parent)
+    def __init__(self, parent=None, settings=None):
+        super(QuantyDockWidget, self).__init__(parent=parent)
         self.settings = settings
 
         # Load the external .ui file for the widget.
@@ -371,6 +372,8 @@ class QuantyDockWidget(QDockWidget):
 
         self.timeout = 4000
         self.counter = 1
+
+        self.hamiltonianSplitter.setSizes((150, 300, 10))
 
     def enableActions(self):
         self.elementComboBox.currentTextChanged.connect(self.resetCalculation)
@@ -413,17 +416,8 @@ class QuantyDockWidget(QDockWidget):
         self.nConfigurationsLineEdit.editingFinished.connect(
             self.updateConfigurations)
 
-        icon = QIcon(resourceFileName(
-            'crispy:' + os.path.join('gui', 'icons', 'save.svg')))
-        self.saveInputAsPushButton.setIcon(icon)
-        self.saveInputAsPushButton.clicked.connect(self.saveInputAs)
-
-        icon = QIcon(resourceFileName(
-            'crispy:' + os.path.join('gui', 'icons', 'play.svg')))
-        self.calculationPushButton.setIcon(icon)
-        self.calculationPushButton.clicked.connect(self.runCalculation)
-
-        self.resultsModel.dataChanged.connect(self.plotSelectedCalculations)
+        self.saveInputAsPushButton.pressed.connect(self.saveInputAs)
+        self.calculationPushButton.pressed.connect(self.runCalculation)
 
     def populateWidget(self):
         """Populate the widget using data stored in the calculation
@@ -516,8 +510,6 @@ class QuantyDockWidget(QDockWidget):
         self.hamiltonianParametersView.setRootIndex(
             self.hamiltonianTermsView.currentIndex())
 
-        self.hamiltonianSplitter.setSizes((150, 300, 10))
-
         self.nPsisLineEdit.setValue(c.nPsis)
         self.nPsisAutoCheckBox.setChecked(c.nPsisAuto)
         self.nConfigurationsLineEdit.setValue(c.nConfigurations)
@@ -553,29 +545,21 @@ class QuantyDockWidget(QDockWidget):
         self.edgeComboBox.setEnabled(flag)
 
         self.temperatureLineEdit.setEnabled(flag)
+        self.magneticFieldLineEdit.setEnabled(flag)
 
         self.e1MinLineEdit.setEnabled(flag)
         self.e1MaxLineEdit.setEnabled(flag)
         self.e1NPointsLineEdit.setEnabled(flag)
         self.e1LorentzianLineEdit.setEnabled(flag)
         self.e1GaussianLineEdit.setEnabled(flag)
+        self.k1LineEdit.setEnabled(flag)
+        self.eps11LineEdit.setEnabled(flag)
 
         self.e2MinLineEdit.setEnabled(flag)
         self.e2MaxLineEdit.setEnabled(flag)
         self.e2NPointsLineEdit.setEnabled(flag)
         self.e2LorentzianLineEdit.setEnabled(flag)
         self.e2GaussianLineEdit.setEnabled(flag)
-
-        self.magneticFieldLineEdit.setEnabled(flag)
-
-        if self.calculation.experiment in ('XMCD', 'X(M)LD'):
-            self.magneticFieldLineEdit.setEnabled(flag)
-            self.k1LineEdit.setEnabled(flag)
-            self.eps11LineEdit.setEnabled(flag)
-        else:
-            self.magneticFieldLineEdit.setEnabled(False)
-            self.k1LineEdit.setEnabled(False)
-            self.eps11LineEdit.setEnabled(False)
 
         self.fkLineEdit.setEnabled(flag)
         self.gkLineEdit.setEnabled(flag)
@@ -1143,6 +1127,7 @@ class QuantyDockWidget(QDockWidget):
 
         self.populateWidget()
         self.updateMainWindowTitle()
+
         self.getPlotWidget().reset()
         self.resultsView.selectionModel().clearSelection()
 
@@ -1216,7 +1201,7 @@ class QuantyDockWidget(QDockWidget):
                 self.calculation.baseName + '.lua', os.getcwd()))
         self.getStatusBar().showMessage(message)
 
-        if sys.platform in 'win32' and self.process.waitForStarted():
+        if sys.platform == 'win32' and self.process.waitForStarted():
             self.updateCalculationPushButton()
         else:
             self.process.started.connect(self.updateCalculationPushButton)
@@ -1244,9 +1229,9 @@ class QuantyDockWidget(QDockWidget):
 
         self.calculationPushButton.disconnect()
         if type == 'stop':
-            self.calculationPushButton.clicked.connect(self.stopCalculation)
+            self.calculationPushButton.pressed.connect(self.stopCalculation)
         elif type == 'run':
-            self.calculationPushButton.clicked.connect(self.runCalculation)
+            self.calculationPushButton.pressed.connect(self.runCalculation)
         else:
             pass
 
@@ -1254,7 +1239,7 @@ class QuantyDockWidget(QDockWidget):
         self.process.kill()
         self.enableWidget(True)
 
-    def processCalculation(self):
+    def processCalculation(self, *args):
         startingTime = self.calculation.startingTime
 
         # When did I finish?
@@ -1263,9 +1248,6 @@ class QuantyDockWidget(QDockWidget):
 
         # Reset the calculation button.
         self.updateCalculationPushButton('run')
-
-        # Re-enable the UI if the calculation has finished.
-        self.enableWidget(True)
 
         # Evaluate the exit code and status of the process.
         exitStatus = self.process.exitStatus()
@@ -1309,12 +1291,12 @@ class QuantyDockWidget(QDockWidget):
         f = '{0:s}.spec'.format(self.calculation.baseName)
         try:
             data = np.loadtxt(f, skiprows=5)
-        except IOError as e:
+        except (OSError, IOError) as e:
             message = 'Failed to read the spectrum file from disk.'
             self.getStatusBar().showMessage(message, self.timeout)
             return
 
-        if 'RIXS' in self.calculation.experiment:
+        if self.calculation.experiment == 'RIXS':
             self.calculation.spectrum = -data[:, 2::2]
         else:
             self.calculation.spectrum = -data[:, 2::2][:, 0]
@@ -1322,8 +1304,11 @@ class QuantyDockWidget(QDockWidget):
         # Store the calculation in the model.
         self.resultsModel.appendItems([self.calculation])
 
-        # Should this be a signal?
+        # TODO: Should this be a signal?
         self.updateResultsViewSelection()
+
+        # Re-enable the UI if the calculation has finished.
+        self.enableWidget(True)
 
         # If the "Hamiltonian Setup" page is currently selected, when the
         # current widget is set to the "Results Page", the former is not
@@ -1338,10 +1323,10 @@ class QuantyDockWidget(QDockWidget):
         if np.max(np.abs(data)) < 1e-6:
             message = 'The spectrum has very low intensity.'
             self.getStatusBar().showMessage(message, self.timeout)
-            if 'RIXS' not in self.calculation.experiment:
+            if self.calculation.experiment != 'RIXS':
                 data = np.zeros_like(data)
 
-        if 'RIXS' in self.calculation.experiment:
+        if self.calculation.experiment == 'RIXS':
             self.getPlotWidget().setGraphXLabel('Incident Energy (eV)')
             self.getPlotWidget().setGraphYLabel('Energy Transfer (eV)')
 
@@ -1468,7 +1453,7 @@ class QuantyDockWidget(QDockWidget):
             calculations.append(calculation)
         return calculations
 
-    def selectedCalculationsChanged(self):
+    def selectedCalculationsChanged(self, *args):
         self.plotSelectedCalculations()
         self.populateWidget()
         self.updateMainWindowTitle()
@@ -1477,7 +1462,7 @@ class QuantyDockWidget(QDockWidget):
         self.getPlotWidget().reset()
         calculations = self.getSelectedCalculationsData()
         for calculation in calculations:
-            if len(calculations) > 1 and 'RIXS' in calculation.experiment:
+            if len(calculations) > 1 and calculation.experiment == 'RIXS':
                 continue
             self.calculation = calculation
             self.plot()
@@ -1487,11 +1472,11 @@ class QuantyDockWidget(QDockWidget):
         index = self.resultsModel.index(self.resultsModel.rowCount() - 1)
         self.resultsView.selectionModel().select(
             index, QItemSelectionModel.Select)
-        # Update available actions in the main menu.
+        # Update available actions in the context menu if the model has data.
         if not self.resultsModel.getData():
-            self.updateMenu(False)
+            self.updateResultsContextMenu(False)
         else:
-            self.updateMenu(True)
+            self.updateResultsContextMenu(True)
 
     def handleOutputLogging(self):
         self.process.setReadChannel(QProcess.StandardOutput)
@@ -1508,7 +1493,7 @@ class QuantyDockWidget(QDockWidget):
         title = 'Crispy - {}'.format(self.calculation.baseName + '.lua')
         self.setMainWindowTitle(title)
 
-    def updateMenu(self, flag):
+    def updateResultsContextMenu(self, flag):
         self.parent().quantyMenuUpdate(flag)
 
     def setMainWindowTitle(self, title):
@@ -1549,13 +1534,13 @@ class QuantyPreferencesDialog(QDialog):
             'crispy:' + os.path.join('gui', 'uis', 'quanty', 'preferences.ui'))
         loadUi(path, baseinstance=self, package='crispy.gui')
 
-        self.pathBrowsePushButton.clicked.connect(self.setExecutablePath)
+        self.pathBrowsePushButton.pressed.connect(self.setExecutablePath)
 
         ok = self.buttonBox.button(QDialogButtonBox.Ok)
-        ok.clicked.connect(self.acceptSettings)
+        ok.pressed.connect(self.acceptSettings)
 
         cancel = self.buttonBox.button(QDialogButtonBox.Cancel)
-        cancel.clicked.connect(self.rejectSettings)
+        cancel.pressed.connect(self.rejectSettings)
 
         self.settings = settings
         self.restoreSettings()
