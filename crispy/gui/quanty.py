@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '17/07/2018'
+__date__ = '18/07/2018'
 
 
 import copy
@@ -43,13 +43,12 @@ except ImportError:
 import re
 import subprocess
 import sys
-import uuid
 
 from PyQt5.QtCore import (
-    QItemSelectionModel, QProcess, Qt, QPoint, QStandardPaths)
+    QItemSelectionModel, QItemSelection, QProcess, Qt, QPoint, QStandardPaths)
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (
-    QAbstractItemView, QDockWidget, QFileDialog, QAction, QMenu, QWidget,
+    QDockWidget, QFileDialog, QAction, QMenu, QWidget,
     QDialog, QDialogButtonBox)
 from PyQt5.uic import loadUi
 from silx.resources import resource_filename as resourceFileName
@@ -97,7 +96,6 @@ class QuantyCalculation(object):
             ('hamiltonianState', None),
             ('baseName', 'untitled'),
             ('spectrum', None),
-            ('uuid', None),
             ('startingTime', None),
             ('endingTime', None),
             ('verbosity', None),
@@ -352,8 +350,6 @@ class QuantyCalculation(object):
         with open(self.baseName + '.lua', 'w') as f:
             f.write(self.template)
 
-        self.uuid = uuid.uuid4().hex[:8]
-
 
 class QuantyDockWidget(QDockWidget):
 
@@ -371,7 +367,6 @@ class QuantyDockWidget(QDockWidget):
         self.enableActions()
 
         self.timeout = 4000
-        self.counter = 1
 
         self.hamiltonianSplitter.setSizes((150, 300, 10))
 
@@ -524,13 +519,20 @@ class QuantyDockWidget(QDockWidget):
         if not hasattr(self, 'resultsModel'):
             # Create the results model.
             self.resultsModel = ResultsModel(parent=self)
+            self.resultsModel.calculationNameChanged.connect(
+                self.updateCalculationName)
+            self.resultsModel.dataChanged.connect(
+                self.updateResultsViewSelection)
 
             # Assign the results model to the results view.
             self.resultsView.setModel(self.resultsModel)
-            self.resultsView.setSelectionMode(
-                QAbstractItemView.ExtendedSelection)
             self.resultsView.selectionModel().selectionChanged.connect(
                 self.selectedCalculationsChanged)
+            self.resultsView.resizeColumnsToContents()
+            self.resultsView.horizontalHeader().setSectionsMovable(False)
+            self.resultsView.horizontalHeader().setSectionsClickable(False)
+            if sys.platform == 'darwin':
+                self.resultsView.horizontalHeader().setMaximumHeight(17)
 
             # Add a context menu to the view.
             self.resultsView.setContextMenuPolicy(Qt.CustomContextMenu)
@@ -931,7 +933,7 @@ class QuantyDockWidget(QDockWidget):
         except IndexError:
             return
         else:
-            self.resultsModel.replaceItem(index,  self.calculation)
+            self.resultsModel.replaceItem(index, self.calculation)
             self.plotSelectedCalculations()
 
     def updateScalingFactors(self):
@@ -1075,6 +1077,7 @@ class QuantyDockWidget(QDockWidget):
             raise e
 
     def saveInputAs(self):
+        # Update the self.calculation
         path, _ = QFileDialog.getSaveFileName(
             self, 'Save Quanty Input',
             os.path.join(self.getCurrentPath(), '{}.lua'.format(
@@ -1135,7 +1138,6 @@ class QuantyDockWidget(QDockWidget):
 
     def removeSelectedCalculations(self):
         self.resultsModel.removeItems(self.resultsView.selectedIndexes())
-        self.updateResultsViewSelection()
         if not self.resultsView.selectedIndexes():
             self.getPlotWidget().reset()
 
@@ -1152,7 +1154,6 @@ class QuantyDockWidget(QDockWidget):
             self.setCurrentPath(path)
             with open(path, 'rb') as p:
                 self.resultsModel.appendItems(pickle.load(p))
-            self.updateResultsViewSelection()
             self.updateMainWindowTitle()
             self.quantyToolBox.setCurrentWidget(self.resultsPage)
 
@@ -1282,12 +1283,10 @@ class QuantyDockWidget(QDockWidget):
             self.getStatusBar().showMessage(message, self.timeout)
             return
 
-        self.calculation.label = '#{} | {} | {} | {} | {} | {}'.format(
-            self.counter, self.calculation.element, self.calculation.charge,
-            self.calculation.symmetry, self.calculation.experiment,
-            self.calculation.edge)
-
-        self.counter += 1
+        self.calculation.label = '{}{} in {} symmetry, {} {}'.format(
+            self.calculation.element, self.calculation.charge,
+            self.calculation.symmetry, self.calculation.edge,
+            self.calculation.experiment)
 
         # Read the spectrum.
         f = '{0:s}.spec'.format(self.calculation.baseName)
@@ -1306,9 +1305,6 @@ class QuantyDockWidget(QDockWidget):
         # Store the calculation in the model.
         self.resultsModel.appendItems([self.calculation])
 
-        # TODO: Should this be a signal?
-        self.updateResultsViewSelection()
-
         # Re-enable the UI if the calculation has finished.
         self.enableWidget(True)
 
@@ -1317,6 +1313,7 @@ class QuantyDockWidget(QDockWidget):
         # displayed. To avoid this I switch first to the "General Setup" page.
         self.quantyToolBox.setCurrentWidget(self.generalPage)
         self.quantyToolBox.setCurrentWidget(self.resultsPage)
+        self.resultsView.setFocus()
 
     def plot(self):
         data = self.calculation.spectrum
@@ -1389,9 +1386,7 @@ class QuantyDockWidget(QDockWidget):
                 fwhm = e1Gaussian / scale
                 y = broaden(y, fwhm, 'gaussian')
 
-            legend = '{} | {}'.format(
-                self.calculation.label.split()[0], self.calculation.uuid)
-
+            legend = self.calculation.legend
             try:
                 self.getPlotWidget().addCurve(x, y, legend)
             except AssertionError:
@@ -1442,19 +1437,15 @@ class QuantyDockWidget(QDockWidget):
             self.removeSelectedCalculationsAction.setEnabled(False)
             self.saveSelectedCalculationsAsAction.setEnabled(False)
 
-        if not self.resultsModel.getData():
+        if not self.resultsModel.modelData:
             self.saveAllCalculationsAsAction.setEnabled(False)
             self.removeAllCalculationsAction.setEnabled(False)
 
         self.resultsContextMenu.exec_(self.resultsView.mapToGlobal(position))
 
     def getSelectedCalculationsData(self):
-        calculations = list()
         indexes = self.resultsView.selectedIndexes()
-        for index in indexes:
-            calculation = copy.deepcopy(self.resultsModel.getIndexData(index))
-            calculations.append(calculation)
-        return calculations
+        return self.resultsModel.getModelData(indexes)
 
     def selectedCalculationsChanged(self, *args):
         self.plotSelectedCalculations()
@@ -1470,16 +1461,31 @@ class QuantyDockWidget(QDockWidget):
             self.calculation = calculation
             self.plot()
 
-    def updateResultsViewSelection(self):
-        self.resultsView.selectionModel().clearSelection()
-        index = self.resultsModel.index(self.resultsModel.rowCount() - 1)
-        self.resultsView.selectionModel().select(
-            index, QItemSelectionModel.Select)
+    def updateResultsViewSelection(self, index, *args):
+        selectionModel = self.resultsView.selectionModel()
+        selectionModel.clear()
+        indexes = self.resultsModel.getRowSiblingsIndexes(index)
+        # Block the signals while the complete row is selected. A bit of a
+        # hack as the selection model has QItemSelectionMode.Columns can be
+        # used, but for some reason it does not work here.
+        selectionModel.blockSignals(True)
+        for index in indexes:
+            selectionModel.select(index, QItemSelectionModel.Select)
+        selectionModel.blockSignals(False)
+        selection = QItemSelection(index, index)
+        selectionModel.selectionChanged.emit(selection, selection)
+        self.resultsView.resizeColumnsToContents()
+        self.resultsView.setFocus()
         # Update available actions in the context menu if the model has data.
-        if not self.resultsModel.getData():
+        if not self.resultsModel.modelData:
             self.updateResultsContextMenu(False)
         else:
             self.updateResultsContextMenu(True)
+
+    def updateCalculationName(self, name):
+        self.resultsView.resizeColumnsToContents()
+        self.calculation.baseName = name
+        self.updateMainWindowTitle()
 
     def handleOutputLogging(self):
         self.process.setReadChannel(QProcess.StandardOutput)

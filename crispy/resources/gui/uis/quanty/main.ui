@@ -37,14 +37,14 @@
   <property name="windowTitle">
    <string>Quanty</string>
   </property>
-  <widget class="QWidget" name="dockWidgetContents">
+  <widget class="QWidget" name="quantyDockWidgetContents">
    <property name="sizePolicy">
     <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <layout class="QVBoxLayout" name="_1">
+   <layout class="QVBoxLayout" name="quantyDockWidgetVBoxLayout">
     <property name="spacing">
      <number>0</number>
     </property>
@@ -83,7 +83,7 @@
        <attribute name="label">
         <string>General Setup</string>
        </attribute>
-       <layout class="QVBoxLayout" name="_2">
+       <layout class="QVBoxLayout" name="generalPageVBoxLayout">
         <property name="leftMargin">
          <number>6</number>
         </property>
@@ -97,7 +97,7 @@
          <number>3</number>
         </property>
         <item>
-         <widget class="QGroupBox" name="elementanExperimentGroupBox">
+         <widget class="QGroupBox" name="elementAndExperimentGroupBox">
           <property name="minimumSize">
            <size>
             <width>240</width>
@@ -107,7 +107,7 @@
           <property name="title">
            <string>Element and Experiment</string>
           </property>
-          <layout class="QGridLayout" name="_24">
+          <layout class="QGridLayout" name="elementAndExperimentVBoxLayout">
            <property name="leftMargin">
             <number>6</number>
            </property>
@@ -298,7 +298,7 @@
                 <enum>Qt::NoFocus</enum>
                </property>
                <property name="currentIndex">
-                <number>0</number>
+                <number>1</number>
                </property>
                <property name="movable">
                 <bool>true</bool>
@@ -307,7 +307,7 @@
                 <attribute name="title">
                  <string>Incident Energy</string>
                 </attribute>
-                <layout class="QVBoxLayout" name="_3">
+                <layout class="QVBoxLayout" name="e1HBoxLayout">
                  <property name="spacing">
                   <number>6</number>
                  </property>
@@ -661,7 +661,7 @@
                 <attribute name="title">
                  <string>Energy Transfer</string>
                 </attribute>
-                <layout class="QVBoxLayout" name="_4">
+                <layout class="QVBoxLayout" name="e2HBoxLayout">
                  <property name="spacing">
                   <number>6</number>
                  </property>
@@ -1054,7 +1054,7 @@
        <attribute name="label">
         <string>Hamiltonian Setup</string>
        </attribute>
-       <layout class="QVBoxLayout" name="_5">
+       <layout class="QVBoxLayout" name="hamiltonianPageVBoxLayout">
         <property name="leftMargin">
          <number>6</number>
         </property>
@@ -1075,7 +1075,7 @@
           <property name="title">
            <string>Scale Factors</string>
           </property>
-          <layout class="QVBoxLayout" name="_6">
+          <layout class="QVBoxLayout" name="scalingVBoxLayout">
            <property name="spacing">
             <number>6</number>
            </property>
@@ -1216,7 +1216,7 @@
           <property name="title">
            <string>Hamiltonian Terms and Parameters</string>
           </property>
-          <layout class="QVBoxLayout" name="_7">
+          <layout class="QVBoxLayout" name="hamiltonianVBoxLayout">
            <property name="spacing">
             <number>6</number>
            </property>
@@ -1289,7 +1289,7 @@
           <property name="title">
            <string>States and Configurations</string>
           </property>
-          <layout class="QVBoxLayout" name="_8">
+          <layout class="QVBoxLayout" name="verticalLayout_6">
            <property name="spacing">
             <number>3</number>
            </property>
@@ -1420,7 +1420,7 @@
        <attribute name="label">
         <string>Results</string>
        </attribute>
-       <layout class="QVBoxLayout" name="_9">
+       <layout class="QVBoxLayout" name="resultsPageVBoxLayout">
         <property name="spacing">
          <number>0</number>
         </property>
@@ -1437,19 +1437,34 @@
          <number>3</number>
         </property>
         <item>
-         <widget class="QListView" name="resultsView">
+         <widget class="QTableView" name="resultsView">
           <property name="toolTip">
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Double-click on the name of a calculation to rename it. Right-click to display the context menu.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-          <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
-          </property>
-          <property name="lineWidth">
-           <number>0</number>
           </property>
           <property name="alternatingRowColors">
            <bool>true</bool>
           </property>
+          <property name="selectionBehavior">
+           <enum>QAbstractItemView::SelectRows</enum>
+          </property>
+          <property name="showGrid">
+           <bool>true</bool>
+          </property>
+          <property name="gridStyle">
+           <enum>Qt::NoPen</enum>
+          </property>
+          <attribute name="horizontalHeaderMinimumSectionSize">
+           <number>30</number>
+          </attribute>
+          <attribute name="horizontalHeaderStretchLastSection">
+           <bool>true</bool>
+          </attribute>
+          <attribute name="verticalHeaderDefaultSectionSize">
+           <number>21</number>
+          </attribute>
+          <attribute name="verticalHeaderMinimumSectionSize">
+           <number>21</number>
+          </attribute>
          </widget>
         </item>
        </layout>

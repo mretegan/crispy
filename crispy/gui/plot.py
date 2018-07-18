@@ -52,7 +52,6 @@ class BackendMatplotlibQt(backends.BackendMatplotlib.BackendMatplotlibQt):
                 x, y, legend, *args, **kwargs)
 
         # Remove the unique identifier from the legend.
-        legend = legend[:-11]
         curve = container.get_children()[0]
         self._legends[curve] = legend
         self._updateLegends()

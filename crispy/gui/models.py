@@ -27,92 +27,144 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '17/07/2018'
+__date__ = '18/07/2018'
 
 from collections import OrderedDict as odict
+import copy
 
 from PyQt5.QtCore import (
-    Qt, QAbstractItemModel, QAbstractListModel, QModelIndex, pyqtSignal)
+    Qt, QAbstractItemModel, QAbstractTableModel, QModelIndex, pyqtSignal)
 
 
-class ResultsModel(QAbstractListModel):
+class ResultsModel(QAbstractTableModel):
+
+    calculationNameChanged = pyqtSignal(str)
+
     def __init__(self, parent=None):
         super(ResultsModel, self).__init__(parent=parent)
+        self.header = ['Name', 'Element', 'Charge', 'Symmetry',
+                       'Experiment', 'Edge']
         self.modelData = list()
 
     def rowCount(self, parent=QModelIndex()):
-        """Return the number of rows in the model."""
         return len(self.modelData)
 
+    def columnCount(self, parent=QModelIndex()):
+        return len(self.header)
+
     def data(self, index, role):
-        """Return role specific data for the item referred by the
-        index."""
+        """Return role specific data for the item referred by the index."""
         if not index.isValid():
             return
         row = index.row()
-        if role == Qt.DisplayRole or role == Qt.EditRole:
-            return self.modelData[row].label
+        column = index.column()
+        item = self.modelData[row]
+        if role == Qt.DisplayRole:
+            if column == 0:
+                return item.baseName
+            elif column == 1:
+                return item.element
+            elif column == 2:
+                return item.charge
+            elif column == 3:
+                return item.symmetry
+            elif column == 4:
+                return item.experiment
+            elif column == 5:
+                return item.edge
+        elif role == Qt.EditRole and column == 0:
+                return item.baseName
 
     def setData(self, index, value, role):
         """Set the role data for the item at index to value."""
         if not index.isValid():
             return
         row = index.row()
-        if role == Qt.EditRole:
-            self.modelData[row].label = value
-        self.dataChanged.emit(index, index)
+        column = index.column()
+        item = self.modelData[row]
+        if role == Qt.EditRole and column == 0:
+            item.baseName = value
+            self.calculationNameChanged.emit(value)
         return True
 
-    def getData(self):
-        return self.modelData
+    def getRowSiblingsIndexes(self, index):
+        columns = self.columnCount()
+        indexes = list()
+        row = index.row()
+        for column in range(columns):
+            indexes.append(self.index(row, column))
+        return indexes
+
+    def headerData(self, section, orientation, role):
+        if role == Qt.DisplayRole:
+            if orientation == Qt.Horizontal:
+                return self.header[section]
+            if orientation == Qt.Vertical:
+                return section + 1
 
     def flags(self, index):
         """Return the active flags for the given index"""
         if not index.isValid():
             return
-        activeFlags = (
-            Qt.ItemIsEnabled | Qt.ItemIsSelectable | Qt.ItemIsEditable)
+        activeFlags = Qt.ItemIsEnabled | Qt.ItemIsSelectable
+        if index.column() == 0:
+            activeFlags = activeFlags | Qt.ItemIsEditable
         return activeFlags
 
-    def insertItems(self, position, items, parent=QModelIndex()):
+    def getModelData(self, indexes=None):
+        # Because the selection model works on complete rows, we make the
+        # rows unique by using a set.
+        rows = {index.row() for index in indexes}
+        modelData = list()
+        for row in rows:
+            item = self.modelData[row]
+            item.legend = row + 1
+            modelData.append(copy.deepcopy(item))
+        return modelData
+
+    def insertRows(self, row, items, parent=QModelIndex()):
         """Insert items at a given position in the model."""
-        first = position
-        last = position + len(items) - 1
+        first = row
+        last = row + len(items) - 1
         self.beginInsertRows(QModelIndex(), first, last)
         for item in items:
-            self.modelData.insert(position, item)
+            self.modelData.insert(row, item)
         self.endInsertRows()
         return True
 
-    def removeItems(self, indexes, parent=QModelIndex()):
+    def removeItems(self, indexes):
         """Remove items from the model."""
-        rows = [index.row() for index in indexes]
-        first = min(rows)
-        last = max(rows)
-        self.beginRemoveRows(QModelIndex(), first, last)
+        # Because the selection model works on complete rows, we make the
+        # rows unique by using a set.
+        rows = {index.row() for index in indexes}
         for row in sorted(rows, reverse=True):
-            del self.modelData[row]
-        self.endRemoveRows()
+            self.beginRemoveRows(QModelIndex(), row, row)
+            try:
+                del self.modelData[row]
+            except IndexError:
+                pass
+            self.endRemoveRows()
+        # Get the last row in the model.
+        lastRow = len(self.modelData) - 1
+        column = 0
+        index = self.index(lastRow, column)
+        self.dataChanged.emit(index, index)
         return True
 
     def appendItems(self, items):
         """Insert items at the end of model."""
-        position = self.rowCount()
-        firstIndex = self.index(position)
-        lastIndex = self.index(position + len(items) - 1)
-        self.insertItems(position, items)
-        self.dataChanged.emit(firstIndex, lastIndex)
+        currentRow = self.rowCount()
+        self.insertRows(currentRow, items)
+        # Get the last row of in the model.
+        lastRow = len(self.modelData) - 1
+        column = 0
+        index = self.index(lastRow, column)
+        self.dataChanged.emit(index, index)
 
     def replaceItem(self, index, item):
         row = index.row()
         self.modelData[row] = item
         self.dataChanged.emit(index, index)
-
-    def getIndexData(self, index):
-        """Return the data stored in the model at the given index."""
-        if not index.isValid():
-            return
-        return self.modelData[index.row()]
 
     def reset(self):
         """Reset the model."""
