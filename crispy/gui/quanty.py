@@ -411,8 +411,8 @@ class QuantyDockWidget(QDockWidget):
         self.nConfigurationsLineEdit.editingFinished.connect(
             self.updateConfigurations)
 
-        self.saveInputAsPushButton.pressed.connect(self.saveInputAs)
-        self.calculationPushButton.pressed.connect(self.runCalculation)
+        self.saveInputAsPushButton.clicked.connect(self.saveInputAs)
+        self.calculationPushButton.clicked.connect(self.runCalculation)
 
     def populateWidget(self):
         """Populate the widget using data stored in the calculation
@@ -1232,9 +1232,9 @@ class QuantyDockWidget(QDockWidget):
 
         self.calculationPushButton.disconnect()
         if type == 'stop':
-            self.calculationPushButton.pressed.connect(self.stopCalculation)
+            self.calculationPushButton.clicked.connect(self.stopCalculation)
         elif type == 'run':
-            self.calculationPushButton.pressed.connect(self.runCalculation)
+            self.calculationPushButton.clicked.connect(self.runCalculation)
         else:
             pass
 
@@ -1543,13 +1543,13 @@ class QuantyPreferencesDialog(QDialog):
             'crispy:' + os.path.join('gui', 'uis', 'quanty', 'preferences.ui'))
         loadUi(path, baseinstance=self, package='crispy.gui')
 
-        self.pathBrowsePushButton.pressed.connect(self.setExecutablePath)
+        self.pathBrowsePushButton.clicked.connect(self.setExecutablePath)
 
         ok = self.buttonBox.button(QDialogButtonBox.Ok)
-        ok.pressed.connect(self.acceptSettings)
+        ok.clicked.connect(self.acceptSettings)
 
         cancel = self.buttonBox.button(QDialogButtonBox.Cancel)
-        cancel.pressed.connect(self.rejectSettings)
+        cancel.clicked.connect(self.rejectSettings)
 
         self.settings = settings
         self.restoreSettings()
