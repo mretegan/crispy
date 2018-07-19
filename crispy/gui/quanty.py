@@ -1258,9 +1258,10 @@ class QuantyDockWidget(QDockWidget):
 
         if exitStatus == 0 and exitCode == 0:
             message = ('Quanty has finished successfully in ')
-            delta = int((endingTime - startingTime).total_seconds())
+            delta = (endingTime - startingTime).total_seconds()
             hours, reminder = divmod(delta, 3600)
             minutes, seconds = divmod(reminder, 60)
+            seconds = round(seconds, 2)
             if hours > 0:
                 message += '{} hours {} minutes and {} seconds.'.format(
                     hours, minutes, seconds)
