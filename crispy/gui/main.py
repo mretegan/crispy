@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '17/07/2018'
+__date__ = '18/07/2018'
 
 
 import os
@@ -111,7 +111,7 @@ class MainWindow(QMainWindow):
         if currentPath is None:
             path = os.path.expanduser('~')
         else:
-            path = settings.value('CurrentPath')
+            path = currentPath
         self.currentPath = path
 
         settings.beginGroup('MainWindow')
@@ -142,7 +142,6 @@ class MainWindow(QMainWindow):
             return
 
         settings.setValue('Version', version)
-        settings.setValue('CurrentPath', self.currentPath)
 
         settings.beginGroup('MainWindow')
         settings.setValue('State', self.saveState())
