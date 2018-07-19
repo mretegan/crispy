@@ -1378,10 +1378,9 @@ class QuantyDockWidget(QDockWidget):
             x = np.linspace(e1Min, e1Max, e1NPoints + 1)
             y = data
 
-            # Reverse and rename the x-axis in XPS.
+            # Rename the x-axis in XPS.
             if 'XPS' in self.calculation.experiment:
                 self.getPlotWidget().setGraphXLabel('Binding Energy (eV)')
-                x = x[::-1]
 
             if e1Gaussian > 0:
                 fwhm = e1Gaussian / scale
