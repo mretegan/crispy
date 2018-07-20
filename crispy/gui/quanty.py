@@ -1249,6 +1249,9 @@ class QuantyDockWidget(QDockWidget):
         endingTime = datetime.datetime.now()
         self.calculation.endingTime = endingTime
 
+        # Re-enable the UI if the calculation has finished.
+        self.enableWidget(True)
+
         # Reset the calculation button.
         self.updateCalculationPushButton('run')
 
@@ -1305,9 +1308,6 @@ class QuantyDockWidget(QDockWidget):
 
         # Store the calculation in the model.
         self.resultsModel.appendItems([self.calculation])
-
-        # Re-enable the UI if the calculation has finished.
-        self.enableWidget(True)
 
         # If the "Hamiltonian Setup" page is currently selected, when the
         # current widget is set to the "Results Page", the former is not
