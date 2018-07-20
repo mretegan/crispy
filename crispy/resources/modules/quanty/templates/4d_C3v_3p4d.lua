@@ -5,7 +5,7 @@
 -- elements: 4d
 -- symmetry: C3v
 -- experiment: RIXS
--- edge: L2,3-N4,5 (2p4d)
+-- edge: M2,3-N4,5 (3p4d)
 --------------------------------------------------------------------------------
 Verbosity($Verbosity)
 
@@ -30,19 +30,19 @@ H_exchange_field = $H_exchange_field
 NBosons = 0
 NFermions = 16
 
-NElectrons_2p = 6
+NElectrons_3p = 6
 NElectrons_4d = $NElectrons_4d
 
-IndexDn_2p = {0, 2, 4}
-IndexUp_2p = {1, 3, 5}
+IndexDn_3p = {0, 2, 4}
+IndexUp_3p = {1, 3, 5}
 IndexDn_4d = {6, 8, 10, 12, 14}
 IndexUp_4d = {7, 9, 11, 13, 15}
 
 --------------------------------------------------------------------------------
 -- Define the atomic term.
 --------------------------------------------------------------------------------
-N_2p = NewOperator('Number', NFermions, IndexUp_2p, IndexUp_2p, {1, 1, 1})
-     + NewOperator('Number', NFermions, IndexDn_2p, IndexDn_2p, {1, 1, 1})
+N_3p = NewOperator('Number', NFermions, IndexUp_3p, IndexUp_3p, {1, 1, 1})
+     + NewOperator('Number', NFermions, IndexDn_3p, IndexDn_3p, {1, 1, 1})
 
 N_4d = NewOperator('Number', NFermions, IndexUp_4d, IndexUp_4d, {1, 1, 1, 1, 1})
      + NewOperator('Number', NFermions, IndexDn_4d, IndexDn_4d, {1, 1, 1, 1, 1})
@@ -52,10 +52,10 @@ if H_atomic == 1 then
     F2_4d_4d = NewOperator('U', NFermions, IndexUp_4d, IndexDn_4d, {0, 1, 0})
     F4_4d_4d = NewOperator('U', NFermions, IndexUp_4d, IndexDn_4d, {0, 0, 1})
 
-    F0_2p_4d = NewOperator('U', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_4d, IndexDn_4d, {1, 0}, {0, 0})
-    F2_2p_4d = NewOperator('U', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_4d, IndexDn_4d, {0, 1}, {0, 0})
-    G1_2p_4d = NewOperator('U', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_4d, IndexDn_4d, {0, 0}, {1, 0})
-    G3_2p_4d = NewOperator('U', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_4d, IndexDn_4d, {0, 0}, {0, 1})
+    F0_3p_4d = NewOperator('U', NFermions, IndexUp_3p, IndexDn_3p, IndexUp_4d, IndexDn_4d, {1, 0}, {0, 0})
+    F2_3p_4d = NewOperator('U', NFermions, IndexUp_3p, IndexDn_3p, IndexUp_4d, IndexDn_4d, {0, 1}, {0, 0})
+    G1_3p_4d = NewOperator('U', NFermions, IndexUp_3p, IndexDn_3p, IndexUp_4d, IndexDn_4d, {0, 0}, {1, 0})
+    G3_3p_4d = NewOperator('U', NFermions, IndexUp_3p, IndexDn_3p, IndexUp_4d, IndexDn_4d, {0, 0}, {0, 1})
 
     F2_4d_4d_i = $F2(4d,4d)_i_value * $F2(4d,4d)_i_scaling
     F4_4d_4d_i = $F4(4d,4d)_i_value * $F4(4d,4d)_i_scaling
@@ -64,10 +64,10 @@ if H_atomic == 1 then
     F2_4d_4d_m = $F2(4d,4d)_m_value * $F2(4d,4d)_m_scaling
     F4_4d_4d_m = $F4(4d,4d)_m_value * $F4(4d,4d)_m_scaling
     F0_4d_4d_m = 2 / 63 * F2_4d_4d_m + 2 / 63 * F4_4d_4d_m
-    F2_2p_4d_m = $F2(2p,4d)_m_value * $F2(2p,4d)_m_scaling
-    G1_2p_4d_m = $G1(2p,4d)_m_value * $G1(2p,4d)_m_scaling
-    G3_2p_4d_m = $G3(2p,4d)_m_value * $G3(2p,4d)_m_scaling
-    F0_2p_4d_m = 1 / 15 * G1_2p_4d_m + 3 / 70 * G3_2p_4d_m
+    F2_3p_4d_m = $F2(3p,4d)_m_value * $F2(3p,4d)_m_scaling
+    G1_3p_4d_m = $G1(3p,4d)_m_value * $G1(3p,4d)_m_scaling
+    G3_3p_4d_m = $G3(3p,4d)_m_value * $G3(3p,4d)_m_scaling
+    F0_3p_4d_m = 1 / 15 * G1_3p_4d_m + 3 / 70 * G3_3p_4d_m
 
     F2_4d_4d_f = $F2(4d,4d)_f_value * $F2(4d,4d)_f_scaling
     F4_4d_4d_f = $F4(4d,4d)_f_value * $F4(4d,4d)_f_scaling
@@ -82,10 +82,10 @@ if H_atomic == 1 then
           F0_4d_4d_m * F0_4d_4d
         + F2_4d_4d_m * F2_4d_4d
         + F4_4d_4d_m * F4_4d_4d
-        + F0_2p_4d_m * F0_2p_4d
-        + F2_2p_4d_m * F2_2p_4d
-        + G1_2p_4d_m * G1_2p_4d
-        + G3_2p_4d_m * G3_2p_4d)
+        + F0_3p_4d_m * F0_3p_4d
+        + F2_3p_4d_m * F2_3p_4d
+        + G1_3p_4d_m * G1_3p_4d
+        + G3_3p_4d_m * G3_3p_4d)
 
     H_f = H_f + Chop(
           F0_4d_4d_f * F0_4d_4d
@@ -94,12 +94,12 @@ if H_atomic == 1 then
 
     ldots_4d = NewOperator('ldots', NFermions, IndexUp_4d, IndexDn_4d)
 
-    ldots_2p = NewOperator('ldots', NFermions, IndexUp_2p, IndexDn_2p)
+    ldots_3p = NewOperator('ldots', NFermions, IndexUp_3p, IndexDn_3p)
 
     zeta_4d_i = $zeta(4d)_i_value * $zeta(4d)_i_scaling
 
     zeta_4d_m = $zeta(4d)_m_value * $zeta(4d)_m_scaling
-    zeta_2p_m = $zeta(2p)_m_value * $zeta(2p)_m_scaling
+    zeta_3p_m = $zeta(3p)_m_value * $zeta(3p)_m_scaling
 
     zeta_4d_f = $zeta(4d)_f_value * $zeta(4d)_f_scaling
 
@@ -108,7 +108,7 @@ if H_atomic == 1 then
 
     H_m = H_m + Chop(
           zeta_4d_m * ldots_4d
-        + zeta_2p_m * ldots_2p)
+        + zeta_3p_m * ldots_3p)
 
     H_f = H_f + Chop(
           zeta_4d_f * ldots_4d)
@@ -254,18 +254,18 @@ Experiment = '$Experiment'
 --------------------------------------------------------------------------------
 -- Define the restrictions and set the number of initial states.
 --------------------------------------------------------------------------------
-InitialRestrictions = {NFermions, NBosons, {'111111 0000000000', NElectrons_2p, NElectrons_2p},
+InitialRestrictions = {NFermions, NBosons, {'111111 0000000000', NElectrons_3p, NElectrons_3p},
                                            {'000000 1111111111', NElectrons_4d, NElectrons_4d}}
 
-IntermediateRestrictions = {NFermions, NBosons, {'111111 0000000000', NElectrons_2p - 1, NElectrons_2p - 1},
+IntermediateRestrictions = {NFermions, NBosons, {'111111 0000000000', NElectrons_3p - 1, NElectrons_3p - 1},
                                                 {'000000 1111111111', NElectrons_4d + 1, NElectrons_4d + 1}}
 
 FinalRestrictions = InitialRestrictions
 
-Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_2p, N_4d, 'dZ'}
+Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_3p, N_4d, 'dZ'}
 header = 'Analysis of the initial Hamiltonian:\n'
 header = header .. '=============================================================================================================\n'
-header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>    <N_2p>    <N_4d>          dZ\n'
+header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>    <N_3p>    <N_4d>          dZ\n'
 header = header .. '=============================================================================================================\n'
 footer = '=============================================================================================================\n'
 
@@ -379,13 +379,13 @@ io.write(footer)
 --------------------------------------------------------------------------------
 t = math.sqrt(1/2);
 
-Tx_2p_4d = NewOperator('CF', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_2p, IndexDn_2p, {{1, -1, t    }, {1, 1, -t    }})
-Ty_2p_4d = NewOperator('CF', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_2p, IndexDn_2p, {{1, -1, t * I}, {1, 1,  t * I}})
-Tz_2p_4d = NewOperator('CF', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_2p, IndexDn_2p, {{1,  0, 1    }                })
+Tx_3p_4d = NewOperator('CF', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_3p, IndexDn_3p, {{1, -1, t    }, {1, 1, -t    }})
+Ty_3p_4d = NewOperator('CF', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_3p, IndexDn_3p, {{1, -1, t * I}, {1, 1,  t * I}})
+Tz_3p_4d = NewOperator('CF', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_3p, IndexDn_3p, {{1,  0, 1    }                })
 
-Tx_4d_2p = NewOperator('CF', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_4d, IndexDn_4d, {{1, -1, t    }, {1, 1, -t    }})
-Ty_4d_2p = NewOperator('CF', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_4d, IndexDn_4d, {{1, -1, t * I}, {1, 1,  t * I}})
-Tz_4d_2p = NewOperator('CF', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_4d, IndexDn_4d, {{1,  0, 1    }                })
+Tx_4d_3p = NewOperator('CF', NFermions, IndexUp_3p, IndexDn_3p, IndexUp_4d, IndexDn_4d, {{1, -1, t    }, {1, 1, -t    }})
+Ty_4d_3p = NewOperator('CF', NFermions, IndexUp_3p, IndexDn_3p, IndexUp_4d, IndexDn_4d, {{1, -1, t * I}, {1, 1,  t * I}})
+Tz_4d_3p = NewOperator('CF', NFermions, IndexUp_3p, IndexDn_3p, IndexUp_4d, IndexDn_4d, {{1,  0, 1    }                })
 
 --------------------------------------------------------------------------------
 -- Calculate and save the spectrum.
@@ -421,9 +421,9 @@ DenseBorder = $DenseBorder
 G = 0
 
 if CalculationRestrictions == nil then
-    G = G + CreateResonantSpectra(H_m, H_f, {Tx_2p_4d, Ty_2p_4d, Tz_2p_4d}, {Tx_4d_2p, Ty_4d_2p, Tz_4d_2p}, Psis_i, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}, {'DenseBorder', DenseBorder}})
+    G = G + CreateResonantSpectra(H_m, H_f, {Tx_3p_4d, Ty_3p_4d, Tz_3p_4d}, {Tx_4d_3p, Ty_4d_3p, Tz_4d_3p}, Psis_i, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}, {'DenseBorder', DenseBorder}})
 else
-    G = G + CreateResonantSpectra(H_m, H_f, {Tx_2p_4d, Ty_2p_4d, Tz_2p_4d}, {Tx_4d_2p, Ty_4d_2p, Tz_4d_2p}, Psis_i, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}, {'restrictions1', CalculationRestrictions}, {'restrictions2', CalculationRestrictions}, {'DenseBorder', DenseBorder}})
+    G = G + CreateResonantSpectra(H_m, H_f, {Tx_3p_4d, Ty_3p_4d, Tz_3p_4d}, {Tx_4d_3p, Ty_4d_3p, Tz_4d_3p}, Psis_i, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}, {'restrictions1', CalculationRestrictions}, {'restrictions2', CalculationRestrictions}, {'DenseBorder', DenseBorder}})
 end
 
 Gtot = 0

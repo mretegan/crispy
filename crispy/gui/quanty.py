@@ -1365,7 +1365,11 @@ class QuantyDockWidget(QDockWidget):
         else:
             self.getPlotWidget().setGraphXLabel('Absorption Energy (eV)')
             self.getPlotWidget().setGraphYLabel(
-                'Absorption Cross Section (a.u.)')
+                'Intensity (a.u.)')
+
+            # Rename the x-axis for XPS.
+            if 'XPS' in self.calculation.experiment:
+                self.getPlotWidget().setGraphXLabel('Binding Energy (eV)')
 
             e1Min = self.calculation.e1Min
             e1Max = self.calculation.e1Max
@@ -1377,10 +1381,6 @@ class QuantyDockWidget(QDockWidget):
 
             x = np.linspace(e1Min, e1Max, e1NPoints + 1)
             y = data
-
-            # Rename the x-axis in XPS.
-            if 'XPS' in self.calculation.experiment:
-                self.getPlotWidget().setGraphXLabel('Binding Energy (eV)')
 
             if e1Gaussian > 0:
                 fwhm = e1Gaussian / scale

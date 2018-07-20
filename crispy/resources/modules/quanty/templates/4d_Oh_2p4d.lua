@@ -537,5 +537,7 @@ for i = 1, #Psis_i do
     end
 end
 
+Gtot = -1 * Gtot
+
 Gtot.Print({{'file', '$BaseName.spec'}})
 
