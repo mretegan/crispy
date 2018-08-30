@@ -152,28 +152,24 @@ class QuantyCalculation(object):
         self.nElectrons = int(self.configurations[0][1][2:])
         self.nPsis = branch['number of states']
         self.nPsisMax = self.nPsis
-        try:
-            self.monoElectronicRadialME = (branch[
-                'monoelectronic radial matrix elements'])
-        except KeyError:
-            self.monoElectronicRadialME = None
+        self.hamiltonianTerms = branch['hamiltonian terms']
 
-        self.e1Label = branch['energies'][0][0]
-        self.e1Min = branch['energies'][0][1]
-        self.e1Max = branch['energies'][0][2]
-        self.e1NPoints = branch['energies'][0][3]
-        self.e1Edge = branch['energies'][0][4]
-        self.e1Lorentzian = branch['energies'][0][5]
-        self.e1Gaussian = branch['energies'][0][6]
+        self.e1Label = branch['axes'][0][0]
+        self.e1Min = branch['axes'][0][1]
+        self.e1Max = branch['axes'][0][2]
+        self.e1NPoints = branch['axes'][0][3]
+        self.e1Edge = branch['axes'][0][4]
+        self.e1Lorentzian = branch['axes'][0][5]
+        self.e1Gaussian = branch['axes'][0][6]
 
         if self.experiment == 'RIXS':
-            self.e2Label = branch['energies'][1][0]
-            self.e2Min = branch['energies'][1][1]
-            self.e2Max = branch['energies'][1][2]
-            self.e2NPoints = branch['energies'][1][3]
-            self.e2Edge = branch['energies'][1][4]
-            self.e2Lorentzian = branch['energies'][1][5]
-            self.e2Gaussian = branch['energies'][1][6]
+            self.e2Label = branch['axes'][1][0]
+            self.e2Min = branch['axes'][1][1]
+            self.e2Max = branch['axes'][1][2]
+            self.e2NPoints = branch['axes'][1][3]
+            self.e2Edge = branch['axes'][1][4]
+            self.e2Lorentzian = branch['axes'][1][5]
+            self.e2Gaussian = branch['axes'][1][6]
 
         if self.hamiltonianData is None:
             self.hamiltonianData = odict()
@@ -181,26 +177,21 @@ class QuantyCalculation(object):
         if self.hamiltonianState is None:
             self.hamiltonianState = odict()
 
+        self.fixedTermsParameters = odict()
+
         branch = parameters['elements'][self.element]['charges'][self.charge]
 
         for label, configuration in self.configurations:
             label = '{} Hamiltonian'.format(label)
             terms = branch['configurations'][configuration]['terms']
 
-            for term in terms:
-                # Include the p-d hybridization term only for the K-edges of
-                # 3d transition metals.
-                if term == '3d-4p Hybridization' and self.edge != 'K (1s)':
-                    continue
-
+            for term in self.hamiltonianTerms:
                 if term in ('Atomic', 'Magnetic Field', 'Exchange Field'):
-                    parameters = terms[term]
+                    node = terms[term]
                 else:
-                    try:
-                        parameters = terms[term][self.symmetry]
-                    except KeyError:
-                        continue
+                    node = terms[term]['symmetries'][self.symmetry]
 
+                parameters = node['parameters']['variable']
                 for parameter in parameters:
                     if term in 'Atomic':
                         if parameter[0] in ('F', 'G'):
@@ -212,6 +203,11 @@ class QuantyCalculation(object):
                         data = parameters[parameter]
 
                     self.hamiltonianData[term][label][parameter] = data
+
+                parameters = terms[term]['parameters']['fixed']
+                for parameter in parameters:
+                    value = parameters[parameter]
+                    self.fixedTermsParameters[term][parameter] = value
 
                 if term in ('Atomic', 'Crystal Field'):
                     self.hamiltonianState[term] = 2
@@ -335,10 +331,14 @@ class QuantyCalculation(object):
             alias = aliases[term]
             replacements['${}'.format(alias)] = checkState
 
-        if self.monoElectronicRadialME:
-            for parameter in self.monoElectronicRadialME:
-                value = self.monoElectronicRadialME[parameter]
-                replacements['${}'.format(parameter)] = value
+            try:
+                parameters = self.fixedTermsParameters[term]
+            except KeyError:
+                pass
+            else:
+                for parameter in parameters:
+                    value = parameters[parameter]
+                    replacements['${}'.format(parameter)] = value
 
         replacements['$Experiment'] = self.experiment
         replacements['$BaseName'] = self.baseName
@@ -415,7 +415,8 @@ class QuantyDockWidget(QDockWidget):
         self.calculationPushButton.clicked.connect(self.runCalculation)
 
     def populateWidget(self):
-        """Populate the widget using data stored in the calculation
+        """
+        Populate the widget using data stored in the calculation
         object. The order in which the individual widgets are populated
         follows the way they are arranged.
 
