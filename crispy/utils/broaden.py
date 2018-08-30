@@ -91,6 +91,9 @@ def convolve_fft(array, kernel):
         kernel_slices += [slice(center - kernel_dimsize // 2,
                           center + (kernel_dimsize + 1) // 2)]
 
+    array_slices = tuple(array_slices)
+    kernel_slices = tuple(kernel_slices)
+
     if not np.all(new_shape == array_shape):
         big_array = np.zeros(new_shape, dtype=np.complex)
         big_array[array_slices] = array
