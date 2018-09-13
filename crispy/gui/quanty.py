@@ -558,6 +558,9 @@ class QuantyDockWidget(QDockWidget):
             self.resultsView.customContextMenuRequested[QPoint].connect(
                 self.showResultsContextMenu)
 
+        if not hasattr(self, 'resultDetailsDialog'):
+            self.resultDetailsDialog = QuantyResultDetailsDialog(parent=self)
+
     def enableWidget(self, flag=True):
         self.elementComboBox.setEnabled(flag)
         self.chargeComboBox.setEnabled(flag)
@@ -1423,6 +1426,12 @@ class QuantyDockWidget(QDockWidget):
         self.hamiltonianParametersView.setRootIndex(index)
 
     def showResultsContextMenu(self, position):
+
+        icon = QIcon(resourceFileName(
+            'crispy:' + os.path.join('gui', 'icons', 'clipboard.svg')))
+        self.showDetailsAsAction = QAction(
+            icon, 'Show Details', self, triggered=self.showResultDetailsDialog)
+
         icon = QIcon(resourceFileName(
             'crispy:' + os.path.join('gui', 'icons', 'save.svg')))
         self.saveSelectedCalculationsAsAction = QAction(
@@ -1448,6 +1457,8 @@ class QuantyDockWidget(QDockWidget):
             triggered=self.loadCalculations)
 
         self.resultsContextMenu = QMenu('Results Context Menu', self)
+        self.resultsContextMenu.addAction(self.showDetailsAsAction)
+        self.resultsContextMenu.addSeparator()
         self.resultsContextMenu.addAction(
             self.saveSelectedCalculationsAsAction)
         self.resultsContextMenu.addAction(
@@ -1463,6 +1474,7 @@ class QuantyDockWidget(QDockWidget):
             self.saveSelectedCalculationsAsAction.setEnabled(False)
 
         if not self.resultsModel.modelData:
+            self.showDetailsAsAction.setEnabled(False)
             self.saveAllCalculationsAsAction.setEnabled(False)
             self.removeAllCalculationsAction.setEnabled(False)
 
@@ -1476,6 +1488,10 @@ class QuantyDockWidget(QDockWidget):
         self.plotSelectedCalculations()
         self.populateWidget()
         self.updateMainWindowTitle()
+        self.updateResultDetailsDialog()
+
+    def updateResultDetailsDialog(self):
+        self.resultDetailsDialog.populate(self.calculation)
 
     def plotSelectedCalculations(self):
         self.getPlotWidget().reset()
@@ -1491,7 +1507,7 @@ class QuantyDockWidget(QDockWidget):
         selectionModel.clear()
         indexes = self.resultsModel.getRowSiblingsIndexes(index)
         # Block the signals while the complete row is selected. A bit of a
-        # hack as the selection model has QItemSelectionMode.Columns can be
+        # hack as the selection model has QItemSelectionMode. Columns can be
         # used, but for some reason it does not work here.
         selectionModel.blockSignals(True)
         for index in indexes:
@@ -1506,6 +1522,10 @@ class QuantyDockWidget(QDockWidget):
             self.updateResultsContextMenu(False)
         else:
             self.updateResultsContextMenu(True)
+
+    def showResultDetailsDialog(self):
+        self.resultDetailsDialog.populate(self.calculation)
+        self.resultDetailsDialog.show()
 
     def updateCalculationName(self, name):
         self.resultsView.resizeColumnsToContents()
@@ -1653,6 +1673,22 @@ class QuantyPreferencesDialog(QDialog):
 
         if path:
             self.pathLineEdit.setText(path)
+
+
+class QuantyResultDetailsDialog(QDialog):
+
+    def __init__(self, parent=None):
+        super(QuantyResultDetailsDialog, self).__init__(parent=parent)
+
+        path = resourceFileName(
+            'crispy:' + os.path.join('gui', 'uis', 'quanty', 'results.ui'))
+        loadUi(path, baseinstance=self, package='crispy.gui')
+
+    def populate(self, calculation=None):
+        self.inputPlainTextEdit.setPlainText(calculation.symmetry)
+
+    def reset(self):
+        pass
 
 
 if __name__ == '__main__':
