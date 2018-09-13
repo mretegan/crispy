@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '18/07/2018'
+__date__ = '13/09/2018'
 
 
 import copy
@@ -53,7 +53,7 @@ from PyQt5.QtWidgets import (
 from PyQt5.uic import loadUi
 from silx.resources import resource_filename as resourceFileName
 
-from .models import HamiltonianModel, ResultsModel
+from .models import HamiltonianModel, ResultsModel, PolarizationsModel
 from ..utils.broaden import broaden
 from ..utils.odict import odict
 from ..version import version
@@ -87,6 +87,7 @@ class QuantyCalculation(object):
             ('k2', [0, 0, 0]),
             ('eps21', [0, 0, 0]),
             ('eps22', [0, 0, 0]),
+            ('polarizations', None),
             ('nPsisAuto', 1),
             ('nConfigurations', 1),
             ('fk', 0.8),
@@ -170,6 +171,16 @@ class QuantyCalculation(object):
             self.e2Edge = branch['axes'][1][4]
             self.e2Lorentzian = branch['axes'][1][5]
             self.e2Gaussian = branch['axes'][1][6]
+
+        if self.polarizations is None:
+            self.polarizations = dict()
+            if self.experiment == 'XAS':
+                self.polarizations['all'] = [
+                    'Isotropic', 'Circular Dichroism', 'Linear Dichroism',
+                    'Parallel']
+            else:
+                self.polarizations['all'] = ['Isotropic']
+            self.polarizations['checked'] = ['Isotropic']
 
         if self.hamiltonianData is None:
             self.hamiltonianData = odict()
@@ -268,6 +279,9 @@ class QuantyCalculation(object):
         w = np.array(self.eps12)
         w = w / np.linalg.norm(w)
         replacements['$eps12'] = s.format(w[0], w[1], w[2])
+
+        replacements['$polarizations'] = ', '.join(
+            '\'{}\''.format(p) for p in self.polarizations['checked'])
 
         if self.experiment == 'RIXS':
             # The Lorentzian broadening along the incident axis cannot be
@@ -474,6 +488,14 @@ class QuantyDockWidget(QDockWidget):
             text = self.eps12Label.text()
             text = re.sub('>[hπ]', '>h', text)
             self.eps12Label.setText(text)
+
+        # Create the polarization model.
+        self.polarizationsModel = PolarizationsModel(parent=self)
+        self.polarizationsModel.setModelData(c.polarizations['all'])
+        self.polarizationsModel.setCheckState(c.polarizations['checked'])
+        self.polarizationsModel.checkStateChanged.connect(
+            self.updatePolarizationsCheckState)
+        self.polarizationsListView.setModel(self.polarizationsModel)
 
         self.fkLineEdit.setValue(c.fk)
         self.gkLineEdit.setValue(c.gk)
@@ -936,6 +958,10 @@ class QuantyDockWidget(QDockWidget):
         else:
             self.resultsModel.replaceItem(index, self.calculation)
             self.plotSelectedCalculations()
+
+    def updatePolarizationsCheckState(self):
+        checkedPolarizations = self.polarizationsModel.getCheckState()
+        self.calculation.polarizations['checked'] = checkedPolarizations
 
     def updateScalingFactors(self):
         fk = self.fkLineEdit.getValue()

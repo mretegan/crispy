@@ -27,13 +27,72 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '18/07/2018'
+__date__ = '13/09/2018'
 
 from collections import OrderedDict as odict
 import copy
 
 from PyQt5.QtCore import (
-    Qt, QAbstractItemModel, QAbstractTableModel, QModelIndex, pyqtSignal)
+    Qt, QAbstractListModel, QAbstractItemModel, QAbstractTableModel,
+    QModelIndex, pyqtSignal)
+from PyQt5.QtGui import QStandardItem
+
+
+class PolarizationsModel(QAbstractListModel):
+
+    checkStateChanged = pyqtSignal()
+
+    def __init__(self, parent=None):
+        super(PolarizationsModel, self).__init__(parent=parent)
+        self.modelData = list()
+
+    def rowCount(self, parent=QModelIndex()):
+        return len(self.modelData)
+
+    def data(self, index, role):
+        if not index.isValid():
+            return
+        row = index.row()
+        item = self.modelData[row]
+        if role == Qt.DisplayRole:
+            return item.text()
+        elif role == Qt.CheckStateRole:
+            return item.checkState()
+
+    def setData(self, index, value, role):
+        if not index.isValid():
+            return
+        row = index.row()
+        item = self.modelData[row]
+        if role == Qt.CheckStateRole:
+            item.setCheckState(value)
+            self.checkStateChanged.emit()
+        return True
+
+    def setModelData(self, items):
+        first = 0
+        last = len(items)
+        self.beginInsertRows(QModelIndex(), first, last)
+        for i, item in enumerate(items):
+            self.modelData.append(QStandardItem(item))
+        self.endInsertRows()
+
+    def setCheckState(self, items):
+        for item in self.modelData:
+            if item.text() in items:
+                item.setCheckState(Qt.Checked)
+            else:
+                item.setCheckState(Qt.Unchecked)
+
+    def getCheckState(self):
+        checkedItems = list()
+        for item in self.modelData:
+            if item.checkState() == Qt.Checked:
+                checkedItems.append(item.text())
+        return checkedItems
+
+    def flags(self, index):
+        return Qt.ItemIsEnabled | Qt.ItemIsSelectable | Qt.ItemIsUserCheckable
 
 
 class ResultsModel(QAbstractTableModel):
