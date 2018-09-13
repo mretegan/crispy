@@ -406,9 +406,13 @@ class HamiltonianModel(QAbstractItemModel):
             except ValueError:
                 return value
         elif role == Qt.EditRole:
-            if abs(float(value)) < 1e-3 and float(value) != 0.0:
-                return str('{0:8.1e}'.format(float(value)))
-            else:
+            try:
+                value = float(value)
+                if abs(value) < 1e-3 and value != 0.0:
+                    return str('{0:8.1e}'.format(value))
+                else:
+                    return str('{0:8.3f}'.format(value))
+            except ValueError:
                 return str(value)
         elif role == Qt.CheckStateRole:
             if node.parent == self.rootNode and column == 0:

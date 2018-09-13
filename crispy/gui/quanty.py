@@ -204,12 +204,15 @@ class QuantyCalculation(object):
 
                 parameters = node['parameters']['variable']
                 for parameter in parameters:
-                    if term in 'Atomic':
+                    if 'Atomic' in term or 'Hybridization' in term:
                         if parameter[0] in ('F', 'G'):
                             scaling = 0.8
-                        else:
+                            data = [parameters[parameter], scaling]
+                        elif parameter[0] == 'ζ':
                             scaling = 1.0
-                        data = [parameters[parameter], scaling]
+                            data = [parameters[parameter], scaling]
+                        else:
+                            data = parameters[parameter]
                     else:
                         data = parameters[parameter]
 
@@ -224,6 +227,9 @@ class QuantyCalculation(object):
                     self.hamiltonianState[term] = 2
                 else:
                     self.hamiltonianState[term] = 0
+
+    def term_suffix(self, term):
+        return term.lower().replace(' ', '_').replace('-', '_')
 
     def saveInput(self):
         templatePath = resourceFileName(
@@ -297,19 +303,6 @@ class QuantyCalculation(object):
         replacements['$NPsisAuto'] = self.nPsisAuto
         replacements['$NPsis'] = self.nPsis
 
-        aliases = odict(
-            [
-                ('Atomic', 'H_atomic'),
-                ('Crystal Field', 'H_cf'),
-                ('3d-Ligands Hybridization', 'H_3d_Ld_hybridization'),
-                ('4d-Ligands Hybridization', 'H_4d_Ld_hybridization'),
-                ('5d-Ligands Hybridization', 'H_5d_Ld_hybridization'),
-                ('3d-4p Hybridization', 'H_3d_4p_hybridization'),
-                ('Magnetic Field', 'H_magnetic_field'),
-                ('Exchange Field', 'H_exchange_field'),
-            ]
-        )
-
         for term in self.hamiltonianData:
             configurations = self.hamiltonianData[term]
             for configuration, parameters in configurations.items():
@@ -327,13 +320,16 @@ class QuantyCalculation(object):
                     parameter = parameter.replace('τ', 'tau')
                     parameter = parameter.replace('μ', 'mu')
                     parameter = parameter.replace('ν', 'nu')
+
                     scaling = None
                     try:
                         value, scaling = data
                     except TypeError:
                         value = data
+
                     key = '${}_{}_value'.format(parameter, suffix)
                     replacements[key] = '{}'.format(value)
+
                     if scaling is not None:
                         key = '${}_{}_scaling'.format(parameter, suffix)
                         replacements[key] = '{}'.format(scaling)
@@ -342,8 +338,8 @@ class QuantyCalculation(object):
             if checkState > 0:
                 checkState = 1
 
-            alias = aliases[term]
-            replacements['${}'.format(alias)] = checkState
+            term_suffix = self.term_suffix(term)
+            replacements['$H_{}'.format(term_suffix)] = checkState
 
             try:
                 parameters = self.fixedTermsParameters[term]
@@ -985,21 +981,23 @@ class QuantyDockWidget(QDockWidget):
         terms = self.calculation.hamiltonianData
 
         for term in terms:
-            if 'Atomic' not in term:
+            if not ('Atomic' in term or 'Hybridization' in term):
                 continue
             configurations = terms[term]
             for configuration in configurations:
                 parameters = configurations[configuration]
                 for parameter in parameters:
-                    value, scaling = parameters[parameter]
+                    # Change the scaling if the parameter has one.
+                    try:
+                        value, scaling = parameters[parameter]
+                    except TypeError:
+                        continue
                     if parameter.startswith('F'):
                         terms[term][configuration][parameter] = [value, fk]
                     elif parameter.startswith('G'):
                         terms[term][configuration][parameter] = [value, gk]
                     elif parameter.startswith('ζ'):
                         terms[term][configuration][parameter] = [value, zeta]
-                    else:
-                        continue
         self.hamiltonianModel.updateModelData(self.calculation.hamiltonianData)
         # I have no idea why this is needed. Both views should update after
         # the above function call.
