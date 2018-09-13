@@ -1121,9 +1121,9 @@ class QuantyDockWidget(QDockWidget):
                 return
             self.updateMainWindowTitle()
 
-    def saveAllCalculationsAs(self):
+    def saveAllResultsAs(self):
         path, _ = QFileDialog.getSaveFileName(
-            self, 'Save Calculations',
+            self, 'Save Results',
             os.path.join(self.getCurrentPath(), '{}.pkl'.format(
                 self.calculation.baseName)), 'Pickle File (*.pkl)')
 
@@ -1134,9 +1134,9 @@ class QuantyDockWidget(QDockWidget):
             with open(path, 'wb') as p:
                 pickle.dump(calculations, p, pickle.HIGHEST_PROTOCOL)
 
-    def saveSelectedCalculationsAs(self):
+    def saveSelectedResultsAs(self):
         path, _ = QFileDialog.getSaveFileName(
-            self, 'Save Calculations',
+            self, 'Save Results',
             os.path.join(self.getCurrentPath(), '{}.pkl'.format(
                 self.calculation.baseName)), 'Pickle File (*.pkl)')
 
@@ -1169,13 +1169,13 @@ class QuantyDockWidget(QDockWidget):
         if not self.resultsView.selectedIndexes():
             self.getPlotWidget().reset()
 
-    def removeAllCalculations(self):
+    def removeAllResults(self):
         self.resultsModel.reset()
         self.getPlotWidget().reset()
 
-    def loadCalculations(self):
+    def loadResults(self):
         path, _ = QFileDialog.getOpenFileName(
-            self, 'Load Calculations',
+            self, 'Load Results',
             self.getCurrentPath(), 'Pickle File (*.pkl)')
 
         if path:
@@ -1429,54 +1429,49 @@ class QuantyDockWidget(QDockWidget):
 
         icon = QIcon(resourceFileName(
             'crispy:' + os.path.join('gui', 'icons', 'clipboard.svg')))
-        self.showDetailsAsAction = QAction(
+        self.showDetailsAction = QAction(
             icon, 'Show Details', self, triggered=self.showResultDetailsDialog)
 
         icon = QIcon(resourceFileName(
             'crispy:' + os.path.join('gui', 'icons', 'save.svg')))
-        self.saveSelectedCalculationsAsAction = QAction(
-            icon, 'Save Selected Calculations As...', self,
-            triggered=self.saveSelectedCalculationsAs)
-        self.saveAllCalculationsAsAction = QAction(
-            icon, 'Save All Calculations As...', self,
-            triggered=self.saveAllCalculationsAs)
+        self.saveSelectedResultsAsAction = QAction(
+            icon, 'Save Selected As...', self,
+            triggered=self.saveSelectedResultsAs)
+        self.saveAllResultsAsAction = QAction(
+            icon, 'Save All As...', self, triggered=self.saveAllResultsAs)
 
         icon = QIcon(resourceFileName(
             'crispy:' + os.path.join('gui', 'icons', 'trash.svg')))
-        self.removeSelectedCalculationsAction = QAction(
-            icon, 'Remove Selected Calculations', self,
+        self.removeSelectedResultsAction = QAction(
+            icon, 'Remove Selected', self,
             triggered=self.removeSelectedCalculations)
-        self.removeAllCalculationsAction = QAction(
-            icon, 'Remove All Calculations', self,
-            triggered=self.removeAllCalculations)
+        self.removeAllResultsAction = QAction(
+            icon, 'Remove All', self, triggered=self.removeAllResults)
 
         icon = QIcon(resourceFileName(
             'crispy:' + os.path.join('gui', 'icons', 'folder-open.svg')))
-        self.loadCalculationsAction = QAction(
-            icon, 'Load Calculations', self,
-            triggered=self.loadCalculations)
+        self.loadResultsAction = QAction(
+            icon, 'Load', self, triggered=self.loadResults)
 
         self.resultsContextMenu = QMenu('Results Context Menu', self)
-        self.resultsContextMenu.addAction(self.showDetailsAsAction)
+        self.resultsContextMenu.addAction(self.showDetailsAction)
         self.resultsContextMenu.addSeparator()
-        self.resultsContextMenu.addAction(
-            self.saveSelectedCalculationsAsAction)
-        self.resultsContextMenu.addAction(
-            self.removeSelectedCalculationsAction)
+        self.resultsContextMenu.addAction(self.saveSelectedResultsAsAction)
+        self.resultsContextMenu.addAction(self.removeSelectedResultsAction)
         self.resultsContextMenu.addSeparator()
-        self.resultsContextMenu.addAction(self.saveAllCalculationsAsAction)
-        self.resultsContextMenu.addAction(self.removeAllCalculationsAction)
+        self.resultsContextMenu.addAction(self.saveAllResultsAsAction)
+        self.resultsContextMenu.addAction(self.removeAllResultsAction)
         self.resultsContextMenu.addSeparator()
-        self.resultsContextMenu.addAction(self.loadCalculationsAction)
+        self.resultsContextMenu.addAction(self.loadResultsAction)
 
         if not self.resultsView.selectedIndexes():
-            self.removeSelectedCalculationsAction.setEnabled(False)
-            self.saveSelectedCalculationsAsAction.setEnabled(False)
+            self.removeSelectedResultsAction.setEnabled(False)
+            self.saveSelectedResultsAsAction.setEnabled(False)
 
         if not self.resultsModel.modelData:
-            self.showDetailsAsAction.setEnabled(False)
-            self.saveAllCalculationsAsAction.setEnabled(False)
-            self.removeAllCalculationsAction.setEnabled(False)
+            self.showDetailsAction.setEnabled(False)
+            self.saveAllResultsAsAction.setEnabled(False)
+            self.removeAllResultsAction.setEnabled(False)
 
         self.resultsContextMenu.exec_(self.resultsView.mapToGlobal(position))
 

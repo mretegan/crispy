@@ -173,13 +173,13 @@ class MainWindow(QMainWindow):
             self.quantyDockWidget.saveInputAs)
 
         self.quantySaveAllCalculationsAsAction.triggered.connect(
-            self.quantyDockWidget.saveAllCalculationsAs)
+            self.quantyDockWidget.saveAllResultsAs)
 
         self.quantyRemoveAllCalculationsAction.triggered.connect(
-            self.quantyDockWidget.removeAllCalculations)
+            self.quantyDockWidget.removeAllResults)
 
         self.quantyLoadCalculationsAction.triggered.connect(
-            self.quantyDockWidget.loadCalculations)
+            self.quantyDockWidget.loadResults)
 
         self.quantyRunCalculationAction.triggered.connect(
             self.quantyDockWidget.runCalculation)
