@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '13/09/2018'
+__date__ = '14/09/2018'
 
 
 import copy
@@ -53,7 +53,7 @@ from PyQt5.QtWidgets import (
 from PyQt5.uic import loadUi
 from silx.resources import resource_filename as resourceFileName
 
-from .models import HamiltonianModel, ResultsModel, PolarizationsModel
+from .models import HamiltonianModel, ResultsModel, SpectraModel
 from ..utils.broaden import broaden
 from ..utils.odict import odict
 from ..version import version
@@ -87,7 +87,7 @@ class QuantyCalculation(object):
             ('k2', [0, 0, 0]),
             ('eps21', [0, 0, 0]),
             ('eps22', [0, 0, 0]),
-            ('polarizations', None),
+            ('spectra', None),
             ('nPsisAuto', 1),
             ('nConfigurations', 1),
             ('fk', 0.8),
@@ -172,15 +172,15 @@ class QuantyCalculation(object):
             self.e2Lorentzian = branch['axes'][1][5]
             self.e2Gaussian = branch['axes'][1][6]
 
-        if self.polarizations is None:
-            self.polarizations = dict()
+        if self.spectra is None:
+            self.spectra = dict()
             if self.experiment == 'XAS':
-                self.polarizations['all'] = [
-                    'Isotropic', 'Circular Dichroism', 'Linear Dichroism',
-                    'Parallel']
+                self.spectra['all'] = [
+                    'Isotropic', 'Parallel', 'Circular Dichroism',
+                    'Linear Dichroism']
             else:
-                self.polarizations['all'] = ['Isotropic']
-            self.polarizations['checked'] = ['Isotropic']
+                self.spectra['all'] = ['Isotropic']
+            self.spectra['checked'] = ['Isotropic']
 
         if self.hamiltonianData is None:
             self.hamiltonianData = odict()
@@ -286,8 +286,8 @@ class QuantyCalculation(object):
         w = w / np.linalg.norm(w)
         replacements['$eps12'] = s.format(w[0], w[1], w[2])
 
-        replacements['$polarizations'] = ', '.join(
-            '\'{}\''.format(p) for p in self.polarizations['checked'])
+        replacements['$spectra'] = ', '.join(
+            '\'{}\''.format(p) for p in self.spectra['checked'])
 
         if self.experiment == 'RIXS':
             # The Lorentzian broadening along the incident axis cannot be
@@ -485,13 +485,13 @@ class QuantyDockWidget(QDockWidget):
             text = re.sub('>[hπ]', '>h', text)
             self.eps12Label.setText(text)
 
-        # Create the polarization model.
-        self.polarizationsModel = PolarizationsModel(parent=self)
-        self.polarizationsModel.setModelData(c.polarizations['all'])
-        self.polarizationsModel.setCheckState(c.polarizations['checked'])
-        self.polarizationsModel.checkStateChanged.connect(
+        # Create the spectra selection model.
+        self.spectraModel = SpectraModel(parent=self)
+        self.spectraModel.setModelData(c.spectra['all'])
+        self.spectraModel.setCheckState(c.spectra['checked'])
+        self.spectraModel.checkStateChanged.connect(
             self.updatePolarizationsCheckState)
-        self.polarizationsListView.setModel(self.polarizationsModel)
+        self.spectraListView.setModel(self.spectraModel)
 
         self.fkLineEdit.setValue(c.fk)
         self.gkLineEdit.setValue(c.gk)
@@ -959,8 +959,8 @@ class QuantyDockWidget(QDockWidget):
             self.plotSelectedCalculations()
 
     def updatePolarizationsCheckState(self):
-        checkedPolarizations = self.polarizationsModel.getCheckState()
-        self.calculation.polarizations['checked'] = checkedPolarizations
+        checkedPolarizations = self.spectraModel.getCheckState()
+        self.calculation.spectra['checked'] = checkedPolarizations
 
     def updateScalingFactors(self):
         fk = self.fkLineEdit.getValue()
@@ -1676,7 +1676,7 @@ class QuantyResultDetailsDialog(QDialog):
         super(QuantyResultDetailsDialog, self).__init__(parent=parent)
 
         path = resourceFileName(
-            'crispy:' + os.path.join('gui', 'uis', 'quanty', 'results.ui'))
+            'crispy:' + os.path.join('gui', 'uis', 'quanty', 'details.ui'))
         loadUi(path, baseinstance=self, package='crispy.gui')
 
     def populate(self, calculation=None):

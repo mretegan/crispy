@@ -1025,9 +1025,9 @@
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="polarizationsGroupBox">
+         <widget class="QGroupBox" name="spectraGroupBox">
           <property name="title">
-           <string>Polarizations</string>
+           <string>Spectra</string>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout">
            <property name="leftMargin">
@@ -1043,7 +1043,7 @@
             <number>6</number>
            </property>
            <item>
-            <widget class="QListView" name="polarizationsListView"/>
+            <widget class="QListView" name="spectraListView"/>
            </item>
           </layout>
          </widget>

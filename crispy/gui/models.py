@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '13/09/2018'
+__date__ = '14/09/2018'
 
 from collections import OrderedDict as odict
 import copy
@@ -38,12 +38,12 @@ from PyQt5.QtCore import (
 from PyQt5.QtGui import QStandardItem
 
 
-class PolarizationsModel(QAbstractListModel):
+class SpectraModel(QAbstractListModel):
 
     checkStateChanged = pyqtSignal()
 
     def __init__(self, parent=None):
-        super(PolarizationsModel, self).__init__(parent=parent)
+        super(SpectraModel, self).__init__(parent=parent)
         self.modelData = list()
 
     def rowCount(self, parent=QModelIndex()):
