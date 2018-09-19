@@ -38,6 +38,7 @@ try:
 except ImportError:
     from urllib2 import urlopen, Request, URLError
 import sys
+import socket
 
 from PyQt5.QtCore import (
     Qt, QThread, pyqtSignal, QByteArray, QSize, QPoint, QStandardPaths)
@@ -231,7 +232,7 @@ class CheckUpdateThread(QThread):
 
         try:
             response = urlopen(request, timeout=5)
-        except URLError:
+        except (URLError, socket.timeout):
             return
 
         data = json.loads(response.read().decode('utf-8'))
