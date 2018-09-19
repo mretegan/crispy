@@ -1616,6 +1616,7 @@ class QuantyDockWidget(QDockWidget):
     def updateQuantyWidgets(self):
         index = self.getLastSelectedResultsModelIndex()
         if index is None:
+            self.resultDetailsDialog.clear()
             return
         self.calculation = self.resultsModel.getItem(index)
 
@@ -1828,6 +1829,11 @@ class QuantyResultDetailsDialog(QDialog):
             calculation.spectra.toPlot, calculation.spectra.toPlotChecked)
         self.spectraListView.selectionModel().setCurrentIndex(
             self.spectraModel.index(0, 0), QItemSelectionModel.Select)
+
+    def clear(self):
+        self.inputPlainTextEdit.clear()
+        self.outputPlainTextEdit.clear()
+        self.spectraModel.clear()
 
     def updateSpectraCheckState(self, checkedItems):
         if not checkedItems:
