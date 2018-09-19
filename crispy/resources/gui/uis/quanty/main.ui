@@ -1468,6 +1468,9 @@
           <property name="alternatingRowColors">
            <bool>true</bool>
           </property>
+          <property name="selectionMode">
+           <enum>QAbstractItemView::ExtendedSelection</enum>
+          </property>
           <property name="selectionBehavior">
            <enum>QAbstractItemView::SelectRows</enum>
           </property>
@@ -1574,6 +1577,16 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>DoubleLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>.widgets</header>
+  </customwidget>
+  <customwidget>
+   <class>DoubleListLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>.widgets</header>
+  </customwidget>
+  <customwidget>
    <class>HamiltonianParametersView</class>
    <extends>QTreeView</extends>
    <header>.views</header>
@@ -1589,17 +1602,7 @@
    <header>.widgets</header>
   </customwidget>
   <customwidget>
-   <class>DoubleLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>.widgets</header>
-  </customwidget>
-  <customwidget>
    <class>VectorLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>.widgets</header>
-  </customwidget>
-  <customwidget>
-   <class>DoubleListLineEdit</class>
    <extends>QLineEdit</extends>
    <header>.widgets</header>
   </customwidget>

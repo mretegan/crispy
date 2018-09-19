@@ -27,83 +27,74 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '14/09/2018'
+__date__ = '19/09/2018'
 
 from collections import OrderedDict as odict
 import copy
 
-from PyQt5.QtCore import (
-    Qt, QAbstractListModel, QAbstractItemModel, QAbstractTableModel,
-    QModelIndex, pyqtSignal)
-from PyQt5.QtGui import QStandardItem
+from PyQt5.QtCore import Qt, QAbstractItemModel, QModelIndex, pyqtSignal
+from PyQt5.QtGui import QStandardItemModel, QStandardItem
 
 
-class SpectraModel(QAbstractListModel):
+class SpectraModel(QStandardItemModel):
 
-    checkStateChanged = pyqtSignal()
+    checkStateChanged = pyqtSignal(list)
 
     def __init__(self, parent=None):
         super(SpectraModel, self).__init__(parent=parent)
-        self.modelData = list()
-
-    def rowCount(self, parent=QModelIndex()):
-        return len(self.modelData)
-
-    def data(self, index, role):
-        if not index.isValid():
-            return
-        row = index.row()
-        item = self.modelData[row]
-        if role == Qt.DisplayRole:
-            return item.text()
-        elif role == Qt.CheckStateRole:
-            return item.checkState()
 
     def setData(self, index, value, role):
         if not index.isValid():
             return
         row = index.row()
-        item = self.modelData[row]
+        item = self.item(row)
         if role == Qt.CheckStateRole:
             item.setCheckState(value)
-            self.checkStateChanged.emit()
+            # Emit a signal with the checked items.
+            checkedItems = list()
+            for item in self.items():
+                if item.checkState() == Qt.Checked:
+                    checkedItems.append(item.text())
+            self.checkStateChanged.emit(checkedItems)
         return True
 
-    def setModelData(self, items):
-        first = 0
-        last = len(items)
-        self.beginInsertRows(QModelIndex(), first, last)
-        for i, item in enumerate(items):
-            self.modelData.append(QStandardItem(item))
-        self.endInsertRows()
+    def items(self):
+        rows = self.rowCount()
+        for row in range(rows):
+            yield self.item(row)
 
-    def setCheckState(self, items):
-        for item in self.modelData:
-            if item.text() in items:
-                item.setCheckState(Qt.Checked)
+    def setModelData(self, items, checkedItems):
+        self.clear()
+        for item in items:
+            modelItem = QStandardItem(item)
+            if item in checkedItems:
+                modelItem.setCheckState(Qt.Checked)
             else:
-                item.setCheckState(Qt.Unchecked)
-
-    def getCheckState(self):
-        checkedItems = list()
-        for item in self.modelData:
-            if item.checkState() == Qt.Checked:
-                checkedItems.append(item.text())
-        return checkedItems
+                modelItem.setCheckState(Qt.Unchecked)
+            self.appendRow(modelItem)
 
     def flags(self, index):
         return Qt.ItemIsEnabled | Qt.ItemIsSelectable | Qt.ItemIsUserCheckable
 
 
-class ResultsModel(QAbstractTableModel):
+class ResultsModel(QAbstractItemModel):
 
-    calculationNameChanged = pyqtSignal(str)
+    itemNameChanged = pyqtSignal(str)
+    itemCheckStateChanged = pyqtSignal()
+    modelDataUpdated = pyqtSignal(QModelIndex)
+    modelDataChanged = pyqtSignal(QModelIndex)
 
     def __init__(self, parent=None):
         super(ResultsModel, self).__init__(parent=parent)
         self.header = ['Name', 'Element', 'Charge', 'Symmetry',
                        'Experiment', 'Edge']
         self.modelData = list()
+
+    def index(self, row, column, parent=QModelIndex()):
+        return self.createIndex(row, column)
+
+    def parent(self, index):
+        return QModelIndex()
 
     def rowCount(self, parent=QModelIndex()):
         return len(self.modelData)
@@ -112,30 +103,26 @@ class ResultsModel(QAbstractTableModel):
         return len(self.header)
 
     def data(self, index, role):
-        """Return role specific data for the item referred by the index."""
         if not index.isValid():
             return
         row = index.row()
         column = index.column()
         item = self.modelData[row]
         if role == Qt.DisplayRole:
-            if column == 0:
-                return item.baseName
-            elif column == 1:
-                return item.element
-            elif column == 2:
-                return item.charge
-            elif column == 3:
-                return item.symmetry
-            elif column == 4:
-                return item.experiment
-            elif column == 5:
-                return item.edge
+            attrs = ['baseName', 'element', 'charge', 'symmetry', 'experiment',
+                     'edge']
+            for i, attr in enumerate(attrs):
+                if column == i:
+                    return getattr(item, attr)
         elif role == Qt.EditRole and column == 0:
                 return item.baseName
+        elif role == Qt.CheckStateRole and column == 0:
+            if item.isChecked:
+                return Qt.Checked
+            else:
+                return Qt.Unchecked
 
     def setData(self, index, value, role):
-        """Set the role data for the item at index to value."""
         if not index.isValid():
             return
         row = index.row()
@@ -143,16 +130,14 @@ class ResultsModel(QAbstractTableModel):
         item = self.modelData[row]
         if role == Qt.EditRole and column == 0:
             item.baseName = value
-            self.calculationNameChanged.emit(value)
+            self.itemNameChanged.emit(value)
+        elif role == Qt.CheckStateRole:
+            if value == Qt.Unchecked:
+                item.isChecked = False
+            elif value == Qt.Checked:
+                item.isChecked = True
+            self.itemCheckStateChanged.emit()
         return True
-
-    def getRowSiblingsIndexes(self, index):
-        columns = self.columnCount()
-        indexes = list()
-        row = index.row()
-        for column in range(columns):
-            indexes.append(self.index(row, column))
-        return indexes
 
     def headerData(self, section, orientation, role):
         if role == Qt.DisplayRole:
@@ -162,27 +147,15 @@ class ResultsModel(QAbstractTableModel):
                 return section + 1
 
     def flags(self, index):
-        """Return the active flags for the given index"""
         if not index.isValid():
             return
         activeFlags = Qt.ItemIsEnabled | Qt.ItemIsSelectable
         if index.column() == 0:
-            activeFlags = activeFlags | Qt.ItemIsEditable
+            activeFlags = (
+                activeFlags | Qt.ItemIsEditable | Qt.ItemIsUserCheckable)
         return activeFlags
 
-    def getModelData(self, indexes=None):
-        # Because the selection model works on complete rows, we make the
-        # rows unique by using a set.
-        rows = {index.row() for index in indexes}
-        modelData = list()
-        for row in rows:
-            item = self.modelData[row]
-            item.legend = row + 1
-            modelData.append(copy.deepcopy(item))
-        return modelData
-
     def insertRows(self, row, items, parent=QModelIndex()):
-        """Insert items at a given position in the model."""
         first = row
         last = row + len(items) - 1
         self.beginInsertRows(QModelIndex(), first, last)
@@ -191,10 +164,37 @@ class ResultsModel(QAbstractTableModel):
         self.endInsertRows()
         return True
 
+    def getItem(self, index):
+        row = index.row()
+        return copy.deepcopy(self.modelData[row])
+
+    def updateItem(self, index, item):
+        row = index.row()
+        self.modelData[row] = item
+        self.modelDataUpdated.emit(index)
+
+    def getCheckedItems(self):
+        items = list()
+        rows = range(self.rowCount())
+        for row in rows:
+            item = self.modelData[row]
+            item.index = row + 1
+            if item.isChecked:
+                items.append(copy.deepcopy(item))
+        return items
+
+    def getSelectedItems(self, indexes=None):
+        if indexes is None:
+            return None
+        rows = {index.row() for index in indexes}
+        items = list()
+        for row in rows:
+            item = self.modelData[row]
+            item.index = row + 1
+            items.append(copy.deepcopy(item))
+        return items
+
     def removeItems(self, indexes):
-        """Remove items from the model."""
-        # Because the selection model works on complete rows, we make the
-        # rows unique by using a set.
         rows = {index.row() for index in indexes}
         for row in sorted(rows, reverse=True):
             self.beginRemoveRows(QModelIndex(), row, row)
@@ -203,50 +203,41 @@ class ResultsModel(QAbstractTableModel):
             except IndexError:
                 pass
             self.endRemoveRows()
-        # Get the last row in the model.
-        lastRow = len(self.modelData) - 1
-        column = 0
-        index = self.index(lastRow, column)
-        self.dataChanged.emit(index, index)
+        row = len(self.modelData) - 1
+        index = self.index(row, 0)
+        self.modelDataChanged.emit(index)
         return True
 
     def appendItems(self, items):
-        """Insert items at the end of model."""
-        currentRow = self.rowCount()
-        self.insertRows(currentRow, items)
-        # Get the last row of in the model.
-        lastRow = len(self.modelData) - 1
-        column = 0
-        index = self.index(lastRow, column)
-        self.dataChanged.emit(index, index)
-
-    def replaceItem(self, index, item):
-        row = index.row()
-        self.modelData[row] = item
-        self.dataChanged.emit(index, index)
+        if not isinstance(items, list):
+            items = [items]
+        row = self.rowCount()
+        self.insertRows(row, items)
+        row = len(self.modelData) - 1
+        index = self.index(row, 0)
+        self.modelDataChanged.emit(index)
 
     def reset(self):
-        """Reset the model."""
         self.beginResetModel()
         self.modelData = list()
         self.endResetModel()
 
 
-class HamiltonianNode(object):
-    """Class implementing a tree node to be used in a tree model."""
+class HamiltonianItem(object):
+    """Class implementing a tree item to be used in a tree model."""
 
-    def __init__(self, parent=None, nodeData=None):
+    def __init__(self, parent=None, itemData=None):
         self.parent = parent
-        self.nodeData = nodeData
+        self.itemData = itemData
         self.children = []
         self.checkState = None
 
         if parent is not None:
             parent.appendChild(self)
 
-    def appendChild(self, node):
-        """Append a child to the parent node."""
-        self.children.append(node)
+    def appendChild(self, item):
+        """Append a child to the parent item."""
+        self.children.append(item)
 
     def getChildren(self):
         return self.children
@@ -268,19 +259,19 @@ class HamiltonianNode(object):
         return len(self.children)
 
     def columnCount(self):
-        return len(self.nodeData)
+        return len(self.itemData)
 
     def getItemData(self, column):
         """Return the data for a given column."""
         try:
-            return self.nodeData[column]
+            return self.itemData[column]
         except IndexError:
             return str()
 
     def setItemData(self, column, value):
         """Set the data at a given column."""
         try:
-            self.nodeData[column] = value
+            self.itemData[column] = value
         except IndexError:
             pass
 
@@ -301,56 +292,56 @@ class HamiltonianModel(QAbstractItemModel):
     also reimplemented to control the way the header is presented.
     """
 
-    nodeCheckStateChanged = pyqtSignal(QModelIndex, Qt.CheckState)
+    itemCheckStateChanged = pyqtSignal(QModelIndex, Qt.CheckState)
 
     def __init__(self, parent=None):
         super(HamiltonianModel, self).__init__(parent)
         self.header = ['Parameter', 'Value', 'Scaling']
         self.modelData = odict()
 
-    def index(self, row, column, parentIndex=None):
+    def index(self, row, column, parent=QModelIndex()):
         """Return the index of the item in the model specified by the
         given row, column, and parent index.
         """
-        if parentIndex is None or not parentIndex.isValid():
-            parentNode = self.rootNode
+        if parent is not None and not parent.isValid():
+            parentItem = self.rootItem
         else:
-            parentNode = self.getNode(parentIndex)
+            parentItem = self.item(parent)
 
-        childNode = parentNode.child(row)
+        childItem = parentItem.child(row)
 
-        if childNode:
-            index = self.createIndex(row, column, childNode)
+        if childItem:
+            index = self.createIndex(row, column, childItem)
         else:
             index = QModelIndex()
 
         return index
 
-    def parent(self, childIndex):
+    def parent(self, index):
         """Return the index of the parent for a given index of the
         child. Unfortunately, the name of the method has to be parent,
         even though a more verbose name like parentIndex, would avoid
         confusion about what parent actually is - an index or an item.
         """
-        childNode = self.getNode(childIndex)
-        parentNode = childNode.parent
+        childItem = self.item(index)
+        parentItem = childItem.parent
 
-        if parentNode == self.rootNode:
+        if parentItem == self.rootItem:
             parentIndex = QModelIndex()
         else:
-            parentIndex = self.createIndex(parentNode.row(), 0, parentNode)
+            parentIndex = self.createIndex(parentItem.row(), 0, parentItem)
 
         return parentIndex
 
     def siblings(self, index):
-        node = self.getNode(index)
+        item = self.item(index)
 
         parentIndex = self.parent(index)
-        parentNode = self.getNode(parentIndex)
+        parentItem = self.item(parentIndex)
 
         siblingIndices = list()
-        for child in parentNode.children:
-            if child is node:
+        for child in parentItem.children:
+            if child is item:
                 continue
             else:
                 row = child.row()
@@ -362,24 +353,24 @@ class HamiltonianModel(QAbstractItemModel):
     def rowCount(self, parentIndex):
         """Return the number of rows under the given parent. When the
         parentIndex is valid, rowCount() returns the number of children
-        of the parent. For this it uses getNode() method to extract the
-        parentNode from the parentIndex, and calls the childCount() of
-        the node to get number of children.
+        of the parent. For this it uses item() method to extract the
+        parentItem from the parentIndex, and calls the childCount() of
+        the item to get number of children.
         """
         if parentIndex.column() > 0:
             return 0
 
         if not parentIndex.isValid():
-            parentNode = self.rootNode
+            parentItem = self.rootItem
         else:
-            parentNode = self.getNode(parentIndex)
+            parentItem = self.item(parentIndex)
 
-        return parentNode.childCount()
+        return parentItem.childCount()
 
     def columnCount(self, parentIndex):
         """Return the number of columns. The index of the parent is
         required, but not used, as in this implementation it defaults
-        for all nodes to the length of the header.
+        for all items to the length of the header.
         """
         return len(self.header)
 
@@ -389,9 +380,9 @@ class HamiltonianModel(QAbstractItemModel):
         if not index.isValid():
             return
 
-        node = self.getNode(index)
+        item = self.item(index)
         column = index.column()
-        value = node.getItemData(column)
+        value = item.getItemData(column)
 
         if role == Qt.DisplayRole:
             try:
@@ -415,8 +406,8 @@ class HamiltonianModel(QAbstractItemModel):
             except ValueError:
                 return str(value)
         elif role == Qt.CheckStateRole:
-            if node.parent == self.rootNode and column == 0:
-                return node.getCheckState()
+            if item.parent == self.rootItem and column == 0:
+                return item.getCheckState()
         elif role == Qt.TextAlignmentRole:
             if column > 0:
                 return Qt.AlignRight
@@ -426,37 +417,37 @@ class HamiltonianModel(QAbstractItemModel):
         if not index.isValid():
             return False
 
-        node = self.getNode(index)
+        item = self.item(index)
         column = index.column()
 
         if role == Qt.EditRole:
-            nodes = list()
-            nodes.append(node)
+            items = list()
+            items.append(item)
 
             if self.sync:
                 parentIndex = self.parent(index)
                 # Iterate over the siblings of the parent index.
                 for sibling in self.siblings(parentIndex):
-                    siblingNode = self.getNode(sibling)
+                    siblingNode = self.item(sibling)
                     for child in siblingNode.children:
-                        if child.getItemData(0) == node.getItemData(0):
-                            nodes.append(child)
+                        if child.getItemData(0) == item.getItemData(0):
+                            items.append(child)
 
-            for node in nodes:
-                columnData = str(node.getItemData(column))
+            for item in items:
+                columnData = str(item.getItemData(column))
                 if columnData and columnData != value:
                     try:
-                        node.setItemData(column, float(value))
+                        item.setItemData(column, float(value))
                     except ValueError:
                         return False
                 else:
                     return False
 
         elif role == Qt.CheckStateRole:
-            node.setCheckState(value)
+            item.setCheckState(value)
             if value == Qt.Unchecked or value == Qt.Checked:
                 state = value
-                self.nodeCheckStateChanged.emit(index, state)
+                self.itemCheckStateChanged.emit(index, state)
 
         self.dataChanged.emit(index, index)
 
@@ -472,10 +463,10 @@ class HamiltonianModel(QAbstractItemModel):
         activeFlags = (Qt.ItemIsEnabled | Qt.ItemIsSelectable |
                        Qt.ItemIsUserCheckable)
 
-        node = self.getNode(index)
+        item = self.item(index)
         column = index.column()
 
-        if column > 0 and not node.childCount():
+        if column > 0 and not item.childCount():
             activeFlags = activeFlags | Qt.ItemIsEditable
 
         return activeFlags
@@ -487,26 +478,26 @@ class HamiltonianModel(QAbstractItemModel):
         if orientation == Qt.Horizontal and role == Qt.DisplayRole:
             return self.header[section]
 
-    def getNode(self, index):
+    def item(self, index):
         if index is None or not index.isValid():
-            return self.rootNode
+            return self.rootItem
         return index.internalPointer()
 
-    def setModelData(self, modelData, parentNode=None):
-        if parentNode is None:
-            self.rootNode = HamiltonianNode(None, self.header)
-            parentNode = self.rootNode
+    def setModelData(self, modelData, parentItem=None):
+        if parentItem is None:
+            self.rootItem = HamiltonianItem(None, self.header)
+            parentItem = self.rootItem
 
         if isinstance(modelData, dict):
             for key, value in modelData.items():
                 if isinstance(value, dict):
-                    node = HamiltonianNode(parentNode, [key])
-                    self.setModelData(value, node)
+                    item = HamiltonianItem(parentItem, [key])
+                    self.setModelData(value, item)
                 elif isinstance(value, float):
-                    node = HamiltonianNode(parentNode, [key, value])
+                    item = HamiltonianItem(parentItem, [key, value])
                 elif isinstance(value, list):
-                    node = HamiltonianNode(
-                        parentNode, [key, value[0], value[1]])
+                    item = HamiltonianItem(
+                        parentItem, [key, value[0], value[1]])
                 else:
                     raise TypeError
 
@@ -514,76 +505,76 @@ class HamiltonianModel(QAbstractItemModel):
         self.header = header
 
     def updateModelData(self, modelData, parentIndex=None):
-        parentNode = self.getNode(parentIndex)
+        parentItem = self.item(parentIndex)
 
-        if parentNode.childCount():
-            for child in parentNode.children:
-                key = child.nodeData[0]
+        if parentItem.childCount():
+            for child in parentItem.children:
+                key = child.itemData[0]
                 childData = modelData[key]
                 childIndex = self.index(child.row(), 0, parentIndex)
                 self.updateModelData(childData, childIndex)
         else:
             if isinstance(modelData, float):
-                parentNode.setItemData(1, modelData)
+                parentItem.setItemData(1, modelData)
             elif isinstance(modelData, list):
                 value, scaling = modelData
-                parentNode.setItemData(1, value)
-                parentNode.setItemData(2, scaling)
+                parentItem.setItemData(1, value)
+                parentItem.setItemData(2, scaling)
             else:
                 raise TypeError
             self.dataChanged.emit(parentIndex, parentIndex)
             return True
 
-    def _getModelData(self, modelData, parentNode=None):
+    def _getModelData(self, modelData, parentItem=None):
         """Return the data contained in the model."""
-        if parentNode is None:
-            parentNode = self.rootNode
+        if parentItem is None:
+            parentItem = self.rootItem
 
-        for node in parentNode.getChildren():
-            key = node.getItemData(0)
-            if node.childCount():
+        for item in parentItem.getChildren():
+            key = item.getItemData(0)
+            if item.childCount():
                 modelData[key] = odict()
-                self._getModelData(modelData[key], node)
+                self._getModelData(modelData[key], item)
             else:
-                if isinstance(node.getItemData(2), float):
-                    modelData[key] = [node.getItemData(1), node.getItemData(2)]
+                if isinstance(item.getItemData(2), float):
+                    modelData[key] = [item.getItemData(1), item.getItemData(2)]
                 else:
-                    modelData[key] = node.getItemData(1)
+                    modelData[key] = item.getItemData(1)
 
     def getModelData(self):
         modelData = odict()
         self._getModelData(modelData)
         return modelData
 
-    def setNodesCheckState(self, checkState, parentNode=None):
-        if parentNode is None:
-            parentNode = self.rootNode
+    def setNodesCheckState(self, checkState, parentItem=None):
+        if parentItem is None:
+            parentItem = self.rootItem
 
-        children = parentNode.getChildren()
+        children = parentItem.getChildren()
 
         for child in children:
-            childName = child.nodeData[0]
+            childName = child.itemData[0]
             try:
                 child.setCheckState(checkState[childName])
             except KeyError:
                 pass
 
-    def getNodesCheckState(self, parentNode=None):
-        """Return the check state (disabled, tristate, enable) of all nodes
+    def getNodesCheckState(self, parentItem=None):
+        """Return the check state (disabled, tristate, enable) of all items
         belonging to a parent.
         """
-        if parentNode is None:
-            parentNode = self.rootNode
+        if parentItem is None:
+            parentItem = self.rootItem
 
         checkStates = odict()
-        children = parentNode.getChildren()
+        children = parentItem.getChildren()
 
         for child in children:
-            checkStates[child.nodeData[0]] = child.getCheckState()
+            checkStates[child.itemData[0]] = child.getCheckState()
 
         return checkStates
 
     def reset(self):
         self.beginResetModel()
-        self.rootNode = None
+        self.rootItem = None
         self.endResetModel()
