@@ -389,6 +389,8 @@ class QuantyCalculation(object):
         with open(templatePath) as p:
             self.template = p.read()
 
+        self.input = copy.deepcopy(self.template)
+
         replacements = odict()
 
         # TODO: Make this an object attribute when saving the .pkl file
@@ -504,11 +506,11 @@ class QuantyCalculation(object):
         replacements['$BaseName'] = self.baseName
 
         for replacement in replacements:
-            self.template = self.template.replace(
+            self.input = self.input.replace(
                 replacement, str(replacements[replacement]))
 
         with open(self.baseName + '.lua', 'w') as f:
-            f.write(self.template)
+            f.write(self.input)
 
 
 class QuantyDockWidget(QDockWidget):
@@ -1814,7 +1816,7 @@ class QuantyResultDetailsDialog(QDialog):
 
     def populateWidget(self, calculation):
         self.calculation = calculation
-        self.inputPlainTextEdit.setPlainText(calculation.symmetry)
+        self.inputPlainTextEdit.setPlainText(calculation.input)
         self.spectraModel.setModelData(
             calculation.spectra.toPlot, calculation.spectra.toPlotChecked)
         self.spectraListView.selectionModel().setCurrentIndex(
