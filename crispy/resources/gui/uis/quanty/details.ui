@@ -35,7 +35,7 @@
       <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="summaryTabWidget">
       <attribute name="title">
@@ -562,7 +562,11 @@
         <number>9</number>
        </property>
        <item>
-        <widget class="QPlainTextEdit" name="outputPlainTextEdit"/>
+        <widget class="QPlainTextEdit" name="outputPlainTextEdit">
+         <property name="lineWrapMode">
+          <enum>QPlainTextEdit::NoWrap</enum>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

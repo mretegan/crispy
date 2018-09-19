@@ -46,7 +46,7 @@ import sys
 
 from PyQt5.QtCore import (
     QItemSelectionModel, QProcess, Qt, QPoint, QStandardPaths)
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon, QFontDatabase
 from PyQt5.QtWidgets import (
     QDockWidget, QFileDialog, QAction, QMenu, QWidget,
     QDialog, QDialogButtonBox)
@@ -251,6 +251,8 @@ class QuantyCalculation(object):
             ('endingTime', None),
             ('verbosity', None),
             ('isChecked', True),
+            ('input', None),
+            ('output', None),
         ]
     )
 
@@ -511,6 +513,8 @@ class QuantyCalculation(object):
 
         with open(self.baseName + '.lua', 'w') as f:
             f.write(self.input)
+
+        self.output = str()
 
 
 class QuantyDockWidget(QDockWidget):
@@ -1357,9 +1361,6 @@ class QuantyDockWidget(QDockWidget):
         except (IOError, OSError) as e:
             return
 
-        # self.getPlotWidget().reset()
-        # self.resultsView.selectionModel().clearSelection()
-
         # Disable the UI while the calculation is running.
         self.enableWidget(False)
 
@@ -1457,9 +1458,8 @@ class QuantyDockWidget(QDockWidget):
             self.getStatusBar().showMessage(message, self.timeout)
             return
 
-        # Get the index of the current calculation. The index is required
-        # to set the labels of the spectra.
-        # self.calculation.index = self.resultsModel.rowCount() + 1
+        scrollBar = self.getLoggerWidget().verticalScrollBar()
+        scrollBar.setValue(scrollBar.maximum())
 
         # Load the spectra from disk.
         self.calculation.spectra.loadFromDisk(self.calculation)
@@ -1659,6 +1659,7 @@ class QuantyDockWidget(QDockWidget):
         data = self.process.readAllStandardOutput().data()
         data = data.decode('utf-8').rstrip()
         self.getLoggerWidget().appendPlainText(data)
+        self.calculation.output = self.calculation.output + data
 
     def handleErrorLogging(self):
         self.process.setReadChannel(QProcess.StandardError)
@@ -1813,10 +1814,16 @@ class QuantyResultDetailsDialog(QDialog):
         self.spectraListView.setModel(self.spectraModel)
         self.spectraModel.checkStateChanged.connect(
             self.updateSpectraCheckState)
+        font = QFontDatabase.systemFont(QFontDatabase.FixedFont)
+        if sys.platform == 'darwin':
+            font.setPointSize(font.pointSize() + 1)
+        self.inputPlainTextEdit.setFont(font)
+        self.outputPlainTextEdit.setFont(font)
 
     def populateWidget(self, calculation):
         self.calculation = calculation
         self.inputPlainTextEdit.setPlainText(calculation.input)
+        self.outputPlainTextEdit.setPlainText(calculation.output)
         self.spectraModel.setModelData(
             calculation.spectra.toPlot, calculation.spectra.toPlotChecked)
         self.spectraListView.selectionModel().setCurrentIndex(
