@@ -98,13 +98,11 @@ class QuantySpectra(object):
                'Linear Dichroism': 'Linear Dichroism (V-H)'}
 
     def __init__(self):
+        self._toCalculateChecked = None
         self._toPlotChecked = None
 
     @property
     def toPlot(self):
-        """
-        List of spectra that ca be plotted.
-        """
         spectraNames = list()
         for spectrum in self.toCalculateChecked:
             if spectrum == 'Isotropic':
@@ -120,14 +118,21 @@ class QuantySpectra(object):
         return spectraNames
 
     @property
+    def toCalculateChecked(self):
+        return self._toCalculateChecked
+
+    @toCalculateChecked.setter
+    def toCalculateChecked(self, values):
+        self._toCalculateChecked = values
+        spectraNames = list()
+        for spectrum in values:
+            if spectrum in (
+                    'Isotropic', 'Circular Dichroism', 'Linear Dichroism'):
+                spectraNames.append(self.aliases[spectrum])
+            self.toPlotChecked = spectraNames
+
+    @property
     def toPlotChecked(self):
-        if self._toPlotChecked is None:
-            spectraNames = list()
-            for spectrum in self.toCalculateChecked:
-                if spectrum in (
-                        'Isotropic', 'Circular Dichroism', 'Linear Dichroism'):
-                    spectraNames.append(self.aliases[spectrum])
-            self._toPlotChecked = spectraNames
         return self._toPlotChecked
 
     @toPlotChecked.setter
@@ -135,9 +140,6 @@ class QuantySpectra(object):
         self._toPlotChecked = values
 
     def processSpectra(self, scale=None, shift=None, broadening=None):
-        # A change of checked, should update the processed spectra,
-        # which will be iterate over to be plotted.
-
         self.processed = copy.deepcopy(self.raw)
 
         for spectrum in self.processed:
@@ -186,7 +188,10 @@ class QuantySpectra(object):
                 spectrum = Spectrum1D(x, y)
 
                 spectrum.name = spectrumName
-                spectrum.shortName = suffix
+                if len(suffix) > 2:
+                    spectrum.shortName = suffix.title()
+                else:
+                    spectrum.shortName = suffix.upper()
 
                 if calculation.experiment == 'XAS':
                     spectrum.xLabel = 'Absorption Energy (eV)'
@@ -200,8 +205,7 @@ class QuantySpectra(object):
                 # return data[:, 2::2][:, 0]
             self.raw.append(spectrum)
 
-        # Process the spectra when the calculation is read from disk.
-        # In this case, only the broadening is done.
+        # Process the spectra once they where read from disk.
         self.processSpectra(broadening=broadening)
 
 
@@ -1635,7 +1639,7 @@ class QuantyDockWidget(QDockWidget):
             if len(calculations) > 1 and calculation.experiment == 'RIXS':
                 continue
             for spectrum in calculation.spectra.processed:
-                spectrum.legend = '{} ({})'.format(
+                spectrum.legend = '{}-{}'.format(
                     calculation.index, spectrum.shortName)
                 if spectrum.name in calculation.spectra.toPlotChecked:
                     self.plotSpectrum(spectrum)
