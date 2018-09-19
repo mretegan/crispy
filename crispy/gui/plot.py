@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '10/07/2018'
+__date__ = '19/09/2018'
 
 
 import sys
@@ -43,13 +43,13 @@ from silx.gui.plot.Profile import ProfileToolBar
 
 class BackendMatplotlibQt(backends.BackendMatplotlib.BackendMatplotlibQt):
 
-    def __init__(self, plot, parent=None):
-        super(BackendMatplotlibQt, self).__init__(plot, parent)
+    def __init__(self, parent=None, plot=None):
+        super(BackendMatplotlibQt, self).__init__(parent, plot)
         self._legends = odict()
 
     def addCurve(self, x, y, legend, *args, **kwargs):
         container = super(BackendMatplotlibQt, self).addCurve(
-                x, y, legend, *args, **kwargs)
+            x, y, legend, *args, **kwargs)
 
         # Remove the unique identifier from the legend.
         curve = container.get_children()[0]
@@ -87,8 +87,8 @@ class BackendMatplotlibQt(backends.BackendMatplotlib.BackendMatplotlibQt):
 
 
 class BasePlotWidget(PlotWidget):
-    def __init__(self, *args, **kwargs):
-        super(BasePlotWidget, self).__init__(*args, **kwargs)
+    def __init__(self, parent=None, **kwargs):
+        super(BasePlotWidget, self).__init__(parent=parent, **kwargs)
 
         self.setActiveCurveHandling(False)
         self.setGraphGrid('both')
@@ -140,9 +140,9 @@ class BasePlotWidget(PlotWidget):
 
 
 class MainPlotWidget(BasePlotWidget):
-    def __init__(self, *args):
+    def __init__(self, parent=None, **kwargs):
         super(MainPlotWidget, self).__init__(
-            *args, backend=BackendMatplotlibQt)
+            parent, **kwargs, backend=BackendMatplotlibQt)
 
         # Add a profile toolbar.
         _profileWindow = BasePlotWidget()
