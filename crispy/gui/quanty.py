@@ -1907,6 +1907,7 @@ class QuantyResultDetailsDialog(QDialog):
         self.outputPlainTextEdit.setPlainText(c.output)
 
         self.updateTitle()
+        self.updateSummary()
 
     def updateTitle(self):
         if not self.calculation.baseName:
@@ -1914,6 +1915,26 @@ class QuantyResultDetailsDialog(QDialog):
         else:
             title = 'Details for {}'.format(self.calculation.baseName)
         self.setWindowTitle(title)
+
+    def updateSummary(self):
+        c = self.calculation
+
+        summary = """Name: $baseName
+Element: $element
+Charge: $charge
+Symmetry: $symmetry
+        """
+
+        replacements = (
+            ('$baseName', c.baseName),
+            ('$element', c.element),
+            ('$charge', c.charge),
+            ('$symmetry', c.symmetry),
+        )
+
+        for replacement in replacements:
+            summary = summary.replace(*replacement)
+        self.summaryPlainTextEdit.setPlainText(summary)
 
     def updateSpectraCheckState(self, checkedItems):
         self.calculation.spectra.toPlotChecked = checkedItems

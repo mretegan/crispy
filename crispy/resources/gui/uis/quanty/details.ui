@@ -61,12 +61,9 @@
         <number>9</number>
        </property>
        <item>
-        <widget class="QListView" name="summaryListView">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
+        <widget class="QPlainTextEdit" name="summaryPlainTextEdit">
+         <property name="readOnly">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
