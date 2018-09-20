@@ -87,7 +87,8 @@ class Spectrum1D(object):
             fwhm = fwhm / self.xScale
             self.y = broaden(self.y, fwhm, kind)
 
-    def shift(self, value):
+    def shift(self, values):
+        value, _ = values
         self.x = self.x + value
 
     def scale(self, value):
@@ -100,12 +101,17 @@ class QuantySpectra(object):
                'Circular Dichroism': 'Circular Dichroism (R-L)',
                'Linear Dichroism': 'Linear Dichroism (V-H)'}
 
+    _defaults = {
+        'scale': 1.0,
+        'shift': (0.0, 0.0),
+        'broadening': list(),
+    }
+
     def __init__(self):
         self._toCalculateChecked = None
         self._toPlotChecked = None
 
-        self.scale = 1.0
-        self.broadening = list()
+        self.__dict__.update(self._defaults)
 
     @property
     def toPlot(self):
@@ -146,12 +152,18 @@ class QuantySpectra(object):
         self._toPlotChecked = values
 
     def process(self):
-        self.processed = copy.deepcopy(self.raw)
+        try:
+            self.processed = copy.deepcopy(self.raw)
+        except AttributeError:
+            return
+
         for spectrum in self.processed:
             if self.broadening:
                 spectrum.broaden(self.broadening)
-            if self.scale != 0.0:
+            if self.scale != self._defaults['scale']:
                 spectrum.scale(self.scale)
+            if self.shift != self._defaults['shift']:
+                spectrum.shift(self.shift)
 
     def loadFromDisk(self, calculation):
         """
@@ -210,8 +222,7 @@ class QuantySpectra(object):
             self.raw.append(spectrum)
 
         # Process the spectra once they where read from disk.
-        self.scale = 1.0
-        self.broadening = list()
+        self.__dict__.update(self._defaults)
         self.process()
 
 
@@ -1314,6 +1325,7 @@ class QuantyDockWidget(QDockWidget):
         self.updateMainWindowTitle()
         self.getPlotWidget().reset()
         self.resultsView.selectionModel().clearSelection()
+        self.resultDetailsDialog.populateWidget()
 
     def removeSelectedCalculations(self):
         indexes = self.resultsView.selectedIndexes()
@@ -1824,6 +1836,8 @@ class QuantyResultDetailsDialog(QDialog):
         if sys.platform == 'darwin':
             font.setPointSize(font.pointSize() + 1)
         self.scaleLineEdit.returnPressed.connect(self.updateScale)
+        self.xAxisShiftLineEdit.returnPressed.connect(self.updateShift)
+        self.yAxisShiftLineEdit.returnPressed.connect(self.updateShift)
         self.inputPlainTextEdit.setFont(font)
         self.outputPlainTextEdit.setFont(font)
         self.closePushButton.setAutoDefault(False)
@@ -1831,11 +1845,22 @@ class QuantyResultDetailsDialog(QDialog):
 
     def populateWidget(self):
         c = self.calculation
+        if c.experiment == 'RIXS':
+            if self.axesTabWidget.count() == 1:
+                tab = self.axesTabWidget.findChild(QWidget, 'yAxisTab')
+                self.axesTabWidget.addTab(tab, tab.objectName())
+                self.axesTabWidget.setTabText(1, c.e2Label)
+        else:
+            self.axesTabWidget.removeTab(1)
+            self.axesTabWidget.setTabText(0, c.e1Label)
         self.spectraModel.setModelData(
             c.spectra.toPlot, c.spectra.toPlotChecked)
         self.spectraListView.selectionModel().setCurrentIndex(
             self.spectraModel.index(0, 0), QItemSelectionModel.Select)
-        self.scaleLineEdit.setValue(self.calculation.spectra.scale)
+        self.scaleLineEdit.setValue(c.spectra.scale)
+        xAxisShift, yAxisShift = c.spectra.shift
+        self.xAxisShiftLineEdit.setValue(xAxisShift)
+        self.yAxisShiftLineEdit.setValue(yAxisShift)
         self.inputPlainTextEdit.setPlainText(c.input)
         self.outputPlainTextEdit.setPlainText(c.output)
 
@@ -1845,15 +1870,19 @@ class QuantyResultDetailsDialog(QDialog):
         self.spectraModel.clear()
 
     def updateSpectraCheckState(self, checkedItems):
-        # if not checkedItems:
-        #     self.calculation.isChecked = False
         self.calculation.spectra.toPlotChecked = checkedItems
         self.parent().updateResultsModelData()
 
     def updateScale(self):
         scale = self.scaleLineEdit.getValue()
-
         self.calculation.spectra.scale = scale
+        self.calculation.spectra.process()
+        self.parent().updateResultsModelData()
+
+    def updateShift(self):
+        xAxisShift = self.xAxisShiftLineEdit.getValue()
+        yAxisShift = self.yAxisShiftLineEdit.getValue()
+        self.calculation.spectra.shift = (xAxisShift, yAxisShift)
         self.calculation.spectra.process()
         self.parent().updateResultsModelData()
 
