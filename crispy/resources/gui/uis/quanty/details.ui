@@ -123,12 +123,12 @@
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QComboBox" name="comboBox"/>
+            <widget class="QComboBox" name="normalizationComboBox"/>
            </item>
            <item row="1" column="0">
-            <widget class="QLabel" name="label_2">
+            <widget class="QLabel" name="normalizaitonLabel">
              <property name="text">
-              <string>Normalize</string>
+              <string>Normalization</string>
              </property>
             </widget>
            </item>

@@ -96,6 +96,16 @@ class Spectrum1D(object):
     def scale(self, value):
         self.y = self.y * value
 
+    def normalization(self, value):
+        if value == 'None':
+            return
+        elif value == 'Maximum':
+            maximum = np.abs(self.y).max()
+            self.y = self.y / maximum
+        elif value == 'Area':
+            area = np.trapz(self.y, self.x)
+            self.y = self.y / area
+
 
 class QuantySpectra(object):
 
@@ -107,6 +117,7 @@ class QuantySpectra(object):
         'scale': 1.0,
         'shift': (0.0, 0.0),
         'broadenings': dict(),
+        'normalization': 'None',
     }
 
     def __init__(self):
@@ -166,6 +177,7 @@ class QuantySpectra(object):
                 spectrum.scale(self.scale)
             if self.shift != self._defaults['shift']:
                 spectrum.shift(self.shift)
+            spectrum.normalization(self.normalization)
 
     def loadFromDisk(self, calculation):
         """
@@ -1653,6 +1665,8 @@ class QuantyDockWidget(QDockWidget):
         self.resultsView.viewport().repaint()
 
     def updatePlotWidget(self):
+        # import time
+        # start = time.time()
         self.getPlotWidget().reset()
 
         calculations = self.resultsModel.getCheckedItems()
@@ -1666,6 +1680,8 @@ class QuantyDockWidget(QDockWidget):
                     calculation.index, spectrum.shortName)
                 if spectrum.name in calculation.spectra.toPlotChecked:
                     self.plotSpectrum(spectrum)
+        # stop = time.time()
+        # print('Updating the plot took {:.3g} seconds.'.format((stop - start)))
 
     def showResultDetailsDialog(self):
         self.updateResultDetailsDialog()
@@ -1855,6 +1871,9 @@ class QuantyResultDetailsDialog(QDialog):
         self.outputPlainTextEdit.setFont(font)
         self.closePushButton.setAutoDefault(False)
         self.closePushButton.clicked.connect(self.accept)
+        self.normalizationComboBox.addItems(['None', 'Maximum', 'Area'])
+        self.normalizationComboBox.currentTextChanged.connect(
+            self.updateNormalization)
 
     def populateWidget(self):
         c = self.calculation
@@ -1873,6 +1892,8 @@ class QuantyResultDetailsDialog(QDialog):
             self.spectraModel.index(0, 0), QItemSelectionModel.Select)
 
         self.scaleLineEdit.setValue(c.spectra.scale)
+        self.normalizationComboBox.setCurrentText(c.spectra.normalization)
+
         xShift, yShift = c.spectra.shift
         self.xShiftLineEdit.setValue(xShift)
         self.yShiftLineEdit.setValue(yShift)
@@ -1894,12 +1915,6 @@ class QuantyResultDetailsDialog(QDialog):
             title = 'Details for {}'.format(self.calculation.baseName)
         self.setWindowTitle(title)
 
-    def clear(self):
-        self.inputPlainTextEdit.clear()
-        self.outputPlainTextEdit.clear()
-        self.spectraModel.clear()
-        self.setWindowTitle('')
-
     def updateSpectraCheckState(self, checkedItems):
         self.calculation.spectra.toPlotChecked = checkedItems
         self.parent().updateResultsModelData()
@@ -1907,6 +1922,12 @@ class QuantyResultDetailsDialog(QDialog):
     def updateScale(self):
         scale = self.scaleLineEdit.getValue()
         self.calculation.spectra.scale = scale
+        self.calculation.spectra.process()
+        self.parent().updateResultsModelData()
+
+    def updateNormalization(self):
+        normalization = self.normalizationComboBox.currentText()
+        self.calculation.spectra.normalization = normalization
         self.calculation.spectra.process()
         self.parent().updateResultsModelData()
 
@@ -1964,6 +1985,12 @@ class QuantyResultDetailsDialog(QDialog):
 
         parent.yGaussianLineEdit.setValue(yGaussian)
         self.calculation.yGaussian = yGaussian
+
+    def clear(self):
+        self.inputPlainTextEdit.clear()
+        self.outputPlainTextEdit.clear()
+        self.spectraModel.clear()
+        self.setWindowTitle('')
 
 
 if __name__ == '__main__':
