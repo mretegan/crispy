@@ -726,7 +726,7 @@ class QuantyDockWidget(QDockWidget):
             # Assign the results model to the results view.
             self.resultsView.setModel(self.resultsModel)
             self.resultsView.selectionModel().selectionChanged.connect(
-                self.updateQuantyWidgets)
+                self.updateWidget)
             self.resultsView.resizeColumnsToContents()
             self.resultsView.horizontalHeader().setSectionsMovable(False)
             self.resultsView.horizontalHeader().setSectionsClickable(False)
@@ -1632,7 +1632,7 @@ class QuantyDockWidget(QDockWidget):
             index = None
         return index
 
-    def updateQuantyWidgets(self):
+    def updateWidget(self):
         index = self.getLastSelectedResultsModelIndex()
         if index is None:
             self.resultDetailsDialog.clear()
@@ -1642,7 +1642,8 @@ class QuantyDockWidget(QDockWidget):
         self.populateWidget()
         self.updateMainWindowTitle()
 
-        self.resultDetailsDialog.populateWidget()
+        if self.resultDetailsDialog.isVisible():
+            self.updateResultDetailsDialog()
 
     def updateResultsModelData(self):
         index = self.getLastSelectedResultsModelIndex()
@@ -1667,7 +1668,11 @@ class QuantyDockWidget(QDockWidget):
                     self.plotSpectrum(spectrum)
 
     def showResultDetailsDialog(self):
+        self.updateResultDetailsDialog()
         self.resultDetailsDialog.show()
+
+    def updateResultDetailsDialog(self):
+        self.resultDetailsDialog.populateWidget()
 
     def updateCalculationName(self, name):
         self.resultsView.resizeColumnsToContents()
@@ -1688,7 +1693,10 @@ class QuantyDockWidget(QDockWidget):
         self.getLoggerWidget().appendPlainText(data.decode('utf-8'))
 
     def updateMainWindowTitle(self):
-        title = 'Crispy - {}'.format(self.calculation.baseName)
+        if not self.calculation.baseName:
+            title = 'Crispy'
+        else:
+            title = 'Crispy - {}'.format(self.calculation.baseName)
         self.setMainWindowTitle(title)
 
     def updateResultsContextMenu(self, flag):
@@ -1880,7 +1888,11 @@ class QuantyResultDetailsDialog(QDialog):
         self.updateTitle()
 
     def updateTitle(self):
-        self.setWindowTitle('Details for {}'.format(self.calculation.baseName))
+        if not self.calculation.baseName:
+            title = 'Details'
+        else:
+            title = 'Details for {}'.format(self.calculation.baseName)
+        self.setWindowTitle(title)
 
     def clear(self):
         self.inputPlainTextEdit.clear()
