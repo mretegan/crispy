@@ -27,9 +27,10 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '17/07/2017'
+__date__ = '20/09/2017'
 
 
+# from PyQt5.QtCore import QTimer, Qt
 from PyQt5.QtWidgets import QComboBox, QLineEdit
 from PyQt5.QtGui import QIntValidator, QDoubleValidator
 
@@ -46,7 +47,27 @@ class ComboBox(QComboBox):
         self.blockSignals(False)
 
 
-class IntLineEdit(QLineEdit):
+# class LineEdit(QLineEdit):
+#     def __init__(self, *args, **kwargs):
+#         super(LineEdit, self).__init__(*args, **kwargs)
+#         self.textEdited.connect(self._timer)
+
+#     def _timer(self):
+#         QTimer.singleShot(500, self._textEdited)
+
+#     def _textEdited(self):
+#         try:
+#             self.getList()
+#         except ValueError:
+#             return
+#         self.editingFinished.emit()
+
+class LineEdit(QLineEdit):
+    def __init__(self, *args, **kwargs):
+        super(LineEdit, self).__init__(*args, **kwargs)
+
+
+class IntLineEdit(LineEdit):
     def __init__(self, *args, **kwargs):
         super(IntLineEdit, self).__init__(*args, **kwargs)
         self.setValidator(QIntValidator(self))
@@ -58,7 +79,7 @@ class IntLineEdit(QLineEdit):
         self.setText(str(value))
 
 
-class DoubleLineEdit(QLineEdit):
+class DoubleLineEdit(LineEdit):
     def __init__(self, *args, **kwargs):
         super(DoubleLineEdit, self).__init__(*args, **kwargs)
         validator = QDoubleValidator(self)
@@ -71,7 +92,7 @@ class DoubleLineEdit(QLineEdit):
         self.setText(str(value))
 
 
-class VectorLineEdit(QLineEdit):
+class VectorLineEdit(LineEdit):
     def __init__(self, *args, **kwargs):
         super(VectorLineEdit, self).__init__(*args, **kwargs)
 
@@ -99,7 +120,7 @@ class VectorLineEdit(QLineEdit):
         self.setText(text)
 
 
-class DoubleListLineEdit(QLineEdit):
+class DoubleListLineEdit(LineEdit):
     def __init__(self, *args, **kwargs):
         super(DoubleListLineEdit, self).__init__(*args, **kwargs)
 

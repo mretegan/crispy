@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '19/09/2018'
+__date__ = '20/09/2018'
 
 from collections import OrderedDict as odict
 import copy
@@ -170,7 +170,7 @@ class ResultsModel(QAbstractItemModel):
 
     def updateItem(self, index, item):
         row = index.row()
-        self.modelData[row] = item
+        self.modelData[row] = copy.deepcopy(item)
         self.modelDataUpdated.emit(index)
 
     def getCheckedItems(self):

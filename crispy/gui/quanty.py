@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '19/09/2018'
+__date__ = '20/09/2018'
 
 
 import copy
@@ -90,6 +90,9 @@ class Spectrum1D(object):
     def shift(self, value):
         self.x = self.x + value
 
+    def scale(self, value):
+        self.y = self.y * value
+
 
 class QuantySpectra(object):
 
@@ -100,6 +103,9 @@ class QuantySpectra(object):
     def __init__(self):
         self._toCalculateChecked = None
         self._toPlotChecked = None
+
+        self.scale = 1.0
+        self.broadening = list()
 
     @property
     def toPlot(self):
@@ -139,15 +145,13 @@ class QuantySpectra(object):
     def toPlotChecked(self, values):
         self._toPlotChecked = values
 
-    def processSpectra(self, scale=None, shift=None, broadening=None):
+    def process(self):
         self.processed = copy.deepcopy(self.raw)
-
         for spectrum in self.processed:
-            if shift is not None:
-                spectrum.shift(shift)
-
-            if broadening is not None:
-                spectrum.broaden(broadening)
+            if self.broadening:
+                spectrum.broaden(self.broadening)
+            if self.scale != 0.0:
+                spectrum.scale(self.scale)
 
     def loadFromDisk(self, calculation):
         """
@@ -199,14 +203,16 @@ class QuantySpectra(object):
                     spectrum.xLabel = 'Binding Energy (eV)'
                 spectrum.yLabel = 'Intensity (a.u.)'
 
-                broadening = [[calculation.e1Gaussian, 'gaussian'], ]
+                self.broadening = [[calculation.e1Gaussian, 'gaussian'], ]
             else:
                 pass
                 # return data[:, 2::2][:, 0]
             self.raw.append(spectrum)
 
         # Process the spectra once they where read from disk.
-        self.processSpectra(broadening=broadening)
+        self.scale = 1.0
+        self.broadening = list()
+        self.process()
 
 
 class QuantyCalculation(object):
@@ -530,13 +536,13 @@ class QuantyDockWidget(QDockWidget):
 
         self.calculation = QuantyCalculation()
         self.populateWidget()
-        self.enableActions()
+        self.activateWidget()
 
         self.timeout = 4000
 
         self.hamiltonianSplitter.setSizes((150, 300, 10))
 
-    def enableActions(self):
+    def activateWidget(self):
         self.elementComboBox.currentTextChanged.connect(self.resetCalculation)
         self.chargeComboBox.currentTextChanged.connect(self.resetCalculation)
         self.symmetryComboBox.currentTextChanged.connect(self.resetCalculation)
@@ -721,6 +727,7 @@ class QuantyDockWidget(QDockWidget):
 
         if not hasattr(self, 'resultDetailsDialog'):
             self.resultDetailsDialog = QuantyResultDetailsDialog(parent=self)
+        self.resultDetailsDialog.calculation = c
 
     def enableWidget(self, flag=True):
         self.elementComboBox.setEnabled(flag)
@@ -1466,9 +1473,7 @@ class QuantyDockWidget(QDockWidget):
 
         # Once all processing is done, store the calculation in the
         # results model. Upon finishing this, a signal is emitted by the
-        # model which triggers some updates to be performed. A better idea is
-        # to get the current selection and extend it to include this last
-        # calculation.
+        # model which triggers some updates to be performed.
         self.resultsModel.appendItems(self.calculation)
 
         # If the "Hamiltonian Setup" page is currently selected, when the
@@ -1623,9 +1628,9 @@ class QuantyDockWidget(QDockWidget):
         self.populateWidget()
         self.updateMainWindowTitle()
 
-        self.resultDetailsDialog.populateWidget(self.calculation)
+        self.resultDetailsDialog.populateWidget()
 
-    def updateResultsModel(self):
+    def updateResultsModelData(self):
         index = self.getLastSelectedResultsModelIndex()
         if index is None:
             return
@@ -1808,9 +1813,9 @@ class QuantyResultDetailsDialog(QDialog):
             'crispy:' + os.path.join('gui', 'uis', 'quanty', 'details.ui'))
         loadUi(path, baseinstance=self, package='crispy.gui')
 
-        self.enableActions()
+        self.activateWidget()
 
-    def enableActions(self):
+    def activateWidget(self):
         self.spectraModel = SpectraModel(parent=self)
         self.spectraListView.setModel(self.spectraModel)
         self.spectraModel.checkStateChanged.connect(
@@ -1818,17 +1823,21 @@ class QuantyResultDetailsDialog(QDialog):
         font = QFontDatabase.systemFont(QFontDatabase.FixedFont)
         if sys.platform == 'darwin':
             font.setPointSize(font.pointSize() + 1)
+        self.scaleLineEdit.returnPressed.connect(self.updateScale)
         self.inputPlainTextEdit.setFont(font)
         self.outputPlainTextEdit.setFont(font)
+        self.closePushButton.setAutoDefault(False)
+        self.closePushButton.clicked.connect(self.accept)
 
-    def populateWidget(self, calculation):
-        self.calculation = calculation
-        self.inputPlainTextEdit.setPlainText(calculation.input)
-        self.outputPlainTextEdit.setPlainText(calculation.output)
+    def populateWidget(self):
+        c = self.calculation
         self.spectraModel.setModelData(
-            calculation.spectra.toPlot, calculation.spectra.toPlotChecked)
+            c.spectra.toPlot, c.spectra.toPlotChecked)
         self.spectraListView.selectionModel().setCurrentIndex(
             self.spectraModel.index(0, 0), QItemSelectionModel.Select)
+        self.scaleLineEdit.setValue(self.calculation.spectra.scale)
+        self.inputPlainTextEdit.setPlainText(c.input)
+        self.outputPlainTextEdit.setPlainText(c.output)
 
     def clear(self):
         self.inputPlainTextEdit.clear()
@@ -1836,10 +1845,17 @@ class QuantyResultDetailsDialog(QDialog):
         self.spectraModel.clear()
 
     def updateSpectraCheckState(self, checkedItems):
-        if not checkedItems:
-            self.calculation.isChecked = False
+        # if not checkedItems:
+        #     self.calculation.isChecked = False
         self.calculation.spectra.toPlotChecked = checkedItems
-        self.parent().updateResultsModel()
+        self.parent().updateResultsModelData()
+
+    def updateScale(self):
+        scale = self.scaleLineEdit.getValue()
+
+        self.calculation.spectra.scale = scale
+        self.calculation.spectra.process()
+        self.parent().updateResultsModelData()
 
 
 if __name__ == '__main__':
