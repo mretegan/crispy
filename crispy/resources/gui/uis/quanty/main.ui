@@ -303,11 +303,11 @@
                <property name="movable">
                 <bool>true</bool>
                </property>
-               <widget class="QWidget" name="e1Tab">
+               <widget class="QWidget" name="xTab">
                 <attribute name="title">
                  <string>Incident Energy</string>
                 </attribute>
-                <layout class="QVBoxLayout" name="e1HBoxLayout">
+                <layout class="QVBoxLayout" name="xHBoxLayout">
                  <property name="spacing">
                   <number>6</number>
                  </property>
@@ -324,16 +324,16 @@
                   <number>6</number>
                  </property>
                  <item>
-                  <layout class="QHBoxLayout" name="e1RangeHBoxLayout">
+                  <layout class="QHBoxLayout" name="xRangeHBoxLayout">
                    <item>
-                    <widget class="QLabel" name="e1RangeLabel">
+                    <widget class="QLabel" name="xRangeLabel">
                      <property name="text">
                       <string>Range (eV)</string>
                      </property>
                     </widget>
                    </item>
                    <item>
-                    <widget class="DoubleLineEdit" name="e1MinLineEdit">
+                    <widget class="DoubleLineEdit" name="xMinLineEdit">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                        <horstretch>0</horstretch>
@@ -352,7 +352,7 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="DoubleLineEdit" name="e1MaxLineEdit">
+                    <widget class="DoubleLineEdit" name="xMaxLineEdit">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                        <horstretch>0</horstretch>
@@ -373,16 +373,16 @@
                   </layout>
                  </item>
                  <item>
-                  <layout class="QHBoxLayout" name="e1NPointsHBoxLayout">
+                  <layout class="QHBoxLayout" name="xNPointsHBoxLayout">
                    <item>
-                    <widget class="QLabel" name="e1NPointslabel">
+                    <widget class="QLabel" name="xNPointslabel">
                      <property name="text">
                       <string>Number of Points</string>
                      </property>
                     </widget>
                    </item>
                    <item>
-                    <widget class="IntLineEdit" name="e1NPointsLineEdit">
+                    <widget class="IntLineEdit" name="xNPointsLineEdit">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                        <horstretch>0</horstretch>
@@ -403,16 +403,16 @@
                   </layout>
                  </item>
                  <item>
-                  <widget class="QLabel" name="e1BroadeningLabel">
+                  <widget class="QLabel" name="xBroadeningLabel">
                    <property name="text">
                     <string>Broadening FWHM (eV)</string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <layout class="QHBoxLayout" name="e1LorentzianHBoxLayout">
+                  <layout class="QHBoxLayout" name="xLorentzianHBoxLayout">
                    <item>
-                    <spacer name="e1LorentzianLeftSpacer">
+                    <spacer name="xLorentzianLeftSpacer">
                      <property name="orientation">
                       <enum>Qt::Horizontal</enum>
                      </property>
@@ -428,14 +428,14 @@
                     </spacer>
                    </item>
                    <item>
-                    <widget class="QLabel" name="e1LorentzianLabel">
+                    <widget class="QLabel" name="xLorentzianLabel">
                      <property name="text">
                       <string>Lorentzian</string>
                      </property>
                     </widget>
                    </item>
                    <item>
-                    <widget class="DoubleListLineEdit" name="e1LorentzianLineEdit">
+                    <widget class="DoubleListLineEdit" name="xLorentzianLineEdit">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                        <horstretch>0</horstretch>
@@ -459,9 +459,9 @@
                   </layout>
                  </item>
                  <item>
-                  <layout class="QHBoxLayout" name="e1GaussianHBoxLayout">
+                  <layout class="QHBoxLayout" name="xGaussianHBoxLayout">
                    <item>
-                    <spacer name="e1GaussianLeftSpacer">
+                    <spacer name="xGaussianLeftSpacer">
                      <property name="orientation">
                       <enum>Qt::Horizontal</enum>
                      </property>
@@ -477,14 +477,14 @@
                     </spacer>
                    </item>
                    <item>
-                    <widget class="QLabel" name="e1GaussianLabel">
+                    <widget class="QLabel" name="xGaussianLabel">
                      <property name="text">
                       <string>Gaussian</string>
                      </property>
                     </widget>
                    </item>
                    <item>
-                    <widget class="DoubleLineEdit" name="e1GaussianLineEdit">
+                    <widget class="DoubleLineEdit" name="xGaussianLineEdit">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                        <horstretch>0</horstretch>
@@ -505,7 +505,7 @@
                   </layout>
                  </item>
                  <item>
-                  <widget class="QLabel" name="e1VectorsLabel">
+                  <widget class="QLabel" name="xVectorsLabel">
                    <property name="text">
                     <string>Wave and Polarization Vectors</string>
                    </property>
@@ -657,11 +657,11 @@
                  </item>
                 </layout>
                </widget>
-               <widget class="QWidget" name="e2Tab">
+               <widget class="QWidget" name="yTab">
                 <attribute name="title">
                  <string>Energy Transfer</string>
                 </attribute>
-                <layout class="QVBoxLayout" name="e2HBoxLayout">
+                <layout class="QVBoxLayout" name="yHBoxLayout">
                  <property name="spacing">
                   <number>6</number>
                  </property>
@@ -678,16 +678,16 @@
                   <number>6</number>
                  </property>
                  <item>
-                  <layout class="QHBoxLayout" name="e2RangeHBoxLayout">
+                  <layout class="QHBoxLayout" name="yRangeHBoxLayout">
                    <item>
-                    <widget class="QLabel" name="e2RangeLabel">
+                    <widget class="QLabel" name="yRangeLabel">
                      <property name="text">
                       <string>Range (eV)</string>
                      </property>
                     </widget>
                    </item>
                    <item>
-                    <widget class="DoubleLineEdit" name="e2MinLineEdit">
+                    <widget class="DoubleLineEdit" name="yMinLineEdit">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                        <horstretch>0</horstretch>
@@ -706,7 +706,7 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="DoubleLineEdit" name="e2MaxLineEdit">
+                    <widget class="DoubleLineEdit" name="yMaxLineEdit">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                        <horstretch>0</horstretch>
@@ -727,9 +727,9 @@
                   </layout>
                  </item>
                  <item>
-                  <layout class="QHBoxLayout" name="e2NPointsHBoxLayout">
+                  <layout class="QHBoxLayout" name="yNPointsHBoxLayout">
                    <item>
-                    <widget class="QLabel" name="e2NPointsLabel">
+                    <widget class="QLabel" name="yNPointsLabel">
                      <property name="minimumSize">
                       <size>
                        <width>55</width>
@@ -742,7 +742,7 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="IntLineEdit" name="e2NPointsLineEdit">
+                    <widget class="IntLineEdit" name="yNPointsLineEdit">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                        <horstretch>0</horstretch>
@@ -763,16 +763,16 @@
                   </layout>
                  </item>
                  <item>
-                  <widget class="QLabel" name="e2BroadeningLabel">
+                  <widget class="QLabel" name="yBroadeningLabel">
                    <property name="text">
                     <string>Broadening FWHM (eV)</string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <layout class="QHBoxLayout" name="e2LorentzianHBoxLayout">
+                  <layout class="QHBoxLayout" name="yLorentzianHBoxLayout">
                    <item>
-                    <spacer name="e2LorentzianLeftSpacer">
+                    <spacer name="yLorentzianLeftSpacer">
                      <property name="orientation">
                       <enum>Qt::Horizontal</enum>
                      </property>
@@ -788,14 +788,14 @@
                     </spacer>
                    </item>
                    <item>
-                    <widget class="QLabel" name="e2LorentzianLabel">
+                    <widget class="QLabel" name="yLorentzianLabel">
                      <property name="text">
                       <string>Lorentzian</string>
                      </property>
                     </widget>
                    </item>
                    <item>
-                    <widget class="DoubleListLineEdit" name="e2LorentzianLineEdit">
+                    <widget class="DoubleListLineEdit" name="yLorentzianLineEdit">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                        <horstretch>0</horstretch>
@@ -816,9 +816,9 @@
                   </layout>
                  </item>
                  <item>
-                  <layout class="QHBoxLayout" name="e2GaussianHBoxLayout">
+                  <layout class="QHBoxLayout" name="yGaussianHBoxLayout">
                    <item>
-                    <spacer name="e2GaussianLeftSpacer">
+                    <spacer name="yGaussianLeftSpacer">
                      <property name="orientation">
                       <enum>Qt::Horizontal</enum>
                      </property>
@@ -834,14 +834,14 @@
                     </spacer>
                    </item>
                    <item>
-                    <widget class="QLabel" name="e2GaussianLabel">
+                    <widget class="QLabel" name="yGaussianLabel">
                      <property name="text">
                       <string>Gaussian</string>
                      </property>
                     </widget>
                    </item>
                    <item>
-                    <widget class="DoubleLineEdit" name="e2GaussianLineEdit">
+                    <widget class="DoubleLineEdit" name="yGaussianLineEdit">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                        <horstretch>0</horstretch>
@@ -862,7 +862,7 @@
                   </layout>
                  </item>
                  <item>
-                  <widget class="QLabel" name="e2VectorsLabel">
+                  <widget class="QLabel" name="yVectorsLabel">
                    <property name="text">
                     <string>Wave and Polarization Vectors</string>
                    </property>
@@ -1615,18 +1615,18 @@
   <tabstop>edgeComboBox</tabstop>
   <tabstop>temperatureLineEdit</tabstop>
   <tabstop>magneticFieldLineEdit</tabstop>
-  <tabstop>e1MinLineEdit</tabstop>
-  <tabstop>e1MaxLineEdit</tabstop>
-  <tabstop>e1NPointsLineEdit</tabstop>
-  <tabstop>e1LorentzianLineEdit</tabstop>
-  <tabstop>e1GaussianLineEdit</tabstop>
+  <tabstop>xMinLineEdit</tabstop>
+  <tabstop>xMaxLineEdit</tabstop>
+  <tabstop>xNPointsLineEdit</tabstop>
+  <tabstop>xLorentzianLineEdit</tabstop>
+  <tabstop>xGaussianLineEdit</tabstop>
   <tabstop>k1LineEdit</tabstop>
   <tabstop>eps11LineEdit</tabstop>
-  <tabstop>e2MinLineEdit</tabstop>
-  <tabstop>e2MaxLineEdit</tabstop>
-  <tabstop>e2NPointsLineEdit</tabstop>
-  <tabstop>e2LorentzianLineEdit</tabstop>
-  <tabstop>e2GaussianLineEdit</tabstop>
+  <tabstop>yMinLineEdit</tabstop>
+  <tabstop>yMaxLineEdit</tabstop>
+  <tabstop>yNPointsLineEdit</tabstop>
+  <tabstop>yLorentzianLineEdit</tabstop>
+  <tabstop>yGaussianLineEdit</tabstop>
   <tabstop>k2LineEdit</tabstop>
   <tabstop>eps21LineEdit</tabstop>
   <tabstop>nPsisAutoCheckBox</tabstop>

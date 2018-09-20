@@ -82,10 +82,12 @@ class Spectrum1D(object):
     def xScale(self):
         return np.abs(self.x.min() - self.x.max()) / self.x.shape[0]
 
-    def broaden(self, parameters):
-        for (fwhm, kind) in parameters:
-            fwhm = fwhm / self.xScale
-            self.y = broaden(self.y, fwhm, kind)
+    def broaden(self, broadenings):
+        for kind in broadenings:
+            if kind == 'gaussian':
+                fwhm, = broadenings[kind]
+                fwhm = fwhm / self.xScale
+                self.y = broaden(self.y, fwhm, kind)
 
     def shift(self, values):
         value, _ = values
@@ -104,7 +106,7 @@ class QuantySpectra(object):
     _defaults = {
         'scale': 1.0,
         'shift': (0.0, 0.0),
-        'broadening': list(),
+        'broadenings': dict(),
     }
 
     def __init__(self):
@@ -158,8 +160,8 @@ class QuantySpectra(object):
             return
 
         for spectrum in self.processed:
-            if self.broadening:
-                spectrum.broaden(self.broadening)
+            if self.broadenings:
+                spectrum.broaden(self.broadenings)
             if self.scale != self._defaults['scale']:
                 spectrum.scale(self.scale)
             if self.shift != self._defaults['shift']:
@@ -194,9 +196,9 @@ class QuantySpectra(object):
             rows, columns = data.shape
 
             if calculation.experiment in ('XAS', 'XPS'):
-                xMin = calculation.e1Min
-                xMax = calculation.e1Max
-                xNPoints = calculation.e1NPoints
+                xMin = calculation.xMin
+                xMax = calculation.xMax
+                xNPoints = calculation.xNPoints
 
                 x = np.linspace(xMin, xMax, xNPoints + 1)
                 y = data[:, 2::2].flatten()
@@ -215,15 +217,15 @@ class QuantySpectra(object):
                     spectrum.xLabel = 'Binding Energy (eV)'
                 spectrum.yLabel = 'Intensity (a.u.)'
 
-                self.broadening = [[calculation.e1Gaussian, 'gaussian'], ]
+                self.broadenings = {'gaussian': (calculation.xGaussian, ), }
             else:
                 pass
                 # return data[:, 2::2][:, 0]
             self.raw.append(spectrum)
 
         # Process the spectra once they where read from disk.
-        self.__dict__.update(self._defaults)
         self.process()
+        self.__dict__.update(self._defaults)
 
 
 class QuantyCalculation(object):
@@ -238,19 +240,19 @@ class QuantyCalculation(object):
             ('edge', 'K (1s)'),
             ('temperature', 10.0),
             ('magneticField', 0.0),
-            ('e1Min', None),
-            ('e1Max', None),
-            ('e1NPoints', None),
-            ('e1Lorentzian', None),
-            ('e1Gaussian', None),
+            ('xMin', None),
+            ('xMax', None),
+            ('xNPoints', None),
+            ('xLorentzian', None),
+            ('xGaussian', None),
             ('k1', [0, 0, 1]),
             ('eps11', [0, 1, 0]),
             ('eps12', [1, 0, 0]),
-            ('e2Min', None),
-            ('e2Max', None),
-            ('e2NPoints', None),
-            ('e2Lorentzian', None),
-            ('e2Gaussian', None),
+            ('yMin', None),
+            ('yMax', None),
+            ('yNPoints', None),
+            ('yLorentzian', None),
+            ('yGaussian', None),
             ('k2', [0, 0, 0]),
             ('eps21', [0, 0, 0]),
             ('eps22', [0, 0, 0]),
@@ -325,22 +327,22 @@ class QuantyCalculation(object):
         self.nPsisMax = self.nPsis
         self.hamiltonianTerms = branch['hamiltonian terms']
 
-        self.e1Label = branch['axes'][0][0]
-        self.e1Min = branch['axes'][0][1]
-        self.e1Max = branch['axes'][0][2]
-        self.e1NPoints = branch['axes'][0][3]
-        self.e1Edge = branch['axes'][0][4]
-        self.e1Lorentzian = branch['axes'][0][5]
-        self.e1Gaussian = branch['axes'][0][6]
+        self.xLabel = branch['axes'][0][0]
+        self.xMin = branch['axes'][0][1]
+        self.xMax = branch['axes'][0][2]
+        self.xNPoints = branch['axes'][0][3]
+        self.xEdge = branch['axes'][0][4]
+        self.xLorentzian = branch['axes'][0][5]
+        self.xGaussian = branch['axes'][0][6]
 
         if self.experiment == 'RIXS':
-            self.e2Label = branch['axes'][1][0]
-            self.e2Min = branch['axes'][1][1]
-            self.e2Max = branch['axes'][1][2]
-            self.e2NPoints = branch['axes'][1][3]
-            self.e2Edge = branch['axes'][1][4]
-            self.e2Lorentzian = branch['axes'][1][5]
-            self.e2Gaussian = branch['axes'][1][6]
+            self.yLabel = branch['axes'][1][0]
+            self.yMin = branch['axes'][1][1]
+            self.yMax = branch['axes'][1][2]
+            self.yNPoints = branch['axes'][1][3]
+            self.yEdge = branch['axes'][1][4]
+            self.yLorentzian = branch['axes'][1][5]
+            self.yGaussian = branch['axes'][1][6]
 
         self.spectra = QuantySpectra()
 
@@ -424,24 +426,24 @@ class QuantyCalculation(object):
 
         replacements['$T'] = self.temperature
 
-        replacements['$Emin1'] = self.e1Min
-        replacements['$Emax1'] = self.e1Max
-        replacements['$NE1'] = self.e1NPoints
-        replacements['$Eedge1'] = self.e1Edge
+        replacements['$Emin1'] = self.xMin
+        replacements['$Emax1'] = self.xMax
+        replacements['$NE1'] = self.xNPoints
+        replacements['$Eedge1'] = self.xEdge
 
-        if len(self.e1Lorentzian) == 1:
+        if len(self.xLorentzian) == 1:
             replacements['$Gamma1'] = 0.1
-            replacements['$Gmin1'] = self.e1Lorentzian[0]
-            replacements['$Gmax1'] = self.e1Lorentzian[0]
-            replacements['$Egamma1'] = (self.e1Min + self.e1Max) / 2
+            replacements['$Gmin1'] = self.xLorentzian[0]
+            replacements['$Gmax1'] = self.xLorentzian[0]
+            replacements['$Egamma1'] = (self.xMin + self.xMax) / 2
         else:
             replacements['$Gamma1'] = 0.1
-            replacements['$Gmin1'] = self.e1Lorentzian[0]
-            replacements['$Gmax1'] = self.e1Lorentzian[1]
-            if len(self.e1Lorentzian) == 2:
-                replacements['$Egamma1'] = (self.e1Min + self.e1Max) / 2
+            replacements['$Gmin1'] = self.xLorentzian[0]
+            replacements['$Gmax1'] = self.xLorentzian[1]
+            if len(self.xLorentzian) == 2:
+                replacements['$Egamma1'] = (self.xMin + self.xMax) / 2
             else:
-                replacements['$Egamma1'] = self.e1Lorentzian[2]
+                replacements['$Egamma1'] = self.xLorentzian[2]
 
         s = '{{{0:.8g}, {1:.8g}, {2:.8g}}}'
 
@@ -464,12 +466,12 @@ class QuantyCalculation(object):
             # The Lorentzian broadening along the incident axis cannot be
             # changed in the interface, and must therefore be set to the
             # final value before the start of the calculation.
-            # replacements['$Gamma1'] = self.e1Lorentzian
-            replacements['$Emin2'] = self.e2Min
-            replacements['$Emax2'] = self.e2Max
-            replacements['$NE2'] = self.e2NPoints
-            replacements['$Eedge2'] = self.e2Edge
-            replacements['$Gamma2'] = self.e2Lorentzian[0]
+            # replacements['$Gamma1'] = self.xLorentzian
+            replacements['$Emin2'] = self.yMin
+            replacements['$Emax2'] = self.yMax
+            replacements['$NE2'] = self.yNPoints
+            replacements['$Eedge2'] = self.yEdge
+            replacements['$Gamma2'] = self.yLorentzian[0]
 
         replacements['$NPsisAuto'] = self.nPsisAuto
         replacements['$NPsis'] = self.nPsis
@@ -566,22 +568,22 @@ class QuantyDockWidget(QDockWidget):
         self.magneticFieldLineEdit.editingFinished.connect(
             self.updateMagneticField)
 
-        self.e1MinLineEdit.editingFinished.connect(self.updateE1Min)
-        self.e1MaxLineEdit.editingFinished.connect(self.updateE1Max)
-        self.e1NPointsLineEdit.editingFinished.connect(self.updateE1NPoints)
-        self.e1LorentzianLineEdit.editingFinished.connect(
-            self.updateE1Lorentzian)
-        self.e1GaussianLineEdit.editingFinished.connect(self.updateE1Gaussian)
+        self.xMinLineEdit.editingFinished.connect(self.updateXMin)
+        self.xMaxLineEdit.editingFinished.connect(self.updateXMax)
+        self.xNPointsLineEdit.editingFinished.connect(self.updateXNPoints)
+        self.xLorentzianLineEdit.editingFinished.connect(
+            self.updateXLorentzian)
+        self.xGaussianLineEdit.editingFinished.connect(self.updateXGaussian)
         self.k1LineEdit.editingFinished.connect(self.updateIncidentWaveVector)
         self.eps11LineEdit.editingFinished.connect(
             self.updateIncidentPolarizationVectors)
 
-        self.e2MinLineEdit.editingFinished.connect(self.updateE2Min)
-        self.e2MaxLineEdit.editingFinished.connect(self.updateE2Max)
-        self.e2NPointsLineEdit.editingFinished.connect(self.updateE2NPoints)
-        self.e2LorentzianLineEdit.editingFinished.connect(
-            self.updateE2Lorentzian)
-        self.e2GaussianLineEdit.editingFinished.connect(self.updateE2Gaussian)
+        self.yMinLineEdit.editingFinished.connect(self.updateYMin)
+        self.yMaxLineEdit.editingFinished.connect(self.updateYMax)
+        self.yNPointsLineEdit.editingFinished.connect(self.updateYNPoints)
+        self.yLorentzianLineEdit.editingFinished.connect(
+            self.updateYLorentzian)
+        self.yGaussianLineEdit.editingFinished.connect(self.updateYGaussian)
 
         self.fkLineEdit.editingFinished.connect(self.updateScalingFactors)
         self.gkLineEdit.editingFinished.connect(self.updateScalingFactors)
@@ -619,12 +621,12 @@ class QuantyDockWidget(QDockWidget):
         self.temperatureLineEdit.setValue(c.temperature)
         self.magneticFieldLineEdit.setValue(c.magneticField)
 
-        self.energiesTabWidget.setTabText(0, str(c.e1Label))
-        self.e1MinLineEdit.setValue(c.e1Min)
-        self.e1MaxLineEdit.setValue(c.e1Max)
-        self.e1NPointsLineEdit.setValue(c.e1NPoints)
-        self.e1LorentzianLineEdit.setList(c.e1Lorentzian)
-        self.e1GaussianLineEdit.setValue(c.e1Gaussian)
+        self.energiesTabWidget.setTabText(0, str(c.xLabel))
+        self.xMinLineEdit.setValue(c.xMin)
+        self.xMaxLineEdit.setValue(c.xMax)
+        self.xNPointsLineEdit.setValue(c.xNPoints)
+        self.xLorentzianLineEdit.setList(c.xLorentzian)
+        self.xGaussianLineEdit.setValue(c.xGaussian)
 
         self.k1LineEdit.setVector(c.k1)
         self.eps11LineEdit.setVector(c.eps11)
@@ -632,14 +634,14 @@ class QuantyDockWidget(QDockWidget):
 
         if c.experiment == 'RIXS':
             if self.energiesTabWidget.count() == 1:
-                tab = self.energiesTabWidget.findChild(QWidget, 'e2Tab')
+                tab = self.energiesTabWidget.findChild(QWidget, 'yTab')
                 self.energiesTabWidget.addTab(tab, tab.objectName())
-                self.energiesTabWidget.setTabText(1, c.e2Label)
-            self.e2MinLineEdit.setValue(c.e2Min)
-            self.e2MaxLineEdit.setValue(c.e2Max)
-            self.e2NPointsLineEdit.setValue(c.e2NPoints)
-            self.e2LorentzianLineEdit.setList(c.e2Lorentzian)
-            self.e2GaussianLineEdit.setValue(c.e2Gaussian)
+                self.energiesTabWidget.setTabText(1, c.yLabel)
+            self.yMinLineEdit.setValue(c.yMin)
+            self.yMaxLineEdit.setValue(c.yMax)
+            self.yNPointsLineEdit.setValue(c.yNPoints)
+            self.yLorentzianLineEdit.setList(c.yLorentzian)
+            self.yGaussianLineEdit.setValue(c.yGaussian)
             self.k2LineEdit.setVector(c.k2)
             self.eps21LineEdit.setVector(c.eps21)
             self.eps22LineEdit.setVector(c.eps22)
@@ -750,19 +752,19 @@ class QuantyDockWidget(QDockWidget):
         self.temperatureLineEdit.setEnabled(flag)
         self.magneticFieldLineEdit.setEnabled(flag)
 
-        self.e1MinLineEdit.setEnabled(flag)
-        self.e1MaxLineEdit.setEnabled(flag)
-        self.e1NPointsLineEdit.setEnabled(flag)
-        self.e1LorentzianLineEdit.setEnabled(flag)
-        self.e1GaussianLineEdit.setEnabled(flag)
+        self.xMinLineEdit.setEnabled(flag)
+        self.xMaxLineEdit.setEnabled(flag)
+        self.xNPointsLineEdit.setEnabled(flag)
+        self.xLorentzianLineEdit.setEnabled(flag)
+        self.xGaussianLineEdit.setEnabled(flag)
         self.k1LineEdit.setEnabled(flag)
         self.eps11LineEdit.setEnabled(flag)
 
-        self.e2MinLineEdit.setEnabled(flag)
-        self.e2MaxLineEdit.setEnabled(flag)
-        self.e2NPointsLineEdit.setEnabled(flag)
-        self.e2LorentzianLineEdit.setEnabled(flag)
-        self.e2GaussianLineEdit.setEnabled(flag)
+        self.yMinLineEdit.setEnabled(flag)
+        self.yMaxLineEdit.setEnabled(flag)
+        self.yNPointsLineEdit.setEnabled(flag)
+        self.yLorentzianLineEdit.setEnabled(flag)
+        self.yGaussianLineEdit.setEnabled(flag)
 
         self.fkLineEdit.setEnabled(flag)
         self.gkLineEdit.setEnabled(flag)
@@ -828,114 +830,114 @@ class QuantyDockWidget(QDockWidget):
 
         self.calculation.magneticField = magneticField
 
-    def updateE1Min(self):
-        e1Min = self.e1MinLineEdit.getValue()
+    def updateXMin(self):
+        xMin = self.xMinLineEdit.getValue()
 
-        if e1Min > self.calculation.e1Max:
+        if xMin > self.calculation.xMax:
             message = ('The lower energy limit cannot be larger than '
                        'the upper limit.')
             self.getStatusBar().showMessage(message, self.timeout)
-            self.e1MinLineEdit.setValue(self.calculation.e1Min)
+            self.xMinLineEdit.setValue(self.calculation.xMin)
             return
 
-        self.calculation.e1Min = e1Min
+        self.calculation.xMin = xMin
 
-    def updateE1Max(self):
-        e1Max = self.e1MaxLineEdit.getValue()
+    def updateXMax(self):
+        xMax = self.xMaxLineEdit.getValue()
 
-        if e1Max < self.calculation.e1Min:
+        if xMax < self.calculation.xMin:
             message = ('The upper energy limit cannot be smaller than '
                        'the lower limit.')
             self.getStatusBar().showMessage(message, self.timeout)
-            self.e1MaxLineEdit.setValue(self.calculation.e1Max)
+            self.xMaxLineEdit.setValue(self.calculation.xMax)
             return
 
-        self.calculation.e1Max = e1Max
+        self.calculation.xMax = xMax
 
-    def updateE1NPoints(self):
-        e1NPoints = self.e1NPointsLineEdit.getValue()
+    def updateXNPoints(self):
+        xNPoints = self.xNPointsLineEdit.getValue()
 
-        e1Min = self.calculation.e1Min
-        e1Max = self.calculation.e1Max
-        e1LorentzianMin = float(self.calculation.e1Lorentzian[0])
+        xMin = self.calculation.xMin
+        xMax = self.calculation.xMax
+        xLorentzianMin = float(self.calculation.xLorentzian[0])
 
-        e1NPointsMin = int(np.floor((e1Max - e1Min) / e1LorentzianMin))
-        if e1NPoints < e1NPointsMin:
+        xNPointsMin = int(np.floor((xMax - xMin) / xLorentzianMin))
+        if xNPoints < xNPointsMin:
             message = ('The number of points must be greater than '
-                       '{}.'.format(e1NPointsMin))
+                       '{}.'.format(xNPointsMin))
             self.getStatusBar().showMessage(message, self.timeout)
-            self.e1NPointsLineEdit.setValue(self.calculation.e1NPoints)
+            self.xNPointsLineEdit.setValue(self.calculation.xNPoints)
             return
 
-        self.calculation.e1NPoints = e1NPoints
+        self.calculation.xNPoints = xNPoints
 
-    def updateE1Lorentzian(self):
+    def updateXLorentzian(self):
         try:
-            e1Lorentzian = self.e1LorentzianLineEdit.getList()
+            xLorentzian = self.xLorentzianLineEdit.getList()
         except ValueError:
             message = 'Invalid data for the Lorentzian brodening.'
             self.getStatusBar().showMessage(message, self.timeout)
-            self.e1LorentzianLineEdit.setList(self.calculation.e1Lorentzian)
+            self.xLorentzianLineEdit.setList(self.calculation.xLorentzian)
             return
 
         # Do some validation of the input value.
-        if len(e1Lorentzian) > 3:
+        if len(xLorentzian) > 3:
             message = 'The broadening can have at most three elements.'
             self.getStatusBar().showMessage(message, self.timeout)
-            self.e1LorentzianLineEdit.setList(self.calculation.e1Lorentzian)
+            self.xLorentzianLineEdit.setList(self.calculation.xLorentzian)
             return
 
         try:
-            e1LorentzianMin = float(e1Lorentzian[0])
+            xLorentzianMin = float(xLorentzian[0])
         except IndexError:
             pass
         else:
-            if e1LorentzianMin < 0.1:
+            if xLorentzianMin < 0.1:
                 message = 'The broadening cannot be smaller than 0.1.'
                 self.getStatusBar().showMessage(message, self.timeout)
-                self.e1LorentzianLineEdit.setList(
-                    self.calculation.e1Lorentzian)
+                self.xLorentzianLineEdit.setList(
+                    self.calculation.xLorentzian)
                 return
 
         try:
-            e1LorentzianMax = float(e1Lorentzian[1])
+            xLorentzianMax = float(xLorentzian[1])
         except IndexError:
             pass
         else:
-            if e1LorentzianMax < 0.1:
+            if xLorentzianMax < 0.1:
                 message = 'The broadening cannot be smaller than 0.1.'
                 self.getStatusBar().showMessage(message, self.timeout)
-                self.e1LorentzianLineEdit.setList(
-                    self.calculation.e1Lorentzian)
+                self.xLorentzianLineEdit.setList(
+                    self.calculation.xLorentzian)
 
         try:
-            e1LorentzianPivotEnergy = float(e1Lorentzian[2])
+            xLorentzianPivotEnergy = float(xLorentzian[2])
         except IndexError:
             pass
         else:
-            e1Min = self.calculation.e1Min
-            e1Max = self.calculation.e1Max
+            xMin = self.calculation.xMin
+            xMax = self.calculation.xMax
 
-            if not (e1Min < e1LorentzianPivotEnergy < e1Max):
+            if not (xMin < xLorentzianPivotEnergy < xMax):
                 message = ('The transition point must lie between the upper '
                            'and lower energy limits.')
                 self.getStatusBar().showMessage(message, self.timeout)
-                self.e1LorentzianLineEdit.setList(
-                    self.calculation.e1Lorentzian)
+                self.xLorentzianLineEdit.setList(
+                    self.calculation.xLorentzian)
                 return
 
-        self.calculation.e1Lorentzian = e1Lorentzian
+        self.calculation.xLorentzian = xLorentzian
 
-    def updateE1Gaussian(self):
-        e1Gaussian = self.e1GaussianLineEdit.getValue()
+    def updateXGaussian(self):
+        xGaussian = self.xGaussianLineEdit.getValue()
 
-        if e1Gaussian < 0:
+        if xGaussian < 0:
             message = 'The broadening cannot be negative.'
             self.getStatusBar().showMessage(message, self.timeout)
-            self.e1GaussianLineEdit.setValue(self.calculation.e1Gaussian)
+            self.xGaussianLineEdit.setValue(self.calculation.xGaussian)
             return
 
-        self.calculation.e1Gaussian = e1Gaussian
+        self.calculation.xGaussian = xGaussian
 
     def updateIncidentWaveVector(self):
         try:
@@ -1012,114 +1014,114 @@ class QuantyDockWidget(QDockWidget):
         self.eps12LineEdit.setVector(eps12)
         self.calculation.eps12 = eps12
 
-    def updateE2Min(self):
-        e2Min = self.e2MinLineEdit.getValue()
+    def updateYMin(self):
+        yMin = self.yMinLineEdit.getValue()
 
-        if e2Min > self.calculation.e2Max:
+        if yMin > self.calculation.yMax:
             message = ('The lower energy limit cannot be larger than '
                        'the upper limit.')
             self.getStatusBar().showMessage(message, self.timeout)
-            self.e2MinLineEdit.setValue(self.calculation.e2Min)
+            self.yMinLineEdit.setValue(self.calculation.yMin)
             return
 
-        self.calculation.e2Min = e2Min
+        self.calculation.yMin = yMin
 
-    def updateE2Max(self):
-        e2Max = self.e2MaxLineEdit.getValue()
+    def updateYMax(self):
+        yMax = self.yMaxLineEdit.getValue()
 
-        if e2Max < self.calculation.e2Min:
+        if yMax < self.calculation.yMin:
             message = ('The upper energy limit cannot be smaller than '
                        'the lower limit.')
             self.getStatusBar().showMessage(message, self.timeout)
-            self.e2MaxLineEdit.setValue(self.calculation.e2Max)
+            self.yMaxLineEdit.setValue(self.calculation.yMax)
             return
 
-        self.calculation.e2Max = e2Max
+        self.calculation.yMax = yMax
 
-    def updateE2NPoints(self):
-        e2NPoints = self.e2NPointsLineEdit.getValue()
+    def updateYNPoints(self):
+        yNPoints = self.yNPointsLineEdit.getValue()
 
-        e2Min = self.calculation.e2Min
-        e2Max = self.calculation.e2Max
-        e2LorentzianMin = float(self.calculation.e2Lorentzian[0])
+        yMin = self.calculation.yMin
+        yMax = self.calculation.yMax
+        yLorentzianMin = float(self.calculation.yLorentzian[0])
 
-        e2NPointsMin = int(np.floor((e2Max - e2Min) / e2LorentzianMin))
-        if e2NPoints < e2NPointsMin:
+        yNPointsMin = int(np.floor((yMax - yMin) / yLorentzianMin))
+        if yNPoints < yNPointsMin:
             message = ('The number of points must be greater than '
-                       '{}.'.format(e2NPointsMin))
+                       '{}.'.format(yNPointsMin))
             self.getStatusBar().showMessage(message, self.timeout)
-            self.e2NPointsLineEdit.setValue(self.calculation.e2NPoints)
+            self.yNPointsLineEdit.setValue(self.calculation.yNPoints)
             return
 
-        self.calculation.e2NPoints = e2NPoints
+        self.calculation.yNPoints = yNPoints
 
-    def updateE2Lorentzian(self):
+    def updateYLorentzian(self):
         try:
-            e2Lorentzian = self.e2LorentzianLineEdit.getList()
+            yLorentzian = self.yLorentzianLineEdit.getList()
         except ValueError:
             message = 'Invalid data for the Lorentzian brodening.'
             self.getStatusBar().showMessage(message, self.timeout)
-            self.e2LorentzianLineEdit.setList(self.calculation.e2Lorentzian)
+            self.yLorentzianLineEdit.setList(self.calculation.yLorentzian)
             return
 
         # Do some validation of the input value.
-        if len(e2Lorentzian) > 3:
+        if len(yLorentzian) > 3:
             message = 'The broadening can have at most three elements.'
             self.getStatusBar().showMessage(message, self.timeout)
-            self.e2LorentzianLineEdit.setList(self.calculation.e2Lorentzian)
+            self.yLorentzianLineEdit.setList(self.calculation.yLorentzian)
             return
 
         try:
-            e2LorentzianMin = float(e2Lorentzian[0])
+            yLorentzianMin = float(yLorentzian[0])
         except IndexError:
             pass
         else:
-            if e2LorentzianMin < 0.1:
+            if yLorentzianMin < 0.1:
                 message = 'The broadening cannot be smaller than 0.1.'
                 self.getStatusBar().showMessage(message, self.timeout)
-                self.e2LorentzianLineEdit.setList(
-                    self.calculation.e2Lorentzian)
+                self.yLorentzianLineEdit.setList(
+                    self.calculation.yLorentzian)
                 return
 
         try:
-            e2LorentzianMax = float(e2Lorentzian[1])
+            yLorentzianMax = float(yLorentzian[1])
         except IndexError:
             pass
         else:
-            if e2LorentzianMax < 0.1:
+            if yLorentzianMax < 0.1:
                 message = 'The broadening cannot be smaller than 0.1.'
                 self.getStatusBar().showMessage(message, self.timeout)
-                self.e2LorentzianLineEdit.setList(
-                    self.calculation.e2Lorentzian)
+                self.yLorentzianLineEdit.setList(
+                    self.calculation.yLorentzian)
 
         try:
-            e2LorentzianPivotEnergy = float(e2Lorentzian[2])
+            yLorentzianPivotEnergy = float(yLorentzian[2])
         except IndexError:
             pass
         else:
-            e2Min = self.calculation.e2Min
-            e2Max = self.calculation.e2Max
+            yMin = self.calculation.yMin
+            yMax = self.calculation.yMax
 
-            if not (e2Min < e2LorentzianPivotEnergy < e2Max):
+            if not (yMin < yLorentzianPivotEnergy < yMax):
                 message = ('The transition point must lie between the upper '
                            'and lower energy limits.')
                 self.getStatusBar().showMessage(message, self.timeout)
-                self.e2LorentzianLineEdit.setList(
-                    self.calculation.e2Lorentzian)
+                self.yLorentzianLineEdit.setList(
+                    self.calculation.yLorentzian)
                 return
 
-        self.calculation.e2Lorentzian = list(map(float, e2Lorentzian))
+        self.calculation.yLorentzian = list(map(float, yLorentzian))
 
-    def updateE2Gaussian(self):
-        e2Gaussian = self.e2GaussianLineEdit.getValue()
+    def updateYGaussian(self):
+        yGaussian = self.yGaussianLineEdit.getValue()
 
-        if e2Gaussian < 0:
+        if yGaussian < 0:
             message = 'The broadening cannot be negative.'
             self.getStatusBar().showMessage(message, self.timeout)
-            self.e2GaussianLineEdit.setValue(self.calculation.e2Gaussian)
+            self.yGaussianLineEdit.setValue(self.calculation.yGaussian)
             return
 
-        self.calculation.e2Gaussian = e2Gaussian
+        self.calculation.yGaussian = yGaussian
 
     def updateSpectraCheckState(self, checkedItems):
         self.calculation.spectra.toCalculateChecked = checkedItems
@@ -1505,30 +1507,30 @@ class QuantyDockWidget(QDockWidget):
             self.getPlotWidget().setGraphXLabel('Incident Energy (eV)')
             self.getPlotWidget().setGraphYLabel('Energy Transfer (eV)')
 
-            e1Min = self.calculation.e1Min
-            e1Max = self.calculation.e1Max
-            e1NPoints = self.calculation.e1NPoints
+            xMin = self.calculation.xMin
+            xMax = self.calculation.xMax
+            xNPoints = self.calculation.xNPoints
 
-            e2Min = self.calculation.e2Min
-            e2Max = self.calculation.e2Max
-            e2NPoints = self.calculation.e2NPoints
+            yMin = self.calculation.yMin
+            yMax = self.calculation.yMax
+            yNPoints = self.calculation.yNPoints
 
-            xScale = (e1Max - e1Min) / e1NPoints
-            yScale = (e2Max - e2Min) / e2NPoints
+            xScale = (xMax - xMin) / xNPoints
+            yScale = (yMax - yMin) / yNPoints
             scale = (xScale, yScale)
 
-            xOrigin = e1Min
-            yOrigin = e2Min
+            xOrigin = xMin
+            yOrigin = yMin
             origin = (xOrigin, yOrigin)
 
             z = spectrum.z
 
-            e1Gaussian = self.calculation.e1Gaussian
-            e2Gaussian = self.calculation.e2Gaussian
+            xGaussian = self.calculation.xGaussian
+            yGaussian = self.calculation.yGaussian
 
-            if e1Gaussian > 0 and e2Gaussian > 0:
-                xFwhm = e1Gaussian / xScale
-                yFwhm = e2Gaussian / yScale
+            if xGaussian > 0 and yGaussian > 0:
+                xFwhm = xGaussian / xScale
+                yFwhm = yGaussian / yScale
 
                 fwhm = [xFwhm, yFwhm]
                 z = broaden(z, fwhm, 'gaussian')
@@ -1671,6 +1673,7 @@ class QuantyDockWidget(QDockWidget):
         self.resultsView.resizeColumnsToContents()
         self.calculation.baseName = name
         self.updateMainWindowTitle()
+        self.resultDetailsDialog.updateTitle()
 
     def handleOutputLogging(self):
         self.process.setReadChannel(QProcess.StandardOutput)
@@ -1685,7 +1688,7 @@ class QuantyDockWidget(QDockWidget):
         self.getLoggerWidget().appendPlainText(data.decode('utf-8'))
 
     def updateMainWindowTitle(self):
-        title = 'Crispy - {}'.format(self.calculation.baseName + '.lua')
+        title = 'Crispy - {}'.format(self.calculation.baseName)
         self.setMainWindowTitle(title)
 
     def updateResultsContextMenu(self, flag):
@@ -1836,8 +1839,10 @@ class QuantyResultDetailsDialog(QDialog):
         if sys.platform == 'darwin':
             font.setPointSize(font.pointSize() + 1)
         self.scaleLineEdit.returnPressed.connect(self.updateScale)
-        self.xAxisShiftLineEdit.returnPressed.connect(self.updateShift)
-        self.yAxisShiftLineEdit.returnPressed.connect(self.updateShift)
+        self.xShiftLineEdit.returnPressed.connect(self.updateShift)
+        self.yShiftLineEdit.returnPressed.connect(self.updateShift)
+        self.xGaussianLineEdit.returnPressed.connect(self.updateBroadening)
+        self.yGaussianLineEdit.returnPressed.connect(self.updateBroadening)
         self.inputPlainTextEdit.setFont(font)
         self.outputPlainTextEdit.setFont(font)
         self.closePushButton.setAutoDefault(False)
@@ -1847,27 +1852,41 @@ class QuantyResultDetailsDialog(QDialog):
         c = self.calculation
         if c.experiment == 'RIXS':
             if self.axesTabWidget.count() == 1:
-                tab = self.axesTabWidget.findChild(QWidget, 'yAxisTab')
+                tab = self.axesTabWidget.findChild(QWidget, 'yTab')
                 self.axesTabWidget.addTab(tab, tab.objectName())
-                self.axesTabWidget.setTabText(1, c.e2Label)
+                self.axesTabWidget.setTabText(1, c.yLabel)
         else:
             self.axesTabWidget.removeTab(1)
-            self.axesTabWidget.setTabText(0, c.e1Label)
+            self.axesTabWidget.setTabText(0, c.xLabel)
+
         self.spectraModel.setModelData(
             c.spectra.toPlot, c.spectra.toPlotChecked)
         self.spectraListView.selectionModel().setCurrentIndex(
             self.spectraModel.index(0, 0), QItemSelectionModel.Select)
+
         self.scaleLineEdit.setValue(c.spectra.scale)
-        xAxisShift, yAxisShift = c.spectra.shift
-        self.xAxisShiftLineEdit.setValue(xAxisShift)
-        self.yAxisShiftLineEdit.setValue(yAxisShift)
+        xShift, yShift = c.spectra.shift
+        self.xShiftLineEdit.setValue(xShift)
+        self.yShiftLineEdit.setValue(yShift)
+
+        self.xGaussianLineEdit.setValue(c.xGaussian)
+        self.xLorentzianLineEdit.setList(c.xLorentzian)
+        self.yGaussianLineEdit.setValue(c.yGaussian)
+        self.yLorentzianLineEdit.setList(c.yLorentzian)
+
         self.inputPlainTextEdit.setPlainText(c.input)
         self.outputPlainTextEdit.setPlainText(c.output)
+
+        self.updateTitle()
+
+    def updateTitle(self):
+        self.setWindowTitle('Details for {}'.format(self.calculation.baseName))
 
     def clear(self):
         self.inputPlainTextEdit.clear()
         self.outputPlainTextEdit.clear()
         self.spectraModel.clear()
+        self.setWindowTitle('')
 
     def updateSpectraCheckState(self, checkedItems):
         self.calculation.spectra.toPlotChecked = checkedItems
@@ -1880,11 +1899,59 @@ class QuantyResultDetailsDialog(QDialog):
         self.parent().updateResultsModelData()
 
     def updateShift(self):
-        xAxisShift = self.xAxisShiftLineEdit.getValue()
-        yAxisShift = self.yAxisShiftLineEdit.getValue()
-        self.calculation.spectra.shift = (xAxisShift, yAxisShift)
+        xShift = self.xShiftLineEdit.getValue()
+        yShift = self.yShiftLineEdit.getValue()
+        self.calculation.spectra.shift = (xShift, yShift)
         self.calculation.spectra.process()
         self.parent().updateResultsModelData()
+
+    def updateBroadening(self):
+        self.updateXGaussian()
+        if self.calculation.experiment == 'RIXS':
+            self.updateYGaussian()
+            broadenings = {
+                'gaussian': (
+                    self.calculation.xGaussian,
+                    self.calculation.yGaussian),
+                'lorentzian': (
+                    self.calculation.xLorentzian,
+                    self.calculation.yLorentzian)}
+        else:
+            broadenings = {
+                'gaussian': (
+                    self.calculation.xGaussian, ),
+                'lorentzian': (
+                    self.calculation.xLorentzian, )}
+
+        self.calculation.spectra.broadenings = copy.deepcopy(broadenings)
+        self.calculation.spectra.process()
+        self.parent().updateResultsModelData()
+
+    def updateXGaussian(self):
+        parent = self.parent()
+        xGaussian = self.xGaussianLineEdit.getValue()
+
+        if xGaussian < 0:
+            message = 'The broadening cannot be negative.'
+            parent.getStatusBar().showMessage(message, parent.timeout)
+            self.xGaussianLineEdit.setValue(self.calculation.xGaussian)
+            return
+
+        parent.xGaussianLineEdit.setValue(xGaussian)
+        self.calculation.xGaussian = xGaussian
+
+    def updateYGaussian(self):
+        parent = self.parent()
+        yGaussian = self.yGaussianLineEdit.getValue()
+
+        if yGaussian < 0:
+            message = 'The broadening cannot be negative.'
+            parent.getStatusBar().showMessage(message, parent.timeout)
+            self.yGaussianLineEdit.setValue(self.calculation.yGaussian)
+            return
+
+        parent.yGaussianLineEdit.setValue(yGaussian)
+        self.calculation.yGaussian = yGaussian
 
 
 if __name__ == '__main__':

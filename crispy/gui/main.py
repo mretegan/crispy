@@ -63,7 +63,7 @@ class MainWindow(QMainWindow):
         loadUi(uiPath, baseinstance=self, package='crispy.gui')
 
         # Default elements of the main window.
-        self.setWindowTitle('Crispy - untitled.lua')
+        self.setWindowTitle('Crispy - untitled')
         self.statusbar.showMessage('Ready')
 
         # Logger widget.

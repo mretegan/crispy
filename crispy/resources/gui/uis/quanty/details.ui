@@ -10,12 +10,15 @@
     <height>505</height>
    </rect>
   </property>
+  <property name="focusPolicy">
+   <enum>Qt::ClickFocus</enum>
+  </property>
   <property name="windowTitle">
    <string>Details</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
-    <number>0</number>
+    <number>9</number>
    </property>
    <property name="leftMargin">
     <number>9</number>
@@ -30,16 +33,19 @@
     <number>9</number>
    </property>
    <item>
-    <widget class="QTabWidget" name="tabWidget">
+    <widget class="QTabWidget" name="detailsTabWidget">
      <property name="tabPosition">
       <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="summaryTabWidget">
+     <widget class="QWidget" name="summaryAndSpectraTabWidget">
+      <property name="focusPolicy">
+       <enum>Qt::ClickFocus</enum>
+      </property>
       <attribute name="title">
-       <string>Summary</string>
+       <string>Summary and Spectra</string>
       </attribute>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <property name="leftMargin">
@@ -65,7 +71,7 @@
         </widget>
        </item>
        <item>
-        <layout class="QVBoxLayout" name="verticalLayout_4">
+        <layout class="QVBoxLayout" name="spectraVerticalLayout">
          <item>
           <widget class="QListView" name="spectraListView">
            <property name="sizePolicy">
@@ -146,16 +152,16 @@
             <enum>Qt::NoFocus</enum>
            </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>1</number>
            </property>
            <property name="movable">
             <bool>true</bool>
            </property>
-           <widget class="QWidget" name="xAxisTab">
+           <widget class="QWidget" name="xTab">
             <attribute name="title">
              <string>Incident Energy</string>
             </attribute>
-            <layout class="QVBoxLayout" name="e1HBoxLayout">
+            <layout class="QVBoxLayout" name="xHBoxLayout">
              <property name="spacing">
               <number>6</number>
              </property>
@@ -172,9 +178,9 @@
               <number>6</number>
              </property>
              <item>
-              <layout class="QHBoxLayout" name="xAxisShiftHBoxLayout">
+              <layout class="QHBoxLayout" name="xShiftHBoxLayout">
                <item>
-                <widget class="QLabel" name="xAxisShiftLabel">
+                <widget class="QLabel" name="xShiftLabel">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -187,7 +193,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="DoubleLineEdit" name="xAxisShiftLineEdit">
+                <widget class="DoubleLineEdit" name="xShiftLineEdit">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -208,16 +214,16 @@
               </layout>
              </item>
              <item>
-              <widget class="QLabel" name="e1BroadeningLabel">
+              <widget class="QLabel" name="xBroadeningLabel">
                <property name="text">
                 <string>Broadening FWHM (eV)</string>
                </property>
               </widget>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="e1LorentzianHBoxLayout">
+              <layout class="QHBoxLayout" name="xLorentzianHBoxLayout">
                <item>
-                <spacer name="e1LorentzianLeftSpacer">
+                <spacer name="xLorentzianLeftSpacer">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
                  </property>
@@ -233,14 +239,14 @@
                 </spacer>
                </item>
                <item>
-                <widget class="QLabel" name="e1LorentzianLabel">
+                <widget class="QLabel" name="xLorentzianLabel">
                  <property name="text">
                   <string>Lorentzian</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="DoubleListLineEdit" name="e1LorentzianLineEdit">
+                <widget class="DoubleListLineEdit" name="xLorentzianLineEdit">
                  <property name="enabled">
                   <bool>false</bool>
                  </property>
@@ -267,9 +273,9 @@
               </layout>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="e1GaussianHBoxLayout">
+              <layout class="QHBoxLayout" name="xGaussianHBoxLayout">
                <item>
-                <spacer name="e1GaussianLeftSpacer">
+                <spacer name="xGaussianLeftSpacer">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
                  </property>
@@ -285,14 +291,14 @@
                 </spacer>
                </item>
                <item>
-                <widget class="QLabel" name="e1GaussianLabel">
+                <widget class="QLabel" name="xGaussianLabel">
                  <property name="text">
                   <string>Gaussian</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="DoubleLineEdit" name="e1GaussianLineEdit">
+                <widget class="DoubleLineEdit" name="xGaussianLineEdit">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -314,11 +320,11 @@
              </item>
             </layout>
            </widget>
-           <widget class="QWidget" name="yAxisTab">
+           <widget class="QWidget" name="yTab">
             <attribute name="title">
              <string>Energy Transfer</string>
             </attribute>
-            <layout class="QVBoxLayout" name="e2HBoxLayout">
+            <layout class="QVBoxLayout" name="yHBoxLayout">
              <property name="spacing">
               <number>6</number>
              </property>
@@ -335,9 +341,9 @@
               <number>6</number>
              </property>
              <item>
-              <layout class="QHBoxLayout" name="yAxisShiftHBoxLayout">
+              <layout class="QHBoxLayout" name="yShiftHBoxLayout">
                <item>
-                <widget class="QLabel" name="yAxisShiftLabel">
+                <widget class="QLabel" name="yShiftLabel">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -350,7 +356,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="DoubleLineEdit" name="yAxisShiftLineEdit">
+                <widget class="DoubleLineEdit" name="yShiftLineEdit">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -371,16 +377,16 @@
               </layout>
              </item>
              <item>
-              <widget class="QLabel" name="e2BroadeningLabel">
+              <widget class="QLabel" name="yBroadeningLabel">
                <property name="text">
                 <string>Broadening FWHM (eV)</string>
                </property>
               </widget>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="e2LorentzianHBoxLayout">
+              <layout class="QHBoxLayout" name="yLorentzianHBoxLayout">
                <item>
-                <spacer name="e2LorentzianLeftSpacer">
+                <spacer name="yLorentzianLeftSpacer">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
                  </property>
@@ -396,14 +402,14 @@
                 </spacer>
                </item>
                <item>
-                <widget class="QLabel" name="e2LorentzianLabel">
+                <widget class="QLabel" name="yLorentzianLabel">
                  <property name="text">
                   <string>Lorentzian</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="DoubleListLineEdit" name="e2LorentzianLineEdit">
+                <widget class="DoubleListLineEdit" name="yLorentzianLineEdit">
                  <property name="enabled">
                   <bool>false</bool>
                  </property>
@@ -427,9 +433,9 @@
               </layout>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="e2GaussianHBoxLayout">
+              <layout class="QHBoxLayout" name="yGaussianHBoxLayout">
                <item>
-                <spacer name="e2GaussianLeftSpacer">
+                <spacer name="yGaussianLeftSpacer">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
                  </property>
@@ -445,14 +451,14 @@
                 </spacer>
                </item>
                <item>
-                <widget class="QLabel" name="e2GaussianLabel">
+                <widget class="QLabel" name="yGaussianLabel">
                  <property name="text">
                   <string>Gaussian</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="DoubleLineEdit" name="e2GaussianLineEdit">
+                <widget class="DoubleLineEdit" name="yGaussianLineEdit">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -477,7 +483,7 @@
           </widget>
          </item>
          <item>
-          <spacer name="verticalSpacer">
+          <spacer name="spectraVerticalSpacer">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
@@ -494,6 +500,9 @@
       </layout>
      </widget>
      <widget class="QWidget" name="inputTabWidget">
+      <property name="focusPolicy">
+       <enum>Qt::ClickFocus</enum>
+      </property>
       <attribute name="title">
        <string>Input</string>
       </attribute>
@@ -526,6 +535,9 @@
       </layout>
      </widget>
      <widget class="QWidget" name="outputTabWidget">
+      <property name="focusPolicy">
+       <enum>Qt::ClickFocus</enum>
+      </property>
       <attribute name="title">
        <string>Ouput</string>
       </attribute>
@@ -557,9 +569,9 @@
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
+    <layout class="QHBoxLayout" name="buttonsHorizontalLayout">
      <item>
-      <spacer name="horizontalSpacer">
+      <spacer name="buttonsHorizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
