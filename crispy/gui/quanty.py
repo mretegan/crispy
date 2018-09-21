@@ -34,6 +34,7 @@ import copy
 import datetime
 import gzip
 import json
+import glob
 import numpy as np
 import os
 try:
@@ -1509,6 +1510,13 @@ class QuantyDockWidget(QDockWidget):
         self.quantyToolBox.setCurrentWidget(self.resultsPage)
         self.resultsView.setFocus()
 
+        # Remove files if requested.
+        if self.getRemoveFiles():
+            os.remove('{}.lua'.format(self.calculation.baseName))
+            spectra = glob.glob('{}_*.spec'.format(self.calculation.baseName))
+            for spectrum in spectra:
+                os.remove(spectrum)
+
     def plotSpectrum(self, spectrum):
         # Spectrum object must have ALL information required to do the stuff
         # below. ALL!!!
@@ -1747,6 +1755,9 @@ class QuantyDockWidget(QDockWidget):
     def getDenseBorder(self):
         return self.settings.value('Quanty/DenseBorder')
 
+    def getRemoveFiles(self):
+        return self.settings.value('Quanty/RemoveFiles')
+
 
 class QuantyPreferencesDialog(QDialog):
 
@@ -1813,6 +1824,11 @@ class QuantyPreferencesDialog(QDialog):
             denseBorder = '50000'
         self.denseBorderLineEdit.setText(denseBorder)
 
+        removeFiles = settings.value('RemoveFiles', True, type=bool)
+        if removeFiles is None:
+            removeFiles = False
+        self.removeFilesCheckBox.setChecked(removeFiles)
+
         settings.endGroup()
 
     def saveSettings(self):
@@ -1824,6 +1840,7 @@ class QuantyPreferencesDialog(QDialog):
         settings.setValue('Path', self.pathLineEdit.text())
         settings.setValue('Verbosity', self.verbosityLineEdit.text())
         settings.setValue('DenseBorder', self.denseBorderLineEdit.text())
+        settings.setValue('RemoveFiles', self.removeFilesCheckBox.isChecked())
         settings.endGroup()
 
         settings.sync()
