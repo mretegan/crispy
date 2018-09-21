@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>566</width>
-    <height>505</height>
+    <width>580</width>
+    <height>504</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -62,6 +62,18 @@
        </property>
        <item>
         <widget class="QPlainTextEdit" name="summaryPlainTextEdit">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>270</width>
+           <height>0</height>
+          </size>
+         </property>
          <property name="readOnly">
           <bool>true</bool>
          </property>

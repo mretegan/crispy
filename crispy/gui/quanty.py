@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '20/09/2018'
+__date__ = '21/09/2018'
 
 
 import copy
@@ -389,11 +389,11 @@ class QuantyCalculation(object):
                 for parameter in parameters:
                     if 'Atomic' in term or 'Hybridization' in term:
                         if parameter[0] in ('F', 'G'):
-                            scaling = 0.8
-                            data = [parameters[parameter], scaling]
+                            scaleFactor = 0.8
+                            data = [parameters[parameter], scaleFactor]
                         elif parameter[0] == 'ζ':
-                            scaling = 1.0
-                            data = [parameters[parameter], scaling]
+                            scaleFactor = 1.0
+                            data = [parameters[parameter], scaleFactor]
                         else:
                             data = parameters[parameter]
                     else:
@@ -506,18 +506,18 @@ class QuantyCalculation(object):
                     parameter = parameter.replace('μ', 'mu')
                     parameter = parameter.replace('ν', 'nu')
 
-                    scaling = None
+                    scaleFactor = None
                     try:
-                        value, scaling = data
+                        value, scaleFactor = data
                     except TypeError:
                         value = data
 
                     key = '${}_{}_value'.format(parameter, suffix)
                     replacements[key] = '{}'.format(value)
 
-                    if scaling is not None:
+                    if scaleFactor is not None:
                         key = '${}_{}_scaling'.format(parameter, suffix)
-                        replacements[key] = '{}'.format(scaling)
+                        replacements[key] = '{}'.format(scaleFactor)
 
             checkState = self.hamiltonianState[term]
             if checkState > 0:
@@ -597,9 +597,9 @@ class QuantyDockWidget(QDockWidget):
             self.updateYLorentzian)
         self.yGaussianLineEdit.editingFinished.connect(self.updateYGaussian)
 
-        self.fkLineEdit.editingFinished.connect(self.updateScalingFactors)
-        self.gkLineEdit.editingFinished.connect(self.updateScalingFactors)
-        self.zetaLineEdit.editingFinished.connect(self.updateScalingFactors)
+        self.fkLineEdit.editingFinished.connect(self.updateScaleFactors)
+        self.gkLineEdit.editingFinished.connect(self.updateScaleFactors)
+        self.zetaLineEdit.editingFinished.connect(self.updateScaleFactors)
 
         self.syncParametersCheckBox.toggled.connect(self.updateSyncParameters)
 
@@ -1138,13 +1138,13 @@ class QuantyDockWidget(QDockWidget):
     def updateSpectraCheckState(self, checkedItems):
         self.calculation.spectra.toCalculateChecked = checkedItems
 
-    def updateScalingFactors(self):
+    def updateScaleFactors(self):
         fk = self.fkLineEdit.getValue()
         gk = self.gkLineEdit.getValue()
         zeta = self.zetaLineEdit.getValue()
 
         if fk < 0 or gk < 0 or zeta < 0:
-            message = 'The scaling factors cannot be negative.'
+            message = 'The scale factors cannot be negative.'
             self.getStatusBar().showMessage(message, self.timeout)
             self.fkLineEdit.setValue(self.calculation.fk)
             self.gkLineEdit.setValue(self.calculation.gk)
@@ -1166,9 +1166,9 @@ class QuantyDockWidget(QDockWidget):
             for configuration in configurations:
                 parameters = configurations[configuration]
                 for parameter in parameters:
-                    # Change the scaling if the parameter has one.
+                    # Change the scale factors if the parameter has one.
                     try:
-                        value, scaling = parameters[parameter]
+                        value, _ = parameters[parameter]
                     except TypeError:
                         continue
                     if parameter.startswith('F'):
@@ -1695,6 +1695,7 @@ class QuantyDockWidget(QDockWidget):
         self.calculation.baseName = name
         self.updateMainWindowTitle()
         self.resultDetailsDialog.updateTitle()
+        self.resultDetailsDialog.updateSummary()
 
     def handleOutputLogging(self):
         self.process.setReadChannel(QProcess.StandardOutput)
@@ -1919,21 +1920,39 @@ class QuantyResultDetailsDialog(QDialog):
     def updateSummary(self):
         c = self.calculation
 
-        summary = """Name: $baseName
-Element: $element
-Charge: $charge
-Symmetry: $symmetry
-        """
+        summary = str()
+        summary += 'Name: {}\n'.format(c.baseName)
+        summary += 'Started: {}\n'.format(c.startingTime)
+        summary += 'Finished: {}\n'.format(c.endingTime)
+        summary += '\n'
+        summary += 'Element: {}\n'.format(c.element)
+        summary += 'Charge: {}\n'.format(c.charge)
+        summary += 'Symmetry: {}\n'.format(c.symmetry)
+        summary += 'Experiment: {}\n'.format(c.experiment)
+        summary += 'Edge: {}\n'.format(c.edge)
+        summary += '\n'
+        summary += 'Temperature: {} K\n'.format(c.temperature)
+        summary += 'Magnetic Field: {} T\n'.format(c.magneticField)
+        summary += '\n'
+        summary += 'Scale Factors:\n'
+        summary += '    Fk: {}\n'.format(c.fk)
+        summary += '    Gk: {}\n'.format(c.gk)
+        summary += '    ζ: {}\n'.format(c.zeta)
+        summary += '\n'
+        summary += 'Hamiltonian Terms:\n'
+        for term in c.hamiltonianData:
+            summary += '    {}:\n'.format(term)
+            configurations = c.hamiltonianData[term]
+            for configuration in configurations:
+                summary += '        {}:\n'.format(configuration)
+                parameters = configurations[configuration]
+                for parameter in parameters:
+                    value = parameters[parameter]
+                    if isinstance(value, list):
+                        value = round(value[0] * value[1], 4)
+                    indent = 12 * ' '
+                    summary += '{}{}: {}\n'.format(indent, parameter, value)
 
-        replacements = (
-            ('$baseName', c.baseName),
-            ('$element', c.element),
-            ('$charge', c.charge),
-            ('$symmetry', c.symmetry),
-        )
-
-        for replacement in replacements:
-            summary = summary.replace(*replacement)
         self.summaryPlainTextEdit.setPlainText(summary)
 
     def updateSpectraCheckState(self, checkedItems):
@@ -2008,9 +2027,18 @@ Symmetry: $symmetry
         self.calculation.yGaussian = yGaussian
 
     def clear(self):
+        self.summaryPlainTextEdit.clear()
+        self.spectraModel.clear()
+        self.scaleLineEdit.clear()
+        self.normalizationComboBox.setCurrentText('None')
+        self.xShiftLineEdit.clear()
+        self.yShiftLineEdit.clear()
+        self.xGaussianLineEdit.clear()
+        self.xLorentzianLineEdit.clear()
+        self.yGaussianLineEdit.clear()
+        self.yLorentzianLineEdit.clear()
         self.inputPlainTextEdit.clear()
         self.outputPlainTextEdit.clear()
-        self.spectraModel.clear()
         self.setWindowTitle('')
 
 

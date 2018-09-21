@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '20/09/2018'
+__date__ = '21/09/2018'
 
 from collections import OrderedDict as odict
 import copy
@@ -296,7 +296,7 @@ class HamiltonianModel(QAbstractItemModel):
 
     def __init__(self, parent=None):
         super(HamiltonianModel, self).__init__(parent)
-        self.header = ['Parameter', 'Value', 'Scaling']
+        self.header = ['Parameter', 'Value', 'Scale Factor']
         self.modelData = odict()
 
     def index(self, row, column, parent=QModelIndex()):
