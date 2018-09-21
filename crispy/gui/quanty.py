@@ -1758,7 +1758,7 @@ class QuantyDockWidget(QDockWidget):
         return self.settings.value('Quanty/DenseBorder')
 
     def getRemoveFiles(self):
-        return self.settings.value('Quanty/RemoveFiles')
+        return self.settings.value('Quanty/RemoveFiles', True, type=bool)
 
 
 class QuantyPreferencesDialog(QDialog):
