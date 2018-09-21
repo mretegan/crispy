@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '18/07/2018'
+__date__ = '21/09/2018'
 
 
 import os
@@ -191,8 +191,7 @@ class MainWindow(QMainWindow):
         self.quantyModuleHideAction.triggered.connect(self.quantyModuleHide)
 
         # Preferences dialog.
-        self.preferencesDialog = QuantyPreferencesDialog(
-            parent=self, settings=self.settings)
+        self.preferencesDialog = QuantyPreferencesDialog(parent=self)
 
     def quantyMenuUpdate(self, flag=True):
         self.quantySaveAllCalculationsAsAction.setEnabled(flag)

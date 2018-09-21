@@ -46,7 +46,7 @@ import subprocess
 import sys
 
 from PyQt5.QtCore import (
-    QItemSelectionModel, QProcess, Qt, QPoint, QStandardPaths)
+    QItemSelectionModel, QProcess, Qt, QPoint, QStandardPaths, QSize)
 from PyQt5.QtGui import QIcon, QFontDatabase
 from PyQt5.QtWidgets import (
     QDockWidget, QFileDialog, QAction, QMenu, QWidget,
@@ -1762,7 +1762,7 @@ class QuantyDockWidget(QDockWidget):
 
 class QuantyPreferencesDialog(QDialog):
 
-    def __init__(self, parent, settings=None):
+    def __init__(self, parent):
         super(QuantyPreferencesDialog, self).__init__(parent)
 
         path = resourceFileName(
@@ -1777,9 +1777,10 @@ class QuantyPreferencesDialog(QDialog):
         cancel = self.buttonBox.button(QDialogButtonBox.Cancel)
         cancel.clicked.connect(self.rejectSettings)
 
-        self.settings = settings
+        self.settings = self.parent().settings
+
+    def showEvent(self, event):
         self.restoreSettings()
-        self.saveSettings()
 
     def _findExecutable(self):
         if sys.platform == 'win32':
@@ -1809,6 +1810,14 @@ class QuantyPreferencesDialog(QDialog):
             return
 
         settings.beginGroup('Quanty')
+
+        size = settings.value('Size')
+        if size is not None:
+            self.resize(QSize(size))
+
+        pos = settings.value('Position')
+        if pos is not None:
+            self.move(QPoint(pos))
 
         path = settings.value('Path')
         if path is None or not path:
@@ -1842,6 +1851,8 @@ class QuantyPreferencesDialog(QDialog):
         settings.setValue('Verbosity', self.verbosityLineEdit.text())
         settings.setValue('DenseBorder', self.denseBorderLineEdit.text())
         settings.setValue('RemoveFiles', self.removeFilesCheckBox.isChecked())
+        settings.setValue('Size', self.size())
+        settings.setValue('Position', self.pos())
         settings.endGroup()
 
         settings.sync()
@@ -1872,27 +1883,43 @@ class QuantyResultDetailsDialog(QDialog):
         loadUi(path, baseinstance=self, package='crispy.gui')
 
         self.activateWidget()
+        self.settings = self.parent().settings
 
     def activateWidget(self):
+        font = QFontDatabase.systemFont(QFontDatabase.FixedFont)
+        if sys.platform == 'darwin':
+            font.setPointSize(font.pointSize() + 1)
+
         self.spectraModel = SpectraModel(parent=self)
         self.spectraListView.setModel(self.spectraModel)
         self.spectraModel.checkStateChanged.connect(
             self.updateSpectraCheckState)
-        font = QFontDatabase.systemFont(QFontDatabase.FixedFont)
-        if sys.platform == 'darwin':
-            font.setPointSize(font.pointSize() + 1)
+
         self.scaleLineEdit.returnPressed.connect(self.updateScale)
+        self.normalizationComboBox.addItems(['None', 'Maximum', 'Area'])
+        self.normalizationComboBox.currentTextChanged.connect(
+            self.updateNormalization)
+
         self.xShiftLineEdit.returnPressed.connect(self.updateShift)
         self.yShiftLineEdit.returnPressed.connect(self.updateShift)
         self.xGaussianLineEdit.returnPressed.connect(self.updateBroadening)
         self.yGaussianLineEdit.returnPressed.connect(self.updateBroadening)
+
         self.inputPlainTextEdit.setFont(font)
         self.outputPlainTextEdit.setFont(font)
+
         self.closePushButton.setAutoDefault(False)
-        self.closePushButton.clicked.connect(self.accept)
-        self.normalizationComboBox.addItems(['None', 'Maximum', 'Area'])
-        self.normalizationComboBox.currentTextChanged.connect(
-            self.updateNormalization)
+        self.closePushButton.clicked.connect(self.closeWidget)
+
+    def closeWidget(self):
+        self.close()
+
+    def closeEvent(self, event):
+        self.saveSettings()
+        event.accept()
+
+    def showEvent(self, event):
+        self.restoreSettings()
 
     def populateWidget(self):
         c = self.calculation
@@ -2070,6 +2097,37 @@ class QuantyResultDetailsDialog(QDialog):
         self.inputPlainTextEdit.clear()
         self.outputPlainTextEdit.clear()
         self.setWindowTitle('')
+
+    def restoreSettings(self):
+        settings = self.settings
+        if settings is None:
+            return
+
+        settings.beginGroup('DetailsDialog')
+
+        size = settings.value('Size')
+        if size is not None:
+            self.resize(QSize(size))
+
+        pos = settings.value('Position')
+        if pos is not None:
+            self.move(QPoint(pos))
+
+        settings.endGroup()
+
+        settings.sync()
+
+    def saveSettings(self):
+        settings = self.settings
+        if settings is None:
+            return
+
+        settings.beginGroup('DetailsDialog')
+        settings.setValue('Size', self.size())
+        settings.setValue('Position', self.pos())
+        settings.endGroup()
+
+        settings.sync()
 
 
 if __name__ == '__main__':
