@@ -798,6 +798,7 @@ class QuantyDockWidget(QDockWidget):
         self.resultsView.setEnabled(flag)
 
         self.saveInputAsPushButton.setEnabled(flag)
+        self.resultDetailsDialog.enableWidget(flag)
 
     def updateTemperature(self):
         temperature = self.temperatureLineEdit.getValue()
@@ -1340,7 +1341,7 @@ class QuantyDockWidget(QDockWidget):
         self.updateMainWindowTitle()
         self.getPlotWidget().reset()
         self.resultsView.selectionModel().clearSelection()
-        self.resultDetailsDialog.populateWidget()
+        self.resultDetailsDialog.clear()
 
     def removeSelectedCalculations(self):
         indexes = self.resultsView.selectedIndexes()
@@ -2042,6 +2043,18 @@ class QuantyResultDetailsDialog(QDialog):
 
         parent.yGaussianLineEdit.setValue(yGaussian)
         self.calculation.yGaussian = yGaussian
+
+    def enableWidget(self, flag):
+        self.summaryPlainTextEdit.setEnabled(flag)
+        self.spectraListView.setEnabled(flag)
+        self.scaleLineEdit.setEnabled(flag)
+        self.normalizationComboBox.setEnabled(flag)
+        self.xShiftLineEdit.setEnabled(flag)
+        self.yShiftLineEdit.setEnabled(flag)
+        self.xGaussianLineEdit.setEnabled(flag)
+        self.yGaussianLineEdit.setEnabled(flag)
+        self.inputPlainTextEdit.setEnabled(flag)
+        self.outputPlainTextEdit.setEnabled(flag)
 
     def clear(self):
         self.summaryPlainTextEdit.clear()
