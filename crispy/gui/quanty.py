@@ -104,7 +104,7 @@ class Spectrum1D(object):
             maximum = np.abs(self.y).max()
             self.y = self.y / maximum
         elif value == 'Area':
-            area = np.trapz(self.y, self.x)
+            area = np.abs(np.trapz(self.y, self.x))
             self.y = self.y / area
 
 
@@ -517,7 +517,7 @@ class QuantyCalculation(object):
                     replacements[key] = '{}'.format(value)
 
                     if scaleFactor is not None:
-                        key = '${}_{}_scaling'.format(parameter, suffix)
+                        key = '${}_{}_scale'.format(parameter, suffix)
                         replacements[key] = '{}'.format(scaleFactor)
 
             checkState = self.hamiltonianState[term]
