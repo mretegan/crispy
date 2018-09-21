@@ -1449,11 +1449,13 @@ class QuantyDockWidget(QDockWidget):
         self.enableWidget(True)
 
     def processCalculation(self, *args):
-        startingTime = self.calculation.startingTime
+        c = self.calculation
+
+        startingTime = c.startingTime
 
         # When did I finish?
         endingTime = datetime.datetime.now()
-        self.calculation.endingTime = endingTime
+        c.endingTime = endingTime
 
         # Re-enable the UI if the calculation has finished.
         self.enableWidget(True)
@@ -1497,12 +1499,12 @@ class QuantyDockWidget(QDockWidget):
         scrollBar.setValue(scrollBar.maximum())
 
         # Load the spectra from disk.
-        self.calculation.spectra.loadFromDisk(self.calculation)
+        c.spectra.loadFromDisk(c)
 
         # Once all processing is done, store the calculation in the
         # results model. Upon finishing this, a signal is emitted by the
         # model which triggers some updates to be performed.
-        self.resultsModel.appendItems(self.calculation)
+        self.resultsModel.appendItems(c)
 
         # If the "Hamiltonian Setup" page is currently selected, when the
         # current widget is set to the "Results Page", the former is not
@@ -1513,8 +1515,8 @@ class QuantyDockWidget(QDockWidget):
 
         # Remove files if requested.
         if self.getRemoveFiles():
-            os.remove('{}.lua'.format(self.calculation.baseName))
-            spectra = glob.glob('{}_*.spec'.format(self.calculation.baseName))
+            os.remove('{}.lua'.format(c.baseName))
+            spectra = glob.glob('{}_*.spec'.format(c.baseName))
             for spectrum in spectra:
                 os.remove(spectrum)
 
@@ -1700,7 +1702,6 @@ class QuantyDockWidget(QDockWidget):
         self.resultDetailsDialog.populateWidget()
 
     def updateCalculationName(self, name):
-        self.resultsView.resizeColumnsToContents()
         self.calculation.baseName = name
         self.updateMainWindowTitle()
         self.resultDetailsDialog.updateTitle()

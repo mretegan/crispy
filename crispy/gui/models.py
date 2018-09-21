@@ -86,8 +86,7 @@ class ResultsModel(QAbstractItemModel):
 
     def __init__(self, parent=None):
         super(ResultsModel, self).__init__(parent=parent)
-        self.header = ['Name', 'Element', 'Charge', 'Symmetry',
-                       'Experiment', 'Edge']
+        self.header = ['Name']
         self.modelData = list()
 
     def index(self, row, column, parent=QModelIndex()):
@@ -109,11 +108,8 @@ class ResultsModel(QAbstractItemModel):
         column = index.column()
         item = self.modelData[row]
         if role == Qt.DisplayRole:
-            attrs = ['baseName', 'element', 'charge', 'symmetry', 'experiment',
-                     'edge']
-            for i, attr in enumerate(attrs):
-                if column == i:
-                    return getattr(item, attr)
+            if column == 0:
+                return item.baseName
         elif role == Qt.EditRole and column == 0:
                 return item.baseName
         elif role == Qt.CheckStateRole and column == 0:
