@@ -101,8 +101,8 @@ class Spectrum1D(object):
         if value == 'None':
             return
         elif value == 'Maximum':
-            maximum = np.abs(self.y).max()
-            self.y = self.y / maximum
+            yMax = np.abs(self.y).max()
+            self.y = self.y / yMax
         elif value == 'Area':
             area = np.abs(np.trapz(self.y, self.x))
             self.y = self.y / area
@@ -238,7 +238,8 @@ class QuantySpectra(object):
 
         # Process the spectra once they where read from disk.
         self.process()
-        self.__dict__.update(self._defaults)
+        # Change to default values.
+        # self.__dict__.update(self._defaults)
 
 
 class QuantyCalculation(object):
@@ -1514,7 +1515,7 @@ class QuantyDockWidget(QDockWidget):
         self.resultsView.setFocus()
 
         # Remove files if requested.
-        if self.getRemoveFiles():
+        if self.doRemoveFiles():
             os.remove('{}.lua'.format(c.baseName))
             spectra = glob.glob('{}_*.spec'.format(c.baseName))
             for spectrum in spectra:
@@ -1757,7 +1758,7 @@ class QuantyDockWidget(QDockWidget):
     def getDenseBorder(self):
         return self.settings.value('Quanty/DenseBorder')
 
-    def getRemoveFiles(self):
+    def doRemoveFiles(self):
         return self.settings.value('Quanty/RemoveFiles', True, type=bool)
 
 
@@ -1906,6 +1907,7 @@ class QuantyResultDetailsDialog(QDialog):
         self.xGaussianLineEdit.returnPressed.connect(self.updateBroadening)
         self.yGaussianLineEdit.returnPressed.connect(self.updateBroadening)
 
+        self.summaryPlainTextEdit.setFont(font)
         self.inputPlainTextEdit.setFont(font)
         self.outputPlainTextEdit.setFont(font)
 
