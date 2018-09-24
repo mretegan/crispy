@@ -484,10 +484,9 @@ function GetSpectrum(G, T, Psis, indices, dZSpectra)
     return Spectra.Sum(G, dZSpectrum)
 end
 
-function SaveSpectrum(G, factor, suffix)
+function SaveSpectrum(G, suffix)
     -- Scale, broaden, and save the spectrum to disk.
     G = -1 / math.pi * G
-    G = G / factor
 
     Gmin1 = $Gmin1 - Gamma
     Gmax1 = $Gmax1 - Gamma
@@ -499,23 +498,21 @@ end
 
 for i, spectrum in ipairs(spectra) do
     if spectrum == 'Isotropic' then
-        indices = indices_1s_3d[spectrum]
-        Giso_1s_3d = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices, dZ_1s_3d)
-        SaveSpectrum(Giso_1s_3d, 15, 'iso')
+        Giso = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices_1s_3d[spectrum], dZ_1s_3d)
+        Giso = Giso / 15
+        SaveSpectrum(Giso, 'iso')
     elseif spectrum == 'Circular Dichroism' then
-        indices = indices_1s_3d[spectrum]
-        Gr_1s_3d = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices[1], dZ_1s_3d)
-        Gl_1s_3d = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices[2], dZ_1s_3d)
-        SaveSpectrum(Gr_1s_3d, 1, 'r')
-        SaveSpectrum(Gl_1s_3d, 1, 'l')
-        SaveSpectrum(Gr_1s_3d - Gl_1s_3d, 1, 'cd')
+        Gr = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices_1s_3d[spectrum][1], dZ_1s_3d)
+        Gl = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices_1s_3d[spectrum][2], dZ_1s_3d)
+        SaveSpectrum(Gr, 'r')
+        SaveSpectrum(Gl, 'l')
+        SaveSpectrum(Gr - Gl, 'cd')
     elseif spectrum == 'Linear Dichroism' then
-        indices = indices_1s_3d[spectrum]
-        Gv_1s_3d = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices[1], dZ_1s_3d)
-        Gh_1s_3d = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices[2], dZ_1s_3d)
-        SaveSpectrum(Gv_1s_3d, 1, 'v')
-        SaveSpectrum(Gh_1s_3d, 1, 'h')
-        SaveSpectrum(Gv_1s_3d - Gh_1s_3d, 1, 'ld')
+        Gv = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices_1s_3d[spectrum][1], dZ_1s_3d)
+        Gh = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices_1s_3d[spectrum][2], dZ_1s_3d)
+        SaveSpectrum(Gv, 'v')
+        SaveSpectrum(Gh, 'h')
+        SaveSpectrum(Gv - Gh, 'ld')
     end
 end
 

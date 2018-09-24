@@ -109,7 +109,7 @@ if H_crystal_field == 1 then
     -- PotentialExpandedOnClm('Td', 2, {Ee, Et2})
     -- tenDq_4d = NewOperator('CF', NFermions, IndexUp_4d, IndexDn_4d, PotentialExpandedOnClm('Td', 2, {-0.6, 0.4}))
 
-    Akm = {{4, 0, 2.1}, {4, -4, -1.5 * sqrt(0.7)}, {4, 4, -1.5 * sqrt(0.7)}}
+    Akm = {{4, 0, -2.1}, {4, -4, -1.5 * sqrt(0.7)}, {4, 4, -1.5 * sqrt(0.7)}}
     tenDq_4d = NewOperator('CF', NFermions, IndexUp_4d, IndexDn_4d, Akm)
 
     tenDq_4d_i = $10Dq(4d)_i_value
@@ -564,10 +564,9 @@ function GetSpectrum(G, T, Psis, indices, dZSpectra)
     return Spectra.Sum(G, dZSpectrum)
 end
 
-function SaveSpectrum(G, factor, suffix)
+function SaveSpectrum(G, suffix)
     -- Scale, broaden, and save the spectrum to disk.
     G = -1 / math.pi * G
-    G = G / factor
 
     Gmin1 = $Gmin1 - Gamma
     Gmax1 = $Gmax1 - Gamma
@@ -579,23 +578,21 @@ end
 
 for i, spectrum in ipairs(spectra) do
     if spectrum == 'Isotropic' then
-        indices = indices_2s_4d[spectrum]
-        Giso_2s_4d = GetSpectrum(G_2s_4d, T_2s_4d, Psis_i, indices, dZ_2s_4d)
-        SaveSpectrum(Giso_2s_4d, 15, 'iso')
+        Giso = GetSpectrum(G_2s_4d, T_2s_4d, Psis_i, indices_2s_4d[spectrum], dZ_2s_4d)
+        Giso = Giso / 15
+        SaveSpectrum(Giso, 'iso')
     elseif spectrum == 'Circular Dichroism' then
-        indices = indices_2s_4d[spectrum]
-        Gr_2s_4d = GetSpectrum(G_2s_4d, T_2s_4d, Psis_i, indices[1], dZ_2s_4d)
-        Gl_2s_4d = GetSpectrum(G_2s_4d, T_2s_4d, Psis_i, indices[2], dZ_2s_4d)
-        SaveSpectrum(Gr_2s_4d, 1, 'r')
-        SaveSpectrum(Gl_2s_4d, 1, 'l')
-        SaveSpectrum(Gr_2s_4d - Gl_2s_4d, 1, 'cd')
+        Gr = GetSpectrum(G_2s_4d, T_2s_4d, Psis_i, indices_2s_4d[spectrum][1], dZ_2s_4d)
+        Gl = GetSpectrum(G_2s_4d, T_2s_4d, Psis_i, indices_2s_4d[spectrum][2], dZ_2s_4d)
+        SaveSpectrum(Gr, 'r')
+        SaveSpectrum(Gl, 'l')
+        SaveSpectrum(Gr - Gl, 'cd')
     elseif spectrum == 'Linear Dichroism' then
-        indices = indices_2s_4d[spectrum]
-        Gv_2s_4d = GetSpectrum(G_2s_4d, T_2s_4d, Psis_i, indices[1], dZ_2s_4d)
-        Gh_2s_4d = GetSpectrum(G_2s_4d, T_2s_4d, Psis_i, indices[2], dZ_2s_4d)
-        SaveSpectrum(Gv_2s_4d, 1, 'v')
-        SaveSpectrum(Gh_2s_4d, 1, 'h')
-        SaveSpectrum(Gv_2s_4d - Gh_2s_4d, 1, 'ld')
+        Gv = GetSpectrum(G_2s_4d, T_2s_4d, Psis_i, indices_2s_4d[spectrum][1], dZ_2s_4d)
+        Gh = GetSpectrum(G_2s_4d, T_2s_4d, Psis_i, indices_2s_4d[spectrum][2], dZ_2s_4d)
+        SaveSpectrum(Gv, 'v')
+        SaveSpectrum(Gh, 'h')
+        SaveSpectrum(Gv - Gh, 'ld')
     end
 end
 

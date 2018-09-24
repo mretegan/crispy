@@ -317,9 +317,9 @@ class QuantyCalculation(object):
             ('version', version),
             ('element', 'Ni'),
             ('charge', '2+'),
-            ('symmetry', 'D4h'),
+            ('symmetry', 'Oh'),
             ('experiment', 'XAS'),
-            ('edge', 'K (1s)'),
+            ('edge', 'L2,3 (2p)'),
             ('temperature', 10.0),
             ('magneticField', 0.0),
             ('xMin', None),
@@ -1572,6 +1572,7 @@ class QuantyDockWidget(QDockWidget):
         # Once all processing is done, store the calculation in the
         # results model. Upon finishing this, a signal is emitted by the
         # model which triggers some updates to be performed.
+        c.isChecked = True
         self.resultsModel.appendItems(c)
 
         # If the "Hamiltonian Setup" page is currently selected, when the

@@ -149,7 +149,7 @@ if H_crystal_field == 1 then
     -- PotentialExpandedOnClm('Td', 2, {Ee, Et2})
     -- tenDq_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm('Td', 2, {-0.6, 0.4}))
 
-    Akm = {{4, 0, 2.1}, {4, -4, -1.5 * sqrt(0.7)}, {4, 4, -1.5 * sqrt(0.7)}}
+    Akm = {{4, 0, -2.1}, {4, -4, -1.5 * sqrt(0.7)}, {4, 4, -1.5 * sqrt(0.7)}}
     tenDq_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, Akm)
 
     tenDq_3d_i = $10Dq(3d)_i_value

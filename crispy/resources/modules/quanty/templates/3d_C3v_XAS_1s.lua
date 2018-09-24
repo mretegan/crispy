@@ -514,11 +514,11 @@ Tl_1s_3d = CalculateT(el, k)
 Tk_1s_3d = CalculateT(k, k)
 
 if H_3d_4p_hybridization == 1 then
-    Tv_1s_4p = CalculateT(ev, k)
-    Th_1s_4p = CalculateT(eh, k)
-    Tr_1s_4p = CalculateT(er, k)
-    Tl_1s_4p = CalculateT(el, k)
-    Tk_1s_4p = CalculateT(k, k)
+    Tv_1s_4p = CalculateT(ev)
+    Th_1s_4p = CalculateT(eh)
+    Tr_1s_4p = CalculateT(er)
+    Tl_1s_4p = CalculateT(el)
+    Tk_1s_4p = CalculateT(k)
 end
 
 
@@ -560,6 +560,36 @@ for i, spectrum in ipairs(spectra) do
     end
 end
 
+if H_3d_4p_hybridization == 1 then
+    T_1s_4p = {}
+    indices_1s_4p = {}
+    c = 1
+    for i, spectrum in ipairs(spectra) do
+        if spectrum == 'Isotropic' then
+            indices_1s_4p[spectrum] = {}
+            for j, operator in ipairs({Tx_1s_4p, Ty_1s_4p, Tz_1s_4p}) do
+                table.insert(T_1s_4p, operator)
+                table.insert(indices_1s_4p[spectrum], c)
+                c = c + 1
+            end
+        elseif spectrum == 'Circular Dichroism' then
+            indices_1s_4p[spectrum] = {}
+            for j, operator in ipairs({Tr_1s_4p, Tl_1s_4p}) do
+                table.insert(T_1s_4p, operator)
+                table.insert(indices_1s_4p[spectrum], c)
+                c = c + 1
+            end
+        elseif spectrum == 'Linear Dichroism' then
+            indices_1s_4p[spectrum] = {}
+            for j, operator in ipairs({Tv_1s_4p, Th_1s_4p}) do
+                table.insert(T_1s_4p, operator)
+                table.insert(indices_1s_4p[spectrum], c)
+                c = c + 1
+            end
+        end
+    end
+end
+
 --------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
@@ -586,25 +616,10 @@ DenseBorder = $DenseBorder
 if H_3d_4p_hybridization == 1 then
     -- Calculate the spectra. Note that the CalculationRestrictions are always active in this case.
     G_1s_3d = CreateSpectra(H_f, T_1s_3d, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}, {'DenseBorder', DenseBorder}})
-    Indexes = {}
-    for i in ipairs(T_1s_3d) do
-        for j in ipairs(Psis_i) do
-            table.insert(Indexes, dZ[j] / 15)
-        end
-    end
-    G_1s_3d = Spectra.Sum(G_1s_3d, Indexes)
-
     G_1s_4p = CreateSpectra(H_f, T_1s_4p, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}, {'DenseBorder', DenseBorder}})
-    Indexes = {}
-    for i in ipairs(T_1s_4p) do
-        for j in ipairs(Psis_i) do
-            table.insert(Indexes, dZ[j] / 3)
-        end
-    end
-    G_1s_4p = Spectra.Sum(G_1s_4p, Indexes)
 
     -- Calculate the prefactors for the two spectra (see http://dx.doi.org/10.1103/PhysRevB.94.245115)
-    -- Not that in the publication Eedge1 and Iedge1 do not appear in the equations 9 and 10. Iedge1 is just
+    -- Note that in the publication Eedge1 and Iedge1 do not appear in the equations 9 and 10. Iedge1 is just
     -- a scale factor for the intensity of the edge, and in the publication is set to the experimental
     -- edge jump. Here it is set to make the quadrupolar prefactor 1. In this way the spectra with and without
     -- pd-hybridization can be more easily compared.
@@ -626,35 +641,128 @@ if H_3d_4p_hybridization == 1 then
 
     G_1s_3d = prefactor_1s_3d * G_1s_3d
     G_1s_4p = prefactor_1s_4p * G_1s_4p
-
-    G_1s_3d = -1 / math.pi * G_1s_3d
-    G_1s_4p = -1 / math.pi * G_1s_4p
-
-    G = G_1s_3d + G_1s_4p
 else
     if CalculationRestrictions == nil then
         G_1s_3d = CreateSpectra(H_f, T_1s_3d, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'DenseBorder', DenseBorder}})
     else
         G_1s_3d = CreateSpectra(H_f, T_1s_3d, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}, {'DenseBorder', DenseBorder}})
     end
-
-    Indexes = {}
-    for i in ipairs(T_1s_3d) do
-        for j in ipairs(Psis_i) do
-            table.insert(Indexes, dZ[j] / 15)
-        end
-    end
-    G_1s_3d = Spectra.Sum(G_1s_3d, Indexes)
-
-    G_1s_3d = -1 / math.pi * G_1s_3d
-
-    G = G_1s_3d
 end
 
-Gmin1 = $Gmin1 - Gamma
-Gmax1 = $Gmax1 - Gamma
-Egamma1 = ($Egamma1 - Eedge1) + DeltaE
-G.Broaden(0, {{Emin, Gmin1}, {Egamma1, Gmin1}, {Egamma1, Gmax1}, {Emax, Gmax1}})
+-- Create a list with the Boltzmann probabilities for a given operator
+-- and state.
+dZ_1s_3d = {}
+for i in ipairs(T_1s_3d) do
+    for j in ipairs(Psis_i) do
+        table.insert(dZ_1s_3d, dZ[j])
+    end
+end
 
-G.Print({{'file', '$BaseName.spec'}})
+if H_3d_4p_hybridization == 1 then
+    dZ_1s_4p = {}
+    for i in ipairs(T_1s_4p) do
+        for j in ipairs(Psis_i) do
+            table.insert(dZ_1s_4p, dZ[j])
+        end
+    end
+end
+
+function ValueInTable(value, table)
+    -- Check if a value is in a table.
+    for k, v in ipairs(table) do
+        if value == v then
+            return true
+        end
+    end
+    return false
+end
+
+function GetSpectrum(G, T, Psis, indices, dZSpectra)
+    -- Extract the spectra corresponding to the operators identified
+    -- using the indices argument. The returned spectrum is a weighted
+    -- sum, where the weights are the Boltzmann probabilities.
+    if not (type(indices) == 'table') then
+        indices = {indices}
+    end
+
+    c = 1
+    dZSpectrum = {}
+
+    for i in ipairs(T) do
+        for k in ipairs(Psis) do
+            if ValueInTable(i, indices) then
+                table.insert(dZSpectrum, dZSpectra[c])
+            else
+                table.insert(dZSpectrum, 0)
+            end
+            c = c + 1
+        end
+    end
+
+    return Spectra.Sum(G, dZSpectrum)
+end
+
+function SaveSpectrum(G, suffix)
+    -- Scale, broaden, and save the spectrum to disk.
+    G = -1 / math.pi * G
+
+    Gmin1 = $Gmin1 - Gamma
+    Gmax1 = $Gmax1 - Gamma
+    Egamma1 = ($Egamma1 - Eedge1) + DeltaE
+    G.Broaden(0, {{Emin, Gmin1}, {Egamma1, Gmin1}, {Egamma1, Gmax1}, {Emax, Gmax1}})
+
+    G.Print({{'file', '$BaseName_' .. suffix .. '.spec'}})
+end
+
+
+if H_3d_4p_hybridization == 1 then
+    for i, spectrum in ipairs(spectra) do
+        if spectrum == 'Isotropic' then
+            Giso_1s_3d = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices_1s_3d[spectrum], dZ_1s_3d)
+            Giso_1s_4p = GetSpectrum(G_1s_4p, T_1s_4p, Psis_i, indices_1s_4p[spectrum], dZ_1s_4p)
+            Giso = Giso_1s_3d / 15 + Giso_1s_4p / 3
+            SaveSpectrum(Giso, 'iso')
+        elseif spectrum == 'Circular Dichroism' then
+            Gr_1s_3d = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices_1s_3d[spectrum][1], dZ_1s_3d)
+            Gl_1s_3d = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices_1s_3d[spectrum][2], dZ_1s_3d)
+            Gr_1s_4p = GetSpectrum(G_1s_4p, T_1s_4p, Psis_i, indices_1s_4p[spectrum][1], dZ_1s_4p)
+            Gl_1s_4p = GetSpectrum(G_1s_4p, T_1s_4p, Psis_i, indices_1s_4p[spectrum][2], dZ_1s_4p)
+            Gr = Gr_1s_3d + Gr_1s_4p
+            Gl = Gl_1s_3d + Gl_1s_4p
+            SaveSpectrum(Gr, 'r')
+            SaveSpectrum(Gl, 'l')
+            SaveSpectrum(Gr - Gl, 'cd')
+        elseif spectrum == 'Linear Dichroism' then
+            Gv_1s_3d = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices_1s_3d[spectrum][1], dZ_1s_3d)
+            Gh_1s_3d = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices_1s_3d[spectrum][2], dZ_1s_3d)
+            Gv_1s_4p = GetSpectrum(G_1s_4p, T_1s_4p, Psis_i, indices_1s_4p[spectrum][1], dZ_1s_4p)
+            Gh_1s_4p = GetSpectrum(G_1s_4p, T_1s_4p, Psis_i, indices_1s_4p[spectrum][2], dZ_1s_4p)
+            Gv = Gv_1s_3d + Gv_1s_4p
+            Gh = Gh_1s_3d + Gh_1s_4p
+            SaveSpectrum(Gv, 'v')
+            SaveSpectrum(Gh, 'h')
+            SaveSpectrum(Gv - Gh, 'ld')
+        end
+    end
+else
+    for i, spectrum in ipairs(spectra) do
+        if spectrum == 'Isotropic' then
+            Giso = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices_1s_3d[spectrum], dZ_1s_3d)
+            Giso = Giso / 15
+            SaveSpectrum(Giso, 'iso')
+        elseif spectrum == 'Circular Dichroism' then
+            Gr = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices_1s_3d[spectrum][1], dZ_1s_3d)
+            Gl = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices_1s_3d[spectrum][2], dZ_1s_3d)
+            SaveSpectrum(Gr, 'r')
+            SaveSpectrum(Gl, 'l')
+            SaveSpectrum(Gr - Gl, 'cd')
+        elseif spectrum == 'Linear Dichroism' then
+            Gv = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices_1s_3d[spectrum][1], dZ_1s_3d)
+            Gh = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices_1s_3d[spectrum][2], dZ_1s_3d)
+            SaveSpectrum(Gv, 'v')
+            SaveSpectrum(Gh, 'h')
+            SaveSpectrum(Gv - Gh, 'ld')
+        end
+    end
+end
 
