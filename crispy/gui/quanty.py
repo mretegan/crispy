@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '21/09/2018'
+__date__ = '24/09/2018'
 
 
 import copy
@@ -1407,7 +1407,6 @@ class QuantyDockWidget(QDockWidget):
 
         self.populateWidget()
         self.updateMainWindowTitle()
-        self.getPlotWidget().reset()
         self.resultsView.selectionModel().clearSelection()
         self.resultDetailsDialog.clear()
 

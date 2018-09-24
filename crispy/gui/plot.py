@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '19/09/2018'
+__date__ = '24/09/2018'
 
 
 import sys
@@ -139,19 +139,25 @@ class BasePlotWidget(PlotWidget):
         # self.statusBar().addWidget(positionInfo)
 
 
+class ProfileWindow(BasePlotWidget):
+    def __init__(self, parent=None):
+        super(ProfileWindow, self).__init__(parent=parent)
+
+        self.setWindowTitle(str())
+        if sys.platform == 'darwin':
+            self.setIconSize(QSize(24, 24))
+
+
 class MainPlotWidget(BasePlotWidget):
     def __init__(self, parent=None, **kwargs):
         super(MainPlotWidget, self).__init__(
             parent, **kwargs, backend=BackendMatplotlibQt)
 
-        _profileWindow = BasePlotWidget()
-        _profileWindow.setWindowTitle(str())
-        if sys.platform == 'darwin':
-            _profileWindow.setIconSize(QSize(24, 24))
-
         # Add a profile toolbar.
+        _profileWindow = ProfileWindow()
         self._profileToolBar = ProfileToolBar(
             plot=self, profileWindow=_profileWindow)
+
         self.removeToolBar(self._outputToolBar)
         self.addToolBar(self._profileToolBar)
         self.addToolBar(self._outputToolBar)
