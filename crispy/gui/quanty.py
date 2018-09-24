@@ -1959,9 +1959,13 @@ class QuantyResultDetailsDialog(QDialog):
                 tab = self.axesTabWidget.findChild(QWidget, 'yTab')
                 self.axesTabWidget.addTab(tab, tab.objectName())
                 self.axesTabWidget.setTabText(1, c.yLabel)
+            self.scaleLineEdit.setEnabled(False)
+            self.normalizationComboBox.setEnabled(False)
         else:
             self.axesTabWidget.removeTab(1)
             self.axesTabWidget.setTabText(0, c.xLabel)
+            self.scaleLineEdit.setEnabled(True)
+            self.normalizationComboBox.setEnabled(True)
 
         self.spectraModel.setModelData(
             c.spectra.toPlot, c.spectra.toPlotChecked)
