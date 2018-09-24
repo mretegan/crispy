@@ -81,7 +81,6 @@ class ResultsModel(QAbstractItemModel):
 
     itemNameChanged = pyqtSignal(str)
     itemCheckStateChanged = pyqtSignal()
-    modelDataUpdated = pyqtSignal(QModelIndex)
     modelDataChanged = pyqtSignal(QModelIndex)
 
     def __init__(self, parent=None):
@@ -167,7 +166,7 @@ class ResultsModel(QAbstractItemModel):
     def updateItem(self, index, item):
         row = index.row()
         self.modelData[row] = copy.deepcopy(item)
-        self.modelDataUpdated.emit(index)
+        self.modelDataChanged.emit(index)
 
     def getCheckedItems(self):
         items = list()

@@ -115,10 +115,13 @@ def convolve_fft(array, kernel):
 
 
 def broaden(array, fwhm=None, kind='gaussian'):
-    if fwhm < 0:
-        return array
+    if fwhm is None:
+        return
 
     fwhm = np.array(fwhm)
+    if (fwhm <= 0).any():
+        return array
+
     if kind == 'gaussian':
         sigma = fwhm / (2 * np.sqrt(2 * np.log(2)))
         if fwhm.size == 1:

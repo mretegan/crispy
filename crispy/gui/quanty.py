@@ -63,9 +63,8 @@ from ..utils.profiling import timeit # noqa
 
 class Spectrum1D(object):
 
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
+    def __init__(self):
+        pass
 
     @property
     def y(self):
@@ -106,6 +105,51 @@ class Spectrum1D(object):
         elif value == 'Area':
             area = np.abs(np.trapz(self.y, self.x))
             self.y = self.y / area
+
+
+class Spectrum2D(object):
+
+    def __init__(self):
+        pass
+
+    @property
+    def xScale(self):
+        return np.abs(self.x.min() - self.x.max()) / self.x.shape[0]
+
+    @property
+    def yScale(self):
+        return np.abs(self.y.min() - self.y.max()) / self.y.shape[0]
+
+    @property
+    def axesScale(self):
+        return (self.xScale, self.yScale)
+
+    @property
+    def origin(self):
+        return (self.x.min(), self.y.min())
+
+    def broaden(self, broadenings):
+        for kind in broadenings:
+            if kind == 'gaussian':
+                xFwhm, yFwhm = broadenings[kind]
+                xFwhm = xFwhm / self.xScale
+                yFwhm = yFwhm / self.yScale
+                self.z = broaden(self.z, [xFwhm, yFwhm], kind)
+
+    def shift(self, values):
+        xValue, yValue = values
+        self.x = self.x + xValue
+        self.y = self.y + yValue
+
+    def scale(self, value):
+        self.z = self.z * value
+
+    def normalization(self, value):
+        if value == 'None':
+            return
+        elif value == 'Maximum':
+            zMax = np.abs(self.z).max()
+            self.z = self.z / zMax
 
 
 class QuantySpectra(object):
@@ -209,14 +253,14 @@ class QuantySpectra(object):
             rows, columns = data.shape
 
             if calculation.experiment in ('XAS', 'XPS'):
+                spectrum = Spectrum1D()
+
                 xMin = calculation.xMin
                 xMax = calculation.xMax
                 xNPoints = calculation.xNPoints
 
-                x = np.linspace(xMin, xMax, xNPoints + 1)
-                y = data[:, 2::2].flatten()
-
-                spectrum = Spectrum1D(x, y)
+                spectrum.x = np.linspace(xMin, xMax, xNPoints + 1)
+                spectrum.y = data[:, 2::2].flatten()
 
                 spectrum.name = spectrumName
                 if len(suffix) > 2:
@@ -232,8 +276,32 @@ class QuantySpectra(object):
 
                 self.broadenings = {'gaussian': (calculation.xGaussian, ), }
             else:
-                pass
-                # return data[:, 2::2][:, 0]
+                spectrum = Spectrum2D()
+
+                xMin = calculation.xMin
+                xMax = calculation.xMax
+                xNPoints = calculation.xNPoints
+
+                yMin = calculation.yMin
+                yMax = calculation.yMax
+                yNPoints = calculation.yNPoints
+
+                spectrum.x = np.linspace(xMin, xMax, xNPoints + 1)
+                spectrum.y = np.linspace(yMin, yMax, yNPoints + 1)
+                spectrum.z = data[:, 2::2]
+
+                spectrum.name = spectrumName
+                if len(suffix) > 2:
+                    spectrum.shortName = suffix.title()
+                else:
+                    spectrum.shortName = suffix.upper()
+
+                spectrum.xLabel = 'Incident Energy (eV)'
+                spectrum.yLabel = 'Energy Transfer (eV)'
+
+                self.broadenings = {'gaussian': (calculation.xGaussian,
+                                                 calculation.yGaussian), }
+
             self.raw.append(spectrum)
 
         # Process the spectra once they where read from disk.
@@ -733,7 +801,6 @@ class QuantyDockWidget(QDockWidget):
                 self.updateCalculationName)
             self.resultsModel.itemCheckStateChanged.connect(
                 self.updatePlotWidget)
-            self.resultsModel.modelDataUpdated.connect(self.updatePlotWidget)
             self.resultsModel.modelDataChanged.connect(self.updatePlotWidget)
             self.resultsModel.modelDataChanged.connect(self.updateResultsView)
 
@@ -1522,55 +1589,17 @@ class QuantyDockWidget(QDockWidget):
                 os.remove(spectrum)
 
     def plotSpectrum(self, spectrum):
-        # Spectrum object must have ALL information required to do the stuff
-        # below. ALL!!!
-
         pw = self.getPlotWidget()
 
-        if self.calculation.experiment == 'RIXS':
-            self.getPlotWidget().setGraphXLabel('Incident Energy (eV)')
-            self.getPlotWidget().setGraphYLabel('Energy Transfer (eV)')
+        pw.setGraphXLabel(spectrum.xLabel)
+        pw.setGraphYLabel(spectrum.yLabel)
 
-            xMin = self.calculation.xMin
-            xMax = self.calculation.xMax
-            xNPoints = self.calculation.xNPoints
-
-            yMin = self.calculation.yMin
-            yMax = self.calculation.yMax
-            yNPoints = self.calculation.yNPoints
-
-            xScale = (xMax - xMin) / xNPoints
-            yScale = (yMax - yMin) / yNPoints
-            scale = (xScale, yScale)
-
-            xOrigin = xMin
-            yOrigin = yMin
-            origin = (xOrigin, yOrigin)
-
-            z = spectrum.z
-
-            xGaussian = self.calculation.xGaussian
-            yGaussian = self.calculation.yGaussian
-
-            if xGaussian > 0 and yGaussian > 0:
-                xFwhm = xGaussian / xScale
-                yFwhm = yGaussian / yScale
-
-                fwhm = [xFwhm, yFwhm]
-                z = broaden(z, fwhm, 'gaussian')
-
-            self.getPlotWidget().addImage(
-                z, origin=origin, scale=scale, reset=False)
-
+        if hasattr(spectrum, 'z'):
+            pw.addImage(
+                spectrum.z, origin=spectrum.origin, scale=spectrum.axesScale,
+                reset=False)
         else:
-            pw.setGraphXLabel(spectrum.xLabel)
-            pw.setGraphYLabel(spectrum.yLabel)
-
-            try:
-                pw.addCurve(spectrum.x, spectrum.y, spectrum.legend)
-            except AssertionError:
-                message = 'The x and y arrays have different lengths.'
-                self.getStatusBar().showMessage(message)
+            pw.addCurve(spectrum.x, spectrum.y, spectrum.legend)
 
     def selectedHamiltonianTermChanged(self):
         index = self.hamiltonianTermsView.currentIndex()
@@ -1628,11 +1657,11 @@ class QuantyDockWidget(QDockWidget):
     def updateResultsView(self, index):
         """
         Update the selection to contain only the result specified by
-        the index (this should be the last index of the model). Also
-        update the context menu.
+        the index. This should be the last index of the model. Finally updade
+        the context menu.
 
-        The selectionChanged signal which is emited after the select
-        method is called will be used to update some of the widgets.
+        The selectionChanged signal is used to trigger the update of
+        the Quanty dock widget and result details dialog.
 
         :param index: Index of the last item of the model.
         :type index: QModelIndex
@@ -1674,9 +1703,11 @@ class QuantyDockWidget(QDockWidget):
         if index is None:
             return
         self.resultsModel.updateItem(index, self.calculation)
-        self.resultsView.viewport().repaint()
+        # self.resultsView.viewport().repaint()
 
     def updatePlotWidget(self):
+        """Updating the plotting widget should not require any information
+        about the current state of the widget (e.g. self.calculation)."""
         # import time
         # start = time.time()
         self.getPlotWidget().reset()
@@ -1912,10 +1943,7 @@ class QuantyResultDetailsDialog(QDialog):
         self.outputPlainTextEdit.setFont(font)
 
         self.closePushButton.setAutoDefault(False)
-        self.closePushButton.clicked.connect(self.closeWidget)
-
-    def closeWidget(self):
-        self.close()
+        self.closePushButton.clicked.connect(self.close)
 
     def closeEvent(self, event):
         self.saveSettings()
@@ -2003,28 +2031,31 @@ class QuantyResultDetailsDialog(QDialog):
 
         self.summaryPlainTextEdit.setPlainText(summary)
 
+    def updateResultsModelData(self):
+        self.parent().updateResultsModelData()
+
     def updateSpectraCheckState(self, checkedItems):
         self.calculation.spectra.toPlotChecked = checkedItems
-        self.parent().updateResultsModelData()
+        self.updateResultsModelData()
 
     def updateScale(self):
         scale = self.scaleLineEdit.getValue()
         self.calculation.spectra.scale = scale
         self.calculation.spectra.process()
-        self.parent().updateResultsModelData()
+        self.updateResultsModelData()
 
     def updateNormalization(self):
         normalization = self.normalizationComboBox.currentText()
         self.calculation.spectra.normalization = normalization
         self.calculation.spectra.process()
-        self.parent().updateResultsModelData()
+        self.updateResultsModelData()
 
     def updateShift(self):
         xShift = self.xShiftLineEdit.getValue()
         yShift = self.yShiftLineEdit.getValue()
         self.calculation.spectra.shift = (xShift, yShift)
         self.calculation.spectra.process()
-        self.parent().updateResultsModelData()
+        self.updateResultsModelData()
 
     def updateBroadening(self):
         self.updateXGaussian()
@@ -2046,7 +2077,7 @@ class QuantyResultDetailsDialog(QDialog):
 
         self.calculation.spectra.broadenings = copy.deepcopy(broadenings)
         self.calculation.spectra.process()
-        self.parent().updateResultsModelData()
+        self.updateResultsModelData()
 
     def updateXGaussian(self):
         parent = self.parent()

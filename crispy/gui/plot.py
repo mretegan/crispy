@@ -43,8 +43,8 @@ from silx.gui.plot.Profile import ProfileToolBar
 
 class BackendMatplotlibQt(backends.BackendMatplotlib.BackendMatplotlibQt):
 
-    def __init__(self, parent=None, plot=None):
-        super(BackendMatplotlibQt, self).__init__(parent, plot)
+    def __init__(self, plot, parent=None):
+        super(BackendMatplotlibQt, self).__init__(plot, parent=parent)
         self._legends = odict()
 
     def addCurve(self, x, y, legend, *args, **kwargs):
@@ -144,11 +144,14 @@ class MainPlotWidget(BasePlotWidget):
         super(MainPlotWidget, self).__init__(
             parent, **kwargs, backend=BackendMatplotlibQt)
 
-        # Add a profile toolbar.
         _profileWindow = BasePlotWidget()
         _profileWindow.setWindowTitle(str())
+        if sys.platform == 'darwin':
+            _profileWindow.setIconSize(QSize(24, 24))
+
+        # Add a profile toolbar.
         self._profileToolBar = ProfileToolBar(
-            parent=self, plot=self, profileWindow=_profileWindow)
+            plot=self, profileWindow=_profileWindow)
         self.removeToolBar(self._outputToolBar)
         self.addToolBar(self._profileToolBar)
         self.addToolBar(self._outputToolBar)
