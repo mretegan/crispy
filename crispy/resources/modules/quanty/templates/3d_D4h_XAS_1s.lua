@@ -455,6 +455,56 @@ end
 io.write(footer)
 
 --------------------------------------------------------------------------------
+-- Define some helper function for the spectra calculation.
+--------------------------------------------------------------------------------
+function ValueInTable(value, table)
+    -- Check if a value is in a table.
+    for k, v in ipairs(table) do
+        if value == v then
+            return true
+        end
+    end
+    return false
+end
+
+function GetSpectrum(G, T, Psis, indices, dZSpectra)
+    -- Extract the spectra corresponding to the operators identified
+    -- using the indices argument. The returned spectrum is a weighted
+    -- sum, where the weights are the Boltzmann probabilities.
+    if not (type(indices) == 'table') then
+        indices = {indices}
+    end
+
+    c = 1
+    dZSpectrum = {}
+
+    for i in ipairs(T) do
+        for k in ipairs(Psis) do
+            if ValueInTable(i, indices) then
+                table.insert(dZSpectrum, dZSpectra[c])
+            else
+                table.insert(dZSpectrum, 0)
+            end
+            c = c + 1
+        end
+    end
+
+    return Spectra.Sum(G, dZSpectrum)
+end
+
+function SaveSpectrum(G, suffix)
+    -- Scale, broaden, and save the spectrum to disk.
+    G = -1 / math.pi * G
+
+    Gmin1 = $Gmin1 - Gamma
+    Gmax1 = $Gmax1 - Gamma
+    Egamma1 = ($Egamma1 - Eedge1) + DeltaE
+    G.Broaden(0, {{Emin, Gmin1}, {Egamma1, Gmin1}, {Egamma1, Gmax1}, {Emax, Gmax1}})
+
+    G.Print({{'file', '$BaseName_' .. suffix .. '.spec'}})
+end
+
+--------------------------------------------------------------------------------
 -- Define the transition operators.
 --------------------------------------------------------------------------------
 t = math.sqrt(1/2)
@@ -508,28 +558,34 @@ end
 T_1s_3d = {}
 indices_1s_3d = {}
 c = 1
-for i, spectrum in ipairs(spectra) do
-    if spectrum == 'Isotropic' then
-        indices_1s_3d[spectrum] = {}
-        for j, operator in ipairs({Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}) do
-            table.insert(T_1s_3d, operator)
-            table.insert(indices_1s_3d[spectrum], c)
-            c = c + 1
-        end
-    elseif spectrum == 'Circular Dichroism' then
-        indices_1s_3d[spectrum] = {}
-        for j, operator in ipairs({Tr_1s_3d, Tl_1s_3d}) do
-            table.insert(T_1s_3d, operator)
-            table.insert(indices_1s_3d[spectrum], c)
-            c = c + 1
-        end
-    elseif spectrum == 'Linear Dichroism' then
-        indices_1s_3d[spectrum] = {}
-        for j, operator in ipairs({Tv_1s_3d, Th_1s_3d}) do
-            table.insert(T_1s_3d, operator)
-            table.insert(indices_1s_3d[spectrum], c)
-            c = c + 1
-        end
+
+spectrum = 'Isotropic'
+if ValueInTable(spectrum, spectra) then
+    indices_1s_3d[spectrum] = {}
+    for j, operator in ipairs({Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}) do
+        table.insert(T_1s_3d, operator)
+        table.insert(indices_1s_3d[spectrum], c)
+        c = c + 1
+    end
+end
+
+spectrum = 'Circular Dichroism'
+if ValueInTable(spectrum, spectra) then
+    indices_1s_3d[spectrum] = {}
+    for j, operator in ipairs({Tr_1s_3d, Tl_1s_3d}) do
+        table.insert(T_1s_3d, operator)
+        table.insert(indices_1s_3d[spectrum], c)
+        c = c + 1
+    end
+end
+
+spectrum = 'Linear Dichroism'
+if ValueInTable(spectrum, spectra) then
+    indices_1s_3d[spectrum] = {}
+    for j, operator in ipairs({Tv_1s_3d, Th_1s_3d}) do
+        table.insert(T_1s_3d, operator)
+        table.insert(indices_1s_3d[spectrum], c)
+        c = c + 1
     end
 end
 
@@ -571,70 +627,28 @@ for i in ipairs(T_1s_3d) do
     end
 end
 
-function ValueInTable(value, table)
-    -- Check if a value is in a table.
-    for k, v in ipairs(table) do
-        if value == v then
-            return true
-        end
-    end
-    return false
-end
-
-function GetSpectrum(G, T, Psis, indices, dZSpectra)
-    -- Extract the spectra corresponding to the operators identified
-    -- using the indices argument. The returned spectrum is a weighted
-    -- sum, where the weights are the Boltzmann probabilities.
-    if not (type(indices) == 'table') then
-        indices = {indices}
-    end
-
-    c = 1
-    dZSpectrum = {}
-
-    for i in ipairs(T) do
-        for k in ipairs(Psis) do
-            if ValueInTable(i, indices) then
-                table.insert(dZSpectrum, dZSpectra[c])
-            else
-                table.insert(dZSpectrum, 0)
-            end
-            c = c + 1
-        end
-    end
-
-    return Spectra.Sum(G, dZSpectrum)
-end
-
-function SaveSpectrum(G, suffix)
-    -- Scale, broaden, and save the spectrum to disk.
-    G = -1 / math.pi * G
-
-    Gmin1 = $Gmin1 - Gamma
-    Gmax1 = $Gmax1 - Gamma
-    Egamma1 = ($Egamma1 - Eedge1) + DeltaE
-    G.Broaden(0, {{Emin, Gmin1}, {Egamma1, Gmin1}, {Egamma1, Gmax1}, {Emax, Gmax1}})
-
-    G.Print({{'file', '$BaseName_' .. suffix .. '.spec'}})
-end
-
-for i, spectrum in ipairs(spectra) do
-    if spectrum == 'Isotropic' then
+spectrum = 'Isotropic'
+if ValueInTable(spectrum, spectra) then
         Giso = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices_1s_3d[spectrum], dZ_1s_3d)
         Giso = Giso / 15
         SaveSpectrum(Giso, 'iso')
-    elseif spectrum == 'Circular Dichroism' then
+end
+
+spectrum = 'Circular Dichroism'
+if ValueInTable(spectrum, spectra) then
         Gr = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices_1s_3d[spectrum][1], dZ_1s_3d)
         Gl = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices_1s_3d[spectrum][2], dZ_1s_3d)
         SaveSpectrum(Gr, 'r')
         SaveSpectrum(Gl, 'l')
         SaveSpectrum(Gr - Gl, 'cd')
-    elseif spectrum == 'Linear Dichroism' then
+end
+
+spectrum = 'Linear Dichroism'
+if ValueInTable(spectrum, spectra) then
         Gv = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices_1s_3d[spectrum][1], dZ_1s_3d)
         Gh = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices_1s_3d[spectrum][2], dZ_1s_3d)
         SaveSpectrum(Gv, 'v')
         SaveSpectrum(Gh, 'h')
         SaveSpectrum(Gv - Gh, 'ld')
-    end
 end
 

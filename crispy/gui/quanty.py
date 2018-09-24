@@ -476,7 +476,7 @@ class QuantyCalculation(object):
                     value = parameters[parameter]
                     self.fixedTermsParameters[term][parameter] = value
 
-                if term in ('Atomic', 'Crystal Field'):
+                if term in ('Atomic', 'Crystal Field', 'Magnetic Field'):
                     self.hamiltonianState[term] = 2
                 else:
                     self.hamiltonianState[term] = 0
@@ -581,6 +581,9 @@ class QuantyCalculation(object):
                         value, scaleFactor = data
                     except TypeError:
                         value = data
+
+                    if self.magneticField == 0 and parameter == 'Bz':
+                        value = 1e-6
 
                     key = '${}_{}_value'.format(parameter, suffix)
                     replacements[key] = '{}'.format(value)
@@ -887,13 +890,6 @@ class QuantyDockWidget(QDockWidget):
     def updateMagneticField(self):
         magneticField = self.magneticFieldLineEdit.getValue()
 
-        if magneticField == 0:
-            self.calculation.hamiltonianState['Magnetic Field'] = 0
-        else:
-            self.calculation.hamiltonianState['Magnetic Field'] = 2
-        self.hamiltonianModel.setNodesCheckState(
-            self.calculation.hamiltonianState)
-
         TESLA_TO_EV = 5.788e-05
 
         # Normalize the current incident vector.
@@ -906,7 +902,7 @@ class QuantyDockWidget(QDockWidget):
             for i, parameter in enumerate(parameters):
                 value = float(magneticField * np.abs(k1[i]) * TESLA_TO_EV)
                 if abs(value) == 0.0:
-                    value = 0.0
+                        value = 0.0
                 configurations[configuration][parameter] = value
         self.hamiltonianModel.updateModelData(self.calculation.hamiltonianData)
 
@@ -1061,7 +1057,7 @@ class QuantyDockWidget(QDockWidget):
         self.eps12LineEdit.setVector(eps12)
         self.calculation.eps12 = eps12
 
-        self.updateMagneticField()
+        # self.updateMagneticField()
 
     def updateIncidentPolarizationVectors(self):
         try:
@@ -1709,7 +1705,6 @@ class QuantyDockWidget(QDockWidget):
         """Updating the plotting widget should not require any information
         about the current state of the widget (e.g. self.calculation)."""
         # import time
-        # start = time.time()
         self.getPlotWidget().reset()
 
         calculations = self.resultsModel.getCheckedItems()
@@ -1723,12 +1718,11 @@ class QuantyDockWidget(QDockWidget):
                     calculation.index, spectrum.shortName)
                 if spectrum.name in calculation.spectra.toPlotChecked:
                     self.plotSpectrum(spectrum)
-        # stop = time.time()
-        # print('Updating the plot took {:.3g} seconds.'.format((stop - start)))
 
     def showResultDetailsDialog(self):
         self.updateResultDetailsDialog()
         self.resultDetailsDialog.show()
+        self.resultDetailsDialog.raise_()
 
     def updateResultDetailsDialog(self):
         self.resultDetailsDialog.populateWidget()

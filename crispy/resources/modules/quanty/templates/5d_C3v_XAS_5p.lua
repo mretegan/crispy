@@ -56,17 +56,20 @@ if H_atomic == 1 then
     G1_5p_5d = NewOperator('U', NFermions, IndexUp_5p, IndexDn_5p, IndexUp_5d, IndexDn_5d, {0, 0}, {1, 0})
     G3_5p_5d = NewOperator('U', NFermions, IndexUp_5p, IndexDn_5p, IndexUp_5d, IndexDn_5d, {0, 0}, {0, 1})
 
+    U_5d_5d_i = $U(5d,5d)_i_value
     F2_5d_5d_i = $F2(5d,5d)_i_value * $F2(5d,5d)_i_scale
     F4_5d_5d_i = $F4(5d,5d)_i_value * $F4(5d,5d)_i_scale
-    F0_5d_5d_i = 2 / 63 * F2_5d_5d_i + 2 / 63 * F4_5d_5d_i
+    F0_5d_5d_i = U_5d_5d_i + 2 / 63 * F2_5d_5d_i + 2 / 63 * F4_5d_5d_i
 
+    U_5d_5d_f = $U(5d,5d)_f_value
     F2_5d_5d_f = $F2(5d,5d)_f_value * $F2(5d,5d)_f_scale
     F4_5d_5d_f = $F4(5d,5d)_f_value * $F4(5d,5d)_f_scale
-    F0_5d_5d_f = 2 / 63 * F2_5d_5d_f + 2 / 63 * F4_5d_5d_f
+    F0_5d_5d_f = U_5d_5d_f + 2 / 63 * F2_5d_5d_f + 2 / 63 * F4_5d_5d_f
+    U_5p_5d_f = $U(5p,5d)_f_value
     F2_5p_5d_f = $F2(5p,5d)_f_value * $F2(5p,5d)_f_scale
     G1_5p_5d_f = $G1(5p,5d)_f_value * $G1(5p,5d)_f_scale
     G3_5p_5d_f = $G3(5p,5d)_f_value * $G3(5p,5d)_f_scale
-    F0_5p_5d_f = 1 / 15 * G1_5p_5d_f + 3 / 70 * G3_5p_5d_f
+    F0_5p_5d_f = U_5p_5d_f + 1 / 15 * G1_5p_5d_f + 3 / 70 * G3_5p_5d_f
 
     H_i = H_i + Chop(
           F0_5d_5d_i * F0_5d_5d
@@ -342,116 +345,8 @@ end
 io.write(footer)
 
 --------------------------------------------------------------------------------
--- Define the transition operators.
+-- Define some helper function for the spectra calculation.
 --------------------------------------------------------------------------------
-t = math.sqrt(1/2)
-
-Tx_5p_5d = NewOperator('CF', NFermions, IndexUp_5d, IndexDn_5d, IndexUp_5p, IndexDn_5p, {{1, -1, t    }, {1, 1, -t    }})
-Ty_5p_5d = NewOperator('CF', NFermions, IndexUp_5d, IndexDn_5d, IndexUp_5p, IndexDn_5p, {{1, -1, t * I}, {1, 1,  t * I}})
-Tz_5p_5d = NewOperator('CF', NFermions, IndexUp_5d, IndexDn_5d, IndexUp_5p, IndexDn_5p, {{1,  0, 1    }                })
-
-k = $k1
-ev = $eps11
-eh = $eps12
-
--- Calculate the right and left polarization vectors.
-er = {t * (eh[1] - I * ev[1]),
-      t * (eh[2] - I * ev[2]),
-      t * (eh[3] - I * ev[3])}
-
-el = {-t * (eh[1] + I * ev[1]),
-      -t * (eh[2] + I * ev[2]),
-      -t * (eh[3] + I * ev[3])}
-
-function CalculateT(e)
-    -- Calculate the transition operator for arbitrary
-    -- polarization and wave vectors.
-    T = e[1] * Tx_5p_5d + e[2] * Ty_5p_5d + e[3] * Tz_5p_5d
-    return Chop(T)
-end
-
-Tv_5p_5d = CalculateT(ev, k)
-Th_5p_5d = CalculateT(eh, k)
-Tr_5p_5d = CalculateT(er, k)
-Tl_5p_5d = CalculateT(el, k)
-Tk_5p_5d = CalculateT(k, k)
-
--- List with the user selected spectra.
-spectra = {$spectra}
-
-if next(spectra) == nil then
-    return
-end
-
--- Create two lists, one with the operators and the second with
--- the indices of the operators required to calculate a given
--- spectrum.
-T_5p_5d = {}
-indices_5p_5d = {}
-c = 1
-for i, spectrum in ipairs(spectra) do
-    if spectrum == 'Isotropic' then
-        indices_5p_5d[spectrum] = {}
-        for j, operator in ipairs({Tx_5p_5d, Ty_5p_5d, Tz_5p_5d}) do
-            table.insert(T_5p_5d, operator)
-            table.insert(indices_5p_5d[spectrum], c)
-            c = c + 1
-        end
-    elseif spectrum == 'Circular Dichroism' then
-        indices_5p_5d[spectrum] = {}
-        for j, operator in ipairs({Tr_5p_5d, Tl_5p_5d}) do
-            table.insert(T_5p_5d, operator)
-            table.insert(indices_5p_5d[spectrum], c)
-            c = c + 1
-        end
-    elseif spectrum == 'Linear Dichroism' then
-        indices_5p_5d[spectrum] = {}
-        for j, operator in ipairs({Tv_5p_5d, Th_5p_5d}) do
-            table.insert(T_5p_5d, operator)
-            table.insert(indices_5p_5d[spectrum], c)
-            c = c + 1
-        end
-    end
-end
-
---------------------------------------------------------------------------------
--- Calculate and save the spectra.
---------------------------------------------------------------------------------
-E_gs_i = Psis_i[1] * H_i * Psis_i[1]
-
-if CalculationRestrictions == nil then
-    Psis_f = Eigensystem(H_f, FinalRestrictions, 1)
-else
-    Psis_f = Eigensystem(H_f, FinalRestrictions, 1, {{'restrictions', CalculationRestrictions}})
-end
-
-Psis_f = {Psis_f}
-E_gs_f = Psis_f[1] * H_f * Psis_f[1]
-
-Eedge1 = $Eedge1
-DeltaE = E_gs_f - E_gs_i
-
-Emin = ($Emin1 - Eedge1) + DeltaE
-Emax = ($Emax1 - Eedge1) + DeltaE
-NE = $NE1
-Gamma = $Gamma1
-DenseBorder = $DenseBorder
-
-if CalculationRestrictions == nil then
-    G_5p_5d = CreateSpectra(H_f, T_5p_5d, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'DenseBorder', DenseBorder}})
-else
-    G_5p_5d = CreateSpectra(H_f, T_5p_5d, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}, {'DenseBorder', DenseBorder}})
-end
-
--- Create a list with the Boltzmann probabilities for a given operator
--- and state.
-dZ_5p_5d = {}
-for i in ipairs(T_5p_5d) do
-    for j in ipairs(Psis_i) do
-        table.insert(dZ_5p_5d, dZ[j])
-    end
-end
-
 function ValueInTable(value, table)
     -- Check if a value is in a table.
     for k, v in ipairs(table) do
@@ -499,23 +394,150 @@ function SaveSpectrum(G, suffix)
     G.Print({{'file', '$BaseName_' .. suffix .. '.spec'}})
 end
 
-for i, spectrum in ipairs(spectra) do
-    if spectrum == 'Isotropic' then
-        Giso = GetSpectrum(G_5p_5d, T_5p_5d, Psis_i, indices_5p_5d[spectrum], dZ_5p_5d)
-        Giso = Giso / 3
-        SaveSpectrum(Giso, 'iso')
-    elseif spectrum == 'Circular Dichroism' then
-        Gr = GetSpectrum(G_5p_5d, T_5p_5d, Psis_i, indices_5p_5d[spectrum][1], dZ_5p_5d)
-        Gl = GetSpectrum(G_5p_5d, T_5p_5d, Psis_i, indices_5p_5d[spectrum][2], dZ_5p_5d)
-        SaveSpectrum(Gr, 'r')
-        SaveSpectrum(Gl, 'l')
-        SaveSpectrum(Gr - Gl, 'cd')
-    elseif spectrum == 'Linear Dichroism' then
-        Gv = GetSpectrum(G_5p_5d, T_5p_5d, Psis_i, indices_5p_5d[spectrum][1], dZ_5p_5d)
-        Gh = GetSpectrum(G_5p_5d, T_5p_5d, Psis_i, indices_5p_5d[spectrum][2], dZ_5p_5d)
-        SaveSpectrum(Gv, 'v')
-        SaveSpectrum(Gh, 'h')
-        SaveSpectrum(Gv - Gh, 'ld')
+--------------------------------------------------------------------------------
+-- Define the transition operators.
+--------------------------------------------------------------------------------
+t = math.sqrt(1/2)
+
+Tx_5p_5d = NewOperator('CF', NFermions, IndexUp_5d, IndexDn_5d, IndexUp_5p, IndexDn_5p, {{1, -1, t    }, {1, 1, -t    }})
+Ty_5p_5d = NewOperator('CF', NFermions, IndexUp_5d, IndexDn_5d, IndexUp_5p, IndexDn_5p, {{1, -1, t * I}, {1, 1,  t * I}})
+Tz_5p_5d = NewOperator('CF', NFermions, IndexUp_5d, IndexDn_5d, IndexUp_5p, IndexDn_5p, {{1,  0, 1    }                })
+
+k = $k1
+ev = $eps11
+eh = $eps12
+
+-- Calculate the right and left polarization vectors.
+er = {t * (eh[1] - I * ev[1]),
+      t * (eh[2] - I * ev[2]),
+      t * (eh[3] - I * ev[3])}
+
+el = {-t * (eh[1] + I * ev[1]),
+      -t * (eh[2] + I * ev[2]),
+      -t * (eh[3] + I * ev[3])}
+
+function CalculateT(e)
+    -- Calculate the transition operator for arbitrary
+    -- polarization and wave vectors.
+    T = e[1] * Tx_5p_5d + e[2] * Ty_5p_5d + e[3] * Tz_5p_5d
+    return Chop(T)
+end
+
+Tv_5p_5d = CalculateT(ev, k)
+Th_5p_5d = CalculateT(eh, k)
+Tr_5p_5d = CalculateT(er, k)
+Tl_5p_5d = CalculateT(el, k)
+Tk_5p_5d = CalculateT(k, k)
+
+-- List with the user selected spectra.
+spectra = {$spectra}
+
+if next(spectra) == nil then
+    return
+end
+
+-- Create two lists, one with the operators and the second with
+-- the indices of the operators required to calculate a given
+-- spectrum.
+T_5p_5d = {}
+indices_5p_5d = {}
+c = 1
+
+spectrum = 'Isotropic'
+if ValueInTable(spectrum, spectra) then
+    indices_5p_5d[spectrum] = {}
+    for j, operator in ipairs({Tr_5p_5d, Tl_5p_5d, Tk_5p_5d}) do
+        table.insert(T_5p_5d, operator)
+        table.insert(indices_5p_5d[spectrum], c)
+        c = c + 1
     end
+end
+
+spectrum = 'Circular Dichroism'
+if ValueInTable(spectrum, spectra) then
+    indices_5p_5d[spectrum] = {}
+    if ValueInTable('Isotropic', table) then
+        for j, operator in ipairs({Tr_5p_5d, Tl_5p_5d}) do
+            table.insert(T_5p_5d, operator)
+            table.insert(indices_5p_5d[spectrum], c)
+            c = c + 1
+        end
+    else
+        table.insert(indices_5p_5d[spectrum], 1)
+        table.insert(indices_5p_5d[spectrum], 2)
+    end
+end
+
+spectrum = 'Linear Dichroism'
+if ValueInTable(spectrum, spectra) then
+    indices_5p_5d[spectrum] = {}
+    for j, operator in ipairs({Tv_5p_5d, Th_5p_5d}) do
+        table.insert(T_5p_5d, operator)
+        table.insert(indices_5p_5d[spectrum], c)
+        c = c + 1
+    end
+end
+
+--------------------------------------------------------------------------------
+-- Calculate and save the spectra.
+--------------------------------------------------------------------------------
+E_gs_i = Psis_i[1] * H_i * Psis_i[1]
+
+if CalculationRestrictions == nil then
+    Psis_f = Eigensystem(H_f, FinalRestrictions, 1)
+else
+    Psis_f = Eigensystem(H_f, FinalRestrictions, 1, {{'restrictions', CalculationRestrictions}})
+end
+
+Psis_f = {Psis_f}
+E_gs_f = Psis_f[1] * H_f * Psis_f[1]
+
+Eedge1 = $Eedge1
+DeltaE = E_gs_f - E_gs_i
+
+Emin = ($Emin1 - Eedge1) + DeltaE
+Emax = ($Emax1 - Eedge1) + DeltaE
+NE = $NE1
+Gamma = $Gamma1
+DenseBorder = $DenseBorder
+
+if CalculationRestrictions == nil then
+    G_5p_5d = CreateSpectra(H_f, T_5p_5d, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'DenseBorder', DenseBorder}})
+else
+    G_5p_5d = CreateSpectra(H_f, T_5p_5d, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}, {'DenseBorder', DenseBorder}})
+end
+
+-- Create a list with the Boltzmann probabilities for a given operator
+-- and state.
+dZ_5p_5d = {}
+for i in ipairs(T_5p_5d) do
+    for j in ipairs(Psis_i) do
+        table.insert(dZ_5p_5d, dZ[j])
+    end
+end
+
+spectrum = 'Isotropic'
+if ValueInTable(spectrum, spectra) then
+    Giso = GetSpectrum(G_5p_5d, T_5p_5d, Psis_i, indices_5p_5d[spectrum], dZ_5p_5d)
+    Giso = Giso / 3
+    SaveSpectrum(Giso, 'iso')
+end
+
+spectrum = 'Circular Dichroism'
+if ValueInTable(spectrum, spectra) then
+    Gr = GetSpectrum(G_5p_5d, T_5p_5d, Psis_i, indices_5p_5d[spectrum][1], dZ_5p_5d)
+    Gl = GetSpectrum(G_5p_5d, T_5p_5d, Psis_i, indices_5p_5d[spectrum][2], dZ_5p_5d)
+    SaveSpectrum(Gr, 'r')
+    SaveSpectrum(Gl, 'l')
+    SaveSpectrum(Gr - Gl, 'cd')
+end
+
+spectrum = 'Linear Dichroism'
+if ValueInTable(spectrum, spectra) then
+    Gv = GetSpectrum(G_5p_5d, T_5p_5d, Psis_i, indices_5p_5d[spectrum][1], dZ_5p_5d)
+    Gh = GetSpectrum(G_5p_5d, T_5p_5d, Psis_i, indices_5p_5d[spectrum][2], dZ_5p_5d)
+    SaveSpectrum(Gv, 'v')
+    SaveSpectrum(Gh, 'h')
+    SaveSpectrum(Gv - Gh, 'ld')
 end
 
