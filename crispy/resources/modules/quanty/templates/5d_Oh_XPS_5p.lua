@@ -298,7 +298,7 @@ if H_5d_ligands_hybridization == 1 then
                                              {'000000 0000000000 1111111111', NElectrons_Ld, NElectrons_Ld}}
 
 
-    CalculationRestrictions = {NFermions, NBosons, {'00 0000000000 1111111111', NElectrons_Ld - (NConfigurations - 1), NElectrons_Ld}}
+    CalculationRestrictions = {NFermions, NBosons, {'000000 0000000000 1111111111', NElectrons_Ld - (NConfigurations - 1), NElectrons_Ld}}
 end
 
 Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, Tz, ldots_5d, N_5p, N_5d, 'dZ'}

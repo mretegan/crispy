@@ -400,6 +400,15 @@ class QuantyCalculation(object):
 
         branch = branch[self.edge]
 
+        if self.experiment == 'RIXS':
+            shortEdge = self.edge[-5:-1]
+        else:
+            shortEdge = self.edge[-3:-1]
+
+        self.baseName = '{}{}_{}_{}_{}'.format(
+            self.element, self.charge, self.symmetry, shortEdge,
+            self.experiment)
+
         self.templateName = branch['template name']
 
         self.configurations = branch['configurations']
