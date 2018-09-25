@@ -1736,7 +1736,6 @@ class QuantyDockWidget(QDockWidget):
     def updatePlotWidget(self):
         """Updating the plotting widget should not require any information
         about the current state of the widget (e.g. self.calculation)."""
-        # import time
         self.getPlotWidget().reset()
 
         calculations = self.resultsModel.getCheckedItems()
