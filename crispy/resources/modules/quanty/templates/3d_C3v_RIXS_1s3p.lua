@@ -408,7 +408,7 @@ io.write(footer)
 --------------------------------------------------------------------------------
 -- Define the transition operators.
 --------------------------------------------------------------------------------
-t = math.sqrt(1/2);
+t = math.sqrt(1/2)
 
 Txy_1s_3d   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -2, t * I}, {2, 2, -t * I}})
 Txz_1s_3d   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -1, t    }, {2, 1, -t    }})
@@ -442,18 +442,18 @@ Psis_f = {Psis_f}
 E_gs_f = Psis_f[1] * H_f * Psis_f[1]
 
 Eedge1 = $Eedge1
-DeltaE1 = Eedge1 + E_gs_i - E_gs_m
+DeltaE1 = E_gs_m - E_gs_i
 
 Eedge2 = $Eedge2
-DeltaE2 = Eedge2 + E_gs_i - E_gs_f
+DeltaE2 = E_gs_f - E_gs_i
 
-Emin1 = $Emin1 - DeltaE1
-Emax1 = $Emax1 - DeltaE1
+Emin1 = ($Emin1 - Eedge1) + DeltaE1
+Emax1 = ($Emax1 - Eedge1) + DeltaE1
 NE1 = $NE1
 Gamma1 = $Gamma1
 
-Emin2 = $Emin2 - DeltaE2
-Emax2 = $Emax2 - DeltaE2
+Emin2 = ($Emin2 - Eedge2) + DeltaE2
+Emax2 = ($Emax2 - Eedge2) + DeltaE2
 NE2 = $NE2
 Gamma2 = $Gamma2
 

@@ -3,9 +3,9 @@
 -- the following reference: http://dx.doi.org/10.5281/zenodo.1008184.
 --
 -- elements: 3d
--- symmetry: D3h
+-- symmetry: C3v
 -- experiment: RIXS
--- edge: K-M2,3 (1s3p)
+-- edge: L2,3-M4,5 (2p3d)
 --------------------------------------------------------------------------------
 Verbosity($Verbosity)
 
@@ -28,27 +28,21 @@ H_exchange_field = $H_exchange_field
 -- Define the number of electrons, shells, etc.
 --------------------------------------------------------------------------------
 NBosons = 0
-NFermions = 18
+NFermions = 16
 
-NElectrons_1s = 2
-NElectrons_3p = 6
+NElectrons_2p = 6
 NElectrons_3d = $NElectrons_3d
 
-IndexDn_1s = {0}
-IndexUp_1s = {1}
-IndexDn_3p = {2, 4, 6}
-IndexUp_3p = {3, 5, 7}
-IndexDn_3d = {8, 10, 12, 14, 16}
-IndexUp_3d = {9, 11, 13, 15, 17}
+IndexDn_2p = {0, 2, 4}
+IndexUp_2p = {1, 3, 5}
+IndexDn_3d = {6, 8, 10, 12, 14}
+IndexUp_3d = {7, 9, 11, 13, 15}
 
 --------------------------------------------------------------------------------
 -- Define the atomic term.
 --------------------------------------------------------------------------------
-N_1s = NewOperator('Number', NFermions, IndexUp_1s, IndexUp_1s, {1})
-     + NewOperator('Number', NFermions, IndexDn_1s, IndexDn_1s, {1})
-
-N_3p = NewOperator('Number', NFermions, IndexUp_3p, IndexUp_3p, {1, 1, 1})
-     + NewOperator('Number', NFermions, IndexDn_3p, IndexDn_3p, {1, 1, 1})
+N_2p = NewOperator('Number', NFermions, IndexUp_2p, IndexUp_2p, {1, 1, 1})
+     + NewOperator('Number', NFermions, IndexDn_2p, IndexDn_2p, {1, 1, 1})
 
 N_3d = NewOperator('Number', NFermions, IndexUp_3d, IndexUp_3d, {1, 1, 1, 1, 1})
      + NewOperator('Number', NFermions, IndexDn_3d, IndexDn_3d, {1, 1, 1, 1, 1})
@@ -58,13 +52,10 @@ if H_atomic == 1 then
     F2_3d_3d = NewOperator('U', NFermions, IndexUp_3d, IndexDn_3d, {0, 1, 0})
     F4_3d_3d = NewOperator('U', NFermions, IndexUp_3d, IndexDn_3d, {0, 0, 1})
 
-    F0_3p_3d = NewOperator('U', NFermions, IndexUp_3p, IndexDn_3p, IndexUp_3d, IndexDn_3d, {1, 0}, {0, 0})
-    F2_3p_3d = NewOperator('U', NFermions, IndexUp_3p, IndexDn_3p, IndexUp_3d, IndexDn_3d, {0, 1}, {0, 0})
-    G1_3p_3d = NewOperator('U', NFermions, IndexUp_3p, IndexDn_3p, IndexUp_3d, IndexDn_3d, {0, 0}, {1, 0})
-    G3_3p_3d = NewOperator('U', NFermions, IndexUp_3p, IndexDn_3p, IndexUp_3d, IndexDn_3d, {0, 0}, {0, 1})
-
-    F0_1s_3d = NewOperator('U', NFermions, IndexUp_1s, IndexDn_1s, IndexUp_3d, IndexDn_3d, {1}, {0})
-    G2_1s_3d = NewOperator('U', NFermions, IndexUp_1s, IndexDn_1s, IndexUp_3d, IndexDn_3d, {0}, {1})
+    F0_2p_3d = NewOperator('U', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_3d, IndexDn_3d, {1, 0}, {0, 0})
+    F2_2p_3d = NewOperator('U', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_3d, IndexDn_3d, {0, 1}, {0, 0})
+    G1_2p_3d = NewOperator('U', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_3d, IndexDn_3d, {0, 0}, {1, 0})
+    G3_2p_3d = NewOperator('U', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_3d, IndexDn_3d, {0, 0}, {0, 1})
 
     U_3d_3d_i = $U(3d,3d)_i_value
     F2_3d_3d_i = $F2(3d,3d)_i_value * $F2(3d,3d)_i_scale
@@ -75,19 +66,16 @@ if H_atomic == 1 then
     F2_3d_3d_m = $F2(3d,3d)_m_value * $F2(3d,3d)_m_scale
     F4_3d_3d_m = $F4(3d,3d)_m_value * $F4(3d,3d)_m_scale
     F0_3d_3d_m = U_3d_3d_m + 2 / 63 * F2_3d_3d_m + 2 / 63 * F4_3d_3d_m
-    U_1s_3d_m = $U(1s,3d)_m_value
-    G2_1s_3d_m = $G2(1s,3d)_m_value * $G2(1s,3d)_m_scale
-    F0_1s_3d_m = U_1s_3d_m + 1 / 10 * G2_1s_3d_m
+    U_2p_3d_m = $U(2p,3d)_m_value
+    F2_2p_3d_m = $F2(2p,3d)_m_value * $F2(2p,3d)_m_scale
+    G1_2p_3d_m = $G1(2p,3d)_m_value * $G1(2p,3d)_m_scale
+    G3_2p_3d_m = $G3(2p,3d)_m_value * $G3(2p,3d)_m_scale
+    F0_2p_3d_m = U_2p_3d_m + 1 / 15 * G1_2p_3d_m + 3 / 70 * G3_2p_3d_m
 
     U_3d_3d_f = $U(3d,3d)_f_value
     F2_3d_3d_f = $F2(3d,3d)_f_value * $F2(3d,3d)_f_scale
     F4_3d_3d_f = $F4(3d,3d)_f_value * $F4(3d,3d)_f_scale
     F0_3d_3d_f = U_3d_3d_f + 2 / 63 * F2_3d_3d_f + 2 / 63 * F4_3d_3d_f
-    U_3p_3d_f = $U(3p,3d)_f_value
-    F2_3p_3d_f = $F2(3p,3d)_f_value * $F2(3p,3d)_f_scale
-    G1_3p_3d_f = $G1(3p,3d)_f_value * $G1(3p,3d)_f_scale
-    G3_3p_3d_f = $G3(3p,3d)_f_value * $G3(3p,3d)_f_scale
-    F0_3p_3d_f = U_3p_3d_f + 1 / 15 * G1_3p_3d_f + 3 / 70 * G3_3p_3d_f
 
     H_i = H_i + Chop(
           F0_3d_3d_i * F0_3d_3d
@@ -98,80 +86,82 @@ if H_atomic == 1 then
           F0_3d_3d_m * F0_3d_3d
         + F2_3d_3d_m * F2_3d_3d
         + F4_3d_3d_m * F4_3d_3d
-        + F0_1s_3d_m * F0_1s_3d
-        + G2_1s_3d_m * G2_1s_3d)
+        + F0_2p_3d_m * F0_2p_3d
+        + F2_2p_3d_m * F2_2p_3d
+        + G1_2p_3d_m * G1_2p_3d
+        + G3_2p_3d_m * G3_2p_3d)
 
     H_f = H_f + Chop(
           F0_3d_3d_f * F0_3d_3d
         + F2_3d_3d_f * F2_3d_3d
-        + F4_3d_3d_f * F4_3d_3d
-        + F0_3p_3d_f * F0_3p_3d
-        + F2_3p_3d_f * F2_3p_3d
-        + G1_3p_3d_f * G1_3p_3d
-        + G3_3p_3d_f * G3_3p_3d)
+        + F4_3d_3d_f * F4_3d_3d)
 
     ldots_3d = NewOperator('ldots', NFermions, IndexUp_3d, IndexDn_3d)
 
-    ldots_3p = NewOperator('ldots', NFermions, IndexUp_3p, IndexDn_3p)
+    ldots_2p = NewOperator('ldots', NFermions, IndexUp_2p, IndexDn_2p)
 
     zeta_3d_i = $zeta(3d)_i_value * $zeta(3d)_i_scale
 
     zeta_3d_m = $zeta(3d)_m_value * $zeta(3d)_m_scale
+    zeta_2p_m = $zeta(2p)_m_value * $zeta(2p)_m_scale
 
     zeta_3d_f = $zeta(3d)_f_value * $zeta(3d)_f_scale
-    zeta_3p_f = $zeta(3p)_f_value * $zeta(3p)_f_scale
 
     H_i = H_i + Chop(
           zeta_3d_i * ldots_3d)
 
     H_m = H_m + Chop(
-          zeta_3d_m * ldots_3d)
+          zeta_3d_m * ldots_3d
+        + zeta_2p_m * ldots_2p)
 
     H_f = H_f + Chop(
-          zeta_3d_f * ldots_3d
-        + zeta_3p_f * ldots_3p)
+          zeta_3d_f * ldots_3d)
 end
 
 --------------------------------------------------------------------------------
 -- Define the crystal field term.
 --------------------------------------------------------------------------------
 if H_crystal_field == 1 then
-    Akm = {{2, 0, -7}}
-    Dmu_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, Akm)
+    Dq_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, {{4, 0, -14}, {4, 3, -2 * math.sqrt(70)}, {4, -3, 2 * math.sqrt(70)}})
+    Dsigma_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, {{2, 0, -7}})
+    Dtau_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, {{4, 0, -21}})
 
-    Akm = {{4, 0, -21}}
-    Dnu_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, Akm)
-
-    Dmu_3d_i = $Dmu(3d)_i_value
-    Dnu_3d_i = $Dnu(3d)_i_value
+    Dq_3d_i = $Dq(3d)_i_value
+    Dsigma_3d_i = $Dsigma(3d)_i_value
+    Dtau_3d_i = $Dtau(3d)_i_value
 
     io.write('Energies of the 3d orbitals in the initial Hamiltonian (crystal field term only):\n')
     io.write('================\n')
     io.write('Irrep.         E\n')
     io.write('================\n')
-    io.write(string.format('a\'1     %8.3f\n', -2 * Dmu_3d_i - 6 * Dnu_3d_i))
-    io.write(string.format('e\'      %8.3f\n', 2 * Dmu_3d_i - Dnu_3d_i))
-    io.write(string.format('e\'\'     %8.3f\n', -Dmu_3d_i + 4 * Dnu_3d_i))
+    io.write(string.format('e(eg)   %8.3f\n', 6 * Dq_3d_i + 7 / 3 * Dtau_3d_i))
+    io.write(string.format('a1(t2g) %8.3f\n', -4 * Dq_3d_i - 2 * Dsigma_3d_i - 6 * Dtau_3d_i))
+    io.write(string.format('e(t2g)  %8.3f\n', -4 * Dq_3d_i + Dsigma_3d_i + 2 / 3 * Dtau_3d_i))
     io.write('================\n')
     io.write('\n')
 
-    Dmu_3d_m = $Dmu(3d)_m_value
-    Dnu_3d_m = $Dnu(3d)_m_value
+    Dq_3d_m = $Dq(3d)_m_value
+    Dsigma_3d_m = $Dsigma(3d)_m_value
+    Dtau_3d_m = $Dtau(3d)_m_value
 
-    Dmu_3d_f = $Dmu(3d)_f_value
-    Dnu_3d_f = $Dnu(3d)_f_value
+    Dq_3d_f = $Dq(3d)_f_value
+    Dsigma_3d_f = $Dsigma(3d)_f_value
+    Dtau_3d_f = $Dtau(3d)_f_value
 
     H_i = H_i + Chop(
-          Dmu_3d_i * Dmu_3d
-        + Dnu_3d_i * Dnu_3d)
+          Dq_3d_i * Dq_3d
+        + Dsigma_3d_i * Dsigma_3d
+        + Dtau_3d_i * Dtau_3d)
 
     H_m = H_m + Chop(
-          Dmu_3d_m * Dmu_3d
-        + Dnu_3d_m * Dnu_3d)
+          Dq_3d_m * Dq_3d
+        + Dsigma_3d_m * Dsigma_3d
+        + Dtau_3d_m * Dtau_3d)
 
     H_f = H_f + Chop(
-          Dmu_3d_f * Dmu_3d
-        + Dnu_3d_f * Dnu_3d)
+          Dq_3d_f * Dq_3d
+        + Dsigma_3d_f * Dsigma_3d
+        + Dtau_3d_f * Dtau_3d)
 end
 
 --------------------------------------------------------------------------------
@@ -276,22 +266,18 @@ end
 --------------------------------------------------------------------------------
 -- Define the restrictions and set the number of initial states.
 --------------------------------------------------------------------------------
-InitialRestrictions = {NFermions, NBosons, {'11 000000 0000000000', NElectrons_1s, NElectrons_1s},
-                                           {'00 111111 0000000000', NElectrons_3p, NElectrons_3p},
-                                           {'00 000000 1111111111', NElectrons_3d, NElectrons_3d}}
+InitialRestrictions = {NFermions, NBosons, {'111111 0000000000', NElectrons_2p, NElectrons_2p},
+                                           {'000000 1111111111', NElectrons_3d, NElectrons_3d}}
 
-IntermediateRestrictions = {NFermions, NBosons, {'11 000000 0000000000', NElectrons_1s - 1, NElectrons_1s - 1},
-                                                {'00 111111 0000000000', NElectrons_3p, NElectrons_3p},
-                                                {'00 000000 1111111111', NElectrons_3d + 1, NElectrons_3d + 1}}
+IntermediateRestrictions = {NFermions, NBosons, {'111111 0000000000', NElectrons_2p - 1, NElectrons_2p - 1},
+                                                {'000000 1111111111', NElectrons_3d + 1, NElectrons_3d + 1}}
 
-FinalRestrictions = {NFermions, NBosons, {'11 000000 0000000000', NElectrons_1s, NElectrons_1s},
-                                         {'00 111111 0000000000', NElectrons_3p - 1, NElectrons_3p - 1},
-                                         {'00 000000 1111111111', NElectrons_3d + 1, NElectrons_3d + 1}}
+FinalRestrictions = InitialRestrictions
 
-Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_1s, N_3d, 'dZ'}
+Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_2p, N_3d, 'dZ'}
 header = 'Analysis of the initial Hamiltonian:\n'
 header = header .. '=============================================================================================================\n'
-header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>    <N_1s>    <N_3d>          dZ\n'
+header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>    <N_2p>    <N_3d>          dZ\n'
 header = header .. '=============================================================================================================\n'
 footer = '=============================================================================================================\n'
 
@@ -406,15 +392,13 @@ io.write(footer)
 --------------------------------------------------------------------------------
 t = math.sqrt(1/2)
 
-Txy_1s_3d   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -2, t * I}, {2, 2, -t * I}})
-Txz_1s_3d   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -1, t    }, {2, 1, -t    }})
-Tyz_1s_3d   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -1, t * I}, {2, 1,  t * I}})
-Tx2y2_1s_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -2, t    }, {2, 2,  t    }})
-Tz2_1s_3d   = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2,  0, 1    }                })
+Tx_2p_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_2p, IndexDn_2p, {{1, -1, t    }, {1, 1, -t    }})
+Ty_2p_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_2p, IndexDn_2p, {{1, -1, t * I}, {1, 1,  t * I}})
+Tz_2p_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_2p, IndexDn_2p, {{1,  0, 1    }                })
 
-Tx_3p_1s = NewOperator('CF', NFermions, IndexUp_1s, IndexDn_1s, IndexUp_3p, IndexDn_3p, {{1, -1, t    }, {1, 1, -t    }})
-Ty_3p_1s = NewOperator('CF', NFermions, IndexUp_1s, IndexDn_1s, IndexUp_3p, IndexDn_3p, {{1, -1, t * I}, {1, 1,  t * I}})
-Tz_3p_1s = NewOperator('CF', NFermions, IndexUp_1s, IndexDn_1s, IndexUp_3p, IndexDn_3p, {{1,  0, 1    }                })
+Tx_3d_2p = NewOperator('CF', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_3d, IndexDn_3d, {{1, -1, t    }, {1, 1, -t    }})
+Ty_3d_2p = NewOperator('CF', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_3d, IndexDn_3d, {{1, -1, t * I}, {1, 1,  t * I}})
+Tz_3d_2p = NewOperator('CF', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_3d, IndexDn_3d, {{1,  0, 1    }                })
 
 --------------------------------------------------------------------------------
 -- Calculate and save the spectrum.
@@ -429,27 +413,19 @@ end
 Psis_m = {Psis_m}
 E_gs_m = Psis_m[1] * H_m * Psis_m[1]
 
-if CalculationRestrictions == nil then
-    Psis_f = Eigensystem(H_f, FinalRestrictions, 1)
-else
-    Psis_f = Eigensystem(H_f, FinalRestrictions, 1, {{'restrictions', CalculationRestrictions}})
-end
-Psis_f = {Psis_f}
-E_gs_f = Psis_f[1] * H_f * Psis_f[1]
-
 Eedge1 = $Eedge1
 DeltaE1 = E_gs_m - E_gs_i
 
 Eedge2 = $Eedge2
-DeltaE2 = E_gs_f - E_gs_i
+DeltaE2 = 0.0
 
 Emin1 = ($Emin1 - Eedge1) + DeltaE1
 Emax1 = ($Emax1 - Eedge1) + DeltaE1
 NE1 = $NE1
 Gamma1 = $Gamma1
 
-Emin2 = ($Emin2 - Eedge2) + DeltaE2
-Emax2 = ($Emax2 - Eedge2) + DeltaE2
+Emin2 = ($Emin2 - Eedge1) + DeltaE2
+Emax2 = ($Emax2 - Eedge1) + DeltaE2
 NE2 = $NE2
 Gamma2 = $Gamma2
 
@@ -458,16 +434,16 @@ DenseBorder = $DenseBorder
 G = 0
 
 if CalculationRestrictions == nil then
-    G = G + CreateResonantSpectra(H_m, H_f, {Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}, {Tx_3p_1s, Ty_3p_1s, Tz_3p_1s}, Psis_i, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}, {'DenseBorder', DenseBorder}})
+    G = G + CreateResonantSpectra(H_m, H_f, {Tx_2p_3d, Ty_2p_3d, Tz_2p_3d}, {Tx_3d_2p, Ty_3d_2p, Tz_3d_2p}, Psis_i, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}, {'DenseBorder', DenseBorder}})
 else
-    G = G + CreateResonantSpectra(H_m, H_f, {Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}, {Tx_3p_1s, Ty_3p_1s, Tz_3p_1s}, Psis_i, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}, {'restrictions1', CalculationRestrictions}, {'restrictions2', CalculationRestrictions}, {'DenseBorder', DenseBorder}})
+    G = G + CreateResonantSpectra(H_m, H_f, {Tx_2p_3d, Ty_2p_3d, Tz_2p_3d}, {Tx_3d_2p, Ty_3d_2p, Tz_3d_2p}, Psis_i, {{'Emin1', Emin1}, {'Emax1', Emax1}, {'NE1', NE1}, {'Gamma1', Gamma1}, {'Emin2', Emin2}, {'Emax2', Emax2}, {'NE2', NE2}, {'Gamma2', Gamma2}, {'restrictions1', CalculationRestrictions}, {'restrictions2', CalculationRestrictions}, {'DenseBorder', DenseBorder}})
 end
 
 Giso = 0
 shift = 0
 
 for i = 1, #Psis_i do
-    for j = 1, 5 * 3 do
+    for j = 1, 3 * 3 do
         Indexes = {}
         for k = 1, NE1 + 1 do
             table.insert(Indexes, k + shift)
