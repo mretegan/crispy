@@ -1731,7 +1731,7 @@ class QuantyDockWidget(QDockWidget):
         if index is None:
             return
         self.resultsModel.updateItem(index, self.calculation)
-        # self.resultsView.viewport().repaint()
+        self.resultsView.viewport().repaint()
 
     def updatePlotWidget(self):
         """Updating the plotting widget should not require any information

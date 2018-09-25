@@ -23,7 +23,7 @@ Crystal Field Multiplet
 
 Charge Transfer Multiplet (CTM)
 -------------------------------
-1. Run a calculation using the following parameters: κ = 0.9, 10Dq(3d) = 0.7 eV (*Crystal Field*), Δ(3d,Ld) = 4.3 eV, U(3d,3d) = 7.5 eV, U(2p,3d) = 8.5 eV, Veg(3d,Ld) = 2.0 eV, Vt2g(3d,Ld) = 1.0 eV (*3d-Ligands Hybridization*). How does the calculated spectrum compare with the measured spectrum of NiO?
+1. Run a calculation using the following parameters: κ = 0.9, U(3d,3d) = 7.5 eV, U(2p,3d) = 8.5 eV (*Atomic*), 10Dq(3d) = 0.7 eV (*Crystal Field*), Δ(3d,Ld) = 4.3 eV, Veg(3d,Ld) = 2.0 eV, Vt2g(3d,Ld) = 1.0 eV (*3d-Ligands Hybridization*). How does the calculated spectrum compare with the measured spectrum of NiO?
 
 2. Repeat the above calculation while varying Δ between 0.0 and 10.0 eV. Notice the changes in the number of the metal 3d and the ligand electrons (<N_3d> and <N_Ld> in the logging window). What happens if Δ is negative?
 

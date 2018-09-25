@@ -32,7 +32,13 @@ Depending on the type of experiment selected above, the panel below will display
     :align: center
     :width: 35 %
 
-The parameters include the energy range and the number of points for the calculated spectrum. Both *Lorentzian* and *Gaussian* functions can be used to broaden the spectrum. In the case of the *Gaussian* broadening, changing the full width at half maximum (FWHM) value after the calculation has finished will trigger a re-broadening of the display spectrum; this is not the case for the *Lorentzian* broadening. This later type of broadening also supports more complex input values. For example an energy dependent broadening can be specify by using two FWHM values, one for lower energy part of the spectrum, and a second one for the high energy part. This feature is only available for some of the available edges. Additionally the energy for the transition point between the two FWHM values can also be specified as a third parameter. This is by default the middle of the absorption energy range. Finally, the wave and polarization vectors can be specified in the case of XMCD and X(M)LD calculations.
+The parameters include the energy range and the number of points for the calculated spectrum. Both *Lorentzian* and *Gaussian* functions can be used to broaden the spectrum. The *Lorentzian* broadening supports more complex input values. For example an energy dependent broadening can be specify by using two FWHM values, one for lower energy part of the spectrum, and a second one for the high energy part. This feature is only available for some of the available edges. Additionally the energy for the transition point between the two FWHM values can also be specified as a third parameter. This is by default the middle of the absorption energy range. Finally, the wave and polarization vectors can be specified.
+
+At the bottom of the *General Setup* tab you can select the spectra to be calculated. 
+
+.. figure:: assets/spectra.png
+    :align: center
+    :width: 35 %
 
 In the *Hamiltonian Setup* tab you can change the parameters of the semi-empirical model used in the calculation. The scale factors for the Coulomb, exchange, and spin-orbit coupling integrals can be changed using a set of three input boxes. Note that the scale factors are used to alter the values of the Hartree---Fock integrals.
 

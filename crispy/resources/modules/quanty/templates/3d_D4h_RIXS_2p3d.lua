@@ -400,7 +400,7 @@ IntermediateRestrictions = {NFermions, NBosons, {'111111 0000000000', NElectrons
 
 FinalRestrictions = InitialRestrictions
 
-if H_3d_Ld_hybridization == 1 then
+if H_3d_ligands_hybridization == 1 then
     InitialRestrictions = {NFermions, NBosons, {'111111 0000000000 0000000000', NElectrons_2p, NElectrons_2p},
                                                {'000000 1111111111 0000000000', NElectrons_3d, NElectrons_3d},
                                                {'000000 0000000000 1111111111', NElectrons_Ld, NElectrons_Ld}}
@@ -565,7 +565,7 @@ E_gs_m = Psis_m[1] * H_m * Psis_m[1]
 Eedge1 = $Eedge1
 DeltaE1 = E_gs_m - E_gs_i
 
-Eedge2 = $Eedge2
+Eedge2 = 0.0
 DeltaE2 = 0.0
 
 Emin1 = ($Emin1 - Eedge1) + DeltaE1
@@ -573,8 +573,8 @@ Emax1 = ($Emax1 - Eedge1) + DeltaE1
 NE1 = $NE1
 Gamma1 = $Gamma1
 
-Emin2 = ($Emin2 - Eedge1) + DeltaE2
-Emax2 = ($Emax2 - Eedge1) + DeltaE2
+Emin2 = ($Emin2 - Eedge2) + DeltaE2
+Emax2 = ($Emax2 - Eedge2) + DeltaE2
 NE2 = $NE2
 Gamma2 = $Gamma2
 
