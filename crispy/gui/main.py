@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '21/09/2018'
+__date__ = '25/09/2018'
 
 
 import os
@@ -189,6 +189,9 @@ class MainWindow(QMainWindow):
 
         self.quantyModuleShowAction.triggered.connect(self.quantyModuleShow)
         self.quantyModuleHideAction.triggered.connect(self.quantyModuleHide)
+
+        self.loadExperimentalSpectrumAction.triggered.connect(
+            self.quantyDockWidget.loadExperimentalSpectrum)
 
         # Preferences dialog.
         self.preferencesDialog = QuantyPreferencesDialog(parent=self)

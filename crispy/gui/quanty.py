@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '24/09/2018'
+__date__ = '25/09/2018'
 
 
 import copy
@@ -308,6 +308,22 @@ class QuantySpectra(object):
         self.process()
         # Change to default values.
         # self.__dict__.update(self._defaults)
+
+
+class ExperimentalResult(object):
+
+    def __init__(self, path=None):
+        self.path = path
+        self.baseName, _ = os.path.splitext(os.path.basename(path))
+        self.isChecked = True
+        self.load()
+
+    def load(self):
+        x, y = np.loadtxt(self.path, unpack=True)
+        self.spectrum = Spectrum1D()
+        self.spectrum.x = x
+        self.spectrum.y = y
+        self.spectrum.normalization('Area')
 
 
 class QuantyCalculation(object):
@@ -833,7 +849,7 @@ class QuantyDockWidget(QDockWidget):
 
         if not hasattr(self, 'resultDetailsDialog'):
             self.resultDetailsDialog = QuantyResultDetailsDialog(parent=self)
-        self.resultDetailsDialog.calculation = c
+        # self.resultDetailsDialog.calculation = c
 
     def enableWidget(self, flag=True):
         self.elementComboBox.setEnabled(flag)
@@ -1694,14 +1710,21 @@ class QuantyDockWidget(QDockWidget):
         index = self.getLastSelectedResultsModelIndex()
         if index is None:
             self.resultDetailsDialog.clear()
+            self.calculationPushButton.setEnabled(True)
+            self.saveInputAsPushButton.setEnabled(True)
             return
         self.calculation = self.resultsModel.getItem(index)
 
-        self.populateWidget()
-        self.updateMainWindowTitle()
+        if isinstance(self.calculation, QuantyCalculation):
+            self.populateWidget()
+            self.calculationPushButton.setEnabled(True)
+            self.saveInputAsPushButton.setEnabled(True)
+        else:
+            self.calculationPushButton.setEnabled(False)
+            self.saveInputAsPushButton.setEnabled(False)
 
-        if self.resultDetailsDialog.isVisible():
-            self.updateResultDetailsDialog()
+        self.updateMainWindowTitle()
+        self.updateResultDetailsDialog()
 
     def updateResultsModelData(self):
         index = self.getLastSelectedResultsModelIndex()
@@ -1720,13 +1743,21 @@ class QuantyDockWidget(QDockWidget):
         for calculation in calculations:
             if not calculation.isChecked:
                 continue
-            if len(calculations) > 1 and calculation.experiment == 'RIXS':
-                continue
-            for spectrum in calculation.spectra.processed:
+            if isinstance(calculation, ExperimentalResult):
+                spectrum = calculation.spectrum
                 spectrum.legend = '{}-{}'.format(
-                    calculation.index, spectrum.shortName)
-                if spectrum.name in calculation.spectra.toPlotChecked:
-                    self.plotSpectrum(spectrum)
+                    calculation.index, 'Expt')
+                spectrum.xLabel = 'X'
+                spectrum.yLabel = 'Y'
+                self.plotSpectrum(spectrum)
+            else:
+                if len(calculations) > 1 and calculation.experiment == 'RIXS':
+                    continue
+                for spectrum in calculation.spectra.processed:
+                    spectrum.legend = '{}-{}'.format(
+                        calculation.index, spectrum.shortName)
+                    if spectrum.name in calculation.spectra.toPlotChecked:
+                        self.plotSpectrum(spectrum)
 
     def showResultDetailsDialog(self):
         self.updateResultDetailsDialog()
@@ -1734,6 +1765,7 @@ class QuantyDockWidget(QDockWidget):
         self.resultDetailsDialog.raise_()
 
     def updateResultDetailsDialog(self):
+        self.resultDetailsDialog.calculation = self.calculation
         self.resultDetailsDialog.populateWidget()
 
     def updateCalculationName(self, name):
@@ -1741,6 +1773,15 @@ class QuantyDockWidget(QDockWidget):
         self.updateMainWindowTitle()
         self.resultDetailsDialog.updateTitle()
         self.resultDetailsDialog.updateSummary()
+
+    def loadExperimentalSpectrum(self):
+        path, _ = QFileDialog.getOpenFileName(
+            self, 'Load Experimental Spectrum',
+            self.getCurrentPath(), 'Data File (*.dat)')
+
+        if path:
+            result = ExperimentalResult(path)
+            self.resultsModel.appendItems([result])
 
     def handleOutputLogging(self):
         self.process.setReadChannel(QProcess.StandardOutput)
@@ -1957,6 +1998,14 @@ class QuantyResultDetailsDialog(QDialog):
 
     def populateWidget(self):
         c = self.calculation
+
+        if isinstance(c, ExperimentalResult):
+            self.clear()
+            self.enableWidget(False)
+            return
+        else:
+            self.enableWidget(True)
+
         if c.experiment == 'RIXS':
             if self.axesTabWidget.count() == 1:
                 tab = self.axesTabWidget.findChild(QWidget, 'yTab')
