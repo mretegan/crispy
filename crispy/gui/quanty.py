@@ -1822,7 +1822,10 @@ class QuantyDockWidget(QDockWidget):
         self.settings.setValue('CurrentPath', path)
 
     def getCurrentPath(self):
-        return self.settings.value('CurrentPath')
+        path = self.settings.value('CurrentPath')
+        if path is None:
+            path = os.path.expanduser('~')
+        return path
 
     def getQuantyPath(self):
         return self.settings.value('Quanty/Path')
