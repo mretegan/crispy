@@ -1710,6 +1710,7 @@ class QuantyDockWidget(QDockWidget):
         index = self.getLastSelectedResultsModelIndex()
         if index is None:
             self.resultDetailsDialog.clear()
+            self.resetCalculation()
             self.calculationPushButton.setEnabled(True)
             self.saveInputAsPushButton.setEnabled(True)
             return
