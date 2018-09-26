@@ -151,7 +151,7 @@ class ProfileWindow(BasePlotWidget):
 class MainPlotWidget(BasePlotWidget):
     def __init__(self, parent=None, **kwargs):
         super(MainPlotWidget, self).__init__(
-            parent, **kwargs, backend=BackendMatplotlibQt)
+            parent, backend=BackendMatplotlibQt, **kwargs)
 
         # Add a profile toolbar.
         _profileWindow = ProfileWindow()

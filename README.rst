@@ -14,7 +14,7 @@ Latest Release
 
 Using the Package Installers
 ****************************
-The easiest way to install Crispy on Windows and macOS operating systems is to use the installers provided on the project `downloads <http://www.esrf.eu/computing/scientific/crispy/downloads.html>`_ page. The installers bundle Python, the required dependencies, and Crispy. However, because for the moment they are only created when a new release is published, they might lack newly implemented features. 
+The easiest way to install Crispy on Windows and macOS operating systems is to use the installers provided on the project `downloads <http://www.esrf.eu/computing/scientific/crispy/downloads.html>`_ page. The installers bundle Python, the required dependencies, and Crispy. However, because for the moment they are only created when a new release is published, they might lack newly implemented features.
 
 Using pip
 *********
@@ -28,10 +28,11 @@ Crispy depends on the following Python packages:
 * `h5py <https://www.h5py.org>`_
 * `silx <http://www.silx.org>`_
 
-The dependencies will be automatically downloaded and installed when run the installation using pip: 
+Except silx, all dependencies are automatically downloaded and installed when using pip:
 
 .. code:: sh
 
+    pip install --upgrade --user silx
     pip install --upgrade --user crispy
 
 After the installation finishes, you should be able to start the program from the command line:
@@ -57,7 +58,7 @@ Assuming that you have a working Python distribution (version 3.5 or greater), y
 
 .. code:: sh
 
-    pip install --upgrade --user https://github.com/mretegan/crispy/tarball/master 
+    pip install --upgrade --user https://github.com/mretegan/crispy/tarball/master
 
 It is possible, although unlikely, that this version requires features that are not yet available with the pip installable version of silx. In this case you have to also install the development version of silx. This is not always a very simple task, especially on Windows, but there is extensive `documentation <http://www.silx.org/doc/silx/latest>`_ on how to do it.
 

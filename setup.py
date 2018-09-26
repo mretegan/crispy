@@ -83,13 +83,13 @@ def main():
             'MacOS :: MacOS X',
             'Microsoft :: Windows',
             'POSIX :: Linux',
-            ],
+        ],
         packages=[
             'crispy',
             'crispy.gui',
             'crispy.resources',
             'crispy.utils',
-            ],
+        ],
         package_data={
             'crispy.resources': [
                 'gui/uis/*.ui',
@@ -97,8 +97,8 @@ def main():
                 'gui/icons/*.svg',
                 'modules/quanty/parameters/*.json.gz',
                 'modules/quanty/templates/*.lua',
-                ],
-            },
+            ],
+        },
         classifiers=[
             'Development Status :: 4 - Beta',
             'Environment :: X11 Applications :: Qt',
@@ -113,8 +113,8 @@ def main():
             'Programming Language :: Python :: 3.5',
             'Programming Language :: Python :: 3.6',
             'Topic :: Scientific/Engineering :: Visualization',
-            ]
-        )
+        ]
+    )
 
     # At the moment pip/setuptools doesn't play nice with shebang paths
     # containing white spaces.
