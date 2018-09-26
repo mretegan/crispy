@@ -168,6 +168,14 @@ class ResultsModel(QAbstractItemModel):
         self.modelData[row] = copy.deepcopy(item)
         self.modelDataChanged.emit(index)
 
+    def getAllItems(self):
+        items = list()
+        rows = range(self.rowCount())
+        for row in rows:
+            item = self.modelData[row]
+            item.index = row + 1
+        return items
+
     def getCheckedItems(self):
         items = list()
         rows = range(self.rowCount())

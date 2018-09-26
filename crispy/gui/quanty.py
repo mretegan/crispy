@@ -1396,7 +1396,7 @@ class QuantyDockWidget(QDockWidget):
 
         if path:
             self.setCurrentPath(path)
-            calculations = self.resultsModel.getModelData()
+            calculations = self.resultsModel.getAllItems()
             calculations.reverse()
             with open(path, 'wb') as p:
                 pickle.dump(calculations, p, pickle.HIGHEST_PROTOCOL)
