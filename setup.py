@@ -28,7 +28,7 @@ from __future__ import absolute_import, division
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '23/03/2018'
+__date__ = '25/09/2018'
 
 import os
 import sys
@@ -87,9 +87,6 @@ def main():
         packages=[
             'crispy',
             'crispy.gui',
-            'crispy.gui.models',
-            'crispy.gui.views',
-            'crispy.gui.widgets',
             'crispy.resources',
             'crispy.utils',
             ],

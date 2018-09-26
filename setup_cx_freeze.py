@@ -31,7 +31,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '23/02/2018'
+__date__ = '25/09/2018'
 
 import crispy
 import os
@@ -51,7 +51,7 @@ def main():
     build_dir = os.path.join(root, 'build')
     shutil.rmtree(build_dir, ignore_errors=True)
 
-    packages = ['matplotlib', 'PyQt5.QtPrintSupport']
+    packages = ['matplotlib', 'PyQt5.QtPrintSupport', 'h5py', 'appdirs', 'packaging']
     includes = []
     excludes = ['tkinter']
 
@@ -68,8 +68,8 @@ def main():
             'include_files': include_files,
             'include_msvcr': True,
             'build_exe': build_dir,
-            },
-        }
+        },
+    }
 
     base = None
     if sys.platform == 'win32':
@@ -80,15 +80,15 @@ def main():
             'scripts/crispy',
             base=base,
             icon=os.path.join('assets', 'crispy.ico'),
-            ),
-        ]
+        ),
+    ]
 
     setup(
         name='crispy',
         version=get_version(),
         options=options,
         executables=executables,
-        )
+    )
 
 
 if __name__ == '__main__':

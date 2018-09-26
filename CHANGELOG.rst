@@ -1,6 +1,14 @@
 Changelog
 =========
 
+v0.7.0 (2018-09-26)
+-------------------
+What's new:
+
+* a dialog to display details about the results
+* D3h symmetry
+* the package installers now contain the 2018 Autumn version of Quanty
+
 v0.6.3 (2018-06-11)
 -------------------
 What's new:

@@ -32,7 +32,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '26/03/2018'
+__date__ = '25/09/2018'
 
 import os
 import sys
@@ -113,7 +113,7 @@ def main():
     # Remove previously built application.
     clean_folders([build_dir, dist_dir, artifacts_dir])
 
-    packages = ['matplotlib', 'silx', 'crispy']
+    packages = ['matplotlib', 'silx', 'crispy', 'h5py']
 
     plist = {
         'CFBundleIdentifier': 'com.github.mretegan.crispy',

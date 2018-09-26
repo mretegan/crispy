@@ -17,10 +17,10 @@ Downloads
 
 **Notes**:
 
-- The files include the latest version of Quanty available at the time when the Crispy release was made. Therefore, if you haven't done so already, please register on the `Quanty <http://quanty.org/start?do=register>`_ website.
+- The files include the latest version of Quanty available at the time when the Crispy release was made. Therefore, if you haven't done so already, **please register** on the `Quanty <http://quanty.org/start?do=register>`_ website.
 - The macOS application is not signed and you will get an error when you try to launch it the first time. You can grant an exception for Crispy by clicking the "Open Anyway" button in the General pane of Security & Privacy preferences. You can find more about this in the `official documentation <https://support.apple.com/kb/PH25088?locale=en_US>`_.
 - On Windows, some antivirus programs might block the installation of the application and even delete the installer from disk. I assume that this is because the installer is not signed. Please rest assured that all releases are scanned using multiple antivirus programs on `VirusTotal <https://www.virustotal.com>`_. Also please make sure that you first uninstall older versions of Crispy before you proceed with the new installation.
-- You can download older versions from the `releases <https://github.com/mretegan/crispy/releases>`_ page on Github. 
+- You can download older versions from the `releases <https://github.com/mretegan/crispy/releases>`_ page on Github.
 
 .. |Windows| image:: assets/windows.svg
     :width: 90pt
