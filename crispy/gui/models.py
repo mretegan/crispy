@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '21/09/2018'
+__date__ = '01/10/2018'
 
 from collections import OrderedDict as odict
 import copy
@@ -106,11 +106,10 @@ class ResultsModel(QAbstractItemModel):
         row = index.row()
         column = index.column()
         item = self.modelData[row]
-        if role == Qt.DisplayRole:
-            if column == 0:
-                return item.baseName
+        if role == Qt.DisplayRole and column == 0:
+            return item.baseName
         elif role == Qt.EditRole and column == 0:
-                return item.baseName
+            return item.baseName
         elif role == Qt.CheckStateRole and column == 0:
             if item.isChecked:
                 return Qt.Checked

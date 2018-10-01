@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '25/09/2018'
+__date__ = '01/10/2018'
 
 
 import copy
@@ -54,11 +54,12 @@ from PyQt5.QtWidgets import (
 from PyQt5.uic import loadUi
 from silx.resources import resource_filename as resourceFileName
 
+from .config import Config
 from .models import HamiltonianModel, ResultsModel, SpectraModel
 from ..utils.broaden import broaden
 from ..utils.odict import odict
-from ..version import version
 from ..utils.profiling import timeit # noqa
+from ..version import version
 
 
 class Spectrum1D(object):
@@ -306,8 +307,6 @@ class QuantySpectra(object):
 
         # Process the spectra once they where read from disk.
         self.process()
-        # Change to default values.
-        # self.__dict__.update(self._defaults)
 
 
 class ExperimentalResult(object):
@@ -506,7 +505,7 @@ class QuantyCalculation(object):
                 else:
                     self.hamiltonianState[term] = 0
 
-    def term_suffix(self, term):
+    def termSuffix(self, term):
         return term.lower().replace(' ', '_').replace('-', '_')
 
     def saveInput(self):
@@ -621,8 +620,8 @@ class QuantyCalculation(object):
             if checkState > 0:
                 checkState = 1
 
-            term_suffix = self.term_suffix(term)
-            replacements['$H_{}'.format(term_suffix)] = checkState
+            termSuffix = self.termSuffix(term)
+            replacements['$H_{}'.format(termSuffix)] = checkState
 
             try:
                 parameters = self.fixedTermsParameters[term]
@@ -648,14 +647,16 @@ class QuantyCalculation(object):
 
 class QuantyDockWidget(QDockWidget):
 
-    def __init__(self, parent=None, settings=None):
+    def __init__(self, parent=None):
         super(QuantyDockWidget, self).__init__(parent=parent)
-        self.settings = settings
 
         # Load the external .ui file for the widget.
         path = resourceFileName(
             'crispy:' + os.path.join('gui', 'uis', 'quanty', 'main.ui'))
         loadUi(path, baseinstance=self, package='crispy.gui')
+
+        config = Config()
+        self.settings = config.read()
 
         self.calculation = QuantyCalculation()
         self.populateWidget()
@@ -1857,10 +1858,16 @@ class QuantyPreferencesDialog(QDialog):
         cancel = self.buttonBox.button(QDialogButtonBox.Cancel)
         cancel.clicked.connect(self.rejectSettings)
 
-        self.settings = self.parent().settings
+        # Loading and saving the settings is needed here.
+        self.loadSettings()
+        self.saveSettings()
 
     def showEvent(self, event):
-        self.restoreSettings()
+        self.loadSettings()
+
+    def closeEvent(self, event):
+        self.saveSettings()
+        event.accept()
 
     def _findExecutable(self):
         if sys.platform == 'win32':
@@ -1884,65 +1891,66 @@ class QuantyPreferencesDialog(QDialog):
 
         return path
 
-    def restoreSettings(self):
-        settings = self.settings
-        if settings is None:
+    def loadSettings(self):
+        config = Config()
+        self.settings = config.read()
+
+        if self.settings is None:
             return
 
-        settings.beginGroup('Quanty')
+        self.settings.beginGroup('Quanty')
 
-        size = settings.value('Size')
+        size = self.settings.value('Size')
         if size is not None:
             self.resize(QSize(size))
 
-        pos = settings.value('Position')
+        pos = self.settings.value('Position')
         if pos is not None:
             self.move(QPoint(pos))
 
-        path = settings.value('Path')
+        path = self.settings.value('Path')
         if path is None or not path:
             path = self._findExecutable()
         self.pathLineEdit.setText(path)
 
-        verbosity = settings.value('Verbosity')
+        verbosity = self.settings.value('Verbosity')
         if verbosity is None:
             verbosity = '0x0000'
         self.verbosityLineEdit.setText(verbosity)
 
-        denseBorder = settings.value('DenseBorder')
+        denseBorder = self.settings.value('DenseBorder')
         if denseBorder is None:
-            denseBorder = '50000'
+            denseBorder = '2000'
         self.denseBorderLineEdit.setText(denseBorder)
 
-        removeFiles = settings.value('RemoveFiles', True, type=bool)
+        removeFiles = self.settings.value('RemoveFiles', True, type=bool)
         if removeFiles is None:
             removeFiles = False
         self.removeFilesCheckBox.setChecked(removeFiles)
 
-        settings.endGroup()
+        self.settings.endGroup()
 
     def saveSettings(self):
-        settings = self.settings
-        if settings is None:
+        if self.settings is None:
             return
 
-        settings.beginGroup('Quanty')
-        settings.setValue('Path', self.pathLineEdit.text())
-        settings.setValue('Verbosity', self.verbosityLineEdit.text())
-        settings.setValue('DenseBorder', self.denseBorderLineEdit.text())
-        settings.setValue('RemoveFiles', self.removeFilesCheckBox.isChecked())
-        settings.setValue('Size', self.size())
-        settings.setValue('Position', self.pos())
-        settings.endGroup()
-
-        settings.sync()
+        self.settings.beginGroup('Quanty')
+        self.settings.setValue('Path', self.pathLineEdit.text())
+        self.settings.setValue('Verbosity', self.verbosityLineEdit.text())
+        self.settings.setValue('DenseBorder', self.denseBorderLineEdit.text())
+        self.settings.setValue(
+            'RemoveFiles', self.removeFilesCheckBox.isChecked())
+        self.settings.setValue('Size', self.size())
+        self.settings.setValue('Position', self.pos())
+        self.settings.endGroup()
+        self.settings.sync()
 
     def acceptSettings(self):
         self.saveSettings()
         self.close()
 
     def rejectSettings(self):
-        self.restoreSettings()
+        self.loadSettings()
         self.close()
 
     def setExecutablePath(self):
@@ -1963,7 +1971,13 @@ class QuantyResultDetailsDialog(QDialog):
         loadUi(path, baseinstance=self, package='crispy.gui')
 
         self.activateWidget()
-        self.settings = self.parent().settings
+
+    def showEvent(self, event):
+        self.loadSettings()
+
+    def closeEvent(self, event):
+        self.saveSettings()
+        event.accept()
 
     def activateWidget(self):
         font = QFontDatabase.systemFont(QFontDatabase.FixedFont)
@@ -1991,13 +2005,6 @@ class QuantyResultDetailsDialog(QDialog):
 
         self.closePushButton.setAutoDefault(False)
         self.closePushButton.clicked.connect(self.close)
-
-    def closeEvent(self, event):
-        self.saveSettings()
-        event.accept()
-
-    def showEvent(self, event):
-        self.restoreSettings()
 
     def populateWidget(self):
         c = self.calculation
@@ -2191,36 +2198,35 @@ class QuantyResultDetailsDialog(QDialog):
         self.outputPlainTextEdit.clear()
         self.setWindowTitle('')
 
-    def restoreSettings(self):
-        settings = self.settings
-        if settings is None:
+    def loadSettings(self):
+        config = Config()
+        self.settings = config.read()
+
+        if self.settings is None:
             return
 
-        settings.beginGroup('DetailsDialog')
+        self.settings.beginGroup('DetailsDialog')
 
-        size = settings.value('Size')
+        size = self.settings.value('Size')
         if size is not None:
             self.resize(QSize(size))
 
-        pos = settings.value('Position')
+        pos = self.settings.value('Position')
         if pos is not None:
             self.move(QPoint(pos))
 
-        settings.endGroup()
-
-        settings.sync()
+        self.settings.endGroup()
 
     def saveSettings(self):
-        settings = self.settings
-        if settings is None:
+        if self.settings is None:
             return
 
-        settings.beginGroup('DetailsDialog')
-        settings.setValue('Size', self.size())
-        settings.setValue('Position', self.pos())
-        settings.endGroup()
+        self.settings.beginGroup('DetailsDialog')
+        self.settings.setValue('Size', self.size())
+        self.settings.setValue('Position', self.pos())
+        self.settings.endGroup()
 
-        settings.sync()
+        self.settings.sync()
 
 
 if __name__ == '__main__':

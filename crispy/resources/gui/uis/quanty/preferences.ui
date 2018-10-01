@@ -133,9 +133,6 @@
          <height>22</height>
         </size>
        </property>
-       <property name="text">
-        <string>1513</string>
-       </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
@@ -163,9 +160,6 @@
        </property>
        <property name="toolTip">
         <string>Verbosity of the Quanty calculation. Acceptable values in increasing verbosity: 0x0000, 0x00FF, 0xFFFF.</string>
-       </property>
-       <property name="text">
-        <string>0x0000</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

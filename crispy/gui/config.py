@@ -29,30 +29,36 @@ __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
 __date__ = '01/10/2018'
 
+import os
 import sys
 
-from PyQt5.QtWidgets import QApplication
-from PyQt5.QtCore import QLocale
+from PyQt5.QtCore import QSettings
+from PyQt5.QtCore import QStandardPaths
 
-from .gui.main import MainWindow
-from .gui.config import Config
-
-
-def main():
-    locale = QLocale(QLocale.C)
-    locale.setNumberOptions(QLocale.RejectGroupSeparator)
-    QLocale.setDefault(locale)
-
-    config = Config()
-    config.removeOldFiles()
-
-    app = QApplication([])
-
-    window = MainWindow()
-    window.show()
-
-    sys.exit(app.exec_())
+from ..version import version
 
 
-if __name__ == '__main__':
-    main()
+class Config(object):
+
+    def __init__(self):
+        if sys.platform in ('win32', 'darwin'):
+            self.name = 'Crispy'
+        else:
+            self.name = 'crispy'
+
+    def read(self):
+        return QSettings(
+            QSettings.IniFormat, QSettings.UserScope, self.name, 'settings')
+
+    def removeOldFiles(self):
+        configLocation = QStandardPaths.GenericConfigLocation
+        root = QStandardPaths.standardLocations(configLocation)[0]
+
+        path = os.path.join(root, self.name)
+
+        if version < '0.7.0':
+            try:
+                os.remove(os.path.join(path, 'settings.json'))
+                os.rmdir(path)
+            except (IOError, OSError) as e:
+                pass

@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '25/09/2018'
+__date__ = '01/10/2018'
 
 
 import os
@@ -40,23 +40,21 @@ except ImportError:
 import sys
 import socket
 
-from PyQt5.QtCore import (
-    Qt, QThread, pyqtSignal, QByteArray, QSize, QPoint, QStandardPaths)
+from PyQt5.QtCore import Qt, QThread, pyqtSignal, QByteArray, QSize, QPoint
 from PyQt5.QtWidgets import QMainWindow, QPlainTextEdit, QDialog
 from PyQt5.QtGui import QFontDatabase
 from PyQt5.uic import loadUi
 from silx.resources import resource_filename as resourceFileName
 
+from .config import Config
 from .quanty import QuantyDockWidget, QuantyPreferencesDialog
 from ..version import version
 
 
 class MainWindow(QMainWindow):
 
-    def __init__(self, settings=None):
+    def __init__(self):
         super(MainWindow, self).__init__()
-
-        self.settings = settings
 
         uiPath = resourceFileName(
             'crispy:' + os.path.join('gui', 'uis', 'main.ui'))
@@ -74,93 +72,70 @@ class MainWindow(QMainWindow):
         self.loggerWidget.setLineWrapMode(QPlainTextEdit.NoWrap)
 
         # About dialog.
-        self.aboutDialog = AboutDialog(parent=self, settings=self.settings)
+        self.aboutDialog = AboutDialog(parent=self)
         self.openAboutDialogAction.triggered.connect(self.openAboutDialog)
 
         # Quanty module.
         self.quantyModuleInit()
 
-        # Remove the old config file.
-        self._removeConfig()
+    def showEvent(self, event):
+        self.loadSettings()
 
-        # Restore the settings from file.
-        self.restoreSettings()
+    def closeEvent(self, event):
         self.saveSettings()
+        event.accept()
 
-    def _removeConfig(self):
-        configLocation = QStandardPaths.GenericConfigLocation
-        root = QStandardPaths.standardLocations(configLocation)[0]
+    def loadSettings(self):
+        config = Config()
+        self.settings = config.read()
 
-        if sys.platform in ('win32', 'darwin'):
-            path = os.path.join(root, 'Crispy')
-        else:
-            path = os.path.join(root, 'crispy')
-
-        if version < '0.7.0':
-            try:
-                os.remove(os.path.join(path, 'settings.json'))
-                os.rmdir(path)
-            except (IOError, OSError) as e:
-                pass
-
-    def restoreSettings(self):
-        settings = self.settings
-        if settings is None:
+        if self.settings is None:
             return
 
-        currentPath = settings.value('CurrentPath')
+        currentPath = self.settings.value('CurrentPath')
         if currentPath is None:
             path = os.path.expanduser('~')
         else:
             path = currentPath
         self.currentPath = path
 
-        settings.beginGroup('MainWindow')
+        self.settings.beginGroup('MainWindow')
 
-        state = settings.value('State')
+        state = self.settings.value('State')
         if state is not None:
             self.restoreState(QByteArray(state))
 
-        size = settings.value('Size')
+        size = self.settings.value('Size')
         if size is not None:
             self.resize(QSize(size))
 
-        pos = settings.value('Position')
+        pos = self.settings.value('Position')
         if pos is not None:
             self.move(QPoint(pos))
 
-        splitter = settings.value('Splitter')
+        splitter = self.settings.value('Splitter')
         if splitter is not None:
             sizes = [int(size) for size in splitter]
         else:
             sizes = [6, 1]
         self.splitter.setSizes(sizes)
-        settings.endGroup()
+        self.settings.endGroup()
 
     def saveSettings(self):
-        settings = self.settings
-        if settings is None:
-            return
+        self.settings.setValue('Version', version)
 
-        settings.setValue('Version', version)
+        self.settings.beginGroup('MainWindow')
+        self.settings.setValue('State', self.saveState())
+        self.settings.setValue('Size', self.size())
+        self.settings.setValue('Position', self.pos())
+        self.settings.setValue('Splitter', self.splitter.sizes())
+        self.settings.endGroup()
 
-        settings.beginGroup('MainWindow')
-        settings.setValue('State', self.saveState())
-        settings.setValue('Size', self.size())
-        settings.setValue('Position', self.pos())
-        settings.setValue('Splitter', self.splitter.sizes())
-        settings.endGroup()
-
-        settings.sync()
-
-    def closeEvent(self, event):
-        self.saveSettings()
-        event.accept()
+        self.settings.sync()
 
     def quantyModuleInit(self):
         # Load components related to the Quanty module.
-        self.quantyDockWidget = QuantyDockWidget(
-            parent=self, settings=self.settings)
+        self.quantyDockWidget = QuantyDockWidget(parent=self)
         self.addDockWidget(Qt.RightDockWidgetArea, self.quantyDockWidget)
         self.quantyDockWidget.setVisible(True)
 
@@ -262,10 +237,11 @@ class UpdateAvailableDialog(QDialog):
 
 class AboutDialog(QDialog):
 
-    def __init__(self, parent, settings=None):
+    def __init__(self, parent):
         super(AboutDialog, self).__init__(parent)
 
-        self.settings = settings
+        config = Config()
+        self.settings = config.read()
 
         path = resourceFileName(
             'crispy:' + os.path.join('gui', 'uis', 'about.ui'))
