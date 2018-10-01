@@ -51,7 +51,6 @@ class BackendMatplotlibQt(backends.BackendMatplotlib.BackendMatplotlibQt):
         container = super(BackendMatplotlibQt, self).addCurve(
             x, y, legend, *args, **kwargs)
 
-        # Remove the unique identifier from the legend.
         curve = container.get_children()[0]
         self._legends[curve] = legend
         self._updateLegends()
@@ -138,10 +137,19 @@ class BasePlotWidget(PlotWidget):
         # positionInfo.setSnappingMode(positionInfo.SNAPPING_CURVE)
         # self.statusBar().addWidget(positionInfo)
 
+    def reset(self):
+        self.clear()
+        self.setKeepDataAspectRatio(False)
+        self.setGraphTitle()
+        self.setGraphXLabel('X')
+        self.setGraphXLimits(0, 100)
+        self.setGraphYLabel('Y')
+        self.setGraphYLimits(0, 100)
+
 
 class ProfileWindow(BasePlotWidget):
-    def __init__(self, parent=None):
-        super(ProfileWindow, self).__init__(parent=parent)
+    def __init__(self, parent=None, **kwargs):
+        super(ProfileWindow, self).__init__(parent=parent, **kwargs)
 
         self.setWindowTitle(str())
         if sys.platform == 'darwin':
@@ -151,12 +159,12 @@ class ProfileWindow(BasePlotWidget):
 class MainPlotWidget(BasePlotWidget):
     def __init__(self, parent=None, **kwargs):
         super(MainPlotWidget, self).__init__(
-            parent, backend=BackendMatplotlibQt, **kwargs)
+            parent=parent, backend=BackendMatplotlibQt, **kwargs)
 
         # Add a profile toolbar.
-        _profileWindow = ProfileWindow()
+        self._profileWindow = ProfileWindow()
         self._profileToolBar = ProfileToolBar(
-            plot=self, profileWindow=_profileWindow)
+            plot=self, profileWindow=self._profileWindow)
 
         self.removeToolBar(self._outputToolBar)
         self.addToolBar(self._profileToolBar)
@@ -198,12 +206,3 @@ class MainPlotWidget(BasePlotWidget):
         plotArea = self.getWidgetHandle()
         globalPosition = plotArea.mapToGlobal(pos)
         menu.exec_(globalPosition)
-
-    def reset(self):
-        self.clear()
-        self.setKeepDataAspectRatio(False)
-        self.setGraphTitle()
-        self.setGraphXLabel('X')
-        self.setGraphXLimits(0, 100)
-        self.setGraphYLabel('Y')
-        self.setGraphYLimits(0, 100)

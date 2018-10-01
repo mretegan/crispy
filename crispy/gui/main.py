@@ -82,6 +82,7 @@ class MainWindow(QMainWindow):
         self.loadSettings()
 
     def closeEvent(self, event):
+        self.plotWidget._profileWindow.close()
         self.saveSettings()
         event.accept()
 
