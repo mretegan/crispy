@@ -108,8 +108,8 @@ if H_crystal_field == 1 then
     io.write('================\n')
     io.write('Irrep.         E\n')
     io.write('================\n')
-    io.write(string.format('e(eg)   %8.3f\n', 6 * Dq_3d_i + 7 / 3 * Dtau_3d_i))
     io.write(string.format('a1(t2g) %8.3f\n', -4 * Dq_3d_i - 2 * Dsigma_3d_i - 6 * Dtau_3d_i))
+    io.write(string.format('e(eg)   %8.3f\n', 6 * Dq_3d_i + 7 / 3 * Dtau_3d_i))
     io.write(string.format('e(t2g)  %8.3f\n', -4 * Dq_3d_i + Dsigma_3d_i + 2 / 3 * Dtau_3d_i))
     io.write('================\n')
     io.write('\n')
@@ -221,7 +221,7 @@ InitialRestrictions = {NFermions, NBosons, {'11 0000000000', NElectrons_3s, NEle
 FinalRestrictions = {NFermions, NBosons, {'11 0000000000', NElectrons_3s - 1, NElectrons_3s - 1},
                                          {'00 1111111111', NElectrons_3d, NElectrons_3d}}
 
-Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, Tz, ldots_3s, N_3s, N_3d, 'dZ'}
+Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, Tz, ldots_3d, N_3s, N_3d, 'dZ'}
 header = 'Analysis of the initial Hamiltonian:\n'
 header = header .. '=================================================================================================================================\n'
 header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>      <Tz>     <l.s>    <N_3s>    <N_3d>          dZ\n'

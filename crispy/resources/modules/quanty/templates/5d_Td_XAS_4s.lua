@@ -118,8 +118,8 @@ if H_crystal_field == 1 then
     io.write('================\n')
     io.write('Irrep.         E\n')
     io.write('================\n')
-    io.write(string.format('t2      %8.3f\n',  0.4 * tenDq_5d_i))
     io.write(string.format('e       %8.3f\n', -0.6 * tenDq_5d_i))
+    io.write(string.format('t2      %8.3f\n',  0.4 * tenDq_5d_i))
     io.write('================\n')
     io.write('\n')
 

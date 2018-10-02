@@ -20,6 +20,7 @@ H_f = 0
 --------------------------------------------------------------------------------
 H_atomic = $H_atomic
 H_crystal_field = $H_crystal_field
+H_5f_ligands_hybridization = $H_5f_ligands_hybridization
 H_magnetic_field = $H_magnetic_field
 H_exchange_field = $H_exchange_field
 
@@ -36,6 +37,15 @@ IndexDn_3p = {0, 2, 4}
 IndexUp_3p = {1, 3, 5}
 IndexDn_5f = {6, 8, 10, 12, 14, 16, 18}
 IndexUp_5f = {7, 9, 11, 13, 15, 17, 19}
+
+if H_5f_ligands_hybridization == 1 then
+    NFermions = 34
+
+    NElectrons_Lf = 14
+
+    IndexDn_Lf = {20, 22, 24, 26, 28, 30, 32}
+    IndexUp_Lf = {21, 23, 25, 27, 29, 31, 33}
+end
 
 --------------------------------------------------------------------------------
 -- Define the atomic term.
@@ -116,41 +126,121 @@ if H_crystal_field == 1 then
     -- Et2u_5f = NewOperator('CF', NFermions, IndexUp_5f, IndexDn_5f, PotentialExpandedOnClm('Oh', 3, {0, 1, 0}))
     -- Et1u_5f = NewOperator('CF', NFermions, IndexUp_5f, IndexDn_5f, PotentialExpandedOnClm('Oh', 3, {0, 0, 1}))
 
-    A40_5f_i = $A40(5f)_i_value
-    A60_5f_i = $A60(5f)_i_value
+    B40_5f_i = $B40(5f)_i_value
+    B60_5f_i = $B60(5f)_i_value
 
     Akm_5f_i = {
-           {4,  0, A40_5f_i},
-           {4, -4, math.sqrt(5/14) * A40_5f_i},
-           {4,  4, math.sqrt(5/14) * A40_5f_i},
-           {6,  0, A60_5f_i},
-           {6, -4, -math.sqrt(7/2) * A60_5f_i},
-           {6,  4, -math.sqrt(7/2) * A60_5f_i}}
+        {4,  0, B40_5f_i},
+        {4, -4, math.sqrt(5/14) * B40_5f_i},
+        {4,  4, math.sqrt(5/14) * B40_5f_i},
+        {6,  0, B60_5f_i},
+        {6, -4, -math.sqrt(7/2) * B60_5f_i},
+        {6,  4, -math.sqrt(7/2) * B60_5f_i},
+    }
 
     io.write('Energies of the 5f orbitals in the initial Hamiltonian (crystal field term only):\n')
     io.write('================\n')
     io.write('Irrep.        E\n')
     io.write('================\n')
-    io.write(string.format('a2u     %8.3f\n', -4 / 11 * A40_5f_i +  80 / 143 * A60_5f_i))
-    io.write(string.format('t1u     %8.3f\n',  2 / 11 * A40_5f_i + 100 / 429 * A60_5f_i))
-    io.write(string.format('t2u     %8.3f\n', -2 / 33 * A40_5f_i -  60 / 143 * A60_5f_i))
+    io.write(string.format('a2u     %8.3f\n', -4 / 11 * B40_5f_i +  80 / 143 * B60_5f_i))
+    io.write(string.format('t1u     %8.3f\n',  2 / 11 * B40_5f_i + 100 / 429 * B60_5f_i))
+    io.write(string.format('t2u     %8.3f\n', -2 / 33 * B40_5f_i -  60 / 143 * B60_5f_i))
     io.write('================\n')
     io.write('\n')
 
-    A40_5f_f = $A40(5f)_f_value
-    A60_5f_f = $A60(5f)_f_value
+    B40_5f_f = $B40(5f)_f_value
+    B60_5f_f = $B60(5f)_f_value
 
     Akm_5f_f = {
-           {4,  0, A40_5f_f},
-           {4, -4, math.sqrt(5/14) * A40_5f_f},
-           {4,  4, math.sqrt(5/14) * A40_5f_f},
-           {6,  0, A60_5f_f},
-           {6, -4, -math.sqrt(7/2) * A60_5f_f},
-           {6,  4, -math.sqrt(7/2) * A60_5f_f}}
+        {4,  0, B40_5f_f},
+        {4, -4, math.sqrt(5/14) * B40_5f_f},
+        {4,  4, math.sqrt(5/14) * B40_5f_f},
+        {6,  0, B60_5f_f},
+        {6, -4, -math.sqrt(7/2) * B60_5f_f},
+        {6,  4, -math.sqrt(7/2) * B60_5f_f},
+    }
 
     H_i = H_i + Chop(NewOperator('CF', NFermions, IndexUp_5f, IndexDn_5f, Akm_5f_i))
 
     H_f = H_f + Chop(NewOperator('CF', NFermions, IndexUp_5f, IndexDn_5f, Akm_5f_f))
+end
+
+--------------------------------------------------------------------------------
+-- Define the 5f-ligands hybridization term.
+--------------------------------------------------------------------------------
+if H_5f_ligands_hybridization == 1 then
+    N_Lf = NewOperator('Number', NFermions, IndexUp_Lf, IndexUp_Lf, {1, 1, 1, 1, 1, 1, 1})
+         + NewOperator('Number', NFermions, IndexDn_Lf, IndexDn_Lf, {1, 1, 1, 1, 1, 1, 1})
+
+    Delta_5f_Lf_i = $Delta(5f,Lf)_i_value
+    e_5f_i = (28 * Delta_5f_Lf_i - 27 * U_5f_5f_i * NElectrons_5f - U_5f_5f_i * NElectrons_5f^2) / (2 * (14 + NElectrons_5f))
+    e_Lf_i = NElectrons_5f * (-2 * Delta_5f_Lf_i + U_5f_5f_i * NElectrons_5f + U_5f_5f_i) / (2 * (NElectrons_5f + 14))
+
+    Delta_5f_Lf_f = $Delta(5f,Lf)_f_value
+    e_5f_f = (28*Delta_5f_Lf_f - U_5f_5f_f*NElectrons_5f^2 - 39*U_5f_5f_f*NElectrons_5f - 228*U_3p_5f_f)/(2*(NElectrons_5f + 20))
+    e_3p_f = (28*Delta_5f_Lf_f + U_5f_5f_f*NElectrons_5f^2 + U_5f_5f_f*NElectrons_5f - 2*U_3p_5f_f*NElectrons_5f^2 - 30*U_3p_5f_f*NElectrons_5f - 28*U_3p_5f_f)/(2*(NElectrons_5f + 20))
+    e_Lf_f = (-2*Delta_5f_Lf_f*NElectrons_5f - 12*Delta_5f_Lf_f + U_5f_5f_f*NElectrons_5f^2 + U_5f_5f_f*NElectrons_5f + 12*U_3p_5f_f*NElectrons_5f + 12*U_3p_5f_f)/(2*(NElectrons_5f + 20))
+
+    H_i = H_i + Chop(
+          e_5f_i * N_5f
+        + e_Lf_i * N_Lf)
+
+    H_f = H_f + Chop(
+          e_5f_f * N_5f
+        + e_3p_f * N_3p
+        + e_Lf_f * N_Lf)
+
+    B40_Lf_i = $B40(Lf)_i_value
+    B60_Lf_i = $B60(Lf)_i_value
+
+    Akm_Lf_i = {
+        {4,  0, B40_Lf_i},
+        {4, -4, math.sqrt(5/14) * B40_Lf_i},
+        {4,  4, math.sqrt(5/14) * B40_Lf_i},
+        {6,  0, B60_Lf_i},
+        {6, -4, -math.sqrt(7/2) * B60_Lf_i},
+        {6,  4, -math.sqrt(7/2) * B60_Lf_i},
+    }
+
+    H_i = H_i + Chop(NewOperator('CF', NFermions, IndexUp_Lf, IndexDn_Lf, Akm_Lf_i))
+
+    Vt1u_5f_Lf_i = $Vt1u(5f,Lf)_i_value
+
+    Akm_5f_Lf_i = {
+        {4,  0, (3/4) * ((math.sqrt(21)) * Vt1u_5f_Lf_i)} ,
+        {4, -4, (3/4) * ((math.sqrt(15/2)) * Vt1u_5f_Lf_i)},
+        {4,  4, (3/4) * ((math.sqrt(15/2)) * Vt1u_5f_Lf_i)},
+    }
+
+    H_i = H_i + Chop(
+          NewOperator('CF', NFermions, IndexUp_Lf, IndexDn_Lf, IndexUp_5f, IndexDn_5f, Akm_5f_Lf_i)
+        + NewOperator('CF', NFermions, IndexUp_5f, IndexDn_5f, IndexUp_Lf, IndexDn_Lf, Akm_5f_Lf_i))
+
+    B40_Lf_f = $B40(Lf)_f_value
+    B60_Lf_f = $B60(Lf)_f_value
+
+    Akm_Lf_f = {
+        {4,  0, B40_Lf_f},
+        {4, -4, math.sqrt(5/14) * B40_Lf_f},
+        {4,  4, math.sqrt(5/14) * B40_Lf_f},
+        {6,  0, B60_Lf_f},
+        {6, -4, -math.sqrt(7/2) * B60_Lf_f},
+        {6,  4, -math.sqrt(7/2) * B60_Lf_f},
+    }
+
+    H_f = H_f + Chop(NewOperator('CF', NFermions, IndexUp_Lf, IndexDn_Lf, Akm_Lf_f))
+
+    Vt1u_5f_Lf_f = $Vt1u(5f,Lf)_f_value
+
+    Akm_5f_Lf_f = {
+        {4,  0, (3/4) * ((math.sqrt(21)) * Vt1u_5f_Lf_f)} ,
+        {4, -4, (3/4) * ((math.sqrt(15/2)) * Vt1u_5f_Lf_f)},
+        {4,  4, (3/4) * ((math.sqrt(15/2)) * Vt1u_5f_Lf_f)},
+    }
+
+    H_f = H_f + Chop(
+          NewOperator('CF', NFermions, IndexUp_Lf, IndexDn_Lf, IndexUp_5f, IndexDn_5f, Akm_5f_Lf_f)
+        + NewOperator('CF', NFermions, IndexUp_5f, IndexDn_5f, IndexUp_Lf, IndexDn_Lf, Akm_5f_Lf_f))
 end
 
 --------------------------------------------------------------------------------
@@ -236,6 +326,8 @@ if H_exchange_field == 1 then
         + Hz_f * Sz)
 end
 
+NConfigurations = $NConfigurations
+
 --------------------------------------------------------------------------------
 -- Define the restrictions and set the number of initial states.
 --------------------------------------------------------------------------------
@@ -243,14 +335,35 @@ InitialRestrictions = {NFermions, NBosons, {'111111 00000000000000', NElectrons_
                                            {'000000 11111111111111', NElectrons_5f, NElectrons_5f}}
 
 FinalRestrictions = {NFermions, NBosons, {'111111 00000000000000', NElectrons_3p - 1, NElectrons_3p - 1},
-                                         {'000000 11111111111111', NElectrons_5f, NElectrons_5f}}
+                                         {'000000 11111111111111', NElectrons_5f + 1, NElectrons_5f + 1}}
 
-Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, Tz, ldots_3p, N_3p, N_5f, 'dZ'}
+if H_5f_ligands_hybridization == 1 then
+    InitialRestrictions = {NFermions, NBosons, {'111111 00000000000000 00000000000000', NElectrons_3p, NElectrons_3p},
+                                               {'000000 11111111111111 00000000000000', NElectrons_5f, NElectrons_5f},
+                                               {'000000 00000000000000 11111111111111', NElectrons_Lf, NElectrons_Lf}}
+
+    FinalRestrictions = {NFermions, NBosons, {'111111 00000000000000 00000000000000', NElectrons_3p - 1, NElectrons_3p - 1},
+                                             {'000000 11111111111111 00000000000000', NElectrons_5f + 1, NElectrons_5f + 1},
+                                             {'000000 00000000000000 11111111111111', NElectrons_Lf, NElectrons_Lf}}
+
+    CalculationRestrictions = {NFermions, NBosons, {'000000 00000000000000 11111111111111', NElectrons_Lf - (NConfigurations - 1), NElectrons_Lf}}
+end
+
+Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, Tz, ldots_5f, N_3p, N_5f, 'dZ'}
 header = 'Analysis of the initial Hamiltonian:\n'
 header = header .. '=================================================================================================================================\n'
 header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>      <Tz>     <l.s>    <N_3p>    <N_5f>          dZ\n'
 header = header .. '=================================================================================================================================\n'
 footer = '=================================================================================================================================\n'
+
+if H_5f_ligands_hybridization == 1 then
+    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, Tz, ldots_5f, N_3p, N_5f, N_Lf, 'dZ'}
+    header = 'Analysis of the initial Hamiltonian:\n'
+    header = header .. '===========================================================================================================================================\n'
+    header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>      <Tz>     <l.s>    <N_3p>    <N_5f>    <N_Lf>          dZ\n'
+    header = header .. '===========================================================================================================================================\n'
+    footer = '===========================================================================================================================================\n'
+end
 
 T = $T * EnergyUnits.Kelvin.value
 
@@ -411,11 +524,43 @@ end
 --------------------------------------------------------------------------------
 -- Define the transition operators.
 --------------------------------------------------------------------------------
-T_3p = {}
-for i = 1, NElectrons_3p / 2 do
-    T_3p[2*i - 1] = NewOperator('An', NFermions, IndexDn_3p[i])
-    T_3p[2*i]     = NewOperator('An', NFermions, IndexUp_3p[i])
+t = math.sqrt(1/2)
+
+Txy_3p_5f   = NewOperator('CF', NFermions, IndexUp_5f, IndexDn_5f, IndexUp_3p, IndexDn_3p, {{2, -2, t * I}, {2, 2, -t * I}})
+Txz_3p_5f   = NewOperator('CF', NFermions, IndexUp_5f, IndexDn_5f, IndexUp_3p, IndexDn_3p, {{2, -1, t    }, {2, 1, -t    }})
+Tyz_3p_5f   = NewOperator('CF', NFermions, IndexUp_5f, IndexDn_5f, IndexUp_3p, IndexDn_3p, {{2, -1, t * I}, {2, 1,  t * I}})
+Tx2y2_3p_5f = NewOperator('CF', NFermions, IndexUp_5f, IndexDn_5f, IndexUp_3p, IndexDn_3p, {{2, -2, t    }, {2, 2,  t    }})
+Tz2_3p_5f   = NewOperator('CF', NFermions, IndexUp_5f, IndexDn_5f, IndexUp_3p, IndexDn_3p, {{2,  0, 1    }                })
+
+k = $k1
+ev = $eps11
+eh = $eps12
+
+-- Calculate the right and left polarization vectors.
+er = {t * (eh[1] - I * ev[1]),
+      t * (eh[2] - I * ev[2]),
+      t * (eh[3] - I * ev[3])}
+
+el = {-t * (eh[1] + I * ev[1]),
+      -t * (eh[2] + I * ev[2]),
+      -t * (eh[3] + I * ev[3])}
+
+function CalculateT(e, k)
+    -- Calculate the transition operator for arbitrary
+    -- polarization and wave vectors.
+    T = (e[1] * k[2] + e[2] * k[1]) * Txy_3p_5f
+      + (e[1] * k[3] + e[3] * k[1]) * Txz_3p_5f
+      + (e[2] * k[3] + e[3] * k[2]) * Tyz_3p_5f
+      + (e[1] * k[1] + e[2] * k[2]) * Tx2y2_3p_5f
+      + e[3] * k[3] * Tz2_3p_5f
+    return Chop(T)
 end
+
+Tv_3p_5f = CalculateT(ev, k)
+Th_3p_5f = CalculateT(eh, k)
+Tr_3p_5f = CalculateT(er, k)
+Tl_3p_5f = CalculateT(el, k)
+Tk_3p_5f = CalculateT(k, k)
 
 -- List with the user selected spectra.
 spectra = {$spectra}
@@ -424,14 +569,39 @@ if next(spectra) == nil then
     return
 end
 
-indices_3p = {}
+-- Create two lists, one with the operators and the second with
+-- the indices of the operators required to calculate a given
+-- spectrum.
+T_3p_5f = {}
+indices_3p_5f = {}
 c = 1
 
 spectrum = 'Isotropic'
 if ValueInTable(spectrum, spectra) then
-    indices_3p[spectrum] = {}
-    for j, operator in ipairs(T_3p) do
-        table.insert(indices_3p[spectrum], c)
+    indices_3p_5f[spectrum] = {}
+    for j, operator in ipairs({Txy_3p_5f, Txz_3p_5f, Tyz_3p_5f, Tx2y2_3p_5f, Tz2_3p_5f}) do
+        table.insert(T_3p_5f, operator)
+        table.insert(indices_3p_5f[spectrum], c)
+        c = c + 1
+    end
+end
+
+spectrum = 'Circular Dichroism'
+if ValueInTable(spectrum, spectra) then
+    indices_3p_5f[spectrum] = {}
+    for j, operator in ipairs({Tr_3p_5f, Tl_3p_5f}) do
+        table.insert(T_3p_5f, operator)
+        table.insert(indices_3p_5f[spectrum], c)
+        c = c + 1
+    end
+end
+
+spectrum = 'Linear Dichroism'
+if ValueInTable(spectrum, spectra) then
+    indices_3p_5f[spectrum] = {}
+    for j, operator in ipairs({Tv_3p_5f, Th_3p_5f}) do
+        table.insert(T_3p_5f, operator)
+        table.insert(indices_3p_5f[spectrum], c)
         c = c + 1
     end
 end
@@ -460,23 +630,42 @@ Gamma = $Gamma1
 DenseBorder = $DenseBorder
 
 if CalculationRestrictions == nil then
-    G_3p = CreateSpectra(H_f, T_3p, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'DenseBorder', DenseBorder}})
+    G_3p_5f = CreateSpectra(H_f, T_3p_5f, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'DenseBorder', DenseBorder}})
 else
-    G_3p = CreateSpectra(H_f, T_3p, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}, {'DenseBorder', DenseBorder}})
+    G_3p_5f = CreateSpectra(H_f, T_3p_5f, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}, {'DenseBorder', DenseBorder}})
 end
 
 -- Create a list with the Boltzmann probabilities for a given operator
 -- and state.
-dZ_3p = {}
-for i in ipairs(T_3p) do
+dZ_3p_5f = {}
+for i in ipairs(T_3p_5f) do
     for j in ipairs(Psis_i) do
-        table.insert(dZ_3p, dZ[j])
+        table.insert(dZ_3p_5f, dZ[j])
     end
 end
 
 spectrum = 'Isotropic'
 if ValueInTable(spectrum, spectra) then
-    Giso = GetSpectrum(G_3p, T_3p, Psis_i, indices_3p[spectrum], dZ_3p)
-    SaveSpectrum(Giso / #T_3p, 'iso')
+        Giso = GetSpectrum(G_3p_5f, T_3p_5f, Psis_i, indices_3p_5f[spectrum], dZ_3p_5f)
+        Giso = Giso / 15
+        SaveSpectrum(Giso, 'iso')
+end
+
+spectrum = 'Circular Dichroism'
+if ValueInTable(spectrum, spectra) then
+        Gr = GetSpectrum(G_3p_5f, T_3p_5f, Psis_i, indices_3p_5f[spectrum][1], dZ_3p_5f)
+        Gl = GetSpectrum(G_3p_5f, T_3p_5f, Psis_i, indices_3p_5f[spectrum][2], dZ_3p_5f)
+        SaveSpectrum(Gr, 'r')
+        SaveSpectrum(Gl, 'l')
+        SaveSpectrum(Gr - Gl, 'cd')
+end
+
+spectrum = 'Linear Dichroism'
+if ValueInTable(spectrum, spectra) then
+        Gv = GetSpectrum(G_3p_5f, T_3p_5f, Psis_i, indices_3p_5f[spectrum][1], dZ_3p_5f)
+        Gh = GetSpectrum(G_3p_5f, T_3p_5f, Psis_i, indices_3p_5f[spectrum][2], dZ_3p_5f)
+        SaveSpectrum(Gv, 'v')
+        SaveSpectrum(Gh, 'h')
+        SaveSpectrum(Gv - Gh, 'ld')
 end
 

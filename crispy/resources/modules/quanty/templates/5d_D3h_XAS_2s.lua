@@ -219,7 +219,7 @@ InitialRestrictions = {NFermions, NBosons, {'11 0000000000', NElectrons_2s, NEle
 FinalRestrictions = {NFermions, NBosons, {'11 0000000000', NElectrons_2s - 1, NElectrons_2s - 1},
                                          {'00 1111111111', NElectrons_5d + 1, NElectrons_5d + 1}}
 
-Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, Tz, ldots_2s, N_2s, N_5d, 'dZ'}
+Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, Tz, ldots_5d, N_2s, N_5d, 'dZ'}
 header = 'Analysis of the initial Hamiltonian:\n'
 header = header .. '=================================================================================================================================\n'
 header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>      <Tz>     <l.s>    <N_2s>    <N_5d>          dZ\n'
