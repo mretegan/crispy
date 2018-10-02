@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '01/10/2018'
+__date__ = '02/10/2018'
 
 
 import os
@@ -82,9 +82,9 @@ class MainWindow(QMainWindow):
         self.loadSettings()
 
     def closeEvent(self, event):
-        self.plotWidget._profileWindow.close()
+        self.plotWidget.closeProfileWindow()
         self.saveSettings()
-        event.accept()
+        super(MainWindow, self).closeEvent(event)
 
     def loadSettings(self):
         config = Config()

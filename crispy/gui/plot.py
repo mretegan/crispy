@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '24/09/2018'
+__date__ = '02/10/2018'
 
 
 import sys
@@ -189,6 +189,9 @@ class MainPlotWidget(BasePlotWidget):
         colormap = {'name': 'viridis', 'normalization': 'linear',
                             'autoscale': True, 'vmin': 0.0, 'vmax': 1.0}
         self.setDefaultColormap(colormap)
+
+    def closeProfileWindow(self):
+        self._profileWindow.close()
 
     def _contextMenu(self, pos):
         """Handle plot area customContextMenuRequested signal.
