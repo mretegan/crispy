@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '01/10/2018'
+__date__ = '02/10/2018'
 
 
 import copy
@@ -1535,7 +1535,6 @@ class QuantyDockWidget(QDockWidget):
 
     def stopCalculation(self):
         self.process.kill()
-        self.enableWidget(True)
 
     def processCalculation(self, *args):
         c = self.calculation
@@ -1546,7 +1545,7 @@ class QuantyDockWidget(QDockWidget):
         endingTime = datetime.datetime.now()
         c.endingTime = endingTime
 
-        # Re-enable the UI if the calculation has finished.
+        # Re-enable the widget when the calculation has finished.
         self.enableWidget(True)
 
         # Reset the calculation button.
