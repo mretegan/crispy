@@ -208,7 +208,9 @@ Jsqr_4d = NewOperator('Jsqr', NFermions, IndexUp_4d, IndexDn_4d)
 Jplus_4d = NewOperator('Jplus', NFermions, IndexUp_4d, IndexDn_4d)
 Jmin_4d = NewOperator('Jmin', NFermions, IndexUp_4d, IndexDn_4d)
 
-Tz = NewOperator('Tz', NFermions, IndexUp_4d, IndexDn_4d)
+Tx_4d = NewOperator('Tx', NFermions, IndexUp_4d, IndexDn_4d)
+Ty_4d = NewOperator('Ty', NFermions, IndexUp_4d, IndexDn_4d)
+Tz_4d = NewOperator('Tz', NFermions, IndexUp_4d, IndexDn_4d)
 
 Sx = Sx_4d
 Sy = Sy_4d
@@ -222,6 +224,9 @@ Jx = Jx_4d
 Jy = Jy_4d
 Jz = Jz_4d
 
+Tx = Tx_4d
+Ty = Ty_4d
+Tz = Tz_4d
 
 Ssqr = Sx * Sx + Sy * Sy + Sz * Sz
 Lsqr = Lx * Lx + Ly * Ly + Lz * Lz
@@ -288,22 +293,6 @@ if H_4d_ligands_hybridization == 1 then
                                              {'00 0000000000 1111111111', NElectrons_Ld, NElectrons_Ld}}
 
     CalculationRestrictions = {NFermions, NBosons, {'00 0000000000 1111111111', NElectrons_Ld - (NConfigurations - 1), NElectrons_Ld}}
-end
-
-Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, Tz, ldots_4d, N_4s, N_4d, 'dZ'}
-header = 'Analysis of the initial Hamiltonian:\n'
-header = header .. '=================================================================================================================================\n'
-header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>      <Tz>     <l.s>    <N_4s>    <N_4d>          dZ\n'
-header = header .. '=================================================================================================================================\n'
-footer = '=================================================================================================================================\n'
-
-if H_4d_ligands_hybridization == 1 then
-    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, Tz, ldots_4d, N_4s, N_4d, N_Ld, 'dZ'}
-    header = 'Analysis of the initial Hamiltonian:\n'
-    header = header .. '===========================================================================================================================================\n'
-    header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>      <Tz>     <l.s>    <N_4s>    <N_4d>    <N_Ld>          dZ\n'
-    header = header .. '===========================================================================================================================================\n'
-    footer = '===========================================================================================================================================\n'
 end
 
 T = $T * EnergyUnits.Kelvin.value
@@ -395,23 +384,6 @@ for i in ipairs(dZ) do
     dZ[i] = dZ[i] / Z
 end
 
--- Print details about the initial Hamiltonian.
-io.write(header)
-for i, Psi in ipairs(Psis_i) do
-    io.write(string.format('%5d', i))
-    for j, Operator in ipairs(Operators) do
-        if j == 1 then
-            io.write(string.format('%12.6f', Complex.Re(Psi * Operator * Psi)))
-        elseif Operator == 'dZ' then
-            io.write(string.format('%12.2E', dZ[i]))
-        else
-            io.write(string.format('%10.4f', Complex.Re(Psi * Operator * Psi)))
-        end
-    end
-    io.write('\n')
-end
-io.write(footer)
-
 --------------------------------------------------------------------------------
 -- Define some helper function for the spectra calculation.
 --------------------------------------------------------------------------------
@@ -471,12 +443,10 @@ for i = 1, NElectrons_4s / 2 do
     T_4s[2*i]     = NewOperator('An', NFermions, IndexUp_4s[i])
 end
 
+k = $k1
+
 -- List with the user selected spectra.
 spectra = {$spectra}
-
-if next(spectra) == nil then
-    return
-end
 
 indices_4s = {}
 c = 1
@@ -493,6 +463,48 @@ end
 --------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
+Sk = Chop(k[1] * Sx + k[2] * Sy + k[3] * Sz)
+Lk = Chop(k[1] * Lx + k[2] * Ly + k[3] * Lz)
+Jk = Chop(k[1] * Jx + k[2] * Jy + k[3] * Jz)
+Tk = Chop(k[1] * Tx + k[2] * Ty + k[3] * Tz)
+
+Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_4d, N_4s, N_4d, 'dZ'}
+header = 'Analysis of the initial Hamiltonian:\n'
+header = header .. '=================================================================================================================================\n'
+header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_4s>    <N_4d>          dZ\n'
+header = header .. '=================================================================================================================================\n'
+footer = '=================================================================================================================================\n'
+
+if H_4d_ligands_hybridization == 1 then
+    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_4d, N_4s, N_4d, N_Ld, 'dZ'}
+    header = 'Analysis of the initial Hamiltonian:\n'
+    header = header .. '===========================================================================================================================================\n'
+    header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_4s>    <N_4d>    <N_Ld>          dZ\n'
+    header = header .. '===========================================================================================================================================\n'
+    footer = '===========================================================================================================================================\n'
+end
+
+io.write(header)
+for i, Psi in ipairs(Psis_i) do
+    io.write(string.format('%5d', i))
+    for j, Operator in ipairs(Operators) do
+        if j == 1 then
+            io.write(string.format('%12.6f', Complex.Re(Psi * Operator * Psi)))
+        elseif Operator == 'dZ' then
+            io.write(string.format('%12.2E', dZ[i]))
+        else
+            io.write(string.format('%10.4f', Complex.Re(Psi * Operator * Psi)))
+        end
+    end
+    io.write('\n')
+end
+io.write(footer)
+
+
+if next(spectra) == nil then
+    return
+end
+
 E_gs_i = Psis_i[1] * H_i * Psis_i[1]
 
 if CalculationRestrictions == nil then

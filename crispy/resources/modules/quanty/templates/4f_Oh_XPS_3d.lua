@@ -273,7 +273,9 @@ Jsqr_4f = NewOperator('Jsqr', NFermions, IndexUp_4f, IndexDn_4f)
 Jplus_4f = NewOperator('Jplus', NFermions, IndexUp_4f, IndexDn_4f)
 Jmin_4f = NewOperator('Jmin', NFermions, IndexUp_4f, IndexDn_4f)
 
-Tz = NewOperator('Tz', NFermions, IndexUp_4f, IndexDn_4f)
+Tx_4f = NewOperator('Tx', NFermions, IndexUp_4f, IndexDn_4f)
+Ty_4f = NewOperator('Ty', NFermions, IndexUp_4f, IndexDn_4f)
+Tz_4f = NewOperator('Tz', NFermions, IndexUp_4f, IndexDn_4f)
 
 Sx = Sx_4f
 Sy = Sy_4f
@@ -287,6 +289,9 @@ Jx = Jx_4f
 Jy = Jy_4f
 Jz = Jz_4f
 
+Tx = Tx_4f
+Ty = Ty_4f
+Tz = Tz_4f
 
 Ssqr = Sx * Sx + Sy * Sy + Sz * Sz
 Lsqr = Lx * Lx + Ly * Ly + Lz * Lz
@@ -353,22 +358,6 @@ if H_4f_ligands_hybridization == 1 then
                                              {'0000000000 00000000000000 11111111111111', NElectrons_Lf, NElectrons_Lf}}
 
     CalculationRestrictions = {NFermions, NBosons, {'0000000000 00000000000000 11111111111111', NElectrons_Lf - (NConfigurations - 1), NElectrons_Lf}}
-end
-
-Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, Tz, ldots_4f, N_3d, N_4f, 'dZ'}
-header = 'Analysis of the initial Hamiltonian:\n'
-header = header .. '=================================================================================================================================\n'
-header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>      <Tz>     <l.s>    <N_3d>    <N_4f>          dZ\n'
-header = header .. '=================================================================================================================================\n'
-footer = '=================================================================================================================================\n'
-
-if H_4f_ligands_hybridization == 1 then
-    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, Tz, ldots_4f, N_3d, N_4f, N_Lf, 'dZ'}
-    header = 'Analysis of the initial Hamiltonian:\n'
-    header = header .. '===========================================================================================================================================\n'
-    header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>      <Tz>     <l.s>    <N_3d>    <N_4f>    <N_Lf>          dZ\n'
-    header = header .. '===========================================================================================================================================\n'
-    footer = '===========================================================================================================================================\n'
 end
 
 T = $T * EnergyUnits.Kelvin.value
@@ -460,23 +449,6 @@ for i in ipairs(dZ) do
     dZ[i] = dZ[i] / Z
 end
 
--- Print details about the initial Hamiltonian.
-io.write(header)
-for i, Psi in ipairs(Psis_i) do
-    io.write(string.format('%5d', i))
-    for j, Operator in ipairs(Operators) do
-        if j == 1 then
-            io.write(string.format('%12.6f', Complex.Re(Psi * Operator * Psi)))
-        elseif Operator == 'dZ' then
-            io.write(string.format('%12.2E', dZ[i]))
-        else
-            io.write(string.format('%10.4f', Complex.Re(Psi * Operator * Psi)))
-        end
-    end
-    io.write('\n')
-end
-io.write(footer)
-
 --------------------------------------------------------------------------------
 -- Define some helper function for the spectra calculation.
 --------------------------------------------------------------------------------
@@ -530,83 +502,23 @@ end
 --------------------------------------------------------------------------------
 -- Define the transition operators.
 --------------------------------------------------------------------------------
-t = math.sqrt(1/2)
-
-Tx_3d_4f = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_3d, IndexDn_3d, {{1, -1, t    }, {1, 1, -t    }})
-Ty_3d_4f = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_3d, IndexDn_3d, {{1, -1, t * I}, {1, 1,  t * I}})
-Tz_3d_4f = NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_3d, IndexDn_3d, {{1,  0, 1    }                })
-
-k = $k1
-ev = $eps11
-eh = $eps12
-
--- Calculate the right and left polarization vectors.
-er = {t * (eh[1] - I * ev[1]),
-      t * (eh[2] - I * ev[2]),
-      t * (eh[3] - I * ev[3])}
-
-el = {-t * (eh[1] + I * ev[1]),
-      -t * (eh[2] + I * ev[2]),
-      -t * (eh[3] + I * ev[3])}
-
-function CalculateT(e)
-    -- Calculate the transition operator for arbitrary
-    -- polarization and wave vectors.
-    T = e[1] * Tx_3d_4f + e[2] * Ty_3d_4f + e[3] * Tz_3d_4f
-    return Chop(T)
+T_3d = {}
+for i = 1, NElectrons_3d / 2 do
+    T_3d[2*i - 1] = NewOperator('An', NFermions, IndexDn_3d[i])
+    T_3d[2*i]     = NewOperator('An', NFermions, IndexUp_3d[i])
 end
-
-Tv_3d_4f = CalculateT(ev, k)
-Th_3d_4f = CalculateT(eh, k)
-Tr_3d_4f = CalculateT(er, k)
-Tl_3d_4f = CalculateT(el, k)
-Tk_3d_4f = CalculateT(k, k)
 
 -- List with the user selected spectra.
 spectra = {$spectra}
 
-if next(spectra) == nil then
-    return
-end
-
--- Create two lists, one with the operators and the second with
--- the indices of the operators required to calculate a given
--- spectrum.
-T_3d_4f = {}
-indices_3d_4f = {}
+indices_3d = {}
 c = 1
 
 spectrum = 'Isotropic'
 if ValueInTable(spectrum, spectra) then
-    indices_3d_4f[spectrum] = {}
-    for j, operator in ipairs({Tr_3d_4f, Tl_3d_4f, Tk_3d_4f}) do
-        table.insert(T_3d_4f, operator)
-        table.insert(indices_3d_4f[spectrum], c)
-        c = c + 1
-    end
-end
-
-spectrum = 'Circular Dichroism'
-if ValueInTable(spectrum, spectra) then
-    indices_3d_4f[spectrum] = {}
-    if ValueInTable('Isotropic', table) then
-        for j, operator in ipairs({Tr_3d_4f, Tl_3d_4f}) do
-            table.insert(T_3d_4f, operator)
-            table.insert(indices_3d_4f[spectrum], c)
-            c = c + 1
-        end
-    else
-        table.insert(indices_3d_4f[spectrum], 1)
-        table.insert(indices_3d_4f[spectrum], 2)
-    end
-end
-
-spectrum = 'Linear Dichroism'
-if ValueInTable(spectrum, spectra) then
-    indices_3d_4f[spectrum] = {}
-    for j, operator in ipairs({Tv_3d_4f, Th_3d_4f}) do
-        table.insert(T_3d_4f, operator)
-        table.insert(indices_3d_4f[spectrum], c)
+    indices_3d[spectrum] = {}
+    for j, operator in ipairs(T_3d) do
+        table.insert(indices_3d[spectrum], c)
         c = c + 1
     end
 end
@@ -614,6 +526,48 @@ end
 --------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
+Sk = Chop(k[1] * Sx + k[2] * Sy + k[3] * Sz)
+Lk = Chop(k[1] * Lx + k[2] * Ly + k[3] * Lz)
+Jk = Chop(k[1] * Jx + k[2] * Jy + k[3] * Jz)
+Tk = Chop(k[1] * Tx + k[2] * Ty + k[3] * Tz)
+
+Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_4f, N_3d, N_4f, 'dZ'}
+header = 'Analysis of the initial Hamiltonian:\n'
+header = header .. '=================================================================================================================================\n'
+header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_3d>    <N_4f>          dZ\n'
+header = header .. '=================================================================================================================================\n'
+footer = '=================================================================================================================================\n'
+
+if H_4f_ligands_hybridization == 1 then
+    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_4f, N_3d, N_4f, N_Lf, 'dZ'}
+    header = 'Analysis of the initial Hamiltonian:\n'
+    header = header .. '===========================================================================================================================================\n'
+    header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_3d>    <N_4f>    <N_Lf>          dZ\n'
+    header = header .. '===========================================================================================================================================\n'
+    footer = '===========================================================================================================================================\n'
+end
+
+io.write(header)
+for i, Psi in ipairs(Psis_i) do
+    io.write(string.format('%5d', i))
+    for j, Operator in ipairs(Operators) do
+        if j == 1 then
+            io.write(string.format('%12.6f', Complex.Re(Psi * Operator * Psi)))
+        elseif Operator == 'dZ' then
+            io.write(string.format('%12.2E', dZ[i]))
+        else
+            io.write(string.format('%10.4f', Complex.Re(Psi * Operator * Psi)))
+        end
+    end
+    io.write('\n')
+end
+io.write(footer)
+
+
+if next(spectra) == nil then
+    return
+end
+
 E_gs_i = Psis_i[1] * H_i * Psis_i[1]
 
 if CalculationRestrictions == nil then
@@ -635,42 +589,23 @@ Gamma = $Gamma1
 DenseBorder = $DenseBorder
 
 if CalculationRestrictions == nil then
-    G_3d_4f = CreateSpectra(H_f, T_3d_4f, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'DenseBorder', DenseBorder}})
+    G_3d = CreateSpectra(H_f, T_3d, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'DenseBorder', DenseBorder}})
 else
-    G_3d_4f = CreateSpectra(H_f, T_3d_4f, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}, {'DenseBorder', DenseBorder}})
+    G_3d = CreateSpectra(H_f, T_3d, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}, {'DenseBorder', DenseBorder}})
 end
 
 -- Create a list with the Boltzmann probabilities for a given operator
 -- and state.
-dZ_3d_4f = {}
-for i in ipairs(T_3d_4f) do
+dZ_3d = {}
+for i in ipairs(T_3d) do
     for j in ipairs(Psis_i) do
-        table.insert(dZ_3d_4f, dZ[j])
+        table.insert(dZ_3d, dZ[j])
     end
 end
 
 spectrum = 'Isotropic'
 if ValueInTable(spectrum, spectra) then
-        Giso = GetSpectrum(G_3d_4f, T_3d_4f, Psis_i, indices_3d_4f[spectrum], dZ_3d_4f)
-        Giso = Giso / 3
-        SaveSpectrum(Giso, 'iso')
-end
-
-spectrum = 'Circular Dichroism'
-if ValueInTable(spectrum, spectra) then
-        Gr = GetSpectrum(G_3d_4f, T_3d_4f, Psis_i, indices_3d_4f[spectrum][1], dZ_3d_4f)
-        Gl = GetSpectrum(G_3d_4f, T_3d_4f, Psis_i, indices_3d_4f[spectrum][2], dZ_3d_4f)
-        SaveSpectrum(Gr, 'r')
-        SaveSpectrum(Gl, 'l')
-        SaveSpectrum(Gr - Gl, 'cd')
-end
-
-spectrum = 'Linear Dichroism'
-if ValueInTable(spectrum, spectra) then
-        Gv = GetSpectrum(G_3d_4f, T_3d_4f, Psis_i, indices_3d_4f[spectrum][1], dZ_3d_4f)
-        Gh = GetSpectrum(G_3d_4f, T_3d_4f, Psis_i, indices_3d_4f[spectrum][2], dZ_3d_4f)
-        SaveSpectrum(Gv, 'v')
-        SaveSpectrum(Gh, 'h')
-        SaveSpectrum(Gv - Gh, 'ld')
+    Giso = GetSpectrum(G_3d, T_3d, Psis_i, indices_3d[spectrum], dZ_3d)
+    SaveSpectrum(Giso / #T_3d, 'iso')
 end
 

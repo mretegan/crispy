@@ -555,17 +555,17 @@ class QuantyCalculation(object):
 
         s = '{{{0:.8g}, {1:.8g}, {2:.8g}}}'
 
-        u = np.array(self.k1)
-        u = u / np.linalg.norm(u)
-        replacements['$k1'] = s.format(u[0], u[1], u[2])
+        k1 = np.array(self.k1)
+        k1 = k1 / np.linalg.norm(k1)
+        replacements['$k1'] = s.format(k1[0], k1[1], k1[2])
 
-        v = np.array(self.eps11)
-        v = v / np.linalg.norm(v)
-        replacements['$eps11'] = s.format(v[0], v[1], v[2])
+        eps11 = np.array(self.eps11)
+        eps11 = eps11 / np.linalg.norm(eps11)
+        replacements['$eps11'] = s.format(eps11[0], eps11[1], eps11[2])
 
-        w = np.array(self.eps12)
-        w = w / np.linalg.norm(w)
-        replacements['$eps12'] = s.format(w[0], w[1], w[2])
+        eps12 = np.array(self.eps12)
+        eps12 = eps12 / np.linalg.norm(eps12)
+        replacements['$eps12'] = s.format(eps12[0], eps12[1], eps12[2])
 
         replacements['$spectra'] = ', '.join(
             '\'{}\''.format(p) for p in self.spectra.toCalculateChecked)
@@ -608,8 +608,14 @@ class QuantyCalculation(object):
                     except TypeError:
                         value = data
 
-                    if self.magneticField == 0 and parameter == 'Bz':
-                        value = 1e-6
+                    if self.magneticField == 0:
+                        small = np.finfo(np.float32).eps  # ~1.19e-7
+                        if parameter == 'Bx':
+                            value = k1[0] * small
+                        elif parameter == 'By':
+                            value = k1[1] * small
+                        elif parameter == 'Bz':
+                            value = k1[2] * small
 
                     key = '${}_{}_value'.format(parameter, suffix)
                     replacements[key] = '{}'.format(value)
@@ -1726,6 +1732,7 @@ class QuantyDockWidget(QDockWidget):
             result = self.resultsModel.getItem(index)
 
         if isinstance(result, QuantyCalculation):
+            self.state = result
             self.enableWidget(True, result)
             self.populateWidget()
             self.resultDetailsDialog.populateWidget()

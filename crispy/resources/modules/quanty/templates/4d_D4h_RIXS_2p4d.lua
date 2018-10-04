@@ -312,6 +312,10 @@ Jsqr_4d = NewOperator('Jsqr', NFermions, IndexUp_4d, IndexDn_4d)
 Jplus_4d = NewOperator('Jplus', NFermions, IndexUp_4d, IndexDn_4d)
 Jmin_4d = NewOperator('Jmin', NFermions, IndexUp_4d, IndexDn_4d)
 
+Tx_4d = NewOperator('Tx', NFermions, IndexUp_4d, IndexDn_4d)
+Ty_4d = NewOperator('Ty', NFermions, IndexUp_4d, IndexDn_4d)
+Tz_4d = NewOperator('Tz', NFermions, IndexUp_4d, IndexDn_4d)
+
 Sx = Sx_4d
 Sy = Sy_4d
 Sz = Sz_4d
@@ -323,6 +327,10 @@ Lz = Lz_4d
 Jx = Jx_4d
 Jy = Jy_4d
 Jz = Jz_4d
+
+Tx = Tx_4d
+Ty = Ty_4d
+Tz = Tz_4d
 
 Ssqr = Sx * Sx + Sy * Sy + Sz * Sz
 Lsqr = Lx * Lx + Ly * Ly + Lz * Lz
@@ -414,22 +422,6 @@ if H_4d_ligands_hybridization == 1 then
     CalculationRestrictions = {NFermions, NBosons, {'000000 0000000000 1111111111', NElectrons_Ld - (NConfigurations - 1), NElectrons_Ld}}
 end
 
-Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_2p, N_4d, 'dZ'}
-header = 'Analysis of the initial Hamiltonian:\n'
-header = header .. '=============================================================================================================\n'
-header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>    <N_2p>    <N_4d>          dZ\n'
-header = header .. '=============================================================================================================\n'
-footer = '=============================================================================================================\n'
-
-if H_4d_ligands_hybridization == 1 then
-    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, N_2p, N_4d, N_Ld, 'dZ'}
-    header = 'Analysis of the initial Hamiltonian:\n'
-    header = header .. '=======================================================================================================================\n'
-    header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>    <N_2p>    <N_4d>    <N_Ld>          dZ\n'
-    header = header .. '=======================================================================================================================\n'
-    footer = '=======================================================================================================================\n'
-end
-
 T = $T * EnergyUnits.Kelvin.value
 
 -- Approximate machine epsilon for single precision arithmetics.
@@ -519,7 +511,48 @@ for i in ipairs(dZ) do
     dZ[i] = dZ[i] / Z
 end
 
--- Print details about the initial Hamiltonian.
+--------------------------------------------------------------------------------
+-- Define the transition operators.
+--------------------------------------------------------------------------------
+t = math.sqrt(1/2)
+
+Tx_2p_4d = NewOperator('CF', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_2p, IndexDn_2p, {{1, -1, t    }, {1, 1, -t    }})
+Ty_2p_4d = NewOperator('CF', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_2p, IndexDn_2p, {{1, -1, t * I}, {1, 1,  t * I}})
+Tz_2p_4d = NewOperator('CF', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_2p, IndexDn_2p, {{1,  0, 1    }                })
+
+Tx_4d_2p = NewOperator('CF', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_4d, IndexDn_4d, {{1, -1, t    }, {1, 1, -t    }})
+Ty_4d_2p = NewOperator('CF', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_4d, IndexDn_4d, {{1, -1, t * I}, {1, 1,  t * I}})
+Tz_4d_2p = NewOperator('CF', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_4d, IndexDn_4d, {{1,  0, 1    }                })
+
+k = $k1
+
+-- List with the user selected spectra.
+spectra = {$spectra}
+
+--------------------------------------------------------------------------------
+-- Calculate and save the spectrum.
+--------------------------------------------------------------------------------
+Sk = Chop(k[1] * Sx + k[2] * Sy + k[3] * Sz)
+Lk = Chop(k[1] * Lx + k[2] * Ly + k[3] * Lz)
+Jk = Chop(k[1] * Jx + k[2] * Jy + k[3] * Jz)
+Tk = Chop(k[1] * Tx + k[2] * Ty + k[3] * Tz)
+
+Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_4d, N_2p, N_4d, 'dZ'}
+header = 'Analysis of the initial Hamiltonian:\n'
+header = header .. '=================================================================================================================================\n'
+header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_2p>    <N_4d>          dZ\n'
+header = header .. '=================================================================================================================================\n'
+footer = '=================================================================================================================================\n'
+
+if H_4d_ligands_hybridization == 1 then
+    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_4d, N_2p, N_4d, N_Ld, 'dZ'}
+    header = 'Analysis of the initial Hamiltonian:\n'
+    header = header .. '===========================================================================================================================================\n'
+    header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_2p>    <N_4d>    <N_Ld>          dZ\n'
+    header = header .. '===========================================================================================================================================\n'
+    footer = '===========================================================================================================================================\n'
+end
+
 io.write(header)
 for i, Psi in ipairs(Psis_i) do
     io.write(string.format('%5d', i))
@@ -536,22 +569,11 @@ for i, Psi in ipairs(Psis_i) do
 end
 io.write(footer)
 
---------------------------------------------------------------------------------
--- Define the transition operators.
---------------------------------------------------------------------------------
-t = math.sqrt(1/2)
 
-Tx_2p_4d = NewOperator('CF', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_2p, IndexDn_2p, {{1, -1, t    }, {1, 1, -t    }})
-Ty_2p_4d = NewOperator('CF', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_2p, IndexDn_2p, {{1, -1, t * I}, {1, 1,  t * I}})
-Tz_2p_4d = NewOperator('CF', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_2p, IndexDn_2p, {{1,  0, 1    }                })
+if next(spectra) == nil then
+    return
+end
 
-Tx_4d_2p = NewOperator('CF', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_4d, IndexDn_4d, {{1, -1, t    }, {1, 1, -t    }})
-Ty_4d_2p = NewOperator('CF', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_4d, IndexDn_4d, {{1, -1, t * I}, {1, 1,  t * I}})
-Tz_4d_2p = NewOperator('CF', NFermions, IndexUp_2p, IndexDn_2p, IndexUp_4d, IndexDn_4d, {{1,  0, 1    }                })
-
---------------------------------------------------------------------------------
--- Calculate and save the spectrum.
---------------------------------------------------------------------------------
 E_gs_i = Psis_i[1] * H_i * Psis_i[1]
 
 if CalculationRestrictions == nil then

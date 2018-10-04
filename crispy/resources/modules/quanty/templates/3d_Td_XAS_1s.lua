@@ -193,7 +193,6 @@ if H_3d_4p_hybridization == 1 then
           e_3d_f * N_3d
         + e_4p_f * N_4p)
 
-
     Akm = {{3, 2, (-7 * I) / math.sqrt(6)}, {3, -2, (7 * I) / math.sqrt(6)}}
     Vt2_3d_4p = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_4p, IndexDn_4p, Akm)
               + NewOperator('CF', NFermions, IndexUp_4p, IndexDn_4p, IndexUp_3d, IndexDn_3d, Akm)
@@ -233,7 +232,9 @@ Jsqr_3d = NewOperator('Jsqr', NFermions, IndexUp_3d, IndexDn_3d)
 Jplus_3d = NewOperator('Jplus', NFermions, IndexUp_3d, IndexDn_3d)
 Jmin_3d = NewOperator('Jmin', NFermions, IndexUp_3d, IndexDn_3d)
 
-Tz = NewOperator('Tz', NFermions, IndexUp_3d, IndexDn_3d)
+Tx_3d = NewOperator('Tx', NFermions, IndexUp_3d, IndexDn_3d)
+Ty_3d = NewOperator('Ty', NFermions, IndexUp_3d, IndexDn_3d)
+Tz_3d = NewOperator('Tz', NFermions, IndexUp_3d, IndexDn_3d)
 
 Sx = Sx_3d
 Sy = Sy_3d
@@ -247,6 +248,9 @@ Jx = Jx_3d
 Jy = Jy_3d
 Jz = Jz_3d
 
+Tx = Tx_3d
+Ty = Ty_3d
+Tz = Tz_3d
 
 Ssqr = Sx * Sx + Sy * Sy + Sz * Sz
 Lsqr = Lx * Lx + Ly * Ly + Lz * Lz
@@ -313,22 +317,6 @@ if H_3d_4p_hybridization == 1 then
                                              {'00 0000000000 111111', NElectrons_4p, NElectrons_4p}}
 
     CalculationRestrictions = {NFermions, NBosons, {'00 0000000000 111111', NElectrons_4p, NElectrons_4p + 1}}
-end
-
-Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, Tz, ldots_3d, N_1s, N_3d, 'dZ'}
-header = 'Analysis of the initial Hamiltonian:\n'
-header = header .. '=================================================================================================================================\n'
-header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>      <Tz>     <l.s>    <N_1s>    <N_3d>          dZ\n'
-header = header .. '=================================================================================================================================\n'
-footer = '=================================================================================================================================\n'
-
-if H_3d_4p_hybridization == 1 then
-    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sz, Lz, Jz, Tz, ldots_3d, N_1s, N_3d, N_4p, 'dZ'}
-    header = 'Analysis of the initial Hamiltonian:\n'
-    header = header .. '===========================================================================================================================================\n'
-    header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sz>      <Lz>      <Jz>      <Tz>     <l.s>    <N_1s>    <N_3d>    <N_4p>          dZ\n'
-    header = header .. '===========================================================================================================================================\n'
-    footer = '===========================================================================================================================================\n'
 end
 
 T = $T * EnergyUnits.Kelvin.value
@@ -419,23 +407,6 @@ end
 for i in ipairs(dZ) do
     dZ[i] = dZ[i] / Z
 end
-
--- Print details about the initial Hamiltonian.
-io.write(header)
-for i, Psi in ipairs(Psis_i) do
-    io.write(string.format('%5d', i))
-    for j, Operator in ipairs(Operators) do
-        if j == 1 then
-            io.write(string.format('%12.6f', Complex.Re(Psi * Operator * Psi)))
-        elseif Operator == 'dZ' then
-            io.write(string.format('%12.2E', dZ[i]))
-        else
-            io.write(string.format('%10.4f', Complex.Re(Psi * Operator * Psi)))
-        end
-    end
-    io.write('\n')
-end
-io.write(footer)
 
 --------------------------------------------------------------------------------
 -- Define some helper function for the spectra calculation.
@@ -550,10 +521,6 @@ end
 -- List with the user selected spectra.
 spectra = {$spectra}
 
-if next(spectra) == nil then
-    return
-end
-
 -- Create two lists, one with the operators and the second with
 -- the indices of the operators required to calculate a given
 -- spectrum.
@@ -630,6 +597,48 @@ end
 --------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
+Sk = Chop(k[1] * Sx + k[2] * Sy + k[3] * Sz)
+Lk = Chop(k[1] * Lx + k[2] * Ly + k[3] * Lz)
+Jk = Chop(k[1] * Jx + k[2] * Jy + k[3] * Jz)
+Tk = Chop(k[1] * Tx + k[2] * Ty + k[3] * Tz)
+
+Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_3d, N_1s, N_3d, 'dZ'}
+header = 'Analysis of the initial Hamiltonian:\n'
+header = header .. '=================================================================================================================================\n'
+header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_1s>    <N_3d>          dZ\n'
+header = header .. '=================================================================================================================================\n'
+footer = '=================================================================================================================================\n'
+
+if H_3d_4p_hybridization == 1 then
+    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_3d, N_1s, N_3d, N_4p, 'dZ'}
+    header = 'Analysis of the initial Hamiltonian:\n'
+    header = header .. '===========================================================================================================================================\n'
+    header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_1s>    <N_3d>    <N_4p>          dZ\n'
+    header = header .. '===========================================================================================================================================\n'
+    footer = '===========================================================================================================================================\n'
+end
+
+io.write(header)
+for i, Psi in ipairs(Psis_i) do
+    io.write(string.format('%5d', i))
+    for j, Operator in ipairs(Operators) do
+        if j == 1 then
+            io.write(string.format('%12.6f', Complex.Re(Psi * Operator * Psi)))
+        elseif Operator == 'dZ' then
+            io.write(string.format('%12.2E', dZ[i]))
+        else
+            io.write(string.format('%10.4f', Complex.Re(Psi * Operator * Psi)))
+        end
+    end
+    io.write('\n')
+end
+io.write(footer)
+
+
+if next(spectra) == nil then
+    return
+end
+
 E_gs_i = Psis_i[1] * H_i * Psis_i[1]
 
 if CalculationRestrictions == nil then
@@ -656,7 +665,7 @@ if H_3d_4p_hybridization == 1 then
     G_1s_4p = CreateSpectra(H_f, T_1s_4p, Psis_i, {{'Emin', Emin}, {'Emax', Emax}, {'NE', NE}, {'Gamma', Gamma}, {'restrictions', CalculationRestrictions}, {'DenseBorder', DenseBorder}})
 
     -- Calculate the prefactors for the two spectra (see http://dx.doi.org/10.1103/PhysRevB.94.245115)
-    -- Note that in the publication Eedge1 and Iedge1 do not appear in the equations 9 and 10. Iedge1 is just
+    -- Note that in the publication Iedge1 doesn't appear in equations 9 and 10. Iedge1 is just
     -- a scale factor for the intensity of the edge, and in the publication is set to the experimental
     -- edge jump. Here it is set to make the quadrupolar prefactor 1. In this way the spectra with and without
     -- pd-hybridization can be more easily compared.
