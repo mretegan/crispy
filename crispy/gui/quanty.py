@@ -1726,6 +1726,10 @@ class QuantyDockWidget(QDockWidget):
         return index
 
     def selectedResultsChanged(self):
+        indexes = self.resultsView.selectedIndexes()
+        if len(indexes) > 1:
+            return
+
         index = self.getLastSelectedResultsModelIndex()
         if index is None:
             result = None
