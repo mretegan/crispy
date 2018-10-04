@@ -1457,6 +1457,7 @@ class QuantyDockWidget(QDockWidget):
             self.getPlotWidget().reset()
             return
         self.resultsModel.removeItems(indexes)
+        self.resultsView.reset()
 
     def removeAllResults(self):
         self.resultsModel.reset()
