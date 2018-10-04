@@ -139,7 +139,7 @@ QToolButton {
     <property name="title">
      <string>Tools</string>
     </property>
-    <addaction name="loadExperimentalSpectrumAction"/>
+    <addaction name="loadExperimentalDataAction"/>
    </widget>
    <addaction name="menuModules"/>
    <addaction name="menuTools"/>
@@ -209,9 +209,9 @@ QToolButton {
     <string>Save All Calculations As...</string>
    </property>
   </action>
-  <action name="loadExperimentalSpectrumAction">
+  <action name="loadExperimentalDataAction">
    <property name="text">
-    <string>Load Experimental Spectrum</string>
+    <string>Load Experimental Data</string>
    </property>
   </action>
  </widget>

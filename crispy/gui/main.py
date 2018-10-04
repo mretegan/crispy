@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '02/10/2018'
+__date__ = '04/10/2018'
 
 
 import os
@@ -60,8 +60,7 @@ class MainWindow(QMainWindow):
             'crispy:' + os.path.join('gui', 'uis', 'main.ui'))
         loadUi(uiPath, baseinstance=self, package='crispy.gui')
 
-        # Default elements of the main window.
-        self.setWindowTitle('Crispy - untitled')
+        # Main window.
         self.statusbar.showMessage('Ready')
 
         # Logger widget.
@@ -166,8 +165,8 @@ class MainWindow(QMainWindow):
         self.quantyModuleShowAction.triggered.connect(self.quantyModuleShow)
         self.quantyModuleHideAction.triggered.connect(self.quantyModuleHide)
 
-        self.loadExperimentalSpectrumAction.triggered.connect(
-            self.quantyDockWidget.loadExperimentalSpectrum)
+        self.loadExperimentalDataAction.triggered.connect(
+            self.quantyDockWidget.loadExperimentalData)
 
         # Preferences dialog.
         self.preferencesDialog = QuantyPreferencesDialog(parent=self)

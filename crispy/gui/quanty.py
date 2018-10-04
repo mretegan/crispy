@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '02/10/2018'
+__date__ = '04/10/2018'
 
 
 import copy
@@ -253,7 +253,7 @@ class QuantySpectra(object):
 
             rows, columns = data.shape
 
-            if calculation.experiment in ('XAS', 'XPS'):
+            if calculation.experiment in ['XAS', 'XPS']:
                 spectrum = Spectrum1D()
 
                 xMin = calculation.xMin
@@ -269,9 +269,9 @@ class QuantySpectra(object):
                 else:
                     spectrum.shortName = suffix.upper()
 
-                if calculation.experiment == 'XAS':
+                if calculation.experiment in ['XAS', ]:
                     spectrum.xLabel = 'Absorption Energy (eV)'
-                elif calculation.experiment == 'XPS':
+                elif calculation.experiment in ['XPS', ]:
                     spectrum.xLabel = 'Binding Energy (eV)'
                 spectrum.yLabel = 'Intensity (a.u.)'
 
@@ -309,7 +309,7 @@ class QuantySpectra(object):
         self.process()
 
 
-class ExperimentalResult(object):
+class ExperimentalData(object):
 
     def __init__(self, path=None):
         self.path = path
@@ -318,11 +318,17 @@ class ExperimentalResult(object):
         self.load()
 
     def load(self):
-        x, y = np.loadtxt(self.path, unpack=True)
-        self.spectrum = Spectrum1D()
-        self.spectrum.x = x
-        self.spectrum.y = y
-        self.spectrum.normalization('Area')
+        try:
+            x, y = np.loadtxt(self.path, unpack=True)
+        except ValueError:
+            self.spectra = None
+        else:
+            spectrum = Spectrum1D()
+            spectrum.x = x
+            spectrum.y = y
+            spectrum.normalization('None')
+            self.spectra = dict()
+            self.spectra['Expt'] = spectrum
 
 
 class QuantyCalculation(object):
@@ -361,12 +367,13 @@ class QuantyCalculation(object):
             ('zeta', 1.0),
             ('hamiltonianData', None),
             ('hamiltonianState', None),
-            ('baseName', 'untitled'),
-            ('spectrum', None),
+            ('baseName', None),
+            ('templateName', None),
             ('startingTime', None),
             ('endingTime', None),
             ('verbosity', None),
-            ('isChecked', True),
+            ('denseBorder', None),
+            ('isChecked', False),
             ('input', None),
             ('output', None),
         ]
@@ -378,44 +385,42 @@ class QuantyCalculation(object):
         'crispy:' + os.path.join('modules', 'quanty', 'parameters',
                                  'parameters.json.gz'))
 
-    with gzip.open(path, 'rb') as p:
-        parameters = json.loads(
-            p.read().decode('utf-8'), object_pairs_hook=odict)
+    with gzip.open(path, 'rb') as _parametersFile:
+        _parameters = json.loads(
+            _parametersFile.read().decode('utf-8'), object_pairs_hook=odict)
 
     def __init__(self, **kwargs):
         self.__dict__.update(self._defaults)
         self.__dict__.update(kwargs)
 
-        parameters = self.parameters
-
-        branch = parameters['elements']
-        self.elements = list(branch)
-        if self.element not in self.elements:
-            self.element = self.elements[0]
+        branch = self._parameters['elements']
+        self._elements = list(branch)
+        if self.element not in self._elements:
+            self.element = self._elements[0]
 
         branch = branch[self.element]['charges']
-        self.charges = list(branch)
-        if self.charge not in self.charges:
-            self.charge = self.charges[0]
+        self._charges = list(branch)
+        if self.charge not in self._charges:
+            self.charge = self._charges[0]
 
         branch = branch[self.charge]['symmetries']
-        self.symmetries = list(branch)
-        if self.symmetry not in self.symmetries:
-            self.symmetry = self.symmetries[0]
+        self._symmetries = list(branch)
+        if self.symmetry not in self._symmetries:
+            self.symmetry = self._symmetries[0]
 
         branch = branch[self.symmetry]['experiments']
-        self.experiments = list(branch)
-        if self.experiment not in self.experiments:
-            self.experiment = self.experiments[0]
+        self._experiments = list(branch)
+        if self.experiment not in self._experiments:
+            self.experiment = self._experiments[0]
 
         branch = branch[self.experiment]['edges']
-        self.edges = list(branch)
-        if self.edge not in self.edges:
-            self.edge = self.edges[0]
+        self._edges = list(branch)
+        if self.edge not in self._edges:
+            self.edge = self._edges[0]
 
         branch = branch[self.edge]
 
-        if self.experiment == 'RIXS':
+        if self.experiment in ['RIXS', ]:
             shortEdge = self.edge[-5:-1]
         else:
             shortEdge = self.edge[-3:-1]
@@ -441,7 +446,7 @@ class QuantyCalculation(object):
         self.xLorentzian = branch['axes'][0][5]
         self.xGaussian = branch['axes'][0][6]
 
-        if self.experiment == 'RIXS':
+        if self.experiment in ['RIXS', ]:
             self.yLabel = branch['axes'][1][0]
             self.yMin = branch['axes'][1][1]
             self.yMax = branch['axes'][1][2]
@@ -451,13 +456,12 @@ class QuantyCalculation(object):
             self.yGaussian = branch['axes'][1][6]
 
         self.spectra = QuantySpectra()
-
-        if self.experiment == 'XAS':
+        if self.experiment in ['XAS', ]:
             self.spectra.toCalculate = [
                 'Isotropic', 'Circular Dichroism', 'Linear Dichroism']
         else:
-            self.spectra.toCalculate = ['Isotropic']
-        self.spectra.toCalculateChecked = ['Isotropic']
+            self.spectra.toCalculate = ['Isotropic', ]
+        self.spectra.toCalculateChecked = ['Isotropic', ]
 
         if self.hamiltonianData is None:
             self.hamiltonianData = odict()
@@ -467,7 +471,7 @@ class QuantyCalculation(object):
 
         self.fixedTermsParameters = odict()
 
-        branch = parameters['elements'][self.element]['charges'][self.charge]
+        branch = self._parameters['elements'][self.element]['charges'][self.charge] # noqa
 
         for label, configuration in self.configurations:
             label = '{} Hamiltonian'.format(label)
@@ -520,8 +524,6 @@ class QuantyCalculation(object):
 
         replacements = odict()
 
-        # TODO: Make this an object attribute when saving the .pkl file
-        # doesn't brake compatibility.
         replacements['$DenseBorder'] = self.denseBorder
         replacements['$Verbosity'] = self.verbosity
         replacements['$NConfigurations'] = self.nConfigurations
@@ -568,7 +570,7 @@ class QuantyCalculation(object):
         replacements['$spectra'] = ', '.join(
             '\'{}\''.format(p) for p in self.spectra.toCalculateChecked)
 
-        if self.experiment == 'RIXS':
+        if self.experiment in ['RIXS', ]:
             # The Lorentzian broadening along the incident axis cannot be
             # changed in the interface, and must therefore be set to the
             # final value before the start of the calculation.
@@ -655,107 +657,64 @@ class QuantyDockWidget(QDockWidget):
             'crispy:' + os.path.join('gui', 'uis', 'quanty', 'main.ui'))
         loadUi(path, baseinstance=self, package='crispy.gui')
 
+        # Load the settings from file.
         config = Config()
         self.settings = config.read()
 
-        self.calculation = QuantyCalculation()
+        # Set the state object
+        self.state = QuantyCalculation()
         self.populateWidget()
         self.activateWidget()
 
         self.timeout = 4000
-
         self.hamiltonianSplitter.setSizes((150, 300, 10))
-
-    def activateWidget(self):
-        self.elementComboBox.currentTextChanged.connect(self.resetCalculation)
-        self.chargeComboBox.currentTextChanged.connect(self.resetCalculation)
-        self.symmetryComboBox.currentTextChanged.connect(self.resetCalculation)
-        self.experimentComboBox.currentTextChanged.connect(
-            self.resetCalculation)
-        self.edgeComboBox.currentTextChanged.connect(self.resetCalculation)
-
-        self.temperatureLineEdit.editingFinished.connect(
-            self.updateTemperature)
-        self.magneticFieldLineEdit.editingFinished.connect(
-            self.updateMagneticField)
-
-        self.xMinLineEdit.editingFinished.connect(self.updateXMin)
-        self.xMaxLineEdit.editingFinished.connect(self.updateXMax)
-        self.xNPointsLineEdit.editingFinished.connect(self.updateXNPoints)
-        self.xLorentzianLineEdit.editingFinished.connect(
-            self.updateXLorentzian)
-        self.xGaussianLineEdit.editingFinished.connect(self.updateXGaussian)
-        self.k1LineEdit.editingFinished.connect(self.updateIncidentWaveVector)
-        self.eps11LineEdit.editingFinished.connect(
-            self.updateIncidentPolarizationVectors)
-
-        self.yMinLineEdit.editingFinished.connect(self.updateYMin)
-        self.yMaxLineEdit.editingFinished.connect(self.updateYMax)
-        self.yNPointsLineEdit.editingFinished.connect(self.updateYNPoints)
-        self.yLorentzianLineEdit.editingFinished.connect(
-            self.updateYLorentzian)
-        self.yGaussianLineEdit.editingFinished.connect(self.updateYGaussian)
-
-        self.fkLineEdit.editingFinished.connect(self.updateScaleFactors)
-        self.gkLineEdit.editingFinished.connect(self.updateScaleFactors)
-        self.zetaLineEdit.editingFinished.connect(self.updateScaleFactors)
-
-        self.syncParametersCheckBox.toggled.connect(self.updateSyncParameters)
-
-        self.nPsisAutoCheckBox.toggled.connect(self.updateNPsisAuto)
-        self.nPsisLineEdit.editingFinished.connect(self.updateNPsis)
-        self.nConfigurationsLineEdit.editingFinished.connect(
-            self.updateConfigurations)
-
-        self.saveInputAsPushButton.clicked.connect(self.saveInputAs)
-        self.calculationPushButton.clicked.connect(self.runCalculation)
 
     def populateWidget(self):
         """
-        Populate the widget using data stored in the calculation
+        Populate the widget using data stored in the state
         object. The order in which the individual widgets are populated
-        follows the way they are arranged.
+        follows their arrangment.
 
         The models are recreated every time the function is called.
         This might seem to be an overkill, but in practice it is very fast.
         Don't try to move the model creation outside this function; is not
         worth the effort, and there is nothing to gain from it.
         """
-        c = self.calculation
+        self.elementComboBox.setItems(self.state._elements, self.state.element)
+        self.chargeComboBox.setItems(self.state._charges, self.state.charge)
+        self.symmetryComboBox.setItems(
+            self.state._symmetries, self.state.symmetry)
+        self.experimentComboBox.setItems(
+            self.state._experiments, self.state.experiment)
+        self.edgeComboBox.setItems(self.state._edges, self.state.edge)
 
-        self.elementComboBox.setItems(c.elements, c.element)
-        self.chargeComboBox.setItems(c.charges, c.charge)
-        self.symmetryComboBox.setItems(c.symmetries, c.symmetry)
-        self.experimentComboBox.setItems(c.experiments, c.experiment)
-        self.edgeComboBox.setItems(c.edges, c.edge)
+        self.temperatureLineEdit.setValue(self.state.temperature)
+        self.magneticFieldLineEdit.setValue(self.state.magneticField)
 
-        self.temperatureLineEdit.setValue(c.temperature)
-        self.magneticFieldLineEdit.setValue(c.magneticField)
+        self.axesTabWidget.setTabText(0, str(self.state.xLabel))
+        self.xMinLineEdit.setValue(self.state.xMin)
+        self.xMaxLineEdit.setValue(self.state.xMax)
+        self.xNPointsLineEdit.setValue(self.state.xNPoints)
+        self.xLorentzianLineEdit.setList(self.state.xLorentzian)
+        self.xGaussianLineEdit.setValue(self.state.xGaussian)
 
-        self.energiesTabWidget.setTabText(0, str(c.xLabel))
-        self.xMinLineEdit.setValue(c.xMin)
-        self.xMaxLineEdit.setValue(c.xMax)
-        self.xNPointsLineEdit.setValue(c.xNPoints)
-        self.xLorentzianLineEdit.setList(c.xLorentzian)
-        self.xGaussianLineEdit.setValue(c.xGaussian)
+        self.k1LineEdit.setVector(self.state.k1)
+        self.eps11LineEdit.setVector(self.state.eps11)
+        self.eps12LineEdit.setVector(self.state.eps12)
 
-        self.k1LineEdit.setVector(c.k1)
-        self.eps11LineEdit.setVector(c.eps11)
-        self.eps12LineEdit.setVector(c.eps12)
-
-        if c.experiment == 'RIXS':
-            if self.energiesTabWidget.count() == 1:
-                tab = self.energiesTabWidget.findChild(QWidget, 'yTab')
-                self.energiesTabWidget.addTab(tab, tab.objectName())
-                self.energiesTabWidget.setTabText(1, c.yLabel)
-            self.yMinLineEdit.setValue(c.yMin)
-            self.yMaxLineEdit.setValue(c.yMax)
-            self.yNPointsLineEdit.setValue(c.yNPoints)
-            self.yLorentzianLineEdit.setList(c.yLorentzian)
-            self.yGaussianLineEdit.setValue(c.yGaussian)
-            self.k2LineEdit.setVector(c.k2)
-            self.eps21LineEdit.setVector(c.eps21)
-            self.eps22LineEdit.setVector(c.eps22)
+        if self.state.experiment in ['RIXS', ]:
+            if self.axesTabWidget.count() == 1:
+                tab = self.axesTabWidget.findChild(QWidget, 'yTab')
+                self.axesTabWidget.addTab(tab, tab.objectName())
+                self.axesTabWidget.setTabText(1, self.state.yLabel)
+            self.yMinLineEdit.setValue(self.state.yMin)
+            self.yMaxLineEdit.setValue(self.state.yMax)
+            self.yNPointsLineEdit.setValue(self.state.yNPoints)
+            self.yLorentzianLineEdit.setList(self.state.yLorentzian)
+            self.yGaussianLineEdit.setValue(self.state.yGaussian)
+            self.k2LineEdit.setVector(self.state.k2)
+            self.eps21LineEdit.setVector(self.state.eps21)
+            self.eps22LineEdit.setVector(self.state.eps22)
             text = self.eps11Label.text()
             text = re.sub('>[vσ]', '>σ', text)
             self.eps11Label.setText(text)
@@ -763,7 +722,7 @@ class QuantyDockWidget(QDockWidget):
             text = re.sub('>[hπ]', '>π', text)
             self.eps12Label.setText(text)
         else:
-            self.energiesTabWidget.removeTab(1)
+            self.axesTabWidget.removeTab(1)
             text = self.eps11Label.text()
             text = re.sub('>[vσ]', '>v', text)
             self.eps11Label.setText(text)
@@ -774,21 +733,22 @@ class QuantyDockWidget(QDockWidget):
         # Create the spectra selection model.
         self.spectraModel = SpectraModel(parent=self)
         self.spectraModel.setModelData(
-            c.spectra.toCalculate, c.spectra.toCalculateChecked)
+            self.state.spectra.toCalculate,
+            self.state.spectra.toCalculateChecked)
         self.spectraModel.checkStateChanged.connect(
             self.updateSpectraCheckState)
         self.spectraListView.setModel(self.spectraModel)
         self.spectraListView.selectionModel().setCurrentIndex(
             self.spectraModel.index(0, 0), QItemSelectionModel.Select)
 
-        self.fkLineEdit.setValue(c.fk)
-        self.gkLineEdit.setValue(c.gk)
-        self.zetaLineEdit.setValue(c.zeta)
+        self.fkLineEdit.setValue(self.state.fk)
+        self.gkLineEdit.setValue(self.state.gk)
+        self.zetaLineEdit.setValue(self.state.zeta)
 
         # Create the Hamiltonian model.
         self.hamiltonianModel = HamiltonianModel(parent=self)
-        self.hamiltonianModel.setModelData(c.hamiltonianData)
-        self.hamiltonianModel.setNodesCheckState(c.hamiltonianState)
+        self.hamiltonianModel.setModelData(self.state.hamiltonianData)
+        self.hamiltonianModel.setNodesCheckState(self.state.hamiltonianState)
         if self.syncParametersCheckBox.isChecked():
             self.hamiltonianModel.setSyncState(True)
         else:
@@ -812,14 +772,14 @@ class QuantyDockWidget(QDockWidget):
         self.hamiltonianParametersView.setRootIndex(
             self.hamiltonianTermsView.currentIndex())
 
-        self.nPsisLineEdit.setValue(c.nPsis)
-        self.nPsisAutoCheckBox.setChecked(c.nPsisAuto)
-        self.nConfigurationsLineEdit.setValue(c.nConfigurations)
+        self.nPsisLineEdit.setValue(self.state.nPsis)
+        self.nPsisAutoCheckBox.setChecked(self.state.nPsisAuto)
+        self.nConfigurationsLineEdit.setValue(self.state.nConfigurations)
 
         self.nConfigurationsLineEdit.setEnabled(False)
-        termName = '{}-Ligands Hybridization'.format(c.block)
-        if termName in c.hamiltonianData:
-            termState = c.hamiltonianState[termName]
+        termName = '{}-Ligands Hybridization'.format(self.state.block)
+        if termName in self.state.hamiltonianData:
+            termState = self.state.hamiltonianState[termName]
             if termState != 0:
                 self.nConfigurationsLineEdit.setEnabled(True)
 
@@ -836,7 +796,7 @@ class QuantyDockWidget(QDockWidget):
             # Assign the results model to the results view.
             self.resultsView.setModel(self.resultsModel)
             self.resultsView.selectionModel().selectionChanged.connect(
-                self.updateWidget)
+                self.selectedResultsChanged)
             self.resultsView.resizeColumnsToContents()
             self.resultsView.horizontalHeader().setSectionsMovable(False)
             self.resultsView.horizontalHeader().setSectionsClickable(False)
@@ -850,9 +810,54 @@ class QuantyDockWidget(QDockWidget):
 
         if not hasattr(self, 'resultDetailsDialog'):
             self.resultDetailsDialog = QuantyResultDetailsDialog(parent=self)
-        # self.resultDetailsDialog.calculation = c
 
-    def enableWidget(self, flag=True):
+        self.updateMainWindowTitle(self.state.baseName)
+
+    def activateWidget(self):
+        self.elementComboBox.currentTextChanged.connect(self.resetState)
+        self.chargeComboBox.currentTextChanged.connect(self.resetState)
+        self.symmetryComboBox.currentTextChanged.connect(self.resetState)
+        self.experimentComboBox.currentTextChanged.connect(
+            self.resetState)
+        self.edgeComboBox.currentTextChanged.connect(self.resetState)
+
+        self.temperatureLineEdit.returnPressed.connect(
+            self.updateTemperature)
+        self.magneticFieldLineEdit.returnPressed.connect(
+            self.updateMagneticField)
+
+        self.xMinLineEdit.returnPressed.connect(self.updateXMin)
+        self.xMaxLineEdit.returnPressed.connect(self.updateXMax)
+        self.xNPointsLineEdit.returnPressed.connect(self.updateXNPoints)
+        self.xLorentzianLineEdit.returnPressed.connect(
+            self.updateXLorentzian)
+        self.xGaussianLineEdit.returnPressed.connect(self.updateXGaussian)
+        self.k1LineEdit.returnPressed.connect(self.updateIncidentWaveVector)
+        self.eps11LineEdit.returnPressed.connect(
+            self.updateIncidentPolarizationVectors)
+
+        self.yMinLineEdit.returnPressed.connect(self.updateYMin)
+        self.yMaxLineEdit.returnPressed.connect(self.updateYMax)
+        self.yNPointsLineEdit.returnPressed.connect(self.updateYNPoints)
+        self.yLorentzianLineEdit.returnPressed.connect(
+            self.updateYLorentzian)
+        self.yGaussianLineEdit.returnPressed.connect(self.updateYGaussian)
+
+        self.fkLineEdit.returnPressed.connect(self.updateScaleFactors)
+        self.gkLineEdit.returnPressed.connect(self.updateScaleFactors)
+        self.zetaLineEdit.returnPressed.connect(self.updateScaleFactors)
+
+        self.syncParametersCheckBox.toggled.connect(self.updateSyncParameters)
+
+        self.nPsisAutoCheckBox.toggled.connect(self.updateNPsisAuto)
+        self.nPsisLineEdit.returnPressed.connect(self.updateNPsis)
+        self.nConfigurationsLineEdit.returnPressed.connect(
+            self.updateConfigurations)
+
+        self.saveInputAsPushButton.clicked.connect(self.saveInputAs)
+        self.calculationPushButton.clicked.connect(self.runCalculation)
+
+    def enableWidget(self, flag=True, result=None):
         self.elementComboBox.setEnabled(flag)
         self.chargeComboBox.setEnabled(flag)
         self.symmetryComboBox.setEnabled(flag)
@@ -876,6 +881,8 @@ class QuantyDockWidget(QDockWidget):
         self.yLorentzianLineEdit.setEnabled(flag)
         self.yGaussianLineEdit.setEnabled(flag)
 
+        self.spectraListView.setEnabled(flag)
+
         self.fkLineEdit.setEnabled(flag)
         self.gkLineEdit.setEnabled(flag)
         self.zetaLineEdit.setEnabled(flag)
@@ -895,7 +902,15 @@ class QuantyDockWidget(QDockWidget):
         self.resultsView.setEnabled(flag)
 
         self.saveInputAsPushButton.setEnabled(flag)
-        self.resultDetailsDialog.enableWidget(flag)
+
+        if result is None or isinstance(result, QuantyCalculation):
+            self.resultsView.setEnabled(flag)
+            self.calculationPushButton.setEnabled(True)
+            self.resultDetailsDialog.enableWidget(flag)
+        else:
+            self.calculationPushButton.setEnabled(flag)
+            self.resultsView.setEnabled(True)
+            self.resultDetailsDialog.enableWidget(False)
 
     def updateTemperature(self):
         temperature = self.temperatureLineEdit.getValue()
@@ -903,7 +918,7 @@ class QuantyDockWidget(QDockWidget):
         if temperature < 0:
             message = 'The temperature cannot be negative.'
             self.getStatusBar().showMessage(message, self.timeout)
-            self.temperatureLineEdit.setValue(self.calculation.temperature)
+            self.temperatureLineEdit.setValue(self.state.temperature)
             return
         elif temperature == 0:
             self.nPsisAutoCheckBox.setChecked(False)
@@ -911,7 +926,7 @@ class QuantyDockWidget(QDockWidget):
             self.nPsisLineEdit.setValue(1)
             self.updateNPsis()
 
-        self.calculation.temperature = temperature
+        self.state.temperature = temperature
 
     def updateMagneticField(self):
         magneticField = self.magneticFieldLineEdit.getValue()
@@ -919,10 +934,10 @@ class QuantyDockWidget(QDockWidget):
         TESLA_TO_EV = 5.788e-05
 
         # Normalize the current incident vector.
-        k1 = np.array(self.calculation.k1)
+        k1 = np.array(self.state.k1)
         k1 = k1 / np.linalg.norm(k1)
 
-        configurations = self.calculation.hamiltonianData['Magnetic Field']
+        configurations = self.state.hamiltonianData['Magnetic Field']
         for configuration in configurations:
             parameters = configurations[configuration]
             for i, parameter in enumerate(parameters):
@@ -930,50 +945,50 @@ class QuantyDockWidget(QDockWidget):
                 if abs(value) == 0.0:
                         value = 0.0
                 configurations[configuration][parameter] = value
-        self.hamiltonianModel.updateModelData(self.calculation.hamiltonianData)
+        self.hamiltonianModel.updateModelData(self.state.hamiltonianData)
 
-        self.calculation.magneticField = magneticField
+        self.state.magneticField = magneticField
 
     def updateXMin(self):
         xMin = self.xMinLineEdit.getValue()
 
-        if xMin > self.calculation.xMax:
+        if xMin > self.state.xMax:
             message = ('The lower energy limit cannot be larger than '
                        'the upper limit.')
             self.getStatusBar().showMessage(message, self.timeout)
-            self.xMinLineEdit.setValue(self.calculation.xMin)
+            self.xMinLineEdit.setValue(self.state.xMin)
             return
 
-        self.calculation.xMin = xMin
+        self.state.xMin = xMin
 
     def updateXMax(self):
         xMax = self.xMaxLineEdit.getValue()
 
-        if xMax < self.calculation.xMin:
+        if xMax < self.state.xMin:
             message = ('The upper energy limit cannot be smaller than '
                        'the lower limit.')
             self.getStatusBar().showMessage(message, self.timeout)
-            self.xMaxLineEdit.setValue(self.calculation.xMax)
+            self.xMaxLineEdit.setValue(self.state.xMax)
             return
 
-        self.calculation.xMax = xMax
+        self.state.xMax = xMax
 
     def updateXNPoints(self):
         xNPoints = self.xNPointsLineEdit.getValue()
 
-        xMin = self.calculation.xMin
-        xMax = self.calculation.xMax
-        xLorentzianMin = float(self.calculation.xLorentzian[0])
+        xMin = self.state.xMin
+        xMax = self.state.xMax
+        xLorentzianMin = float(self.state.xLorentzian[0])
 
         xNPointsMin = int(np.floor((xMax - xMin) / xLorentzianMin))
         if xNPoints < xNPointsMin:
             message = ('The number of points must be greater than '
                        '{}.'.format(xNPointsMin))
             self.getStatusBar().showMessage(message, self.timeout)
-            self.xNPointsLineEdit.setValue(self.calculation.xNPoints)
+            self.xNPointsLineEdit.setValue(self.state.xNPoints)
             return
 
-        self.calculation.xNPoints = xNPoints
+        self.state.xNPoints = xNPoints
 
     def updateXLorentzian(self):
         try:
@@ -981,14 +996,14 @@ class QuantyDockWidget(QDockWidget):
         except ValueError:
             message = 'Invalid data for the Lorentzian brodening.'
             self.getStatusBar().showMessage(message, self.timeout)
-            self.xLorentzianLineEdit.setList(self.calculation.xLorentzian)
+            self.xLorentzianLineEdit.setList(self.state.xLorentzian)
             return
 
         # Do some validation of the input value.
         if len(xLorentzian) > 3:
             message = 'The broadening can have at most three elements.'
             self.getStatusBar().showMessage(message, self.timeout)
-            self.xLorentzianLineEdit.setList(self.calculation.xLorentzian)
+            self.xLorentzianLineEdit.setList(self.state.xLorentzian)
             return
 
         try:
@@ -1000,7 +1015,7 @@ class QuantyDockWidget(QDockWidget):
                 message = 'The broadening cannot be smaller than 0.1.'
                 self.getStatusBar().showMessage(message, self.timeout)
                 self.xLorentzianLineEdit.setList(
-                    self.calculation.xLorentzian)
+                    self.state.xLorentzian)
                 return
 
         try:
@@ -1012,25 +1027,25 @@ class QuantyDockWidget(QDockWidget):
                 message = 'The broadening cannot be smaller than 0.1.'
                 self.getStatusBar().showMessage(message, self.timeout)
                 self.xLorentzianLineEdit.setList(
-                    self.calculation.xLorentzian)
+                    self.state.xLorentzian)
 
         try:
             xLorentzianPivotEnergy = float(xLorentzian[2])
         except IndexError:
             pass
         else:
-            xMin = self.calculation.xMin
-            xMax = self.calculation.xMax
+            xMin = self.state.xMin
+            xMax = self.state.xMax
 
             if not (xMin < xLorentzianPivotEnergy < xMax):
                 message = ('The transition point must lie between the upper '
                            'and lower energy limits.')
                 self.getStatusBar().showMessage(message, self.timeout)
                 self.xLorentzianLineEdit.setList(
-                    self.calculation.xLorentzian)
+                    self.state.xLorentzian)
                 return
 
-        self.calculation.xLorentzian = xLorentzian
+        self.state.xLorentzian = xLorentzian
 
     def updateXGaussian(self):
         xGaussian = self.xGaussianLineEdit.getValue()
@@ -1038,10 +1053,10 @@ class QuantyDockWidget(QDockWidget):
         if xGaussian < 0:
             message = 'The broadening cannot be negative.'
             self.getStatusBar().showMessage(message, self.timeout)
-            self.xGaussianLineEdit.setValue(self.calculation.xGaussian)
+            self.xGaussianLineEdit.setValue(self.state.xGaussian)
             return
 
-        self.calculation.xGaussian = xGaussian
+        self.state.xGaussian = xGaussian
 
     def updateIncidentWaveVector(self):
         try:
@@ -1049,17 +1064,17 @@ class QuantyDockWidget(QDockWidget):
         except ValueError:
             message = 'Invalid data for the wave vector.'
             self.getStatusBar().showMessage(message, self.timeout)
-            self.k1LineEdit.setVector(self.calculation.k1)
+            self.k1LineEdit.setVector(self.state.k1)
             return
 
         if np.all(np.array(k1) == 0):
             message = 'The wave vector cannot be null.'
             self.getStatusBar().showMessage(message, self.timeout)
-            self.k1LineEdit.setVector(self.calculation.k1)
+            self.k1LineEdit.setVector(self.state.k1)
             return
 
         # The k1 value should be fine; save it.
-        self.calculation.k1 = k1
+        self.state.k1 = k1
 
         # The polarization vector must be correct.
         eps11 = self.eps11LineEdit.getVector()
@@ -1073,7 +1088,7 @@ class QuantyDockWidget(QDockWidget):
                 eps11 = (-k1[2] - k1[1], k1[0], k1[0])
 
         self.eps11LineEdit.setVector(eps11)
-        self.calculation.eps11 = eps11
+        self.state.eps11 = eps11
 
         # Generate a second, perpendicular, polarization vector to the plane
         # defined by the wave vector and the first polarization vector.
@@ -1081,9 +1096,10 @@ class QuantyDockWidget(QDockWidget):
         eps12 = eps12.tolist()
 
         self.eps12LineEdit.setVector(eps12)
-        self.calculation.eps12 = eps12
+        self.state.eps12 = eps12
 
-        # self.updateMagneticField()
+        # Update the magnetic field.
+        self.updateMagneticField()
 
     def updateIncidentPolarizationVectors(self):
         try:
@@ -1091,24 +1107,24 @@ class QuantyDockWidget(QDockWidget):
         except ValueError:
             message = 'Invalid data for the polarization vector.'
             self.getStatusBar().showMessage(message, self.timeout)
-            self.eps11LineEdit.setVector(self.calculation.eps11)
+            self.eps11LineEdit.setVector(self.state.eps11)
             return
 
         if np.all(np.array(eps11) == 0):
             message = 'The polarization vector cannot be null.'
             self.getStatusBar().showMessage(message, self.timeout)
-            self.eps11LineEdit.setVector(self.calculation.eps11)
+            self.eps11LineEdit.setVector(self.state.eps11)
             return
 
-        k1 = self.calculation.k1
+        k1 = self.state.k1
         if np.dot(np.array(k1), np.array(eps11)) != 0:
             message = ('The wave and polarization vectors need to be '
                        'perpendicular.')
             self.getStatusBar().showMessage(message, self.timeout)
-            self.eps11LineEdit.setVector(self.calculation.eps11)
+            self.eps11LineEdit.setVector(self.state.eps11)
             return
 
-        self.calculation.eps11 = eps11
+        self.state.eps11 = eps11
 
         # Generate a second, perpendicular, polarization vector to the plane
         # defined by the wave vector and the first polarization vector.
@@ -1116,48 +1132,48 @@ class QuantyDockWidget(QDockWidget):
         eps12 = eps12.tolist()
 
         self.eps12LineEdit.setVector(eps12)
-        self.calculation.eps12 = eps12
+        self.state.eps12 = eps12
 
     def updateYMin(self):
         yMin = self.yMinLineEdit.getValue()
 
-        if yMin > self.calculation.yMax:
+        if yMin > self.state.yMax:
             message = ('The lower energy limit cannot be larger than '
                        'the upper limit.')
             self.getStatusBar().showMessage(message, self.timeout)
-            self.yMinLineEdit.setValue(self.calculation.yMin)
+            self.yMinLineEdit.setValue(self.state.yMin)
             return
 
-        self.calculation.yMin = yMin
+        self.state.yMin = yMin
 
     def updateYMax(self):
         yMax = self.yMaxLineEdit.getValue()
 
-        if yMax < self.calculation.yMin:
+        if yMax < self.state.yMin:
             message = ('The upper energy limit cannot be smaller than '
                        'the lower limit.')
             self.getStatusBar().showMessage(message, self.timeout)
-            self.yMaxLineEdit.setValue(self.calculation.yMax)
+            self.yMaxLineEdit.setValue(self.state.yMax)
             return
 
-        self.calculation.yMax = yMax
+        self.state.yMax = yMax
 
     def updateYNPoints(self):
         yNPoints = self.yNPointsLineEdit.getValue()
 
-        yMin = self.calculation.yMin
-        yMax = self.calculation.yMax
-        yLorentzianMin = float(self.calculation.yLorentzian[0])
+        yMin = self.state.yMin
+        yMax = self.state.yMax
+        yLorentzianMin = float(self.state.yLorentzian[0])
 
         yNPointsMin = int(np.floor((yMax - yMin) / yLorentzianMin))
         if yNPoints < yNPointsMin:
             message = ('The number of points must be greater than '
                        '{}.'.format(yNPointsMin))
             self.getStatusBar().showMessage(message, self.timeout)
-            self.yNPointsLineEdit.setValue(self.calculation.yNPoints)
+            self.yNPointsLineEdit.setValue(self.state.yNPoints)
             return
 
-        self.calculation.yNPoints = yNPoints
+        self.state.yNPoints = yNPoints
 
     def updateYLorentzian(self):
         try:
@@ -1165,14 +1181,14 @@ class QuantyDockWidget(QDockWidget):
         except ValueError:
             message = 'Invalid data for the Lorentzian brodening.'
             self.getStatusBar().showMessage(message, self.timeout)
-            self.yLorentzianLineEdit.setList(self.calculation.yLorentzian)
+            self.yLorentzianLineEdit.setList(self.state.yLorentzian)
             return
 
         # Do some validation of the input value.
         if len(yLorentzian) > 3:
             message = 'The broadening can have at most three elements.'
             self.getStatusBar().showMessage(message, self.timeout)
-            self.yLorentzianLineEdit.setList(self.calculation.yLorentzian)
+            self.yLorentzianLineEdit.setList(self.state.yLorentzian)
             return
 
         try:
@@ -1184,7 +1200,7 @@ class QuantyDockWidget(QDockWidget):
                 message = 'The broadening cannot be smaller than 0.1.'
                 self.getStatusBar().showMessage(message, self.timeout)
                 self.yLorentzianLineEdit.setList(
-                    self.calculation.yLorentzian)
+                    self.state.yLorentzian)
                 return
 
         try:
@@ -1196,25 +1212,25 @@ class QuantyDockWidget(QDockWidget):
                 message = 'The broadening cannot be smaller than 0.1.'
                 self.getStatusBar().showMessage(message, self.timeout)
                 self.yLorentzianLineEdit.setList(
-                    self.calculation.yLorentzian)
+                    self.state.yLorentzian)
 
         try:
             yLorentzianPivotEnergy = float(yLorentzian[2])
         except IndexError:
             pass
         else:
-            yMin = self.calculation.yMin
-            yMax = self.calculation.yMax
+            yMin = self.state.yMin
+            yMax = self.state.yMax
 
             if not (yMin < yLorentzianPivotEnergy < yMax):
                 message = ('The transition point must lie between the upper '
                            'and lower energy limits.')
                 self.getStatusBar().showMessage(message, self.timeout)
                 self.yLorentzianLineEdit.setList(
-                    self.calculation.yLorentzian)
+                    self.state.yLorentzian)
                 return
 
-        self.calculation.yLorentzian = list(map(float, yLorentzian))
+        self.state.yLorentzian = list(map(float, yLorentzian))
 
     def updateYGaussian(self):
         yGaussian = self.yGaussianLineEdit.getValue()
@@ -1222,13 +1238,13 @@ class QuantyDockWidget(QDockWidget):
         if yGaussian < 0:
             message = 'The broadening cannot be negative.'
             self.getStatusBar().showMessage(message, self.timeout)
-            self.yGaussianLineEdit.setValue(self.calculation.yGaussian)
+            self.yGaussianLineEdit.setValue(self.state.yGaussian)
             return
 
-        self.calculation.yGaussian = yGaussian
+        self.state.yGaussian = yGaussian
 
     def updateSpectraCheckState(self, checkedItems):
-        self.calculation.spectra.toCalculateChecked = checkedItems
+        self.state.spectra.toCalculateChecked = checkedItems
 
     def updateScaleFactors(self):
         fk = self.fkLineEdit.getValue()
@@ -1238,18 +1254,18 @@ class QuantyDockWidget(QDockWidget):
         if fk < 0 or gk < 0 or zeta < 0:
             message = 'The scale factors cannot be negative.'
             self.getStatusBar().showMessage(message, self.timeout)
-            self.fkLineEdit.setValue(self.calculation.fk)
-            self.gkLineEdit.setValue(self.calculation.gk)
-            self.zetaLineEdit.setValue(self.calculation.zeta)
+            self.fkLineEdit.setValue(self.state.fk)
+            self.gkLineEdit.setValue(self.state.gk)
+            self.zetaLineEdit.setValue(self.state.zeta)
             return
 
-        self.calculation.fk = fk
-        self.calculation.gk = gk
-        self.calculation.zeta = zeta
+        self.state.fk = fk
+        self.state.gk = gk
+        self.state.zeta = zeta
 
         # TODO: This should be already updated to the most recent data.
-        # self.calculation.hamiltonianData = self.hamiltonianModel.getModelData() # noqa
-        terms = self.calculation.hamiltonianData
+        # self.state.hamiltonianData = self.hamiltonianModel.getModelData()
+        terms = self.state.hamiltonianData
 
         for term in terms:
             if not ('Atomic' in term or 'Hybridization' in term):
@@ -1269,7 +1285,7 @@ class QuantyDockWidget(QDockWidget):
                         terms[term][configuration][parameter] = [value, gk]
                     elif parameter.startswith('ζ'):
                         terms[term][configuration][parameter] = [value, zeta]
-        self.hamiltonianModel.updateModelData(self.calculation.hamiltonianData)
+        self.hamiltonianModel.updateModelData(self.state.hamiltonianData)
         # I have no idea why this is needed. Both views should update after
         # the above function call.
         self.hamiltonianTermsView.viewport().repaint()
@@ -1279,12 +1295,12 @@ class QuantyDockWidget(QDockWidget):
         nPsisAuto = int(self.nPsisAutoCheckBox.isChecked())
 
         if nPsisAuto:
-            self.nPsisLineEdit.setValue(self.calculation.nPsisMax)
+            self.nPsisLineEdit.setValue(self.state.nPsisMax)
             self.nPsisLineEdit.setEnabled(False)
         else:
             self.nPsisLineEdit.setEnabled(True)
 
-        self.calculation.nPsisAuto = nPsisAuto
+        self.state.nPsisAuto = nPsisAuto
 
     def updateNPsis(self):
         nPsis = self.nPsisLineEdit.getValue()
@@ -1292,29 +1308,29 @@ class QuantyDockWidget(QDockWidget):
         if nPsis <= 0:
             message = 'The number of states must be larger than zero.'
             self.getStatusBar().showMessage(message, self.timeout)
-            self.nPsisLineEdit.setValue(self.calculation.nPsis)
+            self.nPsisLineEdit.setValue(self.state.nPsis)
             return
 
-        if nPsis > self.calculation.nPsisMax:
+        if nPsis > self.state.nPsisMax:
             message = 'The selected number of states exceeds the maximum.'
             self.getStatusBar().showMessage(message, self.timeout)
-            self.nPsisLineEdit.setValue(self.calculation.nPsisMax)
-            nPsis = self.calculation.nPsisMax
+            self.nPsisLineEdit.setValue(self.state.nPsisMax)
+            nPsis = self.state.nPsisMax
 
-        self.calculation.nPsis = nPsis
+        self.state.nPsis = nPsis
 
     def updateSyncParameters(self, flag):
         self.hamiltonianModel.setSyncState(flag)
 
     def updateHamiltonianData(self):
-        self.calculation.hamiltonianData = self.hamiltonianModel.getModelData()
+        self.state.hamiltonianData = self.hamiltonianModel.getModelData()
 
     def updateHamiltonianNodeCheckState(self, index, state):
         hamiltonianState = self.hamiltonianModel.getNodesCheckState()
-        self.calculation.hamiltonianState = hamiltonianState
+        self.state.hamiltonianState = hamiltonianState
 
         # If needed, enable the configurations.
-        term = '{}-Ligands Hybridization'.format(self.calculation.block)
+        term = '{}-Ligands Hybridization'.format(self.state.block)
         if term in index.data():
             if state == 0:
                 nConfigurations = 1
@@ -1324,15 +1340,15 @@ class QuantyDockWidget(QDockWidget):
                 self.nConfigurationsLineEdit.setEnabled(True)
 
             self.nConfigurationsLineEdit.setValue(nConfigurations)
-            self.calculation.nConfigurations = nConfigurations
+            self.state.nConfigurations = nConfigurations
 
     def updateConfigurations(self, *args):
         nConfigurations = self.nConfigurationsLineEdit.getValue()
 
-        if 'd' in self.calculation.block:
-            nConfigurationsMax = 10 - self.calculation.nElectrons + 1
-        elif 'f' in self.calculation.block:
-            nConfigurationsMax = 14 - self.calculation.nElectrons + 1
+        if 'd' in self.state.block:
+            nConfigurationsMax = 10 - self.state.nElectrons + 1
+        elif 'f' in self.state.block:
+            nConfigurationsMax = 14 - self.state.nElectrons + 1
         else:
             return
 
@@ -1343,16 +1359,14 @@ class QuantyDockWidget(QDockWidget):
             self.nConfigurationsLineEdit.setValue(nConfigurationsMax)
             nConfigurations = nConfigurationsMax
 
-        self.calculation.nConfigurations = nConfigurations
+        self.state.nConfigurations = nConfigurations
 
     def saveInput(self):
         # TODO: If the user changes a value in a widget without pressing Return
-        # or without interacting with another part of the GUI before running
-        # the calculation, the values are not updated.
+        # before running the calculation, the values are not updated.
 
-        # Set the verbosity of the calculation.
-        self.calculation.verbosity = self.getVerbosity()
-        self.calculation.denseBorder = self.getDenseBorder()
+        self.state.verbosity = self.getVerbosity()
+        self.state.denseBorder = self.getDenseBorder()
 
         path = self.getCurrentPath()
         try:
@@ -1366,70 +1380,69 @@ class QuantyDockWidget(QDockWidget):
 
         # The folder might exist, but is not writable.
         try:
-            self.calculation.saveInput()
+            self.state.saveInput()
         except (IOError, OSError) as e:
             message = 'Failed to write the Quanty input file.'
             self.getStatusBar().showMessage(message, self.timeout)
             raise e
 
     def saveInputAs(self):
-        # Update the self.calculation
         path, _ = QFileDialog.getSaveFileName(
             self, 'Save Quanty Input',
             os.path.join(self.getCurrentPath(), '{}.lua'.format(
-                self.calculation.baseName)), 'Quanty Input File (*.lua)')
+                self.state.baseName)), 'Quanty Input File (*.lua)')
 
         if path:
             basename = os.path.basename(path)
-            self.calculation.baseName, _ = os.path.splitext(basename)
+            self.state.baseName, _ = os.path.splitext(basename)
             self.setCurrentPath(path)
             try:
                 self.saveInput()
             except (IOError, OSError) as e:
                 return
-            self.updateMainWindowTitle()
+            self.updateMainWindowTitle(self.state.baseName)
 
     def saveAllResultsAs(self):
         path, _ = QFileDialog.getSaveFileName(
             self, 'Save Results',
             os.path.join(self.getCurrentPath(), '{}.pkl'.format(
-                self.calculation.baseName)), 'Pickle File (*.pkl)')
+                self.state.baseName)), 'Pickle File (*.pkl)')
 
         if path:
             self.setCurrentPath(path)
-            calculations = self.resultsModel.getAllItems()
-            calculations.reverse()
+            results = self.resultsModel.getAllItems()
+            results.reverse()
             with open(path, 'wb') as p:
-                pickle.dump(calculations, p, pickle.HIGHEST_PROTOCOL)
+                pickle.dump(results, p, pickle.HIGHEST_PROTOCOL)
 
     def saveSelectedResultsAs(self):
         path, _ = QFileDialog.getSaveFileName(
             self, 'Save Results',
             os.path.join(self.getCurrentPath(), '{}.pkl'.format(
-                self.calculation.baseName)), 'Pickle File (*.pkl)')
+                self.state.baseName)), 'Pickle File (*.pkl)')
 
         if path:
             self.setCurrentPath(path)
             indexes = self.resultsView.selectedIndexes()
-            calculations = self.resultsModel.getSelectedItems(indexes)
-            calculations.reverse()
+            results = self.resultsModel.getSelectedItems(indexes)
+            results.reverse()
             with open(path, 'wb') as p:
-                pickle.dump(calculations, p, pickle.HIGHEST_PROTOCOL)
+                pickle.dump(results, p, pickle.HIGHEST_PROTOCOL)
 
-    def resetCalculation(self):
+    def resetState(self):
         element = self.elementComboBox.currentText()
         charge = self.chargeComboBox.currentText()
         symmetry = self.symmetryComboBox.currentText()
         experiment = self.experimentComboBox.currentText()
         edge = self.edgeComboBox.currentText()
 
-        self.calculation = QuantyCalculation(
+        self.state = QuantyCalculation(
             element=element, charge=charge, symmetry=symmetry,
             experiment=experiment, edge=edge)
 
-        self.populateWidget()
-        self.updateMainWindowTitle()
         self.resultsView.selectionModel().clearSelection()
+        self.populateWidget()
+        self.updateMainWindowTitle(self.state.baseName)
         self.resultDetailsDialog.clear()
 
     def removeSelectedCalculations(self):
@@ -1452,7 +1465,7 @@ class QuantyDockWidget(QDockWidget):
             self.setCurrentPath(path)
             with open(path, 'rb') as p:
                 self.resultsModel.appendItems(pickle.load(p))
-            self.updateMainWindowTitle()
+            self.updateMainWindowTitle(self.state.baseName)
             self.quantyToolBox.setCurrentWidget(self.resultsPage)
 
     def runCalculation(self):
@@ -1473,7 +1486,7 @@ class QuantyDockWidget(QDockWidget):
             except OSError as e:
                 if e.errno == os.errno.ENOENT:
                     message = ('The Quanty executable is not working '
-                               'properly. Is the path set correctly?')
+                               'properly. Is the PATH set correctly?')
                     self.getStatusBar().showMessage(message, 2 * self.timeout)
                     return
                 else:
@@ -1485,18 +1498,18 @@ class QuantyDockWidget(QDockWidget):
         except (IOError, OSError) as e:
             return
 
-        # Disable the UI while the calculation is running.
+        # Disable the widget while the calculation is running.
         self.enableWidget(False)
 
-        self.calculation.startingTime = datetime.datetime.now()
+        self.state.startingTime = datetime.datetime.now()
 
         # Run Quanty using QProcess.
         self.process = QProcess()
 
-        self.process.start(command, (self.calculation.baseName + '.lua', ))
+        self.process.start(command, (self.state.baseName + '.lua', ))
         message = (
             'Running "Quanty {}" in {}.'.format(
-                self.calculation.baseName + '.lua', os.getcwd()))
+                self.state.baseName + '.lua', os.getcwd()))
         self.getStatusBar().showMessage(message)
 
         if sys.platform == 'win32' and self.process.waitForStarted():
@@ -1537,13 +1550,11 @@ class QuantyDockWidget(QDockWidget):
         self.process.kill()
 
     def processCalculation(self, *args):
-        c = self.calculation
-
-        startingTime = c.startingTime
+        startingTime = self.state.startingTime
 
         # When did I finish?
         endingTime = datetime.datetime.now()
-        c.endingTime = endingTime
+        self.state.endingTime = endingTime
 
         # Re-enable the widget when the calculation has finished.
         self.enableWidget(True)
@@ -1583,17 +1594,18 @@ class QuantyDockWidget(QDockWidget):
             self.getStatusBar().showMessage(message, self.timeout)
             return
 
+        # Scroll to the bottom of the logger widget.
         scrollBar = self.getLoggerWidget().verticalScrollBar()
         scrollBar.setValue(scrollBar.maximum())
 
         # Load the spectra from disk.
-        c.spectra.loadFromDisk(c)
+        self.state.spectra.loadFromDisk(self.state)
 
-        # Once all processing is done, store the calculation in the
+        # Once all processing is done, store the state in the
         # results model. Upon finishing this, a signal is emitted by the
         # model which triggers some updates to be performed.
-        c.isChecked = True
-        self.resultsModel.appendItems(c)
+        self.state.isChecked = True
+        self.resultsModel.appendItems(self.state)
 
         # If the "Hamiltonian Setup" page is currently selected, when the
         # current widget is set to the "Results Page", the former is not
@@ -1604,8 +1616,8 @@ class QuantyDockWidget(QDockWidget):
 
         # Remove files if requested.
         if self.doRemoveFiles():
-            os.remove('{}.lua'.format(c.baseName))
-            spectra = glob.glob('{}_*.spec'.format(c.baseName))
+            os.remove('{}.lua'.format(self.state.baseName))
+            spectra = glob.glob('{}_*.spec'.format(self.state.baseName))
             for spectrum in spectra:
                 os.remove(spectrum)
 
@@ -1706,100 +1718,99 @@ class QuantyDockWidget(QDockWidget):
             index = None
         return index
 
-    def updateWidget(self):
+    def selectedResultsChanged(self):
         index = self.getLastSelectedResultsModelIndex()
         if index is None:
-            self.resultDetailsDialog.clear()
-            self.resetCalculation()
-            self.calculationPushButton.setEnabled(True)
-            self.saveInputAsPushButton.setEnabled(True)
-            return
-        self.calculation = self.resultsModel.getItem(index)
-
-        if isinstance(self.calculation, QuantyCalculation):
-            self.populateWidget()
-            self.calculationPushButton.setEnabled(True)
-            self.saveInputAsPushButton.setEnabled(True)
+            result = None
         else:
-            self.calculationPushButton.setEnabled(False)
-            self.saveInputAsPushButton.setEnabled(False)
+            result = self.resultsModel.getItem(index)
 
-        self.updateMainWindowTitle()
-        self.updateResultDetailsDialog()
+        if isinstance(result, QuantyCalculation):
+            self.enableWidget(True, result)
+            self.populateWidget()
+            self.resultDetailsDialog.populateWidget()
+        elif isinstance(result, ExperimentalData):
+            self.enableWidget(False, result)
+            self.updateMainWindowTitle(result.baseName)
+            self.resultDetailsDialog.clear()
+            self.resultDetailsDialog.updateTitle()
+        else:
+            self.enableWidget(True, result)
+            self.resetState()
 
     def updateResultsModelData(self):
         index = self.getLastSelectedResultsModelIndex()
         if index is None:
             return
-        self.resultsModel.updateItem(index, self.calculation)
+        self.resultsModel.updateItem(index, self.state)
         self.resultsView.viewport().repaint()
 
     def updatePlotWidget(self):
         """Updating the plotting widget should not require any information
-        about the current state of the widget (e.g. self.calculation)."""
+        about the current state of the widget."""
         self.getPlotWidget().reset()
 
-        calculations = self.resultsModel.getCheckedItems()
-        for calculation in calculations:
-            if not calculation.isChecked:
-                continue
-            if isinstance(calculation, ExperimentalResult):
-                spectrum = calculation.spectrum
+        results = self.resultsModel.getCheckedItems()
+
+        for result in results:
+            if isinstance(result, ExperimentalData):
+                spectrum = result.spectra['Expt']
                 spectrum.legend = '{}-{}'.format(
-                    calculation.index, 'Expt')
+                    result.index, 'Expt')
                 spectrum.xLabel = 'X'
                 spectrum.yLabel = 'Y'
                 self.plotSpectrum(spectrum)
             else:
-                if len(calculations) > 1 and calculation.experiment == 'RIXS':
+                if len(results) > 1 and result.experiment in ['RIXS', ]:
                     continue
-                for spectrum in calculation.spectra.processed:
+                for spectrum in result.spectra.processed:
                     spectrum.legend = '{}-{}'.format(
-                        calculation.index, spectrum.shortName)
-                    if spectrum.name in calculation.spectra.toPlotChecked:
+                        result.index, spectrum.shortName)
+                    if spectrum.name in result.spectra.toPlotChecked:
                         self.plotSpectrum(spectrum)
 
     def showResultDetailsDialog(self):
-        self.updateResultDetailsDialog()
         self.resultDetailsDialog.show()
         self.resultDetailsDialog.raise_()
 
-    def updateResultDetailsDialog(self):
-        self.resultDetailsDialog.calculation = self.calculation
-        self.resultDetailsDialog.populateWidget()
-
     def updateCalculationName(self, name):
-        self.calculation.baseName = name
-        self.updateMainWindowTitle()
-        self.resultDetailsDialog.updateTitle()
-        self.resultDetailsDialog.updateSummary()
+        self.state.baseName = name
+        self.updateMainWindowTitle(name)
+        self.resultDetailsDialog.updateTitle(name)
+        if isinstance(self.state, QuantyCalculation):
+            self.resultDetailsDialog.updateSummary()
 
-    def loadExperimentalSpectrum(self):
+    def loadExperimentalData(self):
         path, _ = QFileDialog.getOpenFileName(
-            self, 'Load Experimental Spectrum',
+            self, 'Load Experimental Data',
             self.getCurrentPath(), 'Data File (*.dat)')
 
         if path:
-            result = ExperimentalResult(path)
-            self.resultsModel.appendItems([result])
+            result = ExperimentalData(path)
+            if result.spectra is not None:
+                self.resultsModel.appendItems([result])
+            else:
+                message = ('Failed to read experimental data. Please check '
+                           'that the file is properly formatted.')
+                self.getStatusBar().showMessage(message, self.timeout)
 
     def handleOutputLogging(self):
         self.process.setReadChannel(QProcess.StandardOutput)
         data = self.process.readAllStandardOutput().data()
         data = data.decode('utf-8').rstrip()
         self.getLoggerWidget().appendPlainText(data)
-        self.calculation.output = self.calculation.output + data
+        self.state.output = self.state.output + data
 
     def handleErrorLogging(self):
         self.process.setReadChannel(QProcess.StandardError)
         data = self.process.readAllStandardError().data()
         self.getLoggerWidget().appendPlainText(data.decode('utf-8'))
 
-    def updateMainWindowTitle(self):
-        if not self.calculation.baseName:
+    def updateMainWindowTitle(self, name=None):
+        if name is None:
             title = 'Crispy'
         else:
-            title = 'Crispy - {}'.format(self.calculation.baseName)
+            title = 'Crispy - {}'.format(name)
         self.setMainWindowTitle(title)
 
     def updateResultsContextMenu(self, flag):
@@ -1857,7 +1868,8 @@ class QuantyPreferencesDialog(QDialog):
         cancel = self.buttonBox.button(QDialogButtonBox.Cancel)
         cancel.clicked.connect(self.rejectSettings)
 
-        # Loading and saving the settings is needed here.
+        # Loading and saving the settings is needed here, due to the
+        # call to _findExecutable.
         self.loadSettings()
         self.saveSettings()
 
@@ -2006,84 +2018,76 @@ class QuantyResultDetailsDialog(QDialog):
         self.closePushButton.clicked.connect(self.close)
 
     def populateWidget(self):
-        c = self.calculation
+        self.state = self.parent().state
 
-        if isinstance(c, ExperimentalResult):
-            self.clear()
-            self.enableWidget(False)
-            return
-        else:
-            self.enableWidget(True)
-
-        if c.experiment == 'RIXS':
+        if self.state.experiment in ['RIXS', ]:
             if self.axesTabWidget.count() == 1:
                 tab = self.axesTabWidget.findChild(QWidget, 'yTab')
                 self.axesTabWidget.addTab(tab, tab.objectName())
-                self.axesTabWidget.setTabText(1, c.yLabel)
+                self.axesTabWidget.setTabText(1, self.state.yLabel)
             self.scaleLineEdit.setEnabled(False)
             self.normalizationComboBox.setEnabled(False)
         else:
             self.axesTabWidget.removeTab(1)
-            self.axesTabWidget.setTabText(0, c.xLabel)
+            self.axesTabWidget.setTabText(0, self.state.xLabel)
             self.scaleLineEdit.setEnabled(True)
             self.normalizationComboBox.setEnabled(True)
 
         self.spectraModel.setModelData(
-            c.spectra.toPlot, c.spectra.toPlotChecked)
+            self.state.spectra.toPlot, self.state.spectra.toPlotChecked)
         self.spectraListView.selectionModel().setCurrentIndex(
             self.spectraModel.index(0, 0), QItemSelectionModel.Select)
 
-        self.scaleLineEdit.setValue(c.spectra.scale)
-        self.normalizationComboBox.setCurrentText(c.spectra.normalization)
+        self.scaleLineEdit.setValue(self.state.spectra.scale)
+        self.normalizationComboBox.setCurrentText(
+            self.state.spectra.normalization)
 
-        xShift, yShift = c.spectra.shift
+        xShift, yShift = self.state.spectra.shift
         self.xShiftLineEdit.setValue(xShift)
         self.yShiftLineEdit.setValue(yShift)
 
-        self.xGaussianLineEdit.setValue(c.xGaussian)
-        self.xLorentzianLineEdit.setList(c.xLorentzian)
-        self.yGaussianLineEdit.setValue(c.yGaussian)
-        self.yLorentzianLineEdit.setList(c.yLorentzian)
+        self.xGaussianLineEdit.setValue(self.state.xGaussian)
+        self.xLorentzianLineEdit.setList(self.state.xLorentzian)
+        self.yGaussianLineEdit.setValue(self.state.yGaussian)
+        self.yLorentzianLineEdit.setList(self.state.yLorentzian)
 
-        self.inputPlainTextEdit.setPlainText(c.input)
-        self.outputPlainTextEdit.setPlainText(c.output)
+        self.inputPlainTextEdit.setPlainText(self.state.input)
+        self.outputPlainTextEdit.setPlainText(self.state.output)
 
-        self.updateTitle()
+        self.updateTitle(self.state.baseName)
         self.updateSummary()
 
-    def updateTitle(self):
-        if not self.calculation.baseName:
+    def updateTitle(self, name=None):
+        if name is None:
             title = 'Details'
         else:
-            title = 'Details for {}'.format(self.calculation.baseName)
+            title = 'Details for {}'.format(name)
         self.setWindowTitle(title)
 
     def updateSummary(self):
-        c = self.calculation
-
         summary = str()
-        summary += 'Name: {}\n'.format(c.baseName)
-        summary += 'Started: {}\n'.format(c.startingTime)
-        summary += 'Finished: {}\n'.format(c.endingTime)
+        summary += 'Name: {}\n'.format(self.state.baseName)
+        summary += 'Started: {}\n'.format(self.state.startingTime)
+        summary += 'Finished: {}\n'.format(self.state.endingTime)
         summary += '\n'
-        summary += 'Element: {}\n'.format(c.element)
-        summary += 'Charge: {}\n'.format(c.charge)
-        summary += 'Symmetry: {}\n'.format(c.symmetry)
-        summary += 'Experiment: {}\n'.format(c.experiment)
-        summary += 'Edge: {}\n'.format(c.edge)
+        summary += 'Element: {}\n'.format(self.state.element)
+        summary += 'Charge: {}\n'.format(self.state.charge)
+        summary += 'Symmetry: {}\n'.format(self.state.symmetry)
+        summary += 'Experiment: {}\n'.format(self.state.experiment)
+        summary += 'Edge: {}\n'.format(self.state.edge)
         summary += '\n'
-        summary += 'Temperature: {} K\n'.format(c.temperature)
-        summary += 'Magnetic Field: {} T\n'.format(c.magneticField)
+        summary += 'Temperature: {} K\n'.format(self.state.temperature)
+        summary += 'Magnetic Field: {} T\n'.format(self.state.magneticField)
         summary += '\n'
         summary += 'Scale Factors:\n'
-        summary += '    Fk: {}\n'.format(c.fk)
-        summary += '    Gk: {}\n'.format(c.gk)
-        summary += '    ζ: {}\n'.format(c.zeta)
+        summary += '    Fk: {}\n'.format(self.state.fk)
+        summary += '    Gk: {}\n'.format(self.state.gk)
+        summary += '    ζ: {}\n'.format(self.state.zeta)
         summary += '\n'
         summary += 'Hamiltonian Terms:\n'
-        for term in c.hamiltonianData:
+        for term in self.state.hamiltonianData:
             summary += '    {}:\n'.format(term)
-            configurations = c.hamiltonianData[term]
+            configurations = self.state.hamiltonianData[term]
             for configuration in configurations:
                 summary += '        {}:\n'.format(configuration)
                 parameters = configurations[configuration]
@@ -2100,48 +2104,50 @@ class QuantyResultDetailsDialog(QDialog):
         self.parent().updateResultsModelData()
 
     def updateSpectraCheckState(self, checkedItems):
-        self.calculation.spectra.toPlotChecked = checkedItems
+        self.state.spectra.toPlotChecked = checkedItems
         self.updateResultsModelData()
 
     def updateScale(self):
         scale = self.scaleLineEdit.getValue()
-        self.calculation.spectra.scale = scale
-        self.calculation.spectra.process()
+        self.state.spectra.scale = scale
+        self.state.spectra.process()
         self.updateResultsModelData()
 
     def updateNormalization(self):
         normalization = self.normalizationComboBox.currentText()
-        self.calculation.spectra.normalization = normalization
-        self.calculation.spectra.process()
+        # In experimental data is spectrum, not spectra. Change this!
+        self.state.spectra.normalization = normalization
+        self.state.spectra.process()
         self.updateResultsModelData()
 
     def updateShift(self):
         xShift = self.xShiftLineEdit.getValue()
         yShift = self.yShiftLineEdit.getValue()
-        self.calculation.spectra.shift = (xShift, yShift)
-        self.calculation.spectra.process()
+        self.state.spectra.shift = (xShift, yShift)
+        self.state.spectra.process()
         self.updateResultsModelData()
 
     def updateBroadening(self):
         self.updateXGaussian()
-        if self.calculation.experiment == 'RIXS':
+
+        if self.state.experiment in ['RIXS', ]:
             self.updateYGaussian()
             broadenings = {
                 'gaussian': (
-                    self.calculation.xGaussian,
-                    self.calculation.yGaussian),
+                    self.state.xGaussian,
+                    self.state.yGaussian),
                 'lorentzian': (
-                    self.calculation.xLorentzian,
-                    self.calculation.yLorentzian)}
+                    self.state.xLorentzian,
+                    self.state.yLorentzian)}
         else:
             broadenings = {
                 'gaussian': (
-                    self.calculation.xGaussian, ),
+                    self.state.xGaussian, ),
                 'lorentzian': (
-                    self.calculation.xLorentzian, )}
+                    self.state.xLorentzian, )}
 
-        self.calculation.spectra.broadenings = copy.deepcopy(broadenings)
-        self.calculation.spectra.process()
+        self.state.spectra.broadenings = copy.deepcopy(broadenings)
+        self.state.spectra.process()
         self.updateResultsModelData()
 
     def updateXGaussian(self):
@@ -2151,11 +2157,11 @@ class QuantyResultDetailsDialog(QDialog):
         if xGaussian < 0:
             message = 'The broadening cannot be negative.'
             parent.getStatusBar().showMessage(message, parent.timeout)
-            self.xGaussianLineEdit.setValue(self.calculation.xGaussian)
+            self.xGaussianLineEdit.setValue(self.state.xGaussian)
             return
 
         parent.xGaussianLineEdit.setValue(xGaussian)
-        self.calculation.xGaussian = xGaussian
+        self.state.xGaussian = xGaussian
 
     def updateYGaussian(self):
         parent = self.parent()
@@ -2164,11 +2170,11 @@ class QuantyResultDetailsDialog(QDialog):
         if yGaussian < 0:
             message = 'The broadening cannot be negative.'
             parent.getStatusBar().showMessage(message, parent.timeout)
-            self.yGaussianLineEdit.setValue(self.calculation.yGaussian)
+            self.yGaussianLineEdit.setValue(self.state.yGaussian)
             return
 
         parent.yGaussianLineEdit.setValue(yGaussian)
-        self.calculation.yGaussian = yGaussian
+        self.state.yGaussian = yGaussian
 
     def enableWidget(self, flag):
         self.summaryPlainTextEdit.setEnabled(flag)
@@ -2195,7 +2201,7 @@ class QuantyResultDetailsDialog(QDialog):
         self.yLorentzianLineEdit.clear()
         self.inputPlainTextEdit.clear()
         self.outputPlainTextEdit.clear()
-        self.setWindowTitle('')
+        self.updateTitle()
 
     def loadSettings(self):
         config = Config()

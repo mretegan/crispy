@@ -279,9 +279,9 @@
             </layout>
            </item>
            <item>
-            <layout class="QVBoxLayout" name="energiesVerticalLayout">
+            <layout class="QVBoxLayout" name="axesVerticalLayout">
              <item>
-              <widget class="QTabWidget" name="energiesTabWidget">
+              <widget class="QTabWidget" name="axesTabWidget">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                  <horstretch>0</horstretch>

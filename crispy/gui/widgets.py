@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '20/09/2017'
+__date__ = '03/10/2018'
 
 
 # from PyQt5.QtCore import QTimer, Qt
@@ -46,21 +46,6 @@ class ComboBox(QComboBox):
         self.setCurrentText(currentItem)
         self.blockSignals(False)
 
-
-# class LineEdit(QLineEdit):
-#     def __init__(self, *args, **kwargs):
-#         super(LineEdit, self).__init__(*args, **kwargs)
-#         self.textEdited.connect(self._timer)
-
-#     def _timer(self):
-#         QTimer.singleShot(500, self._textEdited)
-
-#     def _textEdited(self):
-#         try:
-#             self.getList()
-#         except ValueError:
-#             return
-#         self.editingFinished.emit()
 
 class LineEdit(QLineEdit):
     def __init__(self, *args, **kwargs):
