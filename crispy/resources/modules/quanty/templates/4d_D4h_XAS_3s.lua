@@ -162,9 +162,9 @@ if H_4d_ligands_hybridization == 1 then
     e_Ld_i = NElectrons_4d * ((1 + NElectrons_4d) * U_4d_4d_i / 2 - Delta_4d_Ld_i) / (10 + NElectrons_4d)
 
     Delta_4d_Ld_f = $Delta(4d,Ld)_f_value
-    e_4d_f = (10 * Delta_4d_Ld_f - NElectrons_4d * (31 + NElectrons_4d) * U_4d_4d_f / 2 - 90 * U_3s_4d_f) / (16 + NElectrons_4d)
-    e_3s_f = (10 * Delta_4d_Ld_f + (1 + NElectrons_4d) * (NElectrons_4d * U_4d_4d_f / 2 - (10 + NElectrons_4d) * U_3s_4d_f)) / (16 + NElectrons_4d)
-    e_Ld_f = ((1 + NElectrons_4d) * (NElectrons_4d * U_4d_4d_f / 2 + 6 * U_3s_4d_f) - (6 + NElectrons_4d) * Delta_4d_Ld_f) / (16 + NElectrons_4d)
+    e_4d_f = (10 * Delta_4d_Ld_f - NElectrons_4d * (23 + NElectrons_4d) * U_4d_4d_f / 2 - 22 * U_3s_4d_f) / (12 + NElectrons_4d)
+    e_3s_f = (10 * Delta_4d_Ld_f + (1 + NElectrons_4d) * (NElectrons_4d * U_4d_4d_f / 2 - (10 + NElectrons_4d) * U_3s_4d_f)) / (12 + NElectrons_4d)
+    e_Ld_f = ((1 + NElectrons_4d) * (NElectrons_4d * U_4d_4d_f / 2 + 2 * U_3s_4d_f) - (2 + NElectrons_4d) * Delta_4d_Ld_f) / (12 + NElectrons_4d)
 
     H_i = H_i + Chop(
           e_4d_i * N_4d

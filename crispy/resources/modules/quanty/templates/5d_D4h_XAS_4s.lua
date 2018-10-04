@@ -162,9 +162,9 @@ if H_5d_ligands_hybridization == 1 then
     e_Ld_i = NElectrons_5d * ((1 + NElectrons_5d) * U_5d_5d_i / 2 - Delta_5d_Ld_i) / (10 + NElectrons_5d)
 
     Delta_5d_Ld_f = $Delta(5d,Ld)_f_value
-    e_5d_f = (10 * Delta_5d_Ld_f - NElectrons_5d * (31 + NElectrons_5d) * U_5d_5d_f / 2 - 90 * U_4s_5d_f) / (16 + NElectrons_5d)
-    e_4s_f = (10 * Delta_5d_Ld_f + (1 + NElectrons_5d) * (NElectrons_5d * U_5d_5d_f / 2 - (10 + NElectrons_5d) * U_4s_5d_f)) / (16 + NElectrons_5d)
-    e_Ld_f = ((1 + NElectrons_5d) * (NElectrons_5d * U_5d_5d_f / 2 + 6 * U_4s_5d_f) - (6 + NElectrons_5d) * Delta_5d_Ld_f) / (16 + NElectrons_5d)
+    e_5d_f = (10 * Delta_5d_Ld_f - NElectrons_5d * (23 + NElectrons_5d) * U_5d_5d_f / 2 - 22 * U_4s_5d_f) / (12 + NElectrons_5d)
+    e_4s_f = (10 * Delta_5d_Ld_f + (1 + NElectrons_5d) * (NElectrons_5d * U_5d_5d_f / 2 - (10 + NElectrons_5d) * U_4s_5d_f)) / (12 + NElectrons_5d)
+    e_Ld_f = ((1 + NElectrons_5d) * (NElectrons_5d * U_5d_5d_f / 2 + 2 * U_4s_5d_f) - (2 + NElectrons_5d) * Delta_5d_Ld_f) / (12 + NElectrons_5d)
 
     H_i = H_i + Chop(
           e_5d_i * N_5d

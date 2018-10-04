@@ -197,14 +197,13 @@ if H_4d_ligands_hybridization == 1 then
     e_Ld_i = NElectrons_4d * ((1 + NElectrons_4d) * U_4d_4d_i / 2 - Delta_4d_Ld_i) / (10 + NElectrons_4d)
 
     Delta_4d_Ld_m = $Delta(4d,Ld)_m_value
-    e_4d_m = (10 * Delta_4d_Ld_m - NElectrons_4d * (23 + NElectrons_4d) * U_4d_4d_m / 2 - 22 * U_2p_4d_m) / (12 + NElectrons_4d)
-    e_2p_m = (10 * Delta_4d_Ld_m + (1 + NElectrons_4d) * (NElectrons_4d * U_4d_4d_m / 2 - (10 + NElectrons_4d) * U_2p_4d_m)) / (12 + NElectrons_4d)
-    e_Ld_m = ((1 + NElectrons_4d) * (NElectrons_4d * U_4d_4d_m / 2 + 2 * U_2p_4d_m) - (2 + NElectrons_4d) * Delta_4d_Ld_m) / (12 + NElectrons_4d)
+    e_4d_m = (10 * Delta_4d_Ld_m - NElectrons_4d * (31 + NElectrons_4d) * U_4d_4d_m / 2 - 90 * U_2p_4d_m) / (16 + NElectrons_4d)
+    e_2p_m = (10 * Delta_4d_Ld_m + (1 + NElectrons_4d) * (NElectrons_4d * U_4d_4d_m / 2 - (10 + NElectrons_4d) * U_2p_4d_m)) / (16 + NElectrons_4d)
+    e_Ld_m = ((1 + NElectrons_4d) * (NElectrons_4d * U_4d_4d_m / 2 + 6 * U_2p_4d_m) - (6 + NElectrons_4d) * Delta_4d_Ld_m) / (16 + NElectrons_4d)
 
     Delta_4d_Ld_f = $Delta(4d,Ld)_f_value
-    e_4d_f = (10 * Delta_4d_Ld_f - NElectrons_4d * (31 + NElectrons_4d) * U_4d_4d_f / 2 - 90 * U_4d_4d_f) / (16 + NElectrons_4d)
-    e_4d_f = (10 * Delta_4d_Ld_f + (1 + NElectrons_4d) * (NElectrons_4d * U_4d_4d_f / 2 - (10 + NElectrons_4d) * U_4d_4d_f)) / (16 + NElectrons_4d)
-    e_Ld_f = ((1 + NElectrons_4d) * (NElectrons_4d * U_4d_4d_f / 2 + 6 * U_4d_4d_f) - (6 + NElectrons_4d) * Delta_4d_Ld_f) / (16 + NElectrons_4d)
+    e_4d_f = (10 * Delta_4d_Ld_f - NElectrons_4d * (19 + NElectrons_4d) * U_4d_4d_f / 2) / (10 + NElectrons_4d)
+    e_Ld_f = NElectrons_4d * ((1 + NElectrons_4d) * U_4d_4d_f / 2 - Delta_4d_Ld_f) / (10 + NElectrons_4d)
 
     H_i = H_i + Chop(
           e_4d_i * N_4d
@@ -217,7 +216,6 @@ if H_4d_ligands_hybridization == 1 then
 
     H_f = H_f + Chop(
           e_4d_f * N_4d
-        + e_4d_f * N_4d
         + e_Ld_f * N_Ld)
 
     Dq_Ld = NewOperator('CF', NFermions, IndexUp_Ld, IndexDn_Ld, PotentialExpandedOnClm('D4h', 2, { 6,  6, -4, -4}))

@@ -175,14 +175,13 @@ if H_5d_ligands_hybridization == 1 then
     e_Ld_i = NElectrons_5d * ((1 + NElectrons_5d) * U_5d_5d_i / 2 - Delta_5d_Ld_i) / (10 + NElectrons_5d)
 
     Delta_5d_Ld_m = $Delta(5d,Ld)_m_value
-    e_5d_m = (10 * Delta_5d_Ld_m - NElectrons_5d * (23 + NElectrons_5d) * U_5d_5d_m / 2 - 22 * U_2p_5d_m) / (12 + NElectrons_5d)
-    e_2p_m = (10 * Delta_5d_Ld_m + (1 + NElectrons_5d) * (NElectrons_5d * U_5d_5d_m / 2 - (10 + NElectrons_5d) * U_2p_5d_m)) / (12 + NElectrons_5d)
-    e_Ld_m = ((1 + NElectrons_5d) * (NElectrons_5d * U_5d_5d_m / 2 + 2 * U_2p_5d_m) - (2 + NElectrons_5d) * Delta_5d_Ld_m) / (12 + NElectrons_5d)
+    e_5d_m = (10 * Delta_5d_Ld_m - NElectrons_5d * (31 + NElectrons_5d) * U_5d_5d_m / 2 - 90 * U_2p_5d_m) / (16 + NElectrons_5d)
+    e_2p_m = (10 * Delta_5d_Ld_m + (1 + NElectrons_5d) * (NElectrons_5d * U_5d_5d_m / 2 - (10 + NElectrons_5d) * U_2p_5d_m)) / (16 + NElectrons_5d)
+    e_Ld_m = ((1 + NElectrons_5d) * (NElectrons_5d * U_5d_5d_m / 2 + 6 * U_2p_5d_m) - (6 + NElectrons_5d) * Delta_5d_Ld_m) / (16 + NElectrons_5d)
 
     Delta_5d_Ld_f = $Delta(5d,Ld)_f_value
-    e_5d_f = (10 * Delta_5d_Ld_f - NElectrons_5d * (31 + NElectrons_5d) * U_5d_5d_f / 2 - 90 * U_5d_5d_f) / (16 + NElectrons_5d)
-    e_5d_f = (10 * Delta_5d_Ld_f + (1 + NElectrons_5d) * (NElectrons_5d * U_5d_5d_f / 2 - (10 + NElectrons_5d) * U_5d_5d_f)) / (16 + NElectrons_5d)
-    e_Ld_f = ((1 + NElectrons_5d) * (NElectrons_5d * U_5d_5d_f / 2 + 6 * U_5d_5d_f) - (6 + NElectrons_5d) * Delta_5d_Ld_f) / (16 + NElectrons_5d)
+    e_5d_f = (10 * Delta_5d_Ld_f - NElectrons_5d * (19 + NElectrons_5d) * U_5d_5d_f / 2) / (10 + NElectrons_5d)
+    e_Ld_f = NElectrons_5d * ((1 + NElectrons_5d) * U_5d_5d_f / 2 - Delta_5d_Ld_f) / (10 + NElectrons_5d)
 
     H_i = H_i + Chop(
           e_5d_i * N_5d
@@ -195,7 +194,6 @@ if H_5d_ligands_hybridization == 1 then
 
     H_f = H_f + Chop(
           e_5d_f * N_5d
-        + e_5d_f * N_5d
         + e_Ld_f * N_Ld)
 
     tenDq_Ld = NewOperator('CF', NFermions, IndexUp_Ld, IndexDn_Ld, PotentialExpandedOnClm('Oh', 2, {0.6, -0.4}))

@@ -162,9 +162,9 @@ if H_3d_ligands_hybridization == 1 then
     e_Ld_i = NElectrons_3d * ((1 + NElectrons_3d) * U_3d_3d_i / 2 - Delta_3d_Ld_i) / (10 + NElectrons_3d)
 
     Delta_3d_Ld_f = $Delta(3d,Ld)_f_value
-    e_3d_f = (10 * Delta_3d_Ld_f - NElectrons_3d * (31 + NElectrons_3d) * U_3d_3d_f / 2 - 90 * U_2s_3d_f) / (16 + NElectrons_3d)
-    e_2s_f = (10 * Delta_3d_Ld_f + (1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_f / 2 - (10 + NElectrons_3d) * U_2s_3d_f)) / (16 + NElectrons_3d)
-    e_Ld_f = ((1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_f / 2 + 6 * U_2s_3d_f) - (6 + NElectrons_3d) * Delta_3d_Ld_f) / (16 + NElectrons_3d)
+    e_3d_f = (10 * Delta_3d_Ld_f - NElectrons_3d * (23 + NElectrons_3d) * U_3d_3d_f / 2 - 22 * U_2s_3d_f) / (12 + NElectrons_3d)
+    e_2s_f = (10 * Delta_3d_Ld_f + (1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_f / 2 - (10 + NElectrons_3d) * U_2s_3d_f)) / (12 + NElectrons_3d)
+    e_Ld_f = ((1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_f / 2 + 2 * U_2s_3d_f) - (2 + NElectrons_3d) * Delta_3d_Ld_f) / (12 + NElectrons_3d)
 
     H_i = H_i + Chop(
           e_3d_i * N_3d
