@@ -1412,7 +1412,7 @@ class QuantyDockWidget(QDockWidget):
         path, _ = QFileDialog.getSaveFileName(
             self, 'Save Results',
             os.path.join(self.getCurrentPath(), '{}.pkl'.format(
-                self.state.baseName)), 'Pickle File (*.pkl)')
+                'untitled')), 'Pickle File (*.pkl)')
 
         if path:
             self.setCurrentPath(path)
@@ -1425,7 +1425,7 @@ class QuantyDockWidget(QDockWidget):
         path, _ = QFileDialog.getSaveFileName(
             self, 'Save Results',
             os.path.join(self.getCurrentPath(), '{}.pkl'.format(
-                self.state.baseName)), 'Pickle File (*.pkl)')
+                'untitled')), 'Pickle File (*.pkl)')
 
         if path:
             self.setCurrentPath(path)
