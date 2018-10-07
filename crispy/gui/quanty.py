@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '04/10/2018'
+__date__ = '05/10/2018'
 
 
 import copy
@@ -362,6 +362,7 @@ class QuantyCalculation(object):
             ('spectra', None),
             ('nPsisAuto', 1),
             ('nConfigurations', 1),
+            ('nConfigurationsMax', 1),
             ('fk', 0.8),
             ('gk', 0.8),
             ('zeta', 1.0),
@@ -510,7 +511,11 @@ class QuantyCalculation(object):
                     self.hamiltonianState[term] = 0
 
     def termSuffix(self, term):
-        return term.lower().replace(' ', '_').replace('-', '_')
+        term = term.lower()
+        replacements = [(' ', '_'), ('-', '_'), ('(', ''), (')', '')]
+        for replacement in replacements:
+            term = term.replace(*replacement)
+        return term
 
     def saveInput(self):
         templatePath = resourceFileName(
@@ -783,11 +788,14 @@ class QuantyDockWidget(QDockWidget):
         self.nConfigurationsLineEdit.setValue(self.state.nConfigurations)
 
         self.nConfigurationsLineEdit.setEnabled(False)
-        termName = '{}-Ligands Hybridization'.format(self.state.block)
-        if termName in self.state.hamiltonianData:
-            termState = self.state.hamiltonianState[termName]
-            if termState != 0:
-                self.nConfigurationsLineEdit.setEnabled(True)
+        name = '{}-Ligands Hybridization'.format(self.state.block)
+        for termName in self.state.hamiltonianData:
+            if name in termName:
+                termState = self.state.hamiltonianState[termName]
+                if termState == 0:
+                    continue
+                else:
+                    self.nConfigurationsLineEdit.setEnabled(True)
 
         if not hasattr(self, 'resultsModel'):
             # Create the results model.
@@ -901,8 +909,6 @@ class QuantyDockWidget(QDockWidget):
         else:
             self.nPsisLineEdit.setEnabled(flag)
 
-        self.nConfigurationsLineEdit.setEnabled(flag)
-
         self.hamiltonianTermsView.setEnabled(flag)
         self.hamiltonianParametersView.setEnabled(flag)
         self.resultsView.setEnabled(flag)
@@ -910,10 +916,13 @@ class QuantyDockWidget(QDockWidget):
         self.saveInputAsPushButton.setEnabled(flag)
 
         if result is None or isinstance(result, QuantyCalculation):
+            # TODO: Check that this works properly.
+            self.nConfigurationsLineEdit.setEnabled(flag)
             self.resultsView.setEnabled(flag)
             self.calculationPushButton.setEnabled(True)
             self.resultDetailsDialog.enableWidget(flag)
         else:
+            self.nConfigurationsLineEdit.setEnabled(False)
             self.calculationPushButton.setEnabled(flag)
             self.resultsView.setEnabled(True)
             self.resultDetailsDialog.enableWidget(False)
@@ -1332,17 +1341,39 @@ class QuantyDockWidget(QDockWidget):
         self.state.hamiltonianData = self.hamiltonianModel.getModelData()
 
     def updateHamiltonianNodeCheckState(self, index, state):
-        hamiltonianState = self.hamiltonianModel.getNodesCheckState()
-        self.state.hamiltonianState = hamiltonianState
+        toggledTerm = index.data()
+        states = self.hamiltonianModel.getNodesCheckState()
 
-        # If needed, enable the configurations.
+        # Allow only one type of hybridization with the ligands, either
+        # LMCT or MLCT.
+        for term in states:
+            if 'LMCT' in term and 'MLCT' in toggledTerm:
+                states[term] = 0
+            elif 'MLCT' in term and 'LMCT' in toggledTerm:
+                states[term] = 0
+
+        self.state.hamiltonianState = states
+        self.hamiltonianModel.setNodesCheckState(states)
+
+        # Determine the maximum number of allowed configurations.
+        if 'LMCT' in toggledTerm:
+            if 'd' in self.state.block:
+                self.state.nConfigurationsMax = 10 - self.state.nElectrons + 1
+            elif 'f' in self.state.block:
+                self.state.nConfigurationsMax = 14 - self.state.nElectrons + 1
+        elif 'MLCT' in toggledTerm:
+            self.state.nConfigurationsMax = self.state.nElectrons + 1
+
         term = '{}-Ligands Hybridization'.format(self.state.block)
         if term in index.data():
             if state == 0:
                 nConfigurations = 1
                 self.nConfigurationsLineEdit.setEnabled(False)
             elif state == 2:
-                nConfigurations = 2
+                if self.state.nConfigurationsMax == 1:
+                    nConfigurations = 1
+                else:
+                    nConfigurations = 2
                 self.nConfigurationsLineEdit.setEnabled(True)
 
             self.nConfigurationsLineEdit.setValue(nConfigurations)
@@ -1351,19 +1382,13 @@ class QuantyDockWidget(QDockWidget):
     def updateConfigurations(self, *args):
         nConfigurations = self.nConfigurationsLineEdit.getValue()
 
-        if 'd' in self.state.block:
-            nConfigurationsMax = 10 - self.state.nElectrons + 1
-        elif 'f' in self.state.block:
-            nConfigurationsMax = 14 - self.state.nElectrons + 1
-        else:
-            return
-
-        if nConfigurations > nConfigurationsMax:
+        if nConfigurations > self.state.nConfigurationsMax:
             message = 'The maximum number of configurations is {}.'.format(
-                nConfigurationsMax)
+                self.state.nConfigurationsMax)
             self.getStatusBar().showMessage(message, self.timeout)
-            self.nConfigurationsLineEdit.setValue(nConfigurationsMax)
-            nConfigurations = nConfigurationsMax
+            self.nConfigurationsLineEdit.setValue(
+                self.state.nConfigurationsMax)
+            nConfigurations = self.state.nConfigurationsMax
 
         self.state.nConfigurations = nConfigurations
 
@@ -1457,7 +1482,7 @@ class QuantyDockWidget(QDockWidget):
             self.getPlotWidget().reset()
             return
         self.resultsModel.removeItems(indexes)
-        self.resultsView.reset()
+        # self.resultsView.reset()
 
     def removeAllResults(self):
         self.resultsModel.reset()
@@ -1737,15 +1762,14 @@ class QuantyDockWidget(QDockWidget):
             result = self.resultsModel.getItem(index)
 
         if isinstance(result, QuantyCalculation):
-            self.state = result
             self.enableWidget(True, result)
+            self.state = result
             self.populateWidget()
             self.resultDetailsDialog.populateWidget()
         elif isinstance(result, ExperimentalData):
             self.enableWidget(False, result)
             self.updateMainWindowTitle(result.baseName)
             self.resultDetailsDialog.clear()
-            self.resultDetailsDialog.updateTitle()
         else:
             self.enableWidget(True, result)
             self.resetState()
@@ -2032,6 +2056,17 @@ class QuantyResultDetailsDialog(QDialog):
     def populateWidget(self):
         self.state = self.parent().state
 
+        self.spectraModel.setModelData(
+            self.state.spectra.toPlot, self.state.spectra.toPlotChecked)
+        self.spectraListView.selectionModel().setCurrentIndex(
+            self.spectraModel.index(0, 0), QItemSelectionModel.Select)
+
+        self.scaleLineEdit.setValue(self.state.spectra.scale)
+        self.normalizationComboBox.blockSignals(True)
+        self.normalizationComboBox.setCurrentText(
+            self.state.spectra.normalization)
+        self.normalizationComboBox.blockSignals(False)
+
         if self.state.experiment in ['RIXS', ]:
             if self.axesTabWidget.count() == 1:
                 tab = self.axesTabWidget.findChild(QWidget, 'yTab')
@@ -2044,15 +2079,6 @@ class QuantyResultDetailsDialog(QDialog):
             self.axesTabWidget.setTabText(0, self.state.xLabel)
             self.scaleLineEdit.setEnabled(True)
             self.normalizationComboBox.setEnabled(True)
-
-        self.spectraModel.setModelData(
-            self.state.spectra.toPlot, self.state.spectra.toPlotChecked)
-        self.spectraListView.selectionModel().setCurrentIndex(
-            self.spectraModel.index(0, 0), QItemSelectionModel.Select)
-
-        self.scaleLineEdit.setValue(self.state.spectra.scale)
-        self.normalizationComboBox.setCurrentText(
-            self.state.spectra.normalization)
 
         xShift, yShift = self.state.spectra.shift
         self.xShiftLineEdit.setValue(xShift)
@@ -2077,6 +2103,7 @@ class QuantyResultDetailsDialog(QDialog):
         self.setWindowTitle(title)
 
     def updateSummary(self):
+        # TODO: Add the wave vector to the summary.
         summary = str()
         summary += 'Name: {}\n'.format(self.state.baseName)
         summary += 'Started: {}\n'.format(self.state.startingTime)
@@ -2204,7 +2231,9 @@ class QuantyResultDetailsDialog(QDialog):
         self.summaryPlainTextEdit.clear()
         self.spectraModel.clear()
         self.scaleLineEdit.clear()
+        self.normalizationComboBox.blockSignals(True)
         self.normalizationComboBox.setCurrentText('None')
+        self.normalizationComboBox.blockSignals(False)
         self.xShiftLineEdit.clear()
         self.yShiftLineEdit.clear()
         self.xGaussianLineEdit.clear()

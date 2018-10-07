@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '04/10/2018'
+__date__ = '05/10/2018'
 
 from collections import OrderedDict as odict
 import copy
@@ -156,16 +156,30 @@ class ResultsModel(QAbstractItemModel):
         for item in items:
             self.modelData.insert(row, item)
         self.endInsertRows()
+        index = self.index(last, 0)
+        self.dataChanged.emit(index, index)
         return True
 
-    def getItem(self, index):
-        row = index.row()
-        return copy.deepcopy(self.modelData[row])
+    def appendItems(self, items):
+        if not isinstance(items, list):
+            items = [items]
+        row = self.rowCount()
+        self.insertRows(row, items)
+        row = len(self.modelData) - 1
+        index = self.index(row, 0)
+        self.dataChanged.emit(index, index)
+        self.modelDataChanged.emit(index)
 
     def updateItem(self, index, item):
         row = index.row()
         self.modelData[row] = copy.deepcopy(item)
+        self.dataChanged.emit(index, index)
         self.modelDataChanged.emit(index)
+
+    def getItem(self, index):
+        row = index.row()
+        item = self.modelData[row]
+        return copy.deepcopy(item)
 
     def getAllItems(self):
         items = list()
@@ -173,8 +187,8 @@ class ResultsModel(QAbstractItemModel):
         for row in rows:
             item = self.modelData[row]
             item.index = row + 1
-            items.append(copy.deepcopy(item))
-        return items
+            items.append(item)
+        return copy.deepcopy(items)
 
     def getCheckedItems(self):
         items = list()
@@ -183,8 +197,8 @@ class ResultsModel(QAbstractItemModel):
             item = self.modelData[row]
             item.index = row + 1
             if item.isChecked:
-                items.append(copy.deepcopy(item))
-        return items
+                items.append(item)
+        return copy.deepcopy(items)
 
     def getSelectedItems(self, indexes=None):
         if indexes is None:
@@ -194,8 +208,8 @@ class ResultsModel(QAbstractItemModel):
         for row in rows:
             item = self.modelData[row]
             item.index = row + 1
-            items.append(copy.deepcopy(item))
-        return items
+            items.append(item)
+        return copy.deepcopy(items)
 
     def removeItems(self, indexes):
         rows = {index.row() for index in indexes}
@@ -208,17 +222,9 @@ class ResultsModel(QAbstractItemModel):
             self.endRemoveRows()
         row = len(self.modelData) - 1
         index = self.index(row, 0)
+        self.dataChanged.emit(index, index)
         self.modelDataChanged.emit(index)
         return True
-
-    def appendItems(self, items):
-        if not isinstance(items, list):
-            items = [items]
-        row = self.rowCount()
-        self.insertRows(row, items)
-        row = len(self.modelData) - 1
-        index = self.index(row, 0)
-        self.modelDataChanged.emit(index)
 
     def reset(self):
         self.beginResetModel()

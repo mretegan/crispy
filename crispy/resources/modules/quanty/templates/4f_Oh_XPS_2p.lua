@@ -20,7 +20,7 @@ H_f = 0
 --------------------------------------------------------------------------------
 H_atomic = $H_atomic
 H_crystal_field = $H_crystal_field
-H_4f_ligands_hybridization = $H_4f_ligands_hybridization
+H_4f_ligands_hybridization_lmct = $H_4f_ligands_hybridization_lmct
 H_magnetic_field = $H_magnetic_field
 H_exchange_field = $H_exchange_field
 
@@ -38,13 +38,13 @@ IndexUp_2p = {1, 3, 5}
 IndexDn_4f = {6, 8, 10, 12, 14, 16, 18}
 IndexUp_4f = {7, 9, 11, 13, 15, 17, 19}
 
-if H_4f_ligands_hybridization == 1 then
+if H_4f_ligands_hybridization_lmct == 1 then
     NFermions = 34
 
-    NElectrons_Lf = 14
+    NElectrons_L1 = 14
 
-    IndexDn_Lf = {20, 22, 24, 26, 28, 30, 32}
-    IndexUp_Lf = {21, 23, 25, 27, 29, 31, 33}
+    IndexDn_L1 = {20, 22, 24, 26, 28, 30, 32}
+    IndexUp_L1 = {21, 23, 25, 27, 29, 31, 33}
 end
 
 --------------------------------------------------------------------------------
@@ -168,79 +168,79 @@ end
 --------------------------------------------------------------------------------
 -- Define the 4f-ligands hybridization term.
 --------------------------------------------------------------------------------
-if H_4f_ligands_hybridization == 1 then
-    N_Lf = NewOperator('Number', NFermions, IndexUp_Lf, IndexUp_Lf, {1, 1, 1, 1, 1, 1, 1})
-         + NewOperator('Number', NFermions, IndexDn_Lf, IndexDn_Lf, {1, 1, 1, 1, 1, 1, 1})
+if H_4f_ligands_hybridization_lmct == 1 then
+    N_L1 = NewOperator('Number', NFermions, IndexUp_L1, IndexUp_L1, {1, 1, 1, 1, 1, 1, 1})
+         + NewOperator('Number', NFermions, IndexDn_L1, IndexDn_L1, {1, 1, 1, 1, 1, 1, 1})
 
-    Delta_4f_Lf_i = $Delta(4f,Lf)_i_value
-    e_4f_i = (28 * Delta_4f_Lf_i - 27 * U_4f_4f_i * NElectrons_4f - U_4f_4f_i * NElectrons_4f^2) / (2 * (14 + NElectrons_4f))
-    e_Lf_i = NElectrons_4f * (-2 * Delta_4f_Lf_i + U_4f_4f_i * NElectrons_4f + U_4f_4f_i) / (2 * (NElectrons_4f + 14))
+    Delta_4f_L1_i = $Delta(4f,L1)_i_value
+    e_4f_i = (28 * Delta_4f_L1_i - 27 * U_4f_4f_i * NElectrons_4f - U_4f_4f_i * NElectrons_4f^2) / (2 * (14 + NElectrons_4f))
+    e_L1_i = NElectrons_4f * (-2 * Delta_4f_L1_i + U_4f_4f_i * NElectrons_4f + U_4f_4f_i) / (2 * (NElectrons_4f + 14))
 
-    Delta_4f_Lf_f = $Delta(4f,Lf)_f_value
-    e_4f_f = (28*Delta_4f_Lf_f - U_4f_4f_f*NElectrons_4f^2 - 39*U_4f_4f_f*NElectrons_4f - 228*U_2p_4f_f)/(2*(NElectrons_4f + 20))
-    e_2p_f = (28*Delta_4f_Lf_f + U_4f_4f_f*NElectrons_4f^2 + U_4f_4f_f*NElectrons_4f - 2*U_2p_4f_f*NElectrons_4f^2 - 30*U_2p_4f_f*NElectrons_4f - 28*U_2p_4f_f)/(2*(NElectrons_4f + 20))
-    e_Lf_f = (-2*Delta_4f_Lf_f*NElectrons_4f - 12*Delta_4f_Lf_f + U_4f_4f_f*NElectrons_4f^2 + U_4f_4f_f*NElectrons_4f + 12*U_2p_4f_f*NElectrons_4f + 12*U_2p_4f_f)/(2*(NElectrons_4f + 20))
+    Delta_4f_L1_f = $Delta(4f,L1)_f_value
+    e_4f_f = (28*Delta_4f_L1_f - U_4f_4f_f*NElectrons_4f^2 - 39*U_4f_4f_f*NElectrons_4f - 228*U_2p_4f_f)/(2*(NElectrons_4f + 20))
+    e_2p_f = (28*Delta_4f_L1_f + U_4f_4f_f*NElectrons_4f^2 + U_4f_4f_f*NElectrons_4f - 2*U_2p_4f_f*NElectrons_4f^2 - 30*U_2p_4f_f*NElectrons_4f - 28*U_2p_4f_f)/(2*(NElectrons_4f + 20))
+    e_L1_f = (-2*Delta_4f_L1_f*NElectrons_4f - 12*Delta_4f_L1_f + U_4f_4f_f*NElectrons_4f^2 + U_4f_4f_f*NElectrons_4f + 12*U_2p_4f_f*NElectrons_4f + 12*U_2p_4f_f)/(2*(NElectrons_4f + 20))
 
     H_i = H_i + Chop(
           e_4f_i * N_4f
-        + e_Lf_i * N_Lf)
+        + e_L1_i * N_L1)
 
     H_f = H_f + Chop(
           e_4f_f * N_4f
         + e_2p_f * N_2p
-        + e_Lf_f * N_Lf)
+        + e_L1_f * N_L1)
 
-    B40_Lf_i = $B40(Lf)_i_value
-    B60_Lf_i = $B60(Lf)_i_value
+    B40_L1_i = $B40(L1)_i_value
+    B60_L1_i = $B60(L1)_i_value
 
-    Akm_Lf_i = {
-        {4,  0, B40_Lf_i},
-        {4, -4, math.sqrt(5/14) * B40_Lf_i},
-        {4,  4, math.sqrt(5/14) * B40_Lf_i},
-        {6,  0, B60_Lf_i},
-        {6, -4, -math.sqrt(7/2) * B60_Lf_i},
-        {6,  4, -math.sqrt(7/2) * B60_Lf_i},
+    Akm_L1_i = {
+        {4,  0, B40_L1_i},
+        {4, -4, math.sqrt(5/14) * B40_L1_i},
+        {4,  4, math.sqrt(5/14) * B40_L1_i},
+        {6,  0, B60_L1_i},
+        {6, -4, -math.sqrt(7/2) * B60_L1_i},
+        {6,  4, -math.sqrt(7/2) * B60_L1_i},
     }
 
-    H_i = H_i + Chop(NewOperator('CF', NFermions, IndexUp_Lf, IndexDn_Lf, Akm_Lf_i))
+    H_i = H_i + Chop(NewOperator('CF', NFermions, IndexUp_L1, IndexDn_L1, Akm_L1_i))
 
-    Vt1u_4f_Lf_i = $Vt1u(4f,Lf)_i_value
+    Vt1u_4f_L1_i = $Vt1u(4f,L1)_i_value
 
-    Akm_4f_Lf_i = {
-        {4,  0, (3/4) * ((math.sqrt(21)) * Vt1u_4f_Lf_i)} ,
-        {4, -4, (3/4) * ((math.sqrt(15/2)) * Vt1u_4f_Lf_i)},
-        {4,  4, (3/4) * ((math.sqrt(15/2)) * Vt1u_4f_Lf_i)},
+    Akm_4f_L1_i = {
+        {4,  0, (3/4) * ((math.sqrt(21)) * Vt1u_4f_L1_i)} ,
+        {4, -4, (3/4) * ((math.sqrt(15/2)) * Vt1u_4f_L1_i)},
+        {4,  4, (3/4) * ((math.sqrt(15/2)) * Vt1u_4f_L1_i)},
     }
 
     H_i = H_i + Chop(
-          NewOperator('CF', NFermions, IndexUp_Lf, IndexDn_Lf, IndexUp_4f, IndexDn_4f, Akm_4f_Lf_i)
-        + NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_Lf, IndexDn_Lf, Akm_4f_Lf_i))
+          NewOperator('CF', NFermions, IndexUp_L1, IndexDn_L1, IndexUp_4f, IndexDn_4f, Akm_4f_L1_i)
+        + NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_L1, IndexDn_L1, Akm_4f_L1_i))
 
-    B40_Lf_f = $B40(Lf)_f_value
-    B60_Lf_f = $B60(Lf)_f_value
+    B40_L1_f = $B40(L1)_f_value
+    B60_L1_f = $B60(L1)_f_value
 
-    Akm_Lf_f = {
-        {4,  0, B40_Lf_f},
-        {4, -4, math.sqrt(5/14) * B40_Lf_f},
-        {4,  4, math.sqrt(5/14) * B40_Lf_f},
-        {6,  0, B60_Lf_f},
-        {6, -4, -math.sqrt(7/2) * B60_Lf_f},
-        {6,  4, -math.sqrt(7/2) * B60_Lf_f},
+    Akm_L1_f = {
+        {4,  0, B40_L1_f},
+        {4, -4, math.sqrt(5/14) * B40_L1_f},
+        {4,  4, math.sqrt(5/14) * B40_L1_f},
+        {6,  0, B60_L1_f},
+        {6, -4, -math.sqrt(7/2) * B60_L1_f},
+        {6,  4, -math.sqrt(7/2) * B60_L1_f},
     }
 
-    H_f = H_f + Chop(NewOperator('CF', NFermions, IndexUp_Lf, IndexDn_Lf, Akm_Lf_f))
+    H_f = H_f + Chop(NewOperator('CF', NFermions, IndexUp_L1, IndexDn_L1, Akm_L1_f))
 
-    Vt1u_4f_Lf_f = $Vt1u(4f,Lf)_f_value
+    Vt1u_4f_L1_f = $Vt1u(4f,L1)_f_value
 
-    Akm_4f_Lf_f = {
-        {4,  0, (3/4) * ((math.sqrt(21)) * Vt1u_4f_Lf_f)} ,
-        {4, -4, (3/4) * ((math.sqrt(15/2)) * Vt1u_4f_Lf_f)},
-        {4,  4, (3/4) * ((math.sqrt(15/2)) * Vt1u_4f_Lf_f)},
+    Akm_4f_L1_f = {
+        {4,  0, (3/4) * ((math.sqrt(21)) * Vt1u_4f_L1_f)} ,
+        {4, -4, (3/4) * ((math.sqrt(15/2)) * Vt1u_4f_L1_f)},
+        {4,  4, (3/4) * ((math.sqrt(15/2)) * Vt1u_4f_L1_f)},
     }
 
     H_f = H_f + Chop(
-          NewOperator('CF', NFermions, IndexUp_Lf, IndexDn_Lf, IndexUp_4f, IndexDn_4f, Akm_4f_Lf_f)
-        + NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_Lf, IndexDn_Lf, Akm_4f_Lf_f))
+          NewOperator('CF', NFermions, IndexUp_L1, IndexDn_L1, IndexUp_4f, IndexDn_4f, Akm_4f_L1_f)
+        + NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_L1, IndexDn_L1, Akm_4f_L1_f))
 end
 
 --------------------------------------------------------------------------------
@@ -342,16 +342,16 @@ InitialRestrictions = {NFermions, NBosons, {'111111 00000000000000', NElectrons_
 FinalRestrictions = {NFermions, NBosons, {'111111 00000000000000', NElectrons_2p - 1, NElectrons_2p - 1},
                                          {'000000 11111111111111', NElectrons_4f + 1, NElectrons_4f + 1}}
 
-if H_4f_ligands_hybridization == 1 then
+if H_4f_ligands_hybridization_lmct == 1 then
     InitialRestrictions = {NFermions, NBosons, {'111111 00000000000000 00000000000000', NElectrons_2p, NElectrons_2p},
                                                {'000000 11111111111111 00000000000000', NElectrons_4f, NElectrons_4f},
-                                               {'000000 00000000000000 11111111111111', NElectrons_Lf, NElectrons_Lf}}
+                                               {'000000 00000000000000 11111111111111', NElectrons_L1, NElectrons_L1}}
 
     FinalRestrictions = {NFermions, NBosons, {'111111 00000000000000 00000000000000', NElectrons_2p - 1, NElectrons_2p - 1},
                                              {'000000 11111111111111 00000000000000', NElectrons_4f + 1, NElectrons_4f + 1},
-                                             {'000000 00000000000000 11111111111111', NElectrons_Lf, NElectrons_Lf}}
+                                             {'000000 00000000000000 11111111111111', NElectrons_L1, NElectrons_L1}}
 
-    CalculationRestrictions = {NFermions, NBosons, {'000000 00000000000000 11111111111111', NElectrons_Lf - (NConfigurations - 1), NElectrons_Lf}}
+    CalculationRestrictions = {NFermions, NBosons, {'000000 00000000000000 11111111111111', NElectrons_L1 - (NConfigurations - 1), NElectrons_L1}}
 end
 
 T = $T * EnergyUnits.Kelvin.value
@@ -507,10 +507,6 @@ k = $k1
 -- List with the user selected spectra.
 spectra = {$spectra}
 
-if next(spectra) == nil then
-    return
-end
-
 indices_2p = {}
 c = 1
 
@@ -538,11 +534,11 @@ header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sk>   
 header = header .. '=================================================================================================================================\n'
 footer = '=================================================================================================================================\n'
 
-if H_4f_ligands_hybridization == 1 then
-    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_4f, N_2p, N_4f, N_Ld, 'dZ'}
+if H_4f_ligands_hybridization_lmct == 1 then
+    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_4f, N_2p, N_4f, N_L1, 'dZ'}
     header = 'Analysis of the initial Hamiltonian:\n'
     header = header .. '===========================================================================================================================================\n'
-    header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_2p>    <N_4f>    <N_Ld>          dZ\n'
+    header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_2p>    <N_4f>    <N_L1>          dZ\n'
     header = header .. '===========================================================================================================================================\n'
     footer = '===========================================================================================================================================\n'
 end
