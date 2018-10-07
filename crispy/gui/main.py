@@ -214,7 +214,9 @@ class CheckUpdateThread(QThread):
 
         try:
             data = json.loads(response.read().decode('utf-8'))
-        except json.decoder.JSONDecodeError:
+        # Use bare except to make sure we catch all possible errors.
+        # We do not want to fail here.
+        except: # noqa
             return None
 
         version = data['version']
