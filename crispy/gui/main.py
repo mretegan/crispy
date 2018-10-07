@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '04/10/2018'
+__date__ = '07/10/2018'
 
 
 import os
@@ -210,9 +210,13 @@ class CheckUpdateThread(QThread):
         try:
             response = urlopen(request, timeout=5)
         except (URLError, socket.timeout):
-            return
+            return None
 
-        data = json.loads(response.read().decode('utf-8'))
+        try:
+            data = json.loads(response.read().decode('utf-8'))
+        except json.decoder.JSONDecodeError:
+            return None
+
         version = data['version']
 
         return version
@@ -221,7 +225,7 @@ class CheckUpdateThread(QThread):
         seconds = 5
         self.sleep(seconds)
         siteVersion = self._getSiteVersion()
-        if siteVersion and version < siteVersion:
+        if siteVersion is not None and version < siteVersion:
             self.updateAvailable.emit()
 
 
