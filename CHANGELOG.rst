@@ -7,7 +7,6 @@ What's new:
 
 * ligand field calculations for the lanthanides and actinides
 * add MLCT (in addition to the existing LMCT) term to the transition metals
-* several bug fixes
 
 v0.7.0 (2018-09-26)
 -------------------
