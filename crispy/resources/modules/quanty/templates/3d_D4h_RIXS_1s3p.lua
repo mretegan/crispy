@@ -51,6 +51,19 @@ if H_3d_ligands_hybridization_lmct == 1 then
     IndexUp_L1 = {19, 21, 23, 25, 27}
 end
 
+if H_3d_ligands_hybridization_mlct == 1 then
+    NFermions = 28
+
+    NElectrons_L2 = 0
+
+    IndexDn_L2 = {18, 20, 22, 24, 26}
+    IndexUp_L2 = {19, 21, 23, 25, 27}
+end
+
+if H_3d_ligands_hybridization_lmct == 1 and H_3d_ligands_hybridization_mlct == 1 then
+    return
+end
+
 --------------------------------------------------------------------------------
 -- Define the atomic term.
 --------------------------------------------------------------------------------
@@ -200,7 +213,7 @@ if H_crystal_field == 1 then
 end
 
 --------------------------------------------------------------------------------
--- Define the 3d-ligands hybridization term.
+-- Define the 3d-ligands hybridization term (LMCT).
 --------------------------------------------------------------------------------
 if H_3d_ligands_hybridization_lmct == 1 then
     N_L1 = NewOperator('Number', NFermions, IndexUp_L1, IndexUp_L1, {1, 1, 1, 1, 1})
@@ -300,6 +313,109 @@ if H_3d_ligands_hybridization_lmct == 1 then
         + Vb1g_3d_L1_f * Vb1g_3d_L1
         + Vb2g_3d_L1_f * Vb2g_3d_L1
         + Veg_3d_L1_f * Veg_3d_L1)
+end
+
+--------------------------------------------------------------------------------
+-- Define the 3d-ligands hybridization term (MLCT).
+--------------------------------------------------------------------------------
+if H_3d_ligands_hybridization_mlct == 1 then
+    N_L2 = NewOperator('Number', NFermions, IndexUp_L2, IndexUp_L2, {1, 1, 1, 1, 1})
+         + NewOperator('Number', NFermions, IndexDn_L2, IndexDn_L2, {1, 1, 1, 1, 1})
+
+    Delta_3d_L2_i = $Delta(3d,L2)_i_value
+    e_3d_i = U_3d_3d_i * (-NElectrons_3d + 1) / 2
+    e_L2_i = Delta_3d_L2_i - U_3d_3d_i * NElectrons_3d / 2 - U_3d_3d_i / 2
+
+    Delta_3d_L2_m = $Delta(3d,L2)_m_value
+    e_3d_m = -(U_3d_3d_m * NElectrons_3d^2 + 3 * U_3d_3d_m * NElectrons_3d + 4 * U_1s_3d_m) / (2 * NElectrons_3d + 4)
+    e_1s_m = NElectrons_3d * (U_3d_3d_m * NElectrons_3d + U_3d_3d_m - 2 * U_1s_3d_m * NElectrons_3d - 2 * U_1s_3d_m) / (2 * (NElectrons_3d + 2))
+    e_L2_m = (2 * Delta_3d_L2_m * NElectrons_3d + 4 * Delta_3d_L2_m - U_3d_3d_m * NElectrons_3d^2 - U_3d_3d_m * NElectrons_3d - 4 * U_1s_3d_m * NElectrons_3d - 4 * U_1s_3d_m) / (2  *(NElectrons_3d + 2))
+
+    Delta_3d_L2_f = $Delta(3d,L2)_f_value
+    e_3d_f = -(U_3d_3d_f * NElectrons_3d^2 + 11 * U_3d_3d_f * NElectrons_3d + 60 * U_3p_3d_f) / (2 * NElectrons_3d + 12)
+    e_3p_f = NElectrons_3d * (U_3d_3d_f * NElectrons_3d + U_3d_3d_f - 2 * U_3p_3d_f * NElectrons_3d - 2 * U_3p_3d_f) / (2 * (NElectrons_3d + 6))
+    e_L2_f = (2 * Delta_3d_L2_f * NElectrons_3d + 12 * Delta_3d_L2_f - U_3d_3d_f * NElectrons_3d^2 - U_3d_3d_f * NElectrons_3d - 12 * U_3p_3d_f * NElectrons_3d - 12 * U_3p_3d_f) / (2 * (NElectrons_3d + 6))
+
+    H_i = H_i + Chop(
+          e_3d_i * N_3d
+        + e_L2_i * N_L2)
+
+    H_m = H_m + Chop(
+          e_3d_m * N_3d
+        + e_1s_m * N_1s
+        + e_L2_m * N_L2)
+
+    H_f = H_f + Chop(
+          e_3d_f * N_3d
+        + e_3p_f * N_3p
+        + e_L2_f * N_L2)
+
+    Dq_L2 = NewOperator('CF', NFermions, IndexUp_L2, IndexDn_L2, PotentialExpandedOnClm('D4h', 2, { 6,  6, -4, -4}))
+    Ds_L2 = NewOperator('CF', NFermions, IndexUp_L2, IndexDn_L2, PotentialExpandedOnClm('D4h', 2, {-2,  2,  2, -1}))
+    Dt_L2 = NewOperator('CF', NFermions, IndexUp_L2, IndexDn_L2, PotentialExpandedOnClm('D4h', 2, {-6, -1, -1,  4}))
+
+    Va1g_3d_L2 = NewOperator('CF', NFermions, IndexUp_L2, IndexDn_L2, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm('D4h', 2, {1, 0, 0, 0}))
+               + NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_L2, IndexDn_L2, PotentialExpandedOnClm('D4h', 2, {1, 0, 0, 0}))
+
+    Vb1g_3d_L2 = NewOperator('CF', NFermions, IndexUp_L2, IndexDn_L2, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm('D4h', 2, {0, 1, 0, 0}))
+               + NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_L2, IndexDn_L2, PotentialExpandedOnClm('D4h', 2, {0, 1, 0, 0}))
+
+    Vb2g_3d_L2 = NewOperator('CF', NFermions, IndexUp_L2, IndexDn_L2, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm('D4h', 2, {0, 0, 1, 0}))
+               + NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_L2, IndexDn_L2, PotentialExpandedOnClm('D4h', 2, {0, 0, 1, 0}))
+
+    Veg_3d_L2 = NewOperator('CF', NFermions, IndexUp_L2, IndexDn_L2, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm('D4h', 2, {0, 0, 0, 1}))
+              + NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, IndexUp_L2, IndexDn_L2, PotentialExpandedOnClm('D4h', 2, {0, 0, 0, 1}))
+
+    Dq_L2_i = $Dq(L2)_i_value
+    Ds_L2_i = $Ds(L2)_i_value
+    Dt_L2_i = $Dt(L2)_i_value
+    Va1g_3d_L2_i = $Va1g(3d,L2)_i_value
+    Vb1g_3d_L2_i = $Vb1g(3d,L2)_i_value
+    Vb2g_3d_L2_i = $Vb2g(3d,L2)_i_value
+    Veg_3d_L2_i = $Veg(3d,L2)_i_value
+
+    Dq_L2_m = $Dq(L2)_m_value
+    Ds_L2_m = $Ds(L2)_m_value
+    Dt_L2_m = $Dt(L2)_m_value
+    Va1g_3d_L2_m = $Va1g(3d,L2)_m_value
+    Vb1g_3d_L2_m = $Vb1g(3d,L2)_m_value
+    Vb2g_3d_L2_m = $Vb2g(3d,L2)_m_value
+    Veg_3d_L2_m = $Veg(3d,L2)_m_value
+
+    Dq_L2_f = $Dq(L2)_f_value
+    Ds_L2_f = $Ds(L2)_f_value
+    Dt_L2_f = $Dt(L2)_f_value
+    Va1g_3d_L2_f = $Va1g(3d,L2)_f_value
+    Vb1g_3d_L2_f = $Vb1g(3d,L2)_f_value
+    Vb2g_3d_L2_f = $Vb2g(3d,L2)_f_value
+    Veg_3d_L2_f = $Veg(3d,L2)_f_value
+
+    H_i = H_i + Chop(
+          Dq_L2_i * Dq_L2
+        + Ds_L2_i * Ds_L2
+        + Dt_L2_i * Dt_L2
+        + Va1g_3d_L2_i * Va1g_3d_L2
+        + Vb1g_3d_L2_i * Vb1g_3d_L2
+        + Vb2g_3d_L2_i * Vb2g_3d_L2
+        + Veg_3d_L2_i * Veg_3d_L2)
+
+    H_m = H_m + Chop(
+          Dq_L2_m * Dq_L2
+        + Ds_L2_m * Ds_L2
+        + Dt_L2_m * Dt_L2
+        + Va1g_3d_L2_m * Va1g_3d_L2
+        + Vb1g_3d_L2_m * Vb1g_3d_L2
+        + Vb2g_3d_L2_m * Vb2g_3d_L2
+        + Veg_3d_L2_m * Veg_3d_L2)
+
+    H_f = H_f + Chop(
+          Dq_L2_f * Dq_L2
+        + Ds_L2_f * Ds_L2
+        + Dt_L2_f * Dt_L2
+        + Va1g_3d_L2_f * Va1g_3d_L2
+        + Vb1g_3d_L2_f * Vb1g_3d_L2
+        + Vb2g_3d_L2_f * Vb2g_3d_L2
+        + Veg_3d_L2_f * Veg_3d_L2)
 end
 
 --------------------------------------------------------------------------------
@@ -445,6 +561,25 @@ if H_3d_ligands_hybridization_lmct == 1 then
     CalculationRestrictions = {NFermions, NBosons, {'00 000000 0000000000 1111111111', NElectrons_L1 - (NConfigurations - 1), NElectrons_L1}}
 end
 
+if H_3d_ligands_hybridization_mlct == 1 then
+    InitialRestrictions = {NFermions, NBosons, {'11 000000 0000000000 0000000000', NElectrons_1s, NElectrons_1s},
+                                               {'00 111111 0000000000 0000000000', NElectrons_3p, NElectrons_3p},
+                                               {'00 000000 1111111111 0000000000', NElectrons_3d, NElectrons_3d},
+                                               {'00 000000 0000000000 1111111111', NElectrons_L2, NElectrons_L2}}
+
+    IntermediateRestrictions = {NFermions, NBosons, {'11 000000 0000000000 0000000000', NElectrons_1s - 1, NElectrons_1s - 1},
+                                                    {'00 111111 0000000000 0000000000', NElectrons_3p, NElectrons_3p},
+                                                    {'00 000000 1111111111 0000000000', NElectrons_3d + 1, NElectrons_3d + 1},
+                                                    {'00 000000 0000000000 1111111111', NElectrons_L2, NElectrons_L2}}
+
+    FinalRestrictions = {NFermions, NBosons, {'11 000000 0000000000 0000000000', NElectrons_1s, NElectrons_1s},
+                                             {'00 111111 0000000000 0000000000', NElectrons_3p - 1, NElectrons_3p - 1},
+                                             {'00 000000 1111111111 0000000000', NElectrons_3d + 1, NElectrons_3d + 1},
+                                             {'00 000000 0000000000 1111111111', NElectrons_L2, NElectrons_L2}}
+
+    CalculationRestrictions = {NFermions, NBosons, {'00 000000 0000000000 1111111111', NElectrons_L2, NElectrons_L2 + (NConfigurations - 1)}}
+end
+
 T = $T * EnergyUnits.Kelvin.value
 
 -- Approximate machine epsilon for single precision arithmetics.
@@ -574,6 +709,15 @@ if H_3d_ligands_hybridization_lmct == 1 then
     header = 'Analysis of the initial Hamiltonian:\n'
     header = header .. '===========================================================================================================================================\n'
     header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_1s>    <N_3d>    <N_L1>          dZ\n'
+    header = header .. '===========================================================================================================================================\n'
+    footer = '===========================================================================================================================================\n'
+end
+
+if H_3d_ligands_hybridization_mlct == 1 then
+    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_3d, N_1s, N_3d, N_L2, 'dZ'}
+    header = 'Analysis of the initial Hamiltonian:\n'
+    header = header .. '===========================================================================================================================================\n'
+    header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_1s>    <N_3d>    <N_L2>          dZ\n'
     header = header .. '===========================================================================================================================================\n'
     footer = '===========================================================================================================================================\n'
 end

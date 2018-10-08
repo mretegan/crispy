@@ -48,6 +48,19 @@ if H_4d_ligands_hybridization_lmct == 1 then
     IndexUp_L1 = {17, 19, 21, 23, 25}
 end
 
+if H_4d_ligands_hybridization_mlct == 1 then
+    NFermions = 26
+
+    NElectrons_L2 = 10
+
+    IndexDn_L2 = {16, 18, 20, 22, 24}
+    IndexUp_L2 = {17, 19, 21, 23, 25}
+end
+
+if H_4d_ligands_hybridization_lmct == 1 and H_4d_ligands_hybridization_mlct == 1 then
+    return
+end
+
 --------------------------------------------------------------------------------
 -- Define the atomic term.
 --------------------------------------------------------------------------------
@@ -164,7 +177,7 @@ if H_crystal_field == 1 then
 end
 
 --------------------------------------------------------------------------------
--- Define the 4d-ligands hybridization term.
+-- Define the 4d-ligands hybridization term (LMCT).
 --------------------------------------------------------------------------------
 if H_4d_ligands_hybridization_lmct == 1 then
     N_L1 = NewOperator('Number', NFermions, IndexUp_L1, IndexUp_L1, {1, 1, 1, 1, 1})
@@ -230,6 +243,75 @@ if H_4d_ligands_hybridization_lmct == 1 then
           tenDq_L1_f * tenDq_L1
         + Ve_4d_L1_f * Ve_4d_L1
         + Vt2_4d_L1_f * Vt2_4d_L1)
+end
+
+--------------------------------------------------------------------------------
+-- Define the 4d-ligands hybridization term (MLCT).
+--------------------------------------------------------------------------------
+if H_4d_ligands_hybridization_mlct == 1 then
+    N_L2 = NewOperator('Number', NFermions, IndexUp_L2, IndexUp_L2, {1, 1, 1, 1, 1})
+         + NewOperator('Number', NFermions, IndexDn_L2, IndexDn_L2, {1, 1, 1, 1, 1})
+
+    Delta_4d_L2_i = $Delta(4d,L2)_i_value
+    e_4d_i = U_4d_4d_i * (-NElectrons_4d + 1) / 2
+    e_L2_i = Delta_4d_L2_i - U_4d_4d_i * NElectrons_4d / 2 - U_4d_4d_i / 2
+
+    Delta_4d_L2_m = $Delta(4d,L2)_m_value
+    e_4d_m = -(U_4d_4d_m * NElectrons_4d^2 + 11 * U_4d_4d_m * NElectrons_4d + 60 * U_2p_4d_m) / (2 * NElectrons_4d + 12)
+    e_2p_m = NElectrons_4d * (U_4d_4d_m * NElectrons_4d + U_4d_4d_m - 2 * U_2p_4d_m * NElectrons_4d - 2 * U_2p_4d_m) / (2 * (NElectrons_4d + 6))
+    e_L2_m = (2 * Delta_4d_L2_m * NElectrons_4d + 12 * Delta_4d_L2_m - U_4d_4d_m * NElectrons_4d^2 - U_4d_4d_m * NElectrons_4d - 12 * U_2p_4d_m * NElectrons_4d - 12 * U_2p_4d_m) / (2 * (NElectrons_4d + 6))
+
+    Delta_4d_L2_f = $Delta(4d,L2)_f_value
+    e_4d_f = U_4d_4d_f * (-NElectrons_4d + 1) / 2
+    e_L2_f = Delta_4d_L2_f - U_4d_4d_f * NElectrons_4d / 2 - U_4d_4d_f / 2
+
+    H_i = H_i + Chop(
+          e_4d_i * N_4d
+        + e_L2_i * N_L2)
+
+    H_m = H_m + Chop(
+          e_4d_m * N_4d
+        + e_2p_m * N_2p
+        + e_L2_m * N_L2)
+
+    H_f = H_f + Chop(
+          e_4d_f * N_4d
+        + e_L2_f * N_L2)
+
+    tenDq_L2 = NewOperator('CF', NFermions, IndexUp_L2, IndexDn_L2, PotentialExpandedOnClm('Td', 2, {-0.6, 0.4}))
+
+    Ve_4d_L2 = NewOperator('CF', NFermions, IndexUp_L2, IndexDn_L2, IndexUp_4d, IndexDn_4d, PotentialExpandedOnClm('Td', 2, {1, 0}))
+             + NewOperator('CF', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_L2, IndexDn_L2, PotentialExpandedOnClm('Td', 2, {1, 0}))
+
+    Vt2_4d_L2 = NewOperator('CF', NFermions, IndexUp_L2, IndexDn_L2, IndexUp_4d, IndexDn_4d, PotentialExpandedOnClm('Td', 2, {0, 1}))
+              + NewOperator('CF', NFermions, IndexUp_4d, IndexDn_4d, IndexUp_L2, IndexDn_L2, PotentialExpandedOnClm('Td', 2, {0, 1}))
+
+    tenDq_L2_i = $10Dq(L2)_i_value
+    Ve_4d_L2_i = $Ve(4d,L2)_i_value
+    Vt2_4d_L2_i = $Vt2(4d,L2)_i_value
+
+    tenDq_L2_m = $10Dq(L2)_m_value
+    Ve_4d_L2_m = $Ve(4d,L2)_m_value
+    Vt2_4d_L2_m = $Vt2(4d,L2)_m_value
+
+    tenDq_L2_f = $10Dq(L2)_f_value
+    Ve_4d_L2_f = $Ve(4d,L2)_f_value
+    Vt2_4d_L2_f = $Vt2(4d,L2)_f_value
+
+    H_i = H_i + Chop(
+          tenDq_L2_i * tenDq_L2
+        + Ve_4d_L2_i * Ve_4d_L2
+        + Vt2_4d_L2_i * Vt2_4d_L2)
+
+    H_m = H_m + Chop(
+          tenDq_L2_m * tenDq_L2
+        + Ve_4d_L2_m * Ve_4d_L2
+        + Vt2_4d_L2_m * Vt2_4d_L2)
+
+    H_f = H_f + Chop(
+          tenDq_L2_f * tenDq_L2
+        + Ve_4d_L2_f * Ve_4d_L2
+        + Vt2_4d_L2_f * Vt2_4d_L2)
 end
 
 --------------------------------------------------------------------------------
@@ -366,6 +448,20 @@ if H_4d_ligands_hybridization_lmct == 1 then
     CalculationRestrictions = {NFermions, NBosons, {'000000 0000000000 1111111111', NElectrons_L1 - (NConfigurations - 1), NElectrons_L1}}
 end
 
+if H_4d_ligands_hybridization_mlct == 1 then
+    InitialRestrictions = {NFermions, NBosons, {'111111 0000000000 0000000000', NElectrons_2p, NElectrons_2p},
+                                               {'000000 1111111111 0000000000', NElectrons_4d, NElectrons_4d},
+                                               {'000000 0000000000 1111111111', NElectrons_L2, NElectrons_L2}}
+
+    IntermediateRestrictions = {NFermions, NBosons, {'111111 0000000000 0000000000', NElectrons_2p - 1, NElectrons_2p - 1},
+                                                    {'000000 1111111111 0000000000', NElectrons_4d + 1, NElectrons_4d + 1},
+                                                    {'000000 0000000000 1111111111', NElectrons_L2, NElectrons_L2}}
+
+    FinalRestrictions = InitialRestrictions
+
+    CalculationRestrictions = {NFermions, NBosons, {'000000 0000000000 1111111111', NElectrons_L2, NElectrons_L2 + (NConfigurations - 1)}}
+end
+
 T = $T * EnergyUnits.Kelvin.value
 
 -- Approximate machine epsilon for single precision arithmetics.
@@ -493,6 +589,15 @@ if H_4d_ligands_hybridization_lmct == 1 then
     header = 'Analysis of the initial Hamiltonian:\n'
     header = header .. '===========================================================================================================================================\n'
     header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_2p>    <N_4d>    <N_L1>          dZ\n'
+    header = header .. '===========================================================================================================================================\n'
+    footer = '===========================================================================================================================================\n'
+end
+
+if H_4d_ligands_hybridization_mlct == 1 then
+    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_4d, N_2p, N_4d, N_L2, 'dZ'}
+    header = 'Analysis of the initial Hamiltonian:\n'
+    header = header .. '===========================================================================================================================================\n'
+    header = header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_2p>    <N_4d>    <N_L2>          dZ\n'
     header = header .. '===========================================================================================================================================\n'
     footer = '===========================================================================================================================================\n'
 end

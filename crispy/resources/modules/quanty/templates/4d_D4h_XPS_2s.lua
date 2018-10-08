@@ -423,6 +423,18 @@ if H_4d_ligands_hybridization_lmct == 1 then
     CalculationRestrictions = {NFermions, NBosons, {'00 0000000000 1111111111', NElectrons_L1 - (NConfigurations - 1), NElectrons_L1}}
 end
 
+if H_4d_ligands_hybridization_mlct == 1 then
+    InitialRestrictions = {NFermions, NBosons, {'11 0000000000 0000000000', NElectrons_2s, NElectrons_2s},
+                                               {'00 1111111111 0000000000', NElectrons_4d, NElectrons_4d},
+                                               {'00 0000000000 1111111111', NElectrons_L2, NElectrons_L2}}
+
+    FinalRestrictions = {NFermions, NBosons, {'11 0000000000 0000000000', NElectrons_2s - 1, NElectrons_2s - 1},
+                                             {'00 1111111111 0000000000', NElectrons_4d, NElectrons_4d},
+                                             {'00 0000000000 1111111111', NElectrons_L2, NElectrons_L2}}
+
+    CalculationRestrictions = {NFermions, NBosons, {'00 0000000000 1111111111', NElectrons_L2, NElectrons_L2 + (NConfigurations - 1)}}
+end
+
 T = $T * EnergyUnits.Kelvin.value
 
 -- Approximate machine epsilon for single precision arithmetics.
