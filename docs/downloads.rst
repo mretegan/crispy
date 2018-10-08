@@ -4,7 +4,7 @@ Downloads
 +----------------------------------+------------------------------+-----------------------------+
 | |Windows|                        | |macOS|                      | |Linux|                     |
 +----------------------------------+------------------------------+-----------------------------+
-| `Crispy-0.7.0-x64.exe (64-bit)`_ | `Crispy-0.7.0.dmg (64-bit)`_ | see the :doc:`installation` |
+| `Crispy-0.7.1-x64.exe (64-bit)`_ | `Crispy-0.7.1.dmg (64-bit)`_ | see the :doc:`installation` |
 |                                  |                              |                             |
 | The installer includes:          | The application includes:    | page for details.           |
 |   - Python 3.5.4                 |   - Python 3.5.4             |                             |
@@ -34,6 +34,6 @@ Downloads
     :width: 90pt
     :align: middle
 
-.. _Crispy-0.7.0-x64.exe (64-bit): https://github.com/mretegan/crispy/releases/download/v0.7.0/Crispy-0.7.0-x64.exe
+.. _Crispy-0.7.1-x64.exe (64-bit): https://github.com/mretegan/crispy/releases/download/v0.7.1/Crispy-0.7.1-x64.exe
 
-.. _Crispy-0.7.0.dmg (64-bit): https://github.com/mretegan/crispy/releases/download/v0.7.0/Crispy-0.7.0.dmg
+.. _Crispy-0.7.1.dmg (64-bit): https://github.com/mretegan/crispy/releases/download/v0.7.1/Crispy-0.7.1.dmg

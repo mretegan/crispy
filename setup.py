@@ -28,7 +28,7 @@ from __future__ import absolute_import, division
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '25/09/2018'
+__date__ = '07/10/2018'
 
 import os
 import sys
@@ -54,10 +54,15 @@ def get_version():
     return version.strictversion
 
 
-def install_requires():
+def get_requirements():
+    requirements = list()
     with open('requirements.txt') as fp:
-        install_requires = fp.readlines()
-    return install_requires
+        for line in fp:
+            if line.startswith('#') or line == '\n':
+                continue
+            line = line.strip('\n')
+            requirements.append(line)
+    return requirements
 
 
 def main():
@@ -78,7 +83,7 @@ def main():
         url='https://github.com/mretegan/crispy',
         download_url='https://github.com/mretegan/crispy/releases',
         keywords='gui, spectroscopy, simulation, synchrotron, science',
-        install_requires=install_requires(),
+        install_requires=get_requirements(),
         platforms=[
             'MacOS :: MacOS X',
             'Microsoft :: Windows',
