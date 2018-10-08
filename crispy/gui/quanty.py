@@ -916,7 +916,6 @@ class QuantyDockWidget(QDockWidget):
         self.saveInputAsPushButton.setEnabled(flag)
 
         if result is None or isinstance(result, QuantyCalculation):
-            # TODO: Check that this works properly.
             self.nConfigurationsLineEdit.setEnabled(flag)
             self.resultsView.setEnabled(flag)
             self.calculationPushButton.setEnabled(True)

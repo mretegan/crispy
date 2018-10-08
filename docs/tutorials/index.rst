@@ -1,7 +1,7 @@
 Tutorials
 =========
 
-On this page you will find links to a series of tutorials to help get you started with Crispy. They are largely based on tutorials kindly provided by `Amélie Juhin <http://www-ext.impmc.upmc.fr/~juhin>`_. The tutorials are in no particular order, so you can start with the one that interests you. Nevertheless, to make things easier to follow, have a look at the quick tour of the interface below. 
+On this page you will find links to a series of tutorials to help get you started with Crispy. They are largely based on tutorials kindly provided by `Amélie Juhin <http://www-ext.impmc.upmc.fr/~juhin>`_. The tutorials are in no particular order, so you can start with the one that interests you. Nevertheless, to make things easier to follow, have a look at the quick tour of the interface below.
 
 .. toctree::
     :maxdepth: 1
@@ -18,15 +18,15 @@ Crispy's main window is divided in three parts: the plotting panel (1), the logg
 
 The buttons located on the top of the plotting panel can be used to change the properties of the plot, e.g zoom, scale, aspect ration, color etc. The displayed plots can also be saved using various file formats.
 
-The progress of the calculation and eventual errors are displayed in the logging panel. 
+The progress of the calculation and eventual errors are displayed in the logging panel.
 
-The Quanty module panel has a vertical tab structure. The *General Setup* tab is located at the top, and will always be displayed when Crispy is started. Here you can select the element, charge, and symmetry of the absorbing site. The type of experiment, edge, temperature, and magnetic field can also be selected here.
+The panel of the Quanty module has a vertical tab structure. The *General Setup* tab is located at the top, and will always be displayed when Crispy is started. Here you can select the element, charge, and symmetry of the absorbing site. The type of experiment, edge, temperature, and magnetic field can also be selected here.
 
 .. figure:: assets/experimental_conditions.png
     :align: center
     :width: 35 %
 
-Depending on the type of experiment selected above, the panel below will display a single tab with the parameters of the *Absorption Energy* for a XAS calculation, or two tabs, *Incident Energy* and *Energy Transfer*, for a RIXS calculation. 
+Depending on the type of experiment selected above, the panel below will display a single tab with the parameters of the *Absorption Energy* for a XAS calculation, or two tabs, *Incident Energy* and *Energy Transfer*, for a RIXS calculation.
 
 .. figure:: assets/absorption_energy.png
     :align: center
@@ -34,7 +34,7 @@ Depending on the type of experiment selected above, the panel below will display
 
 The parameters include the energy range and the number of points for the calculated spectrum. Both *Lorentzian* and *Gaussian* functions can be used to broaden the spectrum. The *Lorentzian* broadening supports more complex input values. For example an energy dependent broadening can be specify by using two FWHM values, one for lower energy part of the spectrum, and a second one for the high energy part. This feature is only available for some of the available edges. Additionally the energy for the transition point between the two FWHM values can also be specified as a third parameter. This is by default the middle of the absorption energy range. Finally, the wave and polarization vectors can be specified.
 
-At the bottom of the *General Setup* tab you can select the spectra to be calculated. 
+At the bottom of the *General Setup* tab you can select the spectra to be calculated.
 
 .. figure:: assets/spectra.png
     :align: center

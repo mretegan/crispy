@@ -18,7 +18,7 @@ The easiest way to install Crispy on Windows and macOS operating systems is to u
 
 Using pip
 *********
-Pip is the package manager for Python, and before you can use it to install Crispy, you have to make sure that you have a working Python distribution. While Crispy works with both Python 2 and Python 3, you should install Python 3.5 or greater, as in previous versions some of the dependencies like PyQt5 cannot be easily installed using pip. On macOS and Windows you can install Python using the `official <https://www.python.org/downloads>`_ installers. In particular for Windows you should install the 64-bit version of Python, and make sure that during the installation you select to add Python to system's PATH. On Linux, Python and dependencies can be installed using the system's package manager (apt, dnf, pacman, etc.).
+Pip is the package manager for Python, and before you can use it to install Crispy, you have to make sure that you have a working Python distribution. While Crispy works with both Python 2 and Python 3, you should install Python 3.5 or greater, as in previous versions some of the dependencies like PyQt5 cannot be easily installed using pip. On macOS and Windows you can install Python using the `official <https://www.python.org/downloads>`_ installers. In particular for Windows you should install the 64-bit version of Python, and make sure that during the installation you select to add Python to system's PATH.
 
 Crispy depends on the following Python packages:
 
@@ -28,12 +28,24 @@ Crispy depends on the following Python packages:
 * `h5py <https://www.h5py.org>`_
 * `silx <http://www.silx.org>`_
 
-Except silx, all dependencies are automatically downloaded and installed when using pip:
+On current Linux distributions, both Python 2 and Python 3 should be present. Start by checking the installed Python 3 version:
 
 .. code:: sh
 
-    pip install --upgrade --user silx
-    pip install --upgrade --user crispy
+    python3 -V
+
+If the version number is at least 3.5, you can install Crispy and all dependencies using pip:
+
+.. code:: sh
+
+    pip3 install --upgrade --user crispy
+
+For lower Python versions, you will have to use the system's package manager (apt, dnf, pacman, etc.) to install the dependencies. Crispy can then be installed using pip, but this time without the depencies.
+
+.. code:: sh
+
+    pip3 install --no-deps --upgrade --user crispy # Python 3
+    pip  install --no-deps --upgrade --user crispy # Python 2
 
 After the installation finishes, you should be able to start the program from the command line:
 
@@ -41,11 +53,11 @@ After the installation finishes, you should be able to start the program from th
 
     crispy
 
-If you are having problems running the previous command, it is probably due to not having your PATH environment variable set correctly. To find the path of the Crispy installation run:
+If you are having problems running the previous command, it is probably due to not having your PATH environment variable set correctly.
 
 .. code:: sh
 
-    pip show -f crispy
+    export PATH=$HOME/.local/bin:$PATH
 
 Just as in the case of using the package installers, this will install the latest release, and not the development version (see below). Also, please note that when you install Crispy using pip, external programs needed to run the calculations have to be installed and their path must be set in the interface (preferred way) or using the PATH environment variable.
 
@@ -73,7 +85,6 @@ As an alternative to the pip installation above, you can download the source cod
     python -m crispy
 
 In this case the dependencies are not automatically installed and you will have to do it yourself:
-
 
 .. code:: sh
 
