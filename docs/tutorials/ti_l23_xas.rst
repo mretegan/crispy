@@ -3,11 +3,11 @@ Calculating the |L2,3| XAS of |Ti4+|
 
 In this tutorial, the calculation of the |L2,3| absorption spectrum of |Ti4+|, resulting from 2p to 3d electronic dipole transitions, is used to illustrates some of the fundamental concepts in using multiplet calculations as a tool to interpret experimental data. As can be seen from the figure below the spectrum calculated using multiplet theory can be in very good agreement with the experimental spectrum (dotted).
 
-.. figure:: assets/degroot_fig7.png
+.. figure:: assets/degroot_fig1.png
     :width: 60 %
     :align: center
 
-    de Groot et al., Phys. Rev. B., 1990, 41 (2), 928--937.
+    de Groot et al., Phys. Chem. Minerals, 1992, 19, 140--147.
 
 Atomic Multiplet
 ----------------
