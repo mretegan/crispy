@@ -32,7 +32,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '25/09/2018'
+__date__ = '17/10/2018'
 
 import os
 import sys
@@ -83,7 +83,7 @@ def prune_app(root):
         'QtWebSockets',
         'QtXml',
         'QtXmlPatterns',
-        ]
+    ]
 
     # TODO: detect the Python version
     pyqt_dir = os.path.join(
@@ -125,7 +125,7 @@ def main():
         'LSMinimumSystemVersion': '10.10.0',
         'NSHumanReadableCopyright': 'MIT',
         'NSHighResolutionCapable': True,
-        }
+    }
 
     options = {
         'py2app': {
@@ -135,17 +135,17 @@ def main():
             'packages': packages,
             'plist': plist,
             'argv_emulation': False,
-            'optimize':  2,
+            'optimize': 2,
             'compressed': True,
-            },
-        }
+        },
+    }
 
     setup(
         name='Crispy',
         version=get_version(),
         app=['scripts/crispy'],
         options=options,
-        )
+    )
 
     # Remove unused modules.
     prune_app(root)

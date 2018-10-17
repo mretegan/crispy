@@ -31,7 +31,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '25/09/2018'
+__date__ = '17/10/2018'
 
 import crispy
 import os
@@ -51,7 +51,8 @@ def main():
     build_dir = os.path.join(root, 'build')
     shutil.rmtree(build_dir, ignore_errors=True)
 
-    packages = ['matplotlib', 'PyQt5.QtPrintSupport', 'h5py', 'appdirs', 'packaging']
+    packages = [
+        'matplotlib', 'PyQt5.QtPrintSupport', 'h5py', 'appdirs', 'packaging']
     includes = []
     excludes = ['tkinter']
 
