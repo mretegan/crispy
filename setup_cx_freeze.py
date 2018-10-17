@@ -35,15 +35,29 @@ __date__ = '17/10/2018'
 
 import crispy
 import os
-import silx
-import sys
 import shutil
+import silx
+import subprocess
+import sys
 from cx_Freeze import setup, Executable
 
 
 def get_version():
     from crispy import version
     return version.strictversion
+
+
+def create_installer():
+    # Create the Inno Setup script.
+    root = os.path.join(os.getcwd(), 'assets')
+    name = 'create_installer.iss'
+    base = open(os.path.join(root, name + '.base')).read()
+    base = base.replace('#Version', get_version())
+    with open(os.path.join(root, name), 'w') as f:
+        f.write(base)
+
+    # Run the Inno Setup compiler.
+    subprocess.call(['iscc', os.path.join(root, name)])
 
 
 def main():
@@ -90,6 +104,14 @@ def main():
         options=options,
         executables=executables,
     )
+
+    # Prune the build directory.
+    os.remove(os.path.join(
+        build_dir, 'crispy', 'resources', 'modules', 'quanty', 'bin',
+        'Quanty'))
+
+    # Create the installer.
+    create_installer()
 
 
 if __name__ == '__main__':
