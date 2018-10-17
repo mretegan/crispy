@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '05/10/2018'
+__date__ = '17/10/2018'
 
 from collections import OrderedDict as odict
 import copy
@@ -104,13 +104,12 @@ class ResultsModel(QAbstractItemModel):
         if not index.isValid():
             return
         row = index.row()
-        column = index.column()
         item = self.modelData[row]
-        if role == Qt.DisplayRole and column == 0:
+        if role == Qt.DisplayRole:
             return item.baseName
-        elif role == Qt.EditRole and column == 0:
+        elif role == Qt.EditRole:
             return item.baseName
-        elif role == Qt.CheckStateRole and column == 0:
+        elif role == Qt.CheckStateRole:
             if item.isChecked:
                 return Qt.Checked
             else:
@@ -120,9 +119,8 @@ class ResultsModel(QAbstractItemModel):
         if not index.isValid():
             return
         row = index.row()
-        column = index.column()
         item = self.modelData[row]
-        if role == Qt.EditRole and column == 0:
+        if role == Qt.EditRole:
             item.baseName = value
             self.itemNameChanged.emit(value)
         elif role == Qt.CheckStateRole:
@@ -143,10 +141,9 @@ class ResultsModel(QAbstractItemModel):
     def flags(self, index):
         if not index.isValid():
             return
-        activeFlags = Qt.ItemIsEnabled | Qt.ItemIsSelectable
-        if index.column() == 0:
-            activeFlags = (
-                activeFlags | Qt.ItemIsEditable | Qt.ItemIsUserCheckable)
+        activeFlags = (
+            Qt.ItemIsEnabled | Qt.ItemIsSelectable | Qt.ItemIsEditable |
+            Qt.ItemIsUserCheckable)
         return activeFlags
 
     def insertRows(self, row, items, parent=QModelIndex()):
