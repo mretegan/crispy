@@ -27,18 +27,19 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '02/10/2018'
+__date__ = '18/10/2018'
 
 
+import numpy as np
 import sys
 from collections import OrderedDict as odict
 from PyQt5.QtWidgets import QMenu, QToolBar
 from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtGui import QGuiApplication
 
 from silx.gui.plot import PlotWidget
 from silx.gui.plot import actions, backends, tools
 from silx.gui.plot.Profile import ProfileToolBar
-# from silx.gui.plot.PlotTools import PositionInfo
 
 
 class BackendMatplotlibQt(backends.BackendMatplotlib.BackendMatplotlibQt):
@@ -132,11 +133,6 @@ class BasePlotWidget(PlotWidget):
             parent=self, plot=self)
         self.addToolBar(self._outputToolBar)
 
-        # Add the position info.
-        # positionInfo = PositionInfo(plot=self)
-        # positionInfo.setSnappingMode(positionInfo.SNAPPING_CURVE)
-        # self.statusBar().addWidget(positionInfo)
-
     def reset(self):
         self.clear()
         self.setKeepDataAspectRatio(False)
@@ -190,6 +186,16 @@ class MainPlotWidget(BasePlotWidget):
                             'autoscale': True, 'vmin': 0.0, 'vmax': 1.0}
         self.setDefaultColormap(colormap)
 
+        windowHandle = self.window().windowHandle()
+        if windowHandle is not None:
+            self._ratio = windowHandle.devicePixelRatio()
+        else:
+            self._ratio = QGuiApplication.primaryScreen().devicePixelRatio()
+
+        self._snap_threshold_dist = 5
+
+        self.sigPlotSignal.connect(self._plotEvent)
+
     def closeProfileWindow(self):
         self._profileWindow.close()
 
@@ -209,3 +215,46 @@ class MainPlotWidget(BasePlotWidget):
         plotArea = self.getWidgetHandle()
         globalPosition = plotArea.mapToGlobal(pos)
         menu.exec_(globalPosition)
+
+    def _plotEvent(self, event):
+        if event['event'] == 'mouseMoved':
+            x, y = event['x'], event['y']
+            xPixel, yPixel = event['xpixel'], event['ypixel']
+            self._updateStatusBar(x, y, xPixel, yPixel)
+
+    def _updateStatusBar(self, x, y, xPixel, yPixel):
+        selectedItems = self._getItems(kind=('curve', 'image'))
+
+        if not selectedItems:
+            return
+
+        distInPixels = (self._snap_threshold_dist * self._ratio) ** 2
+
+        for item in selectedItems:
+            try:
+                xArray = item.getXData(copy=False)
+                yArray = item.getYData(copy=False)
+            except AttributeError:
+                continue
+
+            closestIndex = np.argmin(
+                pow(xArray - x, 2) + pow(yArray - y, 2))
+
+            xClosest = xArray[closestIndex]
+            yClosest = yArray[closestIndex]
+
+            axis = item.getYAxis()
+
+            closestInPixels = self.dataToPixel(xClosest, yClosest, axis=axis)
+            if closestInPixels is not None:
+                curveDistInPixels = (
+                    (closestInPixels[0] - xPixel)**2 +
+                    (closestInPixels[1] - yPixel)**2)
+
+                if curveDistInPixels <= distInPixels:
+                    # If close enough, snap to data point coordinates.
+                    x, y = xClosest, yClosest
+                    distInPixels = curveDistInPixels
+
+        message = 'X: {:g}    Y: {:g}'.format(x, y)
+        self.window().statusBar().showMessage(message)
