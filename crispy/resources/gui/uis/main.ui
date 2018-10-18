@@ -120,11 +120,6 @@ QToolButton {
      <addaction name="quantySaveInputAction"/>
      <addaction name="quantySaveInputAsAction"/>
      <addaction name="separator"/>
-     <addaction name="quantySaveAllCalculationsAsAction"/>
-     <addaction name="quantyRemoveAllCalculationsAction"/>
-     <addaction name="separator"/>
-     <addaction name="quantyLoadCalculationsAction"/>
-     <addaction name="separator"/>
      <addaction name="quantyModuleHideAction"/>
     </widget>
     <addaction name="menuModulesQuanty"/>

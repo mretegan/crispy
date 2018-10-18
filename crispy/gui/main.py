@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '07/10/2018'
+__date__ = '18/10/2018'
 
 
 import os
@@ -148,19 +148,8 @@ class MainWindow(QMainWindow):
         self.quantySaveInputAsAction.triggered.connect(
             self.quantyDockWidget.saveInputAs)
 
-        self.quantySaveAllCalculationsAsAction.triggered.connect(
-            self.quantyDockWidget.saveAllResultsAs)
-
-        self.quantyRemoveAllCalculationsAction.triggered.connect(
-            self.quantyDockWidget.removeAllResults)
-
-        self.quantyLoadCalculationsAction.triggered.connect(
-            self.quantyDockWidget.loadResults)
-
         self.quantyRunCalculationAction.triggered.connect(
             self.quantyDockWidget.runCalculation)
-
-        self.quantyMenuUpdate(False)
 
         self.quantyModuleShowAction.triggered.connect(self.quantyModuleShow)
         self.quantyModuleHideAction.triggered.connect(self.quantyModuleHide)
@@ -170,10 +159,6 @@ class MainWindow(QMainWindow):
 
         # Preferences dialog.
         self.preferencesDialog = QuantyPreferencesDialog(parent=self)
-
-    def quantyMenuUpdate(self, flag=True):
-        self.quantySaveAllCalculationsAsAction.setEnabled(flag)
-        self.quantyRemoveAllCalculationsAction.setEnabled(flag)
 
     def quantyModuleShow(self):
         self.quantyDockWidget.setVisible(True)

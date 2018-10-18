@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '05/10/2018'
+__date__ = '18/10/2018'
 
 
 import copy
@@ -1736,10 +1736,6 @@ class QuantyDockWidget(QDockWidget):
         self.resultsView.selectionModel().select(index, flags)
         self.resultsView.resizeColumnsToContents()
         self.resultsView.setFocus()
-        if not self.resultsModel.modelData:
-            self.updateResultsContextMenu(False)
-        else:
-            self.updateResultsContextMenu(True)
 
     def getLastSelectedResultsModelIndex(self):
         rows = self.resultsView.selectionModel().selectedRows()
@@ -1847,9 +1843,6 @@ class QuantyDockWidget(QDockWidget):
         else:
             title = 'Crispy - {}'.format(name)
         self.setMainWindowTitle(title)
-
-    def updateResultsContextMenu(self, flag):
-        self.parent().quantyMenuUpdate(flag)
 
     def setMainWindowTitle(self, title):
         self.parent().setWindowTitle(title)
