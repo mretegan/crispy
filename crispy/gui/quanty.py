@@ -850,8 +850,8 @@ class QuantyDockWidget(QDockWidget):
                 self.updateCalculationName)
             self.resultsModel.itemCheckStateChanged.connect(
                 self.updatePlotWidget)
-            self.resultsModel.modelDataChanged.connect(self.updatePlotWidget)
-            self.resultsModel.modelDataChanged.connect(self.updateResultsView)
+            self.resultsModel.dataChanged.connect(self.updatePlotWidget)
+            self.resultsModel.dataChanged.connect(self.updateResultsView)
 
             # Assign the results model to the results view.
             self.resultsView.setModel(self.resultsModel)

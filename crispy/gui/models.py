@@ -81,7 +81,6 @@ class ResultsModel(QAbstractItemModel):
 
     itemNameChanged = pyqtSignal(str)
     itemCheckStateChanged = pyqtSignal()
-    modelDataChanged = pyqtSignal(QModelIndex)
 
     def __init__(self, parent=None):
         super(ResultsModel, self).__init__(parent=parent)
@@ -162,16 +161,11 @@ class ResultsModel(QAbstractItemModel):
             items = [items]
         row = self.rowCount()
         self.insertRows(row, items)
-        row = len(self.modelData) - 1
-        index = self.index(row, 0)
-        self.dataChanged.emit(index, index)
-        self.modelDataChanged.emit(index)
 
     def updateItem(self, index, item):
         row = index.row()
         self.modelData[row] = copy.deepcopy(item)
         self.dataChanged.emit(index, index)
-        self.modelDataChanged.emit(index)
 
     def getItem(self, index):
         row = index.row()
@@ -226,7 +220,6 @@ class ResultsModel(QAbstractItemModel):
         row = len(self.modelData) - 1
         index = self.index(row, 0)
         self.dataChanged.emit(index, index)
-        self.modelDataChanged.emit(index)
         return True
 
     def reset(self):
