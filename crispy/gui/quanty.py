@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '18/10/2018'
+__date__ = '19/10/2018'
 
 
 import copy
@@ -62,10 +62,47 @@ from ..utils.profiling import timeit # noqa
 from ..version import version
 
 
-class Spectrum1D(object):
+class Spectrum(object):
+
+    def __init__(
+            self, name=None, shortName=None, legend=None, x=None, y=None,
+            xLabel=None, yLabel=None):
+        self.name = name
+        self.shortName = shortName
+        self.legend = legend
+        self.x = x
+        self.y = y
+        self.xLabel = xLabel
+        self.yLabel = yLabel
+
+    @property
+    def xScale(self):
+        if self.x is None:
+            return None
+        return np.abs(self.x.min() - self.x.max()) / self.x.shape[0]
+
+    @property
+    def yScale(self):
+        if self.y is None:
+            return None
+        return np.abs(self.y.min() - self.y.max()) / self.y.shape[0]
+
+    @property
+    def axesScale(self):
+        return (self.xScale, self.yScale)
+
+    @property
+    def origin(self):
+        if self.x is None or self.y is None:
+            return (None, None)
+        return (self.x.min(), self.y.min())
+
+
+class Spectrum1D(Spectrum):
 
     def __init__(self):
-        pass
+        super(Spectrum1D, self).__init__()
+        self._y = None
 
     @property
     def y(self):
@@ -73,15 +110,13 @@ class Spectrum1D(object):
 
     @y.setter
     def y(self, values):
+        if values is None:
+            return
         # Check for very small values.
         valuesMax = np.max(np.abs(values))
         if valuesMax < np.finfo(np.float32).eps:
             values = np.zeros_like(values)
         self._y = values
-
-    @property
-    def xScale(self):
-        return np.abs(self.x.min() - self.x.max()) / self.x.shape[0]
 
     def broaden(self, broadenings):
         for kind in broadenings:
@@ -91,14 +126,18 @@ class Spectrum1D(object):
                 self.y = broaden(self.y, fwhm, kind)
 
     def shift(self, values):
+        if self.x is None or values is None:
+            return
         value, _ = values
         self.x = self.x + value
 
     def scale(self, value):
+        if self.y is None or value is None:
+            return
         self.y = self.y * value
 
-    def normalization(self, value):
-        if value == 'None':
+    def normalize(self, value):
+        if value == 'None' or self.y is None:
             return
         elif value == 'Maximum':
             yMax = np.abs(self.y).max()
@@ -107,29 +146,23 @@ class Spectrum1D(object):
             area = np.abs(np.trapz(self.y, self.x))
             self.y = self.y / area
 
+    def plot(self, plotWidget=None):
+        if plotWidget is None:
+            return
+        plotWidget.setGraphXLabel(self.xLabel)
+        plotWidget.setGraphYLabel(self.yLabel)
+        plotWidget.addCurve(self.x, self.y, self.legend)
 
-class Spectrum2D(object):
+
+class Spectrum2D(Spectrum):
 
     def __init__(self):
-        pass
-
-    @property
-    def xScale(self):
-        return np.abs(self.x.min() - self.x.max()) / self.x.shape[0]
-
-    @property
-    def yScale(self):
-        return np.abs(self.y.min() - self.y.max()) / self.y.shape[0]
-
-    @property
-    def axesScale(self):
-        return (self.xScale, self.yScale)
-
-    @property
-    def origin(self):
-        return (self.x.min(), self.y.min())
+        super(Spectrum2D, self).__init__()
+        self.z = None
 
     def broaden(self, broadenings):
+        if self.z is None or broadenings is None:
+            return
         for kind in broadenings:
             if kind == 'gaussian':
                 xFwhm, yFwhm = broadenings[kind]
@@ -138,19 +171,32 @@ class Spectrum2D(object):
                 self.z = broaden(self.z, [xFwhm, yFwhm], kind)
 
     def shift(self, values):
+        if self.x is None or self.y is None or values is None:
+            return
         xValue, yValue = values
         self.x = self.x + xValue
         self.y = self.y + yValue
 
     def scale(self, value):
+        if self.z is None or value is None:
+            return
         self.z = self.z * value
 
-    def normalization(self, value):
-        if value == 'None':
+    def normalize(self, value):
+        if value == 'None' or self.z is None:
             return
         elif value == 'Maximum':
             zMax = np.abs(self.z).max()
             self.z = self.z / zMax
+
+    def plot(self, plotWidget=None):
+        if plotWidget is None:
+            return
+        plotWidget.setGraphXLabel(self.xLabel)
+        plotWidget.setGraphYLabel(self.yLabel)
+        plotWidget.addImage(
+            self.z, origin=self.origin, scale=self.axesScale,
+            reset=False)
 
 
 class QuantySpectra(object):
@@ -223,7 +269,7 @@ class QuantySpectra(object):
                 spectrum.scale(self.scale)
             if self.shift != self._defaults['shift']:
                 spectrum.shift(self.shift)
-            spectrum.normalization(self.normalization)
+            spectrum.normalize(self.normalization)
 
     def loadFromDisk(self, calculation):
         """
@@ -326,7 +372,7 @@ class ExperimentalData(object):
             spectrum = Spectrum1D()
             spectrum.x = x
             spectrum.y = y
-            spectrum.normalization('None')
+            spectrum.normalize('None')
             self.spectra = dict()
             self.spectra['Expt'] = spectrum
 
@@ -1652,19 +1698,6 @@ class QuantyDockWidget(QDockWidget):
             for spectrum in spectra:
                 os.remove(spectrum)
 
-    def plotSpectrum(self, spectrum):
-        pw = self.getPlotWidget()
-
-        pw.setGraphXLabel(spectrum.xLabel)
-        pw.setGraphYLabel(spectrum.yLabel)
-
-        if hasattr(spectrum, 'z'):
-            pw.addImage(
-                spectrum.z, origin=spectrum.origin, scale=spectrum.axesScale,
-                reset=False)
-        else:
-            pw.addCurve(spectrum.x, spectrum.y, spectrum.legend)
-
     def selectedHamiltonianTermChanged(self):
         index = self.hamiltonianTermsView.currentIndex()
         self.hamiltonianParametersView.setRootIndex(index)
@@ -1779,18 +1812,18 @@ class QuantyDockWidget(QDockWidget):
     def updatePlotWidget(self):
         """Updating the plotting widget should not require any information
         about the current state of the widget."""
-        self.getPlotWidget().reset()
+        pw = self.getPlotWidget()
+        pw.reset()
 
         results = self.resultsModel.getCheckedItems()
 
         for result in results:
             if isinstance(result, ExperimentalData):
                 spectrum = result.spectra['Expt']
-                spectrum.legend = '{}-{}'.format(
-                    result.index, 'Expt')
+                spectrum.legend = '{}-{}'.format(result.index, 'Expt')
                 spectrum.xLabel = 'X'
                 spectrum.yLabel = 'Y'
-                self.plotSpectrum(spectrum)
+                spectrum.plot(plotWidget=pw)
             else:
                 if len(results) > 1 and result.experiment in ['RIXS', ]:
                     continue
@@ -1798,7 +1831,7 @@ class QuantyDockWidget(QDockWidget):
                     spectrum.legend = '{}-{}'.format(
                         result.index, spectrum.shortName)
                     if spectrum.name in result.spectra.toPlotChecked:
-                        self.plotSpectrum(spectrum)
+                        spectrum.plot(plotWidget=pw)
 
     def showResultDetailsDialog(self):
         self.resultDetailsDialog.show()
