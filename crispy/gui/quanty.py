@@ -1678,23 +1678,23 @@ class QuantyDockWidget(QDockWidget):
         icon = QIcon(resourceFileName(
             'crispy:' + os.path.join('gui', 'icons', 'save.svg')))
         self.saveSelectedResultsAsAction = QAction(
-            icon, 'Save Selected As...', self,
+            icon, 'Save Selected Results As...', self,
             triggered=self.saveSelectedResultsAs)
         self.saveAllResultsAsAction = QAction(
-            icon, 'Save All As...', self, triggered=self.saveAllResultsAs)
+            icon, 'Save All Results As...', self, triggered=self.saveAllResultsAs)
 
         icon = QIcon(resourceFileName(
             'crispy:' + os.path.join('gui', 'icons', 'trash.svg')))
         self.removeSelectedResultsAction = QAction(
-            icon, 'Remove Selected', self,
+            icon, 'Remove Selected Results', self,
             triggered=self.removeSelectedCalculations)
         self.removeAllResultsAction = QAction(
-            icon, 'Remove All', self, triggered=self.removeAllResults)
+            icon, 'Remove All Results', self, triggered=self.removeAllResults)
 
         icon = QIcon(resourceFileName(
             'crispy:' + os.path.join('gui', 'icons', 'folder-open.svg')))
         self.loadResultsAction = QAction(
-            icon, 'Load', self, triggered=self.loadResults)
+            icon, 'Load Results', self, triggered=self.loadResults)
 
         self.resultsContextMenu = QMenu('Results Context Menu', self)
         self.resultsContextMenu.addAction(self.showDetailsAction)

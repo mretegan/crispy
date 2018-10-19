@@ -1463,7 +1463,7 @@
         <item>
          <widget class="QTableView" name="resultsView">
           <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Double-click on the name of a calculation to rename it. Right-click to display the context menu.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Double-click on the name to change it. Right-click to display the context menu.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="alternatingRowColors">
            <bool>true</bool>
