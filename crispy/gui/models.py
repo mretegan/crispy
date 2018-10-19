@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '17/10/2018'
+__date__ = '19/10/2018'
 
 from collections import OrderedDict as odict
 import copy
@@ -207,6 +207,12 @@ class ResultsModel(QAbstractItemModel):
             item.index = row + 1
             items.append(item)
         return copy.deepcopy(items)
+
+    def uncheckAllItems(self):
+        rows = range(self.rowCount())
+        for row in rows:
+            item = self.modelData[row]
+            item.isChecked = False
 
     def removeItems(self, indexes):
         rows = {index.row() for index in indexes}

@@ -1678,6 +1678,12 @@ class QuantyDockWidget(QDockWidget):
         # Load the spectra from disk.
         self.state.spectra.loadFromDisk(self.state)
 
+        # If the calculated spectrum is an image, uncheck all the other
+        # calculations. This way the current result can be disaplyed in the
+        # plot widget.
+        if self.state.experiment in ['RIXS', ]:
+            self.resultsModel.uncheckAllItems()
+
         # Once all processing is done, store the state in the
         # results model. Upon finishing this, a signal is emitted by the
         # model which triggers some updates to be performed.
