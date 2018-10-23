@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '19/10/2018'
+__date__ = '22/10/2018'
 
 
 import copy
@@ -64,16 +64,23 @@ from ..version import version
 
 class Spectrum(object):
 
-    def __init__(
-            self, name=None, shortName=None, legend=None, x=None, y=None,
-            xLabel=None, yLabel=None):
-        self.name = name
-        self.shortName = shortName
-        self.legend = legend
+    _defaults = {
+        'xLabel': None,
+        'yLabel': None,
+        'xScale': None,
+        'yScale': None,
+        'axesScale': None,
+        'origin': None,
+        'name': None,
+        'shortName': None,
+        'legend': None,
+    }
+
+    def __init__(self, x, y, **kwargs):
         self.x = x
         self.y = y
-        self.xLabel = xLabel
-        self.yLabel = yLabel
+        self.__dict__.update(self._defaults)
+        self.__dict__.update(kwargs)
 
     @property
     def xScale(self):
@@ -100,9 +107,9 @@ class Spectrum(object):
 
 class Spectrum1D(Spectrum):
 
-    def __init__(self):
-        super(Spectrum1D, self).__init__()
-        self._y = None
+    def __init__(self, x, y, **kwargs):
+        super(Spectrum1D, self).__init__(x, y, **kwargs)
+        self._y = y
 
     @property
     def y(self):
@@ -156,9 +163,9 @@ class Spectrum1D(Spectrum):
 
 class Spectrum2D(Spectrum):
 
-    def __init__(self):
-        super(Spectrum2D, self).__init__()
-        self.z = None
+    def __init__(self, x, y, z, **kwargs):
+        super(Spectrum2D, self).__init__(x, y, **kwargs)
+        self.z = z
 
     def broaden(self, broadenings):
         if self.z is None or broadenings is None:
@@ -201,22 +208,26 @@ class Spectrum2D(Spectrum):
 
 class QuantySpectra(object):
 
-    aliases = {'Isotropic': 'Isotropic',
-               'Circular Dichroism': 'Circular Dichroism (R-L)',
-               'Linear Dichroism': 'Linear Dichroism (V-H)'}
-
     _defaults = {
         'scale': 1.0,
-        'shift': (0.0, 0.0),
+        'shift': [0.0, 0.0],
         'broadenings': dict(),
         'normalization': 'None',
+        'toCalculateChecked': None,
+        '_toCalculateChecked': None,
+        'toPlotChecked': None,
+        '_toPlotChecked': None,
+        'toPlot': None,
     }
 
     def __init__(self):
-        self._toCalculateChecked = None
-        self._toPlotChecked = None
-
         self.__dict__.update(self._defaults)
+
+        self.aliases = {
+            'Isotropic': 'Isotropic',
+            'Circular Dichroism': 'Circular Dichroism (R-L)',
+            'Linear Dichroism': 'Linear Dichroism (V-H)',
+        }
 
     @property
     def toPlot(self):
@@ -300,15 +311,15 @@ class QuantySpectra(object):
             rows, columns = data.shape
 
             if calculation.experiment in ['XAS', 'XPS']:
-                spectrum = Spectrum1D()
 
                 xMin = calculation.xMin
                 xMax = calculation.xMax
                 xNPoints = calculation.xNPoints
 
-                spectrum.x = np.linspace(xMin, xMax, xNPoints + 1)
-                spectrum.y = data[:, 2::2].flatten()
+                x = np.linspace(xMin, xMax, xNPoints + 1)
+                y = data[:, 2::2].flatten()
 
+                spectrum = Spectrum1D(x, y)
                 spectrum.name = spectrumName
                 if len(suffix) > 2:
                     spectrum.shortName = suffix.title()
@@ -323,8 +334,6 @@ class QuantySpectra(object):
 
                 self.broadenings = {'gaussian': (calculation.xGaussian, ), }
             else:
-                spectrum = Spectrum2D()
-
                 xMin = calculation.xMin
                 xMax = calculation.xMax
                 xNPoints = calculation.xNPoints
@@ -333,10 +342,11 @@ class QuantySpectra(object):
                 yMax = calculation.yMax
                 yNPoints = calculation.yNPoints
 
-                spectrum.x = np.linspace(xMin, xMax, xNPoints + 1)
-                spectrum.y = np.linspace(yMin, yMax, yNPoints + 1)
-                spectrum.z = data[:, 2::2]
+                x = np.linspace(xMin, xMax, xNPoints + 1)
+                y = np.linspace(yMin, yMax, yNPoints + 1)
+                z = data[:, 2::2]
 
+                spectrum = Spectrum2D(x, y, z)
                 spectrum.name = spectrumName
                 if len(suffix) > 2:
                     spectrum.shortName = suffix.title()
@@ -357,10 +367,17 @@ class QuantySpectra(object):
 
 class ExperimentalData(object):
 
-    def __init__(self, path=None):
+    _defaults = {
+        'baseName': None,
+        'isChecked': True,
+    }
+
+    def __init__(self, path, **kwargs):
         self.path = path
-        self.baseName, _ = os.path.splitext(os.path.basename(path))
-        self.isChecked = True
+        self.__dict__.update(self._defaults)
+        self.__dict__.update(kwargs)
+
+        self.baseName, _ = os.path.splitext(os.path.basename(self.path))
         self.load()
 
     def load(self):
@@ -369,62 +386,57 @@ class ExperimentalData(object):
         except ValueError:
             self.spectra = None
         else:
-            spectrum = Spectrum1D()
-            spectrum.x = x
-            spectrum.y = y
-            spectrum.normalize('None')
             self.spectra = dict()
+            spectrum = Spectrum1D(x, y, normalize='None')
             self.spectra['Expt'] = spectrum
 
 
 class QuantyCalculation(object):
 
-    _defaults = odict(
-        [
-            ('version', version),
-            ('element', 'Ni'),
-            ('charge', '2+'),
-            ('symmetry', 'Oh'),
-            ('experiment', 'XAS'),
-            ('edge', 'L2,3 (2p)'),
-            ('temperature', 10.0),
-            ('magneticField', 0.0),
-            ('xMin', None),
-            ('xMax', None),
-            ('xNPoints', None),
-            ('xLorentzian', None),
-            ('xGaussian', None),
-            ('k1', [0, 0, 1]),
-            ('eps11', [0, 1, 0]),
-            ('eps12', [1, 0, 0]),
-            ('yMin', None),
-            ('yMax', None),
-            ('yNPoints', None),
-            ('yLorentzian', None),
-            ('yGaussian', None),
-            ('k2', [0, 0, 0]),
-            ('eps21', [0, 0, 0]),
-            ('eps22', [0, 0, 0]),
-            ('spectra', None),
-            ('nPsisAuto', 1),
-            ('nConfigurations', 1),
-            ('nConfigurationsMax', 1),
-            ('fk', 0.8),
-            ('gk', 0.8),
-            ('zeta', 1.0),
-            ('hamiltonianData', None),
-            ('hamiltonianState', None),
-            ('baseName', None),
-            ('templateName', None),
-            ('startingTime', None),
-            ('endingTime', None),
-            ('verbosity', None),
-            ('denseBorder', None),
-            ('isChecked', False),
-            ('input', None),
-            ('output', None),
-        ]
-    )
+    _defaults = {
+        'version': version,
+        'element': 'Ni',
+        'charge': '2+',
+        'symmetry': 'Oh',
+        'experiment': 'XAS',
+        'edge': 'L2,3 (2p)',
+        'temperature': 10.0,
+        'magneticField': 0.0,
+        'xMin': None,
+        'xMax': None,
+        'xNPoints': None,
+        'xLorentzian': None,
+        'xGaussian': None,
+        'k1': [0, 0, 1],
+        'eps11': [0, 1, 0],
+        'eps12': [1, 0, 0],
+        'yMin': None,
+        'yMax': None,
+        'yNPoints': None,
+        'yLorentzian': None,
+        'yGaussian': None,
+        'k2': [0, 0, 0],
+        'eps21': [0, 0, 0],
+        'eps22': [0, 0, 0],
+        'spectra': None,
+        'nPsisAuto': 1,
+        'nConfigurations': 1,
+        'nConfigurationsMax': 1,
+        'fk': 0.8,
+        'gk': 0.8,
+        'zeta': 1.0,
+        'hamiltonianData': None,
+        'hamiltonianState': None,
+        'baseName': None,
+        'templateName': None,
+        'startingTime': None,
+        'endingTime': None,
+        'verbosity': None,
+        'denseBorder': None,
+        'isChecked': True,
+        'input': None,
+        'output': None,
+    }
 
     # Make the parameters a class attribute. This speeds up the creation
     # of a new calculation object; significantly.
