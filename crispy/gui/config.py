@@ -41,7 +41,7 @@ from ..version import version
 class Config(object):
 
     def __init__(self):
-        if sys.platform in ('win32', 'darwin'):
+        if sys.platform == 'win32':
             self.name = 'Crispy'
         else:
             self.name = 'crispy'
