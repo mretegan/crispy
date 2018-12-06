@@ -117,7 +117,7 @@ If you have used the installers, Crispy should be easy to find and launch. For t
 
 Citation
 ========
-Crispy is a scientific software. If you use it for a scientific publication, please cite the following reference (change the the version number if required)::
+Crispy is a scientific software. If you use it for a scientific publication, please cite the following reference (change the version number if required)::
 
     @misc{retegan_crispy,
       author       = {Retegan, Marius},
