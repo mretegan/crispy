@@ -1,5 +1,19 @@
 Crispy is a modern graphical user interface to calculate core-level spectra using the semi-empirical multiplet approaches implemented in `Quanty <http://quanty.org>`_. The interface provides a set of tools to generate input files, submit calculations, and plot the resulting spectra.
 
+|release| |downloads| |DOI| |licence| 
+
+.. |downloads| image:: https://img.shields.io/github/downloads/mretegan/crispy/total.svg
+    :target: https://github.com/mretegan/crispy/releases
+    
+.. |release| image::  https://img.shields.io/github/release/mretegan/crispy.svg
+    :target: https://github.com/mretegan/crispy/releases
+
+.. |DOI| image:: https://zenodo.org/badge/53660512.svg
+    :target: https://zenodo.org/badge/latestdoi/53660512
+    
+.. |licence| image:: https://img.shields.io/github/license/mretegan/crispy.svg 
+    :target: https://github.com/mretegan/crispy/blob/master/LICENSE.txt
+
 .. first-marker
 
 .. image:: docs/assets/main_window.png
@@ -103,12 +117,15 @@ If you have used the installers, Crispy should be easy to find and launch. For t
 
 Citation
 ========
-Crispy is a scientific software. If you use it for a scientific publication, please cite the following reference:
+Crispy is a scientific software. If you use it for a scientific publication, please cite the following reference (change the the version number if required)::
 
-|ZENODO|
-
-.. |ZENODO| image:: https://zenodo.org/badge/53660512.svg
-   :target: https://zenodo.org/badge/latestdoi/53660512
+    @misc{retegan_crispy,
+      author       = {Retegan, Marius},
+      title        = {Crispy: v0.7.1},
+      year         = {2018},
+      doi          = {10.5281/zenodo.1451209},
+      url          = {https://zenodo.org/badge/latestdoi/53660512}
+    }
 
 .. sixth-marker
 
