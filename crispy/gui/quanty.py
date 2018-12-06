@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '22/10/2018'
+__date__ = '06/12/2018'
 
 
 import copy
@@ -1954,10 +1954,11 @@ class QuantyPreferencesDialog(QDialog):
 
     def showEvent(self, event):
         self.loadSettings()
+        super(QuantyPreferencesDialog, self).showEvent(event)
 
     def closeEvent(self, event):
         self.saveSettings()
-        event.accept()
+        super(QuantyPreferencesDialog, self).closeEvent(event)
 
     def _findExecutable(self):
         if sys.platform == 'win32':
@@ -2064,10 +2065,11 @@ class QuantyResultDetailsDialog(QDialog):
 
     def showEvent(self, event):
         self.loadSettings()
+        super(QuantyPreferencesDialog, self).showEvent(event)
 
     def closeEvent(self, event):
         self.saveSettings()
-        event.accept()
+        super(QuantyPreferencesDialog, self).closeEvent(event)
 
     def activateWidget(self):
         font = QFontDatabase.systemFont(QFontDatabase.FixedFont)
