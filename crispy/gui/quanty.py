@@ -2065,7 +2065,7 @@ class QuantyResultDetailsDialog(QDialog):
 
     def showEvent(self, event):
         self.loadSettings()
-        super(QuantyPreferencesDialog, self).showEvent(event)
+        super(QuantyResultDetailsDialog, self).showEvent(event)
 
     def closeEvent(self, event):
         self.saveSettings()
