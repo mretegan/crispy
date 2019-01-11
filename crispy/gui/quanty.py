@@ -1,7 +1,7 @@
 # coding: utf-8
 # /*##########################################################################
 #
-# Copyright (c) 2016-2018 European Synchrotron Radiation Facility
+# Copyright (c) 2016-2019 European Synchrotron Radiation Facility
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '18/12/2018'
+__date__ = '11/01/2019'
 
 
 import copy
@@ -2069,7 +2069,7 @@ class QuantyResultDetailsDialog(QDialog):
 
     def closeEvent(self, event):
         self.saveSettings()
-        super(QuantyPreferencesDialog, self).closeEvent(event)
+        super(QuantyResultDialog, self).closeEvent(event)
 
     def activateWidget(self):
         font = QFontDatabase.systemFont(QFontDatabase.FixedFont)
