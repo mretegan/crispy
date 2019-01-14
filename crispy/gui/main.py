@@ -1,7 +1,7 @@
 # coding: utf-8
 # /*##########################################################################
 #
-# Copyright (c) 2016-2018 European Synchrotron Radiation Facility
+# Copyright (c) 2016-2019 European Synchrotron Radiation Facility
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '06/12/2018'
+__date__ = '14/01/2019'
 
 
 import os
@@ -56,8 +56,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
 
-        uiPath = resourceFileName(
-            'crispy:' + os.path.join('gui', 'uis', 'main.ui'))
+        uiPath = resourceFileName('uis:main.ui')
         loadUi(uiPath, baseinstance=self, package='crispy.gui')
 
         # Main window.
@@ -222,8 +221,7 @@ class UpdateAvailableDialog(QDialog):
     def __init__(self, parent):
         super(UpdateAvailableDialog, self).__init__(parent)
 
-        path = resourceFileName(
-            'crispy:' + os.path.join('gui', 'uis', 'update.ui'))
+        path = resourceFileName('uis:update.ui')
         loadUi(path, baseinstance=self, package='crispy.gui')
 
 
@@ -235,8 +233,7 @@ class AboutDialog(QDialog):
         config = Config()
         self.settings = config.read()
 
-        path = resourceFileName(
-            'crispy:' + os.path.join('gui', 'uis', 'about.ui'))
+        path = resourceFileName('uis:about.ui')
         loadUi(path, baseinstance=self, package='crispy.gui')
 
         self.nameLabel.setText('Crispy {}'.format(version))

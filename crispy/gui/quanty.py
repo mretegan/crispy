@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '11/01/2019'
+__date__ = '14/01/2019'
 
 
 import copy
@@ -440,9 +440,7 @@ class QuantyCalculation(object):
 
     # Make the parameters a class attribute. This speeds up the creation
     # of a new calculation object; significantly.
-    path = resourceFileName(
-        'crispy:' + os.path.join('modules', 'quanty', 'parameters',
-                                 'parameters.json.gz'))
+    path = resourceFileName('quanty:parameters/parameters.json.gz')
 
     with gzip.open(path, 'rb') as _parametersFile:
         _parameters = json.loads(
@@ -577,7 +575,7 @@ class QuantyCalculation(object):
 
     def saveInput(self):
         templatePath = resourceFileName(
-            'crispy:' + os.path.join('modules', 'quanty', 'templates',
+            'quanty:' + os.path.join('templates',
                                      '{}'.format(self.templateName)))
 
         with open(templatePath) as p:
@@ -722,8 +720,7 @@ class QuantyDockWidget(QDockWidget):
         super(QuantyDockWidget, self).__init__(parent=parent)
 
         # Load the external .ui file for the widget.
-        path = resourceFileName(
-            'crispy:' + os.path.join('gui', 'uis', 'quanty', 'main.ui'))
+        path = resourceFileName('uis:quanty/main.ui')
         loadUi(path, baseinstance=self, package='crispy.gui')
 
         # Load the settings from file.
@@ -1608,8 +1605,8 @@ class QuantyDockWidget(QDockWidget):
         self.process.readyReadStandardOutput.connect(self.handleOutputLogging)
         self.process.finished.connect(self.processCalculation)
 
-    def updateCalculationPushButton(self, type='stop'):
-        types = {
+    def updateCalculationPushButton(self, kind='stop'):
+        kinds = {
             'stop': {
                 'iconName': 'stop.svg',
                 'buttonText': 'Stop',
@@ -1620,17 +1617,16 @@ class QuantyDockWidget(QDockWidget):
                 'buttonToolTip': 'Run Quanty.'},
         }
 
-        icon = QIcon(resourceFileName(
-            'crispy:' + os.path.join('gui', 'icons', types[type]['iconName'])))
+        icon = QIcon(resourceFileName('icons:', kinds[kind]['iconName']))
         self.calculationPushButton.setIcon(icon)
 
-        self.calculationPushButton.setText(types[type]['buttonText'])
-        self.calculationPushButton.setToolTip(types[type]['buttonToolTip'])
+        self.calculationPushButton.setText(kinds[kind]['buttonText'])
+        self.calculationPushButton.setToolTip(kinds[kind]['buttonToolTip'])
 
         self.calculationPushButton.disconnect()
-        if type == 'stop':
+        if kind == 'stop':
             self.calculationPushButton.clicked.connect(self.stopCalculation)
-        elif type == 'run':
+        elif kind == 'run':
             self.calculationPushButton.clicked.connect(self.runCalculation)
         else:
             pass
@@ -1721,29 +1717,25 @@ class QuantyDockWidget(QDockWidget):
         self.hamiltonianParametersView.setRootIndex(index)
 
     def showResultsContextMenu(self, position):
-        icon = QIcon(resourceFileName(
-            'crispy:' + os.path.join('gui', 'icons', 'clipboard.svg')))
+        icon = QIcon(resourceFileName('icons:clipboard.svg'))
         self.showDetailsAction = QAction(
             icon, 'Show Details', self, triggered=self.showResultDetailsDialog)
 
-        icon = QIcon(resourceFileName(
-            'crispy:' + os.path.join('gui', 'icons', 'save.svg')))
+        icon = QIcon(resourceFileName('icons:save.svg'))
         self.saveSelectedResultsAsAction = QAction(
             icon, 'Save Selected Results As...', self,
             triggered=self.saveSelectedResultsAs)
         self.saveAllResultsAsAction = QAction(
             icon, 'Save All Results As...', self, triggered=self.saveAllResultsAs)
 
-        icon = QIcon(resourceFileName(
-            'crispy:' + os.path.join('gui', 'icons', 'trash.svg')))
+        icon = QIcon(resourceFileName('icons:trash.svg'))
         self.removeSelectedResultsAction = QAction(
             icon, 'Remove Selected Results', self,
             triggered=self.removeSelectedCalculations)
         self.removeAllResultsAction = QAction(
             icon, 'Remove All Results', self, triggered=self.removeAllResults)
 
-        icon = QIcon(resourceFileName(
-            'crispy:' + os.path.join('gui', 'icons', 'folder-open.svg')))
+        icon = QIcon(resourceFileName('icons:folder-open.svg'))
         self.loadResultsAction = QAction(
             icon, 'Load Results', self, triggered=self.loadResults)
 
@@ -1935,8 +1927,7 @@ class QuantyPreferencesDialog(QDialog):
     def __init__(self, parent):
         super(QuantyPreferencesDialog, self).__init__(parent)
 
-        path = resourceFileName(
-            'crispy:' + os.path.join('gui', 'uis', 'quanty', 'preferences.ui'))
+        path = resourceFileName('uis:quanty/preferences.ui')
         loadUi(path, baseinstance=self, package='crispy.gui')
 
         self.pathBrowsePushButton.clicked.connect(self.setExecutablePath)
@@ -1968,8 +1959,7 @@ class QuantyPreferencesDialog(QDialog):
 
         envPath = QStandardPaths.findExecutable(executable)
         localPath = QStandardPaths.findExecutable(
-            executable, [resourceFileName(
-                'crispy:' + os.path.join('modules', 'quanty', 'bin'))])
+            executable, [resourceFileName('quanty:bin')])
 
         # Check if Quanty is in the paths defined in the $PATH.
         if envPath:
@@ -2057,8 +2047,7 @@ class QuantyResultDetailsDialog(QDialog):
     def __init__(self, parent=None):
         super(QuantyResultDetailsDialog, self).__init__(parent=parent)
 
-        path = resourceFileName(
-            'crispy:' + os.path.join('gui', 'uis', 'quanty', 'details.ui'))
+        path = resourceFileName('uis:quanty/details.ui')
         loadUi(path, baseinstance=self, package='crispy.gui')
 
         self.activateWidget()
