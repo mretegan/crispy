@@ -87,7 +87,7 @@ class TestQuanty(unittest.TestCase):
         self.executable = settings.value('Quanty/Path')
         self.runQuanty()
 
-        #
+        # Customize the error message.
         self.message = 'in test #{} failed.'.format(self.index)
 
     def runQuanty(self):
