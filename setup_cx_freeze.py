@@ -107,8 +107,7 @@ def main():
 
     # Prune the build directory.
     os.remove(os.path.join(
-        build_dir, 'crispy', 'resources', 'modules', 'quanty', 'bin',
-        'Quanty'))
+        build_dir, 'crispy', 'modules', 'quanty', 'bin', 'Quanty'))
 
     # Create the installer.
     create_installer()

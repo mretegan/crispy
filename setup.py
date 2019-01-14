@@ -92,16 +92,18 @@ def main():
         packages=[
             'crispy',
             'crispy.gui',
-            'crispy.resources',
+            'crispy.modules',
             'crispy.utils',
         ],
         package_data={
-            'crispy.resources': [
-                'gui/uis/*.ui',
-                'gui/uis/quanty/*.ui',
-                'gui/icons/*.svg',
-                'modules/quanty/parameters/*.json.gz',
-                'modules/quanty/templates/*.lua',
+            'crispy.gui': [
+                'uis/*.ui',
+                'uis/quanty/*.ui',
+                'icons/*.svg',
+            ],
+            'crispy.modules': [
+                'quanty/parameters/*.json.gz',
+                'quanty/templates/*.lua',
             ],
         },
         classifiers=[
