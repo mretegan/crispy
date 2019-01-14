@@ -557,10 +557,15 @@ end
 spectrum = 'Circular Dichroism'
 if ValueInTable(spectrum, spectra) then
     indices_3p_5f[spectrum] = {}
-    for j, operator in ipairs({Tr_3p_5f, Tl_3p_5f}) do
-        table.insert(T_3p_5f, operator)
-        table.insert(indices_3p_5f[spectrum], c)
-        c = c + 1
+    if ValueInTable('Isotropic', table) then
+        table.insert(indices_3p_5f[spectrum], 1)
+        table.insert(indices_3p_5f[spectrum], 2)
+    else
+        for j, operator in ipairs({Tr_3p_5f, Tl_3p_5f}) do
+            table.insert(T_3p_5f, operator)
+            table.insert(indices_3p_5f[spectrum], c)
+            c = c + 1
+        end
     end
 end
 

@@ -1,1 +1,4 @@
-{"001": {"element": "Ni", "charge": "2+", "symmetry": "Oh", "experiment": "XAS", "edge": "2p", "subshell": "3d", "spectrum": "iso", "energy": -2.433625, "description": "Crystal-field calculation for Ni2+; this is the default calculation of the interface."}}
+{
+    "001": {"element": "Ni", "charge": "2+", "symmetry": "Oh", "experiment": "XAS", "edge": "2p", "subshell": "3d", "spectrum": "iso", "energy": -2.433625, "description": "Absorption calculation for Ni(II) using a crystal-field Hamiltonian. This is the default calculation of the interface."},
+    "002": {"element": "Ni", "charge": "2+", "symmetry": "Oh", "experiment": "XAS", "edge": "2p", "subshell": "3d", "spectrum": "cd", "energy": -2.433758, "description": "XMCD calculation for Ni(II) using a crystal-field Hamiltonian."}
+}
