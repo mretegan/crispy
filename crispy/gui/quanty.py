@@ -1606,28 +1606,21 @@ class QuantyDockWidget(QDockWidget):
         self.process.finished.connect(self.processCalculation)
 
     def updateCalculationPushButton(self, kind='stop'):
-        kinds = {
-            'stop': {
-                'iconName': 'stop.svg',
-                'buttonText': 'Stop',
-                'buttonToolTip': 'Stop Quanty.'},
-            'run': {
-                'iconName': 'play.svg',
-                'buttonText': 'Run',
-                'buttonToolTip': 'Run Quanty.'},
-        }
-
-        icon = QIcon(resourceFileName('icons:', kinds[kind]['iconName']))
-        self.calculationPushButton.setIcon(icon)
-
-        self.calculationPushButton.setText(kinds[kind]['buttonText'])
-        self.calculationPushButton.setToolTip(kinds[kind]['buttonToolTip'])
-
         self.calculationPushButton.disconnect()
-        if kind == 'stop':
-            self.calculationPushButton.clicked.connect(self.stopCalculation)
-        elif kind == 'run':
+
+        if kind == 'run':
+            icon = QIcon(resourceFileName('icons:play.svg'))
+            self.calculationPushButton.setIcon(icon)
+            self.calculationPushButton.setText('Run')
+            self.calculationPushButton.setToolTip('Run Quanty.')
+
             self.calculationPushButton.clicked.connect(self.runCalculation)
+        elif kind == 'stop':
+            icon = QIcon(resourceFileName('icons:stop.svg'))
+            self.calculationPushButton.setIcon(icon)
+            self.calculationPushButton.setText('Stop')
+            self.calculationPushButton.setToolTip('Stop Quanty.')
+            self.calculationPushButton.clicked.connect(self.stopCalculation)
         else:
             pass
 
@@ -1726,7 +1719,8 @@ class QuantyDockWidget(QDockWidget):
             icon, 'Save Selected Results As...', self,
             triggered=self.saveSelectedResultsAs)
         self.saveAllResultsAsAction = QAction(
-            icon, 'Save All Results As...', self, triggered=self.saveAllResultsAs)
+            icon, 'Save All Results As...', self,
+            triggered=self.saveAllResultsAs)
 
         icon = QIcon(resourceFileName('icons:trash.svg'))
         self.removeSelectedResultsAction = QAction(
@@ -2058,7 +2052,7 @@ class QuantyResultDetailsDialog(QDialog):
 
     def closeEvent(self, event):
         self.saveSettings()
-        super(QuantyResultDialog, self).closeEvent(event)
+        super(QuantyResultDetailsDialog, self).closeEvent(event)
 
     def activateWidget(self):
         font = QFontDatabase.systemFont(QFontDatabase.FixedFont)
