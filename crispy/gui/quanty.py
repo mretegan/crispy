@@ -708,6 +708,9 @@ class QuantyCalculation(object):
             self.input = self.input.replace(
                 replacement, str(replacements[replacement]))
 
+        with open('{}.json'.format(self.baseName), 'w') as f:
+            json.dump(replacements, f, indent=2)
+
         with open(self.baseName + '.lua', 'w') as f:
             f.write(self.input)
 
