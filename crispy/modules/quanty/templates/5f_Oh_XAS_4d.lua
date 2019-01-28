@@ -658,10 +658,12 @@ for i in ipairs(T_4d_5f) do
     end
 end
 
+Pcl_4d_5f = 3
+
 spectrum = 'Isotropic'
 if ValueInTable(spectrum, spectra) then
         Giso = GetSpectrum(G_4d_5f, T_4d_5f, Psis_i, indices_4d_5f[spectrum], dZ_4d_5f)
-        Giso = Giso / 3
+        Giso = Giso / 3 / Pcl_4d_5f
         SaveSpectrum(Giso, 'iso')
 end
 
@@ -669,6 +671,8 @@ spectrum = 'Circular Dichroism'
 if ValueInTable(spectrum, spectra) then
         Gr = GetSpectrum(G_4d_5f, T_4d_5f, Psis_i, indices_4d_5f[spectrum][1], dZ_4d_5f)
         Gl = GetSpectrum(G_4d_5f, T_4d_5f, Psis_i, indices_4d_5f[spectrum][2], dZ_4d_5f)
+        Gr = Gr / Pcl_4d_5f
+        Gl = Gl / Pcl_4d_5f
         SaveSpectrum(Gr, 'r')
         SaveSpectrum(Gl, 'l')
         SaveSpectrum(Gr - Gl, 'cd')
@@ -678,6 +682,8 @@ spectrum = 'Linear Dichroism'
 if ValueInTable(spectrum, spectra) then
         Gv = GetSpectrum(G_4d_5f, T_4d_5f, Psis_i, indices_4d_5f[spectrum][1], dZ_4d_5f)
         Gh = GetSpectrum(G_4d_5f, T_4d_5f, Psis_i, indices_4d_5f[spectrum][2], dZ_4d_5f)
+        Gv = Gv / Pcl_4d_5f
+        Gh = Gh / Pcl_4d_5f
         SaveSpectrum(Gv, 'v')
         SaveSpectrum(Gh, 'h')
         SaveSpectrum(Gv - Gh, 'ld')
