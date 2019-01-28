@@ -215,6 +215,7 @@ class MainPlotWidget(BasePlotWidget):
         self._profileWindow = ProfileWindow()
         self._profileToolBar = Profile.ProfileToolBar(
             plot=self, profileWindow=self._profileWindow)
+        self._profileToolBar.actions()[-1].setVisible(False)
 
         self.removeToolBar(self._outputToolBar)
         self.addToolBar(self._profileToolBar)
