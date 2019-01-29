@@ -556,7 +556,7 @@ end
 spectrum = 'Circular Dichroism'
 if ValueInTable(spectrum, spectra) then
     indices_3d_5f[spectrum] = {}
-    if ValueInTable('Isotropic', table) then
+    if ValueInTable('Isotropic', spectra) then
         table.insert(indices_3d_5f[spectrum], 1)
         table.insert(indices_3d_5f[spectrum], 2)
     else
@@ -662,30 +662,30 @@ Pcl_3d_5f = 3
 
 spectrum = 'Isotropic'
 if ValueInTable(spectrum, spectra) then
-        Giso = GetSpectrum(G_3d_5f, T_3d_5f, Psis_i, indices_3d_5f[spectrum], dZ_3d_5f)
-        Giso = Giso / 3 / Pcl_3d_5f
-        SaveSpectrum(Giso, 'iso')
+    Giso = GetSpectrum(G_3d_5f, T_3d_5f, Psis_i, indices_3d_5f[spectrum], dZ_3d_5f)
+    Giso = Giso / 3 / Pcl_3d_5f
+    SaveSpectrum(Giso, 'iso')
 end
 
 spectrum = 'Circular Dichroism'
 if ValueInTable(spectrum, spectra) then
-        Gr = GetSpectrum(G_3d_5f, T_3d_5f, Psis_i, indices_3d_5f[spectrum][1], dZ_3d_5f)
-        Gl = GetSpectrum(G_3d_5f, T_3d_5f, Psis_i, indices_3d_5f[spectrum][2], dZ_3d_5f)
-        Gr = Gr / Pcl_3d_5f
-        Gl = Gl / Pcl_3d_5f
-        SaveSpectrum(Gr, 'r')
-        SaveSpectrum(Gl, 'l')
-        SaveSpectrum(Gr - Gl, 'cd')
+    Gr = GetSpectrum(G_3d_5f, T_3d_5f, Psis_i, indices_3d_5f[spectrum][1], dZ_3d_5f)
+    Gl = GetSpectrum(G_3d_5f, T_3d_5f, Psis_i, indices_3d_5f[spectrum][2], dZ_3d_5f)
+    Gr = Gr / Pcl_3d_5f
+    Gl = Gl / Pcl_3d_5f
+    SaveSpectrum(Gr, 'r')
+    SaveSpectrum(Gl, 'l')
+    SaveSpectrum(Gr - Gl, 'cd')
 end
 
 spectrum = 'Linear Dichroism'
 if ValueInTable(spectrum, spectra) then
-        Gv = GetSpectrum(G_3d_5f, T_3d_5f, Psis_i, indices_3d_5f[spectrum][1], dZ_3d_5f)
-        Gh = GetSpectrum(G_3d_5f, T_3d_5f, Psis_i, indices_3d_5f[spectrum][2], dZ_3d_5f)
-        Gv = Gv / Pcl_3d_5f
-        Gh = Gh / Pcl_3d_5f
-        SaveSpectrum(Gv, 'v')
-        SaveSpectrum(Gh, 'h')
-        SaveSpectrum(Gv - Gh, 'ld')
+    Gv = GetSpectrum(G_3d_5f, T_3d_5f, Psis_i, indices_3d_5f[spectrum][1], dZ_3d_5f)
+    Gh = GetSpectrum(G_3d_5f, T_3d_5f, Psis_i, indices_3d_5f[spectrum][2], dZ_3d_5f)
+    Gv = Gv / Pcl_3d_5f
+    Gh = Gh / Pcl_3d_5f
+    SaveSpectrum(Gv, 'v')
+    SaveSpectrum(Gh, 'h')
+    SaveSpectrum(Gv - Gh, 'ld')
 end
 

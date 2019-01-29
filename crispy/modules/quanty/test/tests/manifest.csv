@@ -1,4 +1,7 @@
-index, element, charge, symmetry, experiment, edge, subshell, suffix, energy, summary
-001, Ni, 2+, Oh, XAS, "L2,3 (2p)", 3d, iso, -2.433625, Absorption spectrum using crystal field Hamiltonian. This is the default calculation of the interface.
-002, Ni, 2+, Oh, XAS, "L2,3 (2p)", 3d, cd,  -2.433758, Circular dichroism spectrum using crystal field Hamiltonian.
-003, Ni, 2+, Oh, XAS, "L2,3 (2p)", 3d, iso, -2.674693, Absorption spectrum using ligand field Hamiltonian.
+index, element, charge, symmetry, experiment, edge, subshell, suffix, energy, hamiltonian
+001, Ni, 2+, Oh, XAS, "L2,3 (2p)", 3d, iso, -2.433625, crystal field
+002, Ni, 2+, Oh, XAS, "L2,3 (2p)", 3d, cd,  -2.433758, crystal field
+003, Ni, 2+, Oh, XAS, "L2,3 (2p)", 3d, iso, -2.674693, ligand field
+004, Fe, 2+, Td, XAS, "K (1s)", 3d, iso, -3.996185, crystal field
+005, Ni, 2+, C3v, XAS, "K (1s)", 3d, iso, -3.609567, crystal field and 3d-4p mixing
+006, Ni, 2+, Td, XAS, "K (1s)", 3d, iso, -3.909201, crystal field and 3d-4p mixing

@@ -238,7 +238,7 @@ class MainPlotWidget(BasePlotWidget):
 
         # Use the viridis color map by default.
         colormap = {'name': 'viridis', 'normalization': 'linear',
-                            'autoscale': True, 'vmin': 0.0, 'vmax': 1.0}
+                    'autoscale': True, 'vmin': 0.0, 'vmax': 1.0}
         self.setDefaultColormap(colormap)
 
     def closeProfileWindow(self):

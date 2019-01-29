@@ -185,13 +185,10 @@ if H_3d_4p_hybridization == 1 then
          + NewOperator('Number', NFermions, IndexDn_4p, IndexDn_4p, {1, 1, 1})
 
     Delta_3d_4p_i = $Delta(3d,4p)_i_value
-    U_3d_3d_i = $U(3d,3d)_i_value
     e_3d_i = -(NElectrons_3d - 1) * U_3d_3d_i / 2
     e_4p_i =  (NElectrons_3d - 1) * U_3d_3d_i / 2 + Delta_3d_4p_i
 
     Delta_3d_4p_f = $Delta(3d,4p)_f_value
-    U_3d_3d_f = $U(3d,3d)_f_value
-    U_1s_3d_f = $U(1s,3d)_f_value
     e_3d_f= -(NElectrons_3d - 1) * U_3d_3d_f / 2
     e_4p_f=  (NElectrons_3d - 1) * U_3d_3d_f / 2 + Delta_3d_4p_f
 
@@ -567,15 +564,10 @@ end
 spectrum = 'Circular Dichroism'
 if ValueInTable(spectrum, spectra) then
     indices_1s_3d[spectrum] = {}
-    if ValueInTable('Isotropic', table) then
-        table.insert(indices_1s_3d[spectrum], 1)
-        table.insert(indices_1s_3d[spectrum], 2)
-    else
-        for j, operator in ipairs({Tr_1s_3d, Tl_1s_3d}) do
-            table.insert(T_1s_3d, operator)
-            table.insert(indices_1s_3d[spectrum], c)
-            c = c + 1
-        end
+    for j, operator in ipairs({Tr_1s_3d, Tl_1s_3d}) do
+        table.insert(T_1s_3d, operator)
+        table.insert(indices_1s_3d[spectrum], c)
+        c = c + 1
     end
 end
 
@@ -781,27 +773,27 @@ if H_3d_4p_hybridization == 1 then
 else
     spectrum = 'Isotropic'
     if ValueInTable(spectrum, spectra) then
-            Giso = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices_1s_3d[spectrum], dZ_1s_3d)
-            Giso = Giso / 15
-            SaveSpectrum(Giso, 'iso')
+        Giso = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices_1s_3d[spectrum], dZ_1s_3d)
+        Giso = Giso / 15
+        SaveSpectrum(Giso, 'iso')
     end
 
     spectrum = 'Circular Dichroism'
     if ValueInTable(spectrum, spectra) then
-            Gr = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices_1s_3d[spectrum][1], dZ_1s_3d)
-            Gl = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices_1s_3d[spectrum][2], dZ_1s_3d)
-            SaveSpectrum(Gr, 'r')
-            SaveSpectrum(Gl, 'l')
-            SaveSpectrum(Gr - Gl, 'cd')
+        Gr = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices_1s_3d[spectrum][1], dZ_1s_3d)
+        Gl = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices_1s_3d[spectrum][2], dZ_1s_3d)
+        SaveSpectrum(Gr, 'r')
+        SaveSpectrum(Gl, 'l')
+        SaveSpectrum(Gr - Gl, 'cd')
     end
 
     spectrum = 'Linear Dichroism'
     if ValueInTable(spectrum, spectra) then
-            Gv = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices_1s_3d[spectrum][1], dZ_1s_3d)
-            Gh = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices_1s_3d[spectrum][2], dZ_1s_3d)
-            SaveSpectrum(Gv, 'v')
-            SaveSpectrum(Gh, 'h')
-            SaveSpectrum(Gv - Gh, 'ld')
+        Gv = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices_1s_3d[spectrum][1], dZ_1s_3d)
+        Gh = GetSpectrum(G_1s_3d, T_1s_3d, Psis_i, indices_1s_3d[spectrum][2], dZ_1s_3d)
+        SaveSpectrum(Gv, 'v')
+        SaveSpectrum(Gh, 'h')
+        SaveSpectrum(Gv - Gh, 'ld')
     end
 end
 

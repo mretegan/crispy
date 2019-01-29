@@ -427,15 +427,10 @@ end
 spectrum = 'Circular Dichroism'
 if ValueInTable(spectrum, spectra) then
     indices_3s_4d[spectrum] = {}
-    if ValueInTable('Isotropic', table) then
-        table.insert(indices_3s_4d[spectrum], 1)
-        table.insert(indices_3s_4d[spectrum], 2)
-    else
-        for j, operator in ipairs({Tr_3s_4d, Tl_3s_4d}) do
-            table.insert(T_3s_4d, operator)
-            table.insert(indices_3s_4d[spectrum], c)
-            c = c + 1
-        end
+    for j, operator in ipairs({Tr_3s_4d, Tl_3s_4d}) do
+        table.insert(T_3s_4d, operator)
+        table.insert(indices_3s_4d[spectrum], c)
+        c = c + 1
     end
 end
 
@@ -524,30 +519,30 @@ Pcl_3s_4d = 1
 
 spectrum = 'Isotropic'
 if ValueInTable(spectrum, spectra) then
-        Giso = GetSpectrum(G_3s_4d, T_3s_4d, Psis_i, indices_3s_4d[spectrum], dZ_3s_4d)
-        Giso = Giso / 15 / Pcl_3s_4d
-        SaveSpectrum(Giso, 'iso')
+    Giso = GetSpectrum(G_3s_4d, T_3s_4d, Psis_i, indices_3s_4d[spectrum], dZ_3s_4d)
+    Giso = Giso / 15 / Pcl_3s_4d
+    SaveSpectrum(Giso, 'iso')
 end
 
 spectrum = 'Circular Dichroism'
 if ValueInTable(spectrum, spectra) then
-        Gr = GetSpectrum(G_3s_4d, T_3s_4d, Psis_i, indices_3s_4d[spectrum][1], dZ_3s_4d)
-        Gl = GetSpectrum(G_3s_4d, T_3s_4d, Psis_i, indices_3s_4d[spectrum][2], dZ_3s_4d)
-        Gr = Gr / Pcl_3s_4d
-        Gl = Gl / Pcl_3s_4d
-        SaveSpectrum(Gr, 'r')
-        SaveSpectrum(Gl, 'l')
-        SaveSpectrum(Gr - Gl, 'cd')
+    Gr = GetSpectrum(G_3s_4d, T_3s_4d, Psis_i, indices_3s_4d[spectrum][1], dZ_3s_4d)
+    Gl = GetSpectrum(G_3s_4d, T_3s_4d, Psis_i, indices_3s_4d[spectrum][2], dZ_3s_4d)
+    Gr = Gr / Pcl_3s_4d
+    Gl = Gl / Pcl_3s_4d
+    SaveSpectrum(Gr, 'r')
+    SaveSpectrum(Gl, 'l')
+    SaveSpectrum(Gr - Gl, 'cd')
 end
 
 spectrum = 'Linear Dichroism'
 if ValueInTable(spectrum, spectra) then
-        Gv = GetSpectrum(G_3s_4d, T_3s_4d, Psis_i, indices_3s_4d[spectrum][1], dZ_3s_4d)
-        Gh = GetSpectrum(G_3s_4d, T_3s_4d, Psis_i, indices_3s_4d[spectrum][2], dZ_3s_4d)
-        Gv = Gv / Pcl_3s_4d
-        Gh = Gh / Pcl_3s_4d
-        SaveSpectrum(Gv, 'v')
-        SaveSpectrum(Gh, 'h')
-        SaveSpectrum(Gv - Gh, 'ld')
+    Gv = GetSpectrum(G_3s_4d, T_3s_4d, Psis_i, indices_3s_4d[spectrum][1], dZ_3s_4d)
+    Gh = GetSpectrum(G_3s_4d, T_3s_4d, Psis_i, indices_3s_4d[spectrum][2], dZ_3s_4d)
+    Gv = Gv / Pcl_3s_4d
+    Gh = Gh / Pcl_3s_4d
+    SaveSpectrum(Gv, 'v')
+    SaveSpectrum(Gh, 'h')
+    SaveSpectrum(Gv - Gh, 'ld')
 end
 
