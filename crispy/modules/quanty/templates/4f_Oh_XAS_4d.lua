@@ -210,18 +210,6 @@ if H_4f_ligands_hybridization_lmct == 1 then
 
     H_i = H_i + Chop(NewOperator('CF', NFermions, IndexUp_L1, IndexDn_L1, Akm_L1_i))
 
-    Vt1u_4f_L1_i = $Vt1u(4f,L1)_i_value
-
-    Akm_4f_L1_i = {
-        {4,  0, (3/4) * ((math.sqrt(21)) * Vt1u_4f_L1_i)} ,
-        {4, -4, (3/4) * ((math.sqrt(15/2)) * Vt1u_4f_L1_i)},
-        {4,  4, (3/4) * ((math.sqrt(15/2)) * Vt1u_4f_L1_i)},
-    }
-
-    H_i = H_i + Chop(
-          NewOperator('CF', NFermions, IndexUp_L1, IndexDn_L1, IndexUp_4f, IndexDn_4f, Akm_4f_L1_i)
-        + NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_L1, IndexDn_L1, Akm_4f_L1_i))
-
     B40_L1_f = $B40(L1)_f_value
     B60_L1_f = $B60(L1)_f_value
 
@@ -236,17 +224,33 @@ if H_4f_ligands_hybridization_lmct == 1 then
 
     H_f = H_f + Chop(NewOperator('CF', NFermions, IndexUp_L1, IndexDn_L1, Akm_L1_f))
 
+    -- Mixing of the f-orbitals with the ligands.
+    Va2u_4f_L1 = NewOperator('CF', NFermions, IndexUp_L1, IndexDn_L1, IndexUp_4f, IndexDn_4f, PotentialExpandedOnClm('Oh', 3, {1, 0, 0}))
+               + NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_L1, IndexDn_L1, PotentialExpandedOnClm('Oh', 3, {1, 0, 0}))
+
+    Vt2u_4f_L1 = NewOperator('CF', NFermions, IndexUp_L1, IndexDn_L1, IndexUp_4f, IndexDn_4f, PotentialExpandedOnClm('Oh', 3, {0, 1, 0}))
+               + NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_L1, IndexDn_L1, PotentialExpandedOnClm('Oh', 3, {0, 1, 0}))
+
+    Vt1u_4f_L1 = NewOperator('CF', NFermions, IndexUp_L1, IndexDn_L1, IndexUp_4f, IndexDn_4f, PotentialExpandedOnClm('Oh', 3, {0, 0, 1}))
+               + NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_L1, IndexDn_L1, PotentialExpandedOnClm('Oh', 3, {0, 0, 1}))
+
+    Va2u_4f_L1_i = $Va2u(4f,L1)_i_value
+    Vt2u_4f_L1_i = $Vt2u(4f,L1)_i_value
+    Vt1u_4f_L1_i = $Vt1u(4f,L1)_i_value
+
+    Va2u_4f_L1_f = $Va2u(4f,L1)_f_value
+    Vt2u_4f_L1_f = $Vt2u(4f,L1)_f_value
     Vt1u_4f_L1_f = $Vt1u(4f,L1)_f_value
 
-    Akm_4f_L1_f = {
-        {4,  0, (3/4) * ((math.sqrt(21)) * Vt1u_4f_L1_f)} ,
-        {4, -4, (3/4) * ((math.sqrt(15/2)) * Vt1u_4f_L1_f)},
-        {4,  4, (3/4) * ((math.sqrt(15/2)) * Vt1u_4f_L1_f)},
-    }
+    H_i = H_i + Chop(
+        Va2u_4f_L1_i * Va2u_4f_L1
+      + Vt2u_4f_L1_i * Vt2u_4f_L1
+      + Vt1u_4f_L1_i * Vt1u_4f_L1)
 
     H_f = H_f + Chop(
-          NewOperator('CF', NFermions, IndexUp_L1, IndexDn_L1, IndexUp_4f, IndexDn_4f, Akm_4f_L1_f)
-        + NewOperator('CF', NFermions, IndexUp_4f, IndexDn_4f, IndexUp_L1, IndexDn_L1, Akm_4f_L1_f))
+        Va2u_4f_L1_f * Va2u_4f_L1
+      + Vt2u_4f_L1_f * Vt2u_4f_L1
+      + Vt1u_4f_L1_f * Vt1u_4f_L1)
 end
 
 --------------------------------------------------------------------------------
