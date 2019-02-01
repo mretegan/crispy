@@ -310,14 +310,20 @@ class QuantySpectra(object):
 
             rows, columns = data.shape
 
-            if calculation.experiment in ['XAS', 'XPS']:
+            if calculation.experiment in ['XAS', 'XPS', 'XES']:
 
                 xMin = calculation.xMin
                 xMax = calculation.xMax
                 xNPoints = calculation.xNPoints
 
-                x = np.linspace(xMin, xMax, xNPoints + 1)
-                y = data[:, 2::2].flatten()
+                if calculation.experiment == 'XES':
+                    x = np.linspace(xMin, xMax, xNPoints + 1)
+                    x = x[::-1]
+                    y = data[:, 2]
+                    y = y / np.abs(y.max())
+                else:
+                    x = np.linspace(xMin, xMax, xNPoints + 1)
+                    y = data[:, 2::2].flatten()
 
                 spectrum = Spectrum1D(x, y)
                 spectrum.name = spectrumName
@@ -330,6 +336,8 @@ class QuantySpectra(object):
                     spectrum.xLabel = 'Absorption Energy (eV)'
                 elif calculation.experiment in ['XPS', ]:
                     spectrum.xLabel = 'Binding Energy (eV)'
+                elif calculation.experiment in ['XES', ]:
+                    spectrum.xLabel = 'Emission Energy (eV)'
                 spectrum.yLabel = 'Intensity (a.u.)'
 
                 self.broadenings = {'gaussian': (calculation.xGaussian, ), }
@@ -477,7 +485,7 @@ class QuantyCalculation(object):
 
         branch = branch[self.edge]
 
-        if self.experiment in ['RIXS', ]:
+        if self.experiment in ['RIXS', 'XES']:
             shortEdge = self.edge[-5:-1]
         else:
             shortEdge = self.edge[-3:-1]
@@ -600,11 +608,17 @@ class QuantyCalculation(object):
         replacements['$NE1'] = self.xNPoints
         replacements['$Eedge1'] = self.xEdge
 
+        if self.experiment == 'XES':
+            replacements['$Emin1'] = self.xMin + 20
+            replacements['$Emax1'] = self.xMax + 20
+
         if len(self.xLorentzian) == 1:
             replacements['$Gamma1'] = 0.1
             replacements['$Gmin1'] = self.xLorentzian[0]
             replacements['$Gmax1'] = self.xLorentzian[0]
             replacements['$Egamma1'] = (self.xMin + self.xMax) / 2
+            if self.experiment == 'XES':
+                replacements['$Gamma1'] = self.xLorentzian[0]
         else:
             replacements['$Gamma1'] = 0.1
             replacements['$Gmin1'] = self.xLorentzian[0]
