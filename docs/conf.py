@@ -49,7 +49,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'Crispy'
-copyright = '2016–2018, Marius Retegan, European Synchrotron Radiation Facility, Grenoble, France'
+copyright = '2016–2019, Marius Retegan, European Synchrotron Radiation Facility, Grenoble, France'
 author = 'Marius Retegan'
 
 # The version info for the project you're documenting, acts as replacement for

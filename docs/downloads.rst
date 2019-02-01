@@ -4,15 +4,15 @@ Downloads
 +----------------------------------+------------------------------+-----------------------------+
 | |Windows|                        | |macOS|                      | |Linux|                     |
 +----------------------------------+------------------------------+-----------------------------+
-| `Crispy-0.7.1-x64.exe (64-bit)`_ | `Crispy-0.7.1.dmg (64-bit)`_ | see the :doc:`installation` |
+| `Crispy-0.7.2-x64.exe (64-bit)`_ | `Crispy-0.7.2.dmg (64-bit)`_ | see the :doc:`installation` |
 |                                  |                              |                             |
 | The installer includes:          | The application includes:    | page for details.           |
 |   - Python 3.5.4                 |   - Python 3.5.4             |                             |
 |   - PyQt5 5.9.2                  |   - PyQt5 5.9.2              |                             |
 |   - NumPy 1.12.0                 |   - NumPy 1.14.0             |                             |
 |   - Matplotlib 2.1.0             |   - Matplotlib 2.1.0         |                             |
-|   - silx 0.8.0                   |   - silx 0.8.0               |                             |
-|   - Quanty Autumn 2018           |   - Quanty Autumn 2018       |                             |
+|   - silx 0.9.0                   |   - silx 0.9.0               |                             |
+|   - Quanty Autumn 2018 (0.6)     |   - Quanty Autumn 2018 (0.6) |                             |
 +----------------------------------+------------------------------+-----------------------------+
 
 **Notes**:
@@ -34,6 +34,6 @@ Downloads
     :width: 90pt
     :align: middle
 
-.. _Crispy-0.7.1-x64.exe (64-bit): https://github.com/mretegan/crispy/releases/download/v0.7.1/Crispy-0.7.1-x64.exe
+.. _Crispy-0.7.2-x64.exe (64-bit): https://github.com/mretegan/crispy/releases/download/v0.7.2/Crispy-0.7.2-x64.exe
 
-.. _Crispy-0.7.1.dmg (64-bit): https://github.com/mretegan/crispy/releases/download/v0.7.1/Crispy-0.7.1.dmg
+.. _Crispy-0.7.2.dmg (64-bit): https://github.com/mretegan/crispy/releases/download/v0.7.2/Crispy-0.7.2.dmg

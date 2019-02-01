@@ -1,6 +1,13 @@
 Changelog
 =========
 
+v0.7.2 (2019-02-01)
+-------------------
+What's new:
+
+* XES calculations for 3d transition metals
+* update the Quanty version in the package installers
+
 v0.7.1 (2018-10-07)
 -------------------
 What's new:
@@ -41,7 +48,7 @@ What's new:
 
 * XPS calculations
 * automatic check for updates
-* important changes to Quanty templates 
+* important changes to Quanty templates
 
 v0.5.0 (2018-03-26)
 -------------------

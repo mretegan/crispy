@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '14/01/2019'
+__date__ = '01/02/2019'
 
 
 import copy
@@ -2001,6 +2001,9 @@ class QuantyPreferencesDialog(QDialog):
             self.move(QPoint(pos))
 
         path = self.settings.value('Path')
+        # In the future remove some settings if there is an version update.
+        if version <= '0.7.2':
+            path = None
         if path is None or not path:
             path = self._findExecutable()
         self.pathLineEdit.setText(path)

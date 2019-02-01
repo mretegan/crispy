@@ -57,7 +57,7 @@ docs/_drafts
 .vscode
 
 # Quanty binaries
-crispy/resources/modules/quanty/bin/
+crispy/modules/quanty/bin/
 
 # Pipenv
 Pipfile.lock
