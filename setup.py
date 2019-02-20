@@ -92,18 +92,24 @@ def main():
         packages=[
             'crispy',
             'crispy.gui',
+            'crispy.gui.uis',
+            'crispy.gui.icons',
             'crispy.modules',
+            'crispy.modules.quanty',
+            'crispy.modules.orca',
             'crispy.utils',
         ],
         package_data={
-            'crispy.gui': [
-                'uis/*.ui',
-                'uis/quanty/*.ui',
-                'icons/*.svg',
+            'crispy.gui.uis': [
+                '*.ui',
+                'quanty/*.ui',
             ],
-            'crispy.modules': [
-                'quanty/parameters/*.json.gz',
-                'quanty/templates/*.lua',
+            'crispy.gui.icons': [
+                '*.svg',
+            ],
+            'crispy.modules.quanty': [
+                'parameters/*.json.gz',
+                'templates/*.lua',
             ],
         },
         classifiers=[
@@ -119,6 +125,7 @@ def main():
             'Programming Language :: Python :: 3.4',
             'Programming Language :: Python :: 3.5',
             'Programming Language :: Python :: 3.6',
+            'Programming Language :: Python :: 3.7',
             'Topic :: Scientific/Engineering :: Visualization',
         ]
     )
