@@ -202,8 +202,7 @@ class Spectrum2D(Spectrum):
         plotWidget.setGraphXLabel(self.xLabel)
         plotWidget.setGraphYLabel(self.yLabel)
         plotWidget.addImage(
-            self.z, origin=self.origin, scale=self.axesScale,
-            reset=False)
+            self.z, origin=self.origin, scale=self.axesScale)
 
 
 class QuantySpectra(object):
