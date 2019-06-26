@@ -1499,7 +1499,7 @@ class QuantyDockWidget(QDockWidget):
             self.setCurrentPath(path)
             try:
                 self.saveInput()
-            except (IOError, OSError) as e:
+            except (IOError, OSError):
                 return
             self.updateMainWindowTitle(self.state.baseName)
 
@@ -1597,7 +1597,7 @@ class QuantyDockWidget(QDockWidget):
         # Write the input file to disk.
         try:
             self.saveInput()
-        except (IOError, OSError) as e:
+        except (IOError, OSError):
             return
 
         # Disable the widget while the calculation is running.
