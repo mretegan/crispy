@@ -5,7 +5,7 @@
 -- elements: 3d
 -- symmetry: C3v
 -- experiment: XES
--- edge: Kɑ (1s2p)
+-- edge: Ka (1s2p)
 --------------------------------------------------------------------------------
 Verbosity($Verbosity)
 
@@ -466,8 +466,8 @@ DeltaE1 = 0
 Eedge2 = $Eedge1
 DeltaE2 = E_gs_f - E_gs_i
 
-Emin1 = 0
-Emax1 = 0
+Emin1 = -20
+Emax1 = 40
 NE1 = 1
 Gamma1 = 0
 
