@@ -121,7 +121,7 @@ Crispy is a scientific software. If you use it for a scientific publication, ple
 
     @misc{retegan_crispy,
       author       = {Retegan, Marius},
-      title        = {Crispy: v0.7.2},
+      title        = {Crispy: v0.7.3},
       year         = {2019},
       doi          = {10.5281/zenodo.1451209},
       url          = {https://zenodo.org/badge/latestdoi/53660512}

@@ -66,7 +66,8 @@ def main():
     shutil.rmtree(build_dir, ignore_errors=True)
 
     packages = [
-        'matplotlib', 'PyQt5.QtPrintSupport', 'h5py', 'appdirs', 'packaging']
+        'matplotlib', 'PyQt5.QtPrintSupport', 'h5py', 'appdirs', 'packaging',
+        'fabio']
     includes = []
     excludes = ['tkinter']
 
@@ -106,8 +107,11 @@ def main():
     )
 
     # Prune the build directory.
-    os.remove(os.path.join(
-        build_dir, 'crispy', 'modules', 'quanty', 'bin', 'Quanty'))
+    try:
+        os.remove(os.path.join(
+            build_dir, 'crispy', 'modules', 'quanty', 'bin', 'Quanty'))
+    except FileNotFoundError:
+        pass
 
     # Create the installer.
     create_installer()

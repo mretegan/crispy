@@ -27,7 +27,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __authors__ = ['Marius Retegan']
 __license__ = 'MIT'
-__date__ = '19/10/2018'
+__date__ = '26/06/2019'
 
 
 import numpy as np

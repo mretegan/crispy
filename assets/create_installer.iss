@@ -1,7 +1,7 @@
 [Setup]
 AppId={{1B71F614-D6B1-4E28-83C8-E04068C7F91A}
 AppName=Crispy
-AppVersion=0.7.2
+AppVersion=0.7.3
 AppVerName=Crispy
 AppPublisher=Marius Retegan
 AppPublisherURL=https://github.com/mretegan/crispy
@@ -11,7 +11,7 @@ DefaultDirName={pf}\Crispy
 DefaultGroupName=Crispy
 LicenseFile=..\LICENSE.txt
 OutputDir=..\..\artifacts
-OutputBaseFilename=Crispy-0.7.2-x64
+OutputBaseFilename=Crispy-0.7.3-x64
 Compression=lzma
 SolidCompression=yes
 ArchitecturesAllowed=x64
