@@ -8,8 +8,8 @@ Crispy is a modern graphical user interface to calculate core-level spectra usin
 .. |release| image::  https://img.shields.io/github/release/mretegan/crispy.svg
     :target: https://github.com/mretegan/crispy/releases
 
-.. |DOI| image:: https://zenodo.org/badge/53660512.svg
-    :target: https://zenodo.org/badge/latestdoi/53660512
+.. |DOI| image:: https://zenodo.org/badge/doi/10.5281/zenodo.1008184.svg
+    :target: https://dx.doi.org/10.5281/zenodo.1008184
 
 .. |licence| image:: https://img.shields.io/github/license/mretegan/crispy.svg
     :target: https://github.com/mretegan/crispy/blob/master/LICENSE.txt
@@ -123,8 +123,8 @@ Crispy is a scientific software. If you use it for a scientific publication, ple
       author       = {Retegan, Marius},
       title        = {Crispy: v0.7.3},
       year         = {2019},
-      doi          = {10.5281/zenodo.1451209},
-      url          = {https://zenodo.org/badge/latestdoi/53660512}
+      doi          = {10.5281/zenodo.1008184},
+      url          = {https://dx.doi.org/10.5281/zenodo.1008184}
     }
 
 .. sixth-marker
