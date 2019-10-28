@@ -22,6 +22,7 @@ H_f = 0
 H_atomic = $H_atomic
 H_crystal_field = $H_crystal_field
 H_3d_ligands_hybridization_lmct = $H_3d_ligands_hybridization_lmct
+H_3d_ligands_hybridization_mlct = $H_3d_ligands_hybridization_mlct
 H_magnetic_field = $H_magnetic_field
 H_exchange_field = $H_exchange_field
 
