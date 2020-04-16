@@ -55,7 +55,7 @@ def create_installer():
     base = base.replace('#Version', get_version())
     with open(os.path.join(root, name), 'w') as f:
         f.write(base)
-
+    base.close()
     # Run the Inno Setup compiler.
     subprocess.call(['iscc', os.path.join(root, name)])
 
