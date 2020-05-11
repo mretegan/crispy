@@ -158,7 +158,7 @@ class Spectrum1D(Spectrum):
             return
         plotWidget.setGraphXLabel(self.xLabel)
         plotWidget.setGraphYLabel(self.yLabel)
-        plotWidget.addCurve(self.x, self.y, self.legend)
+        plotWidget.addCurve(self.x, self.y, legend=self.legend)
 
 
 class Spectrum2D(Spectrum):
