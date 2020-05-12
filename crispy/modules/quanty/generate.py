@@ -6,7 +6,7 @@
 # This work is licensed under the terms of the MIT license.       #
 # For further information, see https://github.com/mretegan/crispy #
 ###################################################################
-"""This module provides a comand line interface for generating the parameters of atomic configurations."""
+"""This module provides a command line interface for generating the parameters of atomic configurations."""
 
 __authors__ = ["Marius Retegan"]
 __license__ = "MIT"
@@ -22,7 +22,7 @@ from crispy.modules.quanty.utils import Calculations, Cowan, Element
 
 
 def generate_parameters(elements):
-    """Generate the atomic parameters of the elments and store them in an HDF5 container."""
+    """Generate the atomic parameters of the elements and store them in an HDF5 container."""
 
     config = h5py.get_config()
     config.track_order = True
