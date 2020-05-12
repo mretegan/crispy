@@ -92,7 +92,7 @@ class BasePlotWidget(PlotWidget):
             self._updateStatusBar(x, y, xPixel, yPixel)
 
     def _updateStatusBar(self, x, y, xPixel, yPixel):
-        selectedItems = self._getItems(kind=("curve", "image"))
+        selectedItems = self.getItems()
 
         if not selectedItems:
             return
@@ -101,7 +101,7 @@ class BasePlotWidget(PlotWidget):
 
         for item in selectedItems:
             if isinstance(item, Curve):
-                messageFormat = "X: {:g}    Y: {:.3g}"
+                messageFormat = "X: {:g}    Y: {:g}"
             elif isinstance(item, ImageData):
                 messageFormat = "X: {:g}    Y: {:g}"
                 continue
@@ -118,9 +118,10 @@ class BasePlotWidget(PlotWidget):
 
             closestInPixels = self.dataToPixel(xClosest, yClosest, axis=axis)
             if closestInPixels is not None:
-                curveDistInPixels = (closestInPixels[0] - xPixel) ** 2 + (
-                    closestInPixels[1] - yPixel
-                ) ** 2
+                xClosestPixel, yClosestPixel = closestInPixels
+                xDistInPixels = xClosestPixel - xPixel
+                yDistInPixels = yClosestPixel - yPixel
+                curveDistInPixels = xDistInPixels ** 2 + yDistInPixels ** 2
 
                 if curveDistInPixels <= distInPixels:
                     # If close enough, snap to data point coordinates.
