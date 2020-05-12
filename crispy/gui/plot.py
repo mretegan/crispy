@@ -149,9 +149,17 @@ class BasePlotWidget(PlotWidget):
 
     def addLegend(self):
         """Add the legend to the Matplotlib axis."""
-        ax = self._backend.ax
-        curves = self.getAllCurves()
+        ax = self.getWidgetHandle().ax
+        # This avoids the log regarding the handles with no labels.
+        legend = ax.legend(handles=[])
 
+        images = self.getAllImages()
+        if not images:
+            legend.set_visible(True)
+        else:
+            legend.set_visible(False)
+
+        curves = self.getAllCurves()
         if not curves:
             return
 
@@ -166,7 +174,7 @@ class BasePlotWidget(PlotWidget):
                 [], [], ls=lineStyle, color=color, label=label, marker=marker
             )
             handles.append(handle)
-        ax.legend(handles=handles, fancybox=False)
+        legend = ax.legend(handles=handles, fancybox=False)
 
 
 class ProfileWindow(BasePlotWidget):
