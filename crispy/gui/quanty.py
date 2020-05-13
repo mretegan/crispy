@@ -43,7 +43,6 @@ from silx.resources import resource_filename as resourceFileName
 
 from crispy.utils.broaden import broaden
 from crispy.utils.odict import odict
-from crispy.utils.profiling import timeit
 from crispy.version import version
 from crispy.gui.config import Config
 from crispy.gui.models import HamiltonianModel, ResultsModel, SpectraModel
@@ -73,9 +72,10 @@ class Spectrum(object):
         "legend": None,
     }
 
-    def __init__(self, x, y, **kwargs):
+    def __init__(self, x, y, legend=None, **kwargs):
         self.x = x
         self.y = y
+        self.legend = legend
         self.__dict__.update(self._defaults)
         self.__dict__.update(kwargs)
 
@@ -142,7 +142,8 @@ class Spectrum1D(Spectrum):
     def normalize(self, value):
         if value == "None" or self.y is None:
             return
-        elif value == "Maximum":
+
+        if value == "Maximum":
             yMax = np.abs(self.y).max()
             self.y = self.y / yMax
         elif value == "Area":
@@ -213,7 +214,11 @@ class QuantySpectra(object):
         "toPlot": None,
     }
 
-    def __init__(self):
+    def __init__(self, scale=1.0, shift=(0.0, 0.0), normalization="None"):
+        self.scale = scale
+        self.shift = shift
+        self.normalization = normalization
+        self.raw = None
         self.__dict__.update(self._defaults)
 
         self.aliases = {
@@ -449,9 +454,23 @@ class QuantyCalculation(object):
             _parametersFile.read().decode("utf-8"), object_pairs_hook=odict
         )
 
-    def __init__(self, **kwargs):
+    def __init__(
+        self,
+        element="Ni",
+        charge="2+",
+        symmetry="Oh",
+        experiment="XAS",
+        edge="L2,3 (2p)",
+        **kwargs
+    ):
         self.__dict__.update(self._defaults)
         self.__dict__.update(kwargs)
+
+        self.element = element
+        self.charge = charge
+        self.symmetry = symmetry
+        self.experiment = experiment
+        self.edge = edge
 
         branch = self._parameters["elements"]
         self._elements = list(branch)

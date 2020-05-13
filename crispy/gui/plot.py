@@ -37,6 +37,8 @@ __date__ = "13/05/2019"
 
 
 class BasePlotWidget(PlotWidget):  # pylint: disable=too-many-instance-attributes
+    SNAP_THRESHOLD_DIST = 5
+
     def __init__(self, parent=None, **kwargs):
         super(BasePlotWidget, self).__init__(
             parent=parent, backend="matplotlib", **kwargs
@@ -95,11 +97,11 @@ class BasePlotWidget(PlotWidget):  # pylint: disable=too-many-instance-attribute
 
         windowHandle = self.window().windowHandle()
         if windowHandle is not None:
-            self._ratio = windowHandle.devicePixelRatio()
+            self.ratio = windowHandle.devicePixelRatio()
         else:
-            self._ratio = QGuiApplication.primaryScreen().devicePixelRatio()
+            self.ratio = QGuiApplication.primaryScreen().devicePixelRatio()
 
-        self._snap_threshold_dist = 5
+        self.plotArea = self.getWidgetHandle()
 
         self.sigPlotSignal.connect(self.plotEvent)
 
@@ -115,7 +117,7 @@ class BasePlotWidget(PlotWidget):  # pylint: disable=too-many-instance-attribute
         if not selectedItems:
             return
 
-        distInPixels = (self._snap_threshold_dist * self._ratio) ** 2
+        distInPixels = (self.SNAP_THRESHOLD_DIST * self.ratio) ** 2
 
         # TODO: Add the intensity for images.
         for item in selectedItems:
@@ -168,15 +170,12 @@ class BasePlotWidget(PlotWidget):  # pylint: disable=too-many-instance-attribute
 
     def addLegend(self):
         """Add the legend to the Matplotlib axis."""
-        ax = self.getWidgetHandle().ax
-
-        if self.getAllImages():
-            # This avoids the log message regarding the handles with no labels.
-            legend = ax.legend(handles=[])
-            legend.set_visible(False)
-
+        images = self.getAllImages()
         curves = self.getAllCurves()
-        if not curves:
+
+        if not curves or images:
+            legend = self.plotArea.ax.legend(handles=[])
+            legend.set_visible(False)
             return
 
         handles = list()
@@ -190,7 +189,7 @@ class BasePlotWidget(PlotWidget):  # pylint: disable=too-many-instance-attribute
                 [], [], ls=lineStyle, color=color, label=label, marker=marker
             )
             handles.append(handle)
-        legend = ax.legend(handles=handles, fancybox=False)
+        legend = self.plotArea.ax.legend(handles=handles, fancybox=False)
 
 
 class ProfileWindow(BasePlotWidget):
@@ -237,12 +236,9 @@ class MainPlotWidget(BasePlotWidget):
         # Create QAction for the context menu once for all.
         self.zoomBackAction = ZoomBackAction(plot=self, parent=self)
 
-        # Retrieve PlotWidget's plot area widget.
-        plotArea = self.getWidgetHandle()
-
         # Set plot area custom context menu.
-        plotArea.setContextMenuPolicy(Qt.CustomContextMenu)
-        plotArea.customContextMenuRequested.connect(self.contextMenu)
+        self.plotArea.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.plotArea.customContextMenuRequested.connect(self.contextMenu)
 
         # Use the viridis color map by default.
         colormap = {
@@ -270,6 +266,5 @@ class MainPlotWidget(BasePlotWidget):
         # a global position.
         # The position received as argument is relative to PlotWidget's
         # plot area, and thus needs to be converted.
-        plotArea = self.getWidgetHandle()
-        globalPosition = plotArea.mapToGlobal(pos)
+        globalPosition = self.plotArea.mapToGlobal(pos)
         menu.exec_(globalPosition)
