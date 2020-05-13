@@ -5,7 +5,7 @@
 # This work is licensed under the terms of the MIT license.       #
 # For further information, see https://github.com/mretegan/crispy #
 ###################################################################
-"""This module holds plotting related functionality."""
+"""This module provides plotting related functionality."""
 import sys
 
 import matplotlib.lines as mlines
@@ -15,7 +15,7 @@ from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtGui import QGuiApplication
 from PyQt5.QtWidgets import QMenu, QToolBar
 
-from silx.gui.plot import PlotWidget, Profile
+from silx.gui.plot import PlotWidget
 from silx.gui.plot.actions.control import (
     ColormapAction,
     CurveStyleAction,
@@ -26,16 +26,17 @@ from silx.gui.plot.actions.control import (
     YAxisAutoScaleAction,
     ZoomBackAction,
 )
+from silx.gui.plot.actions.mode import ZoomModeAction, PanModeAction
+from silx.gui.plot.actions.io import CopyAction, SaveAction
 from silx.gui.plot.items.curve import Curve
 from silx.gui.plot.items.image import ImageData
-from silx.gui.plot.tools.toolbars import InteractiveModeToolBar, OutputToolBar
 
 __authors__ = ["Marius Retegan"]
 __license__ = "MIT"
-__date__ = "11/05/2019"
+__date__ = "13/05/2019"
 
 
-class BasePlotWidget(PlotWidget):
+class BasePlotWidget(PlotWidget):  # pylint: disable=too-many-instance-attributes
     def __init__(self, parent=None, **kwargs):
         super(BasePlotWidget, self).__init__(
             parent=parent, backend="matplotlib", **kwargs
@@ -44,36 +45,53 @@ class BasePlotWidget(PlotWidget):
         self.setActiveCurveHandling(False)
         self.setGraphGrid("both")
 
-        # Create toolbars.
-        self._interactiveModeToolBar = InteractiveModeToolBar(parent=self, plot=self)
-        self.addToolBar(self._interactiveModeToolBar)
+        # Add the interactive mode toolbar.
+        self.interactionModeToolBar = QToolBar("Interaction", parent=self)
 
-        self._toolBar = QToolBar("Curve or Image", parent=self)
-        self._resetZoomAction = ResetZoomAction(parent=self, plot=self)
-        self._toolBar.addAction(self._resetZoomAction)
+        self.zoomModeAction = ZoomModeAction(self, parent=self.interactionModeToolBar)
+        self.interactionModeToolBar.addAction(self.zoomModeAction)
 
-        self._xAxisAutoScaleAction = XAxisAutoScaleAction(parent=self, plot=self)
-        self._toolBar.addAction(self._xAxisAutoScaleAction)
+        self.panModeAction = PanModeAction(self, parent=self.interactionModeToolBar)
+        self.interactionModeToolBar.addAction(self.panModeAction)
 
-        self._yAxisAutoScaleAction = YAxisAutoScaleAction(parent=self, plot=self)
-        self._toolBar.addAction(self._yAxisAutoScaleAction)
+        self.addToolBar(self.interactionModeToolBar)
 
-        self._gridAction = GridAction(parent=self, plot=self)
-        self._toolBar.addAction(self._gridAction)
+        # Add a custom toolbar for curves and images.
+        self.mainToolBar = QToolBar("Curve or Image", parent=self)
 
-        self._curveStyleAction = CurveStyleAction(parent=self, plot=self)
-        self._toolBar.addAction(self._curveStyleAction)
+        self.resetZoomAction = ResetZoomAction(self, parent=self.mainToolBar)
+        self.mainToolBar.addAction(self.resetZoomAction)
 
-        self._colormapAction = ColormapAction(parent=self, plot=self)
-        self._toolBar.addAction(self._colormapAction)
+        self.xAxisAutoScaleAction = XAxisAutoScaleAction(self, parent=self.mainToolBar)
+        self.mainToolBar.addAction(self.xAxisAutoScaleAction)
 
-        self._keepAspectRatio = KeepAspectRatioAction(parent=self, plot=self)
-        self._toolBar.addAction(self._keepAspectRatio)
+        self.yAxisAutoScaleAction = YAxisAutoScaleAction(self, parent=self.mainToolBar)
+        self.mainToolBar.addAction(self.yAxisAutoScaleAction)
 
-        self.addToolBar(self._toolBar)
+        self.gridAction = GridAction(self, parent=self.mainToolBar)
+        self.mainToolBar.addAction(self.gridAction)
 
-        self._outputToolBar = OutputToolBar(parent=self, plot=self)
-        self.addToolBar(self._outputToolBar)
+        self.curveStyleAction = CurveStyleAction(self, parent=self.mainToolBar)
+        self.mainToolBar.addAction(self.curveStyleAction)
+
+        self.colormapAction = ColormapAction(self, parent=self.mainToolBar)
+        self.mainToolBar.addAction(self.colormapAction)
+
+        self.keepAspectRatio = KeepAspectRatioAction(self, parent=self.mainToolBar)
+        self.mainToolBar.addAction(self.keepAspectRatio)
+
+        self.addToolBar(self.mainToolBar)
+
+        # Add the output toolbar.
+        self.outputToolBar = QToolBar("IO", parent=self)
+
+        self.copyAction = CopyAction(self, parent=self.outputToolBar)
+        self.outputToolBar.addAction(self.copyAction)
+
+        self.saveAction = SaveAction(self, parent=self.outputToolBar)
+        self.outputToolBar.addAction(self.saveAction)
+
+        self.addToolBar(self.outputToolBar)
 
         windowHandle = self.window().windowHandle()
         if windowHandle is not None:
@@ -83,15 +101,15 @@ class BasePlotWidget(PlotWidget):
 
         self._snap_threshold_dist = 5
 
-        self.sigPlotSignal.connect(self._plotEvent)
+        self.sigPlotSignal.connect(self.plotEvent)
 
-    def _plotEvent(self, event):
+    def plotEvent(self, event):
         if event["event"] == "mouseMoved":
             x, y = event["x"], event["y"]
             xPixel, yPixel = event["xpixel"], event["ypixel"]
-            self._updateStatusBar(x, y, xPixel, yPixel)
+            self.updateStatusBar(x, y, xPixel, yPixel)
 
-    def _updateStatusBar(self, x, y, xPixel, yPixel):
+    def updateStatusBar(self, x, y, xPixel, yPixel):
         selectedItems = self.getItems()
 
         if not selectedItems:
@@ -99,9 +117,10 @@ class BasePlotWidget(PlotWidget):
 
         distInPixels = (self._snap_threshold_dist * self._ratio) ** 2
 
+        # TODO: Add the intensity for images.
         for item in selectedItems:
             if isinstance(item, Curve):
-                messageFormat = "X: {:g}    Y: {:g}"
+                messageFormat = "X: {:g}    Y: {:.3g}"
             elif isinstance(item, ImageData):
                 messageFormat = "X: {:g}    Y: {:g}"
                 continue
@@ -118,9 +137,8 @@ class BasePlotWidget(PlotWidget):
 
             closestInPixels = self.dataToPixel(xClosest, yClosest, axis=axis)
             if closestInPixels is not None:
-                xClosestPixel, yClosestPixel = closestInPixels
-                xDistInPixels = xClosestPixel - xPixel
-                yDistInPixels = yClosestPixel - yPixel
+                xDistInPixels = closestInPixels[0] - xPixel
+                yDistInPixels = closestInPixels[1] - yPixel
                 curveDistInPixels = xDistInPixels ** 2 + yDistInPixels ** 2
 
                 if curveDistInPixels <= distInPixels:
@@ -188,32 +206,43 @@ class ProfileWindow(BasePlotWidget):
 class MainPlotWidget(BasePlotWidget):
     def __init__(self, parent=None, **kwargs):
         super(MainPlotWidget, self).__init__(parent=parent, **kwargs)
+        self.profileWindow = ProfileWindow()
 
-        # Add a profile toolbar.
-        self._profileWindow = ProfileWindow()
-        self._profileToolBar = Profile.ProfileToolBar(
-            plot=self, profileWindow=self._profileWindow
-        )
-        # TODO: Check what the last element is.
-        self._profileToolBar.actions()[-1].setVisible(False)
+        # Instantiate the profile manager.
+        # profileManager = manager.ProfileManager(self, self)
+        # profileManager.setItemType(image=True)
+        # profileManager.setActiveItemTracking(True)
 
-        self.removeToolBar(self._outputToolBar)
-        self.addToolBar(self._profileToolBar)
-        self.addToolBar(self._outputToolBar)
-        self._outputToolBar.show()
+        # profileWindow = ProfileWindow()
+        # self.profileToolBar = ProfileToolBar(
+        #     parent=self, plot=self, profileWindow=profileWindow
+        # )
+        # self.profileToolBar.clear()
+        # for action in profileManager.createImageActions(self.profileToolBar):
+        #     self.profileToolBar.addAction(action)
+
+        # action = profileManager.createClearAction(self.profileToolBar)
+        # self.profileToolBar.addAction(action)
+        # action = profileManager.createEditorAction(self.profileToolBar)
+        # self.profileToolBar.addAction(action)
+
+        # self.removeToolBar(self.outputToolBar)
+        # self.addToolBar(self.profileToolBar)
+        # self.addToolBar(self.outputToolBar)
+        # self.outputToolBar.show()
 
         if sys.platform == "darwin":
             self.setIconSize(QSize(24, 24))
 
         # Create QAction for the context menu once for all.
-        self._zoomBackAction = ZoomBackAction(plot=self, parent=self)
+        self.zoomBackAction = ZoomBackAction(plot=self, parent=self)
 
         # Retrieve PlotWidget's plot area widget.
         plotArea = self.getWidgetHandle()
 
         # Set plot area custom context menu.
         plotArea.setContextMenuPolicy(Qt.CustomContextMenu)
-        plotArea.customContextMenuRequested.connect(self._contextMenu)
+        plotArea.customContextMenuRequested.connect(self.contextMenu)
 
         # Use the viridis color map by default.
         colormap = {
@@ -226,16 +255,16 @@ class MainPlotWidget(BasePlotWidget):
         self.setDefaultColormap(colormap)
 
     def closeProfileWindow(self):
-        self._profileWindow.close()
+        self.profileWindow.close()
 
-    def _contextMenu(self, pos):
+    def contextMenu(self, pos):
         """Handle plot area customContextMenuRequested signal.
 
         :param QPoint pos: Mouse position relative to plot area
         """
         # Create the context menu.
         menu = QMenu(self)
-        menu.addAction(self._zoomBackAction)
+        menu.addAction(self.zoomBackAction)
 
         # Displaying the context menu at the mouse position requires
         # a global position.
