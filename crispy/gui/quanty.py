@@ -1770,9 +1770,6 @@ class QuantyDockWidget(QDockWidget):
             self,
             triggered=self.saveSelectedResultsAs,
         )
-        self.saveAllResultsAsAction = QAction(
-            icon, "Save All Results As...", self, triggered=self.saveAllResultsAs
-        )
 
         icon = QIcon(resourceFileName("icons:trash.svg"))
         self.removeSelectedResultsAction = QAction(
@@ -1780,9 +1777,6 @@ class QuantyDockWidget(QDockWidget):
             "Remove Selected Results",
             self,
             triggered=self.removeSelectedCalculations,
-        )
-        self.removeAllResultsAction = QAction(
-            icon, "Remove All Results", self, triggered=self.removeAllResults
         )
 
         icon = QIcon(resourceFileName("icons:folder-open.svg"))
@@ -1796,9 +1790,6 @@ class QuantyDockWidget(QDockWidget):
         self.resultsContextMenu.addAction(self.saveSelectedResultsAsAction)
         self.resultsContextMenu.addAction(self.removeSelectedResultsAction)
         self.resultsContextMenu.addSeparator()
-        self.resultsContextMenu.addAction(self.saveAllResultsAsAction)
-        self.resultsContextMenu.addAction(self.removeAllResultsAction)
-        self.resultsContextMenu.addSeparator()
         self.resultsContextMenu.addAction(self.loadResultsAction)
 
         if not self.resultsView.selectedIndexes():
@@ -1807,8 +1798,6 @@ class QuantyDockWidget(QDockWidget):
 
         if not self.resultsModel.modelData:
             self.showDetailsAction.setEnabled(False)
-            self.saveAllResultsAsAction.setEnabled(False)
-            self.removeAllResultsAction.setEnabled(False)
 
         self.resultsContextMenu.exec_(self.resultsView.mapToGlobal(position))
 

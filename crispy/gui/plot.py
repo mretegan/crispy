@@ -189,7 +189,7 @@ class BasePlotWidget(PlotWidget):  # pylint: disable=too-many-instance-attribute
                 [], [], ls=lineStyle, color=color, label=label, marker=marker
             )
             handles.append(handle)
-        legend = self.plotArea.ax.legend(handles=handles, fancybox=False)
+        self.plotArea.ax.legend(handles=handles, fancybox=False)
 
 
 class ProfileWindow(BasePlotWidget):
