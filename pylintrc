@@ -1,0 +1,8 @@
+[MASTER]
+extension-pkg-whitelist=PyQt5
+
+[MESSAGES CONTROL]
+disable=
+  invalid-name,
+  missing-class-docstring,
+  missing-function-docstring,

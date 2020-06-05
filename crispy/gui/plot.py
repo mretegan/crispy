@@ -80,9 +80,8 @@ class CustomPlotWidget(PlotWidget):  # pylint: disable=too-many-instance-attribu
 
     def showPositionInfo(self, x, y, xPixel, yPixel):
         # For images get also the data at the x and y position.
-        for picked in self.pickItems(
-            xPixel, yPixel, lambda item: isinstance(item, items.ImageBase)
-        ):
+        condition = lambda item: isinstance(item, items.ImageBase)
+        for picked in self.pickItems(xPixel, yPixel, condition):
             image = picked.getItem()
             indices = picked.getIndices(copy=False)
             if indices is not None:
@@ -276,4 +275,4 @@ class MainPlotWidget(CustomPlotWidget):
             )
             handles.append(handle)
 
-        self.plotArea.ax.legend(handles=handles, fancybox=False)
+        self.plotArea.ax.legend(handles=handles, fancybox=False, loc="upper right")
