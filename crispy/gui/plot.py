@@ -66,7 +66,36 @@ class CustomPlotWidget(PlotWidget):  # pylint: disable=too-many-instance-attribu
         self.addProfileToolBar()
         self.addOutputToolBar()
 
+        # self.addPositionInfoWidget()
         self.sigContentChanged.connect(self.setProfileToolBarVisibility)
+        self.sigPlotSignal.connect(self.plotEvent)
+
+    def plotEvent(self, event):
+        if event["event"] == "mouseMoved":
+            x, y = event["x"], event["y"]
+            xPixel, yPixel = event["xpixel"], event["ypixel"]
+            self.showPositionInfo(x, y, xPixel, yPixel)
+
+    def showPositionInfo(self, x, y, xPixel, yPixel):
+        # For images get also the data at the x and y position.
+        for picked in self.pickItems(
+            xPixel, yPixel, lambda item: isinstance(item, items.ImageBase)
+        ):
+            image = picked.getItem()
+            indices = picked.getIndices(copy=False)
+            if indices is not None:
+                row, col = indices[0][0], indices[1][0]
+                data = image.getData(copy=False)[row, col]
+
+        for item in self.getItems():
+            if isinstance(item, items.Curve):
+                message = "X: {:g}    Y: {:g}".format(x, y)
+            elif isinstance(item, items.ImageData):
+                message = "X: {:g}    Y: {:g}    Data: {:g}".format(x, y, data)
+            else:
+                message = None
+
+            self.window().statusBar().showMessage(message)
 
     def addInteractiveToolBar(self):
         self.interactiveToolBar = QToolBar("Interaction", parent=self)
@@ -154,10 +183,10 @@ class CustomPlotWidget(PlotWidget):  # pylint: disable=too-many-instance-attribu
         self.addToolBar(self.profileToolBar)
 
     def setProfileToolBarVisibility(self):
-        imageDataItems = [
-            item for item in self.getItems() if isinstance(item, items.ImageData)
+        imageBaseItems = [
+            item for item in self.getItems() if isinstance(item, items.ImageBase)
         ]
-        if imageDataItems:
+        if imageBaseItems:
             self.profileToolBar.setVisible(True)
         else:
             self.profileToolBar.setVisible(False)
