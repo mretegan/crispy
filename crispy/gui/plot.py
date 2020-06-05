@@ -25,6 +25,7 @@ from silx.gui.plot.actions.control import (
     XAxisAutoScaleAction,
     YAxisAutoScaleAction,
     ZoomBackAction,
+    CrosshairAction,
 )
 from silx.gui.plot.actions.io import CopyAction, SaveAction
 from silx.gui.plot.actions.mode import PanModeAction, ZoomModeAction
@@ -66,7 +67,8 @@ class CustomPlotWidget(PlotWidget):  # pylint: disable=too-many-instance-attribu
         self.addProfileToolBar()
         self.addOutputToolBar()
 
-        # self.addPositionInfoWidget()
+        self.addContextMenu()
+
         self.sigContentChanged.connect(self.setProfileToolBarVisibility)
         self.sigPlotSignal.connect(self.plotEvent)
 
@@ -90,12 +92,32 @@ class CustomPlotWidget(PlotWidget):  # pylint: disable=too-many-instance-attribu
         for item in self.getItems():
             if isinstance(item, items.Curve):
                 message = "X: {:g}    Y: {:g}".format(x, y)
-            elif isinstance(item, items.ImageData):
+            elif isinstance(item, items.ImageBase):
                 message = "X: {:g}    Y: {:g}    Data: {:g}".format(x, y, data)
             else:
                 message = None
 
             self.window().statusBar().showMessage(message)
+
+    def addContextMenu(self):
+        # Create the actions for the context menu once for all.
+        self.zoomBackAction = ZoomBackAction(plot=self, parent=self)
+        self.crosshairAction = CrosshairAction(plot=self, color="lime", parent=self)
+
+        # Set plot area custom context menu.
+        self.plotArea.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.plotArea.customContextMenuRequested.connect(self.showContextMenu)
+
+    def showContextMenu(self, pos):
+        menu = QMenu(self)
+        menu.addAction(self.zoomBackAction)
+        menu.addAction(self.crosshairAction)
+
+        # Displaying the context menu at the mouse position requires a global
+        # position. The position received as argument is relative to
+        # PlotWidget's plot area, and thus needs to be converted.
+        globalPosition = self.plotArea.mapToGlobal(pos)
+        menu.exec_(globalPosition)
 
     def addInteractiveToolBar(self):
         self.interactiveToolBar = QToolBar("Interaction", parent=self)
@@ -211,13 +233,6 @@ class MainPlotWidget(CustomPlotWidget):
         super().__init__(parent=parent, **kwargs)
         self.profileWindow = ProfileWindow()
 
-        # Create QAction for the context menu once for all.
-        self.zoomBackAction = ZoomBackAction(plot=self, parent=self)
-
-        # Set plot area custom context menu.
-        self.plotArea.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.plotArea.customContextMenuRequested.connect(self.contextMenu)
-
         # Use the viridis color map by default.
         colormap = {
             "name": "viridis",
@@ -230,22 +245,6 @@ class MainPlotWidget(CustomPlotWidget):
 
     def closeProfileWindow(self):
         self.profileWindow.close()
-
-    def contextMenu(self, pos):
-        """Handle plot area customContextMenuRequested signal.
-
-        :param QPoint pos: Mouse position relative to plot area
-        """
-        # Create the context menu.
-        menu = QMenu(self)
-        menu.addAction(self.zoomBackAction)
-
-        # Displaying the context menu at the mouse position requires
-        # a global position.
-        # The position received as argument is relative to PlotWidget's
-        # plot area, and thus needs to be converted.
-        globalPosition = self.plotArea.mapToGlobal(pos)
-        menu.exec_(globalPosition)
 
     def addCurve(self, x, y, **kwargs):  # pylint: disable=arguments-differ
         super().addCurve(x, y, **kwargs)
