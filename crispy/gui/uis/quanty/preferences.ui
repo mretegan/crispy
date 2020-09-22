@@ -102,7 +102,7 @@
      <item row="0" column="0">
       <widget class="QLabel" name="pathLabel">
        <property name="text">
-        <string>Quanty executable:</string>
+        <string>Quanty Executable:</string>
        </property>
       </widget>
      </item>

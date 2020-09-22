@@ -1,43 +1,85 @@
 # coding: utf-8
-# /*##########################################################################
-#
-# Copyright (c) 2016-2018 European Synchrotron Radiation Facility
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#
-# ###########################################################################*/
+###################################################################
+# Copyright (c) 2016-2020 European Synchrotron Radiation Facility #
+#                                                                 #
+# Author: Marius Retegan                                          #
+#                                                                 #
+# This work is licensed under the terms of the MIT license.       #
+# For further information, see https://github.com/mretegan/crispy #
+###################################################################
+# pylint: disable=unused-argument, no-self-use
+"""Custom delegates and views."""
 
-from __future__ import absolute_import, division, unicode_literals
+import logging
 
-__authors__ = ['Marius Retegan']
-__license__ = 'MIT'
-__date__ = '17/07/2017'
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QStyledItemDelegate, QTableView, QTreeView
+
+from crispy.gui.items import DoubleItem, IntItem, Vector3DItem, ComboItem
+from crispy.gui.widgets import DoubleLineEdit, IntLineEdit, Vector3DLineEdit, ComboBox
+
+logger = logging.getLogger(__name__)
 
 
-from PyQt5.QtWidgets import QTreeView
+class Delegate(QStyledItemDelegate):
+    def __init__(self, parent):
+        super().__init__(parent=parent)
+
+    def createEditor(self, parent, option, index):
+        # The method is used only when editing directly in the view, and not when
+        # editing is done via a widget.
+        EDITORS = {
+            IntItem: IntLineEdit,
+            DoubleItem: DoubleLineEdit,
+            Vector3DItem: Vector3DLineEdit,
+            ComboItem: ComboBox,
+        }
+        # Don't create the editor if data is None.
+        if index.data(Qt.EditRole) is None:
+            return None
+        item = index.internalPointer()
+        for itemClass, widget in EDITORS.items():
+            if isinstance(item, itemClass):
+                editor = widget(parent)
+                editor.setAlignment(Qt.AlignRight)
+                return editor
+        return None
+
+    def setModelData(self, editor, model, index):
+        try:
+            return editor.setModelData(model, index)
+        except ValueError as e:
+            logger.info(str(e))
+            self.setEditorData(editor, index)
+
+    def setEditorData(self, editor, index):
+        editor.setEditorData(index)
 
 
-class HamiltonianParametersView(QTreeView):
-    """Class enabling additional functionality in QTreeView."""
+class TreeView(QTreeView):
+    """Class enabling additional functionality for a QTreeView."""
+
     def __init__(self, parent=None):
-        super(HamiltonianParametersView, self).__init__(parent)
+        super().__init__(parent=parent)
+        self.setItemDelegateForColumn(1, Delegate(parent=self))
+        self.setItemDelegateForColumn(2, Delegate(parent=self))
+
+    def showEvent(self, event):
+        self.resizeAllColumnsToContents()
+        super().showEvent(event)
 
     def resizeAllColumnsToContents(self):
-        for i in range(self.model().columnCount(0)):
+        if self.model() is None:
+            return
+        for i in range(self.model().columnCount()):
             self.resizeColumnToContents(i)
+
+
+class TableView(QTableView):
+    def __init__(self, parent):
+        super().__init__(parent=parent)
+
+    def showEvent(self, event):
+        self.hideColumn(1)
+        self.hideColumn(2)
+        super().showEvent(event)

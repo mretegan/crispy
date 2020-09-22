@@ -1,44 +1,30 @@
 # coding: utf-8
-# /*##########################################################################
-#
-# Copyright (c) 2016-2018 European Synchrotron Radiation Facility
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#
-# ###########################################################################*/
+###################################################################
+# Copyright (c) 2016-2020 European Synchrotron Radiation Facility #
+#                                                                 #
+# Author: Marius Retegan                                          #
+#                                                                 #
+# This work is licensed under the terms of the MIT license.       #
+# For further information, see https://github.com/mretegan/crispy #
+###################################################################
+"""Custom widgets."""
 
-from __future__ import absolute_import, division, unicode_literals
+import logging
 
-__authors__ = ['Marius Retegan']
-__license__ = 'MIT'
-__date__ = '03/10/2018'
+from PyQt5.QtWidgets import QCheckBox, QComboBox, QLineEdit
+from PyQt5.QtGui import (
+    QDoubleValidator,
+    QIntValidator,
+    QRegExpValidator,
+    QPalette,
+    QColor,
+)
+from PyQt5.QtCore import QRegExp, Qt, QEvent
 
-
-# from PyQt5.QtCore import QTimer, Qt
-from PyQt5.QtWidgets import QComboBox, QLineEdit
-from PyQt5.QtGui import QIntValidator, QDoubleValidator
+logger = logging.getLogger(__name__)
 
 
 class ComboBox(QComboBox):
-    def __init__(self, *args, **kwargs):
-        super(ComboBox, self).__init__(*args, **kwargs)
-
     def setItems(self, items, currentItem):
         self.blockSignals(True)
         self.clear()
@@ -46,79 +32,107 @@ class ComboBox(QComboBox):
         self.setCurrentText(currentItem)
         self.blockSignals(False)
 
+    def setModelData(self, model, index):
+        value = self.currentText()
+        if value == model.data(index, role=Qt.EditRole):
+            return
+        model.setData(index, value, Qt.EditRole)
+
+    def setEditorData(self, index):
+        item = index.internalPointer()
+        self.setItems(item.items, item.currentItem)
+
+
+# Note: Initially the line edits were implemented to return the types specified in
+# their names, i.e. the IntLineEdit would return an int, etc. In the end I found it
+# better to delegate the conversion to the items in the model. The validators take care
+# of having the proper format.
+
 
 class LineEdit(QLineEdit):
     def __init__(self, *args, **kwargs):
-        super(LineEdit, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
+        self.validator = None
+        self.currentText = None
+        self.textEdited.connect(self.updateBackgroundColor)
+        self.installEventFilter(self)
+
+    def focusInEvent(self, event):
+        self.currentText = self.text()
+        super().focusInEvent(event)
+
+    def focusOutEvent(self, event):
+        self.setBackgroundColor("#FFFFFF")
+        if not self.text():
+            self.setText(self.currentText)
+        super().focusOutEvent(event)
+
+    def setTextColor(self, color):
+        palette = self.palette()
+        palette.setColor(QPalette.Text, QColor(color))
+        self.setPalette(palette)
+
+    def setBackgroundColor(self, color):
+        palette = self.palette()
+        palette.setColor(QPalette.Base, QColor(color))
+        self.setPalette(palette)
+
+    def eventFilter(self, source, event):
+        if event.type() == QEvent.KeyPress:
+            if event.key() in (Qt.Key_Return, Qt.Key_Enter):
+                self.setBackgroundColor("#FFFFFF")
+        return super().eventFilter(source, event)
+
+    def updateBackgroundColor(self):
+        self.setBackgroundColor("#FFFF8D")
+
+    def setModelData(self, model, index):
+        value = self.text()
+        # Don't update the model's data if it did not change.
+        if value == model.data(index, role=Qt.EditRole):
+            return
+        model.setData(index, value, Qt.EditRole)
+        self.currentText = value
+
+    def setEditorData(self, index):
+        value = index.data()
+        self.setText(value)
 
 
 class IntLineEdit(LineEdit):
     def __init__(self, *args, **kwargs):
-        super(IntLineEdit, self).__init__(*args, **kwargs)
-        self.setValidator(QIntValidator(self))
-
-    def getValue(self):
-        return int(self.text())
-
-    def setValue(self, value):
-        self.setText(str(value))
+        super().__init__(*args, **kwargs)
+        self.validator = QIntValidator()
+        self.setValidator(self.validator)
 
 
 class DoubleLineEdit(LineEdit):
     def __init__(self, *args, **kwargs):
-        super(DoubleLineEdit, self).__init__(*args, **kwargs)
-        validator = QDoubleValidator(self)
-        self.setValidator(validator)
-
-    def getValue(self):
-        return float(self.text())
-
-    def setValue(self, value):
-        self.setText(str(value))
+        super().__init__(*args, **kwargs)
+        self.validator = QDoubleValidator()
+        self.setValidator(self.validator)
 
 
-class VectorLineEdit(LineEdit):
+class Vector3DLineEdit(LineEdit):
     def __init__(self, *args, **kwargs):
-        super(VectorLineEdit, self).__init__(*args, **kwargs)
-
-    def getVector(self):
-        text = self.text()
-        if '(' not in text or ')' not in text:
-            raise ValueError
-
-        text = text[1:-1].split(',')
-
-        try:
-            vector = list(map(int, text))
-        except ValueError:
-            try:
-                vector = list(map(float, text))
-            except ValueError:
-                raise
-            else:
-                return vector
-        else:
-            return vector
-
-    def setVector(self, vector):
-        text = str(tuple(vector))
-        self.setText(text)
+        super().__init__(*args, **kwargs)
+        self.regex = QRegExp()
+        # Regex that matches the vectors input format, e.g. (1, 0, 1), (-1,0,1)
+        # + and - are allowed and any number of spaces after comma. The regex has
+        # groups that can be captured.
+        # pylint: disable=anomalous-backslash-in-string
+        self.regex.setPattern("\\(([+-]?\d?),\s*([+-]?\d?),\s*([+-]?\d?)\\)")
+        self.validator = QRegExpValidator(self.regex, self)
+        self.setValidator(self.validator)
 
 
-class DoubleListLineEdit(LineEdit):
-    def __init__(self, *args, **kwargs):
-        super(DoubleListLineEdit, self).__init__(*args, **kwargs)
+class CheckBox(QCheckBox):
+    def setModelData(self, model, index):
+        value = self.isChecked()
+        if value == model.data(index, role=Qt.UserRole):
+            return
+        model.setData(index, value, Qt.EditRole)
 
-    def getList(self):
-        text = self.text().split(',')
-        try:
-            values = list(map(float, text))
-        except ValueError:
-            raise
-        else:
-            return values
-
-    def setList(self, values):
-        if not isinstance(values, list):
-            values = [values]
-        self.setText(', '.join(map(str, values)))
+    def setEditorData(self, index):
+        value = index.data(Qt.UserRole)
+        self.setChecked(value)

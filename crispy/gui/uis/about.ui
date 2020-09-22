@@ -163,22 +163,6 @@ font-weight: bold;</string>
     </widget>
    </item>
    <item>
-    <spacer name="firstVerticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeType">
-      <enum>QSizePolicy::Expanding</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item>
     <widget class="QLabel" name="homepageLabel">
      <property name="text">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;http://www.esrf.eu/computing/scientific/crispy&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Home Page&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -211,20 +195,7 @@ font-weight: bold;</string>
     </widget>
    </item>
    <item>
-    <spacer name="secondVerticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="updateHorizontalLayout">
+    <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <spacer name="updateLeftSpacer">
        <property name="orientation">
@@ -269,14 +240,24 @@ font-weight: bold;</string>
       <string notr="true">font-size: 12px;</string>
      </property>
      <property name="text">
-      <string>© Copyright 2016–2019,
-European Synchrotron Radiation Facility.</string>
+      <string>Copyright (c) 2016–2020,
+European Synchrotron Radiation Facility</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
      </property>
      <property name="wordWrap">
       <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="authorLabel">
+     <property name="text">
+      <string>Author: Marius Retegan</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
    </item>

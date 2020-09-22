@@ -7,12 +7,13 @@
 # This work is licensed under the terms of the MIT license.       #
 # For further information, see https://github.com/mretegan/crispy #
 ###################################################################
-"""This module provides plotting related functionality."""
+"""Plotting related functionality."""
+
 import sys
 
 import matplotlib.lines as mlines
 
-from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtCore import QSize
 from PyQt5.QtWidgets import QMenu, QToolBar
 
 from silx.gui.plot import PlotWidget, items
@@ -50,7 +51,8 @@ class CustomProfileWindow(ProfileWindow):
         return plot
 
 
-class CustomPlotWidget(PlotWidget):  # pylint: disable=too-many-instance-attributes
+class CustomPlotWidget(PlotWidget):
+    # pylint: disable=too-many-instance-attributes
     def __init__(self, parent=None, backend="matplotlib"):
         super().__init__(parent=parent, backend=backend)
 
@@ -67,8 +69,6 @@ class CustomPlotWidget(PlotWidget):  # pylint: disable=too-many-instance-attribu
         self.addProfileToolBar()
         self.addOutputToolBar()
 
-        self.addContextMenu()
-
         self.sigContentChanged.connect(self.setProfileToolBarVisibility)
         self.sigPlotSignal.connect(self.plotEvent)
 
@@ -79,8 +79,9 @@ class CustomPlotWidget(PlotWidget):  # pylint: disable=too-many-instance-attribu
             self.showPositionInfo(x, y, xPixel, yPixel)
 
     def showPositionInfo(self, x, y, xPixel, yPixel):
-        # For images get also the data at the x and y position.
+        # For images get also the data at the x and y coordinates.
         condition = lambda item: isinstance(item, items.ImageBase)
+        data = None
         for picked in self.pickItems(xPixel, yPixel, condition):
             image = picked.getItem()
             indices = picked.getIndices(copy=False)
@@ -98,25 +99,16 @@ class CustomPlotWidget(PlotWidget):  # pylint: disable=too-many-instance-attribu
 
             self.window().statusBar().showMessage(message)
 
-    def addContextMenu(self):
-        # Create the actions for the context menu once for all.
-        self.zoomBackAction = ZoomBackAction(plot=self, parent=self)
-        self.crosshairAction = CrosshairAction(plot=self, color="lime", parent=self)
+    def contextMenuEvent(self, event):
+        contextMenu = QMenu(self)
 
-        # Set plot area custom context menu.
-        self.plotArea.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.plotArea.customContextMenuRequested.connect(self.showContextMenu)
+        zoomBackAction = ZoomBackAction(plot=self, parent=self)
+        crosshairAction = CrosshairAction(plot=self, color="lime", parent=contextMenu)
 
-    def showContextMenu(self, pos):
-        menu = QMenu(self)
-        menu.addAction(self.zoomBackAction)
-        menu.addAction(self.crosshairAction)
+        contextMenu.addAction(zoomBackAction)
+        contextMenu.addAction(crosshairAction)
 
-        # Displaying the context menu at the mouse position requires a global
-        # position. The position received as argument is relative to
-        # PlotWidget's plot area, and thus needs to be converted.
-        globalPosition = self.plotArea.mapToGlobal(pos)
-        menu.exec_(globalPosition)
+        contextMenu.exec_(event.globalPos())
 
     def addInteractiveToolBar(self):
         self.interactiveToolBar = QToolBar("Interaction", parent=self)
@@ -245,7 +237,8 @@ class MainPlotWidget(CustomPlotWidget):
     def closeProfileWindow(self):
         self.profileWindow.close()
 
-    def addCurve(self, x, y, **kwargs):  # pylint: disable=arguments-differ
+    def addCurve(self, x, y, **kwargs):
+        # pylint: disable=arguments-differ
         super().addCurve(x, y, **kwargs)
         self.addLegend()
 
@@ -253,18 +246,18 @@ class MainPlotWidget(CustomPlotWidget):
         self.addLegend()
         super().replot()
 
+    def isEmpty(self):
+        return bool(not self.getAllImages() + self.getAllCurves())
+
     def addLegend(self):
         """Add the legend to the Matplotlib axis."""
-        images = self.getAllImages()
-        curves = self.getAllCurves()
-
-        if not curves or images:
+        if self.isEmpty():
             legend = self.plotArea.ax.legend(handles=[])
             legend.set_visible(False)
             return
 
         handles = list()
-        for curve in curves:
+        for curve in self.getAllCurves():
             label = curve.getLegend()
             style = curve.getCurrentStyle()
             marker = style.getSymbol()

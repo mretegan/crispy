@@ -1,0 +1,422 @@
+# coding: utf-8
+###################################################################
+# Copyright (c) 2016-2020 European Synchrotron Radiation Facility #
+#                                                                 #
+# Author: Marius Retegan                                          #
+#                                                                 #
+# This work is licensed under the terms of the MIT license.       #
+# For further information, see https://github.com/mretegan/crispy #
+###################################################################
+"""Axis related components."""
+
+import copy
+import logging
+from math import floor
+
+import numpy as np
+
+from crispy.gui.items import (
+    BaseItem,
+    DoubleItem,
+    IntItem,
+    Vector3DItem,
+    ComboItem,
+)
+from crispy.quanty import XDB
+
+logger = logging.getLogger(__name__)
+
+
+class Broadening(DoubleItem):
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, value):
+        if value is None:
+            return
+        if value < 0.0:
+            raise ValueError("The broadening cannot be negative.")
+        self._value = value
+
+
+class Lorentzian(Broadening):
+    def __init__(self, parent=None, name="Lorentzian", value=None):
+        super().__init__(parent=parent, name=name)
+        self._value = value
+
+        # TODO: Implement these for variable broadening.
+        self.energies = BaseItem(self, "Energies")
+        self.fwhms = BaseItem(self, "FWHM")
+
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, value):
+        if value is None:
+            return
+        if value < 0.1:
+            raise ValueError("The Lorentzian broadening cannot be smaller than 0.1.")
+        self._value = value
+
+    @property
+    def replacements(self):
+        replacements = dict()
+
+        axis = self.parent()
+        start = axis.start.value
+        stop = axis.stop.value
+
+        points = [(start, self.value), (stop, self.value)]
+        replacement = "{"
+        for i, (energy, fwhm) in enumerate(points):
+            replacement += f"{{{energy}, {fwhm}}}"
+            if i != len(points) - 1:
+                replacement += ", "
+            else:
+                replacement += "}"
+        replacements["Lorentzian"] = replacement
+
+        return replacements
+
+    def copyFrom(self, item):
+        super().copyFrom(item)
+        self.energies.copyFrom(item.energies)
+        self.fwhms.copyFrom(item.fwhms)
+
+
+class Gaussian(Broadening):
+    def __init__(self, parent=None, name="Gaussian", value=None):
+        super().__init__(parent=parent, name=name)
+        self._value = value
+
+
+class PhotonVector(Vector3DItem):
+    @property
+    def replacements(self):
+        # Normalize the vector.
+        v = self.value / np.linalg.norm(self.value)
+        return f"{{{v[0]:.8g}, {v[1]:.8g}, {v[2]:.8g}}}"
+
+
+class WaveVector(PhotonVector):
+    def __init__(self, parent=None, name="Wave Vector", value=None):
+        super().__init__(parent=parent, name=name, value=value)
+
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, value):
+        if np.all(value == 0):
+            raise ValueError("The wave vector cannot be null.")
+
+        photon = self.parent()
+        k, e1 = value, photon.e1.value
+        # If the wave and polarization vectors are not perpendicular, select a new
+        # perpendicular vector for the polarization.
+        if np.dot(k, e1) != 0:
+            if k[2] != 0 or (-k[0] - k[1]) != 0:
+                e1 = np.array([k[2], k[2], -k[0] - k[1]])
+            else:
+                e1 = np.array([-k[2] - k[1], k[0], k[0]])
+
+        self._value = value
+        photon.e1.value = e1
+        photon.e2.value = np.cross(e1, k)
+
+
+class FirstPolarization(PhotonVector):
+    def __init__(self, parent=None, name="First Polarization", value=None):
+        super().__init__(parent=parent, name=name, value=value)
+
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, value):
+        if np.all(value == 0):
+            raise ValueError("The polarization vector cannot be null.")
+
+        photon = self.parent()
+        if np.dot(photon.k.value, value) != 0:
+            raise ValueError(
+                "The wave and polarization vectors need to be perpendicular."
+            )
+        self._value = value
+        photon.e2.value = np.cross(value, photon.k.value)
+
+
+class SecondPolarization(PhotonVector):
+    def __init__(self, parent=None, name="Second Polarization", value=None):
+        super().__init__(parent=parent, name=name, value=value)
+
+
+class Photon(BaseItem):
+    def __init__(self, parent=None, name="Photon"):
+        super().__init__(parent=parent, name=name)
+
+        self.k = WaveVector(parent=self, value=np.array([0, 0, 1]))
+        self.e1 = FirstPolarization(parent=self, value=np.array([0, 1, 0]))
+        self.e2 = SecondPolarization(parent=self, value=np.array([1, 0, 0]))
+
+    @property
+    def replacements(self):
+        replacements = dict()
+
+        def formatVector(vector):
+            # Normalize the vector.
+            vector = vector / np.linalg.norm(vector)
+            x, y, z = vector
+            return f"{{{x:.8g}, {y:.8g}, {z:.8g}}}"
+
+        replacements["WaveVector"] = formatVector(self.k.value)
+        replacements["FirstPolarization"] = formatVector(self.e1.value)
+        replacements["SecondPolarization"] = formatVector(self.e2.value)
+
+        return replacements
+
+    def copyFrom(self, item):
+        super().copyFrom(item)
+        self.k.copyFrom(item.k)
+        self.e1.copyFrom(item.e1)
+        self.e2.copyFrom(item.e2)
+
+
+class IncidentPhoton(Photon):
+    def __init__(self, parent=None, name="Incident Photon"):
+        super().__init__(parent=parent, name=name)
+
+
+class ScatteredPhoton(Photon):
+    def __init__(self, parent=None, name="Scattered Photon"):
+        super().__init__(parent=parent, name=name)
+
+
+class Start(DoubleItem):
+    def __init__(self, parent=None, name="Start", value=None):
+        super().__init__(parent=parent, name=name)
+        self._value = value
+
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, value):
+        stop = self.parent().stop
+        if stop.value is not None and value > stop.value:
+            raise ValueError(
+                "The lower energy limit cannot be larger than the upper limit."
+            )
+        self._value = value
+
+
+class Stop(DoubleItem):
+    def __init__(self, parent=None, name="Stop", value=None):
+        super().__init__(parent=parent, name=name)
+        self._value = value
+
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, value):
+        start = self.parent().start
+        if start.value is not None and value < start.value:
+            raise ValueError(
+                "The upper energy limit cannot be larger than the lower limit."
+            )
+        self._value = value
+
+
+class NPoints(IntItem):
+    def __init__(self, parent=None, name="Number of Points", value=None):
+        super().__init__(parent=parent, name=name)
+        self._value = value
+
+    @property
+    def minimum(self):
+        axis = self.parent()
+        start, stop = axis.start, axis.stop
+        lorentzian = axis.lorentzian
+        return int(floor(stop.value - start.value) / lorentzian.value)
+
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, value):
+        if value < self.minimum:
+            raise ValueError(
+                f"The number of points must be greater than {self.minimum}."
+            )
+        self._value = value
+
+
+class Shift(DoubleItem):
+    def __init__(self, parent=None, value=None):
+        super().__init__(parent=parent, name="User Defined Shift", value=value)
+
+
+class Axis(BaseItem):
+    def __init__(self, parent=None, name="Axis"):
+        super().__init__(parent=parent, name=name)
+
+        self.idx = 0
+        if name == "Y-axis":
+            self.idx = 1
+
+        start, stop = self.limits
+        self.start = Start(parent=self, value=start)
+        self.stop = Stop(parent=self, value=stop)
+        self.npoints = NPoints(parent=self, value=1000)
+
+        self.gaussian = Gaussian(parent=self, value=0.1)
+        self.lorentzian = Lorentzian(parent=self, value=self.coreholeWidth)
+
+        self.shift = Shift(parent=self, value=0.0)
+
+        self.photon = None
+
+    @property
+    def limits(self):
+        calculation = self.ancestor
+        STEP = 10
+        if calculation.experiment.isEmission:
+            limits = [-3 * STEP, STEP]
+        else:
+            label = calculation.edge.labels[self.idx]
+            if label in ("K", "L1", "M1", "N1"):
+                limits = [-STEP, STEP]
+            limits = [-STEP, 3 * STEP]
+
+        return [limit + self.experimentalEnergy for limit in limits]
+
+    @property
+    def experimentalEnergy(self):
+        """Experimental edges/lines energies."""
+        calculation = self.ancestor
+        label = calculation.edge.labels[self.idx]
+        if calculation.experiment.isEmission:
+            energy = XDB.xray_lines(calculation.element.symbol)[label].energy
+        else:
+            try:
+                energy = XDB.xray_edges(calculation.element.symbol)[label].energy
+            except (TypeError, AttributeError, KeyError):
+                energy = 0.0
+                logger.debug(
+                    "%s %s %s %s",
+                    calculation.element,
+                    calculation.experiment,
+                    calculation.edge,
+                    label,
+                )
+        return energy
+
+    @property
+    def coreholeWidth(self):
+        calculation = self.ancestor
+        label = calculation.edge.labels[self.idx]
+        coreholeWidth = XDB.corehole_width(calculation.element.symbol, label)
+
+        try:
+            coreholeWidth = float(coreholeWidth)
+        except TypeError:
+            coreholeWidth = 0.1
+
+        if coreholeWidth < 0.1:
+            coreholeWidth = 0.1
+
+        return round(coreholeWidth, 2)
+
+    @property
+    def replacements(self):
+        replacements = dict()
+
+        replacements["Emin"] = self.start.value
+        replacements["Emax"] = self.stop.value
+        replacements["NPoints"] = self.npoints.value
+        replacements["ExperimentalShift"] = self.experimentalEnergy
+        replacements["ZeroShift"] = 0.0
+        replacements["Gaussian"] = self.gaussian.value
+
+        replacements.update(self.lorentzian.replacements)
+        replacements.update(self.photon.replacements)
+
+        prefix = self.name[0]
+        replacements = {prefix + name: value for name, value in replacements.items()}
+
+        return replacements
+
+    def copyFrom(self, item):
+        super().copyFrom(item)
+        self.idx = copy.deepcopy(item.idx)
+        self.start.copyFrom(item.start)
+        self.stop.copyFrom(item.stop)
+        self.npoints.copyFrom(item.npoints)
+        self.gaussian.copyFrom(item.gaussian)
+        self.lorentzian.copyFrom(item.lorentzian)
+        self.shift.copyFrom(item.shift)
+        self.photon.copyFrom(item.photon)
+
+
+class XAxis(Axis):
+    def __init__(self, parent=None, name="X-axis"):
+        super().__init__(parent=parent, name=name)
+        self.photon = IncidentPhoton(parent=self)
+
+    @property
+    def label(self):
+        calculation = self.ancestor
+        value = calculation.experiment.value
+        if value == "XAS":
+            return "Absorption Energy"
+        if value == "XES":
+            return "Emission Energy"
+        if value == "XPS":
+            return "Binding Energy"
+        return "Incident Energy"
+
+
+class YAxis(Axis):
+    def __init__(self, parent=None, name="Y-axis"):
+        super().__init__(parent=parent, name=name)
+        self.photon = ScatteredPhoton(parent=self)
+
+    @property
+    def label(self):
+        return "Energy Transfer"
+
+
+class Axes(BaseItem):
+    def __init__(self, parent=None, name="Axes"):
+        super().__init__(parent=parent, name=name)
+
+        self.scale = DoubleItem(parent=self, name="Scale Factor", value=0.0)
+        self.normalization = ComboItem(parent=self, name="Normalization", value="None")
+        self.normalization.items = ["None", "Maximum", "Area"]
+
+        self.xaxis = XAxis(parent=self)
+
+        calculation = self.ancestor
+        self.labels = [self.xaxis.label, "Intensity (a.u.)"]
+        if calculation.experiment.isTwoDimensional:
+            self.yaxis = YAxis(parent=self)
+            self.xaxis.npoints._value = self.xaxis.npoints.minimum
+            self.labels = [self.xaxis.label, self.yaxis.label]
+
+    def copyFrom(self, item):
+        super().copyFrom(item)
+        self.scale.copyFrom(item.scale)
+        self.normalization.copyFrom(item.normalization)
+        self.xaxis.copyFrom(item.xaxis)
+        if getattr(self, "yaxis", None) is not None:
+            self.yaxis.copyFrom(item.yaxis)
