@@ -65,10 +65,25 @@ class DetailsDialog(QDialog):
         # self.closePushButton.setAutoDefault(False)
         self.closePushButton.clicked.connect(self.close)
 
-    def populate(self, result):
+    def clear(self):
+        self.setWindowTitle("Details")
+
         if self.mappers:
             for mapper in self.mappers:
                 mapper.clearMapping()
+
+        self.scaleLineEdit.clear()
+        self.normalizationComboBox.clear()
+
+        self.inputText.clear()
+        self.outputText.clear()
+        self.summaryText.clear()
+
+    def populate(self, result):
+        self.clear()
+
+        if result is None:
+            return
 
         MAPPINGS = (
             (self.scaleLineEdit, result.axes.scale),
@@ -95,10 +110,9 @@ class DetailsDialog(QDialog):
         self.outputText.setPlainText(result.output)
         self.summaryText.setPlainText(result.summary)
 
-        title = "Details"
         if result.value is not None:
             title = f"Details for {result.value}"
-        self.setWindowTitle(title)
+            self.setWindowTitle(title)
 
     def showEvent(self, event):
         self.loadSettings()

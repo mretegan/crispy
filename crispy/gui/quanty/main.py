@@ -242,11 +242,20 @@ class ResultsPage(QWidget):
         selectionModel.selectionChanged.connect(self.selectionChanged)
 
         self.model.dataChanged.connect(self.plot)
+        self.currentIndexChanged.connect(
+            lambda index: self.detailsDialog.populate(index.internalPointer())
+        )
 
-        self.currentIndex = QModelIndex()
+        self._currentIndex = QModelIndex()
 
-    def saveSelected(self):
-        pass
+    @property
+    def currentIndex(self):
+        return self._currentIndex
+
+    @currentIndex.setter
+    def currentIndex(self, value):
+        self._currentIndex = value
+        self.currentIndexChanged.emit(value)
 
     def removeSelected(self):
         indexes = self.view.selectedIndexes()
@@ -259,8 +268,18 @@ class ResultsPage(QWidget):
         for item in items:
             item.setParent(None)
 
-        self.selectFirstResult()
+        index = self.model.firstIndex()
+        if index.isValid():
+            # This changes the selection, and the self.currentIndex will be
+            # updated.
+            self.view.setCurrentIndex(index)
+        else:
+            self.currentIndex = QModelIndex()
+
         self.model.dataChanged.emit(self.currentIndex, self.currentIndex)
+
+    def saveSelected(self):
+        pass
 
     def load(self):
         pass
@@ -290,7 +309,6 @@ class ResultsPage(QWidget):
         except ValueError:
             return
         self.currentIndex = index
-        self.currentIndexChanged.emit(index)
 
     def showResultsContextMenu(self, position):
         selected = bool(self.view.selectedIndexes())
@@ -299,30 +317,17 @@ class ResultsPage(QWidget):
 
         # Enable the action only if there is a valid item under the cursor.
         # TODO: Probably also check if the item is of a valid class.
+        # No need to set the current index to the index at position. This is
+        # done already when the selection changes.
         index = self.view.indexAt(position)
         self.showDetailsDialogAction.setEnabled(index.internalPointer() is not None)
-
         self.contextMenu.exec_(self.view.mapToGlobal(position))
 
     def showDetailsDialog(self):
-        self.detailsDialog.populate(self.currentIndex.internalPointer())
+        result = self.currentIndex.internalPointer()
+        self.detailsDialog.populate(result)
         self.detailsDialog.show()
         self.detailsDialog.raise_()
-
-    def selectLastResult(self):
-        self.selectResult(self.model.lastIndex())
-        self.view.setFocus()
-
-    def selectFirstResult(self):
-        self.selectResult(self.model.firstIndex())
-        self.view.setFocus()
-
-    def selectResult(self, index):
-        if index.isValid():
-            self.currentIndex = index
-            self.view.setCurrentIndex(index)
-        else:
-            self.currentIndex = QModelIndex()
 
 
 class DockWidget(QDockWidget):
@@ -519,7 +524,8 @@ class DockWidget(QDockWidget):
         # Move the state to the results model.
         self.state.setParent(self.resultsPage.model.rootItem())
         self.state.checkState = Qt.Checked
-        self.resultsPage.selectLastResult()
+        index = self.state.index()
+        self.resultsPage.view.setCurrentIndex(index)
 
         removeFiles = Config().settings.value("Quanty/RemoveFiles", type=bool)
         if removeFiles:

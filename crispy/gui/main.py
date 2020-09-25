@@ -120,7 +120,7 @@ class MainWindow(QMainWindow):
         settings.sync()
 
     def openAboutDialog(self):
-        self.aboutDialog.show()
+        self.aboutDialog.exec_()
 
 
 class CheckUpdateThread(QThread):
@@ -149,6 +149,8 @@ class CheckUpdateThread(QThread):
         return data["version"]
 
     def run(self):
+        # TODO: The implementation is not ideal. The run() method of the
+        # parent class is not called.
         # Wait a few seconds to avoid too much work at startup.
         seconds = 3
         self.sleep(seconds)
@@ -157,7 +159,7 @@ class CheckUpdateThread(QThread):
         if siteVersion is not None and version < siteVersion:
             self.updateAvailable.emit()
         else:
-            logger.debug("There are no updates.")
+            logger.info("There are no updates.")
 
 
 class UpdateAvailableDialog(QDialog):
