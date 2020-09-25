@@ -22,13 +22,13 @@ from crispy.gui.main import MainWindow
 from crispy.loggers import setUpLoggers
 
 
-setUpLoggers()
 logger = logging.getLogger("crispy.main")
-
 warnings.filterwarnings("ignore", category=UserWarning)
 
 
 def main():
+    setUpLoggers()
+
     app = QApplication([])
 
     # This must be done after the application is instantiated.
