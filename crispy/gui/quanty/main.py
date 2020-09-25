@@ -521,7 +521,7 @@ class DockWidget(QDockWidget):
         self.state.checkState = Qt.Checked
         self.resultsPage.selectLastResult()
 
-        removeFiles = Config().settings.value("Quanty/RemoveFiles")
+        removeFiles = Config().settings.value("Quanty/RemoveFiles", type=bool)
         if removeFiles:
             self.state.clean()
 
