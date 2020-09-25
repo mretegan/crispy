@@ -10,7 +10,6 @@
 """This is the crispy package."""
 __version__ = "0.8.0-dev"
 
-import logging
 import os
 import sys
 
@@ -19,7 +18,3 @@ def resourceAbsolutePath(relativePath):
     """Get the absolute path to a resource. Works for development and for PyInstaller."""
     basePath = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__)))
     return os.path.join(basePath, relativePath)
-
-
-logger = logging.getLogger("crispy")
-logger.setLevel(logging.DEBUG)

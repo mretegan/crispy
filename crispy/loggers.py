@@ -10,8 +10,37 @@
 """Loggers"""
 
 import logging
+import os
 
 from PyQt5.QtCore import QObject, pyqtSignal
+
+from crispy.config import Config
+
+
+def setUpLoggers():
+    """Setup the application loggers."""
+    # Set the top level logger to debug, and refine the handlers.
+    # https://stackoverflow.com/questions/17668633/what-is-the-point-of-setlevel-in-a-python-logging-handler
+    logger = logging.getLogger("crispy")
+    logger.setLevel(logging.DEBUG)
+
+    logfmt = "%(asctime)s.%(msecs)03d | %(name)s | %(levelname)s | %(message)s"
+    datefmt = "%Y-%m-%d | %H:%M:%S"
+    formatter = logging.Formatter(logfmt, datefmt=datefmt)
+
+    handler = logging.StreamHandler()
+    handler.setLevel(logging.INFO)
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
+    logfile = os.path.join(Config().path, "crispy.log")
+    handler = logging.FileHandler(logfile)
+    handler.setLevel(logging.DEBUG)
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
+    message = f"Debug log file: {logfile}"
+    logger.info(message)
 
 
 class Handler(logging.Handler, QObject):

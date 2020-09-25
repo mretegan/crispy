@@ -67,13 +67,13 @@ class MainWindow(QMainWindow):
         menu.addAction(self.openAboutDialogAction)
 
         # Register a handler to display messages in the status bar.
-        l = logging.getLogger("crispy")
+        logger = logging.getLogger("crispy")
         handler = StatusBarHandler()
-        l.addHandler(handler)
+        logger.addHandler(handler)
         handler.logUpdated.connect(self.updateStatusBar)
 
         handler = OutputHandler()
-        l.addHandler(handler)
+        logger.addHandler(handler)
 
     def updateStatusBar(self, message):
         self.statusBar().showMessage(message, 3000)

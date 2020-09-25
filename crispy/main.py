@@ -10,7 +10,6 @@
 """This module is the entry point to the application."""
 
 import logging
-import os
 import sys
 import warnings
 
@@ -20,29 +19,13 @@ from PyQt5.QtWidgets import QApplication
 
 from crispy.config import Config
 from crispy.gui.main import MainWindow
+from crispy.loggers import setUpLoggers
 
-logger = logging.getLogger("crispy")
+
+setUpLoggers()
+logger = logging.getLogger("crispy.main")
+
 warnings.filterwarnings("ignore", category=UserWarning)
-
-
-def setup():
-    logfmt = "%(asctime)s.%(msecs)03d | %(name)s | %(levelname)s | %(message)s"
-    datefmt = "%Y-%m-%d | %H:%M:%S"
-    formatter = logging.Formatter(logfmt, datefmt=datefmt)
-
-    handler = logging.StreamHandler()
-    handler.setLevel(logging.DEBUG)
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-
-    logfile = os.path.join(Config().path, "crispy.log")
-    handler = logging.FileHandler(logfile)
-    handler.setLevel(logging.DEBUG)
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-
-    message = f"The log file is: {logfile}"
-    logger.info(message)
 
 
 def main():
@@ -52,8 +35,6 @@ def main():
     locale = QLocale(QLocale.C)
     locale.setNumberOptions(QLocale.OmitGroupSeparator)
     QLocale.setDefault(locale)
-
-    setup()
 
     config = Config()
     config.removeOldFiles()
