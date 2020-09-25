@@ -187,11 +187,14 @@ class Spectra(BaseItem):
     @property
     def replacements(self):
         replacements = dict()
-        value = "{"
-        for name in self.toCalculate.selected:
-            value += f'"{name}", '
-        # Replace the last two characters of the string.
-        value = value[:-2] + "} "
+        if not list(self.toCalculate.selected):
+            value = "{}"
+        else:
+            value = "{"
+            for name in self.toCalculate.selected:
+                value += f'"{name}", '
+            # Replace the last two characters of the string.
+            value = value[:-2] + "} "
         replacements["SpectraToCalculate"] = value
         return replacements
 
