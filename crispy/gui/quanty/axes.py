@@ -39,6 +39,7 @@ class Broadening(DoubleItem):
         if value < 0.0:
             raise ValueError("The broadening cannot be negative.")
         self._value = value
+        self.dataChanged.emit(1)
 
 
 class Lorentzian(Broadening):
@@ -61,6 +62,7 @@ class Lorentzian(Broadening):
         if value < 0.1:
             raise ValueError("The Lorentzian broadening cannot be smaller than 0.1.")
         self._value = value
+        self.dataChanged.emit(1)
 
     @property
     def replacements(self):
@@ -267,6 +269,7 @@ class Shift(DoubleItem):
 
 
 class Axis(BaseItem):
+    # pylint: disable=too-many-instance-attributes
     def __init__(self, parent=None, name="Axis"):
         super().__init__(parent=parent, name=name)
 
@@ -285,6 +288,10 @@ class Axis(BaseItem):
         self.shift = Shift(parent=self, value=0.0)
 
         self.photon = None
+
+    @property
+    def interval(self):
+        return np.abs(self.stop.value - self.start.value) / self.npoints.value
 
     @property
     def limits(self):
@@ -400,7 +407,7 @@ class Axes(BaseItem):
     def __init__(self, parent=None, name="Axes"):
         super().__init__(parent=parent, name=name)
 
-        self.scale = DoubleItem(parent=self, name="Scale Factor", value=0.0)
+        self.scale = DoubleItem(parent=self, name="Scale Factor", value=1.0)
         self.normalization = ComboItem(parent=self, name="Normalization", value="None")
         self.normalization.items = ["None", "Maximum", "Area"]
 

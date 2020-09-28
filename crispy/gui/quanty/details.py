@@ -31,16 +31,24 @@ class AxisWidget(QWidget):
 
         self.mappers = list()
 
-    def populate(self, axis):
+    def clear(self):
         if self.mappers:
             for mapper in self.mappers:
                 mapper.clearMapping()
 
+        self.shiftLineEdit.clear()
+        self.gaussianLineEdit.clear()
+        self.lorentzianLineEdit.clear()
+
+    def populate(self, axis):
+        self.clear()
+
         MAPPINGS = (
             (self.shiftLineEdit, axis.shift),
-            (self.gaussianLineEdit, axis.gaussian),
             (self.lorentzianLineEdit, axis.lorentzian),
+            (self.gaussianLineEdit, axis.gaussian),
         )
+
         self.mappers = setMappings(MAPPINGS)
 
 
@@ -62,7 +70,9 @@ class DetailsDialog(QDialog):
 
         self.mappers = list()
 
-        # self.closePushButton.setAutoDefault(False)
+        # This avoids closing the window after changing the value in a line
+        # edit and then pressing return.
+        self.closePushButton.setAutoDefault(False)
         self.closePushButton.clicked.connect(self.close)
 
     def clear(self):
@@ -74,6 +84,9 @@ class DetailsDialog(QDialog):
 
         self.scaleLineEdit.clear()
         self.normalizationComboBox.clear()
+
+        self.xAxis.clear()
+        self.yAxis.clear()
 
         self.inputText.clear()
         self.outputText.clear()

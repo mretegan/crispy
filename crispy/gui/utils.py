@@ -53,7 +53,8 @@ def setMappings(mappings):
             try:
                 signal.disconnect()
             except TypeError:
-                signal.connect(mapper.submit)
+                pass
+            signal.connect(mapper.submit)
         mappers.append(mapper)
     return mappers
 

@@ -82,7 +82,7 @@ class BaseItem(QObject):
 
     def _modelDataChanged(self, column):
         index = self.model().createIndex(self.childPosition(), column, self)
-        # logger.debug(
+        # logger.info(
         #     "Item = %s, Data = %s, Model = %s", *(self, self.data(column), self.model())
         # )
         self.model().dataChanged.emit(index, index)

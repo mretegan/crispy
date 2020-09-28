@@ -16,6 +16,7 @@ import numpy as np
 from PyQt5.QtCore import Qt
 
 from crispy.gui.items import BaseItem, SelectableItem
+from crispy.utils.broaden import broaden
 
 logger = logging.getLogger(__name__)
 
@@ -23,60 +24,89 @@ logger = logging.getLogger(__name__)
 class Spectrum(SelectableItem):
     def __init__(self, parent=None, name=None):
         super().__init__(parent=parent, name=name)
-        self._suffix = None
+        self.raw = None
         self.x = None
         self.signal = None
-
-    @property
-    def suffix(self):
-        return self._suffix
-
-    @suffix.setter
-    def suffix(self, value):
-        self._suffix = value
+        self.suffix = None
 
     def copyFrom(self, item):
         super().copyFrom(item)
-        self._suffix = copy.deepcopy(item.suffix)
+        self.suffix = copy.deepcopy(item.suffix)
 
 
 class Spectrum1D(Spectrum):
+    """One-dimensional spectrum.
+
+    NOTE: The number of points of a Quanty spectrum is equal to N + 1, where N
+    is the number of points specified in the input.
+    """
+
+    def __init__(self, parent, name):
+        super().__init__(parent, name)
+        self.axes = self.ancestor.axes
+
+        self.axes.scale.dataChanged.connect(self.process)
+        self.axes.normalization.dataChanged.connect(self.process)
+
+        self.axes.xaxis.shift.dataChanged.connect(self.process)
+        self.axes.xaxis.gaussian.dataChanged.connect(self.process)
+
     def load(self):
         calculation = self.ancestor
         filename = f"{calculation.value}_{self.suffix}.spec"
 
         try:
-            data = np.loadtxt(filename, skiprows=5)
+            self.raw = np.loadtxt(filename, skiprows=5)
         except (OSError, IOError):
             message = f"Could not read spectrum {filename}."
             logger.info(message)
             self.setParent(None)
             return
 
-        self.x = data[:, 0]
-        self.signal = data[:, 2]
+        self.process()
+
+    def copy(self):
+        self.x = self.raw[:, 0].copy()
+        self.signal = self.raw[:, 2].copy()
 
     def process(self):
-        pass
+        self.copy()
+        self.shift()
+        self.scale()
+        self.normalize()
+        self.gaussian()
+        self.dataChanged.emit(1)
 
-    def broaden(self):
-        pass
-
-    def shift(self, value):
-        return self.x + value
-
-    def scale(self, value):
-        return self.signal * value
-
-    def normalize(self, value):
-        if value == "None":
+    def scale(self, value=None):
+        if value is None:
+            value = self.axes.scale.value
+        if value <= 0:
             return
-        if value == "Maximum":
+        self.signal = self.signal * value
+
+    def normalize(self, value=None):
+        if value is None:
+            value = self.axes.normalization.value
+        value = value.lower()
+        if value == "none":
+            return
+        if value == "maximum":
             absmax = np.abs(self.signal).max()
             self.signal = self.signal / absmax
-        elif value == "Area":
+        elif value == "area":
             area = np.abs(np.trapz(self.signal, self.x))
             self.signal = self.signal / area
+
+    def shift(self, value=None):
+        if value is None:
+            value = self.axes.xaxis.shift.value
+        self.x = self.x + value
+
+    def gaussian(self, value=None):
+        if value is None:
+            value = self.axes.xaxis.gaussian.value
+        fwhm = value / self.axes.xaxis.interval
+        self.signal = broaden(self.signal, fwhm, kind="gaussian")
 
     def plot(self, plotWidget):
         if not self.checkState:

@@ -46,7 +46,7 @@ def gaussian_kernel2d(sigma=None, truncate=(6, 6)):
 
 def convolve_fft(array, kernel):
     """Convolve an array with a kernel using FFT.
-    Implemntation based on the convolve_fft function from astropy.
+    Implementation based on the convolve_fft function from astropy.
 
     https://github.com/astropy/astropy/blob/master/astropy/convolution/convolve.py
     """
@@ -99,20 +99,21 @@ def convolve_fft(array, kernel):
 
 def broaden(array, fwhm=None, kind="gaussian"):
     if fwhm is None:
-        return
+        return array
 
     fwhm = np.array(fwhm)
     if (fwhm <= 0).any():
         return array
 
+    kernel = None
     if kind == "gaussian":
         sigma = fwhm / (2 * np.sqrt(2 * np.log(2)))
         if fwhm.size == 1:
             kernel = gaussian_kernel1d(sigma)
         elif fwhm.size == 2:
             kernel = gaussian_kernel2d(sigma)
-    else:
-        print("Unvailable type of broadening.")
+
+    if kernel is None:
         return array
 
     return convolve_fft(array, kernel)
