@@ -353,7 +353,10 @@ class Axis(BaseItem):
         replacements["NPoints"] = self.npoints.value
         replacements["ExperimentalShift"] = self.experimentalEnergy
         replacements["ZeroShift"] = 0.0
-        replacements["Gaussian"] = self.gaussian.value
+        # NOTE: The Gaussian broadening is done in the interface, but we still
+        # want the user to easily change this value if the script is run from
+        # outside.
+        replacements["Gaussian"] = 0.0
 
         replacements.update(self.lorentzian.replacements)
         replacements.update(self.photon.replacements)
