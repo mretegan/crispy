@@ -384,11 +384,12 @@ class DockWidget(QDockWidget):
 
     @state.setter
     def state(self, value):
-        # By now self.state should be in the results model, so disconnect only
-        # the signals that are not relevant anymore.
-        # TODO: Should these signals be managed at the self.state level?
+        # Except for the case when this function is called from __init__, the
+        # self.state should be assigned the results model, so disconnect only the
+        # signals that are not relevant anymore.
+        # NOTE: Should these signals be managed at the self.state level?
         # The title change is a bit problematic, but the other should be fine.
-        # They work like this so not necessary a priority.
+        # NOTE: They work like this so not necessary a priority.
         if getattr(self, "state", None) is not None:
             self.state.runner.outputUpdated.disconnect()
             self.state.runner.started.disconnect()
@@ -399,7 +400,9 @@ class DockWidget(QDockWidget):
         self.generalPage.populate(self.state)
         self.hamiltonianPage.populate(self.state)
 
+        # NOTE: Different actions are required if the runner is successful or not.
         self.state.runner.started.connect(self.started)
+        self.state.runner.successful.connect(self.successful)
         self.state.runner.finished.connect(self.finished)
         self.state.runner.outputUpdated.connect(self.updateLogger)
         self.state.titleChanged.connect(self.updateMainWindowTitle)
@@ -518,6 +521,7 @@ class DockWidget(QDockWidget):
         self.calculationPushButton.setToolTip("Run Quanty.")
         self.calculationPushButton.clicked.connect(self.run)
 
+    def successful(self):
         # If the "Hamiltonian Setup" page is currently selected, when the
         # current widget is set to the "Results Page", the former is not
         # displayed. To avoid this we switch first to the "General Setup" page.
