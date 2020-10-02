@@ -313,8 +313,12 @@ class LigandHybridizationTerm(HamiltonianTerm):
         for hamiltonianName, _ in self.hamiltonianNames:
             hamiltonian = BaseItem(self, hamiltonianName)
             for parameterName in names:
-                # Extend the name to include the subshell.
-                parameterName = parameterName + f"({self.subshell},{ligandsName})"
+                if parameterName in ("10Dq", "Ds", "Dt"):
+                    suffix = f"({ligandsName})"
+                else:
+                    suffix = f"({self.subshell},{ligandsName})"
+                # Extend the name to include the suffix.
+                parameterName = parameterName + suffix
                 HamiltonianParameter(hamiltonian, parameterName, 0.0, None)
 
     def setData(self, column, value, role=Qt.EditRole):

@@ -15,6 +15,24 @@ Header = Header .. "State           E     <S^2>     <L^2>     <J^2>      <Sk>   
 Header = Header .. "=================================================================================================================================\n"
 Footer = "=================================================================================================================================\n\n"
 
+if LmctLigandsHybridizationTerm then
+    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_#f, N_#i, N_#f, N_L1, 'dZ'}
+    Header = 'Analysis of the initial Hamiltonian:\n'
+    Header = Header .. '===========================================================================================================================================\n'
+    Header = Header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_#i>    <N_#f>    <N_L1>          dZ\n'
+    Header = Header .. '===========================================================================================================================================\n'
+    Footer = '===========================================================================================================================================\n'
+end
+
+if MlctLigandsHybridizationTerm then
+    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_#f, N_#i, N_#f, N_L2, 'dZ'}
+    Header = 'Analysis of the initial Hamiltonian:\n'
+    Header = Header .. '===========================================================================================================================================\n'
+    Header = Header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_#i>    <N_#f>    <N_L2>          dZ\n'
+    Header = Header .. '===========================================================================================================================================\n'
+    Footer = '===========================================================================================================================================\n'
+end
+
 local Psis_i, dZ_i = WavefunctionsAndBoltzmannFactors(H_i, NPsis, NPsisAuto, Temperature, nil, InitialRestrictions, CalculationRestrictions)
 PrintHamiltonianAnalysis(Psis_i, Operators, dZ_i, string.format(Header, "initial"), Footer)
 

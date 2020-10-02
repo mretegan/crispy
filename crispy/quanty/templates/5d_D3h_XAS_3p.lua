@@ -466,13 +466,13 @@ Lk = DotProduct(WaveVector, {Lx, Ly, Lz})
 Jk = DotProduct(WaveVector, {Jx, Jy, Jz})
 Tk = DotProduct(WaveVector, {Tx, Ty, Tz})
 
+Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_5d, N_3p, N_5d, "dZ"}
 Header = "Analysis of the %s Hamiltonian:\n"
 Header = Header .. "=================================================================================================================================\n"
 Header = Header .. "State           E     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_3p>    <N_5d>          dZ\n"
 Header = Header .. "=================================================================================================================================\n"
 Footer = "=================================================================================================================================\n\n"
 
-Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_5d, N_3p, N_5d, "dZ"}
 local Psis_i, dZ_i = WavefunctionsAndBoltzmannFactors(H_i, NPsis, NPsisAuto, Temperature, nil, InitialRestrictions, CalculationRestrictions)
 PrintHamiltonianAnalysis(Psis_i, Operators, dZ_i, string.format(Header, "initial"), Footer)
 
