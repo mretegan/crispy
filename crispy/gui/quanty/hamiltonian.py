@@ -399,7 +399,7 @@ class ExchangeFieldTerm(HamiltonianTerm):
             for parameterName in ("Hx", "Hy", "Hz"):
                 HamiltonianParameter(hamiltonian, parameterName, 0.0, None)
 
-        self._checkState = Qt.Checked
+        self._checkState = Qt.Unchecked
 
 
 class HamiltonianTerms(BaseItem):
