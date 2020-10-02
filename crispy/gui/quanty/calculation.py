@@ -695,7 +695,11 @@ class Calculation(SelectableItem):
             fp.write(self.input)
 
     def run(self):
-        self.saveInput()
+        # Don't crash if something when wrong when saving the input file.
+        try:
+            self.saveInput()
+        except FileNotFoundError:
+            return
         self.runner.run(self.inputName)
 
     def process(self, successful):
