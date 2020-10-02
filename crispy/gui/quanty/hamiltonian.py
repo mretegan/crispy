@@ -313,7 +313,7 @@ class LigandHybridizationTerm(HamiltonianTerm):
         for hamiltonianName, _ in self.hamiltonianNames:
             hamiltonian = BaseItem(self, hamiltonianName)
             for parameterName in names:
-                if parameterName in ("10Dq", "Ds", "Dt"):
+                if parameterName in ("10Dq", "Ds", "Dt", "B40", "B60"):
                     suffix = f"({ligandsName})"
                 else:
                     suffix = f"({self.subshell},{ligandsName})"
@@ -452,7 +452,7 @@ class HamiltonianTerms(BaseItem):
 
         if calculation.element.valenceBlock == "f":
             # Add ligands hybridization term.
-            if calculation.symmetry in ("Oh",):
+            if calculation.symmetry.value in ("Oh",):
                 name = "{}-Ligands Hybridization (LMCT)".format(
                     calculation.element.valenceSubshell
                 )
