@@ -141,22 +141,24 @@ if CrystalFieldTerm then
     Dsigma_5d = NewOperator("CF", NFermions, IndexUp_5d, IndexDn_5d, {{2, 0, -7}})
     Dtau_5d = NewOperator("CF", NFermions, IndexUp_5d, IndexDn_5d, {{4, 0, -21}})
 
-    Dq_5d_i = $Dq(5d)_i_value
+    Dq_5d_i = $10Dq(5d)_i_value / 10.0
     Dsigma_5d_i = $Dsigma(5d)_i_value
     Dtau_5d_i = $Dtau(5d)_i_value
 
-    io.write("Energies of the 5d orbitals in the initial Hamiltonian (crystal field term only):\n")
+    io.write("Diagonal values of the initial crystal field Hamiltonian:\n")
     io.write("================\n")
     io.write("Irrep.         E\n")
     io.write("================\n")
     io.write(string.format("a1(t2g) %8.3f\n", -4 * Dq_5d_i - 2 * Dsigma_5d_i - 6 * Dtau_5d_i))
-    io.write(string.format("e(eg)   %8.3f\n", 6 * Dq_5d_i + 7 / 3 * Dtau_5d_i))
     io.write(string.format("e(t2g)  %8.3f\n", -4 * Dq_5d_i + Dsigma_5d_i + 2 / 3 * Dtau_5d_i))
+    io.write(string.format("e(eg)   %8.3f\n", 6 * Dq_5d_i + 7 / 3 * Dtau_5d_i))
     io.write("================\n")
-    io.write("Note: For C3v symmetry the Hamiltonian is not diagonal in the basis of the 5d orbitals."
+    io.write("For the C3v symmetry, the crystal field Hamiltonian is not necessarily diagonal in\n")
+    io.write("the basis of the irreducible representations. See the König and Kremer book, page 56.\n")
+    io.write(string.format("The non-digonal element <e(t2g)|H|e(eg)> is %.3f.\n", -math.sqrt(2) / 3 * (3 * Dsigma_5d_i - 5 * Dtau_5d_i)))
     io.write("\n")
 
-    Dq_5d_f = $Dq(5d)_f_value
+    Dq_5d_f = $10Dq(5d)_f_value / 10.0
     Dsigma_5d_f = $Dsigma(5d)_f_value
     Dtau_5d_f = $Dtau(5d)_f_value
 

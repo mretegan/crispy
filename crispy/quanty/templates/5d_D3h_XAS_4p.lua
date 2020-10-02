@@ -143,7 +143,7 @@ if CrystalFieldTerm then
     Dmu_5d_i = $Dmu(5d)_i_value
     Dnu_5d_i = $Dnu(5d)_i_value
 
-    io.write("Energies of the 5d orbitals in the initial Hamiltonian (crystal field term only):\n")
+    io.write("Diagonal values of the initial crystal field Hamiltonian:\n")
     io.write("================\n")
     io.write("Irrep.         E\n")
     io.write("================\n")

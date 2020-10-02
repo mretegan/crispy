@@ -8,7 +8,7 @@ if CrystalFieldTerm then
     Dmu_#f_i = $Dmu(#f)_i_value
     Dnu_#f_i = $Dnu(#f)_i_value
 
-    io.write("Energies of the #f orbitals in the initial Hamiltonian (crystal field term only):\n")
+    io.write("Diagonal values of the initial crystal field Hamiltonian:\n")
     io.write("================\n")
     io.write("Irrep.         E\n")
     io.write("================\n")

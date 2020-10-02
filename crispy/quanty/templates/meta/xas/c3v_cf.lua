@@ -6,7 +6,7 @@ if CrystalFieldTerm then
     Dsigma_#f = NewOperator("CF", NFermions, IndexUp_#f, IndexDn_#f, {{2, 0, -7}})
     Dtau_#f = NewOperator("CF", NFermions, IndexUp_#f, IndexDn_#f, {{4, 0, -21}})
 
-    Dq_#f_i = $Dq(#f)_i_value
+    Dq_#f_i = $10Dq(#f)_i_value / 10.0
     Dsigma_#f_i = $Dsigma(#f)_i_value
     Dtau_#f_i = $Dtau(#f)_i_value
 
@@ -15,14 +15,15 @@ if CrystalFieldTerm then
     io.write("Irrep.         E\n")
     io.write("================\n")
     io.write(string.format("a1(t2g) %8.3f\n", -4 * Dq_#f_i - 2 * Dsigma_#f_i - 6 * Dtau_#f_i))
-    io.write(string.format("e(eg)   %8.3f\n", 6 * Dq_#f_i + 7 / 3 * Dtau_#f_i))
     io.write(string.format("e(t2g)  %8.3f\n", -4 * Dq_#f_i + Dsigma_#f_i + 2 / 3 * Dtau_#f_i))
+    io.write(string.format("e(eg)   %8.3f\n", 6 * Dq_#f_i + 7 / 3 * Dtau_#f_i))
     io.write("================\n")
-    io.write("Note: For C3v symmetry the crystal field Hamiltonian is expressed in the basis\n")
-    io.write("      of the irreducible representations.\n")
+    io.write("For the C3v symmetry, the crystal field Hamiltonian is not necessarily diagonal in\n")
+    io.write("the basis of the irreducible representations. See the König and Kremer book, page 56.\n")
+    io.write(string.format("The non-digonal element <e(t2g)|H|e(eg)> is %.3f.\n", -math.sqrt(2) / 3 * (3 * Dsigma_#f_i - 5 * Dtau_#f_i)))
     io.write("\n")
 
-    Dq_#f_f = $Dq(#f)_f_value
+    Dq_#f_f = $10Dq(#f)_f_value / 10.0
     Dsigma_#f_f = $Dsigma(#f)_f_value
     Dtau_#f_f = $Dtau(#f)_f_value
 

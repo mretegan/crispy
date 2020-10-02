@@ -143,7 +143,7 @@ if CrystalFieldTerm then
     Dmu_3d_i = $Dmu(3d)_i_value
     Dnu_3d_i = $Dnu(3d)_i_value
 
-    io.write("Energies of the 3d orbitals in the initial Hamiltonian (crystal field term only):\n")
+    io.write("Diagonal values of the initial crystal field Hamiltonian:\n")
     io.write("================\n")
     io.write("Irrep.         E\n")
     io.write("================\n")

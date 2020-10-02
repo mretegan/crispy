@@ -143,7 +143,7 @@ if CrystalFieldTerm then
     Dmu_4d_i = $Dmu(4d)_i_value
     Dnu_4d_i = $Dnu(4d)_i_value
 
-    io.write("Energies of the 4d orbitals in the initial Hamiltonian (crystal field term only):\n")
+    io.write("Diagonal values of the initial crystal field Hamiltonian:\n")
     io.write("================\n")
     io.write("Irrep.         E\n")
     io.write("================\n")
