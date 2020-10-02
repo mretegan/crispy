@@ -559,8 +559,8 @@ class Hamiltonian(BaseItem):
     def __init__(self, parent):
         super().__init__(parent=parent, name="Hamiltonian")
 
-        self.fk = ScaleFactor(parent=self, name="Fk", value=0.7)
-        self.gk = ScaleFactor(parent=self, name="Gk", value=0.7)
+        self.fk = ScaleFactor(parent=self, name="Fk", value=0.8)
+        self.gk = ScaleFactor(parent=self, name="Gk", value=0.8)
         self.zeta = ScaleFactor(parent=self, name="Zeta", value=1.0)
 
         self.numberOfStates = NumberOfStates(parent=self)
