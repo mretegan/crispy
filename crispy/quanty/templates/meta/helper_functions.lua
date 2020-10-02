@@ -56,8 +56,8 @@ function GetSpectrum(G, Ids, dZ, NOperators, NPsis)
     return Spectra.Sum(G, dZs)
 end
 
-function SaveSpectrum(G, Filename, Gaussian, Lorentzian)
-    G = -1 / math.pi * G
+function SaveSpectrum(G, Filename, Gaussian, Lorentzian, Pcl)
+    G = -1 / math.pi / Pcl * G
     G.Broaden(Gaussian, Lorentzian)
     G.Print({{"file", Filename .. ".spec"}})
 end

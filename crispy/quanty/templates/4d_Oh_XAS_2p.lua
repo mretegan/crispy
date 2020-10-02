@@ -437,8 +437,8 @@ function GetSpectrum(G, Ids, dZ, NOperators, NPsis)
     return Spectra.Sum(G, dZs)
 end
 
-function SaveSpectrum(G, Filename, Gaussian, Lorentzian)
-    G = -1 / math.pi * G
+function SaveSpectrum(G, Filename, Gaussian, Lorentzian, Pcl)
+    G = -1 / math.pi / Pcl * G
     G.Broaden(Gaussian, Lorentzian)
     G.Print({{"file", Filename .. ".spec"}})
 end
@@ -725,6 +725,8 @@ for k, v in pairs(T_2p_4d) do
     Ids[v] = k
 end
 
+Pcl_2p_4d = 2
+
 for Spectrum, Operators in pairs(SpectraAndOperators) do
     if ValueInTable(Spectrum, SpectraToCalculate) then
         -- Find the indices of the spectrum's operators in the table used during the
@@ -735,31 +737,30 @@ for Spectrum, Operators in pairs(SpectraAndOperators) do
         end
 
         if Spectrum == "Isotropic Absorption" then
-            Pcl_2p_4d = 2
             Giso = GetSpectrum(G_2p_4d, SpectrumIds, dZ_2p_4d, #T_2p_4d, #Psis_i)
-            Giso = Giso / 3 / Pcl_2p_4d
-            SaveSpectrum(Giso, Prefix .. "_iso", Gaussian, Lorentzian)
+            Giso = Giso / 3 
+            SaveSpectrum(Giso, Prefix .. "_iso", Gaussian, Lorentzian, Pcl_2p_4d)
         end
 
         if Spectrum == "Absorption" then
             Gk = GetSpectrum(G_2p_4d, SpectrumIds, dZ_2p_4d, #T_2p_4d, #Psis_i)
-            SaveSpectrum(Gk, Prefix .. "_k", Gaussian, Lorentzian)
+            SaveSpectrum(Gk, Prefix .. "_k", Gaussian, Lorentzian, Pcl_2p_4d)
         end
 
         if Spectrum == "Circular Dichroic" then
             Gr = GetSpectrum(G_2p_4d, SpectrumIds[1], dZ_2p_4d, #T_2p_4d, #Psis_i)
             Gl = GetSpectrum(G_2p_4d, SpectrumIds[2], dZ_2p_4d, #T_2p_4d, #Psis_i)
-            SaveSpectrum(Gr, Prefix .. "_r", Gaussian, Lorentzian)
-            SaveSpectrum(Gl, Prefix .. "_l", Gaussian, Lorentzian)
-            SaveSpectrum(Gr - Gl, Prefix .. "_cd", Gaussian, Lorentzian)
+            SaveSpectrum(Gr, Prefix .. "_r", Gaussian, Lorentzian, Pcl_2p_4d)
+            SaveSpectrum(Gl, Prefix .. "_l", Gaussian, Lorentzian, Pcl_2p_4d)
+            SaveSpectrum(Gr - Gl, Prefix .. "_cd", Gaussian, Lorentzian, 1)
         end
 
         if Spectrum == "Linear Dichroic" then
             Gv = GetSpectrum(G_2p_4d, SpectrumIds[1], dZ_2p_4d, #T_2p_4d, #Psis_i)
             Gh = GetSpectrum(G_2p_4d, SpectrumIds[2], dZ_2p_4d, #T_2p_4d, #Psis_i)
-            SaveSpectrum(Gv, Prefix .. "_v", Gaussian, Lorentzian)
-            SaveSpectrum(Gh, Prefix .. "_h", Gaussian, Lorentzian)
-            SaveSpectrum(Gv - Gh, Prefix .. "_ld", Gaussian, Lorentzian)
+            SaveSpectrum(Gv, Prefix .. "_v", Gaussian, Lorentzian, Pcl_2p_4d)
+            SaveSpectrum(Gh, Prefix .. "_h", Gaussian, Lorentzian, Pcl_2p_4d)
+            SaveSpectrum(Gv - Gh, Prefix .. "_ld", Gaussian, Lorentzian, 1)
         end
     end
 end

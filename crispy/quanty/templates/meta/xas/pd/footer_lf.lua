@@ -116,6 +116,8 @@ for k, v in pairs(T_#i_#f) do
     Ids[v] = k
 end
 
+Pcl_#i_#f = 2
+
 for Spectrum, Operators in pairs(SpectraAndOperators) do
     if ValueInTable(Spectrum, SpectraToCalculate) then
         -- Find the indices of the spectrum's operators in the table used during the
@@ -126,31 +128,30 @@ for Spectrum, Operators in pairs(SpectraAndOperators) do
         end
 
         if Spectrum == "Isotropic Absorption" then
-            Pcl_#i_#f = 2
             Giso = GetSpectrum(G_#i_#f, SpectrumIds, dZ_#i_#f, #T_#i_#f, #Psis_i)
-            Giso = Giso / 3 / Pcl_#i_#f
-            SaveSpectrum(Giso, Prefix .. "_iso", Gaussian, Lorentzian)
+            Giso = Giso / 3
+            SaveSpectrum(Giso, Prefix .. "_iso", Gaussian, Lorentzian, Pcl_#i_#f)
         end
 
         if Spectrum == "Absorption" then
             Gk = GetSpectrum(G_#i_#f, SpectrumIds, dZ_#i_#f, #T_#i_#f, #Psis_i)
-            SaveSpectrum(Gk, Prefix .. "_k", Gaussian, Lorentzian)
+            SaveSpectrum(Gk, Prefix .. "_k", Gaussian, Lorentzian, Pcl_#i_#f)
         end
 
         if Spectrum == "Circular Dichroic" then
             Gr = GetSpectrum(G_#i_#f, SpectrumIds[1], dZ_#i_#f, #T_#i_#f, #Psis_i)
             Gl = GetSpectrum(G_#i_#f, SpectrumIds[2], dZ_#i_#f, #T_#i_#f, #Psis_i)
-            SaveSpectrum(Gr, Prefix .. "_r", Gaussian, Lorentzian)
-            SaveSpectrum(Gl, Prefix .. "_l", Gaussian, Lorentzian)
-            SaveSpectrum(Gr - Gl, Prefix .. "_cd", Gaussian, Lorentzian)
+            SaveSpectrum(Gr, Prefix .. "_r", Gaussian, Lorentzian, Pcl_#i_#f)
+            SaveSpectrum(Gl, Prefix .. "_l", Gaussian, Lorentzian, Pcl_#i_#f)
+            SaveSpectrum(Gr - Gl, Prefix .. "_cd", Gaussian, Lorentzian, 1)
         end
 
         if Spectrum == "Linear Dichroic" then
             Gv = GetSpectrum(G_#i_#f, SpectrumIds[1], dZ_#i_#f, #T_#i_#f, #Psis_i)
             Gh = GetSpectrum(G_#i_#f, SpectrumIds[2], dZ_#i_#f, #T_#i_#f, #Psis_i)
-            SaveSpectrum(Gv, Prefix .. "_v", Gaussian, Lorentzian)
-            SaveSpectrum(Gh, Prefix .. "_h", Gaussian, Lorentzian)
-            SaveSpectrum(Gv - Gh, Prefix .. "_ld", Gaussian, Lorentzian)
+            SaveSpectrum(Gv, Prefix .. "_v", Gaussian, Lorentzian, Pcl_#i_#f)
+            SaveSpectrum(Gh, Prefix .. "_h", Gaussian, Lorentzian, Pcl_#i_#f)
+            SaveSpectrum(Gv - Gh, Prefix .. "_ld", Gaussian, Lorentzian, 1)
         end
     end
 end
