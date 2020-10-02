@@ -48,8 +48,8 @@ Tk_#i_#f = DotProduct(WaveVector, {Tx_#i_#f, Ty_#i_#f, Tz_#i_#f})
 
 -- Initialize a table with the available spectra and the required operators.
 SpectraAndOperators = {
-    ["Absorption"] = {Tk_#i_#f,},
     ["Isotropic Absorption"] = {Tk_#i_#f, Tr_#i_#f, Tl_#i_#f},
+    ["Absorption"] = {Tk_#i_#f,},
     ["Circular Dichroic"] = {Tr_#i_#f, Tl_#i_#f},
     ["Linear Dichroic"] = {Tv_#i_#f, Th_#i_#f},
 }

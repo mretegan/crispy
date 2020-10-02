@@ -17,28 +17,28 @@ Verbosity($Verbosity)
 --------------------------------------------------------------------------------
 -- Define the parameters of the calculation.
 --------------------------------------------------------------------------------
-Temperature = $Temperature -- Temperature (Kelvin)
+Temperature = $Temperature -- temperature (Kelvin)
 
-NPsis = $NPsis  -- Number of states to calculate
-NPsisAuto = $NPsisAuto  -- Determine the number of state automatically
-NConfigurations = $NConfigurations  -- Number of configurations
+NPsis = $NPsis  -- number of states to consider in the spectra calculation
+NPsisAuto = $NPsisAuto  -- determine the number of state automatically
+NConfigurations = $NConfigurations  -- number of configurations
 
-Emin = $XEmin  -- Minimum value of the energy range (eV)
-Emax = $XEmax  -- Maximum value of the energy range (eV)
-NPoints = $XNPoints  -- Number of points of the spectra
-ExperimentalShift = $XExperimentalShift  -- Experimental edge energy (eV)
-ZeroShift = $XZeroShift  -- Energy required to shift the calculated spectrum to start from approximately zero (eV)
+Emin = $XEmin  -- minimum value of the energy range (eV)
+Emax = $XEmax  -- maximum value of the energy range (eV)
+NPoints = $XNPoints  -- number of points of the spectra
+ExperimentalShift = $XExperimentalShift  -- experimental edge energy (eV)
+ZeroShift = $XZeroShift  -- energy required to shift the calculated spectrum to start from approximately zero (eV)
 Gaussian = $XGaussian  -- Gaussian FWHM (eV)
 Lorentzian = $XLorentzian  -- Lorentzian FWHM (eV)
 
-WaveVector = $XWaveVector  -- Wave vector
-Ev = $XFirstPolarization  -- Vertical polarization
-Eh = $XSecondPolarization  -- Horizontal polarization
+WaveVector = $XWaveVector  -- wave vector
+Ev = $XFirstPolarization  -- vertical polarization
+Eh = $XSecondPolarization  -- horizontal polarization
 
-SpectraToCalculate = $SpectraToCalculate  -- Type of spectra to calculate
-DenseBorder = $DenseBorder -- Number of determinants where we switch from dense methods to sparse methods
+SpectraToCalculate = $SpectraToCalculate  -- types of spectra to calculate
+DenseBorder = $DenseBorder -- number of determinants where we switch from dense methods to sparse methods
 
-Prefix = "$Prefix"  -- File name prefix
+Prefix = "$Prefix"  -- file name prefix
 
 --------------------------------------------------------------------------------
 -- Toggle the Hamiltonian terms.

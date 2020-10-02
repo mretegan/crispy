@@ -17,28 +17,28 @@ Verbosity($Verbosity)
 --------------------------------------------------------------------------------
 -- Define the parameters of the calculation.
 --------------------------------------------------------------------------------
-Temperature = $Temperature -- Temperature (Kelvin)
+Temperature = $Temperature -- temperature (Kelvin)
 
-NPsis = $NPsis  -- Number of states to calculate
-NPsisAuto = $NPsisAuto  -- Determine the number of state automatically
-NConfigurations = $NConfigurations  -- Number of configurations
+NPsis = $NPsis  -- number of states to consider in the spectra calculation
+NPsisAuto = $NPsisAuto  -- determine the number of state automatically
+NConfigurations = $NConfigurations  -- number of configurations
 
-Emin = $XEmin  -- Minimum value of the energy range (eV)
-Emax = $XEmax  -- Maximum value of the energy range (eV)
-NPoints = $XNPoints  -- Number of points of the spectra
-ExperimentalShift = $XExperimentalShift  -- Experimental edge energy (eV)
-ZeroShift = $XZeroShift  -- Energy required to shift the calculated spectrum to start from approximately zero (eV)
+Emin = $XEmin  -- minimum value of the energy range (eV)
+Emax = $XEmax  -- maximum value of the energy range (eV)
+NPoints = $XNPoints  -- number of points of the spectra
+ExperimentalShift = $XExperimentalShift  -- experimental edge energy (eV)
+ZeroShift = $XZeroShift  -- energy required to shift the calculated spectrum to start from approximately zero (eV)
 Gaussian = $XGaussian  -- Gaussian FWHM (eV)
 Lorentzian = $XLorentzian  -- Lorentzian FWHM (eV)
 
-WaveVector = $XWaveVector  -- Wave vector
-Ev = $XFirstPolarization  -- Vertical polarization
-Eh = $XSecondPolarization  -- Horizontal polarization
+WaveVector = $XWaveVector  -- wave vector
+Ev = $XFirstPolarization  -- vertical polarization
+Eh = $XSecondPolarization  -- horizontal polarization
 
-SpectraToCalculate = $SpectraToCalculate  -- Type of spectra to calculate
-DenseBorder = $DenseBorder -- Number of determinants where we switch from dense methods to sparse methods
+SpectraToCalculate = $SpectraToCalculate  -- types of spectra to calculate
+DenseBorder = $DenseBorder -- number of determinants where we switch from dense methods to sparse methods
 
-Prefix = "$Prefix"  -- File name prefix
+Prefix = "$Prefix"  -- file name prefix
 
 --------------------------------------------------------------------------------
 -- Toggle the Hamiltonian terms.
@@ -167,30 +167,30 @@ end
 --------------------------------------------------------------------------------
 -- Define the magnetic field and exchange field terms.
 --------------------------------------------------------------------------------
-Sx_4d = NewOperator('Sx', NFermions, IndexUp_4d, IndexDn_4d)
-Sy_4d = NewOperator('Sy', NFermions, IndexUp_4d, IndexDn_4d)
-Sz_4d = NewOperator('Sz', NFermions, IndexUp_4d, IndexDn_4d)
-Ssqr_4d = NewOperator('Ssqr', NFermions, IndexUp_4d, IndexDn_4d)
-Splus_4d = NewOperator('Splus', NFermions, IndexUp_4d, IndexDn_4d)
-Smin_4d = NewOperator('Smin', NFermions, IndexUp_4d, IndexDn_4d)
+Sx_4d = NewOperator("Sx", NFermions, IndexUp_4d, IndexDn_4d)
+Sy_4d = NewOperator("Sy", NFermions, IndexUp_4d, IndexDn_4d)
+Sz_4d = NewOperator("Sz", NFermions, IndexUp_4d, IndexDn_4d)
+Ssqr_4d = NewOperator("Ssqr", NFermions, IndexUp_4d, IndexDn_4d)
+Splus_4d = NewOperator("Splus", NFermions, IndexUp_4d, IndexDn_4d)
+Smin_4d = NewOperator("Smin", NFermions, IndexUp_4d, IndexDn_4d)
 
-Lx_4d = NewOperator('Lx', NFermions, IndexUp_4d, IndexDn_4d)
-Ly_4d = NewOperator('Ly', NFermions, IndexUp_4d, IndexDn_4d)
-Lz_4d = NewOperator('Lz', NFermions, IndexUp_4d, IndexDn_4d)
-Lsqr_4d = NewOperator('Lsqr', NFermions, IndexUp_4d, IndexDn_4d)
-Lplus_4d = NewOperator('Lplus', NFermions, IndexUp_4d, IndexDn_4d)
-Lmin_4d = NewOperator('Lmin', NFermions, IndexUp_4d, IndexDn_4d)
+Lx_4d = NewOperator("Lx", NFermions, IndexUp_4d, IndexDn_4d)
+Ly_4d = NewOperator("Ly", NFermions, IndexUp_4d, IndexDn_4d)
+Lz_4d = NewOperator("Lz", NFermions, IndexUp_4d, IndexDn_4d)
+Lsqr_4d = NewOperator("Lsqr", NFermions, IndexUp_4d, IndexDn_4d)
+Lplus_4d = NewOperator("Lplus", NFermions, IndexUp_4d, IndexDn_4d)
+Lmin_4d = NewOperator("Lmin", NFermions, IndexUp_4d, IndexDn_4d)
 
-Jx_4d = NewOperator('Jx', NFermions, IndexUp_4d, IndexDn_4d)
-Jy_4d = NewOperator('Jy', NFermions, IndexUp_4d, IndexDn_4d)
-Jz_4d = NewOperator('Jz', NFermions, IndexUp_4d, IndexDn_4d)
-Jsqr_4d = NewOperator('Jsqr', NFermions, IndexUp_4d, IndexDn_4d)
-Jplus_4d = NewOperator('Jplus', NFermions, IndexUp_4d, IndexDn_4d)
-Jmin_4d = NewOperator('Jmin', NFermions, IndexUp_4d, IndexDn_4d)
+Jx_4d = NewOperator("Jx", NFermions, IndexUp_4d, IndexDn_4d)
+Jy_4d = NewOperator("Jy", NFermions, IndexUp_4d, IndexDn_4d)
+Jz_4d = NewOperator("Jz", NFermions, IndexUp_4d, IndexDn_4d)
+Jsqr_4d = NewOperator("Jsqr", NFermions, IndexUp_4d, IndexDn_4d)
+Jplus_4d = NewOperator("Jplus", NFermions, IndexUp_4d, IndexDn_4d)
+Jmin_4d = NewOperator("Jmin", NFermions, IndexUp_4d, IndexDn_4d)
 
-Tx_4d = NewOperator('Tx', NFermions, IndexUp_4d, IndexDn_4d)
-Ty_4d = NewOperator('Ty', NFermions, IndexUp_4d, IndexDn_4d)
-Tz_4d = NewOperator('Tz', NFermions, IndexUp_4d, IndexDn_4d)
+Tx_4d = NewOperator("Tx", NFermions, IndexUp_4d, IndexDn_4d)
+Ty_4d = NewOperator("Ty", NFermions, IndexUp_4d, IndexDn_4d)
+Tz_4d = NewOperator("Tz", NFermions, IndexUp_4d, IndexDn_4d)
 
 Sx = Sx_4d
 Sy = Sy_4d
@@ -448,11 +448,13 @@ end
 --------------------------------------------------------------------------------
 -- Define the restrictions and set the number of initial states.
 --------------------------------------------------------------------------------
-InitialRestrictions = {NFermions, NBosons, {'111111 0000000000', NElectrons_3p, NElectrons_3p},
-                                           {'000000 1111111111', NElectrons_4d, NElectrons_4d}}
+InitialRestrictions = {NFermions, NBosons, {"111111 0000000000", NElectrons_3p, NElectrons_3p},
+                                           {"000000 1111111111", NElectrons_4d, NElectrons_4d}}
 
-FinalRestrictions = {NFermions, NBosons, {'111111 0000000000', NElectrons_3p - 1, NElectrons_3p - 1},
-                                         {'000000 1111111111', NElectrons_4d + 1, NElectrons_4d + 1}}
+FinalRestrictions = {NFermions, NBosons, {"111111 0000000000", NElectrons_3p - 1, NElectrons_3p - 1},
+                                         {"000000 1111111111", NElectrons_4d + 1, NElectrons_4d + 1}}
+
+CalculationRestrictions = nil
 
 --------------------------------------------------------------------------------
 -- Analyze the initial Hamiltonian.
@@ -504,8 +506,8 @@ Tk_3p_4d = DotProduct(WaveVector, {Tx_3p_4d, Ty_3p_4d, Tz_3p_4d})
 
 -- Initialize a table with the available spectra and the required operators.
 SpectraAndOperators = {
-    ["Absorption"] = {Tk_3p_4d,},
     ["Isotropic Absorption"] = {Tk_3p_4d, Tr_3p_4d, Tl_3p_4d},
+    ["Absorption"] = {Tk_3p_4d,},
     ["Circular Dichroic"] = {Tr_3p_4d, Tl_3p_4d},
     ["Linear Dichroic"] = {Tv_3p_4d, Th_3p_4d},
 }

@@ -19,17 +19,19 @@ from crispy.config import Config
 
 def setUpLoggers():
     """Setup the application loggers."""
+    logger = logging.getLogger("crispy")
     # Set the top level logger to debug, and refine the handlers.
     # https://stackoverflow.com/questions/17668633/what-is-the-point-of-setlevel-in-a-python-logging-handler
-    logger = logging.getLogger("crispy")
     logger.setLevel(logging.DEBUG)
+    # Don't pass events logged by this logger to the handlers of the ancestor loggers.
+    # logger.propagate = False
 
     logfmt = "%(asctime)s.%(msecs)03d | %(name)s | %(levelname)s | %(message)s"
     datefmt = "%Y-%m-%d | %H:%M:%S"
     formatter = logging.Formatter(logfmt, datefmt=datefmt)
 
     handler = logging.StreamHandler()
-    handler.setLevel(logging.INFO)
+    handler.setLevel(logging.DEBUG)
     handler.setFormatter(formatter)
     logger.addHandler(handler)
 

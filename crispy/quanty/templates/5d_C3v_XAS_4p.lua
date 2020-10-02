@@ -17,28 +17,28 @@ Verbosity($Verbosity)
 --------------------------------------------------------------------------------
 -- Define the parameters of the calculation.
 --------------------------------------------------------------------------------
-Temperature = $Temperature -- Temperature (Kelvin)
+Temperature = $Temperature -- temperature (Kelvin)
 
-NPsis = $NPsis  -- Number of states to calculate
-NPsisAuto = $NPsisAuto  -- Determine the number of state automatically
-NConfigurations = $NConfigurations  -- Number of configurations
+NPsis = $NPsis  -- number of states to consider in the spectra calculation
+NPsisAuto = $NPsisAuto  -- determine the number of state automatically
+NConfigurations = $NConfigurations  -- number of configurations
 
-Emin = $XEmin  -- Minimum value of the energy range (eV)
-Emax = $XEmax  -- Maximum value of the energy range (eV)
-NPoints = $XNPoints  -- Number of points of the spectra
-ExperimentalShift = $XExperimentalShift  -- Experimental edge energy (eV)
-ZeroShift = $XZeroShift  -- Energy required to shift the calculated spectrum to start from approximately zero (eV)
+Emin = $XEmin  -- minimum value of the energy range (eV)
+Emax = $XEmax  -- maximum value of the energy range (eV)
+NPoints = $XNPoints  -- number of points of the spectra
+ExperimentalShift = $XExperimentalShift  -- experimental edge energy (eV)
+ZeroShift = $XZeroShift  -- energy required to shift the calculated spectrum to start from approximately zero (eV)
 Gaussian = $XGaussian  -- Gaussian FWHM (eV)
 Lorentzian = $XLorentzian  -- Lorentzian FWHM (eV)
 
-WaveVector = $XWaveVector  -- Wave vector
-Ev = $XFirstPolarization  -- Vertical polarization
-Eh = $XSecondPolarization  -- Horizontal polarization
+WaveVector = $XWaveVector  -- wave vector
+Ev = $XFirstPolarization  -- vertical polarization
+Eh = $XSecondPolarization  -- horizontal polarization
 
-SpectraToCalculate = $SpectraToCalculate  -- Type of spectra to calculate
-DenseBorder = $DenseBorder -- Number of determinants where we switch from dense methods to sparse methods
+SpectraToCalculate = $SpectraToCalculate  -- types of spectra to calculate
+DenseBorder = $DenseBorder -- number of determinants where we switch from dense methods to sparse methods
 
-Prefix = "$Prefix"  -- File name prefix
+Prefix = "$Prefix"  -- file name prefix
 
 --------------------------------------------------------------------------------
 -- Toggle the Hamiltonian terms.
@@ -137,65 +137,66 @@ end
 -- Define the crystal field term.
 --------------------------------------------------------------------------------
 if CrystalFieldTerm then
-    Dq_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, {{4, 0, -14}, {4, 3, -2 * math.sqrt(70)}, {4, -3, 2 * math.sqrt(70)}})
-    Dsigma_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, {{2, 0, -7}})
-    Dtau_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, {{4, 0, -21}})
+    Dq_5d = NewOperator("CF", NFermions, IndexUp_5d, IndexDn_5d, {{4, 0, -14}, {4, 3, -2 * math.sqrt(70)}, {4, -3, 2 * math.sqrt(70)}})
+    Dsigma_5d = NewOperator("CF", NFermions, IndexUp_5d, IndexDn_5d, {{2, 0, -7}})
+    Dtau_5d = NewOperator("CF", NFermions, IndexUp_5d, IndexDn_5d, {{4, 0, -21}})
 
-    Dq_3d_i = $Dq(5d)_i_value
-    Dsigma_3d_i = $Dsigma(5d)_i_value
-    Dtau_3d_i = $Dtau(5d)_i_value
+    Dq_5d_i = $Dq(5d)_i_value
+    Dsigma_5d_i = $Dsigma(5d)_i_value
+    Dtau_5d_i = $Dtau(5d)_i_value
 
-    io.write('Energies of the 3d orbitals in the initial Hamiltonian (crystal field term only):\n')
-    io.write('================\n')
-    io.write('Irrep.         E\n')
-    io.write('================\n')
-    io.write(string.format('a1(t2g) %8.3f\n', -4 * Dq_3d_i - 2 * Dsigma_3d_i - 6 * Dtau_3d_i))
-    io.write(string.format('e(eg)   %8.3f\n', 6 * Dq_3d_i + 7 / 3 * Dtau_3d_i))
-    io.write(string.format('e(t2g)  %8.3f\n', -4 * Dq_3d_i + Dsigma_3d_i + 2 / 3 * Dtau_3d_i))
-    io.write('================\n')
-    io.write('\n')
+    io.write("Energies of the 5d orbitals in the initial Hamiltonian (crystal field term only):\n")
+    io.write("================\n")
+    io.write("Irrep.         E\n")
+    io.write("================\n")
+    io.write(string.format("a1(t2g) %8.3f\n", -4 * Dq_5d_i - 2 * Dsigma_5d_i - 6 * Dtau_5d_i))
+    io.write(string.format("e(eg)   %8.3f\n", 6 * Dq_5d_i + 7 / 3 * Dtau_5d_i))
+    io.write(string.format("e(t2g)  %8.3f\n", -4 * Dq_5d_i + Dsigma_5d_i + 2 / 3 * Dtau_5d_i))
+    io.write("================\n")
+    io.write("Note: For C3v symmetry the Hamiltonian is not diagonal in the basis of the 5d orbitals."
+    io.write("\n")
 
-    Dq_3d_f = $Dq(5d)_f_value
-    Dsigma_3d_f = $Dsigma(5d)_f_value
-    Dtau_3d_f = $Dtau(5d)_f_value
+    Dq_5d_f = $Dq(5d)_f_value
+    Dsigma_5d_f = $Dsigma(5d)_f_value
+    Dtau_5d_f = $Dtau(5d)_f_value
 
     H_i = H_i + Chop(
-          Dq_3d_i * Dq_3d
-        + Dsigma_3d_i * Dsigma_3d
-        + Dtau_3d_i * Dtau_3d)
+          Dq_5d_i * Dq_5d
+        + Dsigma_5d_i * Dsigma_5d
+        + Dtau_5d_i * Dtau_5d)
 
     H_f = H_f + Chop(
-          Dq_3d_f * Dq_3d
-        + Dsigma_3d_f * Dsigma_3d
-        + Dtau_3d_f * Dtau_3d)
+          Dq_5d_f * Dq_5d
+        + Dsigma_5d_f * Dsigma_5d
+        + Dtau_5d_f * Dtau_5d)
 end
 --------------------------------------------------------------------------------
 -- Define the magnetic field and exchange field terms.
 --------------------------------------------------------------------------------
-Sx_5d = NewOperator('Sx', NFermions, IndexUp_5d, IndexDn_5d)
-Sy_5d = NewOperator('Sy', NFermions, IndexUp_5d, IndexDn_5d)
-Sz_5d = NewOperator('Sz', NFermions, IndexUp_5d, IndexDn_5d)
-Ssqr_5d = NewOperator('Ssqr', NFermions, IndexUp_5d, IndexDn_5d)
-Splus_5d = NewOperator('Splus', NFermions, IndexUp_5d, IndexDn_5d)
-Smin_5d = NewOperator('Smin', NFermions, IndexUp_5d, IndexDn_5d)
+Sx_5d = NewOperator("Sx", NFermions, IndexUp_5d, IndexDn_5d)
+Sy_5d = NewOperator("Sy", NFermions, IndexUp_5d, IndexDn_5d)
+Sz_5d = NewOperator("Sz", NFermions, IndexUp_5d, IndexDn_5d)
+Ssqr_5d = NewOperator("Ssqr", NFermions, IndexUp_5d, IndexDn_5d)
+Splus_5d = NewOperator("Splus", NFermions, IndexUp_5d, IndexDn_5d)
+Smin_5d = NewOperator("Smin", NFermions, IndexUp_5d, IndexDn_5d)
 
-Lx_5d = NewOperator('Lx', NFermions, IndexUp_5d, IndexDn_5d)
-Ly_5d = NewOperator('Ly', NFermions, IndexUp_5d, IndexDn_5d)
-Lz_5d = NewOperator('Lz', NFermions, IndexUp_5d, IndexDn_5d)
-Lsqr_5d = NewOperator('Lsqr', NFermions, IndexUp_5d, IndexDn_5d)
-Lplus_5d = NewOperator('Lplus', NFermions, IndexUp_5d, IndexDn_5d)
-Lmin_5d = NewOperator('Lmin', NFermions, IndexUp_5d, IndexDn_5d)
+Lx_5d = NewOperator("Lx", NFermions, IndexUp_5d, IndexDn_5d)
+Ly_5d = NewOperator("Ly", NFermions, IndexUp_5d, IndexDn_5d)
+Lz_5d = NewOperator("Lz", NFermions, IndexUp_5d, IndexDn_5d)
+Lsqr_5d = NewOperator("Lsqr", NFermions, IndexUp_5d, IndexDn_5d)
+Lplus_5d = NewOperator("Lplus", NFermions, IndexUp_5d, IndexDn_5d)
+Lmin_5d = NewOperator("Lmin", NFermions, IndexUp_5d, IndexDn_5d)
 
-Jx_5d = NewOperator('Jx', NFermions, IndexUp_5d, IndexDn_5d)
-Jy_5d = NewOperator('Jy', NFermions, IndexUp_5d, IndexDn_5d)
-Jz_5d = NewOperator('Jz', NFermions, IndexUp_5d, IndexDn_5d)
-Jsqr_5d = NewOperator('Jsqr', NFermions, IndexUp_5d, IndexDn_5d)
-Jplus_5d = NewOperator('Jplus', NFermions, IndexUp_5d, IndexDn_5d)
-Jmin_5d = NewOperator('Jmin', NFermions, IndexUp_5d, IndexDn_5d)
+Jx_5d = NewOperator("Jx", NFermions, IndexUp_5d, IndexDn_5d)
+Jy_5d = NewOperator("Jy", NFermions, IndexUp_5d, IndexDn_5d)
+Jz_5d = NewOperator("Jz", NFermions, IndexUp_5d, IndexDn_5d)
+Jsqr_5d = NewOperator("Jsqr", NFermions, IndexUp_5d, IndexDn_5d)
+Jplus_5d = NewOperator("Jplus", NFermions, IndexUp_5d, IndexDn_5d)
+Jmin_5d = NewOperator("Jmin", NFermions, IndexUp_5d, IndexDn_5d)
 
-Tx_5d = NewOperator('Tx', NFermions, IndexUp_5d, IndexDn_5d)
-Ty_5d = NewOperator('Ty', NFermions, IndexUp_5d, IndexDn_5d)
-Tz_5d = NewOperator('Tz', NFermions, IndexUp_5d, IndexDn_5d)
+Tx_5d = NewOperator("Tx", NFermions, IndexUp_5d, IndexDn_5d)
+Ty_5d = NewOperator("Ty", NFermions, IndexUp_5d, IndexDn_5d)
+Tz_5d = NewOperator("Tz", NFermions, IndexUp_5d, IndexDn_5d)
 
 Sx = Sx_5d
 Sy = Sy_5d
@@ -453,11 +454,13 @@ end
 --------------------------------------------------------------------------------
 -- Define the restrictions and set the number of initial states.
 --------------------------------------------------------------------------------
-InitialRestrictions = {NFermions, NBosons, {'111111 0000000000', NElectrons_4p, NElectrons_4p},
-                                           {'000000 1111111111', NElectrons_5d, NElectrons_5d}}
+InitialRestrictions = {NFermions, NBosons, {"111111 0000000000", NElectrons_4p, NElectrons_4p},
+                                           {"000000 1111111111", NElectrons_5d, NElectrons_5d}}
 
-FinalRestrictions = {NFermions, NBosons, {'111111 0000000000', NElectrons_4p - 1, NElectrons_4p - 1},
-                                         {'000000 1111111111', NElectrons_5d + 1, NElectrons_5d + 1}}
+FinalRestrictions = {NFermions, NBosons, {"111111 0000000000", NElectrons_4p - 1, NElectrons_4p - 1},
+                                         {"000000 1111111111", NElectrons_5d + 1, NElectrons_5d + 1}}
+
+CalculationRestrictions = nil
 
 --------------------------------------------------------------------------------
 -- Analyze the initial Hamiltonian.
@@ -509,8 +512,8 @@ Tk_4p_5d = DotProduct(WaveVector, {Tx_4p_5d, Ty_4p_5d, Tz_4p_5d})
 
 -- Initialize a table with the available spectra and the required operators.
 SpectraAndOperators = {
-    ["Absorption"] = {Tk_4p_5d,},
     ["Isotropic Absorption"] = {Tk_4p_5d, Tr_4p_5d, Tl_4p_5d},
+    ["Absorption"] = {Tk_4p_5d,},
     ["Circular Dichroic"] = {Tr_4p_5d, Tl_4p_5d},
     ["Linear Dichroic"] = {Tv_4p_5d, Th_4p_5d},
 }

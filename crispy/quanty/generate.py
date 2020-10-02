@@ -20,10 +20,11 @@ import h5py
 
 from crispy import resourceAbsolutePath
 from crispy.gui.quanty.calculation import Calculation, Element
+from crispy.loggers import setUpLoggers
 from crispy.quanty import CALCULATIONS
 from crispy.quanty.cowan import Cowan
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("crispy.quanty.generate")
 config = h5py.get_config()
 config.track_order = True
 
@@ -173,8 +174,6 @@ def generate_templates():
         templates = resourceAbsolutePath(os.path.join("quanty", "templates"))
         path = os.path.join(templates, "meta", experiment.value.lower(), blocks)
 
-        logger.debug("Template name: %s", templateName)
-
         SUBSTITUTIONS = {
             "#header": f"header_{suffix}.lua",
             "#symmetry_term": f"{symmetry.value.lower()}_{suffix}.lua",
@@ -195,6 +194,7 @@ def generate_templates():
                 with open(os.path.join(path, filename)) as fp:
                     base = base.replace(key, fp.read())
         except FileNotFoundError:
+            logger.warning("Could not make %s template.", templateName)
             continue
 
         base = base.replace("#symmetry", symmetry.value)
@@ -234,7 +234,11 @@ def main():
 
     args = parser.parse_args()
 
-    logging.basicConfig(level=args.loglevel.upper())
+    # Set up the application logger.
+    setUpLoggers()
+    # Set the level of the application logger using the command line arguments.
+    logger = logging.getLogger("crispy")
+    logger.setLevel(args.loglevel.upper())
 
     if args.command == "parameters":
         generate_parameters(args.symbols)

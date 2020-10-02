@@ -17,28 +17,28 @@ Verbosity($Verbosity)
 --------------------------------------------------------------------------------
 -- Define the parameters of the calculation.
 --------------------------------------------------------------------------------
-Temperature = $Temperature -- Temperature (Kelvin)
+Temperature = $Temperature -- temperature (Kelvin)
 
-NPsis = $NPsis  -- Number of states to calculate
-NPsisAuto = $NPsisAuto  -- Determine the number of state automatically
-NConfigurations = $NConfigurations  -- Number of configurations
+NPsis = $NPsis  -- number of states to consider in the spectra calculation
+NPsisAuto = $NPsisAuto  -- determine the number of state automatically
+NConfigurations = $NConfigurations  -- number of configurations
 
-Emin = $XEmin  -- Minimum value of the energy range (eV)
-Emax = $XEmax  -- Maximum value of the energy range (eV)
-NPoints = $XNPoints  -- Number of points of the spectra
-ExperimentalShift = $XExperimentalShift  -- Experimental edge energy (eV)
-ZeroShift = $XZeroShift  -- Energy required to shift the calculated spectrum to start from approximately zero (eV)
+Emin = $XEmin  -- minimum value of the energy range (eV)
+Emax = $XEmax  -- maximum value of the energy range (eV)
+NPoints = $XNPoints  -- number of points of the spectra
+ExperimentalShift = $XExperimentalShift  -- experimental edge energy (eV)
+ZeroShift = $XZeroShift  -- energy required to shift the calculated spectrum to start from approximately zero (eV)
 Gaussian = $XGaussian  -- Gaussian FWHM (eV)
 Lorentzian = $XLorentzian  -- Lorentzian FWHM (eV)
 
-WaveVector = $XWaveVector  -- Wave vector
-Ev = $XFirstPolarization  -- Vertical polarization
-Eh = $XSecondPolarization  -- Horizontal polarization
+WaveVector = $XWaveVector  -- wave vector
+Ev = $XFirstPolarization  -- vertical polarization
+Eh = $XSecondPolarization  -- horizontal polarization
 
-SpectraToCalculate = $SpectraToCalculate  -- Type of spectra to calculate
-DenseBorder = $DenseBorder -- Number of determinants where we switch from dense methods to sparse methods
+SpectraToCalculate = $SpectraToCalculate  -- types of spectra to calculate
+DenseBorder = $DenseBorder -- number of determinants where we switch from dense methods to sparse methods
 
-Prefix = "$Prefix"  -- File name prefix
+Prefix = "$Prefix"  -- file name prefix
 
 --------------------------------------------------------------------------------
 -- Toggle the Hamiltonian terms.
@@ -137,23 +137,24 @@ end
 -- Define the crystal field term.
 --------------------------------------------------------------------------------
 if CrystalFieldTerm then
-    Dq_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, {{4, 0, -14}, {4, 3, -2 * math.sqrt(70)}, {4, -3, 2 * math.sqrt(70)}})
-    Dsigma_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, {{2, 0, -7}})
-    Dtau_3d = NewOperator('CF', NFermions, IndexUp_3d, IndexDn_3d, {{4, 0, -21}})
+    Dq_3d = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, {{4, 0, -14}, {4, 3, -2 * math.sqrt(70)}, {4, -3, 2 * math.sqrt(70)}})
+    Dsigma_3d = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, {{2, 0, -7}})
+    Dtau_3d = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, {{4, 0, -21}})
 
     Dq_3d_i = $Dq(3d)_i_value
     Dsigma_3d_i = $Dsigma(3d)_i_value
     Dtau_3d_i = $Dtau(3d)_i_value
 
-    io.write('Energies of the 3d orbitals in the initial Hamiltonian (crystal field term only):\n')
-    io.write('================\n')
-    io.write('Irrep.         E\n')
-    io.write('================\n')
-    io.write(string.format('a1(t2g) %8.3f\n', -4 * Dq_3d_i - 2 * Dsigma_3d_i - 6 * Dtau_3d_i))
-    io.write(string.format('e(eg)   %8.3f\n', 6 * Dq_3d_i + 7 / 3 * Dtau_3d_i))
-    io.write(string.format('e(t2g)  %8.3f\n', -4 * Dq_3d_i + Dsigma_3d_i + 2 / 3 * Dtau_3d_i))
-    io.write('================\n')
-    io.write('\n')
+    io.write("Energies of the 3d orbitals in the initial Hamiltonian (crystal field term only):\n")
+    io.write("================\n")
+    io.write("Irrep.         E\n")
+    io.write("================\n")
+    io.write(string.format("a1(t2g) %8.3f\n", -4 * Dq_3d_i - 2 * Dsigma_3d_i - 6 * Dtau_3d_i))
+    io.write(string.format("e(eg)   %8.3f\n", 6 * Dq_3d_i + 7 / 3 * Dtau_3d_i))
+    io.write(string.format("e(t2g)  %8.3f\n", -4 * Dq_3d_i + Dsigma_3d_i + 2 / 3 * Dtau_3d_i))
+    io.write("================\n")
+    io.write("Note: For C3v symmetry the Hamiltonian is not diagonal in the basis of the 3d orbitals."
+    io.write("\n")
 
     Dq_3d_f = $Dq(3d)_f_value
     Dsigma_3d_f = $Dsigma(3d)_f_value
@@ -172,30 +173,30 @@ end
 --------------------------------------------------------------------------------
 -- Define the magnetic field and exchange field terms.
 --------------------------------------------------------------------------------
-Sx_3d = NewOperator('Sx', NFermions, IndexUp_3d, IndexDn_3d)
-Sy_3d = NewOperator('Sy', NFermions, IndexUp_3d, IndexDn_3d)
-Sz_3d = NewOperator('Sz', NFermions, IndexUp_3d, IndexDn_3d)
-Ssqr_3d = NewOperator('Ssqr', NFermions, IndexUp_3d, IndexDn_3d)
-Splus_3d = NewOperator('Splus', NFermions, IndexUp_3d, IndexDn_3d)
-Smin_3d = NewOperator('Smin', NFermions, IndexUp_3d, IndexDn_3d)
+Sx_3d = NewOperator("Sx", NFermions, IndexUp_3d, IndexDn_3d)
+Sy_3d = NewOperator("Sy", NFermions, IndexUp_3d, IndexDn_3d)
+Sz_3d = NewOperator("Sz", NFermions, IndexUp_3d, IndexDn_3d)
+Ssqr_3d = NewOperator("Ssqr", NFermions, IndexUp_3d, IndexDn_3d)
+Splus_3d = NewOperator("Splus", NFermions, IndexUp_3d, IndexDn_3d)
+Smin_3d = NewOperator("Smin", NFermions, IndexUp_3d, IndexDn_3d)
 
-Lx_3d = NewOperator('Lx', NFermions, IndexUp_3d, IndexDn_3d)
-Ly_3d = NewOperator('Ly', NFermions, IndexUp_3d, IndexDn_3d)
-Lz_3d = NewOperator('Lz', NFermions, IndexUp_3d, IndexDn_3d)
-Lsqr_3d = NewOperator('Lsqr', NFermions, IndexUp_3d, IndexDn_3d)
-Lplus_3d = NewOperator('Lplus', NFermions, IndexUp_3d, IndexDn_3d)
-Lmin_3d = NewOperator('Lmin', NFermions, IndexUp_3d, IndexDn_3d)
+Lx_3d = NewOperator("Lx", NFermions, IndexUp_3d, IndexDn_3d)
+Ly_3d = NewOperator("Ly", NFermions, IndexUp_3d, IndexDn_3d)
+Lz_3d = NewOperator("Lz", NFermions, IndexUp_3d, IndexDn_3d)
+Lsqr_3d = NewOperator("Lsqr", NFermions, IndexUp_3d, IndexDn_3d)
+Lplus_3d = NewOperator("Lplus", NFermions, IndexUp_3d, IndexDn_3d)
+Lmin_3d = NewOperator("Lmin", NFermions, IndexUp_3d, IndexDn_3d)
 
-Jx_3d = NewOperator('Jx', NFermions, IndexUp_3d, IndexDn_3d)
-Jy_3d = NewOperator('Jy', NFermions, IndexUp_3d, IndexDn_3d)
-Jz_3d = NewOperator('Jz', NFermions, IndexUp_3d, IndexDn_3d)
-Jsqr_3d = NewOperator('Jsqr', NFermions, IndexUp_3d, IndexDn_3d)
-Jplus_3d = NewOperator('Jplus', NFermions, IndexUp_3d, IndexDn_3d)
-Jmin_3d = NewOperator('Jmin', NFermions, IndexUp_3d, IndexDn_3d)
+Jx_3d = NewOperator("Jx", NFermions, IndexUp_3d, IndexDn_3d)
+Jy_3d = NewOperator("Jy", NFermions, IndexUp_3d, IndexDn_3d)
+Jz_3d = NewOperator("Jz", NFermions, IndexUp_3d, IndexDn_3d)
+Jsqr_3d = NewOperator("Jsqr", NFermions, IndexUp_3d, IndexDn_3d)
+Jplus_3d = NewOperator("Jplus", NFermions, IndexUp_3d, IndexDn_3d)
+Jmin_3d = NewOperator("Jmin", NFermions, IndexUp_3d, IndexDn_3d)
 
-Tx_3d = NewOperator('Tx', NFermions, IndexUp_3d, IndexDn_3d)
-Ty_3d = NewOperator('Ty', NFermions, IndexUp_3d, IndexDn_3d)
-Tz_3d = NewOperator('Tz', NFermions, IndexUp_3d, IndexDn_3d)
+Tx_3d = NewOperator("Tx", NFermions, IndexUp_3d, IndexDn_3d)
+Ty_3d = NewOperator("Ty", NFermions, IndexUp_3d, IndexDn_3d)
+Tz_3d = NewOperator("Tz", NFermions, IndexUp_3d, IndexDn_3d)
 
 Sx = Sx_3d
 Sy = Sy_3d
@@ -453,11 +454,13 @@ end
 --------------------------------------------------------------------------------
 -- Define the restrictions and set the number of initial states.
 --------------------------------------------------------------------------------
-InitialRestrictions = {NFermions, NBosons, {'111111 0000000000', NElectrons_2p, NElectrons_2p},
-                                           {'000000 1111111111', NElectrons_3d, NElectrons_3d}}
+InitialRestrictions = {NFermions, NBosons, {"111111 0000000000", NElectrons_2p, NElectrons_2p},
+                                           {"000000 1111111111", NElectrons_3d, NElectrons_3d}}
 
-FinalRestrictions = {NFermions, NBosons, {'111111 0000000000', NElectrons_2p - 1, NElectrons_2p - 1},
-                                         {'000000 1111111111', NElectrons_3d + 1, NElectrons_3d + 1}}
+FinalRestrictions = {NFermions, NBosons, {"111111 0000000000", NElectrons_2p - 1, NElectrons_2p - 1},
+                                         {"000000 1111111111", NElectrons_3d + 1, NElectrons_3d + 1}}
+
+CalculationRestrictions = nil
 
 --------------------------------------------------------------------------------
 -- Analyze the initial Hamiltonian.
@@ -509,8 +512,8 @@ Tk_2p_3d = DotProduct(WaveVector, {Tx_2p_3d, Ty_2p_3d, Tz_2p_3d})
 
 -- Initialize a table with the available spectra and the required operators.
 SpectraAndOperators = {
-    ["Absorption"] = {Tk_2p_3d,},
     ["Isotropic Absorption"] = {Tk_2p_3d, Tr_2p_3d, Tl_2p_3d},
+    ["Absorption"] = {Tk_2p_3d,},
     ["Circular Dichroic"] = {Tr_2p_3d, Tl_2p_3d},
     ["Linear Dichroic"] = {Tv_2p_3d, Th_2p_3d},
 }
