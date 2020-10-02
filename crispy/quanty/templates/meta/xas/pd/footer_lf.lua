@@ -89,8 +89,6 @@ for Operator, _ in pairs(T_#i_#f) do
 end
 T_#i_#f = T
 
-Gamma = 0.1
-
 Emin = Emin - (ZeroShift + ExperimentalShift)
 Emax = Emax - (ZeroShift + ExperimentalShift)
 
@@ -100,7 +98,7 @@ else
     G_#i_#f = CreateSpectra(H_f, T_#i_#f, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"Restrictions", CalculationRestrictions}, {"DenseBorder", DenseBorder}})
 end
 
--- Shift the calculated spectrum.
+-- Shift the calculated spectra.
 G_#i_#f.Shift(ZeroShift + ExperimentalShift)
 
 -- Create a list with the Boltzmann probabilities for a given operator and wavefunction.
@@ -114,6 +112,12 @@ end
 local Ids = {}
 for k, v in pairs(T_#i_#f) do
     Ids[v] = k
+end
+
+-- Subtract the broadening used in the spectra calculations from the Lorentzian table.
+for i, _ in ipairs(Lorentzian) do
+    -- The FWHM is the second value in each pair.
+    Lorentzian[i][2] = Lorentzian[i][2] - Gamma
 end
 
 Pcl_#i_#f = 2

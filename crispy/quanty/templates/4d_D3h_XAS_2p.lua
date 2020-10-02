@@ -29,7 +29,8 @@ NPoints = $XNPoints  -- number of points of the spectra
 ExperimentalShift = $XExperimentalShift  -- experimental edge energy (eV)
 ZeroShift = $XZeroShift  -- energy required to shift the calculated spectrum to start from approximately zero (eV)
 Gaussian = $XGaussian  -- Gaussian FWHM (eV)
-Lorentzian = $XLorentzian  -- Lorentzian FWHM (eV)
+Gamma = 0.1  -- Lorentzian FWHM used in the spectra calculation (eV)
+Lorentzian = $XLorentzian  -- Lorentzian FWHM applied additionally (eV)
 
 WaveVector = $XWaveVector  -- wave vector
 Ev = $XFirstPolarization  -- vertical polarization
@@ -529,8 +530,6 @@ for Operator, _ in pairs(T_2p_4d) do
 end
 T_2p_4d = T
 
-Gamma = 0.1
-
 Emin = Emin - (ZeroShift + ExperimentalShift)
 Emax = Emax - (ZeroShift + ExperimentalShift)
 
@@ -540,7 +539,7 @@ else
     G_2p_4d = CreateSpectra(H_f, T_2p_4d, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"Restrictions", CalculationRestrictions}, {"DenseBorder", DenseBorder}})
 end
 
--- Shift the calculated spectrum.
+-- Shift the calculated spectra.
 G_2p_4d.Shift(ZeroShift + ExperimentalShift)
 
 -- Create a list with the Boltzmann probabilities for a given operator and wavefunction.
@@ -556,6 +555,12 @@ for k, v in pairs(T_2p_4d) do
     Ids[v] = k
 end
 
+-- Subtract the broadening used in the spectra calculations from the Lorentzian table.
+for i, _ in ipairs(Lorentzian) do
+    -- The FWHM is the second value in each pair.
+    Lorentzian[i][2] = Lorentzian[i][2] - Gamma
+end
+
 Pcl_2p_4d = 2
 
 for Spectrum, Operators in pairs(SpectraAndOperators) do
@@ -569,7 +574,7 @@ for Spectrum, Operators in pairs(SpectraAndOperators) do
 
         if Spectrum == "Isotropic Absorption" then
             Giso = GetSpectrum(G_2p_4d, SpectrumIds, dZ_2p_4d, #T_2p_4d, #Psis_i)
-            Giso = Giso / 3 
+            Giso = Giso / 3
             SaveSpectrum(Giso, Prefix .. "_iso", Gaussian, Lorentzian, Pcl_2p_4d)
         end
 
