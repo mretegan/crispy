@@ -253,7 +253,6 @@ if MlctLigandsHybridizationTerm then
     Delta_3d_L2_f = $Delta(3d,L2)_f_value
     e_3d_f = -(U_3d_3d_f * NElectrons_3d^2 + 11 * U_3d_3d_f * NElectrons_3d + 60 * U_2p_3d_f) / (2 * NElectrons_3d + 12)
     e_2p_f = NElectrons_3d * (U_3d_3d_f * NElectrons_3d + U_3d_3d_f - 2 * U_2p_3d_f * NElectrons_3d - 2 * U_2p_3d_f) / (2 * (NElectrons_3d + 6))
-
     e_L2_f = (2 * Delta_3d_L2_f * NElectrons_3d + 12 * Delta_3d_L2_f + U_3d_3d_f * NElectrons_3d^2 - U_3d_3d_f * NElectrons_3d - 12 * U_3d_3d_f + 12 * U_2p_3d_f * NElectrons_3d + 12 * U_2p_3d_f) / (2 * (NElectrons_3d + 6))
 
     H_i = H_i + Chop(

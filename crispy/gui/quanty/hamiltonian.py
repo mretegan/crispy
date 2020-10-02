@@ -300,8 +300,8 @@ class LigandHybridizationTerm(HamiltonianTerm):
                 names = ("Δ", "Veg", "Vt2g", "10Dq")
             elif self.symmetry.value == "D4h":
                 names = ("Δ", "Va1g", "Vb1g", "Vb2g", "Veg", "10Dq", "Ds", "Dt")
-            elif self.symmetry.value == "Td":
-                names = ("Δ", "Ve", "Vt2", "10Dq")
+            # elif self.symmetry.value == "Td":
+            #     names = ("Δ", "Ve", "Vt2", "10Dq")
             else:
                 raise ValueError("Unknown symmetry.")
         elif self.block == "f":
@@ -332,7 +332,7 @@ class LigandHybridizationTerm(HamiltonianTerm):
             for sibling in siblings:
                 if value == Qt.Checked and sibling is not self:
                     sibling.checkState = Qt.Unchecked
-                    sibling.dataChanged.emit(column=1)
+                    sibling.dataChanged.emit(1)
 
         return super().setData(column, value, role)
 
@@ -414,7 +414,9 @@ class HamiltonianTerms(BaseItem):
 
         if calculation.element.valenceBlock == "d":
             # Add ligands hybridization term.
-            if calculation.symmetry.value in ("Oh", "D4h", "Td"):
+            # TODO: Td is still problematic due to the another set of t2 ligands
+            # http://quanty.org/forum/data/2019/metal_3d_to_ligand_hybridization_in_td
+            if calculation.symmetry.value in ("Oh", "D4h"):
                 # TODO: These exceptions have to be advertised somewhere as the
                 # generation of templates must also use them.
                 if (

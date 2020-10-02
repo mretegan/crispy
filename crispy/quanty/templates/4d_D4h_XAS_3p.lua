@@ -3,7 +3,7 @@
 -- the following reference: http://dx.doi.org/10.5281/zenodo.1008184.
 --
 -- elements: 4d
--- symmetry: Oh
+-- symmetry: D4h
 -- experiment: XAS
 -- edge: M2,3 (3p)
 --------------------------------------------------------------------------------
@@ -160,31 +160,49 @@ end
 --------------------------------------------------------------------------------
 -- Define the crystal field term.
 --------------------------------------------------------------------------------
-if CrystalFieldTerm then
-    -- PotentialExpandedOnClm("Oh", 2, {Eeg, Et2g})
-    -- tenDq_4d = NewOperator("CF", NFermions, IndexUp_4d, IndexDn_4d, PotentialExpandedOnClm("Oh", 2, {0.6, -0.4}))
+if  CrystalFieldTerm then
+    -- PotentialExpandedOnClm("D4h", 2, {Ea1g, Eb1g, Eb2g, Eeg})
+    -- Dq_4d = NewOperator("CF", NFermions, IndexUp_4d, IndexDn_4d, PotentialExpandedOnClm("D4h", 2, { 6,  6, -4, -4}))
+    -- Ds_4d = NewOperator("CF", NFermions, IndexUp_4d, IndexDn_4d, PotentialExpandedOnClm("D4h", 2, {-2,  2,  2, -1}))
+    -- Dt_4d = NewOperator("CF", NFermions, IndexUp_4d, IndexDn_4d, PotentialExpandedOnClm("D4h", 2, {-6, -1, -1,  4}))
 
-    Akm = {{4, 0, 2.1}, {4, -4, 1.5 * sqrt(0.7)}, {4, 4, 1.5 * sqrt(0.7)}}
-    tenDq_4d = NewOperator("CF", NFermions, IndexUp_4d, IndexDn_4d, Akm)
+    Akm = {{4, 0, 21}, {4, -4, 1.5 * sqrt(70)}, {4, 4, 1.5 * sqrt(70)}}
+    Dq_4d = NewOperator("CF", NFermions, IndexUp_4d, IndexDn_4d, Akm)
 
-    tenDq_4d_i = $10Dq(4d)_i_value
+    Akm = {{2, 0, -7}}
+    Ds_4d = NewOperator("CF", NFermions, IndexUp_4d, IndexDn_4d, Akm)
+
+    Akm = {{4, 0, -21}}
+    Dt_4d = NewOperator("CF", NFermions, IndexUp_4d, IndexDn_4d, Akm)
+
+    Dq_4d_i = $10Dq(4d)_i_value / 10.0
+    Ds_4d_i = $Ds(4d)_i_value
+    Dt_4d_i = $Dt(4d)_i_value
 
     io.write("Diagonal values of the initial crystal field Hamiltonian:\n")
     io.write("================\n")
-    io.write("Irrep.        E\n")
+    io.write("Irrep.         E\n")
     io.write("================\n")
-    io.write(string.format("eg      %8.3f\n",  0.6 * tenDq_4d_i))
-    io.write(string.format("t2g     %8.3f\n", -0.4 * tenDq_4d_i))
+    io.write(string.format("a1g     %8.3f\n", 6 * Dq_4d_i - 2 * Ds_4d_i - 6 * Dt_4d_i ))
+    io.write(string.format("b1g     %8.3f\n", 6 * Dq_4d_i + 2 * Ds_4d_i - Dt_4d_i ))
+    io.write(string.format("b2g     %8.3f\n", -4 * Dq_4d_i + 2 * Ds_4d_i - Dt_4d_i ))
+    io.write(string.format("eg      %8.3f\n", -4 * Dq_4d_i - Ds_4d_i + 4 * Dt_4d_i))
     io.write("================\n")
     io.write("\n")
 
-    tenDq_4d_f = $10Dq(4d)_f_value
+    Dq_4d_f = $10Dq(4d)_f_value / 10.0
+    Ds_4d_f = $Ds(4d)_f_value
+    Dt_4d_f = $Dt(4d)_f_value
 
     H_i = H_i + Chop(
-          tenDq_4d_i * tenDq_4d)
+          Dq_4d_i * Dq_4d
+        + Ds_4d_i * Ds_4d
+        + Dt_4d_i * Dt_4d)
 
     H_f = H_f + Chop(
-          tenDq_4d_f * tenDq_4d)
+          Dq_4d_f * Dq_4d
+        + Ds_4d_f * Ds_4d
+        + Dt_4d_f * Dt_4d)
 end
 
 --------------------------------------------------------------------------------
@@ -212,31 +230,55 @@ if LmctLigandsHybridizationTerm then
         + e_3p_f * N_3p
         + e_L1_f * N_L1)
 
-    tenDq_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, PotentialExpandedOnClm("Oh", 2, {0.6, -0.4}))
+    Dq_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, PotentialExpandedOnClm("D4h", 2, { 6,  6, -4, -4}))
+    Ds_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, PotentialExpandedOnClm("D4h", 2, {-2,  2,  2, -1}))
+    Dt_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, PotentialExpandedOnClm("D4h", 2, {-6, -1, -1,  4}))
 
-    Veg_4d_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, IndexUp_4d, IndexDn_4d, PotentialExpandedOnClm("Oh", 2, {1, 0}))
-              + NewOperator("CF", NFermions, IndexUp_4d, IndexDn_4d, IndexUp_L1, IndexDn_L1, PotentialExpandedOnClm("Oh", 2, {1, 0}))
+    Va1g_4d_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, IndexUp_4d, IndexDn_4d, PotentialExpandedOnClm("D4h", 2, {1, 0, 0, 0}))
+               + NewOperator("CF", NFermions, IndexUp_4d, IndexDn_4d, IndexUp_L1, IndexDn_L1, PotentialExpandedOnClm("D4h", 2, {1, 0, 0, 0}))
 
-    Vt2g_4d_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, IndexUp_4d, IndexDn_4d, PotentialExpandedOnClm("Oh", 2, {0, 1}))
-               + NewOperator("CF", NFermions, IndexUp_4d, IndexDn_4d, IndexUp_L1, IndexDn_L1, PotentialExpandedOnClm("Oh", 2, {0, 1}))
+    Vb1g_4d_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, IndexUp_4d, IndexDn_4d, PotentialExpandedOnClm("D4h", 2, {0, 1, 0, 0}))
+               + NewOperator("CF", NFermions, IndexUp_4d, IndexDn_4d, IndexUp_L1, IndexDn_L1, PotentialExpandedOnClm("D4h", 2, {0, 1, 0, 0}))
 
-    tenDq_L1_i = $10Dq(L1)_i_value
+    Vb2g_4d_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, IndexUp_4d, IndexDn_4d, PotentialExpandedOnClm("D4h", 2, {0, 0, 1, 0}))
+               + NewOperator("CF", NFermions, IndexUp_4d, IndexDn_4d, IndexUp_L1, IndexDn_L1, PotentialExpandedOnClm("D4h", 2, {0, 0, 1, 0}))
+
+    Veg_4d_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, IndexUp_4d, IndexDn_4d, PotentialExpandedOnClm("D4h", 2, {0, 0, 0, 1}))
+              + NewOperator("CF", NFermions, IndexUp_4d, IndexDn_4d, IndexUp_L1, IndexDn_L1, PotentialExpandedOnClm("D4h", 2, {0, 0, 0, 1}))
+
+    Dq_L1_i = $10Dq(L1)_i_value / 10.0
+    Ds_L1_i = $Ds(L1)_i_value
+    Dt_L1_i = $Dt(L1)_i_value
+    Va1g_4d_L1_i = $Va1g(4d,L1)_i_value
+    Vb1g_4d_L1_i = $Vb1g(4d,L1)_i_value
+    Vb2g_4d_L1_i = $Vb2g(4d,L1)_i_value
     Veg_4d_L1_i = $Veg(4d,L1)_i_value
-    Vt2g_4d_L1_i = $Vt2g(4d,L1)_i_value
 
-    tenDq_L1_f = $10Dq(L1)_f_value
+    Dq_L1_f = $10Dq(L1)_f_value / 10.0
+    Ds_L1_f = $Ds(L1)_f_value
+    Dt_L1_f = $Dt(L1)_f_value
+    Va1g_4d_L1_f = $Va1g(4d,L1)_f_value
+    Vb1g_4d_L1_f = $Vb1g(4d,L1)_f_value
+    Vb2g_4d_L1_f = $Vb2g(4d,L1)_f_value
     Veg_4d_L1_f = $Veg(4d,L1)_f_value
-    Vt2g_4d_L1_f = $Vt2g(4d,L1)_f_value
 
     H_i = H_i + Chop(
-          tenDq_L1_i * tenDq_L1
-        + Veg_4d_L1_i * Veg_4d_L1
-        + Vt2g_4d_L1_i * Vt2g_4d_L1)
+          Dq_L1_i * Dq_L1
+        + Ds_L1_i * Ds_L1
+        + Dt_L1_i * Dt_L1
+        + Va1g_4d_L1_i * Va1g_4d_L1
+        + Vb1g_4d_L1_i * Vb1g_4d_L1
+        + Vb2g_4d_L1_i * Vb2g_4d_L1
+        + Veg_4d_L1_i  * Veg_4d_L1)
 
     H_f = H_f + Chop(
-          tenDq_L1_f * tenDq_L1
-        + Veg_4d_L1_f * Veg_4d_L1
-        + Vt2g_4d_L1_f * Vt2g_4d_L1)
+          Dq_L1_f * Dq_L1
+        + Ds_L1_f * Ds_L1
+        + Dt_L1_f * Dt_L1
+        + Va1g_4d_L1_f * Va1g_4d_L1
+        + Vb1g_4d_L1_f * Vb1g_4d_L1
+        + Vb2g_4d_L1_f * Vb2g_4d_L1
+        + Veg_4d_L1_f  * Veg_4d_L1)
 end
 
 --------------------------------------------------------------------------------
@@ -264,31 +306,55 @@ if MlctLigandsHybridizationTerm then
         + e_3p_f * N_3p
         + e_L2_f * N_L2)
 
-    tenDq_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, PotentialExpandedOnClm("Oh", 2, {0.6, -0.4}))
+    Dq_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, PotentialExpandedOnClm("D4h", 2, { 6,  6, -4, -4}))
+    Ds_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, PotentialExpandedOnClm("D4h", 2, {-2,  2,  2, -1}))
+    Dt_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, PotentialExpandedOnClm("D4h", 2, {-6, -1, -1,  4}))
 
-    Veg_4d_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, IndexUp_4d, IndexDn_4d, PotentialExpandedOnClm("Oh", 2, {1, 0}))
-              + NewOperator("CF", NFermions, IndexUp_4d, IndexDn_4d, IndexUp_L2, IndexDn_L2, PotentialExpandedOnClm("Oh", 2, {1, 0}))
+    Va1g_4d_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, IndexUp_4d, IndexDn_4d, PotentialExpandedOnClm("D4h", 2, {1, 0, 0, 0}))
+               + NewOperator("CF", NFermions, IndexUp_4d, IndexDn_4d, IndexUp_L2, IndexDn_L2, PotentialExpandedOnClm("D4h", 2, {1, 0, 0, 0}))
 
-    Vt2g_4d_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, IndexUp_4d, IndexDn_4d, PotentialExpandedOnClm("Oh", 2, {0, 1}))
-               + NewOperator("CF", NFermions, IndexUp_4d, IndexDn_4d, IndexUp_L2, IndexDn_L2, PotentialExpandedOnClm("Oh", 2, {0, 1}))
+    Vb1g_4d_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, IndexUp_4d, IndexDn_4d, PotentialExpandedOnClm("D4h", 2, {0, 1, 0, 0}))
+               + NewOperator("CF", NFermions, IndexUp_4d, IndexDn_4d, IndexUp_L2, IndexDn_L2, PotentialExpandedOnClm("D4h", 2, {0, 1, 0, 0}))
 
-    tenDq_L2_i = $10Dq(L2)_i_value
+    Vb2g_4d_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, IndexUp_4d, IndexDn_4d, PotentialExpandedOnClm("D4h", 2, {0, 0, 1, 0}))
+               + NewOperator("CF", NFermions, IndexUp_4d, IndexDn_4d, IndexUp_L2, IndexDn_L2, PotentialExpandedOnClm("D4h", 2, {0, 0, 1, 0}))
+
+    Veg_4d_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, IndexUp_4d, IndexDn_4d, PotentialExpandedOnClm("D4h", 2, {0, 0, 0, 1}))
+              + NewOperator("CF", NFermions, IndexUp_4d, IndexDn_4d, IndexUp_L2, IndexDn_L2, PotentialExpandedOnClm("D4h", 2, {0, 0, 0, 1}))
+
+    Dq_L2_i = $10Dq(L2)_i_value / 10.0
+    Ds_L2_i = $Ds(L2)_i_value
+    Dt_L2_i = $Dt(L2)_i_value
+    Va1g_4d_L2_i = $Va1g(4d,L2)_i_value
+    Vb1g_4d_L2_i = $Vb1g(4d,L2)_i_value
+    Vb2g_4d_L2_i = $Vb2g(4d,L2)_i_value
     Veg_4d_L2_i = $Veg(4d,L2)_i_value
-    Vt2g_4d_L2_i = $Vt2g(4d,L2)_i_value
 
-    tenDq_L2_f = $10Dq(L2)_f_value
+    Dq_L2_f = $10Dq(L2)_f_value / 10.0
+    Ds_L2_f = $Ds(L2)_f_value
+    Dt_L2_f = $Dt(L2)_f_value
+    Va1g_4d_L2_f = $Va1g(4d,L2)_f_value
+    Vb1g_4d_L2_f = $Vb1g(4d,L2)_f_value
+    Vb2g_4d_L2_f = $Vb2g(4d,L2)_f_value
     Veg_4d_L2_f = $Veg(4d,L2)_f_value
-    Vt2g_4d_L2_f = $Vt2g(4d,L2)_f_value
 
     H_i = H_i + Chop(
-          tenDq_L2_i * tenDq_L2
-        + Veg_4d_L2_i * Veg_4d_L2
-        + Vt2g_4d_L2_i * Vt2g_4d_L2)
+          Dq_L2_i * Dq_L2
+        + Ds_L2_i * Ds_L2
+        + Dt_L2_i * Dt_L2
+        + Va1g_4d_L2_i * Va1g_4d_L2
+        + Vb1g_4d_L2_i * Vb1g_4d_L2
+        + Vb2g_4d_L2_i * Vb2g_4d_L2
+        + Veg_4d_L2_i  * Veg_4d_L2)
 
     H_f = H_f + Chop(
-          tenDq_L2_f * tenDq_L2
-        + Veg_4d_L2_f * Veg_4d_L2
-        + Vt2g_4d_L2_f * Vt2g_4d_L2)
+          Dq_L2_f * Dq_L2
+        + Ds_L2_f * Ds_L2
+        + Dt_L2_f * Dt_L2
+        + Va1g_4d_L2_f * Va1g_4d_L2
+        + Vb1g_4d_L2_f * Vb1g_4d_L2
+        + Vb2g_4d_L2_f * Vb2g_4d_L2
+        + Veg_4d_L2_f  * Veg_4d_L2)
 end
 
 --------------------------------------------------------------------------------

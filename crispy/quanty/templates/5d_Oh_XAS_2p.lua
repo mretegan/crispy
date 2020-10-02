@@ -253,7 +253,6 @@ if MlctLigandsHybridizationTerm then
     Delta_5d_L2_f = $Delta(5d,L2)_f_value
     e_5d_f = -(U_5d_5d_f * NElectrons_5d^2 + 11 * U_5d_5d_f * NElectrons_5d + 60 * U_2p_5d_f) / (2 * NElectrons_5d + 12)
     e_2p_f = NElectrons_5d * (U_5d_5d_f * NElectrons_5d + U_5d_5d_f - 2 * U_2p_5d_f * NElectrons_5d - 2 * U_2p_5d_f) / (2 * (NElectrons_5d + 6))
-
     e_L2_f = (2 * Delta_5d_L2_f * NElectrons_5d + 12 * Delta_5d_L2_f + U_5d_5d_f * NElectrons_5d^2 - U_5d_5d_f * NElectrons_5d - 12 * U_5d_5d_f + 12 * U_2p_5d_f * NElectrons_5d + 12 * U_2p_5d_f) / (2 * (NElectrons_5d + 6))
 
     H_i = H_i + Chop(
