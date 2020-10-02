@@ -403,7 +403,6 @@ class DockWidget(QDockWidget):
         # NOTE: Different actions are required if the runner is successful or not.
         self.state.runner.started.connect(self.started)
         self.state.runner.successful.connect(self.successful)
-        self.state.runner.finished.connect(self.finished)
         self.state.runner.outputUpdated.connect(self.updateLogger)
         self.state.titleChanged.connect(self.updateMainWindowTitle)
 
@@ -507,7 +506,7 @@ class DockWidget(QDockWidget):
         self.calculationPushButton.setToolTip("Stop Quanty.")
         self.calculationPushButton.clicked.connect(self.stop)
 
-    def finished(self):
+    def successful(self, successful):
         # Scroll to the bottom of the logger widget.
         scrollBar = self.parent().loggerWidget.verticalScrollBar()
         scrollBar.setValue(scrollBar.maximum())
@@ -521,7 +520,9 @@ class DockWidget(QDockWidget):
         self.calculationPushButton.setToolTip("Run Quanty.")
         self.calculationPushButton.clicked.connect(self.run)
 
-    def successful(self):
+        if not successful:
+            return
+
         # If the "Hamiltonian Setup" page is currently selected, when the
         # current widget is set to the "Results Page", the former is not
         # displayed. To avoid this we switch first to the "General Setup" page.

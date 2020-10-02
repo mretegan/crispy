@@ -334,7 +334,7 @@ class MagneticField(DoubleItem):
 class Runner(QProcess):
 
     outputUpdated = pyqtSignal(str)
-    successful = pyqtSignal()
+    successful = pyqtSignal(bool)
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
@@ -361,6 +361,7 @@ class Runner(QProcess):
     def checkExitCodes(self, exitCode, exitStatus):
         self.endingTime = datetime.datetime.now()
 
+        successful = False
         if exitStatus == 0 and exitCode == 0:
             message = "Quanty has finished successfully in "
             delta = self.runningTime
@@ -376,7 +377,7 @@ class Runner(QProcess):
             else:
                 message += "{} seconds.".format(seconds)
             logger.info(message)
-            self.successful.emit()
+            successful = True
         elif exitStatus == 0 and exitCode == 1:
             message = (
                 "Quanty has finished unsuccessfully. "
@@ -387,6 +388,7 @@ class Runner(QProcess):
         elif exitStatus == 1:
             message = "Quanty was stopped."
             logger.info(message)
+        self.successful.emit(successful)
 
     def updateOutput(self):
         data = self.readAll().data()
@@ -696,7 +698,9 @@ class Calculation(SelectableItem):
         self.saveInput()
         self.runner.run(self.inputName)
 
-    def process(self):
+    def process(self, successful):
+        if not successful:
+            return
         # TODO: Check if loading the spectra was successful.
         self.spectra.load()
 
