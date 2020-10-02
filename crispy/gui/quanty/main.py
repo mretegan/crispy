@@ -129,9 +129,12 @@ class HamiltonianSetupPage(QWidget):
         loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy.gui")
 
         self.mappers = list()
+        # NOTE: This is needed for the updateAutoStates.
+        self.hamiltonian = None
 
     def populate(self, state):
         hamiltonian = state.hamiltonian
+        self.hamiltonian = hamiltonian
         model = state.model()
 
         if self.mappers:

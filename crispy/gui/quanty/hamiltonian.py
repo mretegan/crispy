@@ -499,6 +499,7 @@ class NumberOfStates(IntItem):
         if value > self.maximum:
             raise ValueError(f"The maximum number of states is {self.maximum}.")
         self._value = value
+        self.dataChanged.emit(1)
 
 
 class NumberOfConfigurations(IntItem):
