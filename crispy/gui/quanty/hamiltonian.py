@@ -566,7 +566,7 @@ class Hamiltonian(BaseItem):
         self.terms = HamiltonianTerms(parent=self)
 
         name = "Synchronize Parameters"
-        self.synchronizeParameters = BoolItem(parent=self, name=name, value=False)
+        self.synchronizeParameters = BoolItem(parent=self, name=name, value=True)
 
         self.numberOfConfigurations = NumberOfConfigurations(parent=self)
 
