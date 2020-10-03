@@ -29,8 +29,8 @@ NPoints = $XNPoints  -- number of points of the spectra
 ExperimentalShift = $XExperimentalShift  -- experimental edge energy (eV)
 ZeroShift = $XZeroShift  -- energy required to shift the calculated spectrum to start from approximately zero (eV)
 Gaussian = $XGaussian  -- Gaussian FWHM (eV)
-Gamma = 0.1  -- Lorentzian FWHM the used in spectra calculation (eV)
-Lorentzian = $XLorentzian  -- Lorentzian FWHM applied additionally (eV)
+Lorentzian = $XLorentzian  -- Lorentzian FWHM (eV)
+Gamma = 0.1  -- Lorentzian FWHM used in the spectra calculation (eV)
 
 WaveVector = $XWaveVector  -- wave vector
 Ev = $XFirstPolarization  -- vertical polarization
@@ -159,43 +159,44 @@ end
 -- Define the crystal field term.
 --------------------------------------------------------------------------------
 if CrystalFieldTerm then
-    -- PotentialExpandedOnClm("Oh", 3, {Ea2u, Et1u, Et2u})
-    -- Ea2u_5f = NewOperator("CF", NFermions, IndexUp_5f, IndexDn_5f, PotentialExpandedOnClm("Oh", 3, {1, 0, 0}))
-    -- Et2u_5f = NewOperator("CF", NFermions, IndexUp_5f, IndexDn_5f, PotentialExpandedOnClm("Oh", 3, {0, 1, 0}))
-    -- Et1u_5f = NewOperator("CF", NFermions, IndexUp_5f, IndexDn_5f, PotentialExpandedOnClm("Oh", 3, {0, 0, 1}))
-
-    B40_5f_i = $B40(5f)_i_value
-    B60_5f_i = $B60(5f)_i_value
+    Eav_5f_i = ($Ea2u(5f)_i_value + 3 * $Et1u(5f)_i_value + 3 * $Et2u(5f)_i_value) / 7
+    Ea2u_5f_i = $Ea2u(5f)_i_value - Eav_5f_i
+    Et1u_5f_i = $Et1u(5f)_i_value - Eav_5f_i
+    Et2u_5f_i = $Et2u(5f)_i_value - Eav_5f_i
 
     Akm_5f_i = {
-        {4,  0, B40_5f_i},
-        {4, -4, math.sqrt(5/14) * B40_5f_i},
-        {4,  4, math.sqrt(5/14) * B40_5f_i},
-        {6,  0, B60_5f_i},
-        {6, -4, -math.sqrt(7/2) * B60_5f_i},
-        {6,  4, -math.sqrt(7/2) * B60_5f_i},
+        {0, 0, (1 / 7) * (Ea2u_5f_i + (3) * (Et1u_5f_i + Et2u_5f_i))},
+        {4, 0, (-3 / 4) * ((2) * (Ea2u_5f_i) + (-3) * (Et1u_5f_i) + Et2u_5f_i)},
+        {4, -4, (-3 / 4) * ((sqrt(5 / 14)) * ((2) * (Ea2u_5f_i) + (-3) * (Et1u_5f_i) + Et2u_5f_i))},
+        {4, 4, (-3 / 4) * ((sqrt(5 / 14)) * ((2) * (Ea2u_5f_i) + (-3) * (Et1u_5f_i) + Et2u_5f_i))},
+        {6, 0, (39 / 280) * ((4) * (Ea2u_5f_i) + (5) * (Et1u_5f_i) + (-9) * (Et2u_5f_i))},
+        {6, -4, (-39 / 40) * ((1 / (sqrt(14))) * ((4) * (Ea2u_5f_i) + (5) * (Et1u_5f_i) + (-9) * (Et2u_5f_i)))},
+        {6, 4, (-39 / 40) * ((1 / (sqrt(14))) * ((4) * (Ea2u_5f_i) + (5) * (Et1u_5f_i) + (-9) * (Et2u_5f_i)))}
     }
 
     io.write("Diagonal values of the initial crystal field Hamiltonian:\n")
     io.write("================\n")
     io.write("Irrep.        E\n")
     io.write("================\n")
-    io.write(string.format("a2u     %8.3f\n", -4 / 11 * B40_5f_i +  80 / 143 * B60_5f_i))
-    io.write(string.format("t1u     %8.3f\n",  2 / 11 * B40_5f_i + 100 / 429 * B60_5f_i))
-    io.write(string.format("t2u     %8.3f\n", -2 / 33 * B40_5f_i -  60 / 143 * B60_5f_i))
+    io.write(string.format("a2u     %8.3f\n", Ea2u_5f_i))
+    io.write(string.format("t1u     %8.3f\n", Et1u_5f_i))
+    io.write(string.format("t2u     %8.3f\n", Et2u_5f_i))
     io.write("================\n")
     io.write("\n")
 
-    B40_5f_f = $B40(5f)_f_value
-    B60_5f_f = $B60(5f)_f_value
+    Eav_5f_f = ($Ea2u(5f)_f_value + 3 * $Et1u(5f)_f_value + 3 * $Et2u(5f)_f_value) / 7
+    Ea2u_5f_f = $Ea2u(5f)_f_value - Eav_5f_f
+    Et1u_5f_f = $Et1u(5f)_f_value - Eav_5f_f
+    Et2u_5f_f = $Et2u(5f)_f_value - Eav_5f_f
 
     Akm_5f_f = {
-        {4,  0, B40_5f_f},
-        {4, -4, math.sqrt(5/14) * B40_5f_f},
-        {4,  4, math.sqrt(5/14) * B40_5f_f},
-        {6,  0, B60_5f_f},
-        {6, -4, -math.sqrt(7/2) * B60_5f_f},
-        {6,  4, -math.sqrt(7/2) * B60_5f_f},
+        {0, 0, (1 / 7) * (Ea2u_5f_f + (3) * (Et1u_5f_f + Et2u_5f_f))},
+        {4, 0, (-3 / 4) * ((2) * (Ea2u_5f_f) + (-3) * (Et1u_5f_f) + Et2u_5f_f)},
+        {4, -4, (-3 / 4) * ((sqrt(5 / 14)) * ((2) * (Ea2u_5f_f) + (-3) * (Et1u_5f_f) + Et2u_5f_f))},
+        {4, 4, (-3 / 4) * ((sqrt(5 / 14)) * ((2) * (Ea2u_5f_f) + (-3) * (Et1u_5f_f) + Et2u_5f_f))},
+        {6, 0, (39 / 280) * ((4) * (Ea2u_5f_f) + (5) * (Et1u_5f_f) + (-9) * (Et2u_5f_f))},
+        {6, -4, (-39 / 40) * ((1 / (sqrt(14))) * ((4) * (Ea2u_5f_f) + (5) * (Et1u_5f_f) + (-9) * (Et2u_5f_f)))},
+        {6, 4, (-39 / 40) * ((1 / (sqrt(14))) * ((4) * (Ea2u_5f_f) + (5) * (Et1u_5f_f) + (-9) * (Et2u_5f_f)))}
     }
 
     H_i = H_i + Chop(NewOperator("CF", NFermions, IndexUp_5f, IndexDn_5f, Akm_5f_i))
@@ -228,30 +229,36 @@ if H_5f_ligands_hybridization_lmct == 1 then
         + e_3d_f * N_3d
         + e_L1_f * N_L1)
 
-    B40_L1_i = $B40(L1)_i_value
-    B60_L1_i = $B60(L1)_i_value
+    Eav_L1_i = ($Ea2u(L1)_i_value + 3 * $Et1u(L1)_i_value + 3 * $Et2u(L1)_i_value) / 7
+    Ea2u_L1_i = $Ea2u(L1)_i_value - Eav_L1_i
+    Et1u_L1_i = $Et1u(L1)_i_value - Eav_L1_i
+    Et2u_L1_i = $Et2u(L1)_i_value - Eav_L1_i
 
     Akm_L1_i = {
-        {4,  0, B40_L1_i},
-        {4, -4, math.sqrt(5/14) * B40_L1_i},
-        {4,  4, math.sqrt(5/14) * B40_L1_i},
-        {6,  0, B60_L1_i},
-        {6, -4, -math.sqrt(7/2) * B60_L1_i},
-        {6,  4, -math.sqrt(7/2) * B60_L1_i},
+        {0, 0, (1 / 7) * (Ea2u_L1_i + (3) * (Et1u_L1_i + Et2u_L1_i))},
+        {4, 0, (-3 / 4) * ((2) * (Ea2u_L1_i) + (-3) * (Et1u_L1_i) + Et2u_L1_i)},
+        {4, -4, (-3 / 4) * ((sqrt(5 / 14)) * ((2) * (Ea2u_L1_i) + (-3) * (Et1u_L1_i) + Et2u_L1_i))},
+        {4, 4, (-3 / 4) * ((sqrt(5 / 14)) * ((2) * (Ea2u_L1_i) + (-3) * (Et1u_L1_i) + Et2u_L1_i))},
+        {6, 0, (39 / 280) * ((4) * (Ea2u_L1_i) + (5) * (Et1u_L1_i) + (-9) * (Et2u_L1_i))},
+        {6, -4, (-39 / 40) * ((1 / (sqrt(14))) * ((4) * (Ea2u_L1_i) + (5) * (Et1u_L1_i) + (-9) * (Et2u_L1_i)))},
+        {6, 4, (-39 / 40) * ((1 / (sqrt(14))) * ((4) * (Ea2u_L1_i) + (5) * (Et1u_L1_i) + (-9) * (Et2u_L1_i)))}
     }
 
     H_i = H_i + Chop(NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, Akm_L1_i))
 
-    B40_L1_f = $B40(L1)_f_value
-    B60_L1_f = $B60(L1)_f_value
+    Eav_L1_f = ($Ea2u(L1)_f_value + 3 * $Et1u(L1)_f_value + 3 * $Et2u(L1)_f_value) / 7
+    Ea2u_L1_f = $Ea2u(L1)_f_value - Eav_L1_f
+    Et1u_L1_f = $Et1u(L1)_f_value - Eav_L1_f
+    Et2u_L1_f = $Et2u(L1)_f_value - Eav_L1_f
 
     Akm_L1_f = {
-        {4,  0, B40_L1_f},
-        {4, -4, math.sqrt(5/14) * B40_L1_f},
-        {4,  4, math.sqrt(5/14) * B40_L1_f},
-        {6,  0, B60_L1_f},
-        {6, -4, -math.sqrt(7/2) * B60_L1_f},
-        {6,  4, -math.sqrt(7/2) * B60_L1_f},
+        {0, 0, (1 / 7) * (Ea2u_L1_f + (3) * (Et1u_L1_f + Et2u_L1_f))},
+        {4, 0, (-3 / 4) * ((2) * (Ea2u_L1_f) + (-3) * (Et1u_L1_f) + Et2u_L1_f)},
+        {4, -4, (-3 / 4) * ((sqrt(5 / 14)) * ((2) * (Ea2u_L1_f) + (-3) * (Et1u_L1_f) + Et2u_L1_f))},
+        {4, 4, (-3 / 4) * ((sqrt(5 / 14)) * ((2) * (Ea2u_L1_f) + (-3) * (Et1u_L1_f) + Et2u_L1_f))},
+        {6, 0, (39 / 280) * ((4) * (Ea2u_L1_f) + (5) * (Et1u_L1_f) + (-9) * (Et2u_L1_f))},
+        {6, -4, (-39 / 40) * ((1 / (sqrt(14))) * ((4) * (Ea2u_L1_f) + (5) * (Et1u_L1_f) + (-9) * (Et2u_L1_f)))},
+        {6, 4, (-39 / 40) * ((1 / (sqrt(14))) * ((4) * (Ea2u_L1_f) + (5) * (Et1u_L1_f) + (-9) * (Et2u_L1_f)))}
     }
 
     H_f = H_f + Chop(NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, Akm_L1_f))
@@ -569,22 +576,22 @@ end
 --------------------------------------------------------------------------------
 -- Define the restrictions and set the number of initial states.
 --------------------------------------------------------------------------------
-InitialRestrictions = {NFermions, NBosons, {'1111111111 00000000000000', NElectrons_3d, NElectrons_3d},
-                                           {'0000000000 11111111111111', NElectrons_5f, NElectrons_5f}}
+InitialRestrictions = {NFermions, NBosons, {"1111111111 00000000000000", NElectrons_3d, NElectrons_3d},
+                                           {"0000000000 11111111111111", NElectrons_5f, NElectrons_5f}}
 
-FinalRestrictions = {NFermions, NBosons, {'1111111111 00000000000000', NElectrons_3d - 1, NElectrons_3d - 1},
-                                         {'0000000000 11111111111111', NElectrons_5f + 1, NElectrons_5f + 1}}
+FinalRestrictions = {NFermions, NBosons, {"1111111111 00000000000000", NElectrons_3d - 1, NElectrons_3d - 1},
+                                         {"0000000000 11111111111111", NElectrons_5f + 1, NElectrons_5f + 1}}
 
 if LmctLigandsHybridizationTerm then
-    InitialRestrictions = {NFermions, NBosons, {'1111111111 00000000000000 00000000000000', NElectrons_3d, NElectrons_3d},
-                                               {'0000000000 11111111111111 00000000000000', NElectrons_5f, NElectrons_5f},
-                                               {'0000000000 00000000000000 11111111111111', NElectrons_L1, NElectrons_L1}}
+    InitialRestrictions = {NFermions, NBosons, {"1111111111 00000000000000 00000000000000", NElectrons_3d, NElectrons_3d},
+                                               {"0000000000 11111111111111 00000000000000", NElectrons_5f, NElectrons_5f},
+                                               {"0000000000 00000000000000 11111111111111", NElectrons_L1, NElectrons_L1}}
 
-    FinalRestrictions = {NFermions, NBosons, {'1111111111 00000000000000 00000000000000', NElectrons_3d - 1, NElectrons_3d - 1},
-                                             {'0000000000 11111111111111 00000000000000', NElectrons_5f + 1, NElectrons_5f + 1},
-                                             {'0000000000 00000000000000 11111111111111', NElectrons_L1, NElectrons_L1}}
+    FinalRestrictions = {NFermions, NBosons, {"1111111111 00000000000000 00000000000000", NElectrons_3d - 1, NElectrons_3d - 1},
+                                             {"0000000000 11111111111111 00000000000000", NElectrons_5f + 1, NElectrons_5f + 1},
+                                             {"0000000000 00000000000000 11111111111111", NElectrons_L1, NElectrons_L1}}
 
-    CalculationRestrictions = {NFermions, NBosons, {'0000000000 00000000000000 11111111111111', NElectrons_L1 - (NConfigurations - 1), NElectrons_L1}}
+    CalculationRestrictions = {NFermions, NBosons, {"0000000000 00000000000000 11111111111111", NElectrons_L1 - (NConfigurations - 1), NElectrons_L1}}
 end
 
 --------------------------------------------------------------------------------

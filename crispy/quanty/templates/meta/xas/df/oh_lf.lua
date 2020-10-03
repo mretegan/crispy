@@ -2,43 +2,44 @@
 -- Define the crystal field term.
 --------------------------------------------------------------------------------
 if CrystalFieldTerm then
-    -- PotentialExpandedOnClm("Oh", 3, {Ea2u, Et1u, Et2u})
-    -- Ea2u_#f = NewOperator("CF", NFermions, IndexUp_#f, IndexDn_#f, PotentialExpandedOnClm("Oh", 3, {1, 0, 0}))
-    -- Et2u_#f = NewOperator("CF", NFermions, IndexUp_#f, IndexDn_#f, PotentialExpandedOnClm("Oh", 3, {0, 1, 0}))
-    -- Et1u_#f = NewOperator("CF", NFermions, IndexUp_#f, IndexDn_#f, PotentialExpandedOnClm("Oh", 3, {0, 0, 1}))
-
-    B40_#f_i = $B40(#f)_i_value
-    B60_#f_i = $B60(#f)_i_value
+    Eav_#f_i = ($Ea2u(#f)_i_value + 3 * $Et1u(#f)_i_value + 3 * $Et2u(#f)_i_value) / 7
+    Ea2u_#f_i = $Ea2u(#f)_i_value - Eav_#f_i
+    Et1u_#f_i = $Et1u(#f)_i_value - Eav_#f_i
+    Et2u_#f_i = $Et2u(#f)_i_value - Eav_#f_i
 
     Akm_#f_i = {
-        {4,  0, B40_#f_i},
-        {4, -4, math.sqrt(5/14) * B40_#f_i},
-        {4,  4, math.sqrt(5/14) * B40_#f_i},
-        {6,  0, B60_#f_i},
-        {6, -4, -math.sqrt(7/2) * B60_#f_i},
-        {6,  4, -math.sqrt(7/2) * B60_#f_i},
+        {0, 0, (1 / 7) * (Ea2u_#f_i + (3) * (Et1u_#f_i + Et2u_#f_i))},
+        {4, 0, (-3 / 4) * ((2) * (Ea2u_#f_i) + (-3) * (Et1u_#f_i) + Et2u_#f_i)},
+        {4, -4, (-3 / 4) * ((sqrt(5 / 14)) * ((2) * (Ea2u_#f_i) + (-3) * (Et1u_#f_i) + Et2u_#f_i))},
+        {4, 4, (-3 / 4) * ((sqrt(5 / 14)) * ((2) * (Ea2u_#f_i) + (-3) * (Et1u_#f_i) + Et2u_#f_i))},
+        {6, 0, (39 / 280) * ((4) * (Ea2u_#f_i) + (5) * (Et1u_#f_i) + (-9) * (Et2u_#f_i))},
+        {6, -4, (-39 / 40) * ((1 / (sqrt(14))) * ((4) * (Ea2u_#f_i) + (5) * (Et1u_#f_i) + (-9) * (Et2u_#f_i)))},
+        {6, 4, (-39 / 40) * ((1 / (sqrt(14))) * ((4) * (Ea2u_#f_i) + (5) * (Et1u_#f_i) + (-9) * (Et2u_#f_i)))}
     }
 
     io.write("Diagonal values of the initial crystal field Hamiltonian:\n")
     io.write("================\n")
     io.write("Irrep.        E\n")
     io.write("================\n")
-    io.write(string.format("a2u     %8.3f\n", -4 / 11 * B40_#f_i +  80 / 143 * B60_#f_i))
-    io.write(string.format("t1u     %8.3f\n",  2 / 11 * B40_#f_i + 100 / 429 * B60_#f_i))
-    io.write(string.format("t2u     %8.3f\n", -2 / 33 * B40_#f_i -  60 / 143 * B60_#f_i))
+    io.write(string.format("a2u     %8.3f\n", Ea2u_#f_i))
+    io.write(string.format("t1u     %8.3f\n", Et1u_#f_i))
+    io.write(string.format("t2u     %8.3f\n", Et2u_#f_i))
     io.write("================\n")
     io.write("\n")
 
-    B40_#f_f = $B40(#f)_f_value
-    B60_#f_f = $B60(#f)_f_value
+    Eav_#f_f = ($Ea2u(#f)_f_value + 3 * $Et1u(#f)_f_value + 3 * $Et2u(#f)_f_value) / 7
+    Ea2u_#f_f = $Ea2u(#f)_f_value - Eav_#f_f
+    Et1u_#f_f = $Et1u(#f)_f_value - Eav_#f_f
+    Et2u_#f_f = $Et2u(#f)_f_value - Eav_#f_f
 
     Akm_#f_f = {
-        {4,  0, B40_#f_f},
-        {4, -4, math.sqrt(5/14) * B40_#f_f},
-        {4,  4, math.sqrt(5/14) * B40_#f_f},
-        {6,  0, B60_#f_f},
-        {6, -4, -math.sqrt(7/2) * B60_#f_f},
-        {6,  4, -math.sqrt(7/2) * B60_#f_f},
+        {0, 0, (1 / 7) * (Ea2u_#f_f + (3) * (Et1u_#f_f + Et2u_#f_f))},
+        {4, 0, (-3 / 4) * ((2) * (Ea2u_#f_f) + (-3) * (Et1u_#f_f) + Et2u_#f_f)},
+        {4, -4, (-3 / 4) * ((sqrt(5 / 14)) * ((2) * (Ea2u_#f_f) + (-3) * (Et1u_#f_f) + Et2u_#f_f))},
+        {4, 4, (-3 / 4) * ((sqrt(5 / 14)) * ((2) * (Ea2u_#f_f) + (-3) * (Et1u_#f_f) + Et2u_#f_f))},
+        {6, 0, (39 / 280) * ((4) * (Ea2u_#f_f) + (5) * (Et1u_#f_f) + (-9) * (Et2u_#f_f))},
+        {6, -4, (-39 / 40) * ((1 / (sqrt(14))) * ((4) * (Ea2u_#f_f) + (5) * (Et1u_#f_f) + (-9) * (Et2u_#f_f)))},
+        {6, 4, (-39 / 40) * ((1 / (sqrt(14))) * ((4) * (Ea2u_#f_f) + (5) * (Et1u_#f_f) + (-9) * (Et2u_#f_f)))}
     }
 
     H_i = H_i + Chop(NewOperator("CF", NFermions, IndexUp_#f, IndexDn_#f, Akm_#f_i))
@@ -71,30 +72,36 @@ if H_#f_ligands_hybridization_lmct == 1 then
         + e_#i_f * N_#i
         + e_L1_f * N_L1)
 
-    B40_L1_i = $B40(L1)_i_value
-    B60_L1_i = $B60(L1)_i_value
+    Eav_L1_i = ($Ea2u(L1)_i_value + 3 * $Et1u(L1)_i_value + 3 * $Et2u(L1)_i_value) / 7
+    Ea2u_L1_i = $Ea2u(L1)_i_value - Eav_L1_i
+    Et1u_L1_i = $Et1u(L1)_i_value - Eav_L1_i
+    Et2u_L1_i = $Et2u(L1)_i_value - Eav_L1_i
 
     Akm_L1_i = {
-        {4,  0, B40_L1_i},
-        {4, -4, math.sqrt(5/14) * B40_L1_i},
-        {4,  4, math.sqrt(5/14) * B40_L1_i},
-        {6,  0, B60_L1_i},
-        {6, -4, -math.sqrt(7/2) * B60_L1_i},
-        {6,  4, -math.sqrt(7/2) * B60_L1_i},
+        {0, 0, (1 / 7) * (Ea2u_L1_i + (3) * (Et1u_L1_i + Et2u_L1_i))},
+        {4, 0, (-3 / 4) * ((2) * (Ea2u_L1_i) + (-3) * (Et1u_L1_i) + Et2u_L1_i)},
+        {4, -4, (-3 / 4) * ((sqrt(5 / 14)) * ((2) * (Ea2u_L1_i) + (-3) * (Et1u_L1_i) + Et2u_L1_i))},
+        {4, 4, (-3 / 4) * ((sqrt(5 / 14)) * ((2) * (Ea2u_L1_i) + (-3) * (Et1u_L1_i) + Et2u_L1_i))},
+        {6, 0, (39 / 280) * ((4) * (Ea2u_L1_i) + (5) * (Et1u_L1_i) + (-9) * (Et2u_L1_i))},
+        {6, -4, (-39 / 40) * ((1 / (sqrt(14))) * ((4) * (Ea2u_L1_i) + (5) * (Et1u_L1_i) + (-9) * (Et2u_L1_i)))},
+        {6, 4, (-39 / 40) * ((1 / (sqrt(14))) * ((4) * (Ea2u_L1_i) + (5) * (Et1u_L1_i) + (-9) * (Et2u_L1_i)))}
     }
 
     H_i = H_i + Chop(NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, Akm_L1_i))
 
-    B40_L1_f = $B40(L1)_f_value
-    B60_L1_f = $B60(L1)_f_value
+    Eav_L1_f = ($Ea2u(L1)_f_value + 3 * $Et1u(L1)_f_value + 3 * $Et2u(L1)_f_value) / 7
+    Ea2u_L1_f = $Ea2u(L1)_f_value - Eav_L1_f
+    Et1u_L1_f = $Et1u(L1)_f_value - Eav_L1_f
+    Et2u_L1_f = $Et2u(L1)_f_value - Eav_L1_f
 
     Akm_L1_f = {
-        {4,  0, B40_L1_f},
-        {4, -4, math.sqrt(5/14) * B40_L1_f},
-        {4,  4, math.sqrt(5/14) * B40_L1_f},
-        {6,  0, B60_L1_f},
-        {6, -4, -math.sqrt(7/2) * B60_L1_f},
-        {6,  4, -math.sqrt(7/2) * B60_L1_f},
+        {0, 0, (1 / 7) * (Ea2u_L1_f + (3) * (Et1u_L1_f + Et2u_L1_f))},
+        {4, 0, (-3 / 4) * ((2) * (Ea2u_L1_f) + (-3) * (Et1u_L1_f) + Et2u_L1_f)},
+        {4, -4, (-3 / 4) * ((sqrt(5 / 14)) * ((2) * (Ea2u_L1_f) + (-3) * (Et1u_L1_f) + Et2u_L1_f))},
+        {4, 4, (-3 / 4) * ((sqrt(5 / 14)) * ((2) * (Ea2u_L1_f) + (-3) * (Et1u_L1_f) + Et2u_L1_f))},
+        {6, 0, (39 / 280) * ((4) * (Ea2u_L1_f) + (5) * (Et1u_L1_f) + (-9) * (Et2u_L1_f))},
+        {6, -4, (-39 / 40) * ((1 / (sqrt(14))) * ((4) * (Ea2u_L1_f) + (5) * (Et1u_L1_f) + (-9) * (Et2u_L1_f)))},
+        {6, 4, (-39 / 40) * ((1 / (sqrt(14))) * ((4) * (Ea2u_L1_f) + (5) * (Et1u_L1_f) + (-9) * (Et2u_L1_f)))}
     }
 
     H_f = H_f + Chop(NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, Akm_L1_f))

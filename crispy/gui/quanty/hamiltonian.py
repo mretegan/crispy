@@ -274,7 +274,7 @@ class CrystalFieldTerm(HamiltonianTerm):
             else:
                 raise ValueError("Unknown symmetry.")
         elif self.block == "f":
-            names, values = ("B40", "B60"), (0.1, 0.2)
+            names, values = ("Ea2u", "Et1u", "Et2u"), (-1.8, 0.3, 0.3)
         else:
             raise ValueError("Unknown symmetry.")
 
@@ -306,14 +306,14 @@ class LigandHybridizationTerm(HamiltonianTerm):
                 raise ValueError("Unknown symmetry.")
         elif self.block == "f":
             if self.symmetry.value == "Oh":
-                names = ("Δ", "Va2u", "Vt2u", "Vt1u", "B40", "B60")
+                names = ("Δ", "Va2u", "Vt2u", "Vt1u", "Ea2u", "Et1u", "Et2u")
             else:
                 raise ValueError("Unknown symmetry.")
 
         for hamiltonianName, _ in self.hamiltonianNames:
             hamiltonian = BaseItem(self, hamiltonianName)
             for parameterName in names:
-                if parameterName in ("10Dq", "Ds", "Dt", "B40", "B60"):
+                if parameterName in ("10Dq", "Ds", "Dt", "Ea2u", "Et1u", "Et2u"):
                     suffix = f"({ligandsName})"
                 else:
                     suffix = f"({self.subshell},{ligandsName})"
