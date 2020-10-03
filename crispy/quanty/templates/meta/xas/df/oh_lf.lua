@@ -19,7 +19,7 @@ if CrystalFieldTerm then
 
     io.write("Diagonal values of the initial crystal field Hamiltonian:\n")
     io.write("================\n")
-    io.write("Irrep.        E\n")
+    io.write("Irrep.         E\n")
     io.write("================\n")
     io.write(string.format("a2u     %8.3f\n", Ea2u_#f_i))
     io.write(string.format("t1u     %8.3f\n", Et1u_#f_i))
@@ -55,22 +55,22 @@ if H_#f_ligands_hybridization_lmct == 1 then
          + NewOperator("Number", NFermions, IndexDn_L1, IndexDn_L1, {1, 1, 1, 1, 1, 1, 1})
 
     Delta_#f_L1_i = $Delta(#f,L1)_i_value
-    e_#f_i = (28 * Delta_#f_L1_i - 27 * U_#f_#f_i * NElectrons_#f - U_#f_#f_i * NElectrons_#f^2) / (2 * (14 + NElectrons_#f))
-    e_L1_i = NElectrons_#f * (-2 * Delta_#f_L1_i + U_#f_#f_i * NElectrons_#f + U_#f_#f_i) / (2 * (NElectrons_#f + 14))
+    E_#f_i = (28 * Delta_#f_L1_i - 27 * U_#f_#f_i * NElectrons_#f - U_#f_#f_i * NElectrons_#f^2) / (2 * (14 + NElectrons_#f))
+    E_L1_i = NElectrons_#f * (-2 * Delta_#f_L1_i + U_#f_#f_i * NElectrons_#f + U_#f_#f_i) / (2 * (NElectrons_#f + 14))
 
     Delta_#f_L1_f = $Delta(#f,L1)_f_value
-    e_#f_f = (28 * Delta_#f_L1_f - 460 * U_#i_#f_f - U_#f_#f_f * NElectrons_#f^2 - 47 * U_#f_#f_f * NElectrons_#f) / (2 * (NElectrons_#f + 24))
-    e_#i_f = (28 * Delta_#f_L1_f - 2 * U_#i_#f_f * NElectrons_#f^2 - 30 * U_#i_#f_f * NElectrons_#f - 28 * U_#i_#f_f + U_#f_#f_f * NElectrons_#f^2 + U_#f_#f_f * NElectrons_#f) / (2 * (NElectrons_#f + 24))
-    e_L1_f = (-2 * Delta_#f_L1_f * NElectrons_#f - 20 * Delta_#f_L1_f + 20 * U_#i_#f_f * NElectrons_#f + 20 * U_#i_#f_f + U_#f_#f_f * NElectrons_#f^2 + U_#f_#f_f * NElectrons_#f) / (2 * (NElectrons_#f + 24))
+    E_#f_f = (28 * Delta_#f_L1_f - 460 * U_#i_#f_f - U_#f_#f_f * NElectrons_#f^2 - 47 * U_#f_#f_f * NElectrons_#f) / (2 * (NElectrons_#f + 24))
+    E_#i_f = (28 * Delta_#f_L1_f - 2 * U_#i_#f_f * NElectrons_#f^2 - 30 * U_#i_#f_f * NElectrons_#f - 28 * U_#i_#f_f + U_#f_#f_f * NElectrons_#f^2 + U_#f_#f_f * NElectrons_#f) / (2 * (NElectrons_#f + 24))
+    E_L1_f = (-2 * Delta_#f_L1_f * NElectrons_#f - 20 * Delta_#f_L1_f + 20 * U_#i_#f_f * NElectrons_#f + 20 * U_#i_#f_f + U_#f_#f_f * NElectrons_#f^2 + U_#f_#f_f * NElectrons_#f) / (2 * (NElectrons_#f + 24))
 
     H_i = H_i + Chop(
-          e_#f_i * N_#f
-        + e_L1_i * N_L1)
+          E_#f_i * N_#f
+        + E_L1_i * N_L1)
 
     H_f = H_f + Chop(
-          e_#f_f * N_#f
-        + e_#i_f * N_#i
-        + e_L1_f * N_L1)
+          E_#f_f * N_#f
+        + E_#i_f * N_#i
+        + E_L1_f * N_L1)
 
     Eav_L1_i = ($Ea2u(L1)_i_value + 3 * $Et1u(L1)_i_value + 3 * $Et2u(L1)_i_value) / 7
     Ea2u_L1_i = $Ea2u(L1)_i_value - Eav_L1_i

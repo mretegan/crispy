@@ -172,7 +172,7 @@ if CrystalFieldTerm then
 
     io.write("Diagonal values of the initial crystal field Hamiltonian:\n")
     io.write("================\n")
-    io.write("Irrep.        E\n")
+    io.write("Irrep.         E\n")
     io.write("================\n")
     io.write(string.format("eg      %8.3f\n",  0.6 * tenDq_4d_i))
     io.write(string.format("t2g     %8.3f\n", -0.4 * tenDq_4d_i))
@@ -196,22 +196,22 @@ if LmctLigandsHybridizationTerm then
          + NewOperator("Number", NFermions, IndexDn_L1, IndexDn_L1, {1, 1, 1, 1, 1})
 
     Delta_4d_L1_i = $Delta(4d,L1)_i_value
-    e_4d_i = (10 * Delta_4d_L1_i - NElectrons_4d * (19 + NElectrons_4d) * U_4d_4d_i / 2) / (10 + NElectrons_4d)
-    e_L1_i = NElectrons_4d * ((1 + NElectrons_4d) * U_4d_4d_i / 2 - Delta_4d_L1_i) / (10 + NElectrons_4d)
+    E_4d_i = (10 * Delta_4d_L1_i - NElectrons_4d * (19 + NElectrons_4d) * U_4d_4d_i / 2) / (10 + NElectrons_4d)
+    E_L1_i = NElectrons_4d * ((1 + NElectrons_4d) * U_4d_4d_i / 2 - Delta_4d_L1_i) / (10 + NElectrons_4d)
 
     Delta_4d_L1_f = $Delta(4d,L1)_f_value
-    e_4d_f = (10 * Delta_4d_L1_f - NElectrons_4d * (31 + NElectrons_4d) * U_4d_4d_f / 2 - 90 * U_4p_4d_f) / (16 + NElectrons_4d)
-    e_4p_f = (10 * Delta_4d_L1_f + (1 + NElectrons_4d) * (NElectrons_4d * U_4d_4d_f / 2 - (10 + NElectrons_4d) * U_4p_4d_f)) / (16 + NElectrons_4d)
-    e_L1_f = ((1 + NElectrons_4d) * (NElectrons_4d * U_4d_4d_f / 2 + 6 * U_4p_4d_f) - (6 + NElectrons_4d) * Delta_4d_L1_f) / (16 + NElectrons_4d)
+    E_4d_f = (10 * Delta_4d_L1_f - NElectrons_4d * (31 + NElectrons_4d) * U_4d_4d_f / 2 - 90 * U_4p_4d_f) / (16 + NElectrons_4d)
+    E_4p_f = (10 * Delta_4d_L1_f + (1 + NElectrons_4d) * (NElectrons_4d * U_4d_4d_f / 2 - (10 + NElectrons_4d) * U_4p_4d_f)) / (16 + NElectrons_4d)
+    E_L1_f = ((1 + NElectrons_4d) * (NElectrons_4d * U_4d_4d_f / 2 + 6 * U_4p_4d_f) - (6 + NElectrons_4d) * Delta_4d_L1_f) / (16 + NElectrons_4d)
 
     H_i = H_i + Chop(
-          e_4d_i * N_4d
-        + e_L1_i * N_L1)
+          E_4d_i * N_4d
+        + E_L1_i * N_L1)
 
     H_f = H_f + Chop(
-          e_4d_f * N_4d
-        + e_4p_f * N_4p
-        + e_L1_f * N_L1)
+          E_4d_f * N_4d
+        + E_4p_f * N_4p
+        + E_L1_f * N_L1)
 
     tenDq_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, PotentialExpandedOnClm("Oh", 2, {0.6, -0.4}))
 
@@ -248,22 +248,22 @@ if MlctLigandsHybridizationTerm then
          + NewOperator("Number", NFermions, IndexDn_L2, IndexDn_L2, {1, 1, 1, 1, 1})
 
     Delta_4d_L2_i = $Delta(4d,L2)_i_value
-    e_4d_i = U_4d_4d_i * (-NElectrons_4d + 1) / 2
-    e_L2_i = Delta_4d_L2_i - U_4d_4d_i * NElectrons_4d / 2 - U_4d_4d_i / 2
+    E_4d_i = U_4d_4d_i * (-NElectrons_4d + 1) / 2
+    E_L2_i = Delta_4d_L2_i - U_4d_4d_i * NElectrons_4d / 2 - U_4d_4d_i / 2
 
     Delta_4d_L2_f = $Delta(4d,L2)_f_value
-    e_4d_f = -(U_4d_4d_f * NElectrons_4d^2 + 11 * U_4d_4d_f * NElectrons_4d + 60 * U_4p_4d_f) / (2 * NElectrons_4d + 12)
-    e_4p_f = NElectrons_4d * (U_4d_4d_f * NElectrons_4d + U_4d_4d_f - 2 * U_4p_4d_f * NElectrons_4d - 2 * U_4p_4d_f) / (2 * (NElectrons_4d + 6))
-    e_L2_f = (2 * Delta_4d_L2_f * NElectrons_4d + 12 * Delta_4d_L2_f + U_4d_4d_f * NElectrons_4d^2 - U_4d_4d_f * NElectrons_4d - 12 * U_4d_4d_f + 12 * U_4p_4d_f * NElectrons_4d + 12 * U_4p_4d_f) / (2 * (NElectrons_4d + 6))
+    E_4d_f = -(U_4d_4d_f * NElectrons_4d^2 + 11 * U_4d_4d_f * NElectrons_4d + 60 * U_4p_4d_f) / (2 * NElectrons_4d + 12)
+    E_4p_f = NElectrons_4d * (U_4d_4d_f * NElectrons_4d + U_4d_4d_f - 2 * U_4p_4d_f * NElectrons_4d - 2 * U_4p_4d_f) / (2 * (NElectrons_4d + 6))
+    E_L2_f = (2 * Delta_4d_L2_f * NElectrons_4d + 12 * Delta_4d_L2_f + U_4d_4d_f * NElectrons_4d^2 - U_4d_4d_f * NElectrons_4d - 12 * U_4d_4d_f + 12 * U_4p_4d_f * NElectrons_4d + 12 * U_4p_4d_f) / (2 * (NElectrons_4d + 6))
 
     H_i = H_i + Chop(
-          e_4d_i * N_4d
-        + e_L2_i * N_L2)
+          E_4d_i * N_4d
+        + E_L2_i * N_L2)
 
     H_f = H_f + Chop(
-          e_4d_f * N_4d
-        + e_4p_f * N_4p
-        + e_L2_f * N_L2)
+          E_4d_f * N_4d
+        + E_4p_f * N_4p
+        + E_L2_f * N_L2)
 
     tenDq_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, PotentialExpandedOnClm("Oh", 2, {0.6, -0.4}))
 
