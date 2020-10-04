@@ -381,6 +381,27 @@ if ExchangeFieldTerm then
 end
 
 --------------------------------------------------------------------------------
+-- Define the restrictions and set the number of initial states.
+--------------------------------------------------------------------------------
+InitialRestrictions = {NFermions, NBosons, {"1111111111 00000000000000", NElectrons_4d, NElectrons_4d},
+                                           {"0000000000 11111111111111", NElectrons_4f, NElectrons_4f}}
+
+FinalRestrictions = {NFermions, NBosons, {"1111111111 00000000000000", NElectrons_4d - 1, NElectrons_4d - 1},
+                                         {"0000000000 11111111111111", NElectrons_4f + 1, NElectrons_4f + 1}}
+
+if LmctLigandsHybridizationTerm then
+    InitialRestrictions = {NFermions, NBosons, {"1111111111 00000000000000 00000000000000", NElectrons_4d, NElectrons_4d},
+                                               {"0000000000 11111111111111 00000000000000", NElectrons_4f, NElectrons_4f},
+                                               {"0000000000 00000000000000 11111111111111", NElectrons_L1, NElectrons_L1}}
+
+    FinalRestrictions = {NFermions, NBosons, {"1111111111 00000000000000 00000000000000", NElectrons_4d - 1, NElectrons_4d - 1},
+                                             {"0000000000 11111111111111 00000000000000", NElectrons_4f + 1, NElectrons_4f + 1},
+                                             {"0000000000 00000000000000 11111111111111", NElectrons_L1, NElectrons_L1}}
+
+    CalculationRestrictions = {NFermions, NBosons, {"0000000000 00000000000000 11111111111111", NElectrons_L1 - (NConfigurations - 1), NElectrons_L1}}
+end
+
+--------------------------------------------------------------------------------
 -- Define some helper functions.
 --------------------------------------------------------------------------------
 function MatrixToOperator(Matrix, StartIndex)
@@ -593,27 +614,6 @@ function PrintHamiltonianAnalysis(Psis, Operators, dZ, Header, Footer)
         io.write("\n")
     end
     io.write(Footer)
-end
-
---------------------------------------------------------------------------------
--- Define the restrictions and set the number of initial states.
---------------------------------------------------------------------------------
-InitialRestrictions = {NFermions, NBosons, {"1111111111 00000000000000", NElectrons_4d, NElectrons_4d},
-                                           {"0000000000 11111111111111", NElectrons_4f, NElectrons_4f}}
-
-FinalRestrictions = {NFermions, NBosons, {"1111111111 00000000000000", NElectrons_4d - 1, NElectrons_4d - 1},
-                                         {"0000000000 11111111111111", NElectrons_4f + 1, NElectrons_4f + 1}}
-
-if LmctLigandsHybridizationTerm then
-    InitialRestrictions = {NFermions, NBosons, {"1111111111 00000000000000 00000000000000", NElectrons_4d, NElectrons_4d},
-                                               {"0000000000 11111111111111 00000000000000", NElectrons_4f, NElectrons_4f},
-                                               {"0000000000 00000000000000 11111111111111", NElectrons_L1, NElectrons_L1}}
-
-    FinalRestrictions = {NFermions, NBosons, {"1111111111 00000000000000 00000000000000", NElectrons_4d - 1, NElectrons_4d - 1},
-                                             {"0000000000 11111111111111 00000000000000", NElectrons_4f + 1, NElectrons_4f + 1},
-                                             {"0000000000 00000000000000 11111111111111", NElectrons_L1, NElectrons_L1}}
-
-    CalculationRestrictions = {NFermions, NBosons, {"0000000000 00000000000000 11111111111111", NElectrons_L1 - (NConfigurations - 1), NElectrons_L1}}
 end
 
 --------------------------------------------------------------------------------

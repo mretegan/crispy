@@ -252,6 +252,17 @@ if ExchangeFieldTerm then
 end
 
 --------------------------------------------------------------------------------
+-- Define the restrictions and set the number of initial states.
+--------------------------------------------------------------------------------
+InitialRestrictions = {NFermions, NBosons, {"111111 0000000000", NElectrons_2p, NElectrons_2p},
+                                           {"000000 1111111111", NElectrons_3d, NElectrons_3d}}
+
+FinalRestrictions = {NFermions, NBosons, {"111111 0000000000", NElectrons_2p - 1, NElectrons_2p - 1},
+                                         {"000000 1111111111", NElectrons_3d + 1, NElectrons_3d + 1}}
+
+CalculationRestrictions = nil
+
+--------------------------------------------------------------------------------
 -- Define some helper functions.
 --------------------------------------------------------------------------------
 function MatrixToOperator(Matrix, StartIndex)
@@ -465,17 +476,6 @@ function PrintHamiltonianAnalysis(Psis, Operators, dZ, Header, Footer)
     end
     io.write(Footer)
 end
-
---------------------------------------------------------------------------------
--- Define the restrictions and set the number of initial states.
---------------------------------------------------------------------------------
-InitialRestrictions = {NFermions, NBosons, {"111111 0000000000", NElectrons_2p, NElectrons_2p},
-                                           {"000000 1111111111", NElectrons_3d, NElectrons_3d}}
-
-FinalRestrictions = {NFermions, NBosons, {"111111 0000000000", NElectrons_2p - 1, NElectrons_2p - 1},
-                                         {"000000 1111111111", NElectrons_3d + 1, NElectrons_3d + 1}}
-
-CalculationRestrictions = nil
 
 --------------------------------------------------------------------------------
 -- Analyze the initial Hamiltonian.

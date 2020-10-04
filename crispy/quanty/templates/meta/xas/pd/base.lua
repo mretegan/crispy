@@ -67,6 +67,6 @@ end
 
 #symmetry_term
 #fields_term
-#helper_functions
 #restrictions
+#helper_functions
 #footer

@@ -447,6 +447,41 @@ if ExchangeFieldTerm then
 end
 
 --------------------------------------------------------------------------------
+-- Define the restrictions and set the number of initial states.
+--------------------------------------------------------------------------------
+InitialRestrictions = {NFermions, NBosons, {"111111 0000000000", NElectrons_3p, NElectrons_3p},
+                                           {"000000 1111111111", NElectrons_3d, NElectrons_3d}}
+
+FinalRestrictions = {NFermions, NBosons, {"111111 0000000000", NElectrons_3p - 1, NElectrons_3p - 1},
+                                         {"000000 1111111111", NElectrons_3d + 1, NElectrons_3d + 1}}
+
+CalculationRestrictions = nil
+
+if LmctLigandsHybridizationTerm then
+    InitialRestrictions = {NFermions, NBosons, {"111111 0000000000 0000000000", NElectrons_3p, NElectrons_3p},
+                                               {"000000 1111111111 0000000000", NElectrons_3d, NElectrons_3d},
+                                               {"000000 0000000000 1111111111", NElectrons_L1, NElectrons_L1}}
+
+    FinalRestrictions = {NFermions, NBosons, {"111111 0000000000 0000000000", NElectrons_3p - 1, NElectrons_3p - 1},
+                                             {"000000 1111111111 0000000000", NElectrons_3d + 1, NElectrons_3d + 1},
+                                             {"000000 0000000000 1111111111", NElectrons_L1, NElectrons_L1}}
+
+    CalculationRestrictions = {NFermions, NBosons, {"000000 0000000000 1111111111", NElectrons_L1 - (NConfigurations - 1), NElectrons_L1}}
+end
+
+if MlctLigandsHybridizationTerm then
+    InitialRestrictions = {NFermions, NBosons, {"111111 0000000000 0000000000", NElectrons_3p, NElectrons_3p},
+                                               {"000000 1111111111 0000000000", NElectrons_3d, NElectrons_3d},
+                                               {"000000 0000000000 1111111111", NElectrons_L2, NElectrons_L2}}
+
+    FinalRestrictions = {NFermions, NBosons, {"111111 0000000000 0000000000", NElectrons_3p - 1, NElectrons_3p - 1},
+                                             {"000000 1111111111 0000000000", NElectrons_3d + 1, NElectrons_3d + 1},
+                                             {"000000 0000000000 1111111111", NElectrons_L2, NElectrons_L2}}
+
+    CalculationRestrictions = {NFermions, NBosons, {"000000 0000000000 1111111111", NElectrons_L2, NElectrons_L2 + (NConfigurations - 1)}}
+end
+
+--------------------------------------------------------------------------------
 -- Define some helper functions.
 --------------------------------------------------------------------------------
 function MatrixToOperator(Matrix, StartIndex)
@@ -659,41 +694,6 @@ function PrintHamiltonianAnalysis(Psis, Operators, dZ, Header, Footer)
         io.write("\n")
     end
     io.write(Footer)
-end
-
---------------------------------------------------------------------------------
--- Define the restrictions and set the number of initial states.
---------------------------------------------------------------------------------
-InitialRestrictions = {NFermions, NBosons, {"111111 0000000000", NElectrons_3p, NElectrons_3p},
-                                           {"000000 1111111111", NElectrons_3d, NElectrons_3d}}
-
-FinalRestrictions = {NFermions, NBosons, {"111111 0000000000", NElectrons_3p - 1, NElectrons_3p - 1},
-                                         {"000000 1111111111", NElectrons_3d + 1, NElectrons_3d + 1}}
-
-CalculationRestrictions = nil
-
-if LmctLigandsHybridizationTerm then
-    InitialRestrictions = {NFermions, NBosons, {"111111 0000000000 0000000000", NElectrons_3p, NElectrons_3p},
-                                               {"000000 1111111111 0000000000", NElectrons_3d, NElectrons_3d},
-                                               {"000000 0000000000 1111111111", NElectrons_L1, NElectrons_L1}}
-
-    FinalRestrictions = {NFermions, NBosons, {"111111 0000000000 0000000000", NElectrons_3p - 1, NElectrons_3p - 1},
-                                             {"000000 1111111111 0000000000", NElectrons_3d + 1, NElectrons_3d + 1},
-                                             {"000000 0000000000 1111111111", NElectrons_L1, NElectrons_L1}}
-
-    CalculationRestrictions = {NFermions, NBosons, {"000000 0000000000 1111111111", NElectrons_L1 - (NConfigurations - 1), NElectrons_L1}}
-end
-
-if MlctLigandsHybridizationTerm then
-    InitialRestrictions = {NFermions, NBosons, {"111111 0000000000 0000000000", NElectrons_3p, NElectrons_3p},
-                                               {"000000 1111111111 0000000000", NElectrons_3d, NElectrons_3d},
-                                               {"000000 0000000000 1111111111", NElectrons_L2, NElectrons_L2}}
-
-    FinalRestrictions = {NFermions, NBosons, {"111111 0000000000 0000000000", NElectrons_3p - 1, NElectrons_3p - 1},
-                                             {"000000 1111111111 0000000000", NElectrons_3d + 1, NElectrons_3d + 1},
-                                             {"000000 0000000000 1111111111", NElectrons_L2, NElectrons_L2}}
-
-    CalculationRestrictions = {NFermions, NBosons, {"000000 0000000000 1111111111", NElectrons_L2, NElectrons_L2 + (NConfigurations - 1)}}
 end
 
 --------------------------------------------------------------------------------
