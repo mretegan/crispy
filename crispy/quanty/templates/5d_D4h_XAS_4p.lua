@@ -510,6 +510,28 @@ function SaveSpectrum(G, Filename, Gaussian, Lorentzian, Pcl)
     G.Print({{"file", Filename .. ".spec"}})
 end
 
+function CalculateT(Operators, Vec1, Vec2)
+    -- Calculate the transition operator for an arbitrary orientation.
+    -- @param: Operators: table of operators used as basis.
+    -- @param: Vec1: first cartesian 3D vector
+    -- @param: Vec2: second cartesian 3D vector
+
+    if #Operators == 3 then
+        -- Dipolar operators in the order x, y, z.
+        T = Vec1[1] * Operators[1]
+          + Vec1[2] * Operators[2]
+          + Vec1[3] * Operators[3]
+    elseif #Operators == 5 then 
+        -- Quadrupolar operators in the order xy, xz, yz, x2y2, z2.
+        T = (Vec1[1] * Vec2[2] + Vec1[2] * Vec2[1]) * Operators[1] / math.sqrt(3)
+          + (Vec1[1] * Vec2[3] + Vec1[3] * Vec2[1]) * Operators[2] / math.sqrt(3)
+          + (Vec1[2] * Vec2[3] + Vec1[3] * Vec2[2]) * Operators[3] / math.sqrt(3)
+          + (Vec1[1] * Vec2[1] - Vec1[2] * Vec2[2]) * Operators[4] / math.sqrt(3)
+          + Vec1[3] * Vec2[3] * Operators[5]
+    end
+    return Chop(T)
+end
+
 function DotProduct(a, b)
     return Chop(a[1] * b[1] + a[2] * b[2] + a[3] * b[3])
 end
@@ -692,21 +714,21 @@ Header = Header .. "============================================================
 Footer = "=================================================================================================================================\n\n"
 
 if LmctLigandsHybridizationTerm then
-    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_5d, N_4p, N_5d, N_L1, 'dZ'}
-    Header = 'Analysis of the initial Hamiltonian:\n'
-    Header = Header .. '===========================================================================================================================================\n'
-    Header = Header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_4p>    <N_5d>    <N_L1>          dZ\n'
-    Header = Header .. '===========================================================================================================================================\n'
-    Footer = '===========================================================================================================================================\n'
+    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_5d, N_4p, N_5d, N_L1, "dZ"}
+    Header = "Analysis of the %s Hamiltonian:\n"
+    Header = Header .. "===========================================================================================================================================\n"
+    Header = Header .. "State         <E>     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_4p>    <N_5d>    <N_L1>          dZ\n"
+    Header = Header .. "===========================================================================================================================================\n"
+    Footer = "===========================================================================================================================================\n"
 end
 
 if MlctLigandsHybridizationTerm then
-    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_5d, N_4p, N_5d, N_L2, 'dZ'}
-    Header = 'Analysis of the initial Hamiltonian:\n'
-    Header = Header .. '===========================================================================================================================================\n'
-    Header = Header .. 'State         <E>     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_4p>    <N_5d>    <N_L2>          dZ\n'
-    Header = Header .. '===========================================================================================================================================\n'
-    Footer = '===========================================================================================================================================\n'
+    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_5d, N_4p, N_5d, N_L2, "dZ"}
+    Header = "Analysis of the %s Hamiltonian:\n"
+    Header = Header .. "===========================================================================================================================================\n"
+    Header = Header .. "State         <E>     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_4p>    <N_5d>    <N_L2>          dZ\n"
+    Header = Header .. "===========================================================================================================================================\n"
+    Footer = "===========================================================================================================================================\n"
 end
 
 local Psis_i, dZ_i = WavefunctionsAndBoltzmannFactors(H_i, NPsis, NPsisAuto, Temperature, nil, InitialRestrictions, CalculationRestrictions)
@@ -734,11 +756,12 @@ El = {-t * (Eh[1] + I * Ev[1]),
       -t * (Eh[2] + I * Ev[2]),
       -t * (Eh[3] + I * Ev[3])}
 
-Tv_4p_5d = DotProduct(Ev, {Tx_4p_5d, Ty_4p_5d, Tz_4p_5d})
-Th_4p_5d = DotProduct(Eh, {Tx_4p_5d, Ty_4p_5d, Tz_4p_5d})
-Tr_4p_5d = DotProduct(Er, {Tx_4p_5d, Ty_4p_5d, Tz_4p_5d})
-Tl_4p_5d = DotProduct(El, {Tx_4p_5d, Ty_4p_5d, Tz_4p_5d})
-Tk_4p_5d = DotProduct(WaveVector, {Tx_4p_5d, Ty_4p_5d, Tz_4p_5d})
+local T = {Tx_4p_5d, Ty_4p_5d, Tz_4p_5d}
+Tv_4p_5d = CalculateT(T, Ev)
+Th_4p_5d = CalculateT(T, Eh)
+Tr_4p_5d = CalculateT(T, Er)
+Tl_4p_5d = CalculateT(T, El)
+Tk_4p_5d = CalculateT(T, WaveVector)
 
 -- Initialize a table with the available spectra and the required operators.
 SpectraAndOperators = {

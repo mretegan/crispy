@@ -444,6 +444,28 @@ function SaveSpectrum(G, Filename, Gaussian, Lorentzian, Pcl)
     G.Print({{"file", Filename .. ".spec"}})
 end
 
+function CalculateT(Operators, Vec1, Vec2)
+    -- Calculate the transition operator for an arbitrary orientation.
+    -- @param: Operators: table of operators used as basis.
+    -- @param: Vec1: first cartesian 3D vector
+    -- @param: Vec2: second cartesian 3D vector
+
+    if #Operators == 3 then
+        -- Dipolar operators in the order x, y, z.
+        T = Vec1[1] * Operators[1]
+          + Vec1[2] * Operators[2]
+          + Vec1[3] * Operators[3]
+    elseif #Operators == 5 then 
+        -- Quadrupolar operators in the order xy, xz, yz, x2y2, z2.
+        T = (Vec1[1] * Vec2[2] + Vec1[2] * Vec2[1]) * Operators[1] / math.sqrt(3)
+          + (Vec1[1] * Vec2[3] + Vec1[3] * Vec2[1]) * Operators[2] / math.sqrt(3)
+          + (Vec1[2] * Vec2[3] + Vec1[3] * Vec2[2]) * Operators[3] / math.sqrt(3)
+          + (Vec1[1] * Vec2[1] - Vec1[2] * Vec2[2]) * Operators[4] / math.sqrt(3)
+          + Vec1[3] * Vec2[3] * Operators[5]
+    end
+    return Chop(T)
+end
+
 function DotProduct(a, b)
     return Chop(a[1] * b[1] + a[2] * b[2] + a[3] * b[3])
 end
@@ -605,7 +627,7 @@ Jk = DotProduct(WaveVector, {Jx, Jy, Jz})
 Tk = DotProduct(WaveVector, {Tx, Ty, Tz})
 
 Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_4f, N_4d, N_4f, "dZ"}
-Header = "Analysis of the initial Hamiltonian:\n"
+Header = "Analysis of the %s Hamiltonian:\n"
 Header = Header .. "=================================================================================================================================\n"
 Header = Header .. "State         <E>     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_4d>    <N_4f>          dZ\n"
 Header = Header .. "=================================================================================================================================\n"
@@ -613,7 +635,7 @@ Footer = "======================================================================
 
 if LmctLigandsHybridizationTerm then
     Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_4f, N_4d, N_4f, N_L1, "dZ"}
-    Header = "Analysis of the initial Hamiltonian:\n"
+    Header = "Analysis of the %s Hamiltonian:\n"
     Header = Header .. "===========================================================================================================================================\n"
     Header = Header .. "State         <E>     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_4d>    <N_4f>    <N_L1>          dZ\n"
     Header = Header .. "===========================================================================================================================================\n"
@@ -645,11 +667,12 @@ El = {-t * (Eh[1] + I * Ev[1]),
       -t * (Eh[2] + I * Ev[2]),
       -t * (Eh[3] + I * Ev[3])}
 
-Tv_4d_4f = DotProduct(Ev, {Tx_4d_4f, Ty_4d_4f, Tz_4d_4f})
-Th_4d_4f = DotProduct(Eh, {Tx_4d_4f, Ty_4d_4f, Tz_4d_4f})
-Tr_4d_4f = DotProduct(Er, {Tx_4d_4f, Ty_4d_4f, Tz_4d_4f})
-Tl_4d_4f = DotProduct(El, {Tx_4d_4f, Ty_4d_4f, Tz_4d_4f})
-Tk_4d_4f = DotProduct(WaveVector, {Tx_4d_4f, Ty_4d_4f, Tz_4d_4f})
+local T = {Tx_4d_4f, Ty_4d_4f, Tz_4d_4f}
+Tv_4d_4f = CalculateT(T, Ev)
+Th_4d_4f = CalculateT(T, Eh)
+Tr_4d_4f = CalculateT(T, Er)
+Tl_4d_4f = CalculateT(T, El)
+Tk_4d_4f = CalculateT(T, WaveVector)
 
 -- Initialize a table with the available spectra and the required operators.
 SpectraAndOperators = {

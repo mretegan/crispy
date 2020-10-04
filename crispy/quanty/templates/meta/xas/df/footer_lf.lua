@@ -9,7 +9,7 @@ Jk = DotProduct(WaveVector, {Jx, Jy, Jz})
 Tk = DotProduct(WaveVector, {Tx, Ty, Tz})
 
 Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_#f, N_#i, N_#f, "dZ"}
-Header = "Analysis of the initial Hamiltonian:\n"
+Header = "Analysis of the %s Hamiltonian:\n"
 Header = Header .. "=================================================================================================================================\n"
 Header = Header .. "State         <E>     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_#i>    <N_#f>          dZ\n"
 Header = Header .. "=================================================================================================================================\n"
@@ -17,7 +17,7 @@ Footer = "======================================================================
 
 if LmctLigandsHybridizationTerm then
     Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_#f, N_#i, N_#f, N_L1, "dZ"}
-    Header = "Analysis of the initial Hamiltonian:\n"
+    Header = "Analysis of the %s Hamiltonian:\n"
     Header = Header .. "===========================================================================================================================================\n"
     Header = Header .. "State         <E>     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_#i>    <N_#f>    <N_L1>          dZ\n"
     Header = Header .. "===========================================================================================================================================\n"
@@ -49,11 +49,12 @@ El = {-t * (Eh[1] + I * Ev[1]),
       -t * (Eh[2] + I * Ev[2]),
       -t * (Eh[3] + I * Ev[3])}
 
-Tv_#i_#f = DotProduct(Ev, {Tx_#i_#f, Ty_#i_#f, Tz_#i_#f})
-Th_#i_#f = DotProduct(Eh, {Tx_#i_#f, Ty_#i_#f, Tz_#i_#f})
-Tr_#i_#f = DotProduct(Er, {Tx_#i_#f, Ty_#i_#f, Tz_#i_#f})
-Tl_#i_#f = DotProduct(El, {Tx_#i_#f, Ty_#i_#f, Tz_#i_#f})
-Tk_#i_#f = DotProduct(WaveVector, {Tx_#i_#f, Ty_#i_#f, Tz_#i_#f})
+local T = {Tx_#i_#f, Ty_#i_#f, Tz_#i_#f}
+Tv_#i_#f = CalculateT(T, Ev)
+Th_#i_#f = CalculateT(T, Eh)
+Tr_#i_#f = CalculateT(T, Er)
+Tl_#i_#f = CalculateT(T, El)
+Tk_#i_#f = CalculateT(T, WaveVector)
 
 -- Initialize a table with the available spectra and the required operators.
 SpectraAndOperators = {
