@@ -57,6 +57,9 @@ function GetSpectrum(G, Ids, dZ, NOperators, NPsis)
 end
 
 function SaveSpectrum(G, Filename, Gaussian, Lorentzian, Pcl)
+    if Pcl == nil then
+        Pcl = 1
+    end
     G = -1 / math.pi / Pcl * G
     G.Broaden(Gaussian, Lorentzian)
     G.Print({{"file", Filename .. ".spec"}})
@@ -64,6 +67,7 @@ end
 
 function CalculateT(Operators, Vec1, Vec2)
     -- Calculate the transition operator for an arbitrary orientation.
+    --
     -- @param: Operators: table of operators used as basis.
     -- @param: Vec1: first cartesian 3D vector
     -- @param: Vec2: second cartesian 3D vector

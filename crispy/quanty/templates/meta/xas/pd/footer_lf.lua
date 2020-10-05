@@ -148,7 +148,7 @@ for Spectrum, Operators in pairs(SpectraAndOperators) do
             Gl = GetSpectrum(G_#i_#f, SpectrumIds[2], dZ_#i_#f, #T_#i_#f, #Psis_i)
             SaveSpectrum(Gr, Prefix .. "_r", Gaussian, Lorentzian, Pcl_#i_#f)
             SaveSpectrum(Gl, Prefix .. "_l", Gaussian, Lorentzian, Pcl_#i_#f)
-            SaveSpectrum(Gr - Gl, Prefix .. "_cd", Gaussian, Lorentzian, 1)
+            SaveSpectrum(Gr - Gl, Prefix .. "_cd", Gaussian, Lorentzian)
         end
 
         if Spectrum == "Linear Dichroic" then
@@ -156,7 +156,7 @@ for Spectrum, Operators in pairs(SpectraAndOperators) do
             Gh = GetSpectrum(G_#i_#f, SpectrumIds[2], dZ_#i_#f, #T_#i_#f, #Psis_i)
             SaveSpectrum(Gv, Prefix .. "_v", Gaussian, Lorentzian, Pcl_#i_#f)
             SaveSpectrum(Gh, Prefix .. "_h", Gaussian, Lorentzian, Pcl_#i_#f)
-            SaveSpectrum(Gv - Gh, Prefix .. "_ld", Gaussian, Lorentzian, 1)
+            SaveSpectrum(Gv - Gh, Prefix .. "_ld", Gaussian, Lorentzian)
         end
     end
 end

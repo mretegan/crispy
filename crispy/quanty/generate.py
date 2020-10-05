@@ -189,12 +189,17 @@ def generate_templates():
         except FileNotFoundError:
             continue
 
+        filename = None
         try:
             for key, filename in SUBSTITUTIONS.items():
                 with open(os.path.join(path, filename)) as fp:
                     base = base.replace(key, fp.read())
         except FileNotFoundError:
-            logger.warning("Could not make %s template.", templateName)
+            logger.warning(
+                "Could not make %s template because the file %s is missing.",
+                templateName,
+                filename,
+            )
             continue
 
         base = base.replace("#symmetry", symmetry.value)

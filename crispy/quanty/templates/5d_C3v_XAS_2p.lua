@@ -331,6 +331,9 @@ function GetSpectrum(G, Ids, dZ, NOperators, NPsis)
 end
 
 function SaveSpectrum(G, Filename, Gaussian, Lorentzian, Pcl)
+    if Pcl == nil then
+        Pcl = 1
+    end
     G = -1 / math.pi / Pcl * G
     G.Broaden(Gaussian, Lorentzian)
     G.Print({{"file", Filename .. ".spec"}})
@@ -338,6 +341,7 @@ end
 
 function CalculateT(Operators, Vec1, Vec2)
     -- Calculate the transition operator for an arbitrary orientation.
+    --
     -- @param: Operators: table of operators used as basis.
     -- @param: Vec1: first cartesian 3D vector
     -- @param: Vec2: second cartesian 3D vector
@@ -619,7 +623,7 @@ for Spectrum, Operators in pairs(SpectraAndOperators) do
             Gl = GetSpectrum(G_2p_5d, SpectrumIds[2], dZ_2p_5d, #T_2p_5d, #Psis_i)
             SaveSpectrum(Gr, Prefix .. "_r", Gaussian, Lorentzian, Pcl_2p_5d)
             SaveSpectrum(Gl, Prefix .. "_l", Gaussian, Lorentzian, Pcl_2p_5d)
-            SaveSpectrum(Gr - Gl, Prefix .. "_cd", Gaussian, Lorentzian, 1)
+            SaveSpectrum(Gr - Gl, Prefix .. "_cd", Gaussian, Lorentzian)
         end
 
         if Spectrum == "Linear Dichroic" then
@@ -627,7 +631,7 @@ for Spectrum, Operators in pairs(SpectraAndOperators) do
             Gh = GetSpectrum(G_2p_5d, SpectrumIds[2], dZ_2p_5d, #T_2p_5d, #Psis_i)
             SaveSpectrum(Gv, Prefix .. "_v", Gaussian, Lorentzian, Pcl_2p_5d)
             SaveSpectrum(Gh, Prefix .. "_h", Gaussian, Lorentzian, Pcl_2p_5d)
-            SaveSpectrum(Gv - Gh, Prefix .. "_ld", Gaussian, Lorentzian, 1)
+            SaveSpectrum(Gv - Gh, Prefix .. "_ld", Gaussian, Lorentzian)
         end
     end
 end
