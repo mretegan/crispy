@@ -64,11 +64,11 @@ def get_all_symbols():
     return symbols
 
 
-def generate_parameters(symbols="all"):
+def generate_parameters(symbols):
     """Generate the atomic parameters of the elements and store them in an
     HDF5 container.
     """
-    if symbols == "all":
+    if "all" in symbols:
         symbols = get_all_symbols()
 
     for symbol in symbols:
