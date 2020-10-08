@@ -69,7 +69,7 @@ Tk_#i_#f = CalculateT(T, WaveVector, WaveVector)
 
 -- Initialize a table with the available spectra and the required operators.
 SpectraAndOperators = {
-    ["Isotropic Absorption"] = {Tk_#i_#f, Tr_#i_#f, Tl_#i_#f},
+    ["Isotropic Absorption"] = {Txy_#i_#f, Txz_#i_#f, Tyz_#i_#f, Tx2y2_#i_#f, Tz2_#i_#f},
     ["Absorption"] = {Tk_#i_#f,},
     ["Circular Dichroic"] = {Tr_#i_#f, Tl_#i_#f},
     ["Linear Dichroic"] = {Tv_#i_#f, Th_#i_#f},

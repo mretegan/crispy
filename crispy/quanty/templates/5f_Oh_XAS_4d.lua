@@ -474,7 +474,7 @@ function CalculateT(Basis, Eps, K)
     --
     -- @param: Basis: operators forming the basis
     -- @param: Eps: cartesian components of the polarization vector
-    -- @param: Vec2: cartesian components of the wave-vector
+    -- @param: K: cartesian components of the wave-vector
 
     if #Basis == 3 then
         -- The basis for dipolar operators is in the order x, y, z.

@@ -326,7 +326,7 @@ function CalculateT(Basis, Eps, K)
     --
     -- @param: Basis: operators forming the basis
     -- @param: Eps: cartesian components of the polarization vector
-    -- @param: Vec2: cartesian components of the wave-vector
+    -- @param: K: cartesian components of the wave-vector
 
     if #Basis == 3 then
         -- The basis for dipolar operators is in the order x, y, z.
@@ -526,7 +526,7 @@ Tk_2s_4d = CalculateT(T, WaveVector, WaveVector)
 
 -- Initialize a table with the available spectra and the required operators.
 SpectraAndOperators = {
-    ["Isotropic Absorption"] = {Tk_2s_4d, Tr_2s_4d, Tl_2s_4d},
+    ["Isotropic Absorption"] = {Txy_2s_4d, Txz_2s_4d, Tyz_2s_4d, Tx2y2_2s_4d, Tz2_2s_4d},
     ["Absorption"] = {Tk_2s_4d,},
     ["Circular Dichroic"] = {Tr_2s_4d, Tl_2s_4d},
     ["Linear Dichroic"] = {Tv_2s_4d, Th_2s_4d},
