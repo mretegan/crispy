@@ -370,7 +370,7 @@ class PdHybridizationTerm(HamiltonianTerm):
             generateParameters("Initial Hamiltonian", names)
             names = hybdridization + finalAtomic
             generateParameters("Final Hamiltonian", names)
-        elif self.symmetry.name == "C3v":
+        elif self.symmetry.value == "C3v":
             hybdridization = ("Δ", "Va1", "Ve(eg)", "Ve(t2g)")
             names = hybdridization + initialAtomic
             generateParameters("Initial Hamiltonian", names)
