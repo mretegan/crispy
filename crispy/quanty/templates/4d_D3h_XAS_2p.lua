@@ -331,25 +331,26 @@ function SaveSpectrum(G, Filename, Gaussian, Lorentzian, Pcl)
     G.Print({{"file", Filename .. ".spec"}})
 end
 
-function CalculateT(Operators, Vec1, Vec2)
-    -- Calculate the transition operator for an arbitrary orientation.
+function CalculateT(Basis, Eps, K)
+    -- Calculate the transition operator in the basis of tesseral harmonics for
+    -- an arbitrary polarization and wave-vector (for quadrupole operators).
     --
-    -- @param: Operators: table of operators used as basis.
-    -- @param: Vec1: first cartesian 3D vector
-    -- @param: Vec2: second cartesian 3D vector
+    -- @param: Basis: operators forming the basis
+    -- @param: Eps: cartesian components of the polarization vector
+    -- @param: Vec2: cartesian components of the wave-vector
 
-    if #Operators == 3 then
-        -- Dipolar operators in the order x, y, z.
-        T = Vec1[1] * Operators[1]
-          + Vec1[2] * Operators[2]
-          + Vec1[3] * Operators[3]
-    elseif #Operators == 5 then 
-        -- Quadrupolar operators in the order xy, xz, yz, x2y2, z2.
-        T = (Vec1[1] * Vec2[2] + Vec1[2] * Vec2[1]) * Operators[1] / math.sqrt(3)
-          + (Vec1[1] * Vec2[3] + Vec1[3] * Vec2[1]) * Operators[2] / math.sqrt(3)
-          + (Vec1[2] * Vec2[3] + Vec1[3] * Vec2[2]) * Operators[3] / math.sqrt(3)
-          + (Vec1[1] * Vec2[1] - Vec1[2] * Vec2[2]) * Operators[4] / math.sqrt(3)
-          + Vec1[3] * Vec2[3] * Operators[5]
+    if #Basis == 3 then
+        -- The basis for dipolar operators is in the order x, y, z.
+        T = Eps[1] * Basis[1]
+          + Eps[2] * Basis[2]
+          + Eps[3] * Basis[3]
+    elseif #Basis == 5 then 
+        -- The basis for quadrupolar operators is in the order xy, xz, yz, x2y2, z2.
+        T = (Eps[1] * K[2] + Eps[2] * K[1]) / math.sqrt(3) * Basis[1] 
+          + (Eps[1] * K[3] + Eps[3] * K[1]) / math.sqrt(3) * Basis[2] 
+          + (Eps[2] * K[3] + Eps[3] * K[2]) / math.sqrt(3) * Basis[3] 
+          + (Eps[1] * K[1] - Eps[2] * K[2]) / math.sqrt(3) * Basis[4] 
+          + Eps[3] * K[3] * Basis[5]
     end
     return Chop(T)
 end
