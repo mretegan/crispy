@@ -97,6 +97,11 @@ class Spectrum1D(Spectrum):
         self.gaussian()
         self.dataChanged.emit(1)
 
+    def shift(self, value=None):
+        if value is None:
+            value = self.axes.xaxis.shift.value
+        self.x = self.x + value
+
     def scale(self, value=None):
         if value is None:
             value = self.axes.scale.value
@@ -116,11 +121,6 @@ class Spectrum1D(Spectrum):
         elif value == "area":
             area = np.abs(np.trapz(self.signal, self.x))
             self.signal = self.signal / area
-
-    def shift(self, value=None):
-        if value is None:
-            value = self.axes.xaxis.shift.value
-        self.x = self.x + value
 
     def gaussian(self, value=None):
         if value is None:
@@ -151,10 +151,103 @@ class Spectrum1D(Spectrum):
         super().copyFrom(item)
         self.x = copy.deepcopy(item.x)
         self.signal = copy.deepcopy(item.signal)
+        self.suffix = copy.deepcopy(item.suffix)
 
 
-class Spectrum2D(Spectrum):
-    pass
+class Spectrum2D(Spectrum1D):
+    """Two-dimensional spectrum."""
+
+    def __init__(self, parent=None, name=None):
+        super().__init__(parent=parent, name=name)
+        self.y = None
+
+        self.axes.yaxis.shift.dataChanged.connect(self.process)
+        self.axes.yaxis.gaussian.dataChanged.connect(self.process)
+
+    @property
+    def xScale(self):
+        if self.x is None:
+            return None
+        return np.abs(self.x.min() - self.x.max()) / self.x.shape[0]
+
+    @property
+    def yScale(self):
+        if self.y is None:
+            return None
+        return np.abs(self.y.min() - self.y.max()) / self.y.shape[0]
+
+    @property
+    def axesScale(self):
+        return (self.xScale, self.yScale)
+
+    @property
+    def origin(self):
+        if self.x is None or self.y is None:
+            return (None, None)
+        return (self.x.min(), self.y.min())
+
+    def copy(self):
+        xaxis = self.axes.xaxis
+        self.x = np.linspace(
+            xaxis.start.value, xaxis.stop.value, xaxis.npoints.value + 1
+        )
+
+        yaxis = self.axes.yaxis
+        self.y = np.linspace(
+            yaxis.start.value, yaxis.stop.value, yaxis.npoints.value + 1
+        )
+        self.signal = self.raw[:, 2::2].copy()
+
+    def shift(self, value=None):
+        if value is None:
+            xs = self.axes.xaxis.shift.value
+            ys = self.axes.yaxis.shift.value
+        else:
+            xs, ys = value
+        self.x = self.x + xs
+        self.y = self.y + ys
+
+    def normalize(self, value=None):
+        if value is None:
+            value = self.axes.normalization.value
+        value = value.lower()
+        if value == "none":
+            return
+        if value == "maximum":
+            absmax = np.abs(self.signal).max()
+            self.signal = self.signal / absmax
+
+    def gaussian(self, value=None):
+        if value is None:
+            xg = self.axes.xaxis.gaussian.value
+            yg = self.axes.yaxis.gaussian.value
+        else:
+            xg, yg = value
+
+        xfwhm = xg / self.axes.xaxis.interval
+        yfwhm = yg / self.axes.yaxis.interval
+
+        fwhm = (xfwhm, yfwhm)
+
+        self.signal = broaden(self.signal, fwhm, kind="gaussian")
+
+    def plot(self, plotWidget):
+        if not self.checkState:
+            return
+        calculation = self.ancestor
+        index = calculation.childPosition() + 1
+        MAPPINGS = {
+            "iso": "Iso",
+        }
+        name = MAPPINGS[self.suffix]
+        legend = f"{index}-{name}"
+        plotWidget.addImage(
+            self.signal, origin=self.origin, scale=self.axesScale, legend=legend
+        )
+
+    def copyFrom(self, item):
+        super().copyFrom(item)
+        self.y = copy.deepcopy(item.y)
 
 
 class Sample(BaseItem):
@@ -272,10 +365,12 @@ class Spectra(BaseItem):
             suffix, symbol = SPECTRA[name]
             if symbol is not None:
                 name = f"{name} {symbol}"
+
             if experiment.isOneDimensional:
                 spectrum = Spectrum1D(parent=self.toPlot, name=name)
             else:
                 spectrum = Spectrum2D(parent=self.toPlot, name=name)
+
             spectrum.suffix = suffix
             # Load before setting the check state to trigger plotting?
             spectrum.load()
