@@ -22,11 +22,13 @@ logger = logging.getLogger(__name__)
 
 
 class Spectrum(SelectableItem):
+    """Base class for spectrum objects.
+
+    NOTE: The objects don't necessary have to have data.
+    """
+
     def __init__(self, parent=None, name=None):
         super().__init__(parent=parent, name=name)
-        self.raw = None
-        self.x = None
-        self.signal = None
         self.suffix = None
 
     def copyFrom(self, item):
@@ -41,8 +43,12 @@ class Spectrum1D(Spectrum):
     is the number of points specified in the input.
     """
 
-    def __init__(self, parent, name):
-        super().__init__(parent, name)
+    def __init__(self, parent=None, name=None):
+        super().__init__(parent=parent, name=name)
+        self.raw = None
+        self.x = None
+        self._signal = None
+
         self.axes = self.ancestor.axes
 
         self.axes.scale.dataChanged.connect(self.process)
@@ -50,6 +56,20 @@ class Spectrum1D(Spectrum):
 
         self.axes.xaxis.shift.dataChanged.connect(self.process)
         self.axes.xaxis.gaussian.dataChanged.connect(self.process)
+
+    @property
+    def signal(self):
+        return self._signal
+
+    @signal.setter
+    def signal(self, values):
+        if values is None:
+            return
+        # Check for very small values.
+        maximum = np.max(np.abs(values))
+        if maximum < np.finfo(np.float32).eps:
+            values = np.zeros_like(values)
+        self._signal = values
 
     def load(self):
         calculation = self.ancestor
@@ -131,6 +151,10 @@ class Spectrum1D(Spectrum):
         super().copyFrom(item)
         self.x = copy.deepcopy(item.x)
         self.signal = copy.deepcopy(item.signal)
+
+
+class Spectrum2D(Spectrum):
+    pass
 
 
 class Sample(BaseItem):
@@ -241,6 +265,7 @@ class Spectra(BaseItem):
             "Linear Dichroic": ("ld", "(V-H)"),
             "Vertical Polarized": ("v", "(V)"),
             "Horizontal Polarized": ("h", "(H)"),
+            "Resonant Inelastic": ("iso", None),
         }
 
         def addSpectrum(name, selected=True):
@@ -250,8 +275,7 @@ class Spectra(BaseItem):
             if experiment.isOneDimensional:
                 spectrum = Spectrum1D(parent=self.toPlot, name=name)
             else:
-                # TODO: Here implement 2D.
-                spectrum = None
+                spectrum = Spectrum2D(parent=self.toPlot, name=name)
             spectrum.suffix = suffix
             # Load before setting the check state to trigger plotting?
             spectrum.load()
