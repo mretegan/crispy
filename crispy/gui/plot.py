@@ -92,7 +92,7 @@ class CustomPlotWidget(PlotWidget):
         for item in self.getItems():
             if isinstance(item, items.Curve):
                 message = "X: {:g}    Y: {:g}".format(x, y)
-            elif isinstance(item, items.ImageBase):
+            elif isinstance(item, items.ImageBase) and data is not None:
                 message = "X: {:g}    Y: {:g}    Data: {:g}".format(x, y, data)
             else:
                 message = None
