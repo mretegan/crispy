@@ -251,7 +251,7 @@ class MainPlotWidget(CustomPlotWidget):
 
     def addLegend(self):
         """Add the legend to the Matplotlib axis."""
-        if self.isEmpty():
+        if not self.getAllCurves():
             legend = self.plotArea.ax.legend(handles=[])
             legend.set_visible(False)
             return
