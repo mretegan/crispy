@@ -435,11 +435,11 @@ class Calculation(SelectableItem):
 
     def __init__(
         self,
-        symbol="Fe",
+        symbol="Ni",
         charge="2+",
-        symmetry="D3h",
-        experiment="XAS",
-        edge="L2,3 (2p)",
+        symmetry="Oh",
+        experiment="RIXS",
+        edge="L2,3-M4,5 (2p3d)",
         hamiltonian=True,
         parent=None,
     ):
