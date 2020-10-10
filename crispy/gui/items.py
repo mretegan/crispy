@@ -254,9 +254,6 @@ class BaseItem(QObject):
 
 
 class SelectableItem(BaseItem):
-
-    checkStateChanged = pyqtSignal(int)
-
     def __init__(self, parent=None, name=None, value=None):
         super().__init__(parent=parent, name=name, value=value)
         self._checkState = Qt.Unchecked
@@ -280,7 +277,6 @@ class SelectableItem(BaseItem):
     def checkState(self, value):
         self._checkState = value
         self.dataChanged.emit(0)
-        self.checkStateChanged.emit(value)
 
     def flags(self, column):
         flags = super().flags(column)
