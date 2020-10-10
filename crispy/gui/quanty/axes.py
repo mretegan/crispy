@@ -43,6 +43,8 @@ class Broadening(DoubleItem):
 
 
 class Lorentzian(Broadening):
+    MINIMUM = 0.01
+
     def __init__(self, parent=None, name="Lorentzian", value=None):
         super().__init__(parent=parent, name=name)
         self._value = value
@@ -59,7 +61,7 @@ class Lorentzian(Broadening):
     def value(self, value):
         if value is None:
             return
-        if value < 0.1:
+        if value < self.MINIMUM:
             raise ValueError("The Lorentzian broadening cannot be smaller than 0.1.")
         self._value = value
         self.dataChanged.emit(1)
@@ -419,8 +421,8 @@ class Axes(BaseItem):
         calculation = self.ancestor
         self.labels = [self.xaxis.label, "Intensity (a.u.)"]
         if calculation.experiment.isTwoDimensional:
+            self.xaxis.npoints._value = 20
             self.yaxis = YAxis(parent=self)
-            self.xaxis.npoints._value = self.xaxis.npoints.minimum
             self.labels = [self.xaxis.label, self.yaxis.label]
 
     def copyFrom(self, item):
