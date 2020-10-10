@@ -244,6 +244,9 @@ class ResultsPage(QWidget):
         selectionModel = self.view.selectionModel()
         selectionModel.selectionChanged.connect(self.selectionChanged)
 
+        # TODO: How to distinguish between a dataChanged related to change in
+        # the name or a change in the checked state? Only the last one should
+        # trigger subsequent actions.
         self.model.dataChanged.connect(self.plot)
         self.currentIndexChanged.connect(
             lambda index: self.detailsDialog.populate(index.internalPointer())
@@ -287,23 +290,53 @@ class ResultsPage(QWidget):
     def load(self):
         pass
 
-    def plot(self):
-        # TODO: How to distinguish between a change in name and a change in checked
-        # state? Only the last one should trigger plotting.
+    def plot(self, *args):
+        calculations = self.model.rootItem().children()
+
+        index, *_ = args
+        # Return if the index is invalid but there are still calculations in
+        # the model.
+        if not index.isValid() and calculations:
+            return
+        # Get the last item the user has changed.
+        last = index.internalPointer()
+
+        # Always reset the plot widget.
         plotWidget = self.window().plotWidget
         plotWidget.reset()
 
-        children = self.model.rootItem().children()
-        items = [item for item in children if item.checkState]
-        if not items:
+        if not calculations:
             return
 
-        for item in items:
+        # TODO: The logic here seems very convoluted.
+        if isinstance(last, Calculation):
+            self.model.blockSignals(True)
+            if last.experiment.isTwoDimensional:
+                for calculation in calculations:
+                    if last != calculation:
+                        calculation.checkState = Qt.Unchecked
+            else:
+                for calculation in calculations:
+                    if calculation.experiment.isTwoDimensional:
+                        calculation.checkState = Qt.Unchecked
+            self.model.blockSignals(False)
+
+        # Make a list of checked calculations only.
+        calculations = [c for c in calculations if c.checkState]
+        if not calculations:
+            return
+
+        for item in calculations:
             item.spectra.plot(plotWidget=plotWidget)
 
         # Reset the plot widget if nothing new was plotted.
         if plotWidget.isEmpty():
             plotWidget.reset()
+
+        # Emit the dataChanged() signal to inform the views that some things
+        # might have changed in the model. Use an invalid index to return early
+        # when this function is called again.
+        self.model.dataChanged.emit(QModelIndex(), QModelIndex())
 
     def selectionChanged(self):
         indexes = self.view.selectedIndexes()
