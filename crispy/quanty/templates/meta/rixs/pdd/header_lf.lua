@@ -30,7 +30,6 @@ NPoints1 = $XNPoints  -- number of points of the spectra
 ExperimentalShift1 = $XExperimentalShift  -- experimental edge energy (eV)
 ZeroShift1 = $XZeroShift  -- energy required to shift the calculated spectrum to start from approximately zero (eV)
 Gaussian1 = $XGaussian  -- Gaussian FWHM (eV)
-Lorentzian1 = $XLorentzian  -- Lorentzian FWHM (eV)
 Gamma1 = $XGamma  -- Lorentzian FWHM used in the spectra calculation (eV)
 
 WaveVector = $XWaveVector  -- wave vector
@@ -44,8 +43,7 @@ NPoints2 = $YNPoints  -- number of points of the spectra
 ExperimentalShift2 = $YExperimentalShift  -- experimental edge energy (eV)
 ZeroShift2 = $YZeroShift  -- energy required to shift the calculated spectrum to start from approximately zero (eV)
 Gaussian2 = $YGaussian  -- Gaussian FWHM (eV)
-Lorentzian2 = $YLorentzian  -- Lorentzian FWHM (eV)
-Gamma2 = $YGamma  -- Lorentzian FWHM used in the spectra calculation (eV)
+Gamma2 = $YGamma  -- Lorentzian FWHM used in the spectra calculation (eV) 
 
 WaveVector = $YWaveVector  -- wave vector
 Ev = $YFirstPolarization  -- vertical polarization

@@ -72,20 +72,26 @@ class Lorentzian(Broadening):
     def replacements(self):
         replacements = dict()
 
-        axis = self.parent()
-        start = axis.start.value
-        stop = axis.stop.value
+        if self.ancestor.experiment.isTwoDimensional:
+            # Energy dependent Lorentzian broadening of 2D spectra is not supported
+            # in Quanty, so we use the value set for the Lorentzian broadening
+            # as Gamma.
+            replacements["Gamma"] = self.value
+        else:
+            axis = self.parent()
+            start = axis.start.value
+            stop = axis.stop.value
 
-        points = [(start, self.value), (stop, self.value)]
-        replacement = "{"
-        for i, (energy, fwhm) in enumerate(points):
-            replacement += f"{{{energy}, {fwhm}}}"
-            if i != len(points) - 1:
-                replacement += ", "
-            else:
-                replacement += "}"
-        replacements["Lorentzian"] = replacement
-        replacements["Gamma"] = self.MINIMUM
+            points = [(start, self.value), (stop, self.value)]
+            replacement = "{"
+            for i, (energy, fwhm) in enumerate(points):
+                replacement += f"{{{energy}, {fwhm}}}"
+                if i != len(points) - 1:
+                    replacement += ", "
+                else:
+                    replacement += "}"
+            replacements["Lorentzian"] = replacement
+            replacements["Gamma"] = self.MINIMUM
 
         return replacements
 

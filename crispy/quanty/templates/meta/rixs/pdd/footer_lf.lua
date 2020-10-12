@@ -82,5 +82,11 @@ for i = 1, #Psis_i do
     end
 end
 
+-- The Gaussian broadening is done using the same value for the two dimensions.
+Gaussian = math.min(Gaussian1, Gaussian2)
+if Gaussian ~= 0 then
+    Giso.Broaden(Gaussian, 0.0)
+end
+
 Giso = -1 / math.pi * Giso
 Giso.Print({{"file", Prefix .. "_iso.spec"}})
