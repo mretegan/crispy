@@ -23,6 +23,7 @@ NPsis = $NPsis  -- number of states to consider in the spectra calculation
 NPsisAuto = $NPsisAuto  -- determine the number of state automatically
 NConfigurations = $NConfigurations  -- number of configurations
 
+-- X-axis parameters
 Emin1 = $XEmin  -- minimum value of the energy range (eV)
 Emax1 = $XEmax  -- maximum value of the energy range (eV)
 NPoints1 = $XNPoints  -- number of points of the spectra
@@ -30,8 +31,13 @@ ExperimentalShift1 = $XExperimentalShift  -- experimental edge energy (eV)
 ZeroShift1 = $XZeroShift  -- energy required to shift the calculated spectrum to start from approximately zero (eV)
 Gaussian1 = $XGaussian  -- Gaussian FWHM (eV)
 Lorentzian1 = $XLorentzian  -- Lorentzian FWHM (eV)
-Gamma1 = 0.1  -- Lorentzian FWHM used in the spectra calculation (eV)
+Gamma1 = $XGamma  -- Lorentzian FWHM used in the spectra calculation (eV)
 
+WaveVector = $XWaveVector  -- wave vector
+Ev = $XFirstPolarization  -- vertical polarization
+Eh = $XSecondPolarization  -- horizontal polarization
+
+-- Y-axis parameters
 Emin2 = $YEmin  -- minimum value of the energy range (eV)
 Emax2 = $YEmax  -- maximum value of the energy range (eV)
 NPoints2 = $YNPoints  -- number of points of the spectra
@@ -39,11 +45,11 @@ ExperimentalShift2 = $YExperimentalShift  -- experimental edge energy (eV)
 ZeroShift2 = $YZeroShift  -- energy required to shift the calculated spectrum to start from approximately zero (eV)
 Gaussian2 = $YGaussian  -- Gaussian FWHM (eV)
 Lorentzian2 = $YLorentzian  -- Lorentzian FWHM (eV)
-Gamma2 = 0.1  -- Lorentzian FWHM used in the spectra calculation (eV)
+Gamma2 = $YGamma  -- Lorentzian FWHM used in the spectra calculation (eV)
 
-WaveVector = $XWaveVector  -- wave vector
-Ev = $XFirstPolarization  -- vertical polarization
-Eh = $XSecondPolarization  -- horizontal polarization
+WaveVector = $YWaveVector  -- wave vector
+Ev = $YFirstPolarization  -- vertical polarization
+Eh = $YSecondPolarization  -- horizontal polarization
 
 SpectraToCalculate = $SpectraToCalculate  -- types of spectra to calculate
 DenseBorder = $DenseBorder -- number of determinants where we switch from dense methods to sparse methods
@@ -804,4 +810,3 @@ end
 
 Giso = -1 / math.pi * Giso
 Giso.Print({{"file", Prefix .. "_iso.spec"}})
-

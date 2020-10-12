@@ -62,7 +62,9 @@ class Lorentzian(Broadening):
         if value is None:
             return
         if value < self.MINIMUM:
-            raise ValueError("The Lorentzian broadening cannot be smaller than 0.1.")
+            raise ValueError(
+                f"The Lorentzian broadening cannot be smaller than {self.MINIMUM}."
+            )
         self._value = value
         self.dataChanged.emit(1)
 
@@ -83,6 +85,7 @@ class Lorentzian(Broadening):
             else:
                 replacement += "}"
         replacements["Lorentzian"] = replacement
+        replacements["Gamma"] = self.MINIMUM
 
         return replacements
 

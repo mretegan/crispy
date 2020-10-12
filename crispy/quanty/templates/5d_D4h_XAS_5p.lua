@@ -30,7 +30,7 @@ ExperimentalShift = $XExperimentalShift  -- experimental edge energy (eV)
 ZeroShift = $XZeroShift  -- energy required to shift the calculated spectrum to start from approximately zero (eV)
 Gaussian = $XGaussian  -- Gaussian FWHM (eV)
 Lorentzian = $XLorentzian  -- Lorentzian FWHM (eV)
-Gamma = 0.1  -- Lorentzian FWHM used in the spectra calculation (eV)
+Gamma = $XGamma  -- Lorentzian FWHM used in the spectra calculation (eV)
 
 WaveVector = $XWaveVector  -- wave vector
 Ev = $XFirstPolarization  -- vertical polarization

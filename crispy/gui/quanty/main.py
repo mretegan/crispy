@@ -17,6 +17,7 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QAction, QDockWidget, QFileDialog, QMenu, QWidget
 from PyQt5.uic import loadUi
 
+from crispy import resourceAbsolutePath
 from crispy.config import Config
 from crispy.gui.models import TreeModel
 from crispy.gui.quanty.axes import YAxis
@@ -24,7 +25,6 @@ from crispy.gui.quanty.calculation import Calculation
 from crispy.gui.quanty.details import DetailsDialog
 from crispy.gui.quanty.preferences import PreferencesDialog
 from crispy.gui.utils import setMappings
-from crispy import resourceAbsolutePath
 
 logger = logging.getLogger(__name__)
 settings = Config().read()
