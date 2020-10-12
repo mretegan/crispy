@@ -116,37 +116,7 @@
      <property name="spacing">
       <number>6</number>
      </property>
-     <item row="1" column="0">
-      <spacer name="lorentzianLeftSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Fixed</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>0</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLabel" name="lorentzianLabel">
-       <property name="text">
-        <string>Lorentzian</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="gaussianLabel">
-       <property name="text">
-        <string>Gaussian</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="3">
+     <item row="1" column="3">
       <widget class="DoubleLineEdit" name="gaussianLineEdit">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -165,20 +135,14 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="3">
-      <widget class="DoubleLineEdit" name="lorentzianLineEdit">
-       <property name="maximumSize">
-        <size>
-         <width>65</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     <item row="1" column="1">
+      <widget class="QLabel" name="gaussianLabel">
+       <property name="text">
+        <string>Gaussian</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="0">
+     <item row="1" column="0">
       <spacer name="gaussianLeftSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -194,7 +158,30 @@
        </property>
       </spacer>
      </item>
-     <item row="1" column="2">
+     <item row="0" column="1">
+      <widget class="QLabel" name="lorentzianLabel">
+       <property name="text">
+        <string>Lorentzian</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <spacer name="lorentzianLeftSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>0</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="0" column="2">
       <widget class="QToolButton" name="lorentzianToolButton">
        <property name="maximumSize">
         <size>
@@ -208,6 +195,19 @@
        <property name="icon">
         <iconset>
          <normaloff>../../icons/cog.svg</normaloff>../../icons/cog.svg</iconset>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="DoubleLineEdit" name="lorentzianLineEdit">
+       <property name="maximumSize">
+        <size>
+         <width>65</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
