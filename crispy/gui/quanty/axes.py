@@ -302,6 +302,7 @@ class Axis(BaseItem):
 
     @property
     def interval(self):
+        # NOTE: Checked and it is consistent with Quanty.
         return np.abs(self.stop.value - self.start.value) / self.npoints.value
 
     @property

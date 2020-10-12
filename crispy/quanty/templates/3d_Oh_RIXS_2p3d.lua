@@ -230,30 +230,30 @@ if LmctLigandsHybridizationTerm then
          + NewOperator("Number", NFermions, IndexDn_L1, IndexDn_L1, {1, 1, 1, 1, 1})
 
     Delta_3d_L1_i = $Delta(3d,L1)_i_value
-    e_3d_i = (10 * Delta_3d_L1_i - NElectrons_3d * (19 + NElectrons_3d) * U_3d_3d_i / 2) / (10 + NElectrons_3d)
-    e_L1_i = NElectrons_3d * ((1 + NElectrons_3d) * U_3d_3d_i / 2 - Delta_3d_L1_i) / (10 + NElectrons_3d)
+    E_3d_i = (10 * Delta_3d_L1_i - NElectrons_3d * (19 + NElectrons_3d) * U_3d_3d_i / 2) / (10 + NElectrons_3d)
+    E_L1_i = NElectrons_3d * ((1 + NElectrons_3d) * U_3d_3d_i / 2 - Delta_3d_L1_i) / (10 + NElectrons_3d)
 
     Delta_3d_L1_m = $Delta(3d,L1)_m_value
-    e_3d_m = (10 * Delta_3d_L1_m - NElectrons_3d * (31 + NElectrons_3d) * U_3d_3d_m / 2 - 90 * U_2p_3d_m) / (16 + NElectrons_3d)
-    e_2p_m = (10 * Delta_3d_L1_m + (1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_m / 2 - (10 + NElectrons_3d) * U_2p_3d_m)) / (16 + NElectrons_3d)
-    e_L1_m = ((1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_m / 2 + 6 * U_2p_3d_m) - (6 + NElectrons_3d) * Delta_3d_L1_m) / (16 + NElectrons_3d)
+    E_3d_m = (10 * Delta_3d_L1_m - NElectrons_3d * (31 + NElectrons_3d) * U_3d_3d_m / 2 - 90 * U_2p_3d_m) / (16 + NElectrons_3d)
+    E_2p_m = (10 * Delta_3d_L1_m + (1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_m / 2 - (10 + NElectrons_3d) * U_2p_3d_m)) / (16 + NElectrons_3d)
+    E_L1_m = ((1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_m / 2 + 6 * U_2p_3d_m) - (6 + NElectrons_3d) * Delta_3d_L1_m) / (16 + NElectrons_3d)
 
     Delta_3d_L1_f = $Delta(3d,L1)_f_value
-    e_3d_f = (10 * Delta_3d_L1_f - NElectrons_3d * (19 + NElectrons_3d) * U_3d_3d_f / 2) / (10 + NElectrons_3d)
-    e_L1_f = NElectrons_3d * ((1 + NElectrons_3d) * U_3d_3d_f / 2 - Delta_3d_L1_f) / (10 + NElectrons_3d)
+    E_3d_f = (10 * Delta_3d_L1_f - NElectrons_3d * (19 + NElectrons_3d) * U_3d_3d_f / 2) / (10 + NElectrons_3d)
+    E_L1_f = NElectrons_3d * ((1 + NElectrons_3d) * U_3d_3d_f / 2 - Delta_3d_L1_f) / (10 + NElectrons_3d)
 
     H_i = H_i + Chop(
-          e_3d_i * N_3d
-        + e_L1_i * N_L1)
+          E_3d_i * N_3d
+        + E_L1_i * N_L1)
 
     H_m = H_m + Chop(
-          e_3d_m * N_3d
-        + e_2p_m * N_2p
-        + e_L1_m * N_L1)
+          E_3d_m * N_3d
+        + E_2p_m * N_2p
+        + E_L1_m * N_L1)
 
     H_f = H_f + Chop(
-          e_3d_f * N_3d
-        + e_L1_f * N_L1)
+          E_3d_f * N_3d
+        + E_L1_f * N_L1)
 
     tenDq_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, PotentialExpandedOnClm("Oh", 2, {0.6, -0.4}))
 
@@ -299,30 +299,30 @@ if MlctLigandsHybridizationTerm then
          + NewOperator("Number", NFermions, IndexDn_L2, IndexDn_L2, {1, 1, 1, 1, 1})
 
     Delta_3d_L2_i = $Delta(3d,L2)_i_value
-    e_3d_i = U_3d_3d_i * (-NElectrons_3d + 1) / 2
-    e_L2_i = Delta_3d_L2_i - U_3d_3d_i * NElectrons_3d / 2 - U_3d_3d_i / 2
+    E_3d_i = U_3d_3d_i * (-NElectrons_3d + 1) / 2
+    E_L2_i = Delta_3d_L2_i - U_3d_3d_i * NElectrons_3d / 2 - U_3d_3d_i / 2
 
     Delta_3d_L2_m = $Delta(3d,L2)_m_value
-    e_3d_m = -(U_3d_3d_m * NElectrons_3d^2 + 11 * U_3d_3d_m * NElectrons_3d + 60 * U_2p_3d_m) / (2 * NElectrons_3d + 12)
-    e_2p_m = NElectrons_3d * (U_3d_3d_m * NElectrons_3d + U_3d_3d_m - 2 * U_2p_3d_m * NElectrons_3d - 2 * U_2p_3d_m) / (2 * (NElectrons_3d + 6))
-    e_L2_m = (2 * Delta_3d_L2_m * NElectrons_3d + 12 * Delta_3d_L2_m - U_3d_3d_m * NElectrons_3d^2 - U_3d_3d_m * NElectrons_3d - 12 * U_2p_3d_m * NElectrons_3d - 12 * U_2p_3d_m) / (2 * (NElectrons_3d + 6))
+    E_3d_m = -(U_3d_3d_m * NElectrons_3d^2 + 11 * U_3d_3d_m * NElectrons_3d + 60 * U_2p_3d_m) / (2 * NElectrons_3d + 12)
+    E_2p_m = NElectrons_3d * (U_3d_3d_m * NElectrons_3d + U_3d_3d_m - 2 * U_2p_3d_m * NElectrons_3d - 2 * U_2p_3d_m) / (2 * (NElectrons_3d + 6))
+    E_L2_m = (2 * Delta_3d_L2_m * NElectrons_3d + 12 * Delta_3d_L2_m + U_3d_3d_m * NElectrons_3d^2 - U_3d_3d_m * NElectrons_3d - 12 * U_3d_3d_m + 12 * U_2p_3d_m * NElectrons_3d + 12 * U_2p_3d_m) / (2 * (NElectrons_3d + 6))
 
     Delta_3d_L2_f = $Delta(3d,L2)_f_value
-    e_3d_f = U_3d_3d_f * (-NElectrons_3d + 1) / 2
-    e_L2_f = Delta_3d_L2_f - U_3d_3d_f * NElectrons_3d / 2 - U_3d_3d_f / 2
+    E_3d_f = U_3d_3d_f * (-NElectrons_3d + 1) / 2
+    E_L2_f = Delta_3d_L2_f - U_3d_3d_f * NElectrons_3d / 2 - U_3d_3d_f / 2
 
     H_i = H_i + Chop(
-          e_3d_i * N_3d
-        + e_L2_i * N_L2)
+          E_3d_i * N_3d
+        + E_L2_i * N_L2)
 
     H_m = H_m + Chop(
-          e_3d_m * N_3d
-        + e_2p_m * N_2p
-        + e_L2_m * N_L2)
+          E_3d_m * N_3d
+        + E_2p_m * N_2p
+        + E_L2_m * N_L2)
 
     H_f = H_f + Chop(
-          e_3d_f * N_3d
-        + e_L2_f * N_L2)
+          E_3d_f * N_3d
+        + E_L2_f * N_L2)
 
     tenDq_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, PotentialExpandedOnClm("Oh", 2, {0.6, -0.4}))
 
