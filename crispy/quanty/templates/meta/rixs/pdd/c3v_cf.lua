@@ -29,11 +29,11 @@ if CrystalFieldTerm then
     io.write("\n")
 
 
-    Dq_#m_m = $10Dq(#m)_m_value / 10
+    Dq_#m_m = $10Dq(#m)_m_value / 10.0
     Dsigma_#m_m = $Dsigma(#m)_m_value
     Dtau_#m_m = $Dtau(#m)_m_value
 
-    Dq_#m_f = $Dq(#m)_f_value
+    Dq_#m_f = $10Dq(#m)_f_value / 10.0
     Dsigma_#m_f = $Dsigma(#m)_f_value
     Dtau_#m_f = $Dtau(#m)_f_value
 

@@ -194,11 +194,11 @@ if CrystalFieldTerm then
     io.write("\n")
 
 
-    Dq_3d_m = $10Dq(3d)_m_value / 10
+    Dq_3d_m = $10Dq(3d)_m_value / 10.0
     Dsigma_3d_m = $Dsigma(3d)_m_value
     Dtau_3d_m = $Dtau(3d)_m_value
 
-    Dq_3d_f = $Dq(3d)_f_value
+    Dq_3d_f = $10Dq(3d)_f_value / 10.0
     Dsigma_3d_f = $Dsigma(3d)_f_value
     Dtau_3d_f = $Dtau(3d)_f_value
 

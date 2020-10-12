@@ -194,11 +194,11 @@ if CrystalFieldTerm then
     io.write("\n")
 
 
-    Dq_5d_m = $10Dq(5d)_m_value / 10
+    Dq_5d_m = $10Dq(5d)_m_value / 10.0
     Dsigma_5d_m = $Dsigma(5d)_m_value
     Dtau_5d_m = $Dtau(5d)_m_value
 
-    Dq_5d_f = $Dq(5d)_f_value
+    Dq_5d_f = $10Dq(5d)_f_value / 10.0
     Dsigma_5d_f = $Dsigma(5d)_f_value
     Dtau_5d_f = $Dtau(5d)_f_value
 

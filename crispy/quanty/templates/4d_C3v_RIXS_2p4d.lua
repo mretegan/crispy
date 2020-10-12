@@ -194,11 +194,11 @@ if CrystalFieldTerm then
     io.write("\n")
 
 
-    Dq_4d_m = $10Dq(4d)_m_value / 10
+    Dq_4d_m = $10Dq(4d)_m_value / 10.0
     Dsigma_4d_m = $Dsigma(4d)_m_value
     Dtau_4d_m = $Dtau(4d)_m_value
 
-    Dq_4d_f = $Dq(4d)_f_value
+    Dq_4d_f = $10Dq(4d)_f_value / 10.0
     Dsigma_4d_f = $Dsigma(4d)_f_value
     Dtau_4d_f = $Dtau(4d)_f_value
 
