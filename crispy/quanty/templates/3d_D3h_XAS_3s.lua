@@ -129,8 +129,11 @@ end
 -- Define the crystal field term.
 --------------------------------------------------------------------------------
 if CrystalFieldTerm then
-    Dmu_3d = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, {{2, 0, -7}})
-    Dnu_3d = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, {{4, 0, -21}})
+    Akm = {{2, 0, -7}}
+    Dmu_3d = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, Akm)
+
+    Akm = {{4, 0, -21}}
+    Dnu_3d = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, Akm)
 
     Dmu_3d_i = $Dmu(3d)_i_value
     Dnu_3d_i = $Dnu(3d)_i_value

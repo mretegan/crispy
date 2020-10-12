@@ -138,8 +138,11 @@ end
 -- Define the crystal field term.
 --------------------------------------------------------------------------------
 if CrystalFieldTerm then
-    Dmu_5d = NewOperator("CF", NFermions, IndexUp_5d, IndexDn_5d, {{2, 0, -7}})
-    Dnu_5d = NewOperator("CF", NFermions, IndexUp_5d, IndexDn_5d, {{4, 0, -21}})
+    Akm = {{2, 0, -7}}
+    Dmu_5d = NewOperator("CF", NFermions, IndexUp_5d, IndexDn_5d, Akm)
+
+    Akm = {{4, 0, -21}}
+    Dnu_5d = NewOperator("CF", NFermions, IndexUp_5d, IndexDn_5d, Akm)
 
     Dmu_5d_i = $Dmu(5d)_i_value
     Dnu_5d_i = $Dnu(5d)_i_value

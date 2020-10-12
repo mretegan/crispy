@@ -2,8 +2,11 @@
 -- Define the crystal field term.
 --------------------------------------------------------------------------------
 if CrystalFieldTerm then
-    Dmu_#f = NewOperator("CF", NFermions, IndexUp_#f, IndexDn_#f, {{2, 0, -7}})
-    Dnu_#f = NewOperator("CF", NFermions, IndexUp_#f, IndexDn_#f, {{4, 0, -21}})
+    Akm = {{2, 0, -7}}
+    Dmu_#f = NewOperator("CF", NFermions, IndexUp_#f, IndexDn_#f, Akm)
+
+    Akm = {{4, 0, -21}}
+    Dnu_#f = NewOperator("CF", NFermions, IndexUp_#f, IndexDn_#f, Akm)
 
     Dmu_#f_i = $Dmu(#f)_i_value
     Dnu_#f_i = $Dnu(#f)_i_value
