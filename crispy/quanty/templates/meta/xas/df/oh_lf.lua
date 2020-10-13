@@ -110,27 +110,27 @@ if H_#f_ligands_hybridization_lmct == 1 then
     Va2u_#f_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, IndexUp_#f, IndexDn_#f, PotentialExpandedOnClm("Oh", 3, {1, 0, 0}))
                + NewOperator("CF", NFermions, IndexUp_#f, IndexDn_#f, IndexUp_L1, IndexDn_L1, PotentialExpandedOnClm("Oh", 3, {1, 0, 0}))
 
-    Vt2u_#f_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, IndexUp_#f, IndexDn_#f, PotentialExpandedOnClm("Oh", 3, {0, 1, 0}))
+    Vt1u_#f_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, IndexUp_#f, IndexDn_#f, PotentialExpandedOnClm("Oh", 3, {0, 1, 0}))
                + NewOperator("CF", NFermions, IndexUp_#f, IndexDn_#f, IndexUp_L1, IndexDn_L1, PotentialExpandedOnClm("Oh", 3, {0, 1, 0}))
 
-    Vt1u_#f_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, IndexUp_#f, IndexDn_#f, PotentialExpandedOnClm("Oh", 3, {0, 0, 1}))
+    Vt2u_#f_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, IndexUp_#f, IndexDn_#f, PotentialExpandedOnClm("Oh", 3, {0, 0, 1}))
                + NewOperator("CF", NFermions, IndexUp_#f, IndexDn_#f, IndexUp_L1, IndexDn_L1, PotentialExpandedOnClm("Oh", 3, {0, 0, 1}))
 
     Va2u_#f_L1_i = $Va2u(#f,L1)_i_value
-    Vt2u_#f_L1_i = $Vt2u(#f,L1)_i_value
     Vt1u_#f_L1_i = $Vt1u(#f,L1)_i_value
+    Vt2u_#f_L1_i = $Vt2u(#f,L1)_i_value
 
     Va2u_#f_L1_f = $Va2u(#f,L1)_f_value
-    Vt2u_#f_L1_f = $Vt2u(#f,L1)_f_value
     Vt1u_#f_L1_f = $Vt1u(#f,L1)_f_value
+    Vt2u_#f_L1_f = $Vt2u(#f,L1)_f_value
 
     H_i = H_i + Chop(
         Va2u_#f_L1_i * Va2u_#f_L1
-      + Vt2u_#f_L1_i * Vt2u_#f_L1
       + Vt1u_#f_L1_i * Vt1u_#f_L1)
+      + Vt2u_#f_L1_i * Vt2u_#f_L1
 
     H_f = H_f + Chop(
         Va2u_#f_L1_f * Va2u_#f_L1
-      + Vt2u_#f_L1_f * Vt2u_#f_L1
       + Vt1u_#f_L1_f * Vt1u_#f_L1)
+      + Vt2u_#f_L1_f * Vt2u_#f_L1
 end
