@@ -106,6 +106,13 @@ class Gaussian(Broadening):
         super().__init__(parent=parent, name=name)
         self._value = value
 
+    @property
+    def replacements(self):
+        replacements = dict()
+        # Use zero by default, but write the actual value as a comment.
+        replacements["Gaussian"] = f"0.0  -- {self.value}"
+        return replacements
+
 
 class PhotonVector(Vector3DItem):
     @property
@@ -368,9 +375,8 @@ class Axis(BaseItem):
         # NOTE: The Gaussian broadening is done in the interface, but we still
         # want the user to easily change this value if the script is run from
         # outside.
-        replacements["Gaussian"] = 0.0
-
         replacements.update(self.lorentzian.replacements)
+        replacements.update(self.gaussian.replacements)
         replacements.update(self.photon.replacements)
 
         prefix = self.name[0]
