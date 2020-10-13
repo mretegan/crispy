@@ -64,6 +64,11 @@ if MagneticFieldTerm then
         + By_i * (2 * Sy + Ly)
         + Bz_i * (2 * Sz + Lz))
 
+    H_m = H_m + Chop(
+          Bx_m * (2 * Sx + Lx)
+        + By_m * (2 * Sy + Ly)
+        + Bz_m * (2 * Sz + Lz))
+
     H_f = H_f + Chop(
           Bx_f * (2 * Sx + Lx)
         + By_f * (2 * Sy + Ly)
