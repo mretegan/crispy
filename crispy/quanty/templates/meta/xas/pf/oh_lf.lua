@@ -50,7 +50,7 @@ end
 --------------------------------------------------------------------------------
 -- Define the #f-ligands hybridization term (LMCT).
 --------------------------------------------------------------------------------
-if H_#f_ligands_hybridization_lmct == 1 then
+if LmctLigandsHybridizationTerm then
     N_L1 = NewOperator("Number", NFermions, IndexUp_L1, IndexUp_L1, {1, 1, 1, 1, 1, 1, 1})
          + NewOperator("Number", NFermions, IndexDn_L1, IndexDn_L1, {1, 1, 1, 1, 1, 1, 1})
 
@@ -59,9 +59,9 @@ if H_#f_ligands_hybridization_lmct == 1 then
     E_L1_i = NElectrons_#f * (-2 * Delta_#f_L1_i + U_#f_#f_i * NElectrons_#f + U_#f_#f_i) / (2 * (NElectrons_#f + 14))
 
     Delta_#f_L1_f = $Delta(#f,L1)_f_value
-    E_#f_f = (28 * Delta_#f_L1_f - 460 * U_#i_#f_f - U_#f_#f_f * NElectrons_#f^2 - 47 * U_#f_#f_f * NElectrons_#f) / (2 * (NElectrons_#f + 24))
-    E_#i_f = (28 * Delta_#f_L1_f - 2 * U_#i_#f_f * NElectrons_#f^2 - 30 * U_#i_#f_f * NElectrons_#f - 28 * U_#i_#f_f + U_#f_#f_f * NElectrons_#f^2 + U_#f_#f_f * NElectrons_#f) / (2 * (NElectrons_#f + 24))
-    E_L1_f = (-2 * Delta_#f_L1_f * NElectrons_#f - 20 * Delta_#f_L1_f + 20 * U_#i_#f_f * NElectrons_#f + 20 * U_#i_#f_f + U_#f_#f_f * NElectrons_#f^2 + U_#f_#f_f * NElectrons_#f) / (2 * (NElectrons_#f + 24))
+    E_#f_f = (28 * Delta_#f_L1_f - U_#f_#f_f * NElectrons_#f^2 - 39 * U_#f_#f_f * NElectrons_#f - 228 * U_#i_#f_f) / (2 * (NElectrons_#f + 20)) 
+    E_#i_f = (28 * Delta_#f_L1_f + U_#f_#f_f * NElectrons_#f^2 + U_#f_#f_f * NElectrons_#f - 2 * U_#i_#f_f * NElectrons_#f^2 - 30 * U_#i_#f_f * NElectrons_#f - 28 * U_#i_#f_f) / (2 * (NElectrons_#f + 20))
+    E_L1_f = (-2 * Delta_#f_L1_f * NElectrons_#f - 12 * Delta_#f_L1_f + U_#f_#f_f * NElectrons_#f^2 + U_#f_#f_f * NElectrons_#f + 12 * U_#i_#f_f * NElectrons_#f + 12 * U_#i_#f_f) / (2 * (NElectrons_#f + 20))
 
     H_i = H_i + Chop(
           E_#f_i * N_#f

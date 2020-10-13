@@ -50,7 +50,7 @@ end
 --------------------------------------------------------------------------------
 -- Define the #f-ligands hybridization term (LMCT).
 --------------------------------------------------------------------------------
-if H_#f_ligands_hybridization_lmct == 1 then
+if LmctLigandsHybridizationTerm then
     N_L1 = NewOperator("Number", NFermions, IndexUp_L1, IndexUp_L1, {1, 1, 1, 1, 1, 1, 1})
          + NewOperator("Number", NFermions, IndexDn_L1, IndexDn_L1, {1, 1, 1, 1, 1, 1, 1})
 
