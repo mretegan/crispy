@@ -354,7 +354,7 @@ if MlctLigandsHybridizationTerm then
 
     Delta_5d_L2_i = $Delta(5d,L2)_i_value
     E_5d_i = U_5d_5d_i * (-NElectrons_5d + 1) / 2
-    E_L2_i = Delta_5d_L2_i - U_5d_5d_i * NElectrons_5d / 2 - U_5d_5d_i / 2
+    E_L2_i = Delta_5d_L2_i + U_5d_5d_i * NElectrons_5d / 2 - U_5d_5d_i / 2
 
     Delta_5d_L2_m = $Delta(5d,L2)_m_value
     E_5d_m = -(U_5d_5d_m * NElectrons_5d^2 + 11 * U_5d_5d_m * NElectrons_5d + 60 * U_2p_5d_m) / (2 * NElectrons_5d + 12)
@@ -363,7 +363,7 @@ if MlctLigandsHybridizationTerm then
 
     Delta_5d_L2_f = $Delta(5d,L2)_f_value
     E_5d_f = U_5d_5d_f * (-NElectrons_5d + 1) / 2
-    E_L2_f = Delta_5d_L2_f - U_5d_5d_f * NElectrons_5d / 2 - U_5d_5d_f / 2
+    E_L2_f = Delta_5d_L2_f + U_5d_5d_f * NElectrons_5d / 2 - U_5d_5d_f / 2
 
     H_i = H_i + Chop(
           E_5d_i * N_5d
@@ -511,6 +511,11 @@ if MagneticFieldTerm then
           Bx_i * (2 * Sx + Lx)
         + By_i * (2 * Sy + Ly)
         + Bz_i * (2 * Sz + Lz))
+
+    H_m = H_m + Chop(
+          Bx_m * (2 * Sx + Lx)
+        + By_m * (2 * Sy + Ly)
+        + Bz_m * (2 * Sz + Lz))
 
     H_f = H_f + Chop(
           Bx_f * (2 * Sx + Lx)
@@ -707,7 +712,7 @@ function WavefunctionsAndBoltzmannFactors(H, NPsis, NPsisAuto, Temperature, Thre
 
     if NPsisAuto == true and NPsis ~= 1 then
         NPsis = 4
-        local NpsisIncrement = 8
+        local NPsisIncrement = 8
         local NPsisIsConverged = false
 
         while not NPsisIsConverged do
@@ -751,7 +756,7 @@ function WavefunctionsAndBoltzmannFactors(H, NPsis, NPsisAuto, Temperature, Thre
             if NPsisIsConverged then
                 break
             else
-                NPsis = NPsis + NpsisIncrement
+                NPsis = NPsis + NPsisIncrement
             end
         end
     else
@@ -794,13 +799,13 @@ function PrintHamiltonianAnalysis(Psis, Operators, dZ, Header, Footer)
     io.write(Header)
     for i, Psi in ipairs(Psis) do
         io.write(string.format("%5d", i))
-        for j, operator in ipairs(Operators) do
+        for j, Operator in ipairs(Operators) do
             if j == 1 then
-                io.write(string.format("%12.6f", Complex.Re(Psi * operator * Psi)))
-            elseif operator == "dZ" then
+                io.write(string.format("%12.6f", Complex.Re(Psi * Operator * Psi)))
+            elseif Operator == "dZ" then
                 io.write(string.format("%12.2e", dZ[i]))
             else
-                io.write(string.format("%10.4f", Complex.Re(Psi * operator * Psi)))
+                io.write(string.format("%10.4f", Complex.Re(Psi * Operator * Psi)))
             end
         end
         io.write("\n")

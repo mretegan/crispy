@@ -191,9 +191,9 @@ if LmctLigandsHybridizationTerm then
     E_L1_i = NElectrons_3d * ((1 + NElectrons_3d) * U_3d_3d_i / 2 - Delta_3d_L1_i) / (10 + NElectrons_3d)
 
     Delta_3d_L1_f = $Delta(3d,L1)_f_value
-    E_3d_f = (10 * Delta_3d_L1_f - NElectrons_3d * (31 + NElectrons_3d) * U_3d_3d_f / 2 - 90 * U_1s_3d_f) / (16 + NElectrons_3d)
-    E_1s_f = (10 * Delta_3d_L1_f + (1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_f / 2 - (10 + NElectrons_3d) * U_1s_3d_f)) / (16 + NElectrons_3d)
-    E_L1_f = ((1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_f / 2 + 6 * U_1s_3d_f) - (6 + NElectrons_3d) * Delta_3d_L1_f) / (16 + NElectrons_3d)
+    E_3d_f = (10 * Delta_3d_L1_f - NElectrons_3d * (23 + NElectrons_3d) * U_3d_3d_f / 2 - 22 * U_1s_3d_f) / (12 + NElectrons_3d)
+    E_1s_f = (10 * Delta_3d_L1_f + (1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_f / 2 - (10 + NElectrons_3d) * U_1s_3d_f)) / (12 + NElectrons_3d)
+    E_L1_f = (-2 * Delta_3d_L1_f * NElectrons_3d - 4 * Delta_3d_L1_f + U_3d_3d_f * NElectrons_3d^2 + U_3d_3d_f * NElectrons_3d + 4 * U_1s_3d_f * NElectrons_3d + 4 * U_1s_3d_f) / (2 * (NElectrons_3d + 12))
 
     H_i = H_i + Chop(
           E_3d_i * N_3d
@@ -240,12 +240,12 @@ if MlctLigandsHybridizationTerm then
 
     Delta_3d_L2_i = $Delta(3d,L2)_i_value
     E_3d_i = U_3d_3d_i * (-NElectrons_3d + 1) / 2
-    E_L2_i = Delta_3d_L2_i - U_3d_3d_i * NElectrons_3d / 2 - U_3d_3d_i / 2
+    E_L2_i = Delta_3d_L2_i + U_3d_3d_i * NElectrons_3d / 2 - U_3d_3d_i / 2
 
     Delta_3d_L2_f = $Delta(3d,L2)_f_value
-    E_3d_f = -(U_3d_3d_f * NElectrons_3d^2 + 11 * U_3d_3d_f * NElectrons_3d + 60 * U_1s_3d_f) / (2 * NElectrons_3d + 12)
-    E_1s_f = NElectrons_3d * (U_3d_3d_f * NElectrons_3d + U_3d_3d_f - 2 * U_1s_3d_f * NElectrons_3d - 2 * U_1s_3d_f) / (2 * (NElectrons_3d + 6))
-    E_L2_f = (2 * Delta_3d_L2_f * NElectrons_3d + 12 * Delta_3d_L2_f + U_3d_3d_f * NElectrons_3d^2 - U_3d_3d_f * NElectrons_3d - 12 * U_3d_3d_f + 12 * U_1s_3d_f * NElectrons_3d + 12 * U_1s_3d_f) / (2 * (NElectrons_3d + 6))
+    E_3d_f = -(U_3d_3d_f * NElectrons_3d^2 + 3 * U_3d_3d_f * NElectrons_3d + 4 * U_1s_3d_f) / (2 * NElectrons_3d + 4)
+    E_1s_f = NElectrons_3d * (U_3d_3d_f * NElectrons_3d + U_3d_3d_f - 2 * U_1s_3d_f * NElectrons_3d - 2 * U_1s_3d_f) / (2 * (NElectrons_3d + 2))
+    E_L2_f = (2 * Delta_3d_L2_f * NElectrons_3d + 4 * Delta_3d_L2_f + U_3d_3d_f * NElectrons_3d^2 - U_3d_3d_f * NElectrons_3d - 4 * U_3d_3d_f + 4 * U_1s_3d_f * NElectrons_3d + 4 * U_1s_3d_f) / (2 * (NElectrons_3d + 2))
 
     H_i = H_i + Chop(
           E_3d_i * N_3d
@@ -525,7 +525,7 @@ function WavefunctionsAndBoltzmannFactors(H, NPsis, NPsisAuto, Temperature, Thre
 
     if NPsisAuto == true and NPsis ~= 1 then
         NPsis = 4
-        local NpsisIncrement = 8
+        local NPsisIncrement = 8
         local NPsisIsConverged = false
 
         while not NPsisIsConverged do
@@ -569,7 +569,7 @@ function WavefunctionsAndBoltzmannFactors(H, NPsis, NPsisAuto, Temperature, Thre
             if NPsisIsConverged then
                 break
             else
-                NPsis = NPsis + NpsisIncrement
+                NPsis = NPsis + NPsisIncrement
             end
         end
     else
@@ -612,13 +612,13 @@ function PrintHamiltonianAnalysis(Psis, Operators, dZ, Header, Footer)
     io.write(Header)
     for i, Psi in ipairs(Psis) do
         io.write(string.format("%5d", i))
-        for j, operator in ipairs(Operators) do
+        for j, Operator in ipairs(Operators) do
             if j == 1 then
-                io.write(string.format("%12.6f", Complex.Re(Psi * operator * Psi)))
-            elseif operator == "dZ" then
+                io.write(string.format("%12.6f", Complex.Re(Psi * Operator * Psi)))
+            elseif Operator == "dZ" then
                 io.write(string.format("%12.2e", dZ[i]))
             else
-                io.write(string.format("%10.4f", Complex.Re(Psi * operator * Psi)))
+                io.write(string.format("%10.4f", Complex.Re(Psi * Operator * Psi)))
             end
         end
         io.write("\n")

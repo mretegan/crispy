@@ -207,7 +207,7 @@ end
 --------------------------------------------------------------------------------
 -- Define the 5f-ligands hybridization term (LMCT).
 --------------------------------------------------------------------------------
-if H_5f_ligands_hybridization_lmct == 1 then
+if LmctLigandsHybridizationTerm then
     N_L1 = NewOperator("Number", NFermions, IndexUp_L1, IndexUp_L1, {1, 1, 1, 1, 1, 1, 1})
          + NewOperator("Number", NFermions, IndexDn_L1, IndexDn_L1, {1, 1, 1, 1, 1, 1, 1})
 
@@ -267,29 +267,29 @@ if H_5f_ligands_hybridization_lmct == 1 then
     Va2u_5f_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, IndexUp_5f, IndexDn_5f, PotentialExpandedOnClm("Oh", 3, {1, 0, 0}))
                + NewOperator("CF", NFermions, IndexUp_5f, IndexDn_5f, IndexUp_L1, IndexDn_L1, PotentialExpandedOnClm("Oh", 3, {1, 0, 0}))
 
-    Vt2u_5f_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, IndexUp_5f, IndexDn_5f, PotentialExpandedOnClm("Oh", 3, {0, 1, 0}))
+    Vt1u_5f_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, IndexUp_5f, IndexDn_5f, PotentialExpandedOnClm("Oh", 3, {0, 1, 0}))
                + NewOperator("CF", NFermions, IndexUp_5f, IndexDn_5f, IndexUp_L1, IndexDn_L1, PotentialExpandedOnClm("Oh", 3, {0, 1, 0}))
 
-    Vt1u_5f_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, IndexUp_5f, IndexDn_5f, PotentialExpandedOnClm("Oh", 3, {0, 0, 1}))
+    Vt2u_5f_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, IndexUp_5f, IndexDn_5f, PotentialExpandedOnClm("Oh", 3, {0, 0, 1}))
                + NewOperator("CF", NFermions, IndexUp_5f, IndexDn_5f, IndexUp_L1, IndexDn_L1, PotentialExpandedOnClm("Oh", 3, {0, 0, 1}))
 
     Va2u_5f_L1_i = $Va2u(5f,L1)_i_value
-    Vt2u_5f_L1_i = $Vt2u(5f,L1)_i_value
     Vt1u_5f_L1_i = $Vt1u(5f,L1)_i_value
+    Vt2u_5f_L1_i = $Vt2u(5f,L1)_i_value
 
     Va2u_5f_L1_f = $Va2u(5f,L1)_f_value
-    Vt2u_5f_L1_f = $Vt2u(5f,L1)_f_value
     Vt1u_5f_L1_f = $Vt1u(5f,L1)_f_value
+    Vt2u_5f_L1_f = $Vt2u(5f,L1)_f_value
 
     H_i = H_i + Chop(
         Va2u_5f_L1_i * Va2u_5f_L1
-      + Vt2u_5f_L1_i * Vt2u_5f_L1
       + Vt1u_5f_L1_i * Vt1u_5f_L1)
+      + Vt2u_5f_L1_i * Vt2u_5f_L1
 
     H_f = H_f + Chop(
         Va2u_5f_L1_f * Va2u_5f_L1
-      + Vt2u_5f_L1_f * Vt2u_5f_L1
       + Vt1u_5f_L1_f * Vt1u_5f_L1)
+      + Vt2u_5f_L1_f * Vt2u_5f_L1
 end
 
 --------------------------------------------------------------------------------
@@ -520,7 +520,7 @@ function WavefunctionsAndBoltzmannFactors(H, NPsis, NPsisAuto, Temperature, Thre
 
     if NPsisAuto == true and NPsis ~= 1 then
         NPsis = 4
-        local NpsisIncrement = 8
+        local NPsisIncrement = 8
         local NPsisIsConverged = false
 
         while not NPsisIsConverged do
@@ -564,7 +564,7 @@ function WavefunctionsAndBoltzmannFactors(H, NPsis, NPsisAuto, Temperature, Thre
             if NPsisIsConverged then
                 break
             else
-                NPsis = NPsis + NpsisIncrement
+                NPsis = NPsis + NPsisIncrement
             end
         end
     else
@@ -607,13 +607,13 @@ function PrintHamiltonianAnalysis(Psis, Operators, dZ, Header, Footer)
     io.write(Header)
     for i, Psi in ipairs(Psis) do
         io.write(string.format("%5d", i))
-        for j, operator in ipairs(Operators) do
+        for j, Operator in ipairs(Operators) do
             if j == 1 then
-                io.write(string.format("%12.6f", Complex.Re(Psi * operator * Psi)))
-            elseif operator == "dZ" then
+                io.write(string.format("%12.6f", Complex.Re(Psi * Operator * Psi)))
+            elseif Operator == "dZ" then
                 io.write(string.format("%12.2e", dZ[i]))
             else
-                io.write(string.format("%10.4f", Complex.Re(Psi * operator * Psi)))
+                io.write(string.format("%10.4f", Complex.Re(Psi * Operator * Psi)))
             end
         end
         io.write("\n")
