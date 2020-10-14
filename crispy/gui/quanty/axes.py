@@ -309,7 +309,7 @@ class Axis(BaseItem):
 
     @property
     def interval(self):
-        # NOTE: Checked and it is consistent with Quanty.
+        # Checked and it is consistent with Quanty.
         return np.abs(self.stop.value - self.start.value) / self.npoints.value
 
     @property
@@ -372,7 +372,7 @@ class Axis(BaseItem):
         replacements["NPoints"] = self.npoints.value
         replacements["ExperimentalShift"] = self.experimentalEnergy
         replacements["ZeroShift"] = 0.0
-        # NOTE: The Gaussian broadening is done in the interface, but we still
+        # The Gaussian broadening is done in the interface, but we still
         # want the user to easily change this value if the script is run from
         # outside.
         replacements.update(self.lorentzian.replacements)

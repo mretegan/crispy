@@ -339,7 +339,7 @@ class DoubleItem(BaseItem):
 
 class Vector3DItem(BaseItem):
     def data(self, column, role=Qt.DisplayRole):
-        # Note: Qt.EditRole is needed to properly show the Numpy array in the
+        # Qt.EditRole is needed to properly show the Numpy array in the
         # VectorLineEdit. Because of this the delegates must rely on the Qt.UserRole
         # to identify the type editor needed for the data.
         if role in (Qt.DisplayRole, Qt.EditRole):

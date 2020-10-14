@@ -129,7 +129,7 @@ class HamiltonianSetupPage(QWidget):
         loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy.gui")
 
         self.mappers = list()
-        # NOTE: This is needed for the updateAutoStates.
+        # This is needed for the updateAutoStates.
         self.hamiltonian = None
 
     def populate(self, state):
@@ -420,9 +420,11 @@ class DockWidget(QDockWidget):
         # Except for the case when this function is called from __init__, the
         # self.state should be assigned the results model, so disconnect only the
         # signals that are not relevant anymore.
-        # NOTE: Should these signals be managed at the self.state level?
+        #
+        # Should these signals be managed at the self.state level?
         # The title change is a bit problematic, but the other should be fine.
-        # NOTE: They work like this so not necessary a priority.
+        #
+        # They work like this, so not necessary a priority.
         if getattr(self, "state", None) is not None:
             self.state.runner.outputUpdated.disconnect()
             self.state.runner.started.disconnect()
@@ -433,7 +435,7 @@ class DockWidget(QDockWidget):
         self.generalPage.populate(self.state)
         self.hamiltonianPage.populate(self.state)
 
-        # NOTE: Different actions are required if the runner is successful or not.
+        # Different actions are required if the runner is successful or not.
         self.state.runner.started.connect(self.started)
         self.state.runner.successful.connect(self.successful)
         self.state.runner.outputUpdated.connect(self.updateLogger)

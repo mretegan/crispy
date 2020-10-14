@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 class Spectrum(SelectableItem):
     """Base class for spectrum objects.
 
-    NOTE: The objects don't necessary have to have data.
+    The objects don't necessary have to have data.
     """
 
     def __init__(self, parent=None, name=None):
@@ -39,7 +39,7 @@ class Spectrum(SelectableItem):
 class Spectrum1D(Spectrum):
     """One-dimensional spectrum.
 
-    NOTE: The number of points of a Quanty spectrum is equal to N + 1, where N
+    The number of points of a Quanty spectrum is equal to N + 1, where N
     is the number of points specified in the input.
     """
 

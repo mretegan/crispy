@@ -43,7 +43,7 @@ class ComboBox(QComboBox):
         self.setItems(item.items, item.currentItem)
 
 
-# Note: Initially the line edits were implemented to return the types specified in
+# Initially the line edits were implemented to return the types specified in
 # their names, i.e. the IntLineEdit would return an int, etc. In the end I found it
 # better to delegate the conversion to the items in the model. The validators take care
 # of having the proper format.

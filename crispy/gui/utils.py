@@ -36,7 +36,7 @@ def setMappings(mappings):
         mapper.setItemDelegate(delegate)
         mapper.setRootIndex(obj.parent().index())
         mapper.setCurrentModelIndex(obj.index())
-        # Note: QDataWidgetMapper needs a focus event to notice a change in the data.
+        # QDataWidgetMapper needs a focus event to notice a change in the data.
         # To make sure the model is informed about the change, I connected the
         # stateChanged signal of the QCheckBox to the submit slot of the
         # QDataWidgetMapper. The same idea goes for the QComboBox.
