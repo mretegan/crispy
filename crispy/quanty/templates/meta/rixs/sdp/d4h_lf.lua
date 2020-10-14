@@ -87,6 +87,7 @@ if LmctLigandsHybridizationTerm then
 
     H_f = H_f + Chop(
           E_#m_f * N_#m
+        + E_#f_f * N_#f
         + E_L1_f * N_L1)
 
     Dq_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, PotentialExpandedOnClm("D4h", 2, { 6,  6, -4, -4}))
@@ -189,6 +190,7 @@ if MlctLigandsHybridizationTerm then
 
     H_f = H_f + Chop(
           E_#m_f * N_#m
+        + E_#f_f * N_#f  
         + E_L2_f * N_L2)
 
     Dq_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, PotentialExpandedOnClm("D4h", 2, { 6,  6, -4, -4}))
