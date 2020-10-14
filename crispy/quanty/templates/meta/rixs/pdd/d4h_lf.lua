@@ -165,7 +165,7 @@ if MlctLigandsHybridizationTerm then
 
     Delta_#m_L2_i = $Delta(#m,L2)_i_value
     E_#m_i = U_#m_#m_i * (-NElectrons_#m + 1) / 2
-    E_L2_i = Delta_#m_L2_i - U_#m_#m_i * NElectrons_#m / 2 - U_#m_#m_i / 2
+    E_L2_i = Delta_#m_L2_i + U_#m_#m_i * NElectrons_#m / 2 - U_#m_#m_i / 2
 
     Delta_#m_L2_m = $Delta(#m,L2)_m_value
     E_#m_m = -(U_#m_#m_m * NElectrons_#m^2 + 11 * U_#m_#m_m * NElectrons_#m + 60 * U_#i_#m_m) / (2 * NElectrons_#m + 12)
@@ -174,7 +174,7 @@ if MlctLigandsHybridizationTerm then
 
     Delta_#m_L2_f = $Delta(#m,L2)_f_value
     E_#m_f = U_#m_#m_f * (-NElectrons_#m + 1) / 2
-    E_L2_f = Delta_#m_L2_f - U_#m_#m_f * NElectrons_#m / 2 - U_#m_#m_f / 2
+    E_L2_f = Delta_#m_L2_f + U_#m_#m_f * NElectrons_#m / 2 - U_#m_#m_f / 2
 
     H_i = H_i + Chop(
           E_#m_i * N_#m
