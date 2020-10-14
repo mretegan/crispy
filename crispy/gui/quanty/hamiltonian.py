@@ -551,6 +551,7 @@ class NumberOfConfigurations(IntItem):
             message = f"The maximum number of configurations is {self.maximum}."
             raise ValueError(message)
         self._value = value
+        self.dataChanged.emit(1)
 
 
 class Hamiltonian(BaseItem):
@@ -571,6 +572,8 @@ class Hamiltonian(BaseItem):
         self.synchronizeParameters = BoolItem(parent=self, name=name, value=True)
 
         self.numberOfConfigurations = NumberOfConfigurations(parent=self)
+        for term in self.terms.children():
+            term.dataChanged.connect(self.numberOfConfigurations.reset)
 
     @property
     def replacements(self):
