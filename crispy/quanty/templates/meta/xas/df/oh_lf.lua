@@ -126,11 +126,11 @@ if LmctLigandsHybridizationTerm then
 
     H_i = H_i + Chop(
         Va2u_#f_L1_i * Va2u_#f_L1
-      + Vt1u_#f_L1_i * Vt1u_#f_L1)
-      + Vt2u_#f_L1_i * Vt2u_#f_L1
+      + Vt1u_#f_L1_i * Vt1u_#f_L1
+      + Vt2u_#f_L1_i * Vt2u_#f_L1)
 
     H_f = H_f + Chop(
         Va2u_#f_L1_f * Va2u_#f_L1
-      + Vt1u_#f_L1_f * Vt1u_#f_L1)
-      + Vt2u_#f_L1_f * Vt2u_#f_L1
+      + Vt1u_#f_L1_f * Vt1u_#f_L1
+      + Vt2u_#f_L1_f * Vt2u_#f_L1)
 end
