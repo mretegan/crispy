@@ -43,7 +43,7 @@ class Broadening(DoubleItem):
 
 
 class Lorentzian(Broadening):
-    MINIMUM = 0.01
+    MINIMUM = 0.1
 
     def __init__(self, parent=None, name="Lorentzian", value=None):
         super().__init__(parent=parent, name=name)
@@ -298,7 +298,7 @@ class Axis(BaseItem):
         start, stop = self.limits
         self.start = Start(parent=self, value=start)
         self.stop = Stop(parent=self, value=stop)
-        self.npoints = NPoints(parent=self, value=1000)
+        self.npoints = NPoints(parent=self, value=2000)
 
         self.gaussian = Gaussian(parent=self, value=0.1)
         self.lorentzian = Lorentzian(parent=self, value=self.coreholeWidth)
