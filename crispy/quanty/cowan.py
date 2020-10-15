@@ -27,8 +27,7 @@ class Cowan:
     RCN_HEADER = "22 -9    2   10  1.0    5.E-06    1.E-09-2   130   1.0  0.65  0.0 0.50 0.0  0.7\n"
     RCN = "runrcn.sh"
 
-    # Use the value from the Cowan programs.
-    RYDBER_TO_EV = 13.60580  # 13.605693122994
+    RYDBER_TO_EV = 13.605693122994  # The value in Cowan's programs is 13.60580.
 
     NAMES = {
         "d": ("U({0:s},{0:s})", "F2({0:s},{0:s})", "F4({0:s},{0:s})", "ζ({0:s})"),
@@ -100,11 +99,10 @@ class Cowan:
         self.configuration = configuration
         self.basename = basename
 
-        if "TTMULT" not in os.environ:
-            logger.debug(
-                "The $TTMULT environment variable is not set; will use internal binaries."
-            )
-            os.environ["TTMULT"] = self.bin
+        logger.debug(
+            "Internal TTMULT binaries are going to be used for the calculation."
+        )
+        os.environ["TTMULT"] = self.bin
 
     @property
     def root(self):
@@ -173,13 +171,7 @@ class Cowan:
 
     def parse_rcn_output(self):
         # pylint: disable=too-many-branches
-        """Parse the output of the RCN program to get the values of the parameters.
-
-        FIXME: For 4f, 5d, and 5f elements RCN doesn't print the Slater
-        integrals involving orbitals lower than 3s, 2p, and 4p, respectively.
-        For electronic configurations that include orbitals outside this
-        range, the parameters are set to zero.
-        """
+        """Parse the output of the RCN program to get the values of the parameters."""
 
         subshells = self.configuration.subshells
         if self.configuration.hasCore:
@@ -196,7 +188,7 @@ class Cowan:
         filename = "{:s}.rcn_out".format(self.basename)
         with open(filename) as fp:
             for line in fp:
-                # Parse the zeta parameters.
+                # Parse the spin-orbit coupling parameters (zeta).
                 if "BLUME-WATSON" in line:
                     while "SLATER INTEGRALS" not in line:
                         # Zeta for the valence subshell.
