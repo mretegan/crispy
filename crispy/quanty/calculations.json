@@ -146,7 +146,11 @@
       "XPS": {
         "edges": ["L2,3 (2p)", "M2,3 (3p)", "M4,5 (3d)", "N2,3 (4p)", "N4,5 (4d)"],
         "symmetries": ["Oh"]
-      }
+      },
+      "RIXS": {
+        "edges": ["L2,3-M4,5 (2p3d)", "L2,3-N4,5 (2p4d)"],
+        "symmetries": ["Oh"]
+      }      
     }
   },
   "5d": {
@@ -225,6 +229,10 @@
       },
       "XPS": {
         "edges": ["L2,3 (2p)", "M2,3 (3p)", "M4,5 (3d)", "N2,3 (4p)", "N4,5 (4d)"],
+        "symmetries": ["Oh"]
+      },
+      "RIXS": {
+        "edges": ["L2,3-M4,5 (2p3d)", "L2,3-N4,5 (2p4d)"],
         "symmetries": ["Oh"]
       }
     }

@@ -211,7 +211,7 @@ if LmctLigandsHybridizationTerm then
     E_L1_i = NElectrons_5f * (-2 * Delta_5f_L1_i + U_5f_5f_i * NElectrons_5f + U_5f_5f_i) / (2 * (NElectrons_5f + 14))
 
     Delta_5f_L1_f = $Delta(5f,L1)_f_value
-    E_5f_f = (28 * Delta_5f_L1_f - U_5f_5f_f * NElectrons_5f^2 - 39 * U_5f_5f_f * NElectrons_5f - 228 * U_2p_5f_f) / (2 * (NElectrons_5f + 20)) 
+    E_5f_f = (28 * Delta_5f_L1_f - U_5f_5f_f * NElectrons_5f^2 - 39 * U_5f_5f_f * NElectrons_5f - 228 * U_2p_5f_f) / (2 * (NElectrons_5f + 20))
     E_2p_f = (28 * Delta_5f_L1_f + U_5f_5f_f * NElectrons_5f^2 + U_5f_5f_f * NElectrons_5f - 2 * U_2p_5f_f * NElectrons_5f^2 - 30 * U_2p_5f_f * NElectrons_5f - 28 * U_2p_5f_f) / (2 * (NElectrons_5f + 20))
     E_L1_f = (-2 * Delta_5f_L1_f * NElectrons_5f - 12 * Delta_5f_L1_f + U_5f_5f_f * NElectrons_5f^2 + U_5f_5f_f * NElectrons_5f + 12 * U_2p_5f_f * NElectrons_5f + 12 * U_2p_5f_f) / (2 * (NElectrons_5f + 20))
 
@@ -278,13 +278,13 @@ if LmctLigandsHybridizationTerm then
 
     H_i = H_i + Chop(
         Va2u_5f_L1_i * Va2u_5f_L1
-      + Vt1u_5f_L1_i * Vt1u_5f_L1)
-      + Vt2u_5f_L1_i * Vt2u_5f_L1
+      + Vt1u_5f_L1_i * Vt1u_5f_L1
+      + Vt2u_5f_L1_i * Vt2u_5f_L1)
 
     H_f = H_f + Chop(
         Va2u_5f_L1_f * Va2u_5f_L1
-      + Vt1u_5f_L1_f * Vt1u_5f_L1)
-      + Vt2u_5f_L1_f * Vt2u_5f_L1
+      + Vt1u_5f_L1_f * Vt1u_5f_L1
+      + Vt2u_5f_L1_f * Vt2u_5f_L1)
 end
 
 --------------------------------------------------------------------------------
