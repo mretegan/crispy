@@ -78,13 +78,13 @@ function CalculateT(Basis, Eps, K)
         T = Eps[1] * Basis[1]
           + Eps[2] * Basis[2]
           + Eps[3] * Basis[3]
-    elseif #Basis == 5 then 
+    elseif #Basis == 5 then
         -- The basis for quadrupolar operators is in the order xy, xz, yz, x2y2, z2.
-        T = (Eps[1] * K[2] + Eps[2] * K[1]) / math.sqrt(3) * Basis[1] 
-          + (Eps[1] * K[3] + Eps[3] * K[1]) / math.sqrt(3) * Basis[2] 
-          + (Eps[2] * K[3] + Eps[3] * K[2]) / math.sqrt(3) * Basis[3] 
-          + (Eps[1] * K[1] - Eps[2] * K[2]) / math.sqrt(3) * Basis[4] 
-          + Eps[3] * K[3] * Basis[5]
+        T = (Eps[1] * K[2] + Eps[2] * K[1]) / math.sqrt(3) * Basis[1]
+          + (Eps[1] * K[3] + Eps[3] * K[1]) / math.sqrt(3) * Basis[2]
+          + (Eps[2] * K[3] + Eps[3] * K[2]) / math.sqrt(3) * Basis[3]
+          + (Eps[1] * K[1] - Eps[2] * K[2]) / math.sqrt(3) * Basis[4]
+          + (Eps[3] * K[3]) * Basis[5]
     end
     return Chop(T)
 end
