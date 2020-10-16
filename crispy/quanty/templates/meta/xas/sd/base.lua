@@ -53,6 +53,10 @@ if AtomicTerm then
 
     H_f = H_f + Chop(
           zeta_#f_f * ldots_#f)
+        
+    -- Save the atomic Hamiltonians.
+    HAtomic_i = H_i - U_#f_#f_i * F0_#f_#f
+    HAtomic_f = H_f - U_#f_#f_f * F0_#f_#f - U_#i_#f_f * F0_#i_#f
 end
 
 #symmetry_term

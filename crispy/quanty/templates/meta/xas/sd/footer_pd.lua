@@ -33,6 +33,11 @@ if next(SpectraToCalculate) == nil then
 end
 
 --------------------------------------------------------------------------------
+-- Calculate the energy required to shift the spectrum to approximately zero.
+--------------------------------------------------------------------------------
+ZeroShift = CalculateEnergyDifference(HAtomic_i, InitialRestrictions, HAtomic_f, FinalRestrictions)
+
+--------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
 if PdHybridizationTerm then

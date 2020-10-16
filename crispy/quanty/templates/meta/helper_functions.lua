@@ -217,3 +217,19 @@ function PrintHamiltonianAnalysis(Psis, Operators, dZ, Header, Footer)
     end
     io.write(Footer)
 end
+
+function CalculateEnergyDifference(H1, H1Restrictions, H2, H2Restrictions)
+    -- Calculate the energy difference between the lowest eigenstates of the two
+    -- Hamiltonians.
+    --
+    -- @param H1: first Hamiltonian
+    -- @param H1Restrictions: restrictions of the occupation numbers for H1
+    -- @param H2: second Hamiltonian
+    -- @param H2Restrictions: restrictions of the occupation numbers for H2
+
+    local Psis1, _ = WavefunctionsAndBoltzmannFactors(H1, 1, false, 0, nil, H1Restrictions, nil)
+    local Psis2, _ = WavefunctionsAndBoltzmannFactors(H2, 1, false, 0, nil, H2Restrictions, nil)
+    local E1 = Psis1[1] * H1 * Psis1[1]
+    local E2 = Psis2[1] * H2 * Psis2[1]
+    return E1 - E2
+end
