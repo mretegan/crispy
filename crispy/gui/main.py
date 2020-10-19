@@ -149,8 +149,8 @@ class CheckUpdateThread(QThread):
         return data["version"]
 
     def run(self):
-        # TODO: The implementation is not ideal. The run() method of the
-        # parent class is not called.
+        # TODO: The implementation is not ideal. The run() method of the parent
+        # class is not called.
         # Wait a few seconds to avoid too much work at startup.
         seconds = 3
         self.sleep(seconds)

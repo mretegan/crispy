@@ -246,7 +246,7 @@ class ResultsPage(QWidget):
 
         # TODO: How to distinguish between a dataChanged related to change in
         # the name or a change in the checked state? Only the last one should
-        # trigger subsequent actions.
+        # trigger the actions.
         self.model.dataChanged.connect(self.plot)
         self.currentIndexChanged.connect(
             lambda index: self.detailsDialog.populate(index.internalPointer())

@@ -247,7 +247,7 @@ class BaseItem(QObject):
 
     def copyFrom(self, item):
         # TODO: If the values are assigned using the setter, the time it takes
-        # to call the function doubles approximately at each call. The is
+        # to call the function doubles approximately at each call. This is
         # related to the _modelDataChanged() function.
         self._name = copy.deepcopy(item.name)
         self._value = copy.deepcopy(item.value)

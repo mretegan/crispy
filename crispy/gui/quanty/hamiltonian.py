@@ -230,7 +230,6 @@ class AtomicTerm(HamiltonianTerm):
     def __init__(self, parent=None, name="Atomic"):
         super().__init__(parent=parent, name=name)
 
-        # TODO: If this is slow, maybe investigate caching it.
         path = resourceAbsolutePath(
             os.path.join("quanty", "parameters", f"{self.element.symbol}.h5")
         )

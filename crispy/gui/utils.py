@@ -22,8 +22,8 @@ logger = logging.getLogger(__name__)
 
 def setMappings(mappings):
     """Set the mappings between the model and widgets.
-    TODO: Extend this to accept other columns?
-    TODO: Check if the already has the model.
+    TODO: - Should this be extended to accept other columns?
+          - Check if the already has the model.
     """
     column = 1
     mappers = list()
