@@ -432,6 +432,7 @@ class Calculation(SelectableItem):
     # TODO: Could this class also inherit from the Runner() class?
 
     titleChanged = pyqtSignal(str)
+    processed = pyqtSignal()
 
     def __init__(
         self,
@@ -707,6 +708,7 @@ class Calculation(SelectableItem):
             return
         # TODO: Check if loading the spectra was successful.
         self.spectra.load()
+        self.processed.emit()
 
     def stop(self):
         self.runner.kill()

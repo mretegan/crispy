@@ -24,6 +24,7 @@ from crispy.gui.quanty.axes import YAxis
 from crispy.gui.quanty.calculation import Calculation
 from crispy.gui.quanty.details import DetailsDialog
 from crispy.gui.quanty.preferences import PreferencesDialog
+from crispy.gui.quanty.progress import ProgressDialog
 from crispy.gui.utils import setMappings
 
 logger = logging.getLogger(__name__)
@@ -490,6 +491,10 @@ class DockWidget(QDockWidget):
         self.state = state
 
     def run(self):
+        progress = ProgressDialog(self)
+        progress.rejected.connect(self.state.stop)
+        self.state.processed.connect(progress.accept)
+        progress.show()
         self.state.run()
 
     def stop(self):

@@ -16,7 +16,7 @@ from PyQt5.QtCore import QSize, QPoint
 from PyQt5.QtWidgets import QDialog, QDialogButtonBox, QFileDialog
 from PyQt5.uic import loadUi
 
-from crispy import __version__ as version, resourceAbsolutePath
+from crispy import resourceAbsolutePath
 from crispy.config import Config
 
 logger = logging.getLogger(__name__)
