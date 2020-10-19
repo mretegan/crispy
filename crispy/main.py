@@ -27,8 +27,6 @@ warnings.filterwarnings("ignore", category=UserWarning)
 
 
 def main():
-    setUpLoggers()
-
     app = QApplication([])
 
     # This must be done after the application is instantiated.
@@ -43,6 +41,8 @@ def main():
     if not settings.allKeys():
         logger.debug("Loading default settings.")
         config.loadDefaults()
+
+    setUpLoggers()
 
     logger.info("Starting the application.")
     window = MainWindow()
