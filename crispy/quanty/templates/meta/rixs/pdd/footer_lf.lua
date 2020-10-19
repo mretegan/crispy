@@ -42,6 +42,12 @@ if next(SpectraToCalculate) == nil then
 end
 
 --------------------------------------------------------------------------------
+-- Calculate the energy required to shift the spectrum to approximately zero.
+--------------------------------------------------------------------------------
+ZeroShift1 = CalculateEnergyDifference(HAtomic_i, InitialRestrictions, HAtomic_m, IntermediateRestrictions)
+ZeroShift2 = CalculateEnergyDifference(HAtomic_i, InitialRestrictions, HAtomic_f, FinalRestrictions)
+
+--------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
 local t = math.sqrt(1 / 2)

@@ -74,12 +74,12 @@ function CalculateT(Basis, Eps, K)
     -- @param: K: cartesian components of the wave-vector
 
     if #Basis == 3 then
-        -- The basis for dipolar operators is in the order x, y, z.
+        -- The basis for dipolar operators must be in the order x, y, z.
         T = Eps[1] * Basis[1]
           + Eps[2] * Basis[2]
           + Eps[3] * Basis[3]
     elseif #Basis == 5 then
-        -- The basis for quadrupolar operators is in the order xy, xz, yz, x2y2, z2.
+        -- The basis for quadrupolar operators must be in the order xy, xz, yz, x2y2, z2.
         T = (Eps[1] * K[2] + Eps[2] * K[1]) / math.sqrt(3) * Basis[1]
           + (Eps[1] * K[3] + Eps[3] * K[1]) / math.sqrt(3) * Basis[2]
           + (Eps[2] * K[3] + Eps[3] * K[2]) / math.sqrt(3) * Basis[3]
