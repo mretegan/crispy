@@ -62,7 +62,7 @@ class DetailsDialog(QDialog):
         font = fixedFont()
         self.inputText.setFont(font)
         self.outputText.setFont(font)
-        self.summaryText.setFont(font)
+        # self.summaryText.setFont(font)
 
         self.xAxis = AxisWidget()
         self.yAxis = AxisWidget()
@@ -90,7 +90,7 @@ class DetailsDialog(QDialog):
 
         self.inputText.clear()
         self.outputText.clear()
-        self.summaryText.clear()
+        # self.summaryText.clear()
 
     def populate(self, result):
         self.clear()
@@ -121,7 +121,7 @@ class DetailsDialog(QDialog):
 
         self.inputText.setPlainText(result.input)
         self.outputText.setPlainText(result.output)
-        self.summaryText.setPlainText(result.summary)
+        # self.summaryText.setPlainText(result.summary)
 
         if result.value is not None:
             title = f"Details for {result.value}"

@@ -684,9 +684,9 @@ class Calculation(SelectableItem):
     def output(self):
         return self.runner.output
 
-    @property
-    def summary(self):
-        return f"Summary for {self.value}"
+    # @property
+    # def summary(self):
+    #     return f"Summary for {self.value}"
 
     def saveInput(self):
         # TODO: Is this too hidden?
