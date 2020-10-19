@@ -695,7 +695,7 @@ class Calculation(SelectableItem):
             fp.write(self.input)
 
     def run(self):
-        # Don't crash if something when wrong when saving the input file.
+        # Don't crash if something went wrong when saving the input file.
         try:
             self.saveInput()
         except FileNotFoundError:
@@ -724,15 +724,7 @@ class Calculation(SelectableItem):
 
 
 def main():
-    parameters = (("XAS", "K (1s)"), ("RIXS", "L2,3-M4,5 (2p3d)"), ("XES", "Kɑ (1s2p)"))
-    for experiment, edge in parameters:
-        calculation = Calculation(symbol="Fe", experiment=experiment, edge=edge)
-        print(calculation)
-        print(calculation.xaxis.__dict__)
-        try:
-            print(calculation.yaxis.__dict__)
-        except AttributeError:
-            pass
+    pass
 
 
 if __name__ == "__main__":
