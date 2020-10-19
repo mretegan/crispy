@@ -427,9 +427,9 @@ class Runner(QProcess):
         return path
 
 
-# TODO: Could this class also inherit from the Runner() class?
 class Calculation(SelectableItem):
     # pylint: disable=too-many-instance-attributes, too-many-arguments, too-many-public-methods
+    # TODO: Could this class also inherit from the Runner() class?
 
     titleChanged = pyqtSignal(str)
 
@@ -438,8 +438,8 @@ class Calculation(SelectableItem):
         symbol="Ni",
         charge="2+",
         symmetry="Oh",
-        experiment="RIXS",
-        edge="L2,3-M4,5 (2p3d)",
+        experiment="XAS",
+        edge="L2,3 (2p)",
         hamiltonian=True,
         parent=None,
     ):
