@@ -418,17 +418,13 @@ class DockWidget(QDockWidget):
 
     @state.setter
     def state(self, value):
-        # Except for the case when this function is called from __init__, the
-        # self.state should be assigned the results model, so disconnect only the
-        # signals that are not relevant anymore.
-        #
-        # Should these signals be managed at the self.state level?
-        # The title change is a bit problematic, but the other should be fine.
-        #
-        # They work like this, so not necessary a priority.
-        if getattr(self, "state", None) is not None:
+        # Except for the case when the method is called from __init__,
+        # self.state should be assigned to the results model, so disconnect
+        # only the signals that are not relevant anymore.
+        try:
             self.state.runner.outputUpdated.disconnect()
-            self.state.runner.successful.disconnect()
+        except AttributeError:
+            pass
 
         self._state = value
 
@@ -490,7 +486,7 @@ class DockWidget(QDockWidget):
     def run(self):
         progress = ProgressDialog(self)
         progress.rejected.connect(self.state.stop)
-        self.state.processed.connect(progress.accept)
+        self.state.runner.successful.connect(progress.accept)
         progress.show()
         self.state.run()
 
