@@ -320,9 +320,15 @@ class Axis(BaseItem):
             limits = [-3 * STEP, STEP]
         else:
             label = calculation.edge.labels[self.idx]
+            subshell = calculation.element.valenceSubshell
+            logger.debug(label)
             if label in ("K", "L1", "M1", "N1"):
                 limits = [-STEP, STEP]
-            limits = [-STEP, 3 * STEP]
+            else:
+                if subshell in ("3d",):
+                    limits = [-STEP, 3 * STEP]
+                else:
+                    limits = [-STEP, 2 * STEP]
 
         return [limit + self.experimentalEnergy for limit in limits]
 
