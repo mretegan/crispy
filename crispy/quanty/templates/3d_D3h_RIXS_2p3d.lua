@@ -161,6 +161,11 @@ if AtomicTerm then
 
     H_f = H_f + Chop(
           zeta_3d_f * ldots_3d)
+
+    -- Save the atomic Hamiltonians.
+    HAtomic_i = H_i - U_3d_3d_i * F0_3d_3d
+    HAtomic_m = H_m - U_3d_3d_m * F0_3d_3d - U_2p_3d_m * F0_2p_3d
+    HAtomic_f = H_f - U_3d_3d_f * F0_3d_3d - U_3d_3d_f * F0_3d_3d
 end
 
 --------------------------------------------------------------------------------
@@ -400,17 +405,17 @@ function CalculateT(Basis, Eps, K)
     -- @param: K: cartesian components of the wave-vector
 
     if #Basis == 3 then
-        -- The basis for dipolar operators is in the order x, y, z.
+        -- The basis for dipolar operators must be in the order x, y, z.
         T = Eps[1] * Basis[1]
           + Eps[2] * Basis[2]
           + Eps[3] * Basis[3]
-    elseif #Basis == 5 then 
-        -- The basis for quadrupolar operators is in the order xy, xz, yz, x2y2, z2.
-        T = (Eps[1] * K[2] + Eps[2] * K[1]) / math.sqrt(3) * Basis[1] 
-          + (Eps[1] * K[3] + Eps[3] * K[1]) / math.sqrt(3) * Basis[2] 
-          + (Eps[2] * K[3] + Eps[3] * K[2]) / math.sqrt(3) * Basis[3] 
-          + (Eps[1] * K[1] - Eps[2] * K[2]) / math.sqrt(3) * Basis[4] 
-          + Eps[3] * K[3] * Basis[5]
+    elseif #Basis == 5 then
+        -- The basis for quadrupolar operators must be in the order xy, xz, yz, x2y2, z2.
+        T = (Eps[1] * K[2] + Eps[2] * K[1]) / math.sqrt(3) * Basis[1]
+          + (Eps[1] * K[3] + Eps[3] * K[1]) / math.sqrt(3) * Basis[2]
+          + (Eps[2] * K[3] + Eps[3] * K[2]) / math.sqrt(3) * Basis[3]
+          + (Eps[1] * K[1] - Eps[2] * K[2]) / math.sqrt(3) * Basis[4]
+          + (Eps[3] * K[3]) * Basis[5]
     end
     return Chop(T)
 end
@@ -544,6 +549,22 @@ function PrintHamiltonianAnalysis(Psis, Operators, dZ, Header, Footer)
     io.write(Footer)
 end
 
+function CalculateEnergyDifference(H1, H1Restrictions, H2, H2Restrictions)
+    -- Calculate the energy difference between the lowest eigenstates of the two
+    -- Hamiltonians.
+    --
+    -- @param H1: first Hamiltonian
+    -- @param H1Restrictions: restrictions of the occupation numbers for H1
+    -- @param H2: second Hamiltonian
+    -- @param H2Restrictions: restrictions of the occupation numbers for H2
+
+    local Psis1, _ = WavefunctionsAndBoltzmannFactors(H1, 1, false, 0, nil, H1Restrictions, nil)
+    local Psis2, _ = WavefunctionsAndBoltzmannFactors(H2, 1, false, 0, nil, H2Restrictions, nil)
+    local E1 = Psis1[1] * H1 * Psis1[1]
+    local E2 = Psis2[1] * H2 * Psis2[1]
+    return E1 - E2
+end
+
 --------------------------------------------------------------------------------
 -- Analyze the initial Hamiltonian.
 --------------------------------------------------------------------------------
@@ -568,6 +589,12 @@ PrintHamiltonianAnalysis(Psis_i, Operators, dZ_i, string.format(Header, "initial
 if next(SpectraToCalculate) == nil then
     return
 end
+
+--------------------------------------------------------------------------------
+-- Calculate the energy required to shift the spectrum to approximately zero.
+--------------------------------------------------------------------------------
+ZeroShift1 = CalculateEnergyDifference(HAtomic_i, InitialRestrictions, HAtomic_m, IntermediateRestrictions)
+ZeroShift2 = CalculateEnergyDifference(HAtomic_i, InitialRestrictions, HAtomic_f, FinalRestrictions)
 
 --------------------------------------------------------------------------------
 -- Calculate and save the spectra.
