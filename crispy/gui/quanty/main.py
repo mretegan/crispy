@@ -428,18 +428,15 @@ class DockWidget(QDockWidget):
         # They work like this, so not necessary a priority.
         if getattr(self, "state", None) is not None:
             self.state.runner.outputUpdated.disconnect()
-            self.state.runner.started.disconnect()
-            self.state.runner.finished.disconnect()
+            self.state.runner.successful.disconnect()
 
         self._state = value
 
         self.generalPage.populate(self.state)
         self.hamiltonianPage.populate(self.state)
 
-        # Different actions are required if the runner is successful or not.
-        self.state.runner.started.connect(self.started)
-        self.state.runner.successful.connect(self.successful)
         self.state.runner.outputUpdated.connect(self.updateLogger)
+        self.state.runner.successful.connect(self.successful)
         self.state.titleChanged.connect(self.updateMainWindowTitle)
 
         self.updateMainWindowTitle(self.state.value)
@@ -536,29 +533,10 @@ class DockWidget(QDockWidget):
         self.state._value = title
         self.parent().setWindowTitle(f"Crispy - {title}")
 
-    def started(self):
-        self.calculationPushButton.disconnect()
-
-        path = os.path.join("gui", "icons", "stop.svg")
-        icon = QIcon(resourceAbsolutePath(path))
-        self.calculationPushButton.setIcon(icon)
-        self.calculationPushButton.setText("Stop")
-        self.calculationPushButton.setToolTip("Stop Quanty.")
-        self.calculationPushButton.clicked.connect(self.stop)
-
     def successful(self, successful):
         # Scroll to the bottom of the logger widget.
         scrollBar = self.parent().loggerWidget.verticalScrollBar()
         scrollBar.setValue(scrollBar.maximum())
-
-        self.calculationPushButton.disconnect()
-
-        path = os.path.join("gui", "icons", "play.svg")
-        icon = QIcon(resourceAbsolutePath(path))
-        self.calculationPushButton.setIcon(icon)
-        self.calculationPushButton.setText("Run")
-        self.calculationPushButton.setToolTip("Run Quanty.")
-        self.calculationPushButton.clicked.connect(self.run)
 
         if not successful:
             return
