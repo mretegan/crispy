@@ -321,7 +321,6 @@ class Axis(BaseItem):
         else:
             label = calculation.edge.labels[self.idx]
             subshell = calculation.element.valenceSubshell
-            logger.debug(label)
             if label in ("K", "L1", "M1", "N1"):
                 limits = [-STEP, STEP]
             else:
