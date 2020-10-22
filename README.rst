@@ -1,6 +1,6 @@
 Crispy is a modern graphical user interface to calculate core-level spectra using the semi-empirical multiplet approaches implemented in `Quanty <http://quanty.org>`_. The interface provides a set of tools to generate input files, submit calculations, and plot the resulting spectra.
 
-|release| |downloads| |DOI| |licence|
+|release| |downloads| |DOI| |license|
 
 .. |downloads| image:: https://img.shields.io/github/downloads/mretegan/crispy/total.svg
     :target: https://github.com/mretegan/crispy/releases
@@ -11,7 +11,7 @@ Crispy is a modern graphical user interface to calculate core-level spectra usin
 .. |DOI| image:: https://zenodo.org/badge/doi/10.5281/zenodo.1008184.svg
     :target: https://dx.doi.org/10.5281/zenodo.1008184
 
-.. |licence| image:: https://img.shields.io/github/license/mretegan/crispy.svg
+.. |license| image:: https://img.shields.io/github/license/mretegan/crispy.svg
     :target: https://github.com/mretegan/crispy/blob/master/LICENSE.txt
 
 .. first-marker
@@ -28,38 +28,32 @@ Latest Release
 
 Using the Package Installers
 ****************************
-The easiest way to install Crispy on Windows and macOS operating systems is to use the installers provided on the project `downloads <http://www.esrf.eu/computing/scientific/crispy/downloads.html>`_ page. The installers bundle Python, the required dependencies, and Crispy. However, because for the moment they are only created when a new release is published, they might lack newly implemented features.
+The easiest way to install Crispy on Windows and macOS operating systems is to use the installers provided on the project's downloads <http://www.esrf.eu/computing/scientific/crispy/downloads.html>`_ page. The installers bundle Python, the required dependencies, and Crispy. However, because for the moment they are only created when a new release is published, they might lack newly implemented features.
 
 Using pip
 *********
-Pip is the package manager for Python, and before you can use it to install Crispy, you have to make sure that you have a working Python distribution. While Crispy works with both Python 2 and Python 3, you should install Python 3.5 or greater, as in previous versions some of the dependencies like PyQt5 cannot be easily installed using pip. On macOS and Windows you can install Python using the `official <https://www.python.org/downloads>`_ installers. In particular for Windows you should install the 64-bit version of Python, and make sure that during the installation you select to add Python to system's PATH.
+Pip is the package manager for Python, and before you can use it to install Crispy, you have to make sure that you have a working Python distribution. Never versions of Crispy work only with Python 3.7 or greater. On macOS and Windows you can install Python using the `official <https://www.python.org/downloads>`_ installers. In particular, for Windows you should install the 64-bit version of Python, and make sure that during the installation you select to add Python to the system's PATH.
 
 Crispy depends on the following Python packages:
 
 * `PyQt5 <https://riverbankcomputing.com/software/pyqt/intro>`_
-* `numpy <http://numpy.org>`_
-* `matplotlib <http://matplotlib.org>`_
+* `NumPy <http://numpy.org>`_
+* `Matplotlib <http://matplotlib.org>`_
 * `h5py <https://www.h5py.org>`_
+* `XrayDB <https://github.com/xraypy/XrayDB>`_
 * `silx <http://www.silx.org>`_
 
-On current Linux distributions, both Python 2 and Python 3 should be present. Start by checking the installed Python 3 version:
+On most current Linux distributions, both Python 2 and Python 3 should be present. Start by checking the installed Python 3 version:
 
 .. code:: sh
 
     python3 -V
 
-If the version number is at least 3.5, you can install Crispy and all dependencies using pip:
+If the version number is at least 3.7, you can install Crispy and all dependencies using pip:
 
 .. code:: sh
 
     pip3 install --upgrade --user crispy
-
-For lower Python versions, you will have to use the system's package manager (apt, dnf, pacman, etc.) to install the dependencies. Crispy can then be installed using pip, but this time without the depencies.
-
-.. code:: sh
-
-    pip3 install --no-deps --upgrade --user crispy # Python 3
-    pip  install --no-deps --upgrade --user crispy # Python 2
 
 After the installation finishes, you should be able to start the program from the command line:
 
@@ -80,13 +74,13 @@ Development Version
 
 Using pip
 *********
-Assuming that you have a working Python distribution (version 3.5 or greater), you can easily install the development version of Crispy using pip:
+Assuming that you have a working Python distribution (version 3.7 or greater), you can easily install the development version of Crispy using pip:
 
 .. code:: sh
 
-    pip install --upgrade --user https://github.com/mretegan/crispy/tarball/master
+    pip3 install --upgrade --user https://github.com/mretegan/crispy/tarball/master
 
-It is possible, although unlikely, that this version requires features that are not yet available with the pip installable version of silx. In this case you have to also install the development version of silx. This is not always a very simple task, especially on Windows, but there is extensive `documentation <http://www.silx.org/doc/silx/latest>`_ on how to do it.
+It is possible, although unlikely, that this version requires features that are not yet available with the pip installable version of silx. In this case, you have to also install the development version of silx. This is not always a very simple task, especially on Windows, but there is extensive `documentation <http://www.silx.org/doc/silx/latest>`_ on how to do it.
 
 Running from Source
 *******************
@@ -96,13 +90,13 @@ As an alternative to the pip installation above, you can download the source cod
 
     git clone https://github.com/mretegan/crispy.git
     cd crispy
-    python -m crispy
+    python3 -m crispy
 
-In this case the dependencies are not automatically installed and you will have to do it yourself:
+In this case, the dependencies are not automatically installed and you will have to do it yourself:
 
 .. code:: sh
 
-    pip install --user -r https://raw.githubusercontent.com/mretegan/crispy/master/requirements.txt
+    pip3 install --user -r https://raw.githubusercontent.com/mretegan/crispy/master/requirements.txt
 
 .. third-marker
 
@@ -132,4 +126,3 @@ Crispy is a scientific software. If you use it for a scientific publication, ple
 License
 =======
 The source code of Crispy is licensed under the MIT license.
-
