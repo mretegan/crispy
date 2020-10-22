@@ -36,12 +36,12 @@ class Config:
         )
 
     def read(self):
-        path = self.settings.value("Quanty/Path")
-        if not os.path.exists(path):
-            path = self.findQuanty()
-            self.settings.beginGroup("Quanty")
-            self.settings.setValue("Path", path)
-            self.settings.endGroup()
+        # path = self.settings.value("Quanty/Path")
+        # if not os.path.exists(path):
+        #     path = self.findQuanty()
+        #     self.settings.beginGroup("Quanty")
+        #     self.settings.setValue("Path", path)
+        #     self.settings.endGroup()
         return self.settings
 
     def loadDefaults(self):
