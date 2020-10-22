@@ -2,20 +2,23 @@
 
 set -e
 
-# Get the root folder. This should be Crispy's parent folder.
-ROOT=$(dirname $(dirname "${PWD}"))
+# Get the root folder.
+ROOT="${PWD}"
 
 # Path to the built application.
 APP="${ROOT}"/dist/Crispy.app
 
 # Path to resources (volume icon, background, ...).
-RESOURCES="${ROOT}"/crispy/assets
+RESOURCES="${ROOT}"
 
 # Other paths.
 ARTIFACTS="${ROOT}"/artifacts
 TEMPLATE="${ARTIFACTS}"/template
 TEMPLATE_DMG="${ARTIFACTS}"/template.dmg
-DMG="${ARTIFACTS}"/Crispy-0.7.3.dmg
+DMG="${ARTIFACTS}"/Crispy.dmg
+
+# Create the artifacts folder if if doesn't exits
+[ ! -d "$ARTIFACTS" ] && mkdir -p "$ARTIFACTS"
 
 echo "Removing previous images."
 if [[ -e "${DMG}" ]]; then rm -rf "${DMG}"; fi

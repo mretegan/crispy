@@ -56,12 +56,12 @@ docs/_drafts
 # Visual Studio Code
 .vscode
 
-# Quanty binaries
-crispy/modules/quanty/bin/
-
 # Pipenv
 Pipfile.lock
 
 # Test files
 input.lua
 input_*.spec
+
+# Artifacts
+artifacts

@@ -10,7 +10,7 @@ AppUpdatesURL=https://github.com/mretegan/crispy/releases
 DefaultDirName={pf}\Crispy
 DefaultGroupName=Crispy
 LicenseFile=..\LICENSE.txt
-OutputDir=..\..\artifacts
+OutputDir=artifacts
 OutputBaseFilename=Crispy-#Version-x64
 Compression=lzma
 SolidCompression=yes
@@ -21,7 +21,7 @@ ArchitecturesInstallIn64BitMode=x64
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
-Source: "..\..\build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
+Source: "dist\Crispy\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
 Source: "crispy.ico"; DestDir: "{app}"
 
 [Icons]

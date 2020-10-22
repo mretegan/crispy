@@ -26,6 +26,9 @@ from crispy.gui.quanty.main import DockWidget
 from crispy.gui.utils import fixedFont
 from crispy.loggers import OutputHandler, StatusBarHandler
 
+# pylint: disable=unused-import
+from crispy.gui.plot import MainPlotWidget
+
 logger = logging.getLogger(__name__)
 settings = Config().read()
 
