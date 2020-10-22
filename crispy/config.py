@@ -36,6 +36,12 @@ class Config:
         )
 
     def read(self):
+        path = self.settings.value("Quanty/Path")
+        if not os.path.exists(path):
+            path = self.findQuanty()
+            self.settings.beginGroup("Quanty")
+            self.settings.setValue("Path", path)
+            self.settings.endGroup()
         return self.settings
 
     def loadDefaults(self):
@@ -72,18 +78,23 @@ class Config:
     def findQuanty():
         if sys.platform == "win32":
             executable = "Quanty.exe"
+            localPath = resourceAbsolutePath(os.path.join("quanty", "bin", "win32"))
+        elif sys.platform == "darwin":
+            executable = "Quanty"
+            localPath = resourceAbsolutePath(os.path.join("quanty", "bin", "darwin"))
         else:
+            localPath = None
             executable = "Quanty"
 
         envPath = QStandardPaths.findExecutable(executable)
-        localPath = resourceAbsolutePath(os.path.join("quanty", "bin"))
-        localPath = QStandardPaths.findExecutable(executable, [localPath])
+        if localPath is not None:
+            localPath = QStandardPaths.findExecutable(executable, [localPath])
 
         # Check if Quanty is in the paths defined in the $PATH.
         if envPath:
             path = envPath
         # Check if Quanty is bundled with Crispy.
-        elif localPath:
+        elif localPath is not None:
             path = localPath
         else:
             path = None

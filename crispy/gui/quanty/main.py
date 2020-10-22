@@ -487,8 +487,11 @@ class DockWidget(QDockWidget):
         progress = ProgressDialog(self)
         progress.rejected.connect(self.state.stop)
         self.state.runner.successful.connect(progress.accept)
+        try:
+            self.state.run()
+        except RuntimeError:
+            return
         progress.show()
-        self.state.run()
 
     def stop(self):
         self.state.stop()

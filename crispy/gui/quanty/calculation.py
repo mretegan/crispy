@@ -352,7 +352,10 @@ class Runner(QProcess):
         self.startingTime = datetime.datetime.now()
 
         # Run Quanty using QProcess.
-        self.start(self.executablePath, (inputName,))
+        try:
+            self.start(self.executablePath, (inputName,))
+        except FileNotFoundError:
+            raise RuntimeError
 
         cwd = os.getcwd()
         message = f"Running Quanty {inputName} in the folder {cwd}."
@@ -401,7 +404,6 @@ class Runner(QProcess):
         return (self.endingTime - self.startingTime).total_seconds()
 
     @property
-    @lru_cache()
     def executablePath(self):
         path = Config().read().value("Quanty/Path")
 
@@ -410,19 +412,18 @@ class Runner(QProcess):
                 "The path to the Quanty executable is not set. "
                 "Please use the preferences menu to set it."
             )
-            raise RuntimeError(message)
+            raise FileNotFoundError(message)
 
         # Test the executable.
         with open(os.devnull, "w") as fp:
             try:
                 subprocess.call(path, stdout=fp, stderr=fp)
-            except OSError as e:
-                if e.errno == errno.ENOENT:
-                    message = (
-                        "The Quanty executable is not working properly. "
-                        "Is the PATH set correctly?"
-                    )
-                    raise RuntimeError(message)
+            except FileNotFoundError as e:
+                message = (
+                    "The Quanty executable is not working properly. "
+                    "Is the PATH set correctly?"
+                )
+                logger.error(message)
                 raise e
         return path
 
