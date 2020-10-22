@@ -10,7 +10,6 @@
 """Classes used to setup Quanty calculations."""
 
 import datetime
-import errno
 import logging
 import os
 import re
