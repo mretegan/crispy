@@ -10,6 +10,7 @@
 """Classes used to setup Quanty calculations."""
 
 import datetime
+import glob
 import logging
 import os
 import re
@@ -712,6 +713,9 @@ class Calculation(SelectableItem):
 
     def clean(self):
         os.remove(f"{self.value}.lua")
+        # Remove the spectra.
+        for spectrum in glob.glob(f"{self.value}*.spec"):
+            os.remove(spectrum)
 
     def copyFrom(self, item):
         super().copyFrom(item)
