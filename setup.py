@@ -7,6 +7,7 @@
 # This work is licensed under the terms of the MIT license.       #
 # For further information, see https://github.com/mretegan/crispy #
 ###################################################################
+"""This is the setup script."""
 import os
 import sys
 
@@ -88,7 +89,9 @@ def main():
             "Operating System :: MacOS :: MacOS X",
             "Operating System :: Microsoft :: Windows",
             "Operating System :: POSIX :: Linux",
+            "Programming Language :: Python :: 3 :: Only",
             "Programming Language :: Python :: 3.7",
+            "Programming Language :: Python :: 3.8",
             "Topic :: Scientific/Engineering :: Visualization",
         ],
     )
@@ -100,7 +103,7 @@ def main():
     # The most straight forward workaround is to have a .bat script to run
     # crispy on Windows.
 
-    if "win32" in sys.platform:
+    if sys.platform == "win32":
         kwargs["scripts"] = ["scripts/crispy.bat"]
     else:
         kwargs["scripts"] = ["scripts/crispy"]

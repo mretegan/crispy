@@ -1,8 +1,6 @@
-# List all dependencies of crispy
-# Requires pip >= 8.0
-
 PyQt5
 numpy
-matplotlib >= 1.2.0
+matplotlib
 h5py
-silx >= 0.7.0
+silx >= 0.13
+xraydb

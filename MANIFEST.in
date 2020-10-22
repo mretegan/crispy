@@ -5,8 +5,6 @@ include README.rst
 include requirements.txt
 recursive-include crispy *.py
 recursive-include crispy/gui/uis *.ui
-recursive-include crispy/gui/uis/quanty *.ui
 recursive-include crispy/gui/icons *.svg
-recursive-include crispy/modules/quanty/parameters *.json.gz
-recursive-include crispy/modules/quanty/templates *.lua
+recursive-include crispy/quanty *
 recursive-include scripts *
