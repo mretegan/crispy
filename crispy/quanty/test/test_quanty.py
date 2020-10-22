@@ -8,17 +8,15 @@
 # This work is licensed under the terms of the MIT license.       #
 # For further information, see https://github.com/mretegan/crispy #
 ###################################################################
+"""Quanty input tests"""
 
 import unittest
-from crispy.quanty.test.test_quanty import suite as test_quanty_suite
 
 
 def suite():
     test_suite = unittest.TestSuite()
-    test_suite.addTest(test_quanty_suite())
     return test_suite
 
 
 if __name__ == "__main__":
-    runner = unittest.TextTestRunner(failfast=False)
-    runner.run(suite())
+    pass
