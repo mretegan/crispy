@@ -45,10 +45,10 @@ def get_requirements():
 
 def main():
     """The main entry point."""
-    if sys.version_info < (2, 7):
-        sys.exit("Crispy requires at least Python 2.7")
-    elif sys.version_info[0] == 3 and sys.version_info < (3, 4):
-        sys.exit("Crispy requires at least Python 3.4")
+    if sys.version_info <= (2, 7):
+        sys.exit("Crispy does not work with Python 2")
+    elif sys.version_info[0] == 3 and sys.version_info < (3, 7):
+        sys.exit("Crispy requires at least Python 3.7")
 
     kwargs = dict(
         name="crispy",
