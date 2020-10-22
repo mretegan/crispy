@@ -28,11 +28,11 @@ Latest Release
 
 Using the Package Installers
 ****************************
-The easiest way to install Crispy on Windows and macOS operating systems is to use the installers provided on the project's downloads <http://www.esrf.eu/computing/scientific/crispy/downloads.html>`_ page. The installers bundle Python, the required dependencies, and Crispy. However, because for the moment they are only created when a new release is published, they might lack newly implemented features.
+The easiest way to install Crispy on Windows and macOS operating systems is to use the installers provided on the project's `downloads page <http://www.esrf.eu/computing/scientific/crispy/downloads.html>`_. The installers bundle Python, the required dependencies, and Crispy. However, because for the moment they are only created when a new release is published, they might lack newly implemented features.
 
 Using pip
 *********
-Pip is the package manager for Python, and before you can use it to install Crispy, you have to make sure that you have a working Python distribution. Never versions of Crispy work only with Python 3.7 or greater. On macOS and Windows you can install Python using the `official <https://www.python.org/downloads>`_ installers. In particular, for Windows you should install the 64-bit version of Python, and make sure that during the installation you select to add Python to the system's PATH.
+Pip is the package manager for Python, and before you can use it to install Crispy, you have to make sure that you have a working Python distribution. Never versions of Crispy work only with Python 3.7 or greater. On macOS and Windows, you can install Python using the `official installers <https://www.python.org/downloads>`_. In particular, for Windows, you should install the 64-bit version of Python, and make sure that during the installation you select to add Python to the system's PATH.
 
 Crispy depends on the following Python packages:
 
@@ -43,7 +43,7 @@ Crispy depends on the following Python packages:
 * `XrayDB <https://github.com/xraypy/XrayDB>`_
 * `silx <http://www.silx.org>`_
 
-On most current Linux distributions, both Python 2 and Python 3 should be present. Start by checking the installed Python 3 version:
+On current Linux distributions, both Python 2 and Python 3 should be present. Start by checking the installed Python 3 version:
 
 .. code:: sh
 
@@ -90,7 +90,7 @@ As an alternative to the pip installation above, you can download the source cod
 
     git clone https://github.com/mretegan/crispy.git
     cd crispy
-    python3 -m crispy
+    python3 -m crispy.main
 
 In this case, the dependencies are not automatically installed and you will have to do it yourself:
 
