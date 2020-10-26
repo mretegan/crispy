@@ -92,7 +92,7 @@ app = BUNDLE(
     info_plist={
         "CFBundleIdentifier": "com.github.mretegan.crispy",
         "CFBundleShortVersionString": version,
-        "CFBundleVersion": "Crispy" + version,
+        "CFBundleVersion": "Crispy " + version,
         "LSTypeIsPackage": True,
         "LSMinimumSystemVersion": "10.13.0",
         "NSHumanReadableCopyright": "MIT",
@@ -100,10 +100,6 @@ app = BUNDLE(
         "NSPrincipalClass": "NSApplication",
         "NSAppleScriptEnabled": False,
     },
-)
-
-bin_folder = os.path.join(
-    "dist", "Crispy.app", "Contents", "Resources", "quanty", "bin"
 )
 
 # Post build actions.
@@ -118,7 +114,10 @@ if sys.platform == "darwin":
         ]
     )
     # Remove the Quanty binary for Windows.
-    os.remove(os.path.join(bin_folder, "win32", "Quanty.exe",))
+    bin_folder = os.path.join(
+        "dist", "Crispy.app", "Contents", "Resources", "quanty", "bin", "win32"
+    )
+    os.remove(os.path.join(bin_folder, "Quanty.exe"))
 
     # Pack the application.
     subprocess.call(["bash", "create-dmg.sh"])
@@ -131,7 +130,8 @@ if sys.platform == "darwin":
 
 elif sys.platform == "win32":
     # Remove the Quanty binary for macOS.
-    os.remove(os.path.join(bin_folder, "darwin", "Quanty",))
+    bin_folder = os.path.join("dist", "Crispy", "quanty", "bin", "darwin")
+    os.remove(os.path.join(bin_folder, "Quanty"))
 
     # Create the Inno Setup script.
     root = os.path.join(os.getcwd(), "assets")
