@@ -193,15 +193,9 @@ class Photon(BaseItem):
     def replacements(self):
         replacements = dict()
 
-        def formatVector(vector):
-            # Normalize the vector.
-            vector = vector / np.linalg.norm(vector)
-            x, y, z = vector
-            return f"{{{x:.8g}, {y:.8g}, {z:.8g}}}"
-
-        replacements["WaveVector"] = formatVector(self.k.value)
-        replacements["FirstPolarization"] = formatVector(self.e1.value)
-        replacements["SecondPolarization"] = formatVector(self.e2.value)
+        replacements["WaveVector"] = self.k.replacements
+        replacements["FirstPolarization"] = self.e1.replacements
+        replacements["SecondPolarization"] = self.e2.replacements
 
         return replacements
 
