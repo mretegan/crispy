@@ -216,6 +216,18 @@ class BaseItem(QObject):
         except IndexError:
             return None
 
+    def findChild(self, name):
+        # Yield from an empty list if there are not children.
+        if not self.children():
+            yield from ()
+
+        for child in self.children():
+            if child.name == name:
+                yield child
+            else:
+                if isinstance(child, BaseItem):
+                    yield from child.findChild(name)
+
     def columnCount(self):
         return 2
 
