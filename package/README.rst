@@ -54,8 +54,8 @@ OS X 10.10
 
 **Using the Official Python**
 
-- There is an issue with the Python 3.7.9 being signed: https://github.com/pyinstaller/pyinstaller/issues/5062
-- The app built segmentation faults on macOS 10.15, while on 10.10, the same as the built system, gives the following error (after removing the signature):
+- There is an issue with the Python 3.7.9 being signed: https://github.com/pyinstaller/pyinstaller/issues/5062.
+- The built app segmentation faults on macOS 10.15, while on 10.10, the same as the build system, gives the following error (after removing the signature):
 
 .. code-block:: sh
 
@@ -78,7 +78,7 @@ Dependencies are installed using `pip`.
 
 Windows
 -------
-1. Install Microsoft Visual C++ Build Tools.
+1. Install Microsoft Visual C++ Build Tools (only needed for installing no-binary packages).
 2. Install the official Python distribution.
 3. Create a Python virtual environment and activate it:
 
