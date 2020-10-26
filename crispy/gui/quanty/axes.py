@@ -114,15 +114,19 @@ class Gaussian(Broadening):
         return replacements
 
 
-class PhotonVector(Vector3DItem):
+class LightVector(Vector3DItem):
+    @property
+    def normalized(self):
+        return self.value / np.linalg.norm(self.value)
+
     @property
     def replacements(self):
         # Normalize the vector.
-        v = self.value / np.linalg.norm(self.value)
+        v = self.normalized
         return f"{{{v[0]:.8g}, {v[1]:.8g}, {v[2]:.8g}}}"
 
 
-class WaveVector(PhotonVector):
+class WaveVector(LightVector):
     def __init__(self, parent=None, name="Wave Vector", value=None):
         super().__init__(parent=parent, name=name, value=value)
 
@@ -150,7 +154,7 @@ class WaveVector(PhotonVector):
         photon.e2.value = np.cross(e1, k)
 
 
-class FirstPolarization(PhotonVector):
+class FirstPolarization(LightVector):
     def __init__(self, parent=None, name="First Polarization", value=None):
         super().__init__(parent=parent, name=name, value=value)
 
@@ -172,7 +176,7 @@ class FirstPolarization(PhotonVector):
         photon.e2.value = np.cross(value, photon.k.value)
 
 
-class SecondPolarization(PhotonVector):
+class SecondPolarization(LightVector):
     def __init__(self, parent=None, name="Second Polarization", value=None):
         super().__init__(parent=parent, name=name, value=value)
 
