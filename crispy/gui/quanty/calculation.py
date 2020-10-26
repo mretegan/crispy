@@ -327,8 +327,19 @@ class MagneticField(DoubleItem):
 
     @value.setter
     def value(self, value):
-        # TODO: Update the magnetic field term.
         self._value = value
+
+        # Set the values in the magnetic field Hamiltonian term.
+        calculation = self.ancestor
+        hamiltonian = calculation.hamiltonian
+
+        # Use the normalized vector.
+        k = calculation.axes.xaxis.photon.k.normalized
+
+        for i, name in enumerate(("Bx", "By", "Bz")):
+            # Get the values of the wave vector.
+            for item in hamiltonian.findChild(name):
+                item.value = k[i] * value
 
 
 class Runner(QProcess):
