@@ -64,6 +64,19 @@ def get_all_symbols():
     return symbols
 
 
+def read_hybridization_parameters(symbol, conf):
+    """Read the p-d hybridization parameters from an external file."""
+    path = resourceAbsolutePath(
+        os.path.join("quanty", "parameters", "p-d_hybridization", "parameters.dat")
+    )
+    with open(path) as fp:
+        for line in fp:
+            if symbol in line and conf in line:
+                *_, p1, p2 = line.strip().split(",")
+                return {"P1(1s,4p)": float(p1), "P2(1s,3d)": float(p2)}
+    return None
+
+
 def generate_parameters(symbols):
     """Generate the atomic parameters of the elements and store them in an
     HDF5 container.
@@ -83,23 +96,31 @@ def generate_parameters(symbols):
 
         with h5py.File(path, "w") as h5:
             for conf in confs:
+                # Get the atomic parameters.
                 cowan = Cowan(element, conf)
                 conf.energy, conf.parameters = cowan.get_parameters()
                 cowan.remove_calculation_files()
 
                 # Write the parameters to the HDF5 file.
                 root = f"/{conf.value}"
-                h5[root + "/energy"] = conf.energy
+                # h5[root + "/energy"] = conf.energy
 
-                root = root + "/parameters"
+                subroot = root + "/Atomic"
                 for parameter, value in conf.parameters.items():
-                    path = root + "/{:s}".format(parameter)
+                    path = subroot + "/{:s}".format(parameter)
                     h5[path] = value
 
                 logger.info("%-2s %-8s", element.symbol, conf)
                 logger.info("E = %-.4f eV", conf.energy)
                 for parameter, value in conf.parameters.items():
                     logger.debug("%-s = %-.4f eV", parameter, value)
+
+                parameters = read_hybridization_parameters(element.symbol, conf.value)
+                if parameters is not None:
+                    subroot = root + "/3d-4p Hybridization"
+                    for parameter, value in parameters.items():
+                        path = subroot + "/{:s}".format(parameter)
+                        h5[path] = value
 
 
 def get_all_calculations():

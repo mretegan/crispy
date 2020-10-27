@@ -239,7 +239,7 @@ class AtomicTerm(HamiltonianTerm):
                 self.configurations, self.hamiltonianNames
             ):
                 hamiltonian = BaseItem(self, hamiltonianName)
-                parameters = h5[f"{configuration}/parameters"]
+                parameters = h5[f"{configuration}/{self.name}"]
                 for parameterName, value in parameters.items():
                     value = float(value[()])
                     scaleFactor = self.scaleFactorFromName(parameterName)
@@ -375,6 +375,24 @@ class PdHybridizationTerm(HamiltonianTerm):
             generateParameters("Initial Hamiltonian", names)
             names = hybdridization + finalAtomic
             generateParameters("Final Hamiltonian", names)
+
+    @property
+    def replacements(self):
+        replacements = super().replacements
+
+        # Read term specific parameters.
+        path = resourceAbsolutePath(
+            os.path.join("quanty", "parameters", f"{self.element.symbol}.h5")
+        )
+
+        initial_configuration, *_ = self.configurations
+        with h5py.File(path, "r") as h5:
+            parameters = h5[f"{initial_configuration}/{self.name}"]
+            for parameterName, value in parameters.items():
+                value = float(value[()])
+                replacements[parameterName] = value
+
+        return replacements
 
 
 class MagneticFieldTerm(HamiltonianTerm):

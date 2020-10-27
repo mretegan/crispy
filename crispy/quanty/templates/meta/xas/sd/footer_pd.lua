@@ -134,12 +134,21 @@ if PdHybridizationTerm then
     G_#i_#f = CreateSpectra(H_f, T_#i_#f, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"Restrictions", CalculationRestrictions}, {"DenseBorder", DenseBorder}})
     G_#i_4p = CreateSpectra(H_f, T_#i_4p, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"Restrictions", CalculationRestrictions}, {"DenseBorder", DenseBorder}})
 
-    -- The prefactors used to scale the two spectra are described in
-    -- http://dx.doi.org/10.1103/PhysRevB.94.245115. Here the prefactor for the
-    -- quadrupolar spectrum is set to 1 to more easily compare the spectra with
-    -- and without hybridization. Note however that the quadrupole spectrum
-    -- without hybdridization can look quite different from the quadrupolar part
-    -- of the spectrum with hybridization.
+    -- The prefactors are described in http://dx.doi.org/10.1103/PhysRevB.94.245115. 
+    -- 
+    -- prefactor_#i_#f = 4 * math.pi^2 * alpha * a0^4 / (2 * hbar * c)^2 * ExperimentalShift   * P2_#i_#f^2 
+    -- prefactor_#i_4p = 4 * math.pi^2 * alpha * a0^2                    * ExperimentalShift^3 * P1_#i_4p^2
+    --
+    -- Here we set the prefactor for the quadrupolar spectrum to 1, to more
+    -- easily compare the spectra with and without hybridization. Note however
+    -- that the quadrupole spectrum without hybdridization can look quite
+    -- different from the quadrupolar part of the spectrum with hybridization, because
+    -- in the later case there is the additional 4p subshell.
+    -- 
+    -- The dipolar prefactor then becomes:
+    -- 
+    -- prefactor_#i_4p = (2 * hbar * c)^2 / (a0 * ExperimentalShift)^2 * (P1_#i_4p / P2_#i_#f)^2
+      
     alpha = 7.2973525664E-3
     a0 = 5.2917721067E-1
     hbar = 6.582119514E-16
@@ -148,13 +157,15 @@ if PdHybridizationTerm then
     P1_#i_4p = $P1(#i,4p)
     P2_#i_#f = $P2(#i,#f)
 
-    -- These are the prefactors from the paper. (prefactor_#i_4p ~ 15 * prefactor_#i_#f)
-    -- Iedge1 is the edge jump.
-    -- prefactor_#i_#f = 4 * math.pi^2 * alpha * a0^4 / (2 * hbar * c)^2 * P2_#i_#f^2 * ExperimentalShift^3 / Iedge1 
-    -- prefactor_#i_4p = 4 * math.pi^2 * alpha * a0^2                    * P1_#i_4p^2 * ExperimentalShift / Iedge1 
-
     prefactor_#i_#f = 1 
-    prefactor_#i_4p = 1 / (a0^2 / (2 * hbar * c)^2 * P2_1s_3d^2 / P1_1s_4p^2 * ExperimentalShift^2)
+    prefactor_#i_4p = (2 * hbar * c)^2 / (a0 * ExperimentalShift)^2 * (P1_#i_4p / P2_#i_#f)^2 
+
+    io.write("\n")
+    io.write("Spectra prefactors\n")
+    io.write("==================\n")
+    io.write(string.format("Dipolar     = %.1f\n", prefactor_#i_4p))
+    io.write("Quadrupolar =  1.0\n")
+    io.write("==================\n")
 
     G_#i_#f = prefactor_#i_#f * G_#i_#f
     G_#i_4p = prefactor_#i_4p * G_#i_4p
