@@ -592,6 +592,12 @@ class Hamiltonian(BaseItem):
         for term in self.terms.children():
             term.dataChanged.connect(self.numberOfConfigurations.reset)
 
+    def isTermEnabled(self, termType):
+        for term in self.terms.children():
+            if isinstance(term, termType) and term.checkState == Qt.Checked:
+                return True
+        return False
+
     @property
     def replacements(self):
         replacements = dict()

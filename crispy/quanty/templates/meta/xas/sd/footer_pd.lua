@@ -142,8 +142,8 @@ if PdHybridizationTerm then
     -- Here we set the prefactor for the quadrupolar spectrum to 1, to more
     -- easily compare the spectra with and without hybridization. Note however
     -- that the quadrupole spectrum without hybdridization can look quite
-    -- different from the quadrupolar part of the spectrum with hybridization, because
-    -- in the later case there is the additional 4p subshell.
+    -- different from the quadrupolar part of the spectrum with hybridization. 
+    -- They are identical only if all parameters of the #f-4p interaction are zero.
     -- 
     -- The dipolar prefactor then becomes:
     -- 
@@ -246,14 +246,20 @@ if PdHybridizationTerm then
 
             if Spectrum == "Isotropic Absorption" then
                 Giso_#i_4p = GetSpectrum(G_#i_4p, SpectrumIds_#i_4p, dZ_#i_4p, #T_#i_4p, #Psis_i)
-                Giso = Giso_#i_#f / 15 + Giso_#i_4p / 3
+                Giso_#i_#f = Giso_#i_#f / 15 
+                Giso_#i_4p = Giso_#i_4p / 3
+                Giso = Giso_#i_#f + Giso_#i_4p
                 SaveSpectrum(Giso, Prefix .. "_iso", Gaussian, Lorentzian)
+                SaveSpectrum(Giso_#i_4p, Prefix .. "_iso_dip", Gaussian, Lorentzian)
+                SaveSpectrum(Giso_#i_#f, Prefix .. "_iso_quad", Gaussian, Lorentzian)
             end
 
             if Spectrum == "Absorption" then
                 Gk_#i_4p = GetSpectrum(G_#i_4p, SpectrumIds_#i_4p, dZ_#i_4p, #T_#i_4p, #Psis_i)
                 Gk = Gk_#i_#f + Gk_#i_4p
                 SaveSpectrum(Gk, Prefix .. "_k", Gaussian, Lorentzian)
+                SaveSpectrum(Gk_#i_4p, Prefix .. "_k_dip", Gaussian, Lorentzian)
+                SaveSpectrum(Gk_#i_#f, Prefix .. "_k_quad", Gaussian, Lorentzian)
             end
 
             if Spectrum == "Circular Dichroic" then
@@ -264,6 +270,8 @@ if PdHybridizationTerm then
                 SaveSpectrum(Gr, Prefix .. "_r", Gaussian, Lorentzian)
                 SaveSpectrum(Gl, Prefix .. "_l", Gaussian, Lorentzian)
                 SaveSpectrum(Gr - Gl, Prefix .. "_cd", Gaussian, Lorentzian)
+                SaveSpectrum(Gr_#i_4p - Gl_#i_4p, Prefix .. "_cd_dip", Gaussian, Lorentzian)
+                SaveSpectrum(Gr_#i_#f - Gl_#i_#f, Prefix .. "_cd_quad", Gaussian, Lorentzian)
             end
 
             if Spectrum == "Linear Dichroic" then
@@ -274,6 +282,8 @@ if PdHybridizationTerm then
                 SaveSpectrum(Gv, Prefix .. "_v", Gaussian, Lorentzian)
                 SaveSpectrum(Gh, Prefix .. "_h", Gaussian, Lorentzian)
                 SaveSpectrum(Gv - Gh, Prefix .. "_ld", Gaussian, Lorentzian)
+                SaveSpectrum(Gv_#i_4p - Gh_#i_4p, Prefix .. "_ld_dip", Gaussian, Lorentzian)
+                SaveSpectrum(Gv_#i_#f - Gh_#i_#f, Prefix .. "_ld_quad", Gaussian, Lorentzian)
             end
         end
     end

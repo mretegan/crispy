@@ -16,6 +16,7 @@ import numpy as np
 from PyQt5.QtCore import Qt
 
 from crispy.gui.items import BaseItem, SelectableItem
+from crispy.gui.quanty.hamiltonian import PdHybridizationTerm
 from crispy.utils.broaden import broaden
 
 logger = logging.getLogger(__name__)
@@ -133,18 +134,7 @@ class Spectrum1D(Spectrum):
             return
         calculation = self.ancestor
         index = calculation.childPosition() + 1
-        MAPPINGS = {
-            "iso": "Iso",
-            "k": "k",
-            "cd": "CD",
-            "r": "R",
-            "l": "L",
-            "ld": "LD",
-            "h": "H",
-            "v": "V",
-        }
-        name = MAPPINGS[self.suffix]
-        legend = f"{index}-{name}"
+        legend = f"{index}-{self.suffix}"
         plotWidget.addCurve(self.x, self.signal, legend=legend)
 
     def copyFrom(self, item):
@@ -351,11 +341,19 @@ class Spectra(BaseItem):
 
         SPECTRA = {
             "Isotropic Absorption": ("iso", None),
+            "Isotropic Absorption (Dipolar)": ("iso_dip", None),
+            "Isotropic Absorption (Quadrupolar)": ("iso_quad", None),
             "Absorption": ("k", None),
+            "Absorption (Dipolar)": ("k_dip", None),
+            "Absorption (Quadrupolar)": ("k_quad", None),
             "Circular Dichroic": ("cd", "(R-L)"),
+            "Circular Dichroic (Dipolar)": ("cd_dip", "(R-L)"),
+            "Circular Dichroic (Quadrupolar)": ("cd_quad", "(R-L)"),
             "Right Polarized": ("r", "(R)"),
             "Left Polarized": ("l", "(L)"),
             "Linear Dichroic": ("ld", "(V-H)"),
+            "Linear Dichroic (Dipolar)": ("ld_dip", "(V-H)"),
+            "Linear Dichroic (Quadrupolar)": ("ld_quad", "(V-H)"),
             "Vertical Polarized": ("v", "(V)"),
             "Horizontal Polarized": ("h", "(H)"),
             "Resonant Inelastic": ("iso", None),
@@ -378,6 +376,10 @@ class Spectra(BaseItem):
 
         for name in self.toCalculate.selected:
             addSpectrum(name)
+            # The case of calculations with p-d hybridization.
+            if calculation.hamiltonian.isTermEnabled(PdHybridizationTerm):
+                addSpectrum(f"{name} (Dipolar)", selected=False)
+                addSpectrum(f"{name} (Quadrupolar)", selected=False)
             if name == "Circular Dichroic":
                 addSpectrum("Right Polarized", selected=False)
                 addSpectrum("Left Polarized", selected=False)
