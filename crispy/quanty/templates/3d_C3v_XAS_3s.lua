@@ -134,13 +134,13 @@ end
 --------------------------------------------------------------------------------
 if CrystalFieldTerm then
     Akm = {{4, 0, -14}, {4, 3, -2 * math.sqrt(70)}, {4, -3, 2 * math.sqrt(70)}}
-    Dq_#m = NewOperator("CF", NFermions, IndexUp_#m, IndexDn_#m, Akm)
+    Dq_3d = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, Akm)
 
     Akm = {{2, 0, -7}}
-    Dsigma_#m = NewOperator("CF", NFermions, IndexUp_#m, IndexDn_#m, Akm)
+    Dsigma_3d = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, Akm)
 
     Akm = {{4, 0, -21}}
-    Dtau_#m = NewOperator("CF", NFermions, IndexUp_#m, IndexDn_#m, Akm)
+    Dtau_3d = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, Akm)
 
 
     Dq_3d_i = $10Dq(3d)_i_value / 10.0
