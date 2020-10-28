@@ -336,10 +336,11 @@ class MagneticField(DoubleItem):
         # Use the normalized vector.
         k = calculation.axes.xaxis.photon.k.normalized
 
+        TESLA_TO_EV = 5.7883818011084e-05
         for i, name in enumerate(("Bx", "By", "Bz")):
             # Get the values of the wave vector.
             for item in hamiltonian.findChild(name):
-                item.value = k[i] * value
+                item.value = k[i] * value * TESLA_TO_EV
 
 
 class Runner(QProcess):

@@ -37,6 +37,7 @@ class Delegate(QStyledItemDelegate):
         # Don't create the editor if data is None.
         if index.data(Qt.EditRole) is None:
             return None
+
         item = index.internalPointer()
         for itemClass, widget in EDITORS.items():
             if isinstance(item, itemClass):

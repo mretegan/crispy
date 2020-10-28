@@ -258,7 +258,7 @@ class BaseItem(QObject):
         return flags
 
     def copyFrom(self, item):
-        # TODO: If the values are assigned using the setter, the time it takes
+        # NOTE: If the values are assigned using the setter, the time it takes
         # to call the function doubles approximately at each call. This is
         # related to the _modelDataChanged() function.
         self._name = copy.deepcopy(item.name)
@@ -334,6 +334,7 @@ class DoubleItem(BaseItem):
         if role in (Qt.EditRole, Qt.DisplayRole):
             if column == 1:
                 try:
+
                     return QLocale().toString(self._value)
                 except TypeError:
                     return self._value
