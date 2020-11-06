@@ -156,7 +156,7 @@ if AtomicTerm then
 
     -- Save the atomic Hamiltonians.
     HAtomic_i = H_i - U_4f_4f_i * F0_4f_4f
-    HAtomic_f = H_f - U_4f_4f_f * F0_4f_4f - U_4d_4f_f * F0_4f_4f
+    HAtomic_f = H_f - U_4f_4f_f * F0_4f_4f - U_4d_4f_f * F0_4d_4f
 end
 
 --------------------------------------------------------------------------------
