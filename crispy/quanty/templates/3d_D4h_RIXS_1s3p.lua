@@ -28,7 +28,6 @@ Emin1 = $XEmin  -- minimum value of the energy range (eV)
 Emax1 = $XEmax  -- maximum value of the energy range (eV)
 NPoints1 = $XNPoints  -- number of points of the spectra
 ExperimentalShift1 = $XExperimentalShift  -- experimental edge energy (eV)
-ZeroShift1 = $XZeroShift  -- energy required to shift the calculated spectrum to start from approximately zero (eV)
 Gaussian1 = $XGaussian  -- Gaussian FWHM (eV)
 Gamma1 = $XGamma  -- Lorentzian FWHM used in the spectra calculation (eV)
 
@@ -41,7 +40,6 @@ Emin2 = $YEmin  -- minimum value of the energy range (eV)
 Emax2 = $YEmax  -- maximum value of the energy range (eV)
 NPoints2 = $YNPoints  -- number of points of the spectra
 ExperimentalShift2 = $YExperimentalShift  -- experimental edge energy (eV)
-ZeroShift2 = $YZeroShift  -- energy required to shift the calculated spectrum to start from approximately zero (eV)
 Gaussian2 = $YGaussian  -- Gaussian FWHM (eV)
 Gamma2 = $YGamma  -- Lorentzian FWHM used in the spectra calculation (eV)
 
