@@ -28,6 +28,7 @@ logger = logging.getLogger(__name__)
 
 
 class BaseItem(QObject):
+    # pylint: disable=too-many-instance-attributes, too-many-public-methods
     """Base class for the items of the tree model."""
 
     dataChanged = pyqtSignal(int)
@@ -289,6 +290,15 @@ class SelectableItem(BaseItem):
     def checkState(self, value):
         self._checkState = value
         self.dataChanged.emit(0)
+
+    def enable(self):
+        self.checkState = Qt.Checked
+
+    def disable(self):
+        self.checkState = Qt.Unchecked
+
+    def isEnabled(self):
+        return bool(self.checkState)
 
     def flags(self, column):
         flags = super().flags(column)
