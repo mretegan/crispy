@@ -38,10 +38,6 @@
         "edges": ["K (1s)", "L1 (2s)", "L2,3 (2p)", "M1 (3s)", "M2,3 (3p)"],
         "symmetries": ["Oh", "D4h", "Td", "C3v", "D3h"]
       },
-      "XES": {
-        "edges": ["Kɑ (1s2p)", "Kβ (1s3p)"],
-        "symmetries": ["Oh", "D4h", "Td", "C3v", "D3h"]
-      },
       "RIXS": {
         "edges": ["K-L2,3 (1s2p)", "K-M2,3 (1s3p)", "L2,3-M4,5 (2p3d)"],
         "symmetries": ["Oh", "D4h", "Td", "C3v", "D3h"]
