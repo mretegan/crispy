@@ -72,8 +72,12 @@ def main():
             "crispy.utils",
         ],
         package_data={
-            "crispy.gui.icons": ["*.svg",],
-            "crispy.gui.uis": ["*.ui", "quanty/*.ui", "quanty/details/*.ui"],
+            "crispy.gui": [
+                "icons/*.svg",
+                "uis/*.ui",
+                "uis/quanty/*.ui",
+                "uis/quanty/details/*.ui",
+            ],
             "crispy.quanty": [
                 "parameters/*.h5",
                 "templates/*.lua",
