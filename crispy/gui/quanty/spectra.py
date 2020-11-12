@@ -357,6 +357,8 @@ class Spectra(BaseItem):
             "Vertical Polarized": ("v", "(V)"),
             "Horizontal Polarized": ("h", "(H)"),
             "Resonant Inelastic": ("iso", None),
+            "Photoemission": ("pho", None),
+            "Emission": ("emi", None),
         }
 
         def addSpectrum(name, selected=True):

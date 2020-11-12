@@ -534,7 +534,7 @@ Header = "Analysis of the %s Hamiltonian:\n"
 Header = Header .. "=================================================================================================================================\n"
 Header = Header .. "State           E     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_4p>    <N_4d>          dZ\n"
 Header = Header .. "=================================================================================================================================\n"
-Footer = "=================================================================================================================================\n\n"
+Footer = "=================================================================================================================================\n"
 
 local Psis_i, dZ_i = WavefunctionsAndBoltzmannFactors(H_i, NPsis, NPsisAuto, Temperature, nil, InitialRestrictions, CalculationRestrictions)
 PrintHamiltonianAnalysis(Psis_i, Operators, dZ_i, string.format(Header, "initial"), Footer)
