@@ -1,7 +1,7 @@
 Changelog
 =========
 
-v2020.1rc1 (2020-11-12)
+v2020.1rc0 (2020-11-12)
 -----------------------
 * Complete rewrite of the program to make it more modular.
 * Added a Jupyter notebook interface.
@@ -10,7 +10,7 @@ v2020.1rc1 (2020-11-12)
 
 v0.7.3 (2019-06-26)
 -------------------
-This is a bug fixing release.
+* This is a bug fixing release.
 
 v0.7.2 (2019-02-01)
 -------------------
