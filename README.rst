@@ -53,7 +53,7 @@ If the version number is at least 3.7, you can install Crispy and all dependenci
 
 .. code:: sh
 
-    pip3 install --upgrade --user crispy
+    pip3 install --upgrade crispy
 
 After the installation finishes, you should be able to start the program from the command line:
 
@@ -78,7 +78,7 @@ Assuming that you have a working Python distribution (version 3.7 or greater), y
 
 .. code:: sh
 
-    pip3 install --upgrade --user https://github.com/mretegan/crispy/tarball/master
+    pip3 install --upgrade https://github.com/mretegan/crispy/tarball/master
 
 It is possible, although unlikely, that this version requires features that are not yet available with the pip installable version of silx. In this case, you have to also install the development version of silx. This is not always a very simple task, especially on Windows, but there is extensive `documentation <http://www.silx.org/doc/silx/latest>`_ on how to do it.
 
@@ -96,7 +96,7 @@ In this case, the dependencies are not automatically installed and you will have
 
 .. code:: sh
 
-    pip3 install --user -r https://raw.githubusercontent.com/mretegan/crispy/master/requirements.txt
+    pip3 install -r https://raw.githubusercontent.com/mretegan/crispy/master/requirements.txt
 
 .. third-marker
 
