@@ -10,7 +10,7 @@ The project is developed at the `European Synchrotron Radiation Facility <http:/
 
 .. figure:: assets/main_window.png
     :align: center
-    :width: 90 %
+    :width: 100 %
 
     Crispy's main window showing a calculated XAS spectrum for |Co2+|.
 
