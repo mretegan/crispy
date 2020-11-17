@@ -18,6 +18,7 @@ from urllib.request import Request, urlopen
 
 from PyQt5.QtCore import QByteArray, QPoint, QSize, Qt, QThread, pyqtSignal
 from PyQt5.QtWidgets import QAction, QDialog, QMainWindow, QPlainTextEdit
+from PyQt5.QtGui import QIcon
 from PyQt5.uic import loadUi
 
 from crispy import __version__ as version, resourceAbsolutePath
@@ -41,6 +42,10 @@ class MainWindow(QMainWindow):
         loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy.gui")
 
         self.setWindowTitle("Crispy")
+
+        # Set the icon.
+        iconPath = os.path.join("gui", "icons", "crispy.png")
+        self.setWindowIcon(QIcon(resourceAbsolutePath(iconPath)))
 
         # Setup the logger widget.
         self.loggerWidget.setFont(fixedFont())
