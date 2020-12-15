@@ -9,7 +9,7 @@ Crystal Field Multiplet
 
 2. Change the default scaling of the Slater integrals (κ) to 0.6, 0.4, and 0.2 and rerun the calculation. Overlay the four spectra and describe the evolution of the main peak and its high energy shoulder when the scaling parameter is decreased.
 
-3. Compare the previous observation with the changes in the experimental spectra when going from fluoride to bromide in the series of nickel halides. How does the reduction factor and covalency of the metal-ligand bond correlate, knowing that the later increases with increasing atomic mass of the halide?
+3. Compare the previous observation with the changes in the experimental spectra when going from fluoride to bromide in the series of nickel halides. How do the reduction factor and covalency of the metal-ligand bond correlate, knowing that the later increases with an increasing atomic mass of the halide?
 
 .. figure:: assets/laan_fig1.png
     :width: 60 %

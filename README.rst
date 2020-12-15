@@ -32,7 +32,7 @@ The easiest way to install Crispy on Windows and macOS operating systems is to u
 
 Using pip
 *********
-Pip is the package manager for Python, and before you can use it to install Crispy, you have to make sure that you have a working Python distribution. Never versions of Crispy work only with Python 3.7 or greater. On macOS and Windows, you can install Python using the `official installers <https://www.python.org/downloads>`_. In particular, for Windows, you should install the 64-bit version of Python, and make sure that during the installation you select to add Python to the system's PATH.
+Pip is the package manager for Python, and before you can use it to install Crispy, you have to make sure that you have a working Python distribution. Newer versions of Crispy work only with Python 3.7 or greater. On macOS and Windows, you can install Python using the `official installers <https://www.python.org/downloads>`_. In particular, for Windows, you should install the 64-bit version of Python, and make sure that during the installation you select to add Python to the system's PATH.
 
 Crispy depends on the following Python packages:
 

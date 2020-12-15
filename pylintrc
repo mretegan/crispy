@@ -6,6 +6,7 @@ disable=
   invalid-name,
   missing-class-docstring,
   missing-function-docstring,
+  missing-module-docstring,
   bad-continuation,
   too-few-public-methods,
   fixme,
