@@ -591,7 +591,7 @@ class Calculation(SelectableItem):
 
         # Initial configuration.
         initialConfiguration = Configuration.fromSubshellsAndOccupancies(
-            subshells=(valenceSubshell,), occupancies=(valenceOccupancy,),
+            subshells=(valenceSubshell,), occupancies=(valenceOccupancy,)
         )
         configurations.append(initialConfiguration)
 
@@ -627,7 +627,8 @@ class Calculation(SelectableItem):
 
             if core2Subshell == valenceSubshell:
                 finalConfiguration = Configuration.fromSubshellsAndOccupancies(
-                    subshells=(valenceSubshell,), occupancies=(valenceOccupancy - 1,),
+                    subshells=(valenceSubshell,),
+                    occupancies=(valenceOccupancy - 1,),
                 )
             else:
                 finalConfiguration = Configuration.fromSubshellsAndOccupancies(

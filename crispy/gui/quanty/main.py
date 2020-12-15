@@ -218,7 +218,7 @@ class ResultsPage(QWidget):
         path = os.path.join("gui", "icons", "trash.svg")
         icon = QIcon(resourceAbsolutePath(path))
         self.removeSelectedResultsAction = QAction(
-            icon, "Remove Selected Results", self, triggered=self.removeSelected,
+            icon, "Remove Selected Results", self, triggered=self.removeSelected
         )
 
         path = os.path.join("gui", "icons", "folder-open.svg")

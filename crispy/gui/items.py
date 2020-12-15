@@ -395,7 +395,7 @@ class BoolItem(BaseItem):
         if role in (Qt.EditRole,):
             if column == 1:
                 return None
-        elif role in (Qt.DisplayRole, Qt.UserRole,):
+        elif role in (Qt.DisplayRole, Qt.UserRole):
             if column == 1:
                 return self.value
         return super().data(column, role)
