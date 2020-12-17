@@ -4,6 +4,7 @@
 
 import os
 import logging
+import shutil
 import sys
 import subprocess
 
@@ -122,8 +123,8 @@ if sys.platform == "darwin":
     # Pack the application.
     subprocess.call(["bash", "create-dmg.sh"])
 
-    # Rename the created .dmg image.
-    os.rename(
+    # Make a copy of the created .dmg image.
+    shutil.copy( 
         os.path.join("artifacts", "Crispy.dmg"),
         os.path.join("artifacts", f"Crispy-{version}.dmg"),
     )

@@ -64,7 +64,7 @@ input.lua
 input_*.spec
 
 # Quanty binaries
-crispy/quanty/bin
+# crispy/quanty/bin
 
 # Artifacts
 artifacts
