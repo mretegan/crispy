@@ -42,10 +42,10 @@ jobs:
       if: runner.os == 'Windows'
       with:
         name: Crispy-Windows-2019-Python-${{ matrix.python-version }}
-        path : package\artifacts\Crispy-2020.1rc0-x64.exe
+        path : package\artifacts\*.exe
     - name: Upload the macOS app
       uses: actions/upload-artifact@v2
       if: runner.os == 'macOS'
       with:
         name: Crispy-macOS-10.15-Python-${{ matrix.python-version }}
-        path : package/artifacts/Crispy-2020.1rc0.dmg
+        path : package/artifacts/*.dmg
