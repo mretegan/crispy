@@ -13,6 +13,8 @@ __version__ = "2020.1rc0"
 import os
 import sys
 
+version = __version__
+
 # https://stackoverflow.com/questions/7674790/bundling-data-files-with-pyinstaller-onefile
 def resourceAbsolutePath(relativePath):
     """Get the absolute path to a resource. Works for development and for PyInstaller."""

@@ -21,7 +21,7 @@ from PyQt5.QtWidgets import QAction, QDialog, QMainWindow, QPlainTextEdit
 from PyQt5.QtGui import QIcon
 from PyQt5.uic import loadUi
 
-from crispy import __version__ as version, resourceAbsolutePath
+from crispy import version, resourceAbsolutePath
 from crispy.config import Config
 from crispy.gui.quanty.main import DockWidget
 from crispy.gui.utils import fixedFont

@@ -16,7 +16,7 @@ try:
 except ImportError:
     from distutils.core import setup
 
-from crispy import __version__ as version
+from crispy import version
 
 
 def get_readme():
@@ -63,7 +63,11 @@ def main():
         download_url="https://github.com/mretegan/crispy/releases",
         keywords="gui, spectroscopy, simulation, synchrotron, science",
         install_requires=get_requirements(),
-        platforms=["MacOS :: MacOS X", "Microsoft :: Windows", "POSIX :: Linux",],
+        platforms=[
+            "MacOS :: MacOS X",
+            "Microsoft :: Windows",
+            "POSIX :: Linux",
+        ],
         packages=[
             "crispy",
             "crispy.gui",
