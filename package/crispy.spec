@@ -10,7 +10,7 @@ import subprocess
 
 from PyInstaller.utils.hooks import collect_data_files, collect_submodules
 
-from crispy import __version__ as version
+from crispy import version
 
 logger = logging.getLogger("pyinstaller")
 
