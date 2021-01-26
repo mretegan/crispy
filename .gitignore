@@ -68,3 +68,6 @@ input_*.spec
 
 # Artifacts
 artifacts
+
+# IPython notebook checkpoints
+.ipynb_checkpoints
