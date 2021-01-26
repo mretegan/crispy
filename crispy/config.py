@@ -13,6 +13,7 @@ import logging
 import os
 import sys
 
+from packaging.version import parse
 from PyQt5.QtCore import QSettings, QStandardPaths
 
 from crispy import version, resourceAbsolutePath
@@ -31,45 +32,49 @@ class Config:
 
     @property
     def settings(self):
-        return QSettings(
-            QSettings.IniFormat, QSettings.UserScope, self.name, "settings-new"
+        settings = QSettings(
+            QSettings.IniFormat, QSettings.UserScope, self.name, "settings"
         )
+        # Set default values if the config file is empty or was not created.
+        if not settings.allKeys():
+            logger.debug("Loading default settings.")
+
+            settings.beginGroup("Quanty")
+            settings.setValue("Path", self.findQuanty())
+            settings.setValue("Verbosity", "0x0000")
+            settings.setValue("DenseBorder", "2000")
+            settings.setValue("RemoveFiles", True)
+            settings.endGroup()
+
+            settings.setValue("CheckForUpdates", True)
+            settings.setValue("CurrentPath", os.path.expanduser("~"))
+            settings.setValue("Version", version)
+
+            settings.sync()
+        return settings
 
     def read(self):
-        # path = self.settings.value("Quanty/Path")
-        # if not os.path.exists(path):
-        #     path = self.findQuanty()
-        #     self.settings.beginGroup("Quanty")
-        #     self.settings.setValue("Path", path)
-        #     self.settings.endGroup()
         return self.settings
-
-    def loadDefaults(self):
-        settings = self.read()
-
-        settings.beginGroup("Quanty")
-        settings.setValue("Path", self.findQuanty())
-        settings.setValue("Verbosity", "0x0000")
-        settings.setValue("DenseBorder", "2000")
-        settings.setValue("RemoveFiles", True)
-        settings.endGroup()
-
-        settings.setValue("CheckForUpdates", True)
-        settings.setValue("CurrentPath", os.path.expanduser("~"))
-        settings.setValue("Version", version)
-
-        settings.sync()
 
     def removeOldFiles(self):
         """Function that removes the settings from previous versions."""
+
+        # This is the very first way settings were stored.
         root = QStandardPaths.standardLocations(QStandardPaths.GenericConfigLocation)[0]
-
         path = os.path.join(root, self.name)
-
-        if version < "0.7.0":
+        if parse(version) < parse("0.7.0"):
             try:
                 os.remove(os.path.join(path, "settings.json"))
                 os.rmdir(path)
+                logger.debug("Removed old configuration file.")
+            except (IOError, OSError):
+                pass
+
+        # Fix a naming error in version 2020.1rc0.
+        if parse("2020.1rc0") <= parse(version):
+            root, _ = os.path.split(self.settings.fileName())
+            try:
+                os.remove(os.path.join(root, "settings-new.ini"))
                 logger.debug("Removed old configuration file.")
             except (IOError, OSError):
                 pass
@@ -99,4 +104,14 @@ class Config:
         else:
             path = None
 
+        if path is None:
+            logger.debug(
+                "Could not find the Quanty executable."
+                'Please set it up using the "Preferences" dialog.'
+            )
+
         return path
+
+    def setQuantyPath(self, path):
+        self.settings.setValue("Quanty/Path", path)
+        self.settings.sync()

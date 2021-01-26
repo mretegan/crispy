@@ -36,11 +36,6 @@ def main():
 
     config = Config()
     config.removeOldFiles()
-    settings = config.read()
-    # Set default values if the config file is empty or was not created.
-    if not settings.allKeys():
-        logger.debug("Loading default settings.")
-        config.loadDefaults()
 
     setUpLoggers()
 
