@@ -4,3 +4,4 @@ matplotlib
 h5py
 silx >= 0.13
 xraydb
+packaging
