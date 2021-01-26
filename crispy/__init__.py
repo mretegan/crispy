@@ -8,7 +8,7 @@
 # For further information, see https://github.com/mretegan/crispy #
 ###################################################################
 """This is the crispy package."""
-__version__ = "2020.1rc0"
+__version__ = "2020.1"
 
 import os
 import sys
