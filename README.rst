@@ -42,6 +42,7 @@ Crispy depends on the following Python packages:
 * `h5py <https://www.h5py.org>`_
 * `XrayDB <https://github.com/xraypy/XrayDB>`_
 * `silx <http://www.silx.org>`_
+* `packaging <https://packaging.pypa.io/en/latest>`_
 
 On current Linux distributions, both Python 2 and Python 3 should be present. Start by checking the installed Python 3 version:
 
