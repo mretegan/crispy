@@ -19,26 +19,26 @@ Verbosity($Verbosity)
 --------------------------------------------------------------------------------
 Temperature = $Temperature -- temperature (Kelvin)
 
-NPsis = $NPsis  -- number of states to consider in the spectra calculation
-NPsisAuto = $NPsisAuto  -- determine the number of state automatically
-NConfigurations = $NConfigurations  -- number of configurations
+NPsis = $NPsis -- number of states to consider in the spectra calculation
+NPsisAuto = $NPsisAuto -- determine the number of state automatically
+NConfigurations = $NConfigurations -- number of configurations
 
-Emin = $XEmin  -- minimum value of the energy range (eV)
-Emax = $XEmax  -- maximum value of the energy range (eV)
-NPoints = $XNPoints  -- number of points of the spectra
-ExperimentalShift = $XExperimentalShift  -- experimental edge energy (eV)
-Gaussian = $XGaussian  -- Gaussian FWHM (eV)
-Lorentzian = $XLorentzian  -- Lorentzian FWHM (eV)
-Gamma = $XGamma  -- Lorentzian FWHM used in the spectra calculation (eV)
+Emin = $XEmin -- minimum value of the energy range (eV)
+Emax = $XEmax -- maximum value of the energy range (eV)
+NPoints = $XNPoints -- number of points of the spectra
+ExperimentalShift = $XExperimentalShift -- experimental edge energy (eV)
+Gaussian = $XGaussian -- Gaussian FWHM (eV)
+Lorentzian = $XLorentzian -- Lorentzian FWHM (eV)
+Gamma = $XGamma -- Lorentzian FWHM used in the spectra calculation (eV)
 
-WaveVector = $XWaveVector  -- wave vector
-Ev = $XFirstPolarization  -- vertical polarization
-Eh = $XSecondPolarization  -- horizontal polarization
+WaveVector = $XWaveVector -- wave vector
+Ev = $XFirstPolarization -- vertical polarization
+Eh = $XSecondPolarization -- horizontal polarization
 
-SpectraToCalculate = $SpectraToCalculate  -- types of spectra to calculate
+SpectraToCalculate = $SpectraToCalculate -- types of spectra to calculate
 DenseBorder = $DenseBorder -- number of determinants where we switch from dense methods to sparse methods
 
-Prefix = "$Prefix"  -- file name prefix
+Prefix = "$Prefix" -- file name prefix
 
 --------------------------------------------------------------------------------
 -- Toggle the Hamiltonian terms.
