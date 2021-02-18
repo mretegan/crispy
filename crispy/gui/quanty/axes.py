@@ -442,12 +442,12 @@ class Axes(BaseItem):
         self.xaxis = XAxis(parent=self)
 
         calculation = self.ancestor
-        self.labels = [self.xaxis.label, "Intensity (a.u.)"]
+        self.labels = [f"{self.xaxis.label} (eV)", "Intensity (a.u.)"]
         if calculation.experiment.isTwoDimensional:
             self.xaxis.npoints.reset()
             self.xaxis.lorentzian.dataChanged.connect(self.xaxis.npoints.reset)
             self.yaxis = YAxis(parent=self)
-            self.labels = [self.xaxis.label, self.yaxis.label]
+            self.labels = [f"{l} (eV)" for l in (self.xaxis.label, self.yaxis.label)]
 
     def copyFrom(self, item):
         super().copyFrom(item)
