@@ -366,8 +366,8 @@ class Runner(QProcess):
         # Run Quanty using QProcess.
         try:
             self.start(self.executablePath, (inputName,))
-        except FileNotFoundError:
-            raise RuntimeError
+        except FileNotFoundError as error:
+            raise RuntimeError from error
 
         cwd = os.getcwd()
         message = f"Running Quanty {inputName} in the folder {cwd}."
