@@ -26,7 +26,10 @@ end
 --------------------------------------------------------------------------------
 -- Calculate the energy required to shift the spectrum to approximately zero.
 --------------------------------------------------------------------------------
-ZeroShift = CalculateEnergyDifference(HAtomic_i, InitialRestrictions, HAtomic_f, FinalRestrictions)
+ZeroShift = 0.0
+if ShiftToZero == true then
+    ZeroShift = CalculateEnergyDifference(HAtomic_i, InitialRestrictions, HAtomic_f, FinalRestrictions)
+end
 
 --------------------------------------------------------------------------------
 -- Calculate and save the spectra.
