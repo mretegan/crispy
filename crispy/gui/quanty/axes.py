@@ -277,6 +277,10 @@ class NPoints(IntItem):
                 f"The number of points must be greater than {self.minimum}."
             )
         self._value = value
+        self.dataChanged.emit(1)
+
+    def reset(self):
+        self.value = self.minimum
 
 
 class Shift(DoubleItem):
@@ -440,7 +444,8 @@ class Axes(BaseItem):
         calculation = self.ancestor
         self.labels = [self.xaxis.label, "Intensity (a.u.)"]
         if calculation.experiment.isTwoDimensional:
-            self.xaxis.npoints._value = 20
+            self.xaxis.npoints.reset()
+            self.xaxis.lorentzian.dataChanged.connect(self.xaxis.npoints.reset)
             self.yaxis = YAxis(parent=self)
             self.labels = [self.xaxis.label, self.yaxis.label]
 
