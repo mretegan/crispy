@@ -227,9 +227,18 @@ function CalculateEnergyDifference(H1, H1Restrictions, H2, H2Restrictions)
     -- @param H2 userdata: the second Hamiltonian.
     -- @param H2Restrictions table: restrictions of the occupation numbers for H2.
 
-    local Psis1, _ = WavefunctionsAndBoltzmannFactors(H1, 1, false, 0, nil, H1Restrictions, nil)
-    local Psis2, _ = WavefunctionsAndBoltzmannFactors(H2, 1, false, 0, nil, H2Restrictions, nil)
-    local E1 = Psis1[1] * H1 * Psis1[1]
-    local E2 = Psis2[1] * H2 * Psis2[1]
+    local E1 = 0.0
+    local E2 = 0.0
+
+    if H1 ~= nil and H1Restrictions ~= nil then
+        Psis1, _ = WavefunctionsAndBoltzmannFactors(H1, 1, false, 0, nil, H1Restrictions, nil)
+        E1 = Psis1[1] * H1 * Psis1[1]
+    end
+
+    if H2 ~= nil and H2Restrictions ~= nil then
+        Psis2, _ = WavefunctionsAndBoltzmannFactors(H2, 1, false, 0, nil, H2Restrictions, nil)
+        E2 = Psis2[1] * H2 * Psis2[1]
+    end
+
     return E1 - E2
 end

@@ -43,6 +43,7 @@ class Config:
             settings.setValue("Path", self.findQuanty())
             settings.setValue("Verbosity", "0x0000")
             settings.setValue("DenseBorder", "2000")
+            settings.setValue("ShiftSpectra", True)
             settings.setValue("RemoveFiles", True)
             settings.endGroup()
 

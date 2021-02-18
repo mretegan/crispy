@@ -649,6 +649,7 @@ class Calculation(SelectableItem):
         # Values defined in another places.
         replacements["Verbosity"] = settings.value("Quanty/Verbosity")
         replacements["DenseBorder"] = settings.value("Quanty/DenseBorder")
+        replacements["ShiftToZero"] = settings.value("Quanty/ShiftSpectra")
 
         subshell = self.element.valenceSubshell
         occupancy = self.element.valenceOccupancy

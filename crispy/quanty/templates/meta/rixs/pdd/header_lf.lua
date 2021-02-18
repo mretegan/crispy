@@ -17,40 +17,41 @@ Verbosity($Verbosity)
 --------------------------------------------------------------------------------
 -- Define the parameters of the calculation.
 --------------------------------------------------------------------------------
-Temperature = $Temperature -- temperature (Kelvin)
+Temperature = $Temperature -- Temperature (Kelvin).
 
-NPsis = $NPsis -- number of states to consider in the spectra calculation
-NPsisAuto = $NPsisAuto -- determine the number of state automatically
-NConfigurations = $NConfigurations -- number of configurations
+NPsis = $NPsis -- Number of states to consider in the spectra calculation.
+NPsisAuto = $NPsisAuto -- Determine the number of state automatically.
+NConfigurations = $NConfigurations -- Number of configurations.
 
--- X-axis parameters
-Emin1 = $XEmin -- minimum value of the energy range (eV)
-Emax1 = $XEmax -- maximum value of the energy range (eV)
-NPoints1 = $XNPoints -- number of points of the spectra
-ExperimentalShift1 = $XExperimentalShift -- experimental edge energy (eV)
-Gaussian1 = $XGaussian -- Gaussian FWHM (eV)
-Gamma1 = $XGamma -- Lorentzian FWHM used in the spectra calculation (eV)
+-- X-axis parameters.
+Emin1 = $XEmin -- Minimum value of the energy range (eV).
+Emax1 = $XEmax -- Maximum value of the energy range (eV).
+NPoints1 = $XNPoints -- Number of points of the spectra.
+ExperimentalShift1 = $XExperimentalShift -- Experimental edge energy (eV).
+Gaussian1 = $XGaussian -- Gaussian FWHM (eV).
+Gamma1 = $XGamma -- Lorentzian FWHM used in the spectra calculation (eV).
 
-WaveVector = $XWaveVector -- wave vector
-Ev = $XFirstPolarization -- vertical polarization
-Eh = $XSecondPolarization -- horizontal polarization
+WaveVector = $XWaveVector -- Wave vector.
+Ev = $XFirstPolarization -- Vertical polarization.
+Eh = $XSecondPolarization -- Horizontal polarization.
 
--- Y-axis parameters
-Emin2 = $YEmin -- minimum value of the energy range (eV)
-Emax2 = $YEmax -- maximum value of the energy range (eV)
-NPoints2 = $YNPoints -- number of points of the spectra
-ExperimentalShift2 = $YExperimentalShift -- experimental edge energy (eV)
-Gaussian2 = $YGaussian -- Gaussian FWHM (eV)
-Gamma2 = $YGamma -- Lorentzian FWHM used in the spectra calculation (eV) 
+-- Y-axis parameters.
+Emin2 = $YEmin -- Minimum value of the energy range (eV).
+Emax2 = $YEmax -- Maximum value of the energy range (eV).
+NPoints2 = $YNPoints -- Number of points of the spectra.
+ExperimentalShift2 = $YExperimentalShift -- Experimental edge energy (eV).
+Gaussian2 = $YGaussian -- Gaussian FWHM (eV).
+Gamma2 = $YGamma -- Lorentzian FWHM used in the spectra calculation (eV).
 
-WaveVector = $YWaveVector -- wave vector
-Ev = $YFirstPolarization -- vertical polarization
-Eh = $YSecondPolarization -- horizontal polarization
+WaveVector = $YWaveVector -- Wave vector.
+Ev = $YFirstPolarization -- Vertical polarization.
+Eh = $YSecondPolarization -- Horizontal polarization.
 
-SpectraToCalculate = $SpectraToCalculate -- types of spectra to calculate
-DenseBorder = $DenseBorder -- number of determinants where we switch from dense methods to sparse methods
+SpectraToCalculate = $SpectraToCalculate -- Types of spectra to calculate.
+DenseBorder = $DenseBorder -- Number of determinants where we switch from dense methods to sparse methods.
+ShiftToZero = $ShiftToZero -- If enabled, shift the calculated spectra to have the first peak at approximately zero.
 
-Prefix = "$Prefix" -- file name prefix
+Prefix = "$Prefix" -- File name prefix.
 
 --------------------------------------------------------------------------------
 -- Toggle the Hamiltonian terms.

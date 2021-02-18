@@ -75,9 +75,10 @@ if AtomicTerm then
           zeta_#f_f * ldots_#f
         + zeta_#i_f * ldots_#i)
 
-    -- Save the atomic Hamiltonians.
-    HAtomic_i = H_i - U_#f_#f_i * F0_#f_#f
-    HAtomic_f = H_f - U_#f_#f_f * F0_#f_#f - U_#i_#f_f * F0_#i_#f
+    -- Save the spin-orbit coupling terms of the atomic Hamiltonians. These are
+    -- used to calculate the "zero" shift.
+    HAtomic_i = $zeta(#f)_i_value * ldots_#f
+    HAtomic_f = $zeta(#f)_f_value * ldots_#f + $zeta(#i)_f_value * ldots_#i
 end
 
 #symmetry_term

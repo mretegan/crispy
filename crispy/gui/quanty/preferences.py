@@ -59,12 +59,16 @@ class PreferencesDialog(QDialog):
 
         path = settings.value("Path")
         self.pathLineEdit.setText(path)
+        self.pathLineEdit.setCursorPosition(0)
 
         verbosity = settings.value("Verbosity")
         self.verbosityLineEdit.setText(verbosity)
 
         denseBorder = settings.value("DenseBorder")
         self.denseBorderLineEdit.setText(denseBorder)
+
+        shiftSpectra = settings.value("ShiftSpectra", type=bool)
+        self.shiftSpectraCheckBox.setChecked(shiftSpectra)
 
         removeFiles = settings.value("RemoveFiles", type=bool)
         self.removeFilesCheckBox.setChecked(removeFiles)
@@ -76,6 +80,7 @@ class PreferencesDialog(QDialog):
         settings.setValue("Path", self.pathLineEdit.text())
         settings.setValue("Verbosity", self.verbosityLineEdit.text())
         settings.setValue("DenseBorder", self.denseBorderLineEdit.text())
+        settings.setValue("ShiftSpectra", self.shiftSpectraCheckBox.isChecked())
         settings.setValue("RemoveFiles", self.removeFilesCheckBox.isChecked())
         settings.setValue("Size", self.size())
         settings.setValue("Position", self.pos())
@@ -96,3 +101,4 @@ class PreferencesDialog(QDialog):
 
         if path:
             self.pathLineEdit.setText(path)
+            self.pathLineEdit.setCursorPosition(0)
