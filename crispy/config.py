@@ -75,7 +75,6 @@ class Config:
         # Remove all configuration files before the first proper calendar
         # versioning release.
         if parse(version) < parse("2021.1"):
-            logger.debug("Start removing old configuration files.")
             root, _ = os.path.split(self.settings.fileName())
             for file in ("settings.ini", "settings-new.ini"):
                 try:
