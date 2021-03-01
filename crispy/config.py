@@ -63,6 +63,7 @@ class Config:
         # This is the very first way settings were stored.
         root = QStandardPaths.standardLocations(QStandardPaths.GenericConfigLocation)[0]
         path = os.path.join(root, self.name)
+
         if parse(version) < parse("0.7.0"):
             try:
                 os.remove(os.path.join(path, "settings.json"))
@@ -71,14 +72,17 @@ class Config:
             except (IOError, OSError):
                 pass
 
-        # Fix a naming error in version 2020.1rc0.
-        if parse("2020.1rc0") <= parse(version):
+        # Remove all configuration files before the first proper calendar
+        # versioning release.
+        if parse(version) < parse("2021.1"):
+            logger.debug("Start removing old configuration files.")
             root, _ = os.path.split(self.settings.fileName())
-            try:
-                os.remove(os.path.join(root, "settings-new.ini"))
-                logger.debug("Removed old configuration file.")
-            except (IOError, OSError):
-                pass
+            for file in ("settings.ini", "settings-new.ini"):
+                try:
+                    os.remove(os.path.join(root, file))
+                    logger.debug("Removed old configuration file: %s.", file)
+                except (IOError, OSError):
+                    pass
 
     @staticmethod
     def findQuanty():
