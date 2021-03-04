@@ -94,7 +94,7 @@ class Element(BaseItem):
             return
         tokens = re.findall(r"(\w{1,2})(\d[+,-])", value)
         if not tokens:
-            raise ValueError(f"Invalid element {value}.")
+            raise ValueError("Could not parse the string. Did you specify the charge?")
         [tokens] = tokens
         self.symbol, self.charge = tokens
 
