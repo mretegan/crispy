@@ -32,17 +32,14 @@ The easiest way to install Crispy on Windows and macOS operating systems is to u
 
 Using pip
 *********
-Pip is the package manager for Python, and before you can use it to install Crispy, you have to make sure that you have a working Python distribution. Newer versions of Crispy work only with Python 3.7 or greater. On macOS and Windows, you can install Python using the `official installers <https://www.python.org/downloads>`_. In particular, for Windows, you should install the 64-bit version of Python, and make sure that during the installation you select to add Python to the system's PATH.
+Pip is the package manager for Python, and before you can use it to install Crispy, you have to make sure that you have a working Python distribution. While the current release works with both Python 2 and Python 3, you should install Python 3.5 or greater, as in previous versions some of the dependencies like PyQt5 cannot be easily installed using pip. On macOS and Windows, you can install Python using the `official installers <https://www.python.org/downloads>`_. In particular, for Windows, you should install the 64-bit version of Python, and make sure that during the installation you select to add Python to the system's PATH.
 
 Crispy depends on the following Python packages:
 
 * `PyQt5 <https://riverbankcomputing.com/software/pyqt/intro>`_
 * `NumPy <http://numpy.org>`_
 * `Matplotlib <http://matplotlib.org>`_
-* `h5py <https://www.h5py.org>`_
-* `XrayDB <https://github.com/xraypy/XrayDB>`_
 * `silx <http://www.silx.org>`_
-* `packaging <https://packaging.pypa.io/en/latest>`_
 
 On current Linux distributions, both Python 2 and Python 3 should be present. Start by checking the installed Python 3 version:
 
@@ -50,11 +47,12 @@ On current Linux distributions, both Python 2 and Python 3 should be present. St
 
     python3 -V
 
-If the version number is at least 3.7, you can install Crispy and all dependencies using pip:
+If the version number is at least 3.5, you can install Crispy and all dependencies using pip:
 
 .. code:: sh
 
-    pip3 install --upgrade crispy
+    python3 -m pip install --upgrade --user PyQt5==5.13.2 numpy matplotlib silx 
+    python3 -m pip install --upgrade --user --no-deps --force crispy
 
 After the installation finishes, you should be able to start the program from the command line:
 
@@ -79,7 +77,7 @@ Assuming that you have a working Python distribution (version 3.7 or greater), y
 
 .. code:: sh
 
-    pip3 install --upgrade https://github.com/mretegan/crispy/tarball/master
+    python3 -m pip install --upgrade --user https://github.com/mretegan/crispy/tarball/master
 
 It is possible, although unlikely, that this version requires features that are not yet available with the pip installable version of silx. In this case, you have to also install the development version of silx. This is not always a very simple task, especially on Windows, but there is extensive `documentation <http://www.silx.org/doc/silx/latest>`_ on how to do it.
 
@@ -97,7 +95,7 @@ In this case, the dependencies are not automatically installed and you will have
 
 .. code:: sh
 
-    pip3 install -r https://raw.githubusercontent.com/mretegan/crispy/master/requirements.txt
+    python3 -m pip install --requirement https://raw.githubusercontent.com/mretegan/crispy/master/requirements.txt
 
 .. third-marker
 
