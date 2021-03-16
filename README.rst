@@ -51,7 +51,7 @@ If the version number is at least 3.5, you can install Crispy and all dependenci
 
 .. code:: sh
 
-    python3 -m pip install --upgrade PyQt5==5.13.2 numpy matplotlib silx 
+    python3 -m pip install --upgrade wheel cython numpy matplotlib==3.2.1 PyQt5==5.13.2 silx==0.11 
     python3 -m pip install --upgrade --no-deps --force crispy
 
 After the installation finishes, you should be able to start the program from the command line:
