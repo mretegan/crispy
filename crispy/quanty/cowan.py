@@ -16,7 +16,7 @@ import os
 import subprocess
 import sys
 
-from crispy.gui.quanty.calculation import Configuration, Element
+from crispy.quanty.calculation import Configuration, Element
 
 logger = logging.getLogger(__name__)
 

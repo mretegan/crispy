@@ -11,10 +11,7 @@
 import os
 import sys
 
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+from setuptools import find_packages, setup
 
 from crispy import version
 
@@ -68,28 +65,23 @@ def main():
             "Microsoft :: Windows",
             "POSIX :: Linux",
         ],
-        packages=[
-            "crispy",
-            "crispy.gui",
-            "crispy.gui.quanty",
-            "crispy.quanty",
-            "crispy.utils",
-        ],
-        package_data={
-            "crispy.gui": [
-                "icons/*.svg",
-                "uis/*.ui",
-                "uis/quanty/*.ui",
-                "uis/quanty/details/*.ui",
-            ],
-            "crispy.quanty": [
-                "parameters/*.h5",
-                "templates/*.lua",
-                "calculations.json",
-            ],
-        },
+        packages=find_packages(),
+        # include_package_data=True,
+        # package_data={
+        #     "crispy": [
+        #         "icons/*.svg",
+        #         "uis/*.ui",
+        #     ],
+        #     "crispy.quanty": [
+        #         "bin/*/*",
+        #         "parameters/*.h5",
+        #         "templates/*.lua",
+        #         "uis/*ui",
+        #         "uis/details/*.ui",
+        #         "calculations.json",
+        #     ],
+        # },
         classifiers=[
-            "Development Status :: 4 - Beta",
             "Environment :: X11 Applications :: Qt",
             "Intended Audience :: Education",
             "Intended Audience :: Science/Research",

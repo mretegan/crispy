@@ -19,7 +19,7 @@ from PyQt5.QtCore import (
     QVariant,
 )
 
-from crispy.gui.items import RootItem
+from crispy.items import RootItem
 
 logger = logging.getLogger(__name__)
 

@@ -15,8 +15,8 @@ import logging
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QStyledItemDelegate, QTableView, QTreeView
 
-from crispy.gui.items import DoubleItem, IntItem, Vector3DItem, ComboItem
-from crispy.gui.widgets import DoubleLineEdit, IntLineEdit, Vector3DLineEdit, ComboBox
+from crispy.items import DoubleItem, IntItem, Vector3DItem, ComboItem
+from crispy.widgets import DoubleLineEdit, IntLineEdit, Vector3DLineEdit, ComboBox
 
 logger = logging.getLogger(__name__)
 

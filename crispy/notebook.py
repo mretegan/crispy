@@ -9,8 +9,8 @@
 ###################################################################
 """The module provides an easy to use API to run calculations from Jupyter notebooks."""
 
-from crispy.gui.models import TreeModel
-from crispy.gui.quanty.calculation import Calculation as _Calculation, Element
+from crispy.models import TreeModel
+from crispy.quanty.calculation import Calculation as _Calculation, Element
 
 
 def prettify(data, level=0):

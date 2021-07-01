@@ -24,8 +24,8 @@ icon = os.path.join(os.getcwd(), icon)
 logger.info(icon)
 
 datas = [
-    (os.path.join(package_path, "gui/uis"), "gui/uis"),
-    (os.path.join(package_path, "gui/icons"), "gui/icons"),
+    (os.path.join(package_path, "uis"), "uis"),
+    (os.path.join(package_path, "icons"), "icons"),
     (os.path.join(package_path, "quanty"), "quanty"),
 ]
 

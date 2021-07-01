@@ -19,7 +19,7 @@ import os
 import h5py
 
 from crispy import resourceAbsolutePath
-from crispy.gui.quanty.calculation import Calculation, Element
+from crispy.quanty.calculation import Calculation, Element
 from crispy.loggers import setUpLoggers
 from crispy.quanty import CALCULATIONS
 from crispy.quanty.cowan import Cowan

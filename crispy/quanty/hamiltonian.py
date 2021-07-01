@@ -20,7 +20,7 @@ import h5py
 from PyQt5.QtCore import QLocale, Qt
 from crispy import resourceAbsolutePath
 
-from crispy.gui.items import BaseItem, BoolItem, DoubleItem, IntItem, SelectableItem
+from crispy.items import BaseItem, BoolItem, DoubleItem, IntItem, SelectableItem
 
 
 OCCUPANCIES = {"s": 2, "p": 6, "d": 10, "f": 14}

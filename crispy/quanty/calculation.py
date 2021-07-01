@@ -21,10 +21,10 @@ from PyQt5.QtCore import QProcess, Qt, pyqtSignal
 
 from crispy import resourceAbsolutePath
 from crispy.config import Config
-from crispy.gui.items import BaseItem, DoubleItem, IntItem, SelectableItem
-from crispy.gui.quanty.axes import Axes
-from crispy.gui.quanty.hamiltonian import Hamiltonian
-from crispy.gui.quanty.spectra import Spectra
+from crispy.items import BaseItem, DoubleItem, IntItem, SelectableItem
+from crispy.quanty.axes import Axes
+from crispy.quanty.hamiltonian import Hamiltonian
+from crispy.quanty.spectra import Spectra
 from crispy.quanty import CALCULATIONS, XDB
 
 logger = logging.getLogger(__name__)

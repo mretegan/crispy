@@ -7,7 +7,7 @@
 # This work is licensed under the terms of the MIT license.       #
 # For further information, see https://github.com/mretegan/crispy #
 ###################################################################
-"""Quanty calculation details dialog"""
+"""Quanty calculation details dialog."""
 
 import os
 
@@ -17,7 +17,7 @@ from PyQt5.uic import loadUi
 
 from crispy import resourceAbsolutePath
 from crispy.config import Config
-from crispy.gui.utils import fixedFont, setMappings
+from crispy.utils import fixedFont, setMappings
 
 settings = Config().read()
 
@@ -26,8 +26,8 @@ class AxisWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
-        uiPath = os.path.join("gui", "uis", "quanty", "details", "axis.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy.gui")
+        uiPath = os.path.join("quanty", "uis", "details", "axis.ui")
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy")
 
         self.mappers = list()
 
@@ -56,8 +56,8 @@ class DetailsDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
-        uiPath = os.path.join("gui", "uis", "quanty", "details", "main.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy.gui")
+        uiPath = os.path.join("quanty", "uis", "details", "main.ui")
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy")
 
         font = fixedFont()
         self.inputText.setFont(font)

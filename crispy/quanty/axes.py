@@ -15,7 +15,7 @@ from math import floor
 
 import numpy as np
 
-from crispy.gui.items import (
+from crispy.items import (
     BaseItem,
     DoubleItem,
     IntItem,

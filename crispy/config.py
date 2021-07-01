@@ -74,7 +74,8 @@ class Config:
 
         # Remove all configuration files before the first proper calendar
         # versioning release.
-        if parse(version) < parse("2021.1"):
+        # TODO: Change this to only check version 2021.0 before release.
+        if parse(version) <= parse("0.7.3") or parse(version) == parse("2020.1rc0"):
             root, _ = os.path.split(self.settings.fileName())
             for file in ("settings.ini", "settings-new.ini"):
                 try:

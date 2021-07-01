@@ -10,7 +10,7 @@
 ###################################################################
 
 import unittest
-from crispy.quanty.test.test_quanty import suite as test_quanty_suite
+from crispy.quanty.tests.test_quanty import suite as test_quanty_suite
 
 
 def suite():

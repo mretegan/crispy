@@ -2,9 +2,9 @@ include CHANGELOG.rst
 include LICENSE.txt
 include MANIFEST.in
 include README.rst
+include run_tests.py
 include requirements.txt
-recursive-include crispy *.py
-recursive-include crispy/gui/uis *.ui
-recursive-include crispy/gui/icons *.svg
-recursive-include crispy/quanty *
+global-include *.ui *.svg test*.py
+recursive-include crispy/quanty/bin *
+recursive-include crispy/quanty/templates *.lua
 recursive-include scripts *

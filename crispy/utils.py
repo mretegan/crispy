@@ -14,7 +14,7 @@ import sys
 from PyQt5.QtGui import QFontDatabase
 from PyQt5.QtWidgets import QCheckBox, QComboBox, QDataWidgetMapper
 
-from crispy.gui.views import Delegate
+from crispy.views import Delegate
 
 
 logger = logging.getLogger(__name__)

@@ -27,8 +27,8 @@ class PreferencesDialog(QDialog):
     def __init__(self, parent):
         super().__init__(parent)
 
-        uiPath = os.path.join("gui", "uis", "quanty", "preferences.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy.gui")
+        uiPath = os.path.join("quanty", "uis", "preferences.ui")
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy")
 
         self.pathBrowsePushButton.clicked.connect(self.setExecutablePath)
 

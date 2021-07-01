@@ -19,13 +19,13 @@ from PyQt5.uic import loadUi
 
 from crispy import resourceAbsolutePath
 from crispy.config import Config
-from crispy.gui.models import TreeModel
-from crispy.gui.quanty.axes import YAxis
-from crispy.gui.quanty.calculation import Calculation
-from crispy.gui.quanty.details import DetailsDialog
-from crispy.gui.quanty.preferences import PreferencesDialog
-from crispy.gui.quanty.progress import ProgressDialog
-from crispy.gui.utils import setMappings
+from crispy.models import TreeModel
+from crispy.quanty.axes import YAxis
+from crispy.quanty.calculation import Calculation
+from crispy.quanty.details import DetailsDialog
+from crispy.quanty.preferences import PreferencesDialog
+from crispy.quanty.progress import ProgressDialog
+from crispy.utils import setMappings
 
 logger = logging.getLogger(__name__)
 settings = Config().read()
@@ -35,8 +35,8 @@ class AxisWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
-        uiPath = os.path.join("gui", "uis", "quanty", "axis.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy.gui")
+        uiPath = os.path.join("quanty", "uis", "axis.ui")
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy")
 
         self.mappers = list()
 
@@ -67,8 +67,8 @@ class GeneralSetupPage(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
-        uiPath = os.path.join("gui", "uis", "quanty", "general.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy.gui")
+        uiPath = os.path.join("quanty", "uis", "general.ui")
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy")
 
         self.xAxis = AxisWidget()
         self.yAxis = AxisWidget()
@@ -126,8 +126,8 @@ class HamiltonianSetupPage(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
-        uiPath = os.path.join("gui", "uis", "quanty", "hamiltonian.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy.gui")
+        uiPath = os.path.join("quanty", "uis", "hamiltonian.ui")
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy")
 
         self.mappers = list()
         # This is needed for the updateAutoStates.
@@ -197,31 +197,31 @@ class ResultsPage(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
-        uiPath = os.path.join("gui", "uis", "quanty", "results.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy.gui")
+        uiPath = os.path.join("quanty", "uis", "results.ui")
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy")
 
         self.detailsDialog = DetailsDialog(parent=self)
 
         # Add a context menu to the view.
-        path = os.path.join("gui", "icons", "clipboard.svg")
+        path = os.path.join("icons", "clipboard.svg")
         icon = QIcon(resourceAbsolutePath(path))
         self.showDetailsDialogAction = QAction(
             icon, "Show Details", self, triggered=self.showDetailsDialog
         )
 
-        path = os.path.join("gui", "icons", "save.svg")
+        path = os.path.join("icons", "save.svg")
         icon = QIcon(resourceAbsolutePath(path))
         self.saveSelectedResultsAsAction = QAction(
             icon, "Save Selected Results As...", self, triggered=self.saveSelected
         )
 
-        path = os.path.join("gui", "icons", "trash.svg")
+        path = os.path.join("icons", "trash.svg")
         icon = QIcon(resourceAbsolutePath(path))
         self.removeSelectedResultsAction = QAction(
             icon, "Remove Selected Results", self, triggered=self.removeSelected
         )
 
-        path = os.path.join("gui", "icons", "folder-open.svg")
+        path = os.path.join("icons", "folder-open.svg")
         icon = QIcon(resourceAbsolutePath(path))
         self.loadResultsAction = QAction(
             icon, "Load Results", self, triggered=self.load
@@ -372,8 +372,8 @@ class DockWidget(QDockWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
-        uiPath = os.path.join("gui", "uis", "quanty", "main.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy.gui")
+        uiPath = os.path.join("quanty", "uis", "main.ui")
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy")
 
         self.model = TreeModel()
 
