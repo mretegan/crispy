@@ -364,16 +364,16 @@ class PdHybridizationTerm(HamiltonianTerm):
         initialAtomic = ("F2", "G1", "G3", "ζ(")
         finalAtomic = ("F2", "G1", "G3", "G1(1s,", "ζ(")
         if self.symmetry.value == "Td":
-            hybdridization = ("Δ", "Vt2")
-            names = hybdridization + initialAtomic
+            hybridization = ("Δ", "Vt2")
+            names = hybridization + initialAtomic
             generateParameters("Initial Hamiltonian", names)
-            names = hybdridization + finalAtomic
+            names = hybridization + finalAtomic
             generateParameters("Final Hamiltonian", names)
         elif self.symmetry.value == "C3v":
-            hybdridization = ("Δ", "Va1", "Ve(eg)", "Ve(t2g)")
-            names = hybdridization + initialAtomic
+            hybridization = ("Δ", "Va1", "Ve(eg)", "Ve(t2g)")
+            names = hybridization + initialAtomic
             generateParameters("Initial Hamiltonian", names)
-            names = hybdridization + finalAtomic
+            names = hybridization + finalAtomic
             generateParameters("Final Hamiltonian", names)
 
     @property

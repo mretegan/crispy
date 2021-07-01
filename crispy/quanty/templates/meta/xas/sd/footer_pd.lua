@@ -144,7 +144,7 @@ if PdHybridizationTerm then
     --
     -- Here we set the prefactor for the quadrupolar spectrum to 1, to more
     -- easily compare the spectra with and without hybridization. Note however
-    -- that the quadrupole spectrum without hybdridization can look quite
+    -- that the quadrupole spectrum without hybridization can look quite
     -- different from the quadrupolar part of the spectrum with hybridization. 
     -- They are identical only if all parameters of the #f-4p interaction are zero.
     -- 
