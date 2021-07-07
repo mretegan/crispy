@@ -17,11 +17,11 @@ import logging
 import os
 
 import h5py
-
 from crispy import resourceAbsolutePath
-from crispy.quanty.calculation import Calculation, Element
 from crispy.loggers import setUpLoggers
+from crispy.models import TreeModel
 from crispy.quanty import CALCULATIONS
+from crispy.quanty.calculation import Calculation, Element
 from crispy.quanty.cowan import Cowan
 
 logger = logging.getLogger("crispy.quanty.generate")
@@ -136,6 +136,10 @@ def get_all_calculations():
             symmetries = experiments[experiment]["symmetries"]
             for edge in edges:
                 for symmetry in symmetries:
+                    # The model is needed because in the case of 2D calculations
+                    # there are calls to dataChanged which need an index from the
+                    # model.
+                    model = TreeModel()
                     calculation = Calculation(
                         symbol=symbol,
                         charge=charge,
@@ -143,7 +147,7 @@ def get_all_calculations():
                         experiment=experiment,
                         edge=edge,
                         hamiltonian=False,
-                        parent=None,
+                        parent=model,
                     )
                     yield calculation
 
@@ -158,6 +162,7 @@ def generate_templates():
         templateName = calculation.templateName
         experiment = calculation.experiment
         edge = calculation.edge
+
         # cf - crystal field
         # lf - crystal field and hybridization with the ligands
         # pd - crystal field and p-d hybridization
@@ -222,6 +227,14 @@ def generate_templates():
                 filename,
             )
             continue
+
+        logger.info(
+            "%s, %s, %s, %s",
+            calculation.element.valenceSubshell,
+            symmetry.value,
+            experiment.value,
+            edge.value,
+        )
 
         base = base.replace("#symmetry", symmetry.value)
         base = base.replace("#edge", edge.value)

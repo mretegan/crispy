@@ -443,6 +443,7 @@ class Axes(BaseItem):
 
         calculation = self.ancestor
         self.labels = [f"{self.xaxis.label} (eV)", "Intensity (a.u.)"]
+
         if calculation.experiment.isTwoDimensional:
             self.xaxis.npoints.reset()
             self.xaxis.lorentzian.dataChanged.connect(self.xaxis.npoints.reset)

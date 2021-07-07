@@ -628,15 +628,15 @@ end
 
 function GetSpectrum(G, Ids, dZ, NOperators, NPsis)
     -- Extract the spectrum corresponding to the operators identified using the
-    -- Ids argument. The returned spectrum is a weighted sum where the weights
+    -- Ids argument. The returned spectrum is a weighted sum, where the weights
     -- are the Boltzmann probabilities.
     --
-    -- @param G userdata: spectrum object as returned by the functions defined in Quanty, i.e. one spectrum
+    -- @param G userdata: Spectrum object as returned by the functions defined in Quanty, i.e. one spectrum
     --                    for each operator and each wavefunction.
-    -- @param Ids table: indexes of the operators that are considered in the returned spectrum.
+    -- @param Ids table: Indexes of the operators that are considered in the returned spectrum.
     -- @param dZ table: Boltzmann prefactors for each of the spectrum in the spectra object.
-    -- @param NOperators number: number of transition operators.
-    -- @param NPsis number: number of wavefunctions.
+    -- @param NOperators number: Number of transition operators.
+    -- @param NPsis number: Number of wavefunctions.
 
     if not (type(Ids) == "table") then
         Ids = {Ids}
@@ -671,9 +671,9 @@ function CalculateT(Basis, Eps, K)
     -- Calculate the transition operator in the basis of tesseral harmonics for
     -- an arbitrary polarization and wave-vector (for quadrupole operators).
     --
-    -- @param Basis table: operators forming the basis.
-    -- @param Eps table: cartesian components of the polarization vector.
-    -- @param K table: cartesian components of the wave-vector.
+    -- @param Basis table: Operators forming the basis.
+    -- @param Eps table: Cartesian components of the polarization vector.
+    -- @param K table: Cartesian components of the wave-vector.
 
     if #Basis == 3 then
         -- The basis for the dipolar operators must be in the order x, y, z.
@@ -699,15 +699,15 @@ function WavefunctionsAndBoltzmannFactors(H, NPsis, NPsisAuto, Temperature, Thre
     -- Calculate the wavefunctions and Boltzmann factors of a Hamiltonian.
     --
     -- @param H userdata: Hamiltonian for which to calculate the wavefunctions.
-    -- @param NPsis number: the number of wavefunctions.
-    -- @param NPsisAuto boolean: determine automatically the number of wavefunctions that are populated at the specified
+    -- @param NPsis number: The number of wavefunctions.
+    -- @param NPsisAuto boolean: Determine automatically the number of wavefunctions that are populated at the specified
     --                           temperature and within the threshold.
-    -- @param Temperature number: temperature in eV.
-    -- @param Threshold number: threshold used to determine the number of wavefunction in the automatic procedure.
-    -- @param StartRestrictions table: occupancy restrictions at the start of the calculation.
-    -- @param CalculationRestrictions table: occupancy restrictions used during the calculation.
-    -- @return table: the wavefunctions.
-    -- @return table: the Boltzmann factors.
+    -- @param Temperature number: The temperature in eV.
+    -- @param Threshold number: Threshold used to determine the number of wavefunction in the automatic procedure.
+    -- @param StartRestrictions table: Occupancy restrictions at the start of the calculation.
+    -- @param CalculationRestrictions table: Occupancy restrictions used during the calculation.
+    -- @return table: The calculated wavefunctions.
+    -- @return table: The calculated Boltzmann factors.
 
     if Threshold == nil then
         Threshold = 1e-8
@@ -824,10 +824,10 @@ function CalculateEnergyDifference(H1, H1Restrictions, H2, H2Restrictions)
     -- Calculate the energy difference between the lowest eigenstates of the two
     -- Hamiltonians.
     --
-    -- @param H1 userdata: the first Hamiltonian.
-    -- @param H1Restrictions table: restrictions of the occupation numbers for H1.
-    -- @param H2 userdata: the second Hamiltonian.
-    -- @param H2Restrictions table: restrictions of the occupation numbers for H2.
+    -- @param H1 userdata: The first Hamiltonian.
+    -- @param H1Restrictions table: Restrictions of the occupation numbers for H1.
+    -- @param H2 userdata: The second Hamiltonian.
+    -- @param H2Restrictions table: Restrictions of the occupation numbers for H2.
 
     local E1 = 0.0
     local E2 = 0.0

@@ -82,6 +82,9 @@ class BaseItem(QObject):
         return self._ancestor
 
     def _modelDataChanged(self, column):
+        model = self.model()
+        if model is None:
+            raise TypeError("The model needs to be defined.")
         index = self.model().createIndex(self.childPosition(), column, self)
         # logger.info(
         #     "Item = %s, Data = %s, Model = %s", *(self, self.data(column), self.model())
