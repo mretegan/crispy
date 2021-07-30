@@ -92,11 +92,11 @@ class MainWindow(QMainWindow):
 
     def showEvent(self, event):
         self.loadSettings()
-        super(MainWindow, self).showEvent(event)
+        super().showEvent(event)
 
     def closeEvent(self, event):
         self.saveSettings()
-        super(MainWindow, self).closeEvent(event)
+        super().closeEvent(event)
 
     def loadSettings(self):
         settings.beginGroup("MainWindow")
@@ -176,7 +176,7 @@ class CheckUpdateThread(QThread):
 
 class UpdateAvailableDialog(QDialog):
     def __init__(self, parent):
-        super(UpdateAvailableDialog, self).__init__(parent)
+        super().__init__(parent)
 
         uiPath = os.path.join("uis", "update.ui")
         loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy")
@@ -184,7 +184,7 @@ class UpdateAvailableDialog(QDialog):
 
 class AboutDialog(QDialog):
     def __init__(self, parent):
-        super(AboutDialog, self).__init__(parent)
+        super().__init__(parent)
 
         uiPath = os.path.join("uis", "about.ui")
         loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy")
