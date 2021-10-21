@@ -119,6 +119,11 @@ if sys.platform == "darwin":
     )
     os.remove(os.path.join(bin_folder, "Quanty.exe"))
 
+    # Remove the extended attributes from the MacOS application as this causes
+    # the application to fail to launch ("is damaged and can’t be opened. You
+    # should move it to the Trash").
+    subprocess.call(["xattr", "-cr", os.path.join("dist", "Crispy.app")])
+
     # Pack the application.
     subprocess.call(["bash", "create-dmg.sh"])
 
