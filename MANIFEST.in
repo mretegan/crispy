@@ -4,7 +4,10 @@ include MANIFEST.in
 include README.rst
 include run_tests.py
 include requirements.txt
-global-include *.ui *.svg test*.py
+
+recursive-include crispy/uis *.ui 
+recursive-include crispy/icons *.svg
+recursive-include crispy/quanty *.json *.h5
 recursive-include crispy/quanty/bin *
 recursive-include crispy/quanty/templates *.lua
 recursive-include scripts *

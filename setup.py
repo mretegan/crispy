@@ -66,21 +66,7 @@ def main():
             "POSIX :: Linux",
         ],
         packages=find_packages(),
-        # include_package_data=True,
-        # package_data={
-        #     "crispy": [
-        #         "icons/*.svg",
-        #         "uis/*.ui",
-        #     ],
-        #     "crispy.quanty": [
-        #         "bin/*/*",
-        #         "parameters/*.h5",
-        #         "templates/*.lua",
-        #         "uis/*ui",
-        #         "uis/details/*.ui",
-        #         "calculations.json",
-        #     ],
-        # },
+        include_package_data=True,
         classifiers=[
             "Environment :: X11 Applications :: Qt",
             "Intended Audience :: Education",
