@@ -91,9 +91,9 @@ class CustomPlotWidget(PlotWidget):
 
         for item in self.getItems():
             if isinstance(item, items.Curve):
-                message = "X: {:g}    Y: {:g}".format(x, y)
+                message = f"X: {x:g}    Y: {y:g}"
             elif isinstance(item, items.ImageBase) and data is not None:
-                message = "X: {:g}    Y: {:g}    Data: {:g}".format(x, y, data)
+                message = f"X: {x:g}    Y: {y:g}    Data: {data:g}"
             else:
                 message = None
 
