@@ -168,7 +168,7 @@ class HamiltonianTerm(SelectableItem):
 
     @property
     def replacements(self):
-        replacements = dict()
+        replacements = {}
 
         # Use the name of the class to generate the name of the replacement.
         name = type(self).__name__
@@ -258,7 +258,7 @@ class CrystalFieldTerm(HamiltonianTerm):
     def __init__(self, parent=None, name="Crystal Field"):
         super().__init__(parent=parent, name=name)
 
-        names = list()
+        names = []
         if self.block == "d":
             if self.symmetry.value == "Oh":
                 names, values = ("10Dq",), (1.0,)
@@ -293,7 +293,7 @@ class LigandHybridizationTerm(HamiltonianTerm):
 
         ligandsName = "L2" if "MLCT" in self.name else "L1"
 
-        names = list()
+        names = []
         if self.block == "d":
             if self.symmetry.value == "Oh":
                 names = ("Δ", "Veg", "Vt2g", "10Dq")
@@ -322,7 +322,7 @@ class LigandHybridizationTerm(HamiltonianTerm):
 
     def setData(self, column, value, role=Qt.EditRole):
         if role == Qt.CheckStateRole:
-            siblings = list()
+            siblings = []
             for sibling in self.siblings():
                 if isinstance(sibling, LigandHybridizationTerm):
                     siblings.append(sibling)
@@ -443,15 +443,12 @@ class HamiltonianTerms(BaseItem):
                 ):
                     pass
                 else:
-                    name = "{}-Ligands Hybridization (LMCT)".format(
-                        calculation.element.valenceSubshell
-                    )
+                    valenceSubshell = calculation.element.valenceSubshell
+                    name = f"{valenceSubshell}-Ligands Hybridization (LMCT)"
                     self.lmctLigandsHybridization = LmctLigandsHybridizationTerm(
                         parent=self, name=name
                     )
-                    name = "{}-Ligands Hybridization (MLCT)".format(
-                        calculation.element.valenceSubshell
-                    )
+                    name = f"{valenceSubshell}-Ligands Hybridization (MLCT)"
                     self.mlctLigandsHybridization = MlctLigandsHybridizationTerm(
                         parent=self, name=name
                     )
@@ -462,17 +459,15 @@ class HamiltonianTerms(BaseItem):
                     calculation.edge.value == "K (1s)"
                     and calculation.experiment.value == "XAS"
                 ):
-                    name = "{}-4p Hybridization".format(
-                        calculation.element.valenceSubshell
-                    )
+                    valenceSubshell = calculation.element.valenceSubshell
+                    name = f"{valenceSubshell}-4p Hybridization"
                     self.pdHybridization = PdHybridizationTerm(parent=self, name=name)
 
         if calculation.element.valenceBlock == "f":
             # Add ligands hybridization term.
             if calculation.symmetry.value in ("Oh",):
-                name = "{}-Ligands Hybridization (LMCT)".format(
-                    calculation.element.valenceSubshell
-                )
+                valenceSubshell = calculation.element.valenceSubshell
+                name = f"{valenceSubshell}-Ligands Hybridization (LMCT)"
                 self.lmctLigandsHybridization = LmctLigandsHybridizationTerm(
                     parent=self, name=name
                 )
@@ -600,7 +595,7 @@ class Hamiltonian(BaseItem):
 
     @property
     def replacements(self):
-        replacements = dict()
+        replacements = {}
         # The NPsisAuto has to come before NPsis. Using regular expressions with
         # word boundaries doesn't work that well.
         replacements["NPsisAuto"] = self.numberOfStates.auto.value

@@ -70,7 +70,7 @@ class Lorentzian(Broadening):
 
     @property
     def replacements(self):
-        replacements = dict()
+        replacements = {}
 
         if self.ancestor.experiment.isTwoDimensional:
             # Energy dependent Lorentzian broadening of 2D spectra is not supported
@@ -108,7 +108,7 @@ class Gaussian(Broadening):
 
     @property
     def replacements(self):
-        replacements = dict()
+        replacements = {}
         # Use zero by default, but write the actual value as a comment.
         replacements["Gaussian"] = f"0.0  -- {self.value}"
         return replacements
@@ -191,7 +191,7 @@ class Photon(BaseItem):
 
     @property
     def replacements(self):
-        replacements = dict()
+        replacements = {}
 
         replacements["WaveVector"] = self.k.replacements
         replacements["FirstPolarization"] = self.e1.replacements
@@ -365,14 +365,13 @@ class Axis(BaseItem):
         except TypeError:
             coreholeWidth = 0.1
 
-        if coreholeWidth < 0.1:
-            coreholeWidth = 0.1
+        coreholeWidth = max(coreholeWidth, 0.1)
 
         return round(coreholeWidth, 2)
 
     @property
     def replacements(self):
-        replacements = dict()
+        replacements = {}
 
         replacements["Emin"] = self.start.value
         replacements["Emax"] = self.stop.value

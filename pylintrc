@@ -9,5 +9,3 @@ disable=
   missing-module-docstring,
   bad-continuation,
   too-few-public-methods,
-  fixme,
-  pointless-string-statement

@@ -323,7 +323,7 @@ class Spectra(BaseItem):
 
     @property
     def replacements(self):
-        replacements = dict()
+        replacements = {}
         if not list(self.toCalculate.selected):
             value = "{}"
         else:

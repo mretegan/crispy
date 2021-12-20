@@ -29,7 +29,7 @@ class AxisWidget(QWidget):
         uiPath = os.path.join("quanty", "uis", "details", "axis.ui")
         loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy")
 
-        self.mappers = list()
+        self.mappers = []
 
     def clear(self):
         if self.mappers:
@@ -68,7 +68,7 @@ class DetailsDialog(QDialog):
         self.yAxis = AxisWidget()
         self.axesTabWidget.addTab(self.xAxis, None)
 
-        self.mappers = list()
+        self.mappers = []
 
         # This avoids closing the window after changing the value in a line
         # edit and then pressing return.

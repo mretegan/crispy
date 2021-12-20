@@ -27,7 +27,7 @@ class Cowan:
     RCN_HEADER = "22 -9    2   10  1.0    5.E-06    1.E-09-2   130   1.0  0.65  0.0 0.50 0.0  0.7\n"
     RCN = "runrcn.sh"
 
-    RYDBER_TO_EV = 13.605693122994  # The value in Cowan's programs is 13.60580.
+    RYDBERG_TO_EV = 13.605693122994  # The value in Cowan's programs is 13.60580.
 
     NAMES = {
         "d": ("U({0:s},{0:s})", "F2({0:s},{0:s})", "F4({0:s},{0:s})", "ζ({0:s})"),
@@ -143,7 +143,7 @@ class Cowan:
             # For 5d elements, the 4f occupied subshells must be included explicitly.
             if "5d" in subshell and "4f" not in subshells:
                 subshell = "4f14 5d"
-            name += "{0:s}{1:02d} ".format(subshell.upper(), occupancy)
+            name += f"{subshell.upper():s}{occupancy:02d} "
         return name.rstrip()
 
     def run(self, command):
@@ -163,16 +163,16 @@ class Cowan:
         """Create the input and run the RCN program."""
         rcn_input = self.RCN_HEADER
         for configuration in (self.configuration,):
-            line = "{:5d}           {:8s}         {:8s}\n".format(
-                self.element.atomicNumber,
-                configuration.value,
-                self.normalize_configuration_name(configuration),
+            line = (
+                f"{self.element.atomicNumber:5d}           "
+                f"{configuration.value:8s}         "
+                f"{self.normalize_configuration_name(configuration):8s}\n"
             )
             rcn_input += line
-        rcn_input += "{:5d}\n".format(-1)
+        rcn_input += f"{-1:5d}\n"
 
-        filename = "{:s}.rcn".format(self.basename)
-        with open(filename, "w") as fp:
+        filename = f"{self.basename:s}.rcn"
+        with open(filename, "w", encoding="utf-8") as fp:
             fp.write(rcn_input)
         self.run(os.path.join(self.scripts, self.RCN))
 
@@ -197,12 +197,12 @@ class Cowan:
             [valence] = subshells
 
         def _format(value):
-            return round(float(value) * self.RYDBER_TO_EV, ndigits=4)
+            return round(float(value) * self.RYDBERG_TO_EV, ndigits=4)
 
         energy = 0.0
-        params = dict()
-        filename = "{:s}.rcn_out".format(self.basename)
-        with open(filename) as fp:
+        params = {}
+        filename = f"{self.basename:s}.rcn_out"
+        with open(filename, encoding="utf-8") as fp:
             for line in fp:
                 # Parse the spin-orbit coupling parameters (zeta).
                 if "BLUME-WATSON" in line:
@@ -239,7 +239,7 @@ class Cowan:
                     energy = _format(line.split()[-1])
 
         key = ",".join(self.configuration.shells)
-        ordered_params = dict()
+        ordered_params = {}
         for name in self.NAMES[key]:
             name = name.format(*self.configuration.subshells)
             ordered_params[name] = 0.0

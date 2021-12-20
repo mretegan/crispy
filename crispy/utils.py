@@ -22,11 +22,12 @@ logger = logging.getLogger(__name__)
 
 def setMappings(mappings):
     """Set the mappings between the model and widgets.
-    TODO: - Should this be extended to accept other columns?
-          - Check if the already has the model.
+    TODO:
+        - Should this be extended to accept other columns?
+        - Check if it has a model already.
     """
     column = 1
-    mappers = list()
+    mappers = []
     for widget, obj in mappings:
         mapper = QDataWidgetMapper(widget)
         # logger.debug(obj.model())

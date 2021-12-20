@@ -18,5 +18,5 @@ from crispy import resourceAbsolutePath
 XDB = xraydb.XrayDB()
 
 path = os.path.join("quanty", "calculations.json")
-with open(resourceAbsolutePath(path)) as fp:
+with open(resourceAbsolutePath(path), encoding="utf-8") as fp:
     CALCULATIONS = json.load(fp, object_hook=dict)

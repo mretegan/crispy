@@ -256,7 +256,7 @@ class MainPlotWidget(CustomPlotWidget):
             legend.set_visible(False)
             return
 
-        handles = list()
+        handles = []
         for curve in self.getAllCurves():
             label = curve.getLegend()
             style = curve.getCurrentStyle()

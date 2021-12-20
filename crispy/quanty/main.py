@@ -38,7 +38,7 @@ class AxisWidget(QWidget):
         uiPath = os.path.join("quanty", "uis", "axis.ui")
         loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy")
 
-        self.mappers = list()
+        self.mappers = []
 
     def populate(self, axis):
         if self.mappers:
@@ -74,7 +74,7 @@ class GeneralSetupPage(QWidget):
         self.yAxis = AxisWidget()
         self.axesTabWidget.addTab(self.xAxis, None)
 
-        self.mappers = list()
+        self.mappers = []
 
         self.symbolComboBox.currentTextChanged.connect(self.comboBoxChanged)
         self.chargeComboBox.currentTextChanged.connect(self.comboBoxChanged)
@@ -129,7 +129,7 @@ class HamiltonianSetupPage(QWidget):
         uiPath = os.path.join("quanty", "uis", "hamiltonian.ui")
         loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy")
 
-        self.mappers = list()
+        self.mappers = []
         # This is needed for the updateAutoStates.
         self.hamiltonian = None
 
@@ -267,7 +267,7 @@ class ResultsPage(QWidget):
     def removeSelected(self):
         indexes = self.view.selectedIndexes()
 
-        items = list()
+        items = []
         for index in reversed(indexes):
             item = index.internalPointer()
             items.append(item)
@@ -503,7 +503,7 @@ class DockWidget(QDockWidget):
         path, _ = QFileDialog.getSaveFileName(
             self,
             "Save Quanty Input",
-            os.path.join(self.currentPath, "{}.lua".format(self.state.value)),
+            os.path.join(self.currentPath, f"{self.state.value}.lua"),
             "Quanty Input File (*.lua)",
         )
 

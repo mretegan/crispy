@@ -19,7 +19,7 @@ from crispy import version
 def get_readme():
     _dir = os.path.dirname(os.path.abspath(__file__))
     long_description = ""
-    with open(os.path.join(_dir, "README.rst")) as f:
+    with open(os.path.join(_dir, "README.rst"), encoding="utf-8") as f:
         for line in f:
             if "main_window" not in line:
                 long_description += line
@@ -31,8 +31,8 @@ def get_version():
 
 
 def get_requirements():
-    requirements = list()
-    with open("requirements.txt") as fp:
+    requirements = []
+    with open("requirements.txt", encoding="utf-8") as fp:
         for line in fp:
             if line.startswith("#") or line == "\n":
                 continue

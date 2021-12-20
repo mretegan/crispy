@@ -78,8 +78,8 @@ class Element(BaseItem):
         # Calculate the number of electrons of the ion.
         ion_electrons = self.atomicNumber - charge
 
-        core_electorns = SUBSHELLS[self.valenceSubshell]["coreElectrons"]
-        occupancy = ion_electrons - core_electorns
+        core_electrons = SUBSHELLS[self.valenceSubshell]["coreElectrons"]
+        occupancy = ion_electrons - core_electrons
         return occupancy
 
     @property
@@ -262,7 +262,7 @@ class Edge(BaseItem):
 
         raw, _ = self.value.split()
 
-        names = list()
+        names = []
         separator = "-"
         if separator in raw:
             names.extend(raw.split(separator))
@@ -384,13 +384,11 @@ class Runner(QProcess):
             minutes, seconds = divmod(reminder, 60)
             seconds = round(seconds, 2)
             if hours > 0:
-                message += "{} hours {} minutes and {} seconds.".format(
-                    hours, minutes, seconds
-                )
+                message += f"{hours} hours {minutes} minutes and {seconds} seconds."
             elif minutes > 0:
-                message += "{} minutes and {} seconds.".format(minutes, seconds)
+                message += f"{minutes} minutes and {seconds} seconds."
             else:
-                message += "{} seconds.".format(seconds)
+                message += f"{seconds} seconds."
             logger.info(message)
             successful = True
         elif exitStatus == 0 and exitCode == 1:
@@ -427,7 +425,7 @@ class Runner(QProcess):
             raise FileNotFoundError(message)
 
         # Test the executable.
-        with open(os.devnull, "w") as fp:
+        with open(os.devnull, "w", encoding="utf-8") as fp:
             try:
                 subprocess.call(path, stdout=fp, stderr=fp)
             except FileNotFoundError as e:
@@ -463,7 +461,7 @@ class Calculation(SelectableItem):
 
         # Validate the keyword arguments. This is best done this way; using properties
         # it gets rather convoluted.
-        self._symbols = list()
+        self._symbols = []
         for subshell in CALCULATIONS.keys():
             self._symbols.extend(CALCULATIONS[subshell]["symbols"])
         self._symbols = tuple(sorted(self._symbols))
@@ -587,7 +585,7 @@ class Calculation(SelectableItem):
         valenceSubshell = self.element.valenceSubshell
         valenceOccupancy = self.element.valenceOccupancy
 
-        configurations = list()
+        configurations = []
 
         # Initial configuration.
         initialConfiguration = Configuration.fromSubshellsAndOccupancies(
@@ -644,7 +642,7 @@ class Calculation(SelectableItem):
         """Replacements dictionary used to fill the calculation template. The
         construction of more complex items is delegated to the respective object.
         """
-        replacements = dict()
+        replacements = {}
 
         # Values defined in another places.
         replacements["Verbosity"] = settings.value("Quanty/Verbosity")
@@ -673,7 +671,7 @@ class Calculation(SelectableItem):
             os.path.join("quanty", "templates", f"{self.templateName}")
         )
         try:
-            with open(path) as fp:
+            with open(path, encoding="utf8") as fp:
                 template = fp.read()
         except FileNotFoundError as e:
             message = f"Could not find the template file {self.templateName}."
@@ -705,7 +703,7 @@ class Calculation(SelectableItem):
     def saveInput(self):
         # TODO: Is this too hidden?
         os.chdir(settings.value("CurrentPath"))
-        with open(self.inputName, "w") as fp:
+        with open(self.inputName, "w", encoding="utf-8") as fp:
             fp.write(self.input)
 
     def run(self):

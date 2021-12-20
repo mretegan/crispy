@@ -40,7 +40,7 @@ class BaseItem(QObject):
 
         self._model = None
         self._parent = None
-        self._children = list()
+        self._children = []
         self._visible = False
 
         if isinstance(parent, (QAbstractItemModel, RootItem)):

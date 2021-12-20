@@ -26,8 +26,8 @@ def gaussian_kernel1d(sigma=None, truncate=6):
     kernel = np.exp(-0.5 * ((x - mu) ** 2 / sigma ** 2))
     if kernel.sum() < MIN_KERNEL_SUM:
         raise Exception(
-            "The kernel can't be normalized, because its sum is close to "
-            "zero. The sum of the kernel is < {0}".format(MIN_KERNEL_SUM)
+            f"The kernel can't be normalized, because its sum is close to "
+            f"zero. The sum of the kernel is < {MIN_KERNEL_SUM}"
         )
     kernel /= kernel.sum()
     return kernel
