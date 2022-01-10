@@ -1,6 +1,6 @@
 # coding: utf-8
 ###################################################################
-# Copyright (c) 2016-2020 European Synchrotron Radiation Facility #
+# Copyright (c) 2016-2022 European Synchrotron Radiation Facility #
 #                                                                 #
 # Author: Marius Retegan                                          #
 #                                                                 #
@@ -8,7 +8,7 @@
 # For further information, see https://github.com/mretegan/crispy #
 ###################################################################
 """This is the crispy package."""
-__version__ = "2021.0.dev0"
+__version__ = "2022.0.dev0"
 
 import os
 import sys

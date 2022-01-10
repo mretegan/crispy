@@ -1,6 +1,6 @@
 # coding: utf-8
 ###################################################################
-# Copyright (c) 2016-2020 European Synchrotron Radiation Facility #
+# Copyright (c) 2016-2022 European Synchrotron Radiation Facility #
 #                                                                 #
 # Author: Marius Retegan                                          #
 #                                                                 #
@@ -74,8 +74,8 @@ class Config:
 
         # Remove all configuration files before the first proper calendar
         # versioning release.
-        # TODO: Change this to only check version 2021.0 before release.
-        if parse(version) <= parse("0.7.3") or parse(version) == parse("2020.1rc0"):
+        # TODO: Change this to only check version 2022.0 before release.
+        if parse(version) <= parse("0.7.3") or parse(version) < parse("2022.0.dev0"):
             root, _ = os.path.split(self.settings.fileName())
             for file in ("settings.ini", "settings-new.ini"):
                 try:

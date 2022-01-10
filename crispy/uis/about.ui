@@ -240,7 +240,7 @@ font-weight: bold;</string>
       <string notr="true">font-size: 12px;</string>
      </property>
      <property name="text">
-      <string>Copyright (c) 2016–2020,
+      <string>Copyright (c) 2016–2022,
 European Synchrotron Radiation Facility</string>
      </property>
      <property name="alignment">

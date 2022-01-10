@@ -1,6 +1,6 @@
 # coding: utf-8
 ###################################################################
-# Copyright (c) 2016-2020 European Synchrotron Radiation Facility #
+# Copyright (c) 2016-2022 European Synchrotron Radiation Facility #
 #                                                                 #
 # Authors: Marius Retegan                                         #
 #                                                                 #
