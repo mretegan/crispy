@@ -51,8 +51,8 @@ def convolve_fft(array, kernel):
     https://github.com/astropy/astropy/blob/master/astropy/convolution/convolve.py
     """
     # pylint: disable=too-many-locals
-    array = np.asarray(array, dtype=np.complex)
-    kernel = np.asarray(kernel, dtype=np.complex)
+    array = np.asarray(array, dtype=complex)
+    kernel = np.asarray(kernel, dtype=complex)
 
     if array.ndim != kernel.ndim:
         raise ValueError("Image and kernel must have same number of dimensions")
@@ -78,13 +78,13 @@ def convolve_fft(array, kernel):
     kernel_slices = tuple(kernel_slices)
 
     if not np.all(new_shape == array_shape):
-        big_array = np.zeros(new_shape, dtype=np.complex)
+        big_array = np.zeros(new_shape, dtype=complex)
         big_array[array_slices] = array
     else:
         big_array = array
 
     if not np.all(new_shape == kernel_shape):
-        big_kernel = np.zeros(new_shape, dtype=np.complex)
+        big_kernel = np.zeros(new_shape, dtype=complex)
         big_kernel[kernel_slices] = kernel
     else:
         big_kernel = kernel
