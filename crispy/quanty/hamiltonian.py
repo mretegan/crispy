@@ -512,7 +512,7 @@ class NumberOfStates(IntItem):
 
     @value.setter
     def value(self, value):
-        if value < 0:
+        if value <= 0:
             raise ValueError("There must be at least one state.")
         if value > self.maximum:
             raise ValueError(f"The maximum number of states is {self.maximum}.")
