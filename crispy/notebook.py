@@ -7,7 +7,7 @@
 # This work is licensed under the terms of the MIT license.       #
 # For further information, see https://github.com/mretegan/crispy #
 ###################################################################
-"""The module provides an easy to use API to run calculations from Jupyter notebooks."""
+"""The module provides an easy to use API to run calculations in Jupyter notebooks."""
 
 from crispy.models import TreeModel
 from crispy.quanty.calculation import Calculation as _Calculation, Element
@@ -18,12 +18,14 @@ def prettify(data, level=0):
     indent = 2 * level * " "
     for key, value in data.items():
         if isinstance(value, dict):
-            output += f"{indent}{key}\n"
+            output += f"{indent}{key}:\n"
             output += prettify(value, level + 1)
         else:
             if isinstance(value, bool):
-                value = "\u2611" if value else "\u2610"
-            output += f"{indent}{key}: {value}\n"
+                value = "\u2612" if value else "\u2610"
+            output += f"{indent}{key}: {value}"
+        if key != list(data)[-1]:
+            output += "\n"
     return output
 
 
@@ -50,10 +52,10 @@ class Terms:
             if term.name == name:
                 term.disable()
 
-    def show(self):
-        return self
+    def print(self):
+        print(self)
 
-    def __repr__(self):
+    def __str__(self):
         data = Tree()
         for term in self.terms:
             data[term.name] = term.isEnabled()
@@ -65,43 +67,40 @@ class Hamiltonian:
         self.hamiltonian = hamiltonian
         self.terms = Terms(self.hamiltonian.terms.children())
 
-    def parameters(self):
-        return self
-
-    def parameter(self, name=None, value=None, scale_factor=None, where=None):
-        if name is None:
-            return self
-
+    def set_parameter(
+        self, name=None, value=None, scale_factor=None, hamiltonian_name=None
+    ):
+        if name is None or value is None:
+            return
         if name in ["Fk", "Gk", "Zeta"]:
             parameter = getattr(self.hamiltonian, name.lower(), None)
             if parameter is not None:
                 parameter.value = value
                 parameter.updateIndividualScaleFactors(value)
-                return True
 
         if name == "Number of Configurations":
             self.hamiltonian.numberOfConfigurations.value = value
-            return True
 
         if name == "Number of States":
             self.hamiltonian.numberOfStates.value = value
-            return True
 
         parameters = list(self.hamiltonian.findChild(name))
         for parameter in parameters:
             hamiltonian = parameter.parent()
-            if where is None:
+            if hamiltonian_name is None:
                 pass
-            elif where not in hamiltonian.name:
+            elif hamiltonian_name not in hamiltonian.name:
                 continue
             if parameter.name == name:
                 if value is not None:
                     parameter.value = value
                 if scale_factor is not None:
                     parameter.scaleFactor = scale_factor
-        return True
 
-    def __repr__(self):
+    def print(self):
+        print(self)
+
+    def __str__(self):
         data = Tree()
         general_data = Tree()
         general_data["Fk"] = self.hamiltonian.fk.value
@@ -129,18 +128,17 @@ class Axis:
     def __init__(self, axis):
         self.axis = axis
 
-    def parameters(self):
-        return self
-
-    def parameter(self, name=None, value=None):
+    def set_parameter(self, name=None, value=None):
         if name is None or value is None:
-            return self
+            return
         for parameter in self.axis.__dict__.values():
             if getattr(parameter, "name", None) == name:
                 parameter.value = value
-        return True
 
-    def __repr__(self):
+    def print(self):
+        print(self)
+
+    def __str__(self):
         data = Tree()
         data[self.axis.name] = {
             "Start": self.axis.start.value,
@@ -167,7 +165,7 @@ class Spectra:
             if spectrum.name == name:
                 spectrum.disable()
 
-    def calculated(self):
+    def get_calculated_data(self):
         if not self.has_data:
             return None
         data = Tree()
@@ -185,88 +183,87 @@ class Spectra:
     def plot(self, spectra=None, ax=None):
         if ax is None:
             return
-        for data in self.calculated().values():
+        for data in self.get_calculated_data().values():
             spectrum = data["raw"]
             if spectra is not None and spectrum.name not in spectra:
                 continue
-            ax.plot(spectrum.x, spectrum.signal, label=spectrum.suffix)
+            ax.plot(spectrum.x, spectrum.signal, label=spectrum.name)
 
-    def show(self):
-        return self
+    def print(self):
+        print(self)
 
-    def __repr__(self):
-        if not self.has_data:
-            data = Tree()
-            for spectrum in self.spectra.toCalculate.all:
-                data[spectrum.name] = spectrum.isEnabled()
-            return prettify(data)
-        return prettify(self.calculated())
+    def __str__(self):
+        data = Tree()
+        for spectrum in self.spectra.toCalculate.all:
+            data[spectrum.name] = spectrum.isEnabled()
+        return prettify(data)
 
 
 class Calculation:
     def __init__(self, element, symmetry, experiment, edge):
         element = Element(parent=None, value=element)
 
-        self.model = TreeModel()
-        self.calculation = _Calculation(
+        self._model = TreeModel()
+        self._calculation = _Calculation(
             element.symbol,
             element.charge,
             symmetry,
             experiment,
             edge,
-            parent=self.model.rootItem(),
+            parent=self._model.rootItem(),
         )
-        self.hamiltonian = Hamiltonian(self.calculation.hamiltonian)
-
-        self.xaxis = Axis(self.calculation.axes.xaxis)
-        self.spectra = Spectra(self.calculation.spectra)
+        self.xaxis = Axis(self._calculation.axes.xaxis)
+        self.hamiltonian = Hamiltonian(self._calculation.hamiltonian)
+        self.spectra = Spectra(self._calculation.spectra)
 
     def __dir__(self):
         return (
-            "xaxis",
+            "get_output",
             "hamiltonian",
-            "run",
             "output",
+            "run",
+            "set_parameter",
             "spectra",
+            "xaxis",
         )
 
-    def parameters(self):
-        return self
-
-    def parameter(self, name=None, value=None):
+    def set_parameter(self, name=None, value=None):
         if name is None or value is None:
-            return self
-        for parameter in self.calculation.__dict__.values():
+            return
+        if name == "Basename":
+            self._calculation.value = value
+        else:
+            for parameter in self._calculation.__dict__.values():
+                if getattr(parameter, "name", None) == name:
+                    parameter.value = value
+
+    def get_parameter(self, name=None):
+        if name is None:
+            return None
+        if name == "Basename":
+            return self._calculation.value
+        for parameter in self._calculation.__dict__.values():
             if getattr(parameter, "name", None) == name:
-                parameter.value = value
-        return True
+                return parameter.value
+            return None
 
-    def temperature(self, value=None):
-        if value is None:
-            return self.calculation.temperature.value
-        self.calculation.temperature.value = value
-        return True
-
-    def magnetic_field(self, value=None):
-        if value is None:
-            return self.calculation.magneticField.value
-        self.calculation.magneticField.value = value
-        return True
+    def get_output(self):
+        return self._calculation.output
 
     def run(self):
-        self.calculation.runner.output = str()
-        self.calculation.run()
-        self.calculation.runner.waitForFinished()
+        self._calculation.runner.output = str()
+        self._calculation.run()
+        self._calculation.runner.waitForFinished()
         self.spectra.has_data = True
-        return True
 
-    def output(self):
-        print(self.calculation.output)
+    def print(self):
+        print(self)
 
-    def __repr__(self):
+    def __str__(self):
         data = {
-            "Temperature": self.calculation.temperature.value,
-            "Magnetic Field": self.calculation.magneticField.value,
+            "Basename": self._calculation.value,
+            "Temperature": self._calculation.temperature.value,
+            "Magnetic Field": self._calculation.magneticField.value,
         }
         return prettify(data)
 
