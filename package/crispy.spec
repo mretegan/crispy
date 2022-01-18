@@ -113,11 +113,10 @@ if sys.platform == "darwin":
             os.path.join("dist", "Crispy.app", "Contents", "MacOS", "Python"),
         ]
     )
-    # Remove the Quanty binary for Windows.
-    bin_folder = os.path.join(
-        "dist", "Crispy.app", "Contents", "Resources", "quanty", "bin", "win32"
-    )
-    os.remove(os.path.join(bin_folder, "Quanty.exe"))
+    # Remove Quanty's Windows and Linux binaries.
+    root = os.path.join("dist", "Crispy.app", "Contents", "Resources", "quanty", "bin")
+    os.remove(os.path.join(root, "win32", "Quanty.exe"))
+    os.remove(os.path.join(root, "linux", "Quanty"))
 
     # Remove the extended attributes from the MacOS application as this causes
     # the application to fail to launch ("is damaged and can’t be opened. You
@@ -134,9 +133,10 @@ if sys.platform == "darwin":
     )
 
 elif sys.platform == "win32":
-    # Remove the Quanty binary for macOS.
-    bin_folder = os.path.join("dist", "Crispy", "quanty", "bin", "darwin")
-    os.remove(os.path.join(bin_folder, "Quanty"))
+    # Remove Quanty's macOS and Linux binaries.
+    root = os.path.join("dist", "Crispy", "quanty", "bin")
+    os.remove(os.path.join(root, "darwin", "Quanty"))
+    os.remove(os.path.join(root, "linux", "Quanty"))
 
     # Create the Inno Setup script.
     root = os.path.join(os.getcwd(), "assets")
