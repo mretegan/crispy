@@ -22,7 +22,7 @@ def prettify(data, level=0):
             output += prettify(value, level + 1)
         else:
             if isinstance(value, bool):
-                value = "\u2612" if value else "\u2610"
+                value = "True" if value else "False"
             output += f"{indent}{key}: {value}"
         if key != list(data)[-1]:
             output += "\n"
@@ -40,32 +40,35 @@ class Tree(dict):
 
 class Terms:
     def __init__(self, value):
-        self.terms = value
+        self._terms = value
 
     def enable(self, name):
-        for term in self.terms:
-            if name in (term.name, "all"):
+        for term in self._terms:
+            if name in (term.name, "All"):
                 term.enable()
 
     def disable(self, name):
-        for term in self.terms:
+        for term in self._terms:
             if term.name == name:
                 term.disable()
 
     def print(self):
         print(self)
 
+    def __iter__(self):
+        return iter(self._terms)
+
     def __str__(self):
         data = Tree()
-        for term in self.terms:
+        for term in self._terms:
             data[term.name] = term.isEnabled()
         return prettify(data)
 
 
 class Hamiltonian:
     def __init__(self, hamiltonian):
-        self.hamiltonian = hamiltonian
-        self.terms = Terms(self.hamiltonian.terms.children())
+        self._hamiltonian = hamiltonian
+        self.terms = Terms(self._hamiltonian.terms.children())
 
     def set_parameter(
         self, name=None, value=None, scale_factor=None, hamiltonian_name=None
@@ -73,18 +76,18 @@ class Hamiltonian:
         if name is None or value is None:
             return
         if name in ["Fk", "Gk", "Zeta"]:
-            parameter = getattr(self.hamiltonian, name.lower(), None)
+            parameter = getattr(self._hamiltonian, name.lower(), None)
             if parameter is not None:
                 parameter.value = value
                 parameter.updateIndividualScaleFactors(value)
 
         if name == "Number of Configurations":
-            self.hamiltonian.numberOfConfigurations.value = value
+            self._hamiltonian.numberOfConfigurations.value = value
 
         if name == "Number of States":
-            self.hamiltonian.numberOfStates.value = value
+            self._hamiltonian.numberOfStates.value = value
 
-        parameters = list(self.hamiltonian.findChild(name))
+        parameters = list(self._hamiltonian.findChild(name))
         for parameter in parameters:
             hamiltonian = parameter.parent()
             if hamiltonian_name is None:
@@ -103,15 +106,15 @@ class Hamiltonian:
     def __str__(self):
         data = Tree()
         general_data = Tree()
-        general_data["Fk"] = self.hamiltonian.fk.value
-        general_data["Gk"] = self.hamiltonian.gk.value
-        general_data["Zeta"] = self.hamiltonian.zeta.value
-        general_data["Number of States"] = self.hamiltonian.numberOfStates.value
+        general_data["Fk"] = self._hamiltonian.fk.value
+        general_data["Gk"] = self._hamiltonian.gk.value
+        general_data["Zeta"] = self._hamiltonian.zeta.value
+        general_data["Number of States"] = self._hamiltonian.numberOfStates.value
         general_data[
             "Number of Configurations"
-        ] = self.hamiltonian.numberOfConfigurations.value
+        ] = self._hamiltonian.numberOfConfigurations.value
         data["General"] = general_data
-        for term in self.hamiltonian.terms.children():
+        for term in self._hamiltonian.terms.children():
             for hamiltonian in term.children():
                 for parameter in hamiltonian.children():
                     parameter_data = [parameter.value]
@@ -126,12 +129,12 @@ class Hamiltonian:
 
 class Axis:
     def __init__(self, axis):
-        self.axis = axis
+        self._axis = axis
 
     def set_parameter(self, name=None, value=None):
         if name is None or value is None:
             return
-        for parameter in self.axis.__dict__.values():
+        for parameter in self._axis.__dict__.values():
             if getattr(parameter, "name", None) == name:
                 parameter.value = value
 
@@ -140,12 +143,12 @@ class Axis:
 
     def __str__(self):
         data = Tree()
-        data[self.axis.name] = {
-            "Start": self.axis.start.value,
-            "Stop": self.axis.stop.value,
-            "Number of points": self.axis.npoints.value,
-            "Gaussian": self.axis.gaussian.value,
-            "Lorentzian": self.axis.lorentzian.value,
+        data[self._axis.name] = {
+            "Start": self._axis.start.value,
+            "Stop": self._axis.stop.value,
+            "Number of Points": self._axis.npoints.value,
+            "Gaussian": self._axis.gaussian.value,
+            "Lorentzian": self._axis.lorentzian.value,
         }
         return prettify(data)
 

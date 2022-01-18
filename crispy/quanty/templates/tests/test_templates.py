@@ -1,0 +1,70 @@
+#!/usr/bin/env python3
+# coding: utf-8
+###################################################################
+# Copyright (c) 2016-2022 European Synchrotron Radiation Facility #
+#                                                                 #
+# Author: Marius Retegan                                          #
+#                                                                 #
+# This work is licensed under the terms of the MIT license.       #
+# For further information, see https://github.com/mretegan/crispy #
+###################################################################
+# pylint: disable=redefined-outer-name
+
+"""Quanty tests"""
+import glob
+import json
+import os
+
+import numpy as np
+import pytest
+from crispy.config import Config
+from crispy.notebook import calculation
+
+
+def get_test_data():
+    path = os.path.join(os.path.dirname(__file__), "test_data.json")
+    with open(path, encoding="utf-8") as f:
+        yield from json.load(f).items()
+
+
+def set_hamiltonian_parameters(calc, parameters):
+    if "terms" in parameters:
+        for term in parameters["terms"]:
+            calc.hamiltonian.terms.enable(term)
+            for args in parameters["terms"][term]:
+                calc.hamiltonian.set_parameter(*args)
+
+    if "parameters" in parameters:
+        for args in parameters["parameters"]:
+            calc.hamiltonian.set_parameter(*args)
+
+
+@pytest.mark.parametrize("test_data", get_test_data())
+def test_calculation(test_data, tmp_path):
+    settings = Config().settings
+
+    idx, parameters = test_data
+
+    # Save the test files to /tmp.
+    # tmp_path = os.path.join("/tmp/tests", idx)
+    # if not os.path.exists(tmp_path):
+    #     os.mkdir(tmp_path)
+    settings.setValue("CurrentPath", tmp_path)
+
+    calc = calculation(*parameters["args"])
+
+    calc.set_parameter("Basename", "test")
+    for parameter in parameters:
+        if parameter == "parameters":
+            for args in parameters["parameters"]:
+                calc.set_parameter(*args)
+        if parameter == "hamiltonian":
+            set_hamiltonian_parameters(calc, parameters["hamiltonian"])
+
+    calc.run()
+
+    ref_path = os.path.join(os.path.dirname(__file__), "references", f"{idx}")
+    for spectrum in glob.glob("*.spec"):
+        ref = np.loadtxt(os.path.join(ref_path, spectrum), skiprows=5)
+        out = np.loadtxt(os.path.join(tmp_path, spectrum), skiprows=5)
+        assert np.allclose(ref, out)
