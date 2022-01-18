@@ -92,6 +92,9 @@ class Config:
         elif sys.platform == "darwin":
             executable = "Quanty"
             localPath = resourceAbsolutePath(os.path.join("quanty", "bin", "darwin"))
+        elif sys.platform == "linux":
+            executable = "Quanty"
+            localPath = resourceAbsolutePath(os.path.join("quanty", "bin", "linux"))
         else:
             localPath = None
             executable = "Quanty"
