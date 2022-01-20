@@ -11,55 +11,92 @@ jobs:
   check-style:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
+
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: 3.8
+
     - name: Install black
       run: |
         python -m pip install --upgrade pip
         pip install black
+
     - name: Check style
       run: |
         black crispy
+
+    - name: Install pytest
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest
+
+    - name: Run tests
+      run: |
+        pytest        
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+
+
   build-binaries:
     runs-on: ${{ matrix.os }}
+
     strategy:
-      max-parallel: 8
+      max-parallel: 6
       fail-fast: false
       matrix:
         os: [macos-latest, windows-latest]
         python-version: [3.7, 3.8, 3.9]
+
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
+    
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
+
     - name: Install packaging dependencies
       run: |
         python -m pip install --upgrade pip
         pip install .
         pip install -r package/requirements.txt
+
     - name: Install Inno Setup
       if: runner.os == 'Windows'
       run: | 
           choco install innosetup
+
     - name: Run PyInstaller
       run: |
         cd package
         pyinstaller --noconfirm crispy.spec
         cd ..
+
     - name: Recursively list folder
       run: |
         ls -R 
+
     - name: Upload the Windows installer
       uses: actions/upload-artifact@v2
       if: runner.os == 'Windows'
       with:
         name: Crispy-Windows-2019-Python-${{ matrix.python-version }}
         path : package\artifacts\*.exe
+
     - name: Upload the macOS app
       uses: actions/upload-artifact@v2
       if: runner.os == 'macOS'
