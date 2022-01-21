@@ -10,21 +10,21 @@
 ###################################################################
 # pylint: disable=redefined-outer-name
 
-"""Quanty tests"""
+"""Quanty templates tests"""
 import glob
-import json
 import os
 
 import numpy as np
 import pytest
+import yaml
 from crispy.config import Config
 from crispy.notebook import calculation
 
 
 def get_test_data():
-    path = os.path.join(os.path.dirname(__file__), "test_data.json")
+    path = os.path.join(os.path.dirname(__file__), "test_data.yaml")
     with open(path, encoding="utf-8") as f:
-        yield from json.load(f).items()
+        yield from yaml.load(f, Loader=yaml.FullLoader).items()
 
 
 def set_hamiltonian_parameters(calc, parameters):
@@ -41,14 +41,13 @@ def set_hamiltonian_parameters(calc, parameters):
 
 @pytest.mark.parametrize("test_data", get_test_data())
 def test_calculation(test_data, tmp_path):
-    settings = Config().settings
-
     idx, parameters = test_data
 
     # Save the test files to /tmp.
-    # tmp_path = os.path.join("/tmp/tests", idx)
-    # if not os.path.exists(tmp_path):
-    #     os.mkdir(tmp_path)
+    tmp_path = os.path.join("/tmp/tests", str(idx))
+    os.makedirs(tmp_path, exist_ok=True)
+
+    settings = Config().settings
     settings.setValue("CurrentPath", tmp_path)
 
     calc = calculation(*parameters["args"])
