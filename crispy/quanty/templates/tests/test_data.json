@@ -62,8 +62,8 @@
         "hamiltonian": {
             "terms": {
                 "Atomic": [["U(3d,3d)", 7.5], ["U(2p,3d)", 8.5]], 
-                "Crystal Field": [["10Dq(3d)", 1.6]], 
-                "3d-Ligands Hybridization (MLCT)": [["10Dq(L2)", 0.8], ["Δ(3d,L2)", 2.3], ["Veg(3d,L2)", 2.1], ["Vt2g(3d,L2)", 1.2]]
+                "Crystal Field": [["10Dq(3d)", 1.1]], 
+                "3d-Ligands Hybridization (MLCT)": [["10Dq(L2)", 0.6], ["Δ(3d,L2)", 2.3], ["Veg(3d,L2)", 2.1], ["Vt2g(3d,L2)", 1.2]]
             }
         }
     }
