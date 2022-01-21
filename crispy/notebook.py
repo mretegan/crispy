@@ -256,7 +256,7 @@ class Calculation:
     def run(self):
         self._calculation.runner.output = str()
         self._calculation.run()
-        self._calculation.runner.waitForFinished()
+        self._calculation.runner.waitForFinished(-1)
         self.spectra.has_data = True
 
     def print(self):
