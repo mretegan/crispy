@@ -5,36 +5,66 @@
     },
     "1": {
         "args": ["Ni2+", "Oh", "XAS", "L2,3 (2p)"],
-        "hamiltonian": {"parameters": [["Fk", 0.75], ["Gk", 0.70], ["Zeta", 0.90]]}
+        "hamiltonian": {
+            "parameters": [["Fk", 0.75], ["Gk", 0.70], ["Zeta", 0.90]]
+        }
     },
     "2": {
         "args": ["Ni2+", "Oh", "XAS", "K (1s)"],
-        "hamiltonian": {"parameters": [["Fk", 0.75], ["Gk", 0.70], ["Zeta", 0.90]]}
+        "hamiltonian": {
+            "parameters": [["Fk", 0.75], ["Gk", 0.70], ["Zeta", 0.90]]
+        }
     },
     "3": {
         "args": ["Ni2+", "Oh", "XAS", "L2,3 (2p)"],
-        "hamiltonian": {"terms": {"Crystal Field": [["10Dq(3d)", 1.6]]}}
+        "hamiltonian": {
+            "terms": {
+                "Crystal Field": [["10Dq(3d)", 1.6]]
+            }
+        }
     },
     "4": {
         "args": ["Ni2+", "D4h", "XAS", "L2,3 (2p)"],
-        "hamiltonian": {"terms": {
-            "Crystal Field": [["Dq(3d)", 0.16], ["Ds(3d)", 0.01], ["Dt(3d)", 0.01]]}
+        "hamiltonian": {
+            "terms": {
+                "Crystal Field": [["Dq(3d)", 0.16], ["Ds(3d)", 0.01], ["Dt(3d)", 0.01]]
+            }
         }
     },
     "5": {
         "args": ["Ni2+", "D3h", "XAS", "L2,3 (2p)"],
-        "hamiltonian": {"terms": {"Crystal Field": [["Dmu(3d)", 0.05], ["Dnu(3d)", 0.03]]}}
+        "hamiltonian": {
+            "terms": {
+                "Crystal Field": [["Dmu(3d)", 0.05], ["Dnu(3d)", 0.03]]
+            }
+        }
     },
     "6": {
         "args": ["Ni2+", "C3v", "XAS", "L2,3 (2p)"],
-        "hamiltonian": {"terms": {"Crystal Field": [["Dq(3d)", 0.16], ["Dsigma(3d)", 0.01], ["Dtau(3d)", 0.02]]}}
+        "hamiltonian": {
+            "terms": {
+                "Crystal Field": [["Dq(3d)", 0.16], ["Dsigma(3d)", 0.01], ["Dtau(3d)", 0.02]]
+            }
+        }
     },
     "7": {
         "args": ["Ni2+", "Oh", "XAS", "L2,3 (2p)"],
-        "hamiltonian": {"terms": {"Atomic": [["U(3d,3d)", 7.5], ["U(2p,3d)", 8.5]], "Crystal Field": [["10Dq(3d)", 1.6]], "3d-Ligands Hybridization (LMCT)": [["10Dq(L1)", 0.8], ["Δ(3d,L1)", 2], ["Veg(3d,L1)", 2.0], ["Vt2g(3d,L1)", 1.0]]}}
+        "hamiltonian": {
+            "terms": {
+                "Atomic": [["U(3d,3d)", 7.5], ["U(2p,3d)", 8.5]], 
+                "Crystal Field": [["10Dq(3d)", 1.6]], 
+                "3d-Ligands Hybridization (LMCT)": [["10Dq(L1)", 0.8], ["Δ(3d,L1)", 2.0], ["Veg(3d,L1)", 2.0], ["Vt2g(3d,L1)", 1.0]]
+            }
+        }
     },
     "8": {
         "args": ["Ni2+", "Oh", "XAS", "L2,3 (2p)"],
-        "hamiltonian": {"terms": {"Atomic": [["U(3d,3d)", 7.5], ["U(2p,3d)", 8.5]], "Crystal Field": [["10Dq(3d)", 1.1]], "3d-Ligands Hybridization (MLCT)": [["10Dq(L2)", 0.4], ["Δ(3d,L2)", -2], ["Veg(3d,L1)", 2.1], ["Vt2g(3d,L1)", 1.2]]}}
+        "hamiltonian": {
+            "terms": {
+                "Atomic": [["U(3d,3d)", 7.5], ["U(2p,3d)", 8.5]], 
+                "Crystal Field": [["10Dq(3d)", 1.6]], 
+                "3d-Ligands Hybridization (MLCT)": [["10Dq(L2)", 0.8], ["Δ(3d,L2)", 2.3], ["Veg(3d,L2)", 2.1], ["Vt2g(3d,L2)", 1.2]]
+            }
+        }
     }
 }

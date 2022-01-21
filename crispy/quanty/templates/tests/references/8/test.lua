@@ -173,7 +173,7 @@ if CrystalFieldTerm then
     Akm = {{4, 0, 2.1}, {4, -4, 1.5 * sqrt(0.7)}, {4, 4, 1.5 * sqrt(0.7)}}
     tenDq_3d = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, Akm)
 
-    tenDq_3d_i = 1.1
+    tenDq_3d_i = 1.6
 
     io.write("Diagonal values of the initial crystal field Hamiltonian:\n")
     io.write("================\n")
@@ -184,7 +184,7 @@ if CrystalFieldTerm then
     io.write("================\n")
     io.write("\n")
 
-    tenDq_3d_f = 1.1
+    tenDq_3d_f = 1.6
 
     H_i = H_i + Chop(
           tenDq_3d_i * tenDq_3d)
@@ -227,12 +227,12 @@ if LmctLigandsHybridizationTerm then
                + NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_L1, IndexDn_L1, PotentialExpandedOnClm("Oh", 2, {0, 1}))
 
     tenDq_L1_i = 0.0
-    Veg_3d_L1_i = 2.1
-    Vt2g_3d_L1_i = 1.2
+    Veg_3d_L1_i = 0.0
+    Vt2g_3d_L1_i = 0.0
 
     tenDq_L1_f = 0.0
-    Veg_3d_L1_f = 2.1
-    Vt2g_3d_L1_f = 1.2
+    Veg_3d_L1_f = 0.0
+    Vt2g_3d_L1_f = 0.0
 
     H_i = H_i + Chop(
           tenDq_L1_i * tenDq_L1
@@ -252,11 +252,11 @@ if MlctLigandsHybridizationTerm then
     N_L2 = NewOperator("Number", NFermions, IndexUp_L2, IndexUp_L2, {1, 1, 1, 1, 1})
          + NewOperator("Number", NFermions, IndexDn_L2, IndexDn_L2, {1, 1, 1, 1, 1})
 
-    Delta_3d_L2_i = -2
+    Delta_3d_L2_i = 2.3
     E_3d_i = U_3d_3d_i * (-NElectrons_3d + 1) / 2
     E_L2_i = Delta_3d_L2_i + U_3d_3d_i * NElectrons_3d / 2 - U_3d_3d_i / 2
 
-    Delta_3d_L2_f = -2
+    Delta_3d_L2_f = 2.3
     E_3d_f = -(U_3d_3d_f * NElectrons_3d^2 + 11 * U_3d_3d_f * NElectrons_3d + 60 * U_2p_3d_f) / (2 * NElectrons_3d + 12)
     E_2p_f = NElectrons_3d * (U_3d_3d_f * NElectrons_3d + U_3d_3d_f - 2 * U_2p_3d_f * NElectrons_3d - 2 * U_2p_3d_f) / (2 * (NElectrons_3d + 6))
     E_L2_f = (2 * Delta_3d_L2_f * NElectrons_3d + 12 * Delta_3d_L2_f + U_3d_3d_f * NElectrons_3d^2 - U_3d_3d_f * NElectrons_3d - 12 * U_3d_3d_f + 12 * U_2p_3d_f * NElectrons_3d + 12 * U_2p_3d_f) / (2 * (NElectrons_3d + 6))
@@ -278,13 +278,13 @@ if MlctLigandsHybridizationTerm then
     Vt2g_3d_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm("Oh", 2, {0, 1}))
                + NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_L2, IndexDn_L2, PotentialExpandedOnClm("Oh", 2, {0, 1}))
 
-    tenDq_L2_i = 0.4
-    Veg_3d_L2_i = 0.0
-    Vt2g_3d_L2_i = 0.0
+    tenDq_L2_i = 0.8
+    Veg_3d_L2_i = 2.1
+    Vt2g_3d_L2_i = 1.2
 
-    tenDq_L2_f = 0.4
-    Veg_3d_L2_f = 0.0
-    Vt2g_3d_L2_f = 0.0
+    tenDq_L2_f = 0.8
+    Veg_3d_L2_f = 2.1
+    Vt2g_3d_L2_f = 1.2
 
     H_i = H_i + Chop(
           tenDq_L2_i * tenDq_L2
