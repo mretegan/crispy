@@ -44,8 +44,8 @@ def test_calculation(test_data, tmp_path):
     idx, parameters = test_data
 
     # Save the test files to /tmp.
-    tmp_path = os.path.join("/tmp/tests", str(idx))
-    os.makedirs(tmp_path, exist_ok=True)
+    # tmp_path = os.path.join("/tmp/tests", str(idx))
+    # os.makedirs(tmp_path, exist_ok=True)
 
     settings = Config().settings
     settings.setValue("CurrentPath", tmp_path)
