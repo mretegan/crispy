@@ -31,8 +31,8 @@ def get_test_data():
 def set_hamiltonian_parameters(calc, parameters):
     if "terms" in parameters:
         for term in parameters["terms"]:
-            calc.hamiltonian.terms.enable(term)
-            for args in parameters["terms"][term]:
+            calc.hamiltonian.terms.enable(term["name"])
+            for args in term["parameters"]:
                 calc.hamiltonian.set_parameter(*args)
 
     if "parameters" in parameters:
