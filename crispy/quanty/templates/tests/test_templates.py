@@ -13,6 +13,7 @@
 """Quanty templates tests"""
 import glob
 import os
+import shutil
 
 import numpy as np
 import pytest
@@ -43,8 +44,10 @@ def set_hamiltonian_parameters(calc, parameters):
 def test_calculation(test_data, tmp_path):
     idx, parameters = test_data
 
-    # Save the test files to /tmp.
+    # Run tests in /tmp/tests
     # tmp_path = os.path.join("/tmp/tests", str(idx))
+    # if os.path.exists(tmp_path):
+    #     shutil.rmtree(tmp_path)
     # os.makedirs(tmp_path, exist_ok=True)
 
     settings = Config().settings
@@ -66,4 +69,8 @@ def test_calculation(test_data, tmp_path):
     for spectrum in glob.glob("*.spec"):
         ref = np.loadtxt(os.path.join(ref_path, spectrum), skiprows=5)
         out = np.loadtxt(os.path.join(tmp_path, spectrum), skiprows=5)
-        assert np.allclose(ref, out)
+        try:
+            kwargs = parameters["test"]["numpy_allclose_kwargs"]
+        except KeyError:
+            kwargs = {}
+        assert np.allclose(ref, out, **kwargs)

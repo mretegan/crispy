@@ -27,6 +27,11 @@
       Atomic: [["U(3d,3d)", 7.5], ["U(2p,3d)", 8.5]]
       Crystal Field: [["10Dq(3d)", 1.1]]
       3d-Ligands Hybridization (MLCT):  [["10Dq(L2)", 0.6], ["Δ(3d,L2)", 2.3], ["Veg(3d,L2)", 2.1], ["Vt2g(3d,L2)", 1.2]]
+  test:
+    runtime: long
+    numpy_allclose_kwargs:
+      rtol: 1.e-4
+      atol: 1.e-7  
 5:
   args: ["Ni2+", "D4h", "XAS", "L2,3 (2p)"]
   hamiltonian:
