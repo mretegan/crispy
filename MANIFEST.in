@@ -5,7 +5,7 @@ include README.rst
 include run_tests.py
 include requirements.txt
 recursive-include crispy/icons *.svg
-recursive-include crispy/quanty *.json *.h5 *.ui
+recursive-include crispy/quanty *.yaml *.h5 *.ui
 recursive-include crispy/quanty/bin *
 recursive-include crispy/quanty/templates *.lua
 recursive-include crispy/uis *.ui 
