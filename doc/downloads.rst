@@ -1,7 +1,7 @@
 Downloads
 =========
 
-.. table:: 
+.. table::
     :widths: 1 1 1
     :column-alignment: center center center
     :column-wrapping: false false true
@@ -20,17 +20,17 @@ Downloads
 - On Windows, some antivirus programs might block the installation of the application and even delete the installer from the disk. I assume that this is because the installer is not signed. Please rest assured that all releases are scanned using multiple antivirus programs on `VirusTotal <https://www.virustotal.com>`_. Also please make sure that you first uninstall older versions of Crispy before you proceed with the new installation.
 - You can download older versions from the `releases <https://github.com/mretegan/crispy/releases>`_ page on Github.
 
-.. |Windows| image:: assets/windows.svg
+.. |Windows| image:: assets/windows.png
     :width: 90pt
     :align: middle
     :target: `Crispy-0.7.3-x64.exe (64-bit)`_
 
-.. |macOS| image:: assets/apple.svg
+.. |macOS| image:: assets/apple.png
     :width: 90pt
     :align: middle
     :target: `Crispy-0.7.3.dmg (64-bit)`_
 
-.. |Linux| image:: assets/linux.svg
+.. |Linux| image:: assets/linux.png
     :width: 90pt
     :align: middle
     :target: installation.html

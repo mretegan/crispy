@@ -44,7 +44,7 @@ Macintosh
 
    * pip3 install .
 
-7. Run the `pyinstaller` script. This will automatically create a .dmg file:
+7. Run the ``pyinstaller`` script. This will automatically create a .dmg file:
 
    *  rm -fr dist build artifacts; pyinstaller --noconfirm crispy.spec
 
@@ -74,7 +74,7 @@ qt5-qtbase cannot be installed as it requires macOS 10.12 or later.
 
 macOS 10.13
 ***********
-Dependencies are installed using `pip`.
+Dependencies are installed using ``pip``.
 
 Windows
 -------
@@ -94,6 +94,6 @@ Windows
 
    * pip3 install .
 
-6. Run the `pyinstaller` script. This will automatically create a .dmg file:
+6. Run the ``pyinstaller`` script. This will automatically create a .dmg file:
 
    *  rmdir /Q /S build dist artifacts; pyinstaller --noconfirm crispy.spec
