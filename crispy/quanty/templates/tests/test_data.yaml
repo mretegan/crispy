@@ -1,4 +1,4 @@
-# Temperature and magnetic field values
+# Temperature and magnetic field
 0:
   args: ["Ni2+", "Oh", "XAS", "L2,3 (2p)"]
   parameters: 

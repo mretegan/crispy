@@ -439,7 +439,7 @@ class Runner(QProcess):
 
 
 class Calculation(SelectableItem):
-    # pylint: disable=too-many-instance-attributes, too-many-arguments, too-many-public-methods
+    # pylint: disable=all
 
     titleChanged = pyqtSignal(str)
 
@@ -462,35 +462,51 @@ class Calculation(SelectableItem):
         # Validate the keyword arguments. This is best done this way; using properties
         # it gets rather convoluted.
         self._symbols = []
-        for subshell in CALCULATIONS.keys():
-            self._symbols.extend(CALCULATIONS[subshell]["symbols"])
+        for subshell in CALCULATIONS:
+            for _element in CALCULATIONS[subshell]["elements"]:
+                self._symbols.append(_element["symbol"])
         self._symbols = tuple(sorted(self._symbols))
-
         if symbol not in self.symbols:
             symbol = self._symbols[0]
 
         # Get the subshell.
         subshell = None
-        for subshell in CALCULATIONS.keys():
-            if symbol in CALCULATIONS[subshell]["symbols"]:
-                break
+        try:
+            for subshell in CALCULATIONS:
+                for _element in CALCULATIONS[subshell]["elements"]:
+                    if _element["symbol"] == symbol:
+                        raise StopIteration
+        except StopIteration:
+            pass
 
-        symbols = CALCULATIONS[subshell]["symbols"]
-        experiments = CALCULATIONS[subshell]["experiments"]
-
-        self._charges = tuple(symbols[symbol]["charges"])
+        self._charges = []
+        for _element in CALCULATIONS[subshell]["elements"]:
+            if _element["symbol"] == symbol:
+                self._charges.extend(_element["charges"])
+        self._charges = tuple(self._charges)
         if charge not in self._charges:
             charge = self._charges[0]
 
-        self._experiments = tuple(experiments)
+        self._experiments = []
+        for _experiment in CALCULATIONS[subshell]["experiments"]:
+            self._experiments.append(_experiment["name"])
+        self._experiments = tuple(self._experiments)
         if experiment not in self._experiments:
             experiment = self._experiments[0]
 
-        self._symmetries = tuple(experiments[experiment]["symmetries"])
+        self._symmetries = []
+        for _experiment in CALCULATIONS[subshell]["experiments"]:
+            if _experiment["name"] == experiment:
+                self._symmetries = _experiment["symmetries"]
+        self._symmetries = tuple(self._symmetries)
         if symmetry not in self._symmetries:
             symmetry = self._symmetries[0]
 
-        self._edges = tuple(experiments[experiment]["edges"])
+        self._edges = []
+        for _experiment in CALCULATIONS[subshell]["experiments"]:
+            if _experiment["name"] == experiment:
+                self._edges = _experiment["edges"]
+        self._edges = tuple(self._edges)
         if edge not in self._edges:
             edge = self._edges[0]
 
@@ -593,7 +609,7 @@ class Calculation(SelectableItem):
         )
         configurations.append(initialConfiguration)
 
-        # Final and in some cases intermediate configurations.
+        # Final and, in some cases, intermediate configurations.
         if self.experiment.isOneStep:
             if not self.experiment.excitesToVacuum:
                 valenceOccupancy += 1

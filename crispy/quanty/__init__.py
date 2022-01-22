@@ -10,13 +10,13 @@
 """This package provides functionality related to Quanty calculations."""
 
 import os
-import json
-import xraydb
 
+import xraydb
+import yaml
 from crispy import resourceAbsolutePath
 
 XDB = xraydb.XrayDB()
 
-path = os.path.join("quanty", "calculations.json")
+path = os.path.join("quanty", "calculations.yaml")
 with open(resourceAbsolutePath(path), encoding="utf-8") as fp:
-    CALCULATIONS = json.load(fp, object_hook=dict)
+    CALCULATIONS = yaml.load(fp, Loader=yaml.FullLoader)

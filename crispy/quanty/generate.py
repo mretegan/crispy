@@ -33,23 +33,30 @@ def unique_configurations(element):
     """Determine the unique electronic configurations of an element."""
     valenceSubshell = element.valenceSubshell
 
-    charges = CALCULATIONS[valenceSubshell]["symbols"][element.symbol]["charges"]
-    experiments = CALCULATIONS[valenceSubshell]["experiments"]
+    for _element in CALCULATIONS[valenceSubshell]["elements"]:
+        if _element["symbol"] == element.symbol:
+            charges = _element["charges"]
+            break
 
-    configurations = list()
+    configurations = []
     for charge in charges:
         element.charge = charge
-        for experiment in experiments:
-            edges = experiments[experiment]["edges"]
+        for experiment in CALCULATIONS[valenceSubshell]["experiments"]:
+            edges = experiment["edges"]
+            experiment = experiment["name"]
             for edge in edges:
                 logger.debug((element.symbol, charge, experiment, edge))
+                # The model is needed because in the case of 2D calculations
+                # there are calls to dataChanged which need an index from the
+                # model.
+                model = TreeModel()
                 calculation = Calculation(
                     symbol=element.symbol,
                     charge=charge,
                     experiment=experiment,
                     edge=edge,
                     hamiltonian=False,
-                    parent=None,
+                    parent=model,
                 )
 
                 configurations.extend(calculation.configurations)
@@ -58,10 +65,9 @@ def unique_configurations(element):
 
 def get_all_symbols():
     """Return a list of element symbols."""
-    symbols = list()
-    for subshell in CALCULATIONS.keys():
-        symbols.extend(CALCULATIONS[subshell]["symbols"].keys())
-    return symbols
+    for subshell in CALCULATIONS:
+        for element in CALCULATIONS[subshell]["elements"]:
+            yield element["symbol"]
 
 
 def read_hybridization_parameters(symbol, conf):
@@ -125,15 +131,14 @@ def generate_parameters(symbols):
 
 def get_all_calculations():
     """Get a generator with all possible calculations."""
-    for subshell in CALCULATIONS.keys():
-        experiments = CALCULATIONS[subshell]["experiments"]
-        symbols = CALCULATIONS[subshell]["symbols"]
-        # Get the first symbol and charge for each subshell.
-        symbol = list(symbols.keys())[0]
-        charge = CALCULATIONS[subshell]["symbols"][symbol]["charges"][0]
-        for experiment in experiments:
-            edges = experiments[experiment]["edges"]
-            symmetries = experiments[experiment]["symmetries"]
+    for subshell in CALCULATIONS:
+        element = CALCULATIONS[subshell]["elements"][0]
+        symbol = element["symbol"]
+        charge = element["charges"]
+        for experiment in CALCULATIONS[subshell]["experiments"]:
+            edges = experiment["edges"]
+            symmetries = experiment["symmetries"]
+            experiment = experiment["name"]
             for edge in edges:
                 for symmetry in symmetries:
                     # The model is needed because in the case of 2D calculations

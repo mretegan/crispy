@@ -1,0 +1,156 @@
+3d:
+  elements:
+    - symbol: Sc
+      charges: [3+]
+    - symbol: Ti
+      charges: [2+, 3+, 4+]
+    - symbol: V
+      charges: [2+, 3+, 4+, 5+]
+    - symbol: Cr
+      charges: [2+, 3+, 4+, 5+]
+    - symbol: Mn
+      charges: [2+, 3+, 4+, 5+, 6+, 7+]
+    - symbol: Fe
+      charges: [2+, 3+, 4+, 5+, 6+]
+    - symbol: Co
+      charges: [2+, 3+, 4+, 5+]
+    - symbol: Ni
+      charges: [2+, 3+, 4+]
+    - symbol: Cu
+      charges: [2+, 3+]
+  experiments:
+    - name: XAS
+      edges: ["K (1s)", "L1 (2s)", "L2,3 (2p)", "M1 (3s)", "M2,3 (3p)"]
+      symmetries: ["Oh", "D4h", "Td", "C3v", "D3h"]
+    - name: XPS
+      edges: ["K (1s)", "L1 (2s)", "L2,3 (2p)", "M1 (3s)", "M2,3 (3p)"]
+      symmetries: ["Oh", "D4h", "Td", "C3v", "D3h"]
+    - name: RIXS
+      edges: ["K-L2,3 (1s2p)", "K-M2,3 (1s3p)", "L2,3-M4,5 (2p3d)"]
+      symmetries: ["Oh", "D4h", "Td", "C3v", "D3h"]
+4d:
+  elements:
+    - symbol: "Y"
+      charges: [2+, 3+]
+    - symbol: Zr
+      charges: [2+, 3+, 4+]
+    - symbol: Nb
+      charges: [2+, 3+, 4+, 5+]
+    - symbol: Mo
+      charges: [2+, 3+, 4+, 5+, 6+]
+    - symbol: Tc
+      charges: [2+, 3+, 4+, 5+, 6+, 7+]
+    - symbol: Ru
+      charges: [2+, 3+, 4+, 5+]
+    - symbol: Rh
+      charges: [2+, 3+, 4+]
+    - symbol: Pd
+      charges: [2+, 3+]
+    - symbol: Ag
+      charges: [2+, 3+]
+  experiments:
+    - name: XAS
+      edges: ["L1 (2s)", "L2,3 (2p)", "M1 (3s)", "M2,3 (3p)", "N1 (4s)", "N2,3 (4p)"]
+      symmetries: ["Oh", "D4h", "Td", "C3v", "D3h"]
+    - name: XPS
+      edges: ["L1 (2s)", "L2,3 (2p)", "M1 (3s)", "M2,3 (3p)", "N1 (4s)", "N2,3 (4p)"]
+      symmetries: ["Oh", "D4h", "Td", "C3v", "D3h"]
+    - name: RIXS
+      edges: ["L2,3-N4,5 (2p4d)"]
+      symmetries: ["Oh", "D4h", "Td", "C3v", "D3h"]
+4f:
+  elements:
+    - symbol: La
+      charges: [2+, 3+]
+    - symbol: Ce
+      charges: [2+, 3+, 4+]
+    - symbol: Pr
+      charges: [2+, 3+, 4+]
+    - symbol: Nd
+      charges: [2+, 3+, 4+]
+    - symbol: Pm
+      charges: [2+, 3+, 4+]
+    - symbol: Sm
+      charges: [2+, 3+, 4+]
+    - symbol: Eu
+      charges: [2+, 3+, 4+]
+    - symbol: Gd
+      charges: [2+, 3+, 4+]
+    - symbol: Tb
+      charges: [2+, 3+, 4+]
+    - symbol: Dy
+      charges: [2+, 3+, 4+]
+    - symbol: Ho
+      charges: [2+, 3+, 4+]
+    - symbol: Er
+      charges: [2+, 3+, 4+]
+    - symbol: Tm
+      charges: [2+, 3+, 4+]
+    - symbol: Yb
+      charges: [3+]
+  experiments:
+    - name: XAS
+      edges: ["L2,3 (2p)", "M2,3 (3p)", "M4,5 (3d)", "N2,3 (4p)", "N4,5 (4d)"]
+      symmetries: ["Oh"]
+    - name: XPS
+      edges: ["L2,3 (2p)", "M2,3 (3p)", "M4,5 (3d)", "N2,3 (4p)", "N4,5 (4d)"]
+      symmetries: ["Oh"]
+    - name: RIXS
+      edges: ["L2,3-M4,5 (2p3d)", "L2,3-N4,5 (2p4d)"]
+      symmetries: ["Oh"]
+5d:
+  elements:
+    - symbol: Hf
+      charges: [2+, 3+, 4+]
+    - symbol: Ta
+      charges: [2+, 3+, 4+, 5+]
+    - symbol: W
+      charges: [2+, 3+, 4+, 5+, 6+]
+    - symbol: Re
+      charges: [2+, 3+, 4+, 5+, 6+]
+    - symbol: Os
+      charges: [2+, 3+, 4+, 5+, 6+]
+    - symbol: Ir
+      charges: [2+, 3+, 4+, 5+, 6+]
+    - symbol: Pt
+      charges: [2+, 3+, 4+, 5+, 6+]
+    - symbol: Au
+      charges: [2+, 3+, 4+]
+  experiments:
+    - name: XAS
+      edges: ["L1 (2s)", "L2,3 (2p)", "M1 (3s)", "M2,3 (3p)", "N1 (4s)", "N2,3 (4p)", "O1 (5s)", "O2,3 (5p)"]
+      symmetries: ["Oh", "D4h", "Td", "C3v", "D3h"]
+    - name: XPS
+      edges: ["L1 (2s)", "L2,3 (2p)", "M1 (3s)", "M2,3 (3p)", "N1 (4s)", "N2,3 (4p)", "O1 (5s)", "O2,3 (5p)"]
+      symmetries: ["Oh", "D4h", "Td", "C3v", "D3h"]
+    - name: RIXS
+      edges: ["L2,3-O4,5 (2p5d)"]
+      symmetries: ["Oh", "D4h", "Td", "C3v", "D3h"]
+5f:
+  elements:
+    - symbol: Ac
+      charges: [2+, 3+]
+    - symbol: Th
+      charges: [2+, 3+, 4+]
+    - symbol: Pa
+      charges: [2+, 3+, 4+, 5+]
+    - symbol: U
+      charges: [2+, 3+, 4+, 5+, 6+]
+    - symbol: Np
+      charges: [2+, 3+, 4+, 5+, 6+, 7+]
+    - symbol: Pu
+      charges: [2+, 3+, 4+, 5+, 6+, 7+]
+    - symbol: Am
+      charges: [2+, 3+, 4+, 5+, 6+, 7+]
+    - symbol: Cm
+      charges: [2+, 3+, 4+, 5+, 6+]
+  experiments:
+    - name: XAS
+      edges: ["L2,3 (2p)", "M2,3 (3p)", "M4,5 (3d)", "N2,3 (4p)", "N4,5 (4d)"]
+      symmetries: ["Oh"]
+    - name: XPS
+      edges: ["L2,3 (2p)", "M2,3 (3p)", "M4,5 (3d)", "N2,3 (4p)", "N4,5 (4d)"]
+      symmetries: ["Oh"]
+    - name: RIXS
+      edges: ["L2,3-M4,5 (2p3d)", "L2,3-N4,5 (2p4d)"]
+      symmetries: ["Oh"]
