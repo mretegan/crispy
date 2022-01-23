@@ -1,2 +1,2 @@
-*.lua linguist-detectable=false
-*.ipynb linguist-detectable=false
+*.lua -linguist-detectable
+*.ipynb -linguist-detectable
