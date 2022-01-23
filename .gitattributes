@@ -1,1 +1,1 @@
-crispy/quanty/templates/* linguist-vendored
+*.lua linguist-detectable=false
