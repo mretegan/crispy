@@ -110,7 +110,7 @@ class Gaussian(Broadening):
     def replacements(self):
         replacements = {}
         # Use zero by default, but write the actual value as a comment.
-        replacements["Gaussian"] = f"0.0  -- {self.value}"
+        replacements["Gaussian"] = f"0.0 -- {self.value}"
         return replacements
 
 
@@ -317,15 +317,16 @@ class Axis(BaseItem):
     @property
     def limits(self):
         calculation = self.ancestor
+
         STEP = 10
         if calculation.experiment.isEmission:
             limits = [-3 * STEP, STEP]
         else:
             label = calculation.edge.labels[self.idx]
-            subshell = calculation.element.valenceSubshell
             if label in ("K", "L1", "M1", "N1"):
                 limits = [-STEP, STEP]
             else:
+                subshell = calculation.element.valenceSubshell
                 if subshell in ("3d",):
                     limits = [-STEP, 3 * STEP]
                 else:

@@ -144,11 +144,11 @@ class Configuration:
 
             self.levels = (coreLevel, valenceLevel)
             self.shells = (coreShell, valenceShell)
-            self.occupancies = [coreOccupancy, valenceOccupancy]
+            self.occupancies = (coreOccupancy, valenceOccupancy)
         else:
             self.levels = (valenceLevel,)
             self.shells = (valenceShell,)
-            self.occupancies = [valenceOccupancy]
+            self.occupancies = (valenceOccupancy,)
 
         self.subshells = tuple(
             [f"{level}{shell}" for level, shell in zip(self.levels, self.shells)]
