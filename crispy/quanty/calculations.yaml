@@ -1,7 +1,7 @@
 3d:
   elements:
     - symbol: Sc
-      charges: [3+]
+      charges: [2+, 3+]
     - symbol: Ti
       charges: [2+, 3+, 4+]
     - symbol: V
