@@ -102,7 +102,7 @@ def generate_parameters(symbols):
 
         with h5py.File(path, "w") as h5:
             for conf in confs:
-                # Get the atomic parameters.
+                # Calculate the atomic parameters.
                 cowan = Cowan(element, conf)
                 conf.energy, conf.parameters = cowan.get_parameters()
                 cowan.remove_calculation_files()
@@ -111,16 +111,19 @@ def generate_parameters(symbols):
                 root = f"/{conf.value}"
                 # h5[root + "/energy"] = conf.energy
 
+                # Add the atomic parameters.
                 subroot = root + "/Atomic"
                 for parameter, value in conf.parameters.items():
                     path = subroot + "/{:s}".format(parameter)
                     h5[path] = value
 
+                # Calculate the lowest eigenvalue of the atomic Hamiltonian.
                 logger.info("%-2s %-8s", element.symbol, conf)
                 logger.info("E = %-.4f eV", conf.energy)
                 for parameter, value in conf.parameters.items():
                     logger.debug("%-s = %-.4f eV", parameter, value)
 
+                # Add the p-d hybridization parameters.
                 parameters = read_hybridization_parameters(element.symbol, conf.value)
                 if parameters is not None:
                     subroot = root + "/3d-4p Hybridization"
