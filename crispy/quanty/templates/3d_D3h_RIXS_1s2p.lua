@@ -278,17 +278,17 @@ Jsqr = Jx * Jx + Jy * Jy + Jz * Jz
 if MagneticFieldTerm then
     -- The values are in eV, and not Tesla. To convert from Tesla to eV multiply
     -- the value with EnergyUnits.Tesla.value.
-    Bx_i = $Bx_i_value 
-    By_i = $By_i_value 
-    Bz_i = $Bz_i_value 
+    Bx_i = $Bx_i_value
+    By_i = $By_i_value
+    Bz_i = $Bz_i_value
 
-    Bx_m = $Bx_m_value 
-    By_m = $By_m_value 
-    Bz_m = $Bz_m_value 
+    Bx_m = $Bx_m_value
+    By_m = $By_m_value
+    Bz_m = $Bz_m_value
 
-    Bx_f = $Bx_f_value 
-    By_f = $By_f_value 
-    Bz_f = $Bz_f_value 
+    Bx_f = $Bx_f_value
+    By_f = $By_f_value
+    Bz_f = $Bz_f_value
 
     H_i = H_i + Chop(
           Bx_i * (2 * Sx + Lx)
