@@ -29,14 +29,77 @@ config = h5py.get_config()
 config.track_order = True
 
 
+def element_charges(symbol):
+    """Return a list of charges for a given element."""
+    for subshell in CALCULATIONS:
+        for element in CALCULATIONS[subshell]["elements"]:
+            if element["symbol"] == symbol:
+                return element["charges"]
+
+
+def element_subshell(symbol):
+    for subshell in CALCULATIONS:
+        for element in CALCULATIONS[subshell]["elements"]:
+            if element["symbol"] == symbol:
+                return subshell
+
+
+def element_calculations(symbol=None, charge=None):
+    """Generator of all possible calculations for a given element."""
+    assert (
+        symbol is not None and charge is not None
+    ), "The symbol and charge must be provided."
+    subshell = element_subshell(symbol)
+    experiments = CALCULATIONS[subshell]["experiments"]
+    for experiment in experiments:
+        edges = experiment["edges"]
+        symmetries = experiment["symmetries"]
+        experiment = experiment["name"]
+        for edge in edges:
+            for symmetry in symmetries:
+                # The model is needed because in the case of 2D calculations
+                # there are calls to dataChanged which need an index from the
+                # model.
+                model = TreeModel()
+                calculation = Calculation(
+                    symbol=symbol,
+                    charge=charge,
+                    symmetry=symmetry,
+                    experiment=experiment,
+                    edge=edge,
+                    hamiltonian=False,
+                    parent=model,
+                )
+                yield calculation
+
+
+def subshell_calculations(subshell="all"):
+    """Generator of all possible calculations for a given subshell."""
+    if subshell == "all":
+        subshells = CALCULATIONS.keys()
+    else:
+        subshells = (subshell,)
+    for subshell in subshells:
+        element = CALCULATIONS[subshell]["elements"][0]
+        symbol = element["symbol"]
+        charge = element["charges"][0]
+        yield from element_calculations(symbol, charge)
+
+
+def all_symbols():
+    """Return a list of all element symbols."""
+    symbols = []
+    for subshell in CALCULATIONS:
+        for element in CALCULATIONS[subshell]["elements"]:
+            symbols.append(element["symbol"])
+    return symbols
+
+
 def unique_configurations(element):
     """Determine the unique electronic configurations of an element."""
     valenceSubshell = element.valenceSubshell
 
-    for _element in CALCULATIONS[valenceSubshell]["elements"]:
-        if _element["symbol"] == element.symbol:
-            charges = _element["charges"]
-            break
+    charges = element_charges(element.symbol)
 
     configurations = []
     for charge in charges:
@@ -58,16 +121,8 @@ def unique_configurations(element):
                     hamiltonian=False,
                     parent=model,
                 )
-
                 configurations.extend(calculation.configurations)
     return sorted(list(set(configurations)))
-
-
-def get_all_symbols():
-    """Return a list of element symbols."""
-    for subshell in CALCULATIONS:
-        for element in CALCULATIONS[subshell]["elements"]:
-            yield element["symbol"]
 
 
 def read_hybridization_parameters(symbol, conf):
@@ -88,7 +143,7 @@ def generate_parameters(symbols):
     HDF5 container.
     """
     if "all" in symbols:
-        symbols = get_all_symbols()
+        symbols = all_symbols()
 
     for symbol in symbols:
         element = Element()
@@ -132,50 +187,23 @@ def generate_parameters(symbols):
                         h5[path] = value
 
 
-def get_all_calculations():
-    """Get a generator with all possible calculations."""
-    for subshell in CALCULATIONS:
-        element = CALCULATIONS[subshell]["elements"][0]
-        symbol = element["symbol"]
-        charge = element["charges"]
-        for experiment in CALCULATIONS[subshell]["experiments"]:
-            edges = experiment["edges"]
-            symmetries = experiment["symmetries"]
-            experiment = experiment["name"]
-            for edge in edges:
-                for symmetry in symmetries:
-                    # The model is needed because in the case of 2D calculations
-                    # there are calls to dataChanged which need an index from the
-                    # model.
-                    model = TreeModel()
-                    calculation = Calculation(
-                        symbol=symbol,
-                        charge=charge,
-                        symmetry=symmetry,
-                        experiment=experiment,
-                        edge=edge,
-                        hamiltonian=False,
-                        parent=model,
-                    )
-                    yield calculation
-
-
 def generate_templates():
     # pylint: disable=all
     """Generate the templates for the Quanty calculations."""
-    for calculation in get_all_calculations():
-        block = calculation.element.valenceBlock
+    for calculation in subshell_calculations():
         element = calculation.element
         symmetry = calculation.symmetry
-        templateName = calculation.templateName
         experiment = calculation.experiment
         edge = calculation.edge
+
+        valenceBlock = calculation.element.valenceBlock
+        templateName = calculation.templateName
 
         # cf - crystal field
         # lf - crystal field and hybridization with the ligands
         # pd - crystal field and p-d hybridization
         suffix = "cf"
-        if block == "d":
+        if valenceBlock == "d":
             if symmetry.value == "Oh":
                 suffix = "lf"
             elif symmetry.value == "D4h":
@@ -192,7 +220,7 @@ def generate_templates():
                     suffix = "cf"
             elif symmetry.value == "D3h":
                 suffix = "cf"
-        elif block == "f":
+        elif valenceBlock == "f":
             if symmetry.value == "Oh":
                 suffix = "lf"
         else:
@@ -265,6 +293,8 @@ def main():
         description="Generate the data needed to run the Quanty calculations.",
     )
 
+    parser.add_argument("-l", "--loglevel", default="info")
+
     subparsers = parser.add_subparsers(dest="command")
 
     parameters_subparser = subparsers.add_parser("parameters")
@@ -275,8 +305,6 @@ def main():
         nargs="+",
         help="list of element symbols for which to generate the parameters",
     )
-    parser.add_argument("-l", "--loglevel", default="info")
-
     subparsers.add_parser("templates")
 
     args = parser.parse_args()
