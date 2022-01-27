@@ -73,14 +73,21 @@ class Element(BaseItem):
 
         # Reverse the string holding the charge before changing it to
         # an integer.
-        charge = int(self.charge[::-1])
+        charge = self.chargeToInt(self.charge)
 
         # Calculate the number of electrons of the ion.
-        ion_electrons = self.atomicNumber - charge
+        ionElectrons = self.atomicNumber - charge
 
-        core_electrons = SUBSHELLS[self.valenceSubshell]["coreElectrons"]
-        occupancy = ion_electrons - core_electrons
+        coreElectrons = SUBSHELLS[self.valenceSubshell]["coreElectrons"]
+        occupancy = ionElectrons - coreElectrons
         return occupancy
+
+    @staticmethod
+    def chargeToInt(charge):
+        return int(charge[::-1])
+
+    def chargeDifference(self, charge="2+"):
+        return self.chargeToInt(self.charge) - self.chargeToInt(charge)
 
     @property
     def value(self):
