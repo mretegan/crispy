@@ -11,18 +11,16 @@
 
 import copy
 import logging
+import os
 from math import floor
 
+import h5py
 import numpy as np
-
-from crispy.items import (
-    BaseItem,
-    DoubleItem,
-    IntItem,
-    Vector3DItem,
-    ComboItem,
-)
+from crispy import resourceAbsolutePath
+from crispy.items import BaseItem, ComboItem, DoubleItem, IntItem, Vector3DItem
 from crispy.quanty import XDB
+
+# from crispy.quanty.calculation import Element
 
 logger = logging.getLogger(__name__)
 
@@ -313,6 +311,63 @@ class Axis(BaseItem):
     def interval(self):
         # Checked and it is consistent with Quanty.
         return np.abs(self.stop.value - self.start.value) / self.npoints.value
+
+    @property
+    def configuration(self):
+        # Get the configuration for the axis.
+        return self.ancestor.configuration[self.idx + 1]
+
+    @property
+    def zeroShift(self):
+        # Calculate the shift required to approximately align the edge to zero. The
+        # shift is calculated using the spin-orbit coupling parameter of the
+        # core subshell for the electronic configuration of the element in the
+        # 2+ oxidation state.
+        calculation = self.ancestor
+        element = calculation.element
+
+        chargeDelta = element.chargeDifference(charge="2+")
+
+        # Add the charge delta to the configuration string.
+        subshells = self.configuration.subshells
+        occupancies = list(self.configuration.occupancies)
+        occupancies[-1] = occupancies[-1] + chargeDelta
+        occupancies = tuple(occupancies)
+
+        baseConfigurationValue = ",".join(
+            f"{subshell}{occupancy}"
+            for subshell, occupancy in zip(subshells, occupancies)
+        )
+        logger.info(baseConfigurationValue)
+
+        if self.configuration.hasCore:
+            coreSubshell = self.configuration.subshells[0]
+            name = f"ζ({coreSubshell})"
+            path = resourceAbsolutePath(
+                os.path.join("quanty", "parameters", f"{element.symbol}.h5")
+            )
+            with h5py.File(path, "r") as h5:
+                try:
+                    value = h5[baseConfigurationValue]["Atomic"][name][()]
+                except KeyError:
+                    # Configurations with s-type core-holes do not have
+                    # spin orbit coupling constants.
+                    value = 0.0
+            if "p" in coreSubshell:
+                factor = 0.5
+            else:
+                factor = 1.0
+
+            value *= factor
+        else:
+            # The value is zero for configurations without core-hole.
+            # These can be the final configurations RIXS or XES calculations.
+            value = 0.0
+
+        # No need to keep too many digits.
+        value = round(value, 1)
+
+        return value
 
     @property
     def limits(self):
