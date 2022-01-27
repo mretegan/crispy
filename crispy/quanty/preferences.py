@@ -12,7 +12,7 @@
 import logging
 import os
 
-from PyQt5.QtCore import QSize, QPoint
+from PyQt5.QtCore import QSize, QPoint, pyqtSignal
 from PyQt5.QtWidgets import QDialog, QDialogButtonBox, QFileDialog
 from PyQt5.uic import loadUi
 
@@ -24,6 +24,9 @@ settings = Config().read()
 
 
 class PreferencesDialog(QDialog):
+
+    settingsChanged = pyqtSignal()
+
     def __init__(self, parent):
         super().__init__(parent)
 
@@ -44,6 +47,7 @@ class PreferencesDialog(QDialog):
 
     def closeEvent(self, event):
         self.saveSettings()
+        self.settingsChanged.emit()
         super().closeEvent(event)
 
     def loadSettings(self):

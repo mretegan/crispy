@@ -476,6 +476,8 @@ class Calculation(SelectableItem):
         if symbol not in self.symbols:
             symbol = self._symbols[0]
 
+        # TODO: I do this exact same thing in generate.py. Refactor? Use the old
+        # structure of the calculations.yaml file?
         # Get the subshell.
         subshell = None
         try:
@@ -486,11 +488,13 @@ class Calculation(SelectableItem):
         except StopIteration:
             pass
 
+        # TODO: See above.
         self._charges = []
         for _element in CALCULATIONS[subshell]["elements"]:
             if _element["symbol"] == symbol:
                 self._charges.extend(_element["charges"])
         self._charges = tuple(self._charges)
+
         if charge not in self._charges:
             charge = self._charges[0]
 
@@ -602,6 +606,7 @@ class Calculation(SelectableItem):
         return f"{valenceSubshell}_{symmetry}_{experiment}_{subshells}.lua"
 
     @property
+    # TODO: Why is this cached?
     @lru_cache()
     def configurations(self):
         """Determine the electronic configurations involved in a calculation."""

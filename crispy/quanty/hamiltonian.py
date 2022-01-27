@@ -385,6 +385,7 @@ class PdHybridizationTerm(HamiltonianTerm):
             os.path.join("quanty", "parameters", f"{self.element.symbol}.h5")
         )
 
+        # TODO: The parameters should be stored in the final configuration.
         initial_configuration, *_ = self.configurations
         with h5py.File(path, "r") as h5:
             parameters = h5[f"{initial_configuration}/{self.name}"]

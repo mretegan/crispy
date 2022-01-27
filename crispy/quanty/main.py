@@ -378,6 +378,7 @@ class DockWidget(QDockWidget):
         self.model = TreeModel()
 
         self.preferencesDialog = PreferencesDialog(self)
+        self.preferencesDialog.settingsChanged.connect(self.populate)
 
         # Remove the placeholder page.
         self.toolBox.removeItem(0)

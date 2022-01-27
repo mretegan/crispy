@@ -17,12 +17,12 @@ from math import floor
 import h5py
 import numpy as np
 from crispy import resourceAbsolutePath
+from crispy.config import Config
 from crispy.items import BaseItem, ComboItem, DoubleItem, IntItem, Vector3DItem
 from crispy.quanty import XDB
 
-# from crispy.quanty.calculation import Element
-
 logger = logging.getLogger(__name__)
+settings = Config().read()
 
 
 class Broadening(DoubleItem):
@@ -295,6 +295,10 @@ class Axis(BaseItem):
         if name == "Y-axis":
             self.idx = 1
 
+        self.shiftSpectra = settings.value("Quanty/ShiftSpectra", type=bool)
+        # A user defined shift is applied to the axis.
+        self.shift = Shift(parent=self, value=0.0)
+
         start, stop = self.limits
         self.start = Start(parent=self, value=start)
         self.stop = Stop(parent=self, value=stop)
@@ -302,8 +306,6 @@ class Axis(BaseItem):
 
         self.gaussian = Gaussian(parent=self, value=0.1)
         self.lorentzian = Lorentzian(parent=self, value=self.coreholeWidth)
-
-        self.shift = Shift(parent=self, value=0.0)
 
         self.photon = None
 
@@ -315,7 +317,7 @@ class Axis(BaseItem):
     @property
     def configuration(self):
         # Get the configuration for the axis.
-        return self.ancestor.configuration[self.idx + 1]
+        return self.ancestor.configurations[self.idx + 1]
 
     @property
     def zeroShift(self):
@@ -338,7 +340,6 @@ class Axis(BaseItem):
             f"{subshell}{occupancy}"
             for subshell, occupancy in zip(subshells, occupancies)
         )
-        logger.info(baseConfigurationValue)
 
         if self.configuration.hasCore:
             coreSubshell = self.configuration.subshells[0]
@@ -364,9 +365,6 @@ class Axis(BaseItem):
             # These can be the final configurations RIXS or XES calculations.
             value = 0.0
 
-        # No need to keep too many digits.
-        value = round(value, 1)
-
         return value
 
     @property
@@ -387,10 +385,16 @@ class Axis(BaseItem):
                 else:
                     limits = [-STEP, 2 * STEP]
 
-        return [limit + self.experimentalEnergy for limit in limits]
+        if self.shiftSpectra:
+            shift = self.experimentalShift
+        else:
+            shift = -self.zeroShift
+
+        # Update and round the limits.
+        return [round(limit + shift, 0) for limit in limits]
 
     @property
-    def experimentalEnergy(self):
+    def experimentalShift(self):
         """Experimental edges/lines energies."""
         calculation = self.ancestor
         label = calculation.edge.labels[self.idx]
@@ -432,8 +436,10 @@ class Axis(BaseItem):
         replacements["Emin"] = self.start.value
         replacements["Emax"] = self.stop.value
         replacements["NPoints"] = self.npoints.value
-        replacements["ExperimentalShift"] = self.experimentalEnergy
-        replacements["ZeroShift"] = 0.0
+        replacements["ShiftSpectra"] = self.shiftSpectra
+        replacements["ZeroShift"] = self.zeroShift
+        replacements["ExperimentalShift"] = self.experimentalShift
+        replacements["UserDefinedShift"] = self.shift.value
         # The Gaussian broadening is done in the interface, but we still
         # want the user to easily change this value if the script is run from
         # outside.
