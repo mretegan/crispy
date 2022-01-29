@@ -23,12 +23,14 @@ NPsis = 45 -- Number of states to consider in the spectra calculation.
 NPsisAuto = true -- Determine the number of state automatically.
 NConfigurations = 1 -- Number of configurations.
 
-Emin = 842.7 -- Minimum value of the energy range (eV).
-Emax = 882.7 -- Maximum value of the energy range (eV).
+Emin = 843.0 -- Minimum value of the energy range (eV).
+Emax = 883.0 -- Maximum value of the energy range (eV).
 NPoints = 2000 -- Number of points of the spectra.
-ExperimentalShift = 852.7 -- Experimental edge energy (eV).
-Gaussian = 0.0  -- 0.1 -- Gaussian FWHM (eV).
-Lorentzian = {{842.7, 0.48}, {882.7, 0.48}} -- Lorentzian FWHM (eV).
+ZeroShift = 5.7535 -- Shift that brings the edge or line energy to approximately zero (eV).
+ExperimentalShift = 852.7 -- Experimental edge or line energy (eV).
+UserDefinedShift = 0.0 -- User-defined energy shift (always applied) (eV).
+Gaussian = 0.0 -- 0.1 -- Gaussian FWHM (eV).
+Lorentzian = {{843.0, 0.48}, {883.0, 0.48}} -- Lorentzian FWHM (eV).
 Gamma = 0.1 -- Lorentzian FWHM used in the spectra calculation (eV).
 
 WaveVector = {0, 0, 1} -- Wave vector.
@@ -37,7 +39,7 @@ Eh = {1, 0, 0} -- Horizontal polarization.
 
 SpectraToCalculate = {"Isotropic Absorption"}  -- Types of spectra to calculate.
 DenseBorder = 2000 -- Number of determinants where we switch from dense methods to sparse methods.
-ShiftToZero = true -- If enabled, shift the calculated spectra to have the first peak at approximately zero.
+ShiftSpectra = true -- If enabled, shift the spectra in the experimental energy range.
 
 Prefix = "test" -- File name prefix.
 
@@ -92,6 +94,7 @@ end
 --------------------------------------------------------------------------------
 H_i = 0
 H_f = 0
+
 
 --------------------------------------------------------------------------------
 -- Define the atomic term.
@@ -348,13 +351,13 @@ Jsqr = Jx * Jx + Jy * Jy + Jz * Jz
 if MagneticFieldTerm then
     -- The values are in eV, and not Tesla. To convert from Tesla to eV multiply
     -- the value with EnergyUnits.Tesla.value.
-    Bx_i = 0.0 
-    By_i = 0.0 
-    Bz_i = 0.0 
+    Bx_i = 0.0
+    By_i = 0.0
+    Bz_i = 0.0
 
-    Bx_f = 0.0 
-    By_f = 0.0 
-    Bz_f = 0.0 
+    Bx_f = 0.0
+    By_f = 0.0
+    Bz_f = 0.0
 
     H_i = H_i + Chop(
           Bx_i * (2 * Sx + Lx)
@@ -711,14 +714,6 @@ if next(SpectraToCalculate) == nil then
 end
 
 --------------------------------------------------------------------------------
--- Calculate the energy required to shift the spectrum to approximately zero.
---------------------------------------------------------------------------------
-ZeroShift = 0.0
-if ShiftToZero == true then
-    ZeroShift = CalculateEnergyDifference(HAtomic_i, InitialRestrictions, HAtomic_f, FinalRestrictions)
-end
-
---------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
 local t = math.sqrt(1 / 2)
@@ -767,8 +762,10 @@ for Operator, _ in pairs(T_2p_3d) do
 end
 T_2p_3d = T
 
-Emin = Emin - (ZeroShift + ExperimentalShift)
-Emax = Emax - (ZeroShift + ExperimentalShift)
+if ShiftSpectra then
+    Emin = Emin - (ZeroShift + ExperimentalShift)
+    Emax = Emax - (ZeroShift + ExperimentalShift)
+end
 
 if CalculationRestrictions == nil then
     G_2p_3d = CreateSpectra(H_f, T_2p_3d, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"DenseBorder", DenseBorder}})
@@ -776,8 +773,10 @@ else
     G_2p_3d = CreateSpectra(H_f, T_2p_3d, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"Restrictions", CalculationRestrictions}, {"DenseBorder", DenseBorder}})
 end
 
--- Shift the calculated spectra.
-G_2p_3d.Shift(ZeroShift + ExperimentalShift)
+if ShiftSpectra then
+    G_2p_3d.Shift(ZeroShift + ExperimentalShift)
+end
+G_2p_3d.Shift(UserDefinedShift)
 
 -- Create a list with the Boltzmann probabilities for a given operator and wavefunction.
 local dZ_2p_3d = {}
