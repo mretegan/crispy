@@ -26,7 +26,9 @@ NConfigurations = $NConfigurations -- Number of configurations.
 Emin = $XEmin -- Minimum value of the energy range (eV).
 Emax = $XEmax -- Maximum value of the energy range (eV).
 NPoints = $XNPoints -- Number of points of the spectra.
-ExperimentalShift = $XExperimentalShift -- Experimental edge energy (eV).
+ZeroShift = $XZeroShift -- Shift that brings the edge or line energy to approximately zero (eV).
+ExperimentalShift = $XExperimentalShift -- Experimental edge or line energy (eV).
+UserDefinedShift = $XUserDefinedShift -- User-defined energy shift (always applied) (eV).
 Gaussian = $XGaussian -- Gaussian FWHM (eV).
 Lorentzian = $XLorentzian -- Lorentzian FWHM (eV).
 Gamma = $XGamma -- Lorentzian FWHM used in the spectra calculation (eV).
@@ -37,7 +39,7 @@ Eh = $XSecondPolarization -- Horizontal polarization.
 
 SpectraToCalculate = $SpectraToCalculate -- Types of spectra to calculate.
 DenseBorder = $DenseBorder -- Number of determinants where we switch from dense methods to sparse methods.
-ShiftToZero = $ShiftToZero -- If enabled, shift the calculated spectra to have the first peak at approximately zero.
+ShiftSpectra = $ShiftSpectra -- If enabled, shift the spectra in the experimental energy range.
 
 Prefix = "$Prefix" -- File name prefix.
 
@@ -639,14 +641,6 @@ if next(SpectraToCalculate) == nil then
 end
 
 --------------------------------------------------------------------------------
--- Calculate the energy required to shift the spectrum to approximately zero.
---------------------------------------------------------------------------------
-ZeroShift = 0.0
-if ShiftToZero == true then
-    ZeroShift = CalculateEnergyDifference(HAtomic_i, InitialRestrictions, HAtomic_f, FinalRestrictions)
-end
-
---------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
 if PdHybridizationTerm then
@@ -743,21 +737,21 @@ if PdHybridizationTerm then
     G_1s_3d = CreateSpectra(H_f, T_1s_3d, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"Restrictions", CalculationRestrictions}, {"DenseBorder", DenseBorder}})
     G_1s_4p = CreateSpectra(H_f, T_1s_4p, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"Restrictions", CalculationRestrictions}, {"DenseBorder", DenseBorder}})
 
-    -- The prefactors are described in http://dx.doi.org/10.1103/PhysRevB.94.245115. 
-    -- 
-    -- prefactor_1s_3d = 4 * math.pi^2 * alpha * a0^4 / (2 * hbar * c)^2 * ExperimentalShift   * P2_1s_3d^2 
+    -- The prefactors are described in http://dx.doi.org/10.1103/PhysRevB.94.245115.
+    --
+    -- prefactor_1s_3d = 4 * math.pi^2 * alpha * a0^4 / (2 * hbar * c)^2 * ExperimentalShift   * P2_1s_3d^2
     -- prefactor_1s_4p = 4 * math.pi^2 * alpha * a0^2                    * ExperimentalShift^3 * P1_1s_4p^2
     --
     -- Here we set the prefactor for the quadrupolar spectrum to 1, to more
     -- easily compare the spectra with and without hybridization. Note however
     -- that the quadrupole spectrum without hybridization can look quite
-    -- different from the quadrupolar part of the spectrum with hybridization. 
+    -- different from the quadrupolar part of the spectrum with hybridization.
     -- They are identical only if all parameters of the 3d-4p interaction are zero.
-    -- 
+    --
     -- The dipolar prefactor then becomes:
-    -- 
+    --
     -- prefactor_1s_4p = (2 * hbar * c)^2 / (a0 * ExperimentalShift)^2 * (P1_1s_4p / P2_1s_3d)^2
-      
+
     alpha = 7.2973525664E-3
     a0 = 5.2917721067E-1
     hbar = 6.582119514E-16
@@ -766,8 +760,8 @@ if PdHybridizationTerm then
     P1_1s_4p = $P1(1s,4p)
     P2_1s_3d = $P2(1s,3d)
 
-    prefactor_1s_3d = 1 
-    prefactor_1s_4p = (2 * hbar * c)^2 / (a0 * ExperimentalShift)^2 * (P1_1s_4p / P2_1s_3d)^2 
+    prefactor_1s_3d = 1
+    prefactor_1s_4p = (2 * hbar * c)^2 / (a0 * ExperimentalShift)^2 * (P1_1s_4p / P2_1s_3d)^2
 
     io.write("\n")
     io.write("Spectra prefactors\n")
@@ -855,7 +849,7 @@ if PdHybridizationTerm then
 
             if Spectrum == "Isotropic Absorption" then
                 Giso_1s_4p = GetSpectrum(G_1s_4p, SpectrumIds_1s_4p, dZ_1s_4p, #T_1s_4p, #Psis_i)
-                Giso_1s_3d = Giso_1s_3d / 15 
+                Giso_1s_3d = Giso_1s_3d / 15
                 Giso_1s_4p = Giso_1s_4p / 3
                 Giso = Giso_1s_3d + Giso_1s_4p
                 SaveSpectrum(Giso, Prefix .. "_iso", Gaussian, Lorentzian)
@@ -954,8 +948,10 @@ else
         G_1s_3d = CreateSpectra(H_f, T_1s_3d, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"Restrictions", CalculationRestrictions}, {"DenseBorder", DenseBorder}})
     end
 
-    -- Shift the calculated spectra.
+if ShiftSpectra then
     G_1s_3d.Shift(ZeroShift + ExperimentalShift)
+end
+G_1s_3d.Shift(UserDefinedShift)
 
     -- Create a list with the Boltzmann probabilities for a given operator and wavefunction.
     local dZ_1s_3d = {}

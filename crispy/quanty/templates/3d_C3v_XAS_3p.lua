@@ -26,7 +26,9 @@ NConfigurations = $NConfigurations -- Number of configurations.
 Emin = $XEmin -- Minimum value of the energy range (eV).
 Emax = $XEmax -- Maximum value of the energy range (eV).
 NPoints = $XNPoints -- Number of points of the spectra.
-ExperimentalShift = $XExperimentalShift -- Experimental edge energy (eV).
+ZeroShift = $XZeroShift -- Shift that brings the edge or line energy to approximately zero (eV).
+ExperimentalShift = $XExperimentalShift -- Experimental edge or line energy (eV).
+UserDefinedShift = $XUserDefinedShift -- User-defined energy shift (always applied) (eV).
 Gaussian = $XGaussian -- Gaussian FWHM (eV).
 Lorentzian = $XLorentzian -- Lorentzian FWHM (eV).
 Gamma = $XGamma -- Lorentzian FWHM used in the spectra calculation (eV).
@@ -37,7 +39,7 @@ Eh = $XSecondPolarization -- Horizontal polarization.
 
 SpectraToCalculate = $SpectraToCalculate -- Types of spectra to calculate.
 DenseBorder = $DenseBorder -- Number of determinants where we switch from dense methods to sparse methods.
-ShiftToZero = $ShiftToZero -- If enabled, shift the calculated spectra to have the first peak at approximately zero.
+ShiftSpectra = $ShiftSpectra -- If enabled, shift the spectra in the experimental energy range.
 
 Prefix = "$Prefix" -- File name prefix.
 
@@ -68,6 +70,7 @@ IndexUp_3d = {7, 9, 11, 13, 15}
 --------------------------------------------------------------------------------
 H_i = 0
 H_f = 0
+
 
 --------------------------------------------------------------------------------
 -- Define the atomic term.
@@ -556,14 +559,6 @@ if next(SpectraToCalculate) == nil then
 end
 
 --------------------------------------------------------------------------------
--- Calculate the energy required to shift the spectrum to approximately zero.
---------------------------------------------------------------------------------
-ZeroShift = 0.0
-if ShiftToZero == true then
-    ZeroShift = CalculateEnergyDifference(HAtomic_i, InitialRestrictions, HAtomic_f, FinalRestrictions)
-end
-
---------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
 local t = math.sqrt(1 / 2)
@@ -612,8 +607,10 @@ for Operator, _ in pairs(T_3p_3d) do
 end
 T_3p_3d = T
 
-Emin = Emin - (ZeroShift + ExperimentalShift)
-Emax = Emax - (ZeroShift + ExperimentalShift)
+if ShiftSpectra then
+    Emin = Emin - (ZeroShift + ExperimentalShift)
+    Emax = Emax - (ZeroShift + ExperimentalShift)
+end
 
 if CalculationRestrictions == nil then
     G_3p_3d = CreateSpectra(H_f, T_3p_3d, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"DenseBorder", DenseBorder}})
@@ -621,8 +618,10 @@ else
     G_3p_3d = CreateSpectra(H_f, T_3p_3d, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"Restrictions", CalculationRestrictions}, {"DenseBorder", DenseBorder}})
 end
 
--- Shift the calculated spectra.
-G_3p_3d.Shift(ZeroShift + ExperimentalShift)
+if ShiftSpectra then
+    G_3p_3d.Shift(ZeroShift + ExperimentalShift)
+end
+G_3p_3d.Shift(UserDefinedShift)
 
 -- Create a list with the Boltzmann probabilities for a given operator and wavefunction.
 local dZ_3p_3d = {}

@@ -295,8 +295,7 @@ class Axis(BaseItem):
         if name == "Y-axis":
             self.idx = 1
 
-        self.shiftSpectra = settings.value("Quanty/ShiftSpectra", type=bool)
-        # A user defined shift is applied to the axis.
+        # A user defined shift applied to the axis.
         self.shift = Shift(parent=self, value=0.0)
 
         start, stop = self.limits
@@ -385,10 +384,13 @@ class Axis(BaseItem):
                 else:
                     limits = [-STEP, 2 * STEP]
 
-        if self.shiftSpectra:
-            shift = self.experimentalShift
-        else:
-            shift = -self.zeroShift
+        # Shift the limits to focus on the lower-energy edge or line.
+        limits = [limit - self.zeroShift for limit in limits]
+
+        shift = 0.0
+        shiftSpectra = settings.value("Quanty/ShiftSpectra", type=bool)
+        if shiftSpectra:
+            shift = self.zeroShift + self.experimentalShift
 
         # Update and round the limits.
         return [round(limit + shift, 0) for limit in limits]
@@ -436,7 +438,6 @@ class Axis(BaseItem):
         replacements["Emin"] = self.start.value
         replacements["Emax"] = self.stop.value
         replacements["NPoints"] = self.npoints.value
-        replacements["ShiftSpectra"] = self.shiftSpectra
         replacements["ZeroShift"] = self.zeroShift
         replacements["ExperimentalShift"] = self.experimentalShift
         replacements["UserDefinedShift"] = self.shift.value

@@ -33,14 +33,6 @@ if next(SpectraToCalculate) == nil then
 end
 
 --------------------------------------------------------------------------------
--- Calculate the energy required to shift the spectrum to approximately zero.
---------------------------------------------------------------------------------
-ZeroShift = 0.0
-if ShiftToZero == true then
-    ZeroShift = CalculateEnergyDifference(HAtomic_i, InitialRestrictions, HAtomic_f, FinalRestrictions)
-end
-
---------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
 local t = math.sqrt(1 / 2)
@@ -89,8 +81,10 @@ for Operator, _ in pairs(T_#i_#f) do
 end
 T_#i_#f = T
 
-Emin = Emin - (ZeroShift + ExperimentalShift)
-Emax = Emax - (ZeroShift + ExperimentalShift)
+if ShiftSpectra then
+    Emin = Emin - (ZeroShift + ExperimentalShift)
+    Emax = Emax - (ZeroShift + ExperimentalShift)
+end
 
 if CalculationRestrictions == nil then
     G_#i_#f = CreateSpectra(H_f, T_#i_#f, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"DenseBorder", DenseBorder}})
@@ -98,8 +92,10 @@ else
     G_#i_#f = CreateSpectra(H_f, T_#i_#f, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"Restrictions", CalculationRestrictions}, {"DenseBorder", DenseBorder}})
 end
 
--- Shift the calculated spectra.
-G_#i_#f.Shift(ZeroShift + ExperimentalShift)
+if ShiftSpectra then
+    G_#i_#f.Shift(ZeroShift + ExperimentalShift)
+end
+G_#i_#f.Shift(UserDefinedShift)
 
 -- Create a list with the Boltzmann probabilities for a given operator and wavefunction.
 local dZ_#i_#f = {}

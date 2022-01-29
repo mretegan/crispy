@@ -26,7 +26,9 @@ NConfigurations = $NConfigurations -- Number of configurations.
 Emin = $XEmin -- Minimum value of the energy range (eV).
 Emax = $XEmax -- Maximum value of the energy range (eV).
 NPoints = $XNPoints -- Number of points of the spectra.
-ExperimentalShift = $XExperimentalShift -- Experimental edge energy (eV).
+ZeroShift = $XZeroShift -- Shift that brings the edge or line energy to approximately zero (eV).
+ExperimentalShift = $XExperimentalShift -- Experimental edge or line energy (eV).
+UserDefinedShift = $XUserDefinedShift -- User-defined energy shift (always applied) (eV).
 Gaussian = $XGaussian -- Gaussian FWHM (eV).
 Lorentzian = $XLorentzian -- Lorentzian FWHM (eV).
 Gamma = $XGamma -- Lorentzian FWHM used in the spectra calculation (eV).
@@ -37,7 +39,7 @@ Eh = $XSecondPolarization -- Horizontal polarization.
 
 SpectraToCalculate = $SpectraToCalculate -- Types of spectra to calculate.
 DenseBorder = $DenseBorder -- Number of determinants where we switch from dense methods to sparse methods.
-ShiftToZero = $ShiftToZero -- If enabled, shift the calculated spectra to have the first peak at approximately zero.
+ShiftSpectra = $ShiftSpectra -- If enabled, shift the spectra in the experimental energy range.
 
 Prefix = "$Prefix" -- File name prefix.
 
@@ -547,14 +549,6 @@ if next(SpectraToCalculate) == nil then
 end
 
 --------------------------------------------------------------------------------
--- Calculate the energy required to shift the spectrum to approximately zero.
---------------------------------------------------------------------------------
-ZeroShift = 0.0
-if ShiftToZero == true then
-    ZeroShift = CalculateEnergyDifference(HAtomic_i, InitialRestrictions, HAtomic_f, FinalRestrictions)
-end
-
---------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
 local t = math.sqrt(1 / 2)
@@ -614,8 +608,10 @@ else
     G_5s_5d = CreateSpectra(H_f, T_5s_5d, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"Restrictions", CalculationRestrictions}, {"DenseBorder", DenseBorder}})
 end
 
--- Shift the calculated spectra.
-G_5s_5d.Shift(ZeroShift + ExperimentalShift)
+if ShiftSpectra then
+    G_5s_5d.Shift(ZeroShift + ExperimentalShift)
+end
+G_5s_5d.Shift(UserDefinedShift)
 
 -- Create a list with the Boltzmann probabilities for a given operator and wavefunction.
 local dZ_5s_5d = {}
@@ -649,7 +645,7 @@ for Spectrum, Operators in pairs(SpectraAndOperators) do
 
         if Spectrum == "Isotropic Absorption" then
             Giso = GetSpectrum(G_5s_5d, SpectrumIds, dZ_5s_5d, #T_5s_5d, #Psis_i)
-            Giso = Giso / 15 
+            Giso = Giso / 15
             SaveSpectrum(Giso, Prefix .. "_iso", Gaussian, Lorentzian, Pcl_5s_5d)
         end
 

@@ -33,14 +33,6 @@ if next(SpectraToCalculate) == nil then
 end
 
 --------------------------------------------------------------------------------
--- Calculate the energy required to shift the spectrum to approximately zero.
---------------------------------------------------------------------------------
-ZeroShift = 0.0
-if ShiftToZero == true then
-    ZeroShift = CalculateEnergyDifference(HAtomic_i, InitialRestrictions, HAtomic_f, FinalRestrictions)
-end
-
---------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
 if PdHybridizationTerm then
@@ -137,21 +129,21 @@ if PdHybridizationTerm then
     G_#i_#f = CreateSpectra(H_f, T_#i_#f, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"Restrictions", CalculationRestrictions}, {"DenseBorder", DenseBorder}})
     G_#i_4p = CreateSpectra(H_f, T_#i_4p, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"Restrictions", CalculationRestrictions}, {"DenseBorder", DenseBorder}})
 
-    -- The prefactors are described in http://dx.doi.org/10.1103/PhysRevB.94.245115. 
-    -- 
-    -- prefactor_#i_#f = 4 * math.pi^2 * alpha * a0^4 / (2 * hbar * c)^2 * ExperimentalShift   * P2_#i_#f^2 
+    -- The prefactors are described in http://dx.doi.org/10.1103/PhysRevB.94.245115.
+    --
+    -- prefactor_#i_#f = 4 * math.pi^2 * alpha * a0^4 / (2 * hbar * c)^2 * ExperimentalShift   * P2_#i_#f^2
     -- prefactor_#i_4p = 4 * math.pi^2 * alpha * a0^2                    * ExperimentalShift^3 * P1_#i_4p^2
     --
     -- Here we set the prefactor for the quadrupolar spectrum to 1, to more
     -- easily compare the spectra with and without hybridization. Note however
     -- that the quadrupole spectrum without hybridization can look quite
-    -- different from the quadrupolar part of the spectrum with hybridization. 
+    -- different from the quadrupolar part of the spectrum with hybridization.
     -- They are identical only if all parameters of the #f-4p interaction are zero.
-    -- 
+    --
     -- The dipolar prefactor then becomes:
-    -- 
+    --
     -- prefactor_#i_4p = (2 * hbar * c)^2 / (a0 * ExperimentalShift)^2 * (P1_#i_4p / P2_#i_#f)^2
-      
+
     alpha = 7.2973525664E-3
     a0 = 5.2917721067E-1
     hbar = 6.582119514E-16
@@ -160,8 +152,8 @@ if PdHybridizationTerm then
     P1_#i_4p = $P1(#i,4p)
     P2_#i_#f = $P2(#i,#f)
 
-    prefactor_#i_#f = 1 
-    prefactor_#i_4p = (2 * hbar * c)^2 / (a0 * ExperimentalShift)^2 * (P1_#i_4p / P2_#i_#f)^2 
+    prefactor_#i_#f = 1
+    prefactor_#i_4p = (2 * hbar * c)^2 / (a0 * ExperimentalShift)^2 * (P1_#i_4p / P2_#i_#f)^2
 
     io.write("\n")
     io.write("Spectra prefactors\n")
@@ -249,7 +241,7 @@ if PdHybridizationTerm then
 
             if Spectrum == "Isotropic Absorption" then
                 Giso_#i_4p = GetSpectrum(G_#i_4p, SpectrumIds_#i_4p, dZ_#i_4p, #T_#i_4p, #Psis_i)
-                Giso_#i_#f = Giso_#i_#f / 15 
+                Giso_#i_#f = Giso_#i_#f / 15
                 Giso_#i_4p = Giso_#i_4p / 3
                 Giso = Giso_#i_#f + Giso_#i_4p
                 SaveSpectrum(Giso, Prefix .. "_iso", Gaussian, Lorentzian)
@@ -348,8 +340,10 @@ else
         G_#i_#f = CreateSpectra(H_f, T_#i_#f, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"Restrictions", CalculationRestrictions}, {"DenseBorder", DenseBorder}})
     end
 
-    -- Shift the calculated spectra.
+if ShiftSpectra then
     G_#i_#f.Shift(ZeroShift + ExperimentalShift)
+end
+G_#i_#f.Shift(UserDefinedShift)
 
     -- Create a list with the Boltzmann probabilities for a given operator and wavefunction.
     local dZ_#i_#f = {}

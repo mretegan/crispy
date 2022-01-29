@@ -27,7 +27,8 @@ NConfigurations = $NConfigurations -- Number of configurations.
 Emin1 = $XEmin -- Minimum value of the energy range (eV).
 Emax1 = $XEmax -- Maximum value of the energy range (eV).
 NPoints1 = $XNPoints -- Number of points of the spectra.
-ExperimentalShift1 = $XExperimentalShift -- Experimental edge energy (eV).
+ZeroShift1 = $XZeroShift -- Shift that brings the edge or line energy to approximately zero (eV).
+ExperimentalShift1 = $XExperimentalShift -- Experimental edge or line energy (eV).
 Gaussian1 = $XGaussian -- Gaussian FWHM (eV).
 Gamma1 = $XGamma -- Lorentzian FWHM used in the spectra calculation (eV).
 
@@ -39,7 +40,8 @@ Eh = $XSecondPolarization -- Horizontal polarization.
 Emin2 = $YEmin -- Minimum value of the energy range (eV).
 Emax2 = $YEmax -- Maximum value of the energy range (eV).
 NPoints2 = $YNPoints -- Number of points of the spectra.
-ExperimentalShift2 = $YExperimentalShift -- Experimental edge energy (eV).
+ZeroShift2 = $YZeroShift -- Shift that brings the edge or line energy to approximately zero (eV).
+ExperimentalShift2 = $YExperimentalShift -- Experimental edge or line energy (eV).
 Gaussian2 = $YGaussian -- Gaussian FWHM (eV).
 Gamma2 = $YGamma -- Lorentzian FWHM used in the spectra calculation (eV).
 
@@ -49,7 +51,7 @@ Eh = $YSecondPolarization -- Horizontal polarization.
 
 SpectraToCalculate = $SpectraToCalculate -- Types of spectra to calculate.
 DenseBorder = $DenseBorder -- Number of determinants where we switch from dense methods to sparse methods.
-ShiftToZero = $ShiftToZero -- If enabled, shift the calculated spectra to have the first peak at approximately zero.
+ShiftSpectra = $ShiftSpectra -- If enabled, shift the spectra in the experimental energy range.
 
 Prefix = "$Prefix" -- File name prefix.
 
@@ -81,6 +83,7 @@ IndexUp_4d = {7, 9, 11, 13, 15}
 H_i = 0
 H_m = 0
 H_f = 0
+
 
 --------------------------------------------------------------------------------
 -- Define the atomic term.
@@ -615,16 +618,6 @@ if next(SpectraToCalculate) == nil then
 end
 
 --------------------------------------------------------------------------------
--- Calculate the energy required to shift the spectrum to approximately zero.
---------------------------------------------------------------------------------
-ZeroShift1 = 0.0
-ZeroShift2 = 0.0
-if ShiftToZero == true then
-    ZeroShift1 = CalculateEnergyDifference(HAtomic_i, InitialRestrictions, HAtomic_m, IntermediateRestrictions)
-    ZeroShift2 = CalculateEnergyDifference(HAtomic_i, InitialRestrictions, HAtomic_f, FinalRestrictions)
-end
-
---------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
 local t = math.sqrt(1 / 2)
@@ -640,11 +633,12 @@ Tz_4d_2p = NewOperator("CF", NFermions, IndexUp_2p, IndexDn_2p, IndexUp_4d, Inde
 T_2p_4d = {Tx_2p_4d, Ty_2p_4d, Tz_2p_4d}
 T_4d_2p = {Tx_4d_2p, Ty_4d_2p, Tz_4d_2p}
 
-Emin1 = Emin1 - (ZeroShift1 + ExperimentalShift1)
-Emax1 = Emax1 - (ZeroShift1 + ExperimentalShift1)
-
-Emin2 = Emin2 - (ZeroShift2 + ExperimentalShift2)
-Emax2 = Emax2 - (ZeroShift2 + ExperimentalShift2)
+if ShiftSpectra then
+    Emin1 = Emin1 - (ZeroShift1 + ExperimentalShift1)
+    Emax1 = Emax1 - (ZeroShift1 + ExperimentalShift1)
+    Emin2 = Emin2 - (ZeroShift2 + ExperimentalShift2)
+    Emax2 = Emax2 - (ZeroShift2 + ExperimentalShift2)
+end
 
 if CalculationRestrictions == nil then
     G = CreateResonantSpectra(H_m, H_f, T_2p_4d, T_4d_2p, Psis_i, {{"Emin1", Emin1}, {"Emax1", Emax1}, {"NE1", NPoints1}, {"Gamma1", Gamma1}, {"Emin2", Emin2}, {"Emax2", Emax2}, {"NE2", NPoints2}, {"Gamma2", Gamma2}, {"DenseBorder", DenseBorder}})

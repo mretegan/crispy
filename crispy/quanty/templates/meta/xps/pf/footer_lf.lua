@@ -38,7 +38,7 @@ end
 ZeroShift = 0.0
 if ShiftToZero == true then
     ZeroShift = CalculateEnergyDifference(HAtomic_i, InitialRestrictions, HAtomic_f, FinalRestrictions)
-end)
+end
 
 --------------------------------------------------------------------------------
 -- Calculate and save the spectra.

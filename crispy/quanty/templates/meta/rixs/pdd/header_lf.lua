@@ -27,7 +27,8 @@ NConfigurations = $NConfigurations -- Number of configurations.
 Emin1 = $XEmin -- Minimum value of the energy range (eV).
 Emax1 = $XEmax -- Maximum value of the energy range (eV).
 NPoints1 = $XNPoints -- Number of points of the spectra.
-ExperimentalShift1 = $XExperimentalShift -- Experimental edge energy (eV).
+ZeroShift1 = $XZeroShift -- Shift that brings the edge or line energy to approximately zero (eV).
+ExperimentalShift1 = $XExperimentalShift -- Experimental edge or line energy (eV).
 Gaussian1 = $XGaussian -- Gaussian FWHM (eV).
 Gamma1 = $XGamma -- Lorentzian FWHM used in the spectra calculation (eV).
 
@@ -39,7 +40,8 @@ Eh = $XSecondPolarization -- Horizontal polarization.
 Emin2 = $YEmin -- Minimum value of the energy range (eV).
 Emax2 = $YEmax -- Maximum value of the energy range (eV).
 NPoints2 = $YNPoints -- Number of points of the spectra.
-ExperimentalShift2 = $YExperimentalShift -- Experimental edge energy (eV).
+ZeroShift2 = $YZeroShift -- Shift that brings the edge or line energy to approximately zero (eV).
+ExperimentalShift2 = $YExperimentalShift -- Experimental edge or line energy (eV).
 Gaussian2 = $YGaussian -- Gaussian FWHM (eV).
 Gamma2 = $YGamma -- Lorentzian FWHM used in the spectra calculation (eV).
 
@@ -49,7 +51,7 @@ Eh = $YSecondPolarization -- Horizontal polarization.
 
 SpectraToCalculate = $SpectraToCalculate -- Types of spectra to calculate.
 DenseBorder = $DenseBorder -- Number of determinants where we switch from dense methods to sparse methods.
-ShiftToZero = $ShiftToZero -- If enabled, shift the calculated spectra to have the first peak at approximately zero.
+ShiftSpectra = $ShiftSpectra -- If enabled, shift the spectra in the experimental energy range.
 
 Prefix = "$Prefix" -- File name prefix.
 
@@ -103,5 +105,5 @@ end
 -- Initialize the Hamiltonians.
 --------------------------------------------------------------------------------
 H_i = 0
-H_m = 0 
+H_m = 0
 H_f = 0

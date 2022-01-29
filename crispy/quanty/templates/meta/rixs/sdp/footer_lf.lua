@@ -42,16 +42,6 @@ if next(SpectraToCalculate) == nil then
 end
 
 --------------------------------------------------------------------------------
--- Calculate the energy required to shift the spectrum to approximately zero.
---------------------------------------------------------------------------------
-ZeroShift1 = 0.0
-ZeroShift2 = 0.0
-if ShiftToZero == true then
-    ZeroShift1 = CalculateEnergyDifference(HAtomic_i, InitialRestrictions, HAtomic_m, IntermediateRestrictions)
-    ZeroShift2 = CalculateEnergyDifference(HAtomic_i, InitialRestrictions, HAtomic_f, FinalRestrictions)
-end
-
---------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
 local t = math.sqrt(1 / 2)
@@ -69,11 +59,12 @@ Tz_#f_#i = NewOperator("CF", NFermions, IndexUp_#i, IndexDn_#i, IndexUp_#f, Inde
 T_#i_#m = {Txy_#i_#m, Txz_#i_#m, Tyz_#i_#m, Tx2y2_#i_#m, Tz2_#i_#m}
 T_#f_#i = {Tx_#f_#i, Ty_#f_#i, Tz_#f_#i}
 
-Emin1 = Emin1 - (ZeroShift1 + ExperimentalShift1)
-Emax1 = Emax1 - (ZeroShift1 + ExperimentalShift1)
-
-Emin2 = Emin2 - (ZeroShift2 + ExperimentalShift2)
-Emax2 = Emax2 - (ZeroShift2 + ExperimentalShift2)
+if ShiftSpectra then
+    Emin1 = Emin1 - (ZeroShift1 + ExperimentalShift1)
+    Emax1 = Emax1 - (ZeroShift1 + ExperimentalShift1)
+    Emin2 = Emin2 - (ZeroShift2 + ExperimentalShift2)
+    Emax2 = Emax2 - (ZeroShift2 + ExperimentalShift2)
+end
 
 if CalculationRestrictions == nil then
     G = CreateResonantSpectra(H_m, H_f, T_#i_#m, T_#f_#i, Psis_i, {{"Emin1", Emin1}, {"Emax1", Emax1}, {"NE1", NPoints1}, {"Gamma1", Gamma1}, {"Emin2", Emin2}, {"Emax2", Emax2}, {"NE2", NPoints2}, {"Gamma2", Gamma2}, {"DenseBorder", DenseBorder}})
