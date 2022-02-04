@@ -247,6 +247,9 @@ class Calculation:
                 return parameter.value
             return None
 
+    def get_input(self):
+        return self._calculation.input
+
     def get_output(self):
         return self._calculation.output
 
