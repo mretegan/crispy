@@ -553,10 +553,6 @@ class DockWidget(QDockWidget):
         index = self.state.index()
         self.resultsPage.view.setCurrentIndex(index)
 
-        removeFiles = Config().settings.value("Quanty/RemoveFiles", type=bool)
-        if removeFiles:
-            self.state.clean()
-
     def showHide(self):
         self.setVisible(not self.isVisible())
 

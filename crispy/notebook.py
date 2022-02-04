@@ -9,8 +9,13 @@
 ###################################################################
 """The module provides an easy to use API to run calculations in Jupyter notebooks."""
 
+from crispy.config import Config
 from crispy.models import TreeModel
-from crispy.quanty.calculation import Calculation as _Calculation, Element
+from crispy.quanty.calculation import Calculation as _Calculation
+from crispy.quanty.calculation import Element
+
+
+settings = Config().read()
 
 
 def prettify(data, level=0):
@@ -203,9 +208,24 @@ class Spectra:
 
 
 class Calculation:
-    def __init__(self, element, symmetry, experiment, edge):
-        element = Element(parent=None, value=element)
+    def __init__(
+        self, element="Ni2+", symmetry="Oh", experiment="XAS", edge="L2,3 (2p)"
+    ):
+        self.set_model(element, symmetry, experiment, edge)
 
+    def __dir__(self):
+        return (
+            "get_output",
+            "hamiltonian",
+            "output",
+            "run",
+            "set_parameter",
+            "spectra",
+            "xaxis",
+        )
+
+    def set_model(self, element=None, symmetry=None, experiment=None, edge=None):
+        element = Element(parent=None, value=element)
         self._model = TreeModel()
         self._calculation = _Calculation(
             element.symbol,
@@ -218,17 +238,6 @@ class Calculation:
         self.xaxis = Axis(self._calculation.axes.xaxis)
         self.hamiltonian = Hamiltonian(self._calculation.hamiltonian)
         self.spectra = Spectra(self._calculation.spectra)
-
-    def __dir__(self):
-        return (
-            "get_output",
-            "hamiltonian",
-            "output",
-            "run",
-            "set_parameter",
-            "spectra",
-            "xaxis",
-        )
 
     def set_parameter(self, name=None, value=None):
         if name is None or value is None:
@@ -259,6 +268,26 @@ class Calculation:
         self._calculation.runner.waitForFinished(-1)
         self.spectra.has_data = True
 
+    def set_setting(self, name, value):
+        if name == "Shift Spectra":
+            name = "ShiftSpectra"
+        elif name == "Remove Files":
+            name = "RemoveFiles"
+        else:
+            print("Unknown setting:", name)
+            return
+        settings.setValue(f"Quanty/{name}", value)
+        settings.sync()
+
+        # Get the current calculation parameters.
+        element = self._calculation.element.value
+        symmetry = self._calculation.symmetry.value
+        experiment = self._calculation.experiment.value
+        edge = self._calculation.edge.value
+
+        # Re-create the underlying calculation object.
+        self.set_model(element, symmetry, experiment, edge)
+
     def print(self):
         print(self)
 
@@ -271,7 +300,7 @@ class Calculation:
         return prettify(data)
 
 
-def calculation(element="Ni2+", symmetry="Oh", experiment="XAS", edge="L2,3 (2p)"):
+def calculation(element, symmetry, experiment, edge):
     """Returns a Quanty calculation object.
 
     :param element:

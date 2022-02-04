@@ -748,6 +748,10 @@ class Calculation(SelectableItem):
         # TODO: Check if loading the spectra was successful.
         self.spectra.load()
 
+        # Clean files.
+        if settings.value("Quanty/RemoveFiles", type=bool):
+            self.clean()
+
     def stop(self):
         self.runner.kill()
 
