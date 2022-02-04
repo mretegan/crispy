@@ -14,7 +14,7 @@
       - ["Gk", 0.70] 
       - ["Zeta", 0.90]
 
-# Crystal field parameters for Oh symmetry
+# d-block elements, Oh, XAS, p-type core-hole, crystal field
 2:
   args: ["Ni2+", "Oh", "XAS", "L2,3 (2p)"]
   hamiltonian:
@@ -23,7 +23,7 @@
       parameters: 
         - ["10Dq(3d)", 1.6]
 
-# Ligand field parameters for Oh symmetry; LMCT case
+# d-block elements, Oh, XAS, p-type core-hole, crystal field + LMCT
 3:
   args: ["Ni2+", "Oh", "XAS", "L2,3 (2p)"]
   hamiltonian:
@@ -42,7 +42,7 @@
           - ["Veg(3d,L1)", 2.0]
           - ["Vt2g(3d,L1)", 1.0]
 
-# Ligand field parameters for Oh symmetry; MLCT case
+# d-block elements, Oh, XAS, p-type core-hole, crystal field + MLCT
 4:
   args:  ["Ni2+", "Oh", "XAS", "L2,3 (2p)"]
   hamiltonian:
@@ -65,7 +65,7 @@
       rtol: 1.e-4
       atol: 1.e-7  
 
-# Crystal field parameters for D4h symmetry
+# d-block elements, D4h, XAS, p-type core-hole, crystal field 
 5:
   args: ["Ni2+", "D4h", "XAS", "L2,3 (2p)"]
   hamiltonian:
@@ -76,7 +76,7 @@
           - ["Ds(3d)", 0.01]
           - ["Dt(3d)", 0.01]
 
-# Crystal field parameters for D3h symmetry
+# d-block elements, D3h, XAS, p-type core-hole, crystal field 
 6:
   args: ["Ni2+", "D3h", "XAS", "L2,3 (2p)"]
   hamiltonian:
@@ -86,7 +86,7 @@
           - ["Dmu(3d)", 0.05] 
           - ["Dnu(3d)", 0.03]
 
-# Crystal field parameters for C3v symmetry
+# d-block elements, C3v, XAS, p-type core-hole, crystal field 
 7:
   args: ["Ni2+", "C3v", "XAS", "L2,3 (2p)"]
   hamiltonian:
@@ -96,3 +96,68 @@
           - ["Dq(3d)", 0.16] 
           - ["Dsigma(3d)", 0.01]
           - ["Dtau(3d)", 0.02]
+
+# d-block elements, Td, XAS, p-type core-hole, crystal field 
+
+# d-block elements, D4h, XAS, p-type core-hole, crystal field + LMCT
+# d-block elements, D4h, XAS, p-type core-hole, crystal field + MLCT
+
+# d-block elements, Oh, XAS, s-type core-hole, crystal field + LMCT
+# d-block elements, Oh, XAS, s-type core-hole, crystal field + MLCT
+
+# d-block elements, D4h, XAS, s-type core-hole, crystal field + LMCT
+# d-block elements, D4h, XAS, s-type core-hole, crystal field + MLCT
+
+# d-block elements, C3v, XAS, s-type core-hole, crystal field + 3d-4p hybridization
+# d-block elements, Td, XAS, s-type core-hole, crystal field + 3d-4p hybridization
+
+# XAS, magnetic and exchange fields
+
+# Number of configurations
+
+# f-block elements, Oh, XAS, p-type core-hole, crystal field  
+# f-block elements, Oh, XAS, p-type core-hole, crystal field + LMCT
+# f-block elements, Oh, XAS, p-type core-hole, crystal field + MLCT
+
+# f-block elements, Oh, XAS, d-type core-hole, crystal field 
+# f-block elements, Oh, XAS, d-type core-hole, crystal field + LMCT
+# f-block elements, Oh, XAS, d-type core-hole, crystal field + MLCT
+
+# Increase the number of configurations in these tests. MLCT not needed, since
+# the meta templates are tested during the XAS tests.
+
+# d-block elements, Oh, XPS, s-type core-hole, crystal field 
+# d-block elements, Oh, XPS, s-type core-hole, crystal field + LMCT
+
+# d-block elements, Oh, XPS, p-type core-hole, crystal field 
+# d-block elements, Oh, XPS, p-type core-hole, crystal field + LMCT
+
+# f-block elements, Oh, XPS, p-type core-hole, crystal field 
+# f-block elements, Oh, XPS, p-type core-hole, crystal field + LMCT
+
+# f-block elements, Oh, XPS, d-type core-hole, crystal field
+# f-block elements, Oh, XPS, d-type core-hole, crystal field + LMCT
+
+# d-block elements, Oh, RIXS, s-type and p-type core-holes, crystal field 
+# d-block elements, Oh, RIXS, s-type and p-type core-holes, crystal field + LMCT
+# d-block elements, Oh, RIXS, s-type and p-type core-holes, crystal field + MLCT
+
+# d-block elements, D4h, RIXS, s-type and p-type core-holes, crystal field 
+# d-block elements, D4h, RIXS, s-type and p-type core-holes, crystal field + LMCT
+# d-block elements, D4h, RIXS, s-type and p-type core-holes, crystal field + MLCT
+
+# d-block elements, C3v, RIXS, s-type and p-type core-holes, crystal field 
+# d-block elements, D3h, RIXS, s-type and p-type core-holes, crystal field
+# d-block elements, Td, RIXS, s-type and p-type core-holes, crystal field 
+
+# d-block elements, Oh, RIXS, p-type only core-hole, crystal field parameters 
+# d-block elements, Oh, RIXS, p-type only core-hole, crystal field parameters + LMCT
+# d-block elements, Oh, RIXS, p-type only core-hole, crystal field parameters + MLCT
+
+# d-block elements, D4h, RIXS, p-type only core-hole, crystal field parameters
+# d-block elements, D4h, RIXS, p-type only core-hole, crystal field parameters + LMCT
+# d-block elements, D4h, RIXS, p-type only core-hole, crystal field parameters + MLCT
+
+# f-block elements, Oh, RIXS, p-type and d-type core-holes, crystal field 
+# f-block elements, Oh, RIXS, p-type and d-type core-holes, crystal field + LMCT
+# f-block elements, Oh, RIXS, p-type and d-type core-holes, crystal field + MLCT
