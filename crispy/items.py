@@ -347,7 +347,6 @@ class DoubleItem(BaseItem):
         if role in (Qt.EditRole, Qt.DisplayRole):
             if column == 1:
                 try:
-
                     return QLocale().toString(self._value)
                 except TypeError:
                     return self._value
