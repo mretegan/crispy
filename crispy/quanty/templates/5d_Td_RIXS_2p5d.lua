@@ -84,7 +84,6 @@ H_i = 0
 H_m = 0
 H_f = 0
 
-
 --------------------------------------------------------------------------------
 -- Define the atomic term.
 --------------------------------------------------------------------------------
@@ -163,12 +162,6 @@ if AtomicTerm then
 
     H_f = H_f + Chop(
           zeta_5d_f * ldots_5d)
-
-    -- Save the spin-orbit coupling terms of the atomic Hamiltonians. These are
-    -- used to calculate the "zero" shift.
-    HAtomic_i = $zeta(5d)_i_value * ldots_5d
-    HAtomic_m = $zeta(5d)_m_value * ldots_5d + $zeta(2p)_m_value * ldots_2p
-    HAtomic_f = $zeta(5d)_f_value * ldots_5d
 end
 
 --------------------------------------------------------------------------------
@@ -647,4 +640,3 @@ end
 
 Giso = -1 / math.pi * Giso
 Giso.Print({{"file", Prefix .. "_iso.spec"}})
-

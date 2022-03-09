@@ -1,5 +1,4 @@
 #header
-
 --------------------------------------------------------------------------------
 -- Define the atomic term.
 --------------------------------------------------------------------------------
@@ -63,11 +62,6 @@ if AtomicTerm then
     H_f = H_f + Chop(
           zeta_#f_f * ldots_#f
         + zeta_#i_f * ldots_#i)
-
-    -- Save the spin-orbit coupling terms of the atomic Hamiltonians. These are
-    -- used to calculate the "zero" shift.
-    HAtomic_i = $zeta(#f)_i_value * ldots_#f
-    HAtomic_f = $zeta(#f)_f_value * ldots_#f + $zeta(#i)_f_value * ldots_#i
 end
 
 #symmetry_term

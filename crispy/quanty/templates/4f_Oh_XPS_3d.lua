@@ -81,7 +81,6 @@ end
 H_i = 0
 H_f = 0
 
-
 --------------------------------------------------------------------------------
 -- Define the atomic term.
 --------------------------------------------------------------------------------
@@ -156,11 +155,6 @@ if AtomicTerm then
     H_f = H_f + Chop(
           zeta_4f_f * ldots_4f
         + zeta_3d_f * ldots_3d)
-
-    -- Save the spin-orbit coupling terms of the atomic Hamiltonians. These are
-    -- used to calculate the "zero" shift.
-    HAtomic_i = $zeta(4f)_i_value * ldots_4f
-    HAtomic_f = $zeta(4f)_f_value * ldots_4f + $zeta(3d)_f_value * ldots_3d
 end
 
 --------------------------------------------------------------------------------
@@ -691,14 +685,6 @@ if next(SpectraToCalculate) == nil then
 end
 
 --------------------------------------------------------------------------------
--- Calculate the energy required to shift the spectrum to approximately zero.
---------------------------------------------------------------------------------
-ZeroShift = 0.0
-if ShiftToZero == true then
-    ZeroShift = CalculateEnergyDifference(HAtomic_i, InitialRestrictions, HAtomic_f, FinalRestrictions)
-end
-
---------------------------------------------------------------------------------
 -- Calculate and save the spectra.
 --------------------------------------------------------------------------------
 T_3d_4f = {}
@@ -707,8 +693,10 @@ for i = 1, NElectrons_3d / 2 do
     T_3d_4f[2*i]     = NewOperator("An", NFermions, IndexUp_3d[i])
 end
 
-Emin = Emin - (ZeroShift + ExperimentalShift)
-Emax = Emax - (ZeroShift + ExperimentalShift)
+if ShiftSpectra then
+    Emin = Emin - (ZeroShift + ExperimentalShift)
+    Emax = Emax - (ZeroShift + ExperimentalShift)
+end
 
 if CalculationRestrictions == nil then
     G_3d_4f = CreateSpectra(H_f, T_3d_4f, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"DenseBorder", DenseBorder}})
@@ -716,8 +704,10 @@ else
     G_3d_4f = CreateSpectra(H_f, T_3d_4f, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"Restrictions", CalculationRestrictions}, {"DenseBorder", DenseBorder}})
 end
 
--- Shift the calculated spectra.
-G_3d_4f.Shift(ZeroShift + ExperimentalShift)
+if ShiftSpectra then
+    G_3d_4f.Shift(ZeroShift + ExperimentalShift)
+end
+G_3d_4f.Shift(UserDefinedShift)
 
 -- Create a list with the Boltzmann probabilities for a given operator and wavefunction.
 local dZ_3d_4f = {}
@@ -735,7 +725,6 @@ end
 
 Spectrum = "Photoemission"
 if ValueInTable(Spectrum, SpectraToCalculate) then
-
     SpectrumIds = {}
     c = 1
     for i, Operator in ipairs(T_3d_4f) do
@@ -746,4 +735,3 @@ if ValueInTable(Spectrum, SpectraToCalculate) then
     Giso = GetSpectrum(G_3d_4f, SpectrumIds, dZ_3d_4f, #T_3d_4f, #Psis_i)
     SaveSpectrum(Giso, Prefix .. "_pho", Gaussian, Lorentzian)
 end
-

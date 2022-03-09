@@ -71,7 +71,6 @@ IndexUp_5d = {3, 5, 7, 9, 11}
 H_i = 0
 H_f = 0
 
-
 --------------------------------------------------------------------------------
 -- Define the atomic term.
 --------------------------------------------------------------------------------
@@ -125,11 +124,6 @@ if AtomicTerm then
 
     H_f = H_f + Chop(
           zeta_5d_f * ldots_5d)
-        
-    -- Save the spin-orbit coupling terms of the atomic Hamiltonians. These are
-    -- used to calculate the "zero" shift.
-    HAtomic_i = $zeta(5d)_i_value * ldots_5d
-    HAtomic_f = $zeta(5d)_f_value * ldots_5d 
 end
 
 --------------------------------------------------------------------------------
@@ -660,4 +654,3 @@ for Spectrum, Operators in pairs(SpectraAndOperators) do
         end
     end
 end
-

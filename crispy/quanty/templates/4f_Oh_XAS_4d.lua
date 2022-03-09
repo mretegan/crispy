@@ -81,7 +81,6 @@ end
 H_i = 0
 H_f = 0
 
-
 --------------------------------------------------------------------------------
 -- Define the atomic term.
 --------------------------------------------------------------------------------
@@ -156,11 +155,6 @@ if AtomicTerm then
     H_f = H_f + Chop(
           zeta_4f_f * ldots_4f
         + zeta_4d_f * ldots_4d)
-
-    -- Save the spin-orbit coupling terms of the atomic Hamiltonians. These are
-    -- used to calculate the "zero" shift.
-    HAtomic_i = $zeta(4f)_i_value * ldots_4f
-    HAtomic_f = $zeta(4f)_f_value * ldots_4f + $zeta(4d)_f_value * ldots_4d
 end
 
 --------------------------------------------------------------------------------
@@ -813,4 +807,3 @@ for Spectrum, Operators in pairs(SpectraAndOperators) do
         end
     end
 end
-

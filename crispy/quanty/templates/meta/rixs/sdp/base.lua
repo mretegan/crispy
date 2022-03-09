@@ -1,5 +1,4 @@
 #header
-
 --------------------------------------------------------------------------------
 -- Define the atomic term.
 --------------------------------------------------------------------------------
@@ -9,10 +8,8 @@ N_#i = NewOperator("Number", NFermions, IndexUp_#i, IndexUp_#i, {1})
 N_#f = NewOperator("Number", NFermions, IndexUp_#f, IndexUp_#f, {1, 1, 1})
      + NewOperator("Number", NFermions, IndexDn_#f, IndexDn_#f, {1, 1, 1})
 
-
 N_#m = NewOperator("Number", NFermions, IndexUp_#m, IndexUp_#m, {1, 1, 1, 1, 1})
      + NewOperator("Number", NFermions, IndexDn_#m, IndexDn_#m, {1, 1, 1, 1, 1})
-
 
 if AtomicTerm then
     F0_#m_#m = NewOperator("U", NFermions, IndexUp_#m, IndexDn_#m, {1, 0, 0})
@@ -91,12 +88,6 @@ if AtomicTerm then
     H_f = H_f + Chop(
           zeta_#m_f * ldots_#m
         + zeta_#f_f * ldots_#f)
-    
-    -- Save the spin-orbit coupling terms of the atomic Hamiltonians. These are
-    -- used to calculate the "zero" shift.
-    HAtomic_i = $zeta(#m)_i_value * ldots_#m
-    HAtomic_m = $zeta(#m)_m_value * ldots_#m
-    HAtomic_f = $zeta(#m)_f_value * ldots_#m + $zeta(#f)_f_value * zeta_#f_f
 end
 
 #symmetry_term

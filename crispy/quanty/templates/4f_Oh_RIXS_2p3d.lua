@@ -97,7 +97,6 @@ H_i = 0
 H_m = 0
 H_f = 0
 
-
 --------------------------------------------------------------------------------
 -- Define the atomic term.
 --------------------------------------------------------------------------------
@@ -106,7 +105,6 @@ N_2p = NewOperator("Number", NFermions, IndexUp_2p, IndexUp_2p, {1, 1, 1})
 
 N_3d = NewOperator("Number", NFermions, IndexUp_3d, IndexUp_3d, {1, 1, 1, 1, 1})
      + NewOperator("Number", NFermions, IndexDn_3d, IndexDn_3d, {1, 1, 1, 1, 1})
-
 
 N_4f = NewOperator("Number", NFermions, IndexUp_4f, IndexUp_4f, {1, 1, 1, 1, 1, 1, 1})
      + NewOperator("Number", NFermions, IndexDn_4f, IndexDn_4f, {1, 1, 1, 1, 1, 1, 1})
@@ -211,12 +209,6 @@ if AtomicTerm then
     H_f = H_f + Chop(
           zeta_4f_f * ldots_4f
         + zeta_3d_f * ldots_3d)
-        
-    -- Save the spin-orbit coupling terms of the atomic Hamiltonians. These are
-    -- used to calculate the "zero" shift.
-    HAtomic_i = $zeta(4f)_i_value * ldots_4f
-    HAtomic_m = $zeta(4f)_m_value * ldots_4f + $zeta(2p)_m_value * ldots_2p
-    HAtomic_f = $zeta(4f)_f_value * ldots_4f + $zeta(3d)_f_value * ldots_3d
 end
 
 --------------------------------------------------------------------------------
@@ -875,4 +867,3 @@ end
 
 Giso = -1 / math.pi * Giso
 Giso.Print({{"file", Prefix .. "_iso.spec"}})
-

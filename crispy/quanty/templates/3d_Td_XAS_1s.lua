@@ -81,7 +81,6 @@ end
 H_i = 0
 H_f = 0
 
-
 --------------------------------------------------------------------------------
 -- Define the atomic term.
 --------------------------------------------------------------------------------
@@ -135,11 +134,6 @@ if AtomicTerm then
 
     H_f = H_f + Chop(
           zeta_3d_f * ldots_3d)
-        
-    -- Save the spin-orbit coupling terms of the atomic Hamiltonians. These are
-    -- used to calculate the "zero" shift.
-    HAtomic_i = $zeta(3d)_i_value * ldots_3d
-    HAtomic_f = $zeta(3d)_f_value * ldots_3d 
 end
 
 --------------------------------------------------------------------------------
@@ -1012,4 +1006,3 @@ G_1s_3d.Shift(UserDefinedShift)
         end
     end
 end
-
