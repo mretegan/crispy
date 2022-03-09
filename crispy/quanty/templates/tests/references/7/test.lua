@@ -28,7 +28,6 @@ Emax = 883.0 -- Maximum value of the energy range (eV).
 NPoints = 2000 -- Number of points of the spectra.
 ZeroShift = 5.7535 -- Shift that brings the edge or line energy to approximately zero (eV).
 ExperimentalShift = 852.7 -- Experimental edge or line energy (eV).
-UserDefinedShift = 0.0 -- User-defined energy shift (always applied) (eV).
 Gaussian = 0.0 -- 0.1 -- Gaussian FWHM (eV).
 Lorentzian = {{843.0, 0.48}, {883.0, 0.48}} -- Lorentzian FWHM (eV).
 Gamma = 0.1 -- Lorentzian FWHM used in the spectra calculation (eV).
@@ -615,7 +614,6 @@ end
 if ShiftSpectra then
     G_2p_3d.Shift(ZeroShift + ExperimentalShift)
 end
-G_2p_3d.Shift(UserDefinedShift)
 
 -- Create a list with the Boltzmann probabilities for a given operator and wavefunction.
 local dZ_2p_3d = {}

@@ -28,7 +28,6 @@ Emax = $XEmax -- Maximum value of the energy range (eV).
 NPoints = $XNPoints -- Number of points of the spectra.
 ZeroShift = $XZeroShift -- Shift that brings the edge or line energy to approximately zero (eV).
 ExperimentalShift = $XExperimentalShift -- Experimental edge or line energy (eV).
-UserDefinedShift = $XUserDefinedShift -- User-defined energy shift (always applied) (eV).
 Gaussian = $XGaussian -- Gaussian FWHM (eV).
 Lorentzian = $XLorentzian -- Lorentzian FWHM (eV).
 Gamma = $XGamma -- Lorentzian FWHM used in the spectra calculation (eV).
@@ -575,7 +574,6 @@ end
 if ShiftSpectra then
     G_2p_4d.Shift(ZeroShift + ExperimentalShift)
 end
-G_2p_4d.Shift(UserDefinedShift)
 
 -- Create a list with the Boltzmann probabilities for a given operator and wavefunction.
 local dZ_2p_4d = {}

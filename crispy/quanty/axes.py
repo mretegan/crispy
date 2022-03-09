@@ -440,7 +440,6 @@ class Axis(BaseItem):
         replacements["NPoints"] = self.npoints.value
         replacements["ZeroShift"] = self.zeroShift
         replacements["ExperimentalShift"] = self.experimentalShift
-        replacements["UserDefinedShift"] = self.shift.value
         # The Gaussian broadening is done in the interface, but we still
         # want the user to easily change this value if the script is run from
         # outside.

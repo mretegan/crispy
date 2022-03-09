@@ -46,7 +46,6 @@ end
 if ShiftSpectra then
     G_#i_#f.Shift(ZeroShift + ExperimentalShift)
 end
-G_#i_#f.Shift(UserDefinedShift)
 
 -- Create a list with the Boltzmann probabilities for a given operator and wavefunction.
 local dZ_#i_#f = {}
