@@ -55,9 +55,7 @@ class AxisWidget(QWidget):
             (self.e2LineEdit, axis.photon.e2),
         )
         self.mappers = setMappings(MAPPINGS)
-        # The Lorentzian tool button is not needed for the y-axis.
-        if isinstance(axis, YAxis):
-            self.lorentzianToolButton.setVisible(False)
+        self.lorentzianToolButton.setVisible(False)
 
 
 class GeneralSetupPage(QWidget):
