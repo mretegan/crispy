@@ -405,7 +405,7 @@ class MagneticFieldTerm(HamiltonianTerm):
             for parameterName in ("Bx", "By", "Bz"):
                 HamiltonianParameter(hamiltonian, parameterName, 0.0, None)
 
-        self._checkState = Qt.Checked
+        self._checkState = Qt.Unchecked
 
 
 class ExchangeFieldTerm(HamiltonianTerm):
