@@ -35,9 +35,6 @@
       <string>Scale Factors</string>
      </property>
      <layout class="QVBoxLayout" name="scalingVBoxLayout">
-      <property name="spacing">
-       <number>6</number>
-      </property>
       <property name="leftMargin">
        <number>6</number>
       </property>
@@ -176,9 +173,6 @@
       <string>Hamiltonian Terms and Parameters</string>
      </property>
      <layout class="QVBoxLayout" name="hamiltonianVBoxLayout">
-      <property name="spacing">
-       <number>6</number>
-      </property>
       <property name="leftMargin">
        <number>6</number>
       </property>
@@ -249,20 +243,17 @@
       <string>States and Configurations</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_6">
-      <property name="spacing">
-       <number>3</number>
-      </property>
       <property name="leftMargin">
        <number>6</number>
       </property>
       <property name="topMargin">
-       <number>3</number>
+       <number>6</number>
       </property>
       <property name="rightMargin">
        <number>6</number>
       </property>
       <property name="bottomMargin">
-       <number>3</number>
+       <number>6</number>
       </property>
       <item>
        <layout class="QHBoxLayout" name="nPsisHBoxLayout">

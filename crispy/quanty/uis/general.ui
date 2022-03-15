@@ -14,6 +14,18 @@
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
+   <property name="leftMargin">
+    <number>6</number>
+   </property>
+   <property name="topMargin">
+    <number>6</number>
+   </property>
+   <property name="rightMargin">
+    <number>6</number>
+   </property>
+   <property name="bottomMargin">
+    <number>6</number>
+   </property>
    <item>
     <widget class="QGroupBox" name="elementAndExperimentGroupBox">
      <property name="minimumSize">
@@ -38,7 +50,7 @@
       <property name="bottomMargin">
        <number>6</number>
       </property>
-      <property name="verticalSpacing">
+      <property name="horizontalSpacing">
        <number>6</number>
       </property>
       <item row="0" column="2">
