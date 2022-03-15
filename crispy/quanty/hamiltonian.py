@@ -498,8 +498,7 @@ class NumberOfStates(IntItem):
 
     @property
     def maximum(self):
-        """The maximum number of excited states given the occupation of the valence
-        shell."""
+        """The maximum number of states given the occupation of the valence shell."""
         calculation = self.ancestor
 
         norbs = OCCUPANCIES[calculation.element.valenceBlock]
@@ -519,6 +518,10 @@ class NumberOfStates(IntItem):
             raise ValueError(f"The maximum number of states is {self.maximum}.")
         self._value = value
         self.dataChanged.emit(1)
+
+    def copyFrom(self, item):
+        super().copyFrom(item)
+        self.auto.copyFrom(item.auto)
 
 
 class NumberOfConfigurations(IntItem):

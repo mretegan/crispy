@@ -171,7 +171,9 @@ class HamiltonianSetupPage(QWidget):
 
         value = hamiltonian.numberOfStates.auto.value
         self.nStatesLineEdit.setEnabled(not value)
-        self.nStatesAutoCheckBox.stateChanged.disconnect()
+        # Having this enabled will cause the nStatesAutoCheckBox to be checked, which
+        # in turn will cause the numberOfStates to be reset to the maximum number.
+        # self.nStatesAutoCheckBox.stateChanged.disconnect()
         self.nStatesAutoCheckBox.stateChanged.connect(self.updateAutoStates)
 
     def updateParametersView(self):
@@ -243,7 +245,7 @@ class ResultsPage(QWidget):
         selectionModel.selectionChanged.connect(self.selectionChanged)
 
         # TODO: How to distinguish between a dataChanged related to change in
-        # the name or a change in the checked state? Only the last one should
+        # the name and a change in the checked state? Only the last one should
         # trigger the actions.
         self.model.dataChanged.connect(self.plot)
         self.currentIndexChanged.connect(
@@ -456,8 +458,8 @@ class DockWidget(QDockWidget):
             experiment = self.generalPage.experimentComboBox.currentText()
             edge = self.generalPage.edgeComboBox.currentText()
 
-            # Try to copy some parameters from the previous state. Things that could be
-            # copied:
+            # TODO: Try to copy some of the parameters from the previous state.
+            # Things that could be copied:
             #   - temperature
             #   - magnetic field
             #   - polarizations and wave vector (partially for polarizations?)
@@ -467,6 +469,7 @@ class DockWidget(QDockWidget):
             # If only the charge is changed, most of the interface parameters stay the
             # same. Maybe add an option to always reset them if the user wants.
 
+        logger.debug("Start creating a new calculation.")
         state = Calculation(
             symbol=symbol,
             charge=charge,
@@ -475,9 +478,12 @@ class DockWidget(QDockWidget):
             edge=edge,
             parent=self.model.rootItem(),
         )
+        logger.debug("Finished creating the calculation.")
 
+        logger.debug("Start copying the parameters.")
         if result is not None:
             state.copyFrom(result)
+        logger.debug("Finished copying the parameters.")
 
         self.state = state
 

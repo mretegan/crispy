@@ -31,7 +31,7 @@ def setUpLoggers():
     formatter = logging.Formatter(logfmt, datefmt=datefmt)
 
     handler = logging.StreamHandler()
-    handler.setLevel(logging.DEBUG)
+    handler.setLevel(logging.INFO)
     handler.setFormatter(formatter)
     logger.addHandler(handler)
 
