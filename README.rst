@@ -28,8 +28,7 @@ Latest Release
 
 Using the Package Installers
 ****************************
-The easiest way to install Crispy on Windows and macOS operating systems is to use the installers provided on the project's `downloads page <http://www.esrf.eu/computing/scientific/crispy/downloads.html>`_. The installers bundle Python, the required dependencies, and Crispy.
-
+The easiest way to install Crispy on Windows and macOS operating systems is to use the installers provided on the project's `downloads page <http://www.esrf.eu/computing/scientific/crispy/downloads.html>`_.
 
 Using pip
 *********
@@ -61,7 +60,13 @@ Assuming that you have a working Python distribution (version 3.7 or greater), y
 
 .. code:: sh
 
-    python3 -m pip install --upgrade https://github.com/mretegan/crispy/tarball/main
+    python3 -m pip install https://github.com/mretegan/crispy/tarball/main
+
+To update the development version of Crispy, you can use the following command:
+
+.. code:: sh
+
+    python3 -m pip install --ignore-installed https://github.com/mretegan/crispy/tarball/main
 
 .. third-marker
 
