@@ -3,28 +3,22 @@ Usage
 
 Local Installation
 ------------------
-If you have used the installers, Crispy should be easy to find and launch. For the installation using pip or if you are running directly from the source folder, follow the instructions from the :doc:`installation <installation>` page.
+Crispy should be easy to find and launch if you have used the installers. For the installation using pip or running directly from the source folder, follow the instructions from the :doc:`installation <installation>` page.
 
 At the ESRF
 -----------
-Crispy is available on the NICE cluster. Make sure that you first connect to the SLURM frontend:
+Crispy is available on the NICE cluster. Make sure that you first connect to the SLURM frontend using the https://remote.esrf.fr
 
-.. code:: sh 
-
-    ssh -Y slurm-access
-
-to enable X11 forwarding; note the *-Y* option.
-
-Depending on the levels of approximation used, the calculations can be a few seconds long, but they can also easily reach a few hours. Therefore, it is **not** advised to run them on the frontend. Instead, you need to use the SLURM scheduler to request cluster resources. Start by opening an interactive session to one of the computing nodes using the command:
+Depending on the levels of approximation used, the calculations can be a few seconds long, but they can also easily reach a few hours. Therefore, it is **not** advised to run them on the front end. Instead, you need to use the SLURM scheduler to request cluster resources. Start by opening an interactive session to one of the computing nodes using the command:
 
 .. code:: sh
 
-    salloc --nodes 1 --tasks-per-node 4 -p nice srun --pty bash -l
+    salloc --x11 --nodes=1 --ntasks-per-node=1 --cpus-per-task=4 --time=12:00:00 srun --pty bash
 
-This will reserve 4 CPUs on the same node. After the interactive session was opened, load the most recent Crispy version using the command:
+After the interactive session was opened, load the required modules:
 
 .. code:: sh
 
-    module load crispy
+    module load conda; module load spectroscopy; module load quanty
 
-Now the ``crispy`` command should be available; type it in the terminal to start the program.
+The ``crispy`` command should now be available. Type it in the terminal to start the program.

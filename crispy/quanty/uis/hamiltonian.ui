@@ -229,7 +229,7 @@
           <item>
            <widget class="CheckBox" name="syncParametersCheckBox">
             <property name="text">
-             <string>Synchronize Hamiltonian Parameters</string>
+             <string>Synchronize Hamiltonians Parameters</string>
             </property>
             <property name="checked">
              <bool>true</bool>
