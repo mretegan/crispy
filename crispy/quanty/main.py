@@ -20,7 +20,6 @@ from PyQt5.uic import loadUi
 from crispy import resourceAbsolutePath
 from crispy.config import Config
 from crispy.models import TreeModel
-from crispy.quanty.axes import YAxis
 from crispy.quanty.calculation import Calculation
 from crispy.quanty.details import DetailsDialog
 from crispy.quanty.preferences import PreferencesDialog
