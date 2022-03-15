@@ -50,8 +50,8 @@ coverage.xml
 *.log
 
 # Sphinx documentation
-doc/_build/
-doc/_drafts
+docs/_build/
+docs/_drafts
 
 # Visual Studio Code
 .vscode

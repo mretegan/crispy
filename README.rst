@@ -16,7 +16,7 @@ Crispy is a modern graphical user interface to calculate core-level spectra usin
 
 .. first-marker
 
-.. image:: doc/assets/main_window.png
+.. image:: docs/assets/main_window.png
 
 .. second-marker
 
@@ -62,27 +62,6 @@ Assuming that you have a working Python distribution (version 3.7 or greater), y
 .. code:: sh
 
     python3 -m pip install --upgrade https://github.com/mretegan/crispy/tarball/main
-
-Running from Source
-*******************
-As an alternative to the pip installation above, you can either download the source code from GitHub as an `archive <https://github.com/mretegan/crispy/archive/master.zip>`_ or using git, and run Crispy without installing it. 
-
-.. code:: sh
-
-    git clone https://github.com/mretegan/crispy.git
-
-In this case, you need to install the dependencies manually.
-
-.. code:: sh
-
-    python3 -m pip install --requirement https://raw.githubusercontent.com/mretegan/crispy/main/requirements.txt
-
-To run the application, go to the directory where you cloned the repository and run the following command:
-
-.. code:: sh
-    
-    cd crispy
-    python3 -m crispy.main
 
 .. third-marker
 
