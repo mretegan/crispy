@@ -66,9 +66,11 @@ v0.4.0 (2018-01-28)
 
 v0.3.0 (2017-10-10)
 -------------------
-* Added support for L2,3 (2p) XAS, L2,3-M4,5 (2p3d) and L2,3-N4,5 (2p4d) RIXS calculations for 4f elements.
+* Added support for L2,3 (2p) XAS, L2,3-M4,5 (2p3d) and L2,3-N4,5 (2p4d) RIXS
+  calculations for 4f elements.
 * Added support for L2,3 (2p) XAS calculations for 4d and 5d elements.
-* Added support for K (1s) XAS calculations for C3v and Td symmetries including 3d-4p hybridization for 3d elements.
+* Added support for K (1s) XAS calculations for C3v and Td symmetries
+  including 3d-4p hybridization for 3d elements.
 * Added interactive Gaussian broadening for 1D and 2D spectra using FFT.
 * The number of initial Hamiltonian states is now determined automatically.
 * The Quanty module was refactored.
@@ -84,11 +86,13 @@ v0.1.0 (2016-08-21)
 -------------------
 The first release of Crispy:
 
-* Added support for the calculation of core-level spectra using Quanty, including:
+* Added support for the calculation of core-level spectra using Quanty,
+  including:
 
   * K (1s), L1 (2s), L2,3 (2p), M1 (3s), M2,3 (3p) XAS for transition metals
   * Oh and D4h symmetries
   * crystal field and ligand field models
 
 * Added interactive plotting of the results.
-* Added an abstract list model and tree model to display/modify the input parameters.
+* Added an abstract list model and tree model to display/modify the input
+  parameters.

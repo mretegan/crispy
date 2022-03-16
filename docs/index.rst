@@ -4,9 +4,14 @@ Welcome to the Crispy documentation!
 .. include:: ../README.rst
     :end-before: first-marker
 
-Crispy is written using `Python <https://www.python.org/>`_ and relies on several additional open-source scientific libraries that are part of the Python ecosystem. The application runs on all major operating systems, and is free and open-source software. The current development can be followed on the `Github <https://github.com/mretegan/crispy>`_ page.
+Crispy is written using `Python <https://www.python.org/>`_ and relies on
+several additional open-source scientific libraries that are part of the Python
+ecosystem. The application runs on all major operating systems, and is free and
+open-source software. The current development can be followed on the `Github
+<https://github.com/mretegan/crispy>`_ page.
 
-The project is developed at the `European Synchrotron Radiation Facility <http://esrf.eu>`_ by `Marius Retegan <http://marius.retegan.org>`_.
+The project is developed at the `European Synchrotron Radiation Facility
+<http://esrf.eu>`_ by `Marius Retegan <http://marius.retegan.org>`_.
 
 .. figure:: assets/main_window.png
     :align: center
