@@ -1,13 +1,2 @@
-# Required if h5py is installed from source.
-# --no-binary=h5py 
-wheel
-PyQt5 
-numpy
-# See https://github.com/pyinstaller/pyinstaller/issues/5004
-# and https://github.com/pyinstaller/pyinstaller/pull/5006.
-matplotlib < 3.3
-h5py
-silx >= 0.13
-xraydb
 # Use dev version of PyInstaller to keep hooks up-to-date.
 https://github.com/pyinstaller/pyinstaller/archive/develop.zip
