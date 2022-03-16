@@ -84,9 +84,9 @@ class HamiltonianParameter(DoubleItem):
             if value is None:
                 return value
             if abs(value) < 1e-3 and value != 0.0:
-                text = QLocale().toString(value, format="E", precision=3)
+                text = QLocale().toString(value, "E", 3)
             else:
-                text = QLocale().toString(value, format="f", precision=precision)
+                text = QLocale().toString(value, "f", precision)
             return text
 
         if role in (Qt.DisplayRole, Qt.EditRole):
