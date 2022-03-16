@@ -12,7 +12,7 @@ import logging
 import sys
 
 from PyQt5.QtGui import QFontDatabase
-from PyQt5.QtWidgets import QCheckBox, QComboBox, QDataWidgetMapper
+from PyQt5.QtWidgets import QApplication, QCheckBox, QComboBox, QDataWidgetMapper
 
 from crispy.views import Delegate
 
@@ -64,3 +64,14 @@ def fixedFont():
     if sys.platform == "darwin":
         font.setPointSize(font.pointSize() + 2)
     return font
+
+
+def findObject(name=None):
+    """Find a Qt object by name."""
+    assert name is not None, "The object name must be provided."
+
+    app = QApplication.instance()
+    for widget in app.allWidgets():
+        if widget.objectName() == name:
+            return widget
+    return None

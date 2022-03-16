@@ -24,7 +24,7 @@ from crispy.quanty.calculation import Calculation
 from crispy.quanty.details import DetailsDialog
 from crispy.quanty.preferences import PreferencesDialog
 from crispy.quanty.progress import ProgressDialog
-from crispy.utils import setMappings
+from crispy.utils import findQtObject, setMappings
 
 logger = logging.getLogger(__name__)
 settings = Config().read()
@@ -302,7 +302,7 @@ class ResultsPage(QWidget):
         last = index.internalPointer()
 
         # Always reset the plot widget.
-        plotWidget = self.window().plotWidget
+        plotWidget = findQtObject(name="plotWidget")
         plotWidget.reset()
 
         if not calculations:
