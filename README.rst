@@ -19,7 +19,7 @@ submit calculations, and plot the resulting spectra.
 
 .. first-marker
 
-.. image:: docs/assets/main_window.png
+.. image:: https://raw.githubusercontent.com/mretegan/crispy/main/docs/assets/main_window.png
 
 .. second-marker
 
