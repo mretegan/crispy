@@ -66,7 +66,7 @@ def fixedFont():
     return font
 
 
-def findObject(name=None):
+def findQtObject(name=None):
     """Find a Qt object by name."""
     assert name is not None, "The object name must be provided."
 
