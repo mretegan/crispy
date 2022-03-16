@@ -12,12 +12,7 @@
 
 import logging
 
-from PyQt5.QtCore import (
-    QAbstractItemModel,
-    QModelIndex,
-    Qt,
-    QVariant,
-)
+from PyQt5.QtCore import QAbstractItemModel, QModelIndex, Qt, QVariant
 
 from crispy.items import RootItem
 

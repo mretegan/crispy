@@ -12,13 +12,12 @@
 import sys
 
 import matplotlib.lines as mlines
-
 from PyQt5.QtCore import QSize
 from PyQt5.QtWidgets import QMenu, QToolBar
-
 from silx.gui.plot import PlotWidget, items
 from silx.gui.plot.actions.control import (
     ColormapAction,
+    CrosshairAction,
     CurveStyleAction,
     GridAction,
     KeepAspectRatioAction,
@@ -26,7 +25,6 @@ from silx.gui.plot.actions.control import (
     XAxisAutoScaleAction,
     YAxisAutoScaleAction,
     ZoomBackAction,
-    CrosshairAction,
 )
 from silx.gui.plot.actions.io import CopyAction, SaveAction
 from silx.gui.plot.actions.mode import PanModeAction, ZoomModeAction

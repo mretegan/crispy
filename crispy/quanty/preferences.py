@@ -12,7 +12,7 @@
 import logging
 import os
 
-from PyQt5.QtCore import QSize, QPoint, pyqtSignal
+from PyQt5.QtCore import QPoint, QSize, pyqtSignal
 from PyQt5.QtWidgets import QDialog, QDialogButtonBox, QFileDialog
 from PyQt5.uic import loadUi
 

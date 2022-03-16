@@ -11,17 +11,16 @@
 """The Quanty Hamiltonian and terms."""
 
 
-import os
 import copy
 import logging
+import os
 from math import factorial
 
 import h5py
 from PyQt5.QtCore import QLocale, Qt
+
 from crispy import resourceAbsolutePath
-
 from crispy.items import BaseItem, BoolItem, DoubleItem, IntItem, SelectableItem
-
 
 OCCUPANCIES = {"s": 2, "p": 6, "d": 10, "f": 14}
 logger = logging.getLogger(__name__)

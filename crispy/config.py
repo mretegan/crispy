@@ -16,7 +16,7 @@ import sys
 from packaging.version import parse
 from PyQt5.QtCore import QSettings, QStandardPaths
 
-from crispy import version, resourceAbsolutePath
+from crispy import resourceAbsolutePath, version
 
 logger = logging.getLogger(__name__)
 

@@ -18,6 +18,7 @@ import shutil
 import numpy as np
 import pytest
 import yaml
+
 from crispy.config import Config
 from crispy.notebook import calculation
 

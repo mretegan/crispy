@@ -11,15 +11,15 @@
 
 import logging
 
-from PyQt5.QtWidgets import QCheckBox, QComboBox, QLineEdit
+from PyQt5.QtCore import QEvent, QRegExp, Qt
 from PyQt5.QtGui import (
+    QColor,
     QDoubleValidator,
     QIntValidator,
-    QRegExpValidator,
     QPalette,
-    QColor,
+    QRegExpValidator,
 )
-from PyQt5.QtCore import QRegExp, Qt, QEvent
+from PyQt5.QtWidgets import QCheckBox, QComboBox, QLineEdit
 
 logger = logging.getLogger(__name__)
 

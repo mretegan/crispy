@@ -13,6 +13,7 @@ import os
 
 import xraydb
 import yaml
+
 from crispy import resourceAbsolutePath
 
 XDB = xraydb.XrayDB()

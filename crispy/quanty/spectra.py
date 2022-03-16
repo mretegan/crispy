@@ -15,9 +15,9 @@ import logging
 import numpy as np
 from PyQt5.QtCore import Qt
 
+from crispy.broaden import broaden
 from crispy.items import BaseItem, SelectableItem
 from crispy.quanty.hamiltonian import PdHybridizationTerm
-from crispy.broaden import broaden
 
 logger = logging.getLogger(__name__)
 

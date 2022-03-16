@@ -25,12 +25,12 @@ from PyQt5.uic import loadUi
 
 from crispy import resourceAbsolutePath, version
 from crispy.config import Config
-from crispy.quanty.main import DockWidget
-from crispy.utils import fixedFont
 from crispy.loggers import OutputHandler, StatusBarHandler, setUpLoggers
 
 # pylint: disable=unused-import
 from crispy.plot import MainPlotWidget
+from crispy.quanty.main import DockWidget
+from crispy.utils import fixedFont
 
 logger = logging.getLogger("crispy.main")
 warnings.filterwarnings("ignore", category=UserWarning)

@@ -17,6 +17,7 @@ import logging
 import os
 
 import h5py
+
 from crispy import resourceAbsolutePath
 from crispy.loggers import setUpLoggers
 from crispy.models import TreeModel
