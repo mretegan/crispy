@@ -350,17 +350,17 @@
   <customwidget>
    <class>DoubleLineEdit</class>
    <extends>QLineEdit</extends>
-   <header>.widgets</header>
+   <header>crispy.widgets</header>
   </customwidget>
   <customwidget>
    <class>IntLineEdit</class>
    <extends>QLineEdit</extends>
-   <header>.widgets</header>
+   <header>crispy.widgets</header>
   </customwidget>
   <customwidget>
    <class>Vector3DLineEdit</class>
    <extends>QLineEdit</extends>
-   <header>.widgets</header>
+   <header>crispy.widgets</header>
   </customwidget>
  </customwidgets>
  <resources/>

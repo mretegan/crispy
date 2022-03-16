@@ -362,22 +362,22 @@
   <customwidget>
    <class>DoubleLineEdit</class>
    <extends>QLineEdit</extends>
-   <header>.widgets</header>
-  </customwidget>
-  <customwidget>
-   <class>TreeView</class>
-   <extends>QTreeView</extends>
-   <header>.views</header>
+   <header>crispy.widgets</header>
   </customwidget>
   <customwidget>
    <class>IntLineEdit</class>
    <extends>QLineEdit</extends>
-   <header>.widgets</header>
+   <header>crispy.widgets</header>
+  </customwidget>
+  <customwidget>
+   <class>TreeView</class>
+   <extends>QTreeView</extends>
+   <header>crispy.views</header>
   </customwidget>
   <customwidget>
    <class>CheckBox</class>
    <extends>QCheckBox</extends>
-   <header>.widgets</header>
+   <header>crispy.widgets</header>
   </customwidget>
  </customwidgets>
  <resources/>

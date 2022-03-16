@@ -254,17 +254,17 @@
   <customwidget>
    <class>DoubleLineEdit</class>
    <extends>QLineEdit</extends>
-   <header>.widgets</header>
+   <header>crispy.widgets</header>
   </customwidget>
   <customwidget>
    <class>TreeView</class>
    <extends>QTreeView</extends>
-   <header>.views</header>
+   <header>crispy.views</header>
   </customwidget>
   <customwidget>
    <class>ComboBox</class>
    <extends>QComboBox</extends>
-   <header>.widgets</header>
+   <header>crispy.widgets</header>
   </customwidget>
  </customwidgets>
  <resources/>

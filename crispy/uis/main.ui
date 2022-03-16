@@ -104,7 +104,7 @@ QToolButton {
      <x>0</x>
      <y>0</y>
      <width>1050</width>
-     <height>22</height>
+     <height>24</height>
     </rect>
    </property>
   </widget>
@@ -126,7 +126,7 @@ QToolButton {
   <customwidget>
    <class>MainPlotWidget</class>
    <extends>QWidget</extends>
-   <header>.plot</header>
+   <header>crispy.plot</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

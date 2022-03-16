@@ -43,7 +43,7 @@ class MainWindow(QMainWindow):
         super().__init__(parent=parent)
 
         uiPath = os.path.join("uis", "main.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy")
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
 
         self.setWindowTitle("Crispy")
 
@@ -179,7 +179,7 @@ class UpdateAvailableDialog(QDialog):
         super().__init__(parent)
 
         uiPath = os.path.join("uis", "update.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy")
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
 
 
 class AboutDialog(QDialog):
@@ -187,7 +187,7 @@ class AboutDialog(QDialog):
         super().__init__(parent)
 
         uiPath = os.path.join("uis", "about.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy")
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
 
         self.nameLabel.setText(f"Crispy {version}")
 

@@ -57,7 +57,7 @@
   <customwidget>
    <class>TableView</class>
    <extends>QTableView</extends>
-   <header>.views</header>
+   <header>crispy.views</header>
   </customwidget>
  </customwidgets>
  <resources/>

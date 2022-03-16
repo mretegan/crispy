@@ -27,7 +27,7 @@ class AxisWidget(QWidget):
         super().__init__(parent=parent)
 
         uiPath = os.path.join("quanty", "uis", "details", "axis.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy")
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
 
         self.mappers = []
 
@@ -57,7 +57,7 @@ class DetailsDialog(QDialog):
         super().__init__(parent=parent)
 
         uiPath = os.path.join("quanty", "uis", "details", "main.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy")
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
 
         font = fixedFont()
         self.inputText.setFont(font)

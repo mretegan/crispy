@@ -173,7 +173,7 @@
   <customwidget>
    <class>DoubleLineEdit</class>
    <extends>QLineEdit</extends>
-   <header>.widgets</header>
+   <header>crispy.widgets</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -27,7 +27,7 @@ class ProgressDialog(QDialog):
         super().__init__(parent)
 
         uiPath = os.path.join("quanty", "uis", "progress.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy")
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
 
         self.message = "The calculation is running. Please wait"
         self.dots = cycle([".", "..", "..."])

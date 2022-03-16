@@ -35,7 +35,7 @@ class AxisWidget(QWidget):
         super().__init__(parent=parent)
 
         uiPath = os.path.join("quanty", "uis", "axis.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy")
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
 
         self.mappers = []
 
@@ -65,7 +65,7 @@ class GeneralSetupPage(QWidget):
         super().__init__(parent=parent)
 
         uiPath = os.path.join("quanty", "uis", "general.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy")
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
 
         self.xAxis = AxisWidget()
         self.yAxis = AxisWidget()
@@ -124,7 +124,7 @@ class HamiltonianSetupPage(QWidget):
         super().__init__(parent=parent)
 
         uiPath = os.path.join("quanty", "uis", "hamiltonian.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy")
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
 
         self.mappers = []
         # This is needed for the updateAutoStates.
@@ -197,7 +197,7 @@ class ResultsPage(QWidget):
         super().__init__(parent=parent)
 
         uiPath = os.path.join("quanty", "uis", "results.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy")
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
 
         self.detailsDialog = DetailsDialog(parent=self)
 
@@ -372,7 +372,7 @@ class DockWidget(QDockWidget):
         super().__init__(parent=parent)
 
         uiPath = os.path.join("quanty", "uis", "main.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy")
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
 
         self.model = TreeModel()
 
