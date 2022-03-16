@@ -9,6 +9,7 @@
 ###################################################################
 """Plotting related functionality."""
 
+import logging
 import sys
 
 import matplotlib.lines as mlines
@@ -35,6 +36,8 @@ from silx.gui.plot.tools.profile.rois import (
     ProfileImageLineROI,
     ProfileImageVerticalLineROI,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class CustomProfileWindow(ProfileWindow):
@@ -215,6 +218,8 @@ class CustomPlotWidget(PlotWidget):
         self.setGraphXLimits(0, 100)
         self.setGraphYLabel("Y")
         self.setGraphYLimits(0, 100)
+        legend = self.plotArea.ax.legend(handles=[])
+        legend.set_visible(False)
 
 
 class MainPlotWidget(CustomPlotWidget):

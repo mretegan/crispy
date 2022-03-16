@@ -321,7 +321,7 @@ class ResultsPage(QWidget):
                         calculation.checkState = Qt.Unchecked
             self.model.blockSignals(False)
 
-        # Make a list of checked calculations only.
+        # Make a list with the checked calculations.
         calculations = [c for c in calculations if c.checkState]
         if not calculations:
             return
