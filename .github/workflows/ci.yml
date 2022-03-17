@@ -70,8 +70,7 @@ jobs:
     - name: Install packaging dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install .
-        pip install -r package/requirements.txt
+        pip install .[dev]
 
     - name: Install Inno Setup
       if: runner.os == 'Windows'
