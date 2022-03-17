@@ -35,7 +35,7 @@ for package in ("xraydb", "silx.resources"):
 hiddenimports = collect_submodules("fabio")
 
 a = Analysis(
-    [os.path.join(package_path, "main.py")],
+    [os.path.join(package_path, "__main__.py")],
     pathex=[],
     binaries=[],
     datas=datas,
