@@ -17,7 +17,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.8
+        python-version: 3.9
 
     - name: Install requirements
       run: |
@@ -37,7 +37,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.8
+        python-version: 3.9
   
     - name: Install requirements
       run: |
@@ -56,7 +56,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-10.15, windows-2019]
-        python-version: [3.7, 3.8, 3.9]
+        python-version: [3.8, 3.9, "3.10"]
 
     steps:
     - name: Checkout
