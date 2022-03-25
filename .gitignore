@@ -71,3 +71,6 @@ artifacts
 
 # IPython notebook checkpoints
 .ipynb_checkpoints
+
+# Files created by JetBrains IDEs
+. idea

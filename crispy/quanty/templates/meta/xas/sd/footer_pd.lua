@@ -165,9 +165,10 @@ if PdHybridizationTerm then
     G_#i_#f = prefactor_#i_#f * G_#i_#f
     G_#i_4p = prefactor_#i_4p * G_#i_4p
 
-    -- Shift the calculated spectra.
-    G_#i_#f.Shift(ZeroShift + ExperimentalShift)
-    G_#i_4p.Shift(ZeroShift + ExperimentalShift)
+    if ShiftSpectra then
+        G_#i_#f.Shift(ZeroShift + ExperimentalShift)
+        G_#i_4p.Shift(ZeroShift + ExperimentalShift)
+    end
 
     -- Subtract the broadening used in the spectra calculations from the Lorentzian table.
     for i, _ in ipairs(Lorentzian) do
@@ -340,9 +341,9 @@ else
         G_#i_#f = CreateSpectra(H_f, T_#i_#f, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"Restrictions", CalculationRestrictions}, {"DenseBorder", DenseBorder}})
     end
 
-if ShiftSpectra then
-    G_#i_#f.Shift(ZeroShift + ExperimentalShift)
-end
+    if ShiftSpectra then
+        G_#i_#f.Shift(ZeroShift + ExperimentalShift)
+    end
 
     -- Create a list with the Boltzmann probabilities for a given operator and wavefunction.
     local dZ_#i_#f = {}

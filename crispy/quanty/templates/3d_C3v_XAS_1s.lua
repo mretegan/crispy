@@ -792,9 +792,10 @@ if PdHybridizationTerm then
     G_1s_3d = prefactor_1s_3d * G_1s_3d
     G_1s_4p = prefactor_1s_4p * G_1s_4p
 
-    -- Shift the calculated spectra.
-    G_1s_3d.Shift(ZeroShift + ExperimentalShift)
-    G_1s_4p.Shift(ZeroShift + ExperimentalShift)
+    if ShiftSpectra then
+        G_1s_3d.Shift(ZeroShift + ExperimentalShift)
+        G_1s_4p.Shift(ZeroShift + ExperimentalShift)
+    end
 
     -- Subtract the broadening used in the spectra calculations from the Lorentzian table.
     for i, _ in ipairs(Lorentzian) do
@@ -967,9 +968,9 @@ else
         G_1s_3d = CreateSpectra(H_f, T_1s_3d, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"Restrictions", CalculationRestrictions}, {"DenseBorder", DenseBorder}})
     end
 
-if ShiftSpectra then
-    G_1s_3d.Shift(ZeroShift + ExperimentalShift)
-end
+    if ShiftSpectra then
+        G_1s_3d.Shift(ZeroShift + ExperimentalShift)
+    end
 
     -- Create a list with the Boltzmann probabilities for a given operator and wavefunction.
     local dZ_1s_3d = {}
