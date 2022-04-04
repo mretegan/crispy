@@ -15,7 +15,7 @@
     - symbol: Co
       charges: [2+, 3+, 4+, 5+]
     - symbol: Ni
-      charges: [2+, 3+, 4+]
+      charges: [1+, 2+, 3+, 4+]
     - symbol: Cu
       charges: [2+, 3+]
   experiments:
