@@ -9,32 +9,28 @@
 ###################################################################
 """The module implements fast FFT broadening."""
 
+from math import ceil
 import numpy as np
 
-MIN_KERNEL_SUM = 1e-8
 
-
-def gaussian_kernel1d(sigma=None, truncate=6):
-    size = int(2 * truncate * sigma)
+def gaussian_kernel1d(sigma=None, truncate=4):
+    size = ceil(2 * truncate * sigma + 1)
     if size % 2 == 0:
         size = size + 1
     x = np.arange(size)
-    # print('The size of the kernel is: {}'.format(size))
     mu = np.median(x)
-    # The prefactor 1 / (sigma * np.sqrt(2 * np.pi))
-    # drops in the normalization.
-    kernel = np.exp(-0.5 * ((x - mu) ** 2 / sigma ** 2))
-    if kernel.sum() < MIN_KERNEL_SUM:
+    # The prefactor 1 / (sigma * np.sqrt(2 * np.pi)) drops in the normalization.
+    kernel = np.exp(-0.5 * ((x - mu) ** 2 / sigma**2))
+    if kernel.sum() < np.finfo(float).eps:
         raise Exception(
-            f"The kernel can't be normalized, because its sum is close to "
-            f"zero. The sum of the kernel is < {MIN_KERNEL_SUM}"
+            f"The kernel can't be normalized, because its sum is {kernel.sum():.1e}."
         )
     kernel /= kernel.sum()
     return kernel
 
 
-def gaussian_kernel2d(sigma=None, truncate=(6, 6)):
-    if sigma.size != 2 or len(truncate) != 2:
+def gaussian_kernel2d(sigma=None, truncate=(4, 4)):
+    if len(sigma) != 2 or len(truncate) != 2:
         raise Exception(
             "Sigma and the truncation parameter don't have the required dimensions."
         )
@@ -46,25 +42,22 @@ def gaussian_kernel2d(sigma=None, truncate=(6, 6)):
 
 def convolve_fft(array, kernel):
     """Convolve an array with a kernel using FFT.
-    Implementation based on the convolve_fft function from astropy.
 
-    https://github.com/astropy/astropy/blob/master/astropy/convolution/convolve.py
+    Implementation based on the convolve_fft function from astropy:
+    https://github.com/astropy/astropy/blob/main/astropy/convolution/convolve.py
     """
-    # pylint: disable=too-many-locals
     array = np.asarray(array, dtype=complex)
     kernel = np.asarray(kernel, dtype=complex)
 
     if array.ndim != kernel.ndim:
         raise ValueError("Image and kernel must have same number of dimensions")
 
-    array_shape = array.shape
-    kernel_shape = kernel.shape
-    new_shape = np.array(array_shape) + np.array(kernel_shape)
+    new_shape = np.array(array.shape) + np.array(kernel.shape)
 
     array_slices = []
     kernel_slices = []
     for (new_dimsize, array_dimsize, kernel_dimsize) in zip(
-        new_shape, array_shape, kernel_shape
+        new_shape, array.shape, kernel.shape
     ):
         center = new_dimsize - (new_dimsize + 1) // 2
         array_slices += [
@@ -77,13 +70,13 @@ def convolve_fft(array, kernel):
     array_slices = tuple(array_slices)
     kernel_slices = tuple(kernel_slices)
 
-    if not np.all(new_shape == array_shape):
+    if not np.all(new_shape == array.shape):
         big_array = np.zeros(new_shape, dtype=complex)
         big_array[array_slices] = array
     else:
         big_array = array
 
-    if not np.all(new_shape == kernel_shape):
+    if not np.all(new_shape == kernel.shape):
         big_kernel = np.zeros(new_shape, dtype=complex)
         big_kernel[kernel_slices] = kernel
     else:
