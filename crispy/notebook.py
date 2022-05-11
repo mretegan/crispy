@@ -57,11 +57,14 @@ class Terms:
     def __iter__(self):
         return iter(self._terms)
 
-    def _repr_pretty_(self, p, cycle):
+    def __str__(self):
         data = Tree()
         for term in self._terms:
             data[term.name] = term.isEnabled()
-        p.text(prettify(data) if not cycle else "...")
+        return prettify(data)
+
+    def _repr_pretty_(self, p, cycle):
+        p.text(str(self) if not cycle else "...")
 
 
 class Hamiltonian:
@@ -99,7 +102,7 @@ class Hamiltonian:
                 if scale_factor is not None:
                     parameter.scaleFactor = scale_factor
 
-    def _repr_pretty_(self, p, cycle):
+    def __str__(self):
         data = Tree()
         general_data = Tree()
         general_data["Fk"] = self._hamiltonian.fk.value
@@ -120,7 +123,10 @@ class Hamiltonian:
                     data["Terms"][term.name][hamiltonian.name][
                         parameter.name
                     ] = parameter_data
-        p.text(prettify(data) if not cycle else "...")
+        return prettify(data)
+
+    def _repr_pretty_(self, p, cycle):
+        p.text(str(self) if not cycle else "...")
 
 
 class Axis:
@@ -134,7 +140,7 @@ class Axis:
             if getattr(parameter, "name", None) == name:
                 parameter.value = value
 
-    def _repr_pretty_(self, p, cycle):
+    def __str__(self):
         data = Tree()
         data[self._axis.name] = {
             "Start": self._axis.start.value,
@@ -143,7 +149,10 @@ class Axis:
             "Gaussian": self._axis.gaussian.value,
             "Lorentzian": self._axis.lorentzian.value,
         }
-        p.text(prettify(data) if not cycle else "...")
+        return prettify(data)
+
+    def _repr_pretty_(self, p, cycle):
+        p.text(str(self) if not cycle else "...")
 
 
 class Spectra:
@@ -185,11 +194,14 @@ class Spectra:
                 continue
             ax.plot(spectrum.x, spectrum.signal, label=spectrum.name)
 
-    def _repr_pretty_(self, p, cycle):
+    def __str__(self):
         data = Tree()
         for spectrum in self.spectra.toCalculate.all:
             data[spectrum.name] = spectrum.isEnabled()
-        p.text(prettify(data) if not cycle else "...")
+        return prettify(data)
+
+    def _repr_pretty_(self, p, cycle):
+        p.text(str(self) if not cycle else "...")
 
 
 class Calculation:
@@ -254,13 +266,16 @@ class Calculation:
         self._calculation.runner.waitForFinished(-1)
         self.spectra.has_data = True
 
-    def _repr_pretty_(self, p, cycle):
+    def __str__(self):
         data = {
             "Basename": self._calculation.value,
             "Temperature": self._calculation.temperature.value,
             "Magnetic Field": self._calculation.magneticField.value,
         }
-        p.text(prettify(data) if not cycle else "...")
+        return prettify(data)
+
+    def _repr_pretty_(self, p, cycle):
+        p.text(str(self) if not cycle else "...")
 
 
 def calculation(element, symmetry, experiment, edge):
