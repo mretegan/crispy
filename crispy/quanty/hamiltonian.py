@@ -214,8 +214,7 @@ class HamiltonianTerm(SelectableItem):
     @property
     def parameters(self):
         for hamiltonian in self.children():
-            for parameter in hamiltonian.children():
-                yield parameter
+            yield from hamiltonian.children()
 
     def copyFrom(self, item):
         super().copyFrom(item)
@@ -476,6 +475,10 @@ class HamiltonianTerms(BaseItem):
         # exchange field, and they should be placed at the end.
         self.magneticField = MagneticFieldTerm(parent=self)
         self.exchangeField = ExchangeFieldTerm(parent=self)
+
+    @property
+    def all(self):
+        yield from self.children()
 
     def copyFrom(self, item):
         super().copyFrom(item)

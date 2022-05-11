@@ -248,8 +248,7 @@ class Sample(BaseItem):
 class SpectraToInteract(BaseItem):
     @property
     def all(self):
-        for spectrum in self.children():
-            yield spectrum
+        yield from self.children()
 
     @property
     def selected(self):
@@ -298,8 +297,7 @@ class SpectraToCalculate(SpectraToInteract):
     @property
     def all(self):
         for sample in self.children():
-            for spectrum in sample.children():
-                yield spectrum
+            yield from sample.children()
 
     def copyFrom(self, item):
         super().copyFrom(item)

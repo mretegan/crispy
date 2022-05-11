@@ -349,6 +349,11 @@ class MagneticField(DoubleItem):
             for item in hamiltonian.findChild(name):
                 item.value = k[i] * value * TESLA_TO_EV
 
+        # Enable the term if the value is not zero.
+        for term in calculation.hamiltonian.terms.all:
+            if term.name == "Magnetic Field":
+                term.enable() if value != 0 else term.disable()
+
 
 class Runner(QProcess):
 
