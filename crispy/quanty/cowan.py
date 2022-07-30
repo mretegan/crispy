@@ -9,7 +9,9 @@
 ###################################################################
 """The module provides functionality to run Robert Cowan's programs"""
 
+
 import argparse
+import contextlib
 import glob
 import logging
 import os
@@ -177,13 +179,11 @@ class Cowan:
         self.run(os.path.join(self.scripts, self.RCN))
 
     def remove_calculation_files(self):
-        filenames = sorted(glob.glob(self.basename + "*"))
+        filenames = sorted(glob.glob(f"{self.basename}*"))
         filenames.append("FTN02")
         for filename in filenames:
-            try:
+            with contextlib.suppress(FileNotFoundError):
                 os.remove(filename)
-            except FileNotFoundError:
-                pass
 
     def parse_rcn_output(self):
         # pylint: disable=too-many-branches

@@ -9,6 +9,8 @@
 ###################################################################
 """The modules provides a class to deal with the configuration."""
 
+
+import contextlib
 import logging
 import os
 import sys
@@ -65,24 +67,19 @@ class Config:
         path = os.path.join(root, self.name)
 
         if parse(version) < parse("0.7.0"):
-            try:
+            with contextlib.suppress(IOError, OSError):
                 os.remove(os.path.join(path, "settings.json"))
                 os.rmdir(path)
                 logger.debug("Removed old configuration file.")
-            except (IOError, OSError):
-                pass
-
         # Remove all configuration files before the first proper calendar
         # versioning release.
         # TODO: Change this to only check version 2022.0 before release.
         if parse(version) <= parse("0.7.3") or parse(version) < parse("2022.0.dev0"):
             root, _ = os.path.split(self.settings.fileName())
             for file in ("settings.ini", "settings-new.ini"):
-                try:
+                with contextlib.suppress(IOError, OSError):
                     os.remove(os.path.join(root, file))
                     logger.debug("Removed old configuration file: %s.", file)
-                except (IOError, OSError):
-                    pass
 
     @staticmethod
     def findQuanty():

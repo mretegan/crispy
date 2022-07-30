@@ -78,9 +78,11 @@ class LineEdit(QLineEdit):
         self.setPalette(palette)
 
     def eventFilter(self, source, event):
-        if event.type() == QEvent.KeyPress:
-            if event.key() in (Qt.Key_Return, Qt.Key_Enter):
-                self.setBackgroundColor("#FFFFFF")
+        if event.type() == QEvent.KeyPress and event.key() in (
+            Qt.Key_Return,
+            Qt.Key_Enter,
+        ):
+            self.setBackgroundColor("#FFFFFF")
         return super().eventFilter(source, event)
 
     def updateBackgroundColor(self):

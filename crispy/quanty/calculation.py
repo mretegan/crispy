@@ -9,6 +9,8 @@
 ###################################################################
 """Classes used to setup Quanty calculations."""
 
+
+import contextlib
 import datetime
 import glob
 import logging
@@ -475,8 +477,10 @@ class Calculation(SelectableItem):
         # it gets rather convoluted.
         self._symbols = []
         for subshell in CALCULATIONS:
-            for _element in CALCULATIONS[subshell]["elements"]:
-                self._symbols.append(_element["symbol"])
+            self._symbols.extend(
+                _element["symbol"] for _element in CALCULATIONS[subshell]["elements"]
+            )
+
         self._symbols = tuple(sorted(self._symbols))
         if symbol not in self.symbols:
             symbol = self._symbols[0]
@@ -485,14 +489,11 @@ class Calculation(SelectableItem):
         # structure of the calculations.yaml file?
         # Get the subshell.
         subshell = None
-        try:
+        with contextlib.suppress(StopIteration):
             for subshell in CALCULATIONS:
                 for _element in CALCULATIONS[subshell]["elements"]:
                     if _element["symbol"] == symbol:
                         raise StopIteration
-        except StopIteration:
-            pass
-
         # TODO: See above.
         self._charges = []
         for _element in CALCULATIONS[subshell]["elements"]:
@@ -503,9 +504,10 @@ class Calculation(SelectableItem):
         if charge not in self._charges:
             charge = self._charges[0]
 
-        self._experiments = []
-        for _experiment in CALCULATIONS[subshell]["experiments"]:
-            self._experiments.append(_experiment["name"])
+        self._experiments = [
+            _experiment["name"] for _experiment in CALCULATIONS[subshell]["experiments"]
+        ]
+
         self._experiments = tuple(self._experiments)
         if experiment not in self._experiments:
             experiment = self._experiments[0]

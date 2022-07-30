@@ -48,8 +48,7 @@ class CustomProfileWindow(ProfileWindow):
 
     @staticmethod
     def createPlot1D(parent, backend):
-        plot = CustomPlotWidget(parent=parent, backend=backend)
-        return plot
+        return CustomPlotWidget(parent=parent, backend=backend)
 
 
 class CustomPlotWidget(PlotWidget):
@@ -197,10 +196,9 @@ class CustomPlotWidget(PlotWidget):
         self.addToolBar(self.profileToolBar)
 
     def setProfileToolBarVisibility(self):
-        imageBaseItems = [
+        if imageBaseItems := [
             item for item in self.getItems() if isinstance(item, items.ImageBase)
-        ]
-        if imageBaseItems:
+        ]:
             self.profileToolBar.setVisible(True)
         else:
             self.profileToolBar.setVisible(False)
@@ -250,7 +248,7 @@ class MainPlotWidget(CustomPlotWidget):
         super().replot()
 
     def isEmpty(self):
-        return bool(not self.getAllImages() + self.getAllCurves())
+        return not self.getAllImages() + self.getAllCurves()
 
     def addLegend(self):
         """Add the legend to the Matplotlib axis."""

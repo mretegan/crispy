@@ -9,6 +9,8 @@
 ###################################################################
 """Quanty dock widget components."""
 
+
+import contextlib
 import logging
 import os
 
@@ -311,14 +313,14 @@ class ResultsPage(QWidget):
         # TODO: The logic here seems very convoluted.
         if isinstance(last, Calculation):
             self.model.blockSignals(True)
-            if last.experiment.isTwoDimensional:
-                for calculation in calculations:
-                    if last != calculation:
-                        calculation.checkState = Qt.Unchecked
-            else:
-                for calculation in calculations:
-                    if calculation.experiment.isTwoDimensional:
-                        calculation.checkState = Qt.Unchecked
+            for calculation in calculations:
+                if (
+                    last.experiment.isTwoDimensional
+                    and last != calculation
+                    or not last.experiment.isTwoDimensional
+                    and calculation.experiment.isTwoDimensional
+                ):
+                    calculation.checkState = Qt.Unchecked
             self.model.blockSignals(False)
 
         # Make a list with the checked calculations.
@@ -421,11 +423,8 @@ class DockWidget(QDockWidget):
         # Except for the case when the method is called from __init__,
         # self.state should be assigned to the results model, so disconnect
         # only the signals that are not relevant anymore.
-        try:
+        with contextlib.suppress(AttributeError):
             self.state.runner.outputUpdated.disconnect()
-        except AttributeError:
-            pass
-
         self._state = value
 
         self.generalPage.populate(self.state)

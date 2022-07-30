@@ -120,7 +120,7 @@ class Hamiltonian:
                     data["Terms"][term.name][hamiltonian.name][
                         parameter.name
                     ] = parameter_data
-        p.text(prettify(data) if not cycle else "...")
+        p.text("..." if cycle else prettify(data))
 
 
 class Axis:
@@ -143,7 +143,7 @@ class Axis:
             "Gaussian": self._axis.gaussian.value,
             "Lorentzian": self._axis.lorentzian.value,
         }
-        p.text(prettify(data) if not cycle else "...")
+        p.text("..." if cycle else prettify(data))
 
 
 class Spectra:
@@ -189,7 +189,7 @@ class Spectra:
         data = Tree()
         for spectrum in self.spectra.toCalculate.all:
             data[spectrum.name] = spectrum.isEnabled()
-        p.text(prettify(data) if not cycle else "...")
+        p.text("..." if cycle else prettify(data))
 
 
 class Calculation:
@@ -238,9 +238,7 @@ class Calculation:
         if name == "Basename":
             return self._calculation.value
         for parameter in self._calculation.__dict__.values():
-            if getattr(parameter, "name", None) == name:
-                return parameter.value
-            return None
+            return parameter.value if getattr(parameter, "name", None) == name else None
 
     def get_input(self):
         return self._calculation.input
@@ -260,7 +258,7 @@ class Calculation:
             "Temperature": self._calculation.temperature.value,
             "Magnetic Field": self._calculation.magneticField.value,
         }
-        p.text(prettify(data) if not cycle else "...")
+        p.text("..." if cycle else prettify(data))
 
 
 def calculation(element, symmetry, experiment, edge):

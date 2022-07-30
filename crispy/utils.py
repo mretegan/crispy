@@ -71,7 +71,6 @@ def findQtObject(name=None):
     assert name is not None, "The object name must be provided."
 
     app = QApplication.instance()
-    for widget in app.allWidgets():
-        if widget.objectName() == name:
-            return widget
-    return None
+    return next(
+        (widget for widget in app.allWidgets() if widget.objectName() == name), None
+    )

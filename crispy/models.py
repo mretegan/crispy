@@ -30,10 +30,7 @@ class TreeModel(QAbstractItemModel):
         parent index."""
         # If the item has no parent it is the root item. Otherwise, get the parent item
         # from the parent index.
-        if not parent.isValid():
-            parentItem = self.rootItem()
-        else:
-            parentItem = self.itemFromIndex(parent)
+        parentItem = self.itemFromIndex(parent) if parent.isValid() else self.rootItem()
 
         # Get the child at the position specified by row.
         childItem = parentItem.child(row)
@@ -101,9 +98,7 @@ class TreeModel(QAbstractItemModel):
         return self._rootItem
 
     def itemFromIndex(self, index):
-        if index.isValid():
-            return index.internalPointer()
-        return self.rootItem()
+        return index.internalPointer() if index.isValid() else self.rootItem()
 
     def indexFromItem(self, item):
         if item == self.rootItem():

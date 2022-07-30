@@ -202,14 +202,13 @@ class HamiltonianTerm(SelectableItem):
 
     def scaleFactorFromName(self, name):
         if name.startswith("F"):
-            scaleFactor = self.hamiltonian.fk.value
+            return self.hamiltonian.fk.value
         elif name.startswith("G"):
-            scaleFactor = self.hamiltonian.gk.value
+            return self.hamiltonian.gk.value
         elif name.startswith("ζ"):
-            scaleFactor = self.hamiltonian.zeta.value
+            return self.hamiltonian.zeta.value
         else:
-            scaleFactor = None
-        return scaleFactor
+            return None
 
     @property
     def parameters(self):
@@ -320,17 +319,16 @@ class LigandHybridizationTerm(HamiltonianTerm):
 
     def setData(self, column, value, role=Qt.EditRole):
         if role == Qt.CheckStateRole:
-            siblings = []
-            for sibling in self.siblings():
-                if isinstance(sibling, LigandHybridizationTerm):
-                    siblings.append(sibling)
+            siblings = [
+                sibling
+                for sibling in self.siblings()
+                if isinstance(sibling, LigandHybridizationTerm)
+            ]
 
-            # At the moment only one type of ligands hybridization is possible.
             for sibling in siblings:
                 if value == Qt.Checked and sibling is not self:
                     sibling.checkState = Qt.Unchecked
                     sibling.dataChanged.emit(1)
-
         return super().setData(column, value, role)
 
 
@@ -594,23 +592,21 @@ class Hamiltonian(BaseItem):
             term.dataChanged.connect(self.numberOfConfigurations.reset)
 
     def isTermEnabled(self, termType):
-        for term in self.terms.children():
-            if isinstance(term, termType) and term.checkState == Qt.Checked:
-                return True
-        return False
+        return any(
+            isinstance(term, termType) and term.checkState == Qt.Checked
+            for term in self.terms.children()
+        )
 
     @property
     def replacements(self):
-        replacements = {}
-        # The NPsisAuto has to come before NPsis. Using regular expressions with
-        # word boundaries doesn't work that well.
-        replacements["NPsisAuto"] = self.numberOfStates.auto.value
-        replacements["NPsis"] = self.numberOfStates.value
-        replacements["NConfigurations"] = self.numberOfConfigurations.value
+        replacements = {
+            "NPsisAuto": self.numberOfStates.auto.value,
+            "NPsis": self.numberOfStates.value,
+            "NConfigurations": self.numberOfConfigurations.value,
+        }
 
         for term in self.terms.children():
             replacements.update(term.replacements)
-
         return replacements
 
     def copyFrom(self, item):

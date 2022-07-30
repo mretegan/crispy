@@ -259,10 +259,7 @@ class SpectraToInteract(BaseItem):
     @selected.setter
     def selected(self, names):
         for spectrum in self.all:
-            if spectrum.name in names:
-                spectrum.checkState = Qt.Checked
-            else:
-                spectrum.checkState = Qt.Unchecked
+            spectrum.checkState = Qt.Checked if spectrum.name in names else Qt.Unchecked
 
 
 class SpectraToCalculate(SpectraToInteract):
@@ -321,7 +318,6 @@ class Spectra(BaseItem):
 
     @property
     def replacements(self):
-        replacements = {}
         if not list(self.toCalculate.selected):
             value = "{}"
         else:
@@ -330,8 +326,7 @@ class Spectra(BaseItem):
                 value += f'"{name}", '
             # Replace the last two characters of the string.
             value = value[:-2] + "} "
-        replacements["SpectraToCalculate"] = value
-        return replacements
+        return {"SpectraToCalculate": value}
 
     def load(self):
         calculation = self.ancestor

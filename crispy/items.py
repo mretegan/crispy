@@ -228,9 +228,8 @@ class BaseItem(QObject):
         for child in self.children():
             if child.name == name:
                 yield child
-            else:
-                if isinstance(child, BaseItem):
-                    yield from child.findChild(name)
+            elif isinstance(child, BaseItem):
+                yield from child.findChild(name)
 
     def columnCount(self):
         return 2
@@ -344,12 +343,11 @@ class IntItem(BaseItem):
 
 class DoubleItem(BaseItem):
     def data(self, column, role=Qt.DisplayRole):
-        if role in (Qt.EditRole, Qt.DisplayRole):
-            if column == 1:
-                try:
-                    return QLocale().toString(self._value)
-                except TypeError:
-                    return self._value
+        if role in (Qt.EditRole, Qt.DisplayRole) and column == 1:
+            try:
+                return QLocale().toString(self._value)
+            except TypeError:
+                return self._value
         return super().data(column, role)
 
     def setData(self, column, value, role=Qt.EditRole):
@@ -367,11 +365,8 @@ class Vector3DItem(BaseItem):
         # Qt.EditRole is needed to properly show the Numpy array in the
         # VectorLineEdit. Because of this the delegates must rely on the Qt.UserRole
         # to identify the type editor needed for the data.
-        if role in (Qt.DisplayRole, Qt.EditRole):
-            # Qt doesn't know how to represent a Numpy array, so we create a digestible
-            # representation for it.
-            if column == 1:
-                return repr(tuple(self.value))
+        if role in (Qt.DisplayRole, Qt.EditRole) and column == 1:
+            return repr(tuple(self.value))
         return super().data(column, role)
 
     def setData(self, column, value, role=Qt.EditRole):
