@@ -610,7 +610,7 @@ class Calculation(SelectableItem):
         subshells = "".join(self.edge.coreSubshells)
         return f"{valenceSubshell}_{symmetry}_{experiment}_{subshells}.lua"
 
-    @property
+    @property  # type: ignore
     # TODO: Why is this cached?
     @lru_cache()
     def configurations(self):
