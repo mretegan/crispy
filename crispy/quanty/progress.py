@@ -13,9 +13,9 @@ import logging
 import os
 from itertools import cycle
 
-from PyQt5.QtCore import QTimer
-from PyQt5.QtWidgets import QApplication, QDialog
-from PyQt5.uic import loadUi
+from PyQt6.QtCore import QTimer
+from PyQt6.QtWidgets import QApplication, QDialog
+from PyQt6.uic import loadUi
 
 from crispy import resourceAbsolutePath
 

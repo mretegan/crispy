@@ -15,7 +15,7 @@ import os
 import sys
 
 from packaging.version import parse
-from PyQt5.QtCore import QSettings, QStandardPaths
+from PyQt6.QtCore import QSettings, QStandardPaths
 
 from crispy import resourceAbsolutePath, version
 

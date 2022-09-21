@@ -15,7 +15,7 @@ import logging
 import weakref
 
 import numpy as np
-from PyQt5.QtCore import (
+from PyQt6.QtCore import (
     QAbstractItemModel,
     QLocale,
     QModelIndex,

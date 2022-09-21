@@ -11,9 +11,9 @@
 
 import os
 
-from PyQt5.QtCore import QPoint, QSize
-from PyQt5.QtWidgets import QDialog, QWidget
-from PyQt5.uic import loadUi
+from PyQt6.QtCore import QPoint, QSize
+from PyQt6.QtWidgets import QDialog, QWidget
+from PyQt6.uic import loadUi
 
 from crispy import resourceAbsolutePath
 from crispy.config import Config

@@ -13,7 +13,7 @@ import copy
 import logging
 
 import numpy as np
-from PyQt5.QtCore import Qt
+from PyQt6.QtCore import Qt
 
 from crispy.broaden import broaden
 from crispy.items import BaseItem, SelectableItem

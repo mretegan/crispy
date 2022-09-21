@@ -18,10 +18,10 @@ import warnings
 from urllib.error import URLError
 from urllib.request import Request, urlopen
 
-from PyQt5.QtCore import QByteArray, QLocale, QPoint, QSize, Qt, QThread, pyqtSignal
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QAction, QApplication, QDialog, QMainWindow, QPlainTextEdit
-from PyQt5.uic import loadUi
+from PyQt6.QtCore import QByteArray, QLocale, QPoint, QSize, Qt, QThread, pyqtSignal
+from PyQt6.QtGui import QAction, QIcon
+from PyQt6.QtWidgets import QApplication, QDialog, QMainWindow, QPlainTextEdit
+from PyQt6.uic import loadUi
 
 from crispy import resourceAbsolutePath, version
 from crispy.config import Config

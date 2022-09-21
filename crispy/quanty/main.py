@@ -13,10 +13,10 @@ import contextlib
 import logging
 import os
 
-from PyQt5.QtCore import QItemSelectionModel, QModelIndex, QPoint, Qt, pyqtSignal
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QAction, QDockWidget, QFileDialog, QMenu, QWidget
-from PyQt5.uic import loadUi
+from PyQt6.QtCore import QItemSelectionModel, QModelIndex, QPoint, Qt, pyqtSignal
+from PyQt6.QtGui import QAction, QIcon
+from PyQt6.QtWidgets import QDockWidget, QFileDialog, QMenu, QWidget
+from PyQt6.uic import loadUi
 
 from crispy import resourceAbsolutePath
 from crispy.config import Config
