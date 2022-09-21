@@ -31,7 +31,7 @@ def gaussian_kernel1d(sigma=None, truncate=4):
 
 def gaussian_kernel2d(sigma=None, truncate=(4, 4)):
     if len(sigma) != 2 or len(truncate) != 2:
-        raise Exception(
+        raise ValueError(
             "Sigma and the truncation parameter don't have the required dimensions."
         )
     kernel_x = gaussian_kernel1d(sigma[0], truncate[0])

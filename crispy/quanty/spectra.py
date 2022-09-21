@@ -321,7 +321,6 @@ class Spectra(BaseItem):
 
     @property
     def replacements(self):
-        replacements = {}
         if not list(self.toCalculate.selected):
             value = "{}"
         else:
@@ -330,8 +329,7 @@ class Spectra(BaseItem):
                 value += f'"{name}", '
             # Replace the last two characters of the string.
             value = value[:-2] + "} "
-        replacements["SpectraToCalculate"] = value
-        return replacements
+        return {"SpectraToCalculate": value}
 
     def load(self):
         calculation = self.ancestor

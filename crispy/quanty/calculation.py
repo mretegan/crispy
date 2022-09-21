@@ -9,6 +9,7 @@
 ###################################################################
 """Classes used to setup Quanty calculations."""
 
+import contextlib
 import datetime
 import glob
 import logging
@@ -485,14 +486,11 @@ class Calculation(SelectableItem):
         # structure of the calculations.yaml file?
         # Get the subshell.
         subshell = None
-        try:
+        with contextlib.suppress(StopIteration):
             for subshell in CALCULATIONS:
                 for _element in CALCULATIONS[subshell]["elements"]:
                     if _element["symbol"] == symbol:
                         raise StopIteration
-        except StopIteration:
-            pass
-
         # TODO: See above.
         self._charges = []
         for _element in CALCULATIONS[subshell]["elements"]:

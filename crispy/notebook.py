@@ -250,9 +250,7 @@ class Calculation:
         if name == "Basename":
             return self._calculation.value
         for parameter in self._calculation.__dict__.values():
-            if getattr(parameter, "name", None) == name:
-                return parameter.value
-            return None
+            return parameter.value if getattr(parameter, "name", None) == name else None
 
     def get_input(self):
         return self._calculation.input

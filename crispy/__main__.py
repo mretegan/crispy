@@ -153,9 +153,7 @@ class CheckUpdateThread(QThread):
 
         try:
             data = json.loads(response.read().decode("utf-8"))
-        # Use bare except to make sure we catch all possible errors.
-        # We do not want to fail here.
-        except:  # pylint: disable=bare-except
+        except Exception:
             return None
 
         return data["version"]

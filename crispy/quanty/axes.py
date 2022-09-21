@@ -190,13 +190,11 @@ class Photon(BaseItem):
 
     @property
     def replacements(self):
-        replacements = {}
-
-        replacements["WaveVector"] = self.k.replacements
-        replacements["FirstPolarization"] = self.e1.replacements
-        replacements["SecondPolarization"] = self.e2.replacements
-
-        return replacements
+        return {
+            "WaveVector": self.k.replacements,
+            "FirstPolarization": self.e1.replacements,
+            "SecondPolarization": self.e2.replacements,
+        }
 
     def copyFrom(self, item):
         super().copyFrom(item)
@@ -347,18 +345,13 @@ class Axis(BaseItem):
             path = resourceAbsolutePath(
                 os.path.join("quanty", "parameters", f"{element.symbol}.h5")
             )
+
             with h5py.File(path, "r") as h5:
                 try:
                     value = h5[baseConfigurationValue]["Atomic"][name][()]
                 except KeyError:
-                    # Configurations with s-type core-holes do not have
-                    # spin orbit coupling constants.
                     value = 0.0
-            if "p" in coreSubshell:
-                factor = 0.5
-            else:
-                factor = 1.0
-
+            factor = 0.5 if "p" in coreSubshell else 1.0
             value *= factor
         else:
             # The value is zero for configurations without core-hole.

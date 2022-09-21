@@ -202,14 +202,12 @@ class HamiltonianTerm(SelectableItem):
 
     def scaleFactorFromName(self, name):
         if name.startswith("F"):
-            scaleFactor = self.hamiltonian.fk.value
-        elif name.startswith("G"):
-            scaleFactor = self.hamiltonian.gk.value
-        elif name.startswith("ζ"):
-            scaleFactor = self.hamiltonian.zeta.value
-        else:
-            scaleFactor = None
-        return scaleFactor
+            return self.hamiltonian.fk.value
+        if name.startswith("G"):
+            return self.hamiltonian.gk.value
+        if name.startswith("ζ"):
+            return self.hamiltonian.zeta.value
+        return None
 
     @property
     def parameters(self):
@@ -601,12 +599,13 @@ class Hamiltonian(BaseItem):
 
     @property
     def replacements(self):
-        replacements = {}
         # The NPsisAuto has to come before NPsis. Using regular expressions with
         # word boundaries doesn't work that well.
-        replacements["NPsisAuto"] = self.numberOfStates.auto.value
-        replacements["NPsis"] = self.numberOfStates.value
-        replacements["NConfigurations"] = self.numberOfConfigurations.value
+        replacements = {
+            "NPsisAuto": self.numberOfStates.auto.value,
+            "NPsis": self.numberOfStates.value,
+            "NConfigurations": self.numberOfConfigurations.value,
+        }
 
         for term in self.terms.children():
             replacements.update(term.replacements)
