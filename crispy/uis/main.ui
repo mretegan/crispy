@@ -90,9 +90,6 @@ QToolButton {
        <property name="readOnly">
         <bool>true</bool>
        </property>
-       <property name="tabStopWidth">
-        <number>120</number>
-       </property>
       </widget>
      </widget>
     </item>
