@@ -28,8 +28,8 @@ from qtpy.QtCore import (
     QThread,
     Signal,
 )
-from qtpy.QtGui import QAction, QIcon
-from qtpy.QtWidgets import QApplication, QDialog, QMainWindow, QPlainTextEdit
+from qtpy.QtGui import QIcon
+from qtpy.QtWidgets import QAction, QApplication, QDialog, QMainWindow, QPlainTextEdit
 from qtpy.uic import loadUi
 
 from crispy import resourceAbsolutePath, version
