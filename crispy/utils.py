@@ -12,7 +12,7 @@ import logging
 import sys
 
 from qtpy.QtGui import QFontDatabase
-from qtpy.QtWidgets import QCheckBox, QComboBox, QDataWidgetMapper
+from qtpy.QtWidgets import QApplication, QCheckBox, QComboBox, QDataWidgetMapper
 
 from crispy.views import Delegate
 
