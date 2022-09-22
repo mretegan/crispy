@@ -14,8 +14,8 @@ import logging
 import os
 
 from qtpy.QtCore import QItemSelectionModel, QModelIndex, QPoint, Qt, Signal
-from qtpy.QtGui import QAction, QIcon
-from qtpy.QtWidgets import QDockWidget, QFileDialog, QMenu, QWidget
+from qtpy.QtGui import QIcon
+from qtpy.QtWidgets import QAction, QDockWidget, QFileDialog, QMenu, QWidget
 from qtpy.uic import loadUi
 
 from crispy import resourceAbsolutePath
