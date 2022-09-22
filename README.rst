@@ -31,29 +31,22 @@ Latest Release
 
 **Using the Package Installers**
 
-Using pip
-*********
-Pip is the package manager for Python, and before you can use it to install Crispy, you have to make sure that you have a working Python distribution. While the current release works with both Python 2 and Python 3, you should install Python 3.5 or greater, as in previous versions some of the dependencies like PySide6 cannot be easily installed using pip. On macOS and Windows, you can install Python using the `official installers <https://www.python.org/downloads>`_. In particular, for Windows, you should install the 64-bit version of Python, and make sure that during the installation you select to add Python to the system's PATH.
+The easiest way to install Crispy on Windows and macOS operating systems is to
+use the installers provided on the project's `downloads page
+<http://www.esrf.eu/computing/scientific/crispy/downloads.html>`_.
 
-Crispy depends on the following Python packages:
+**Using pip**
 
-* `PySide6 <https://riverbankcomputing.com/software/pyqt/intro>`_
-* `NumPy <http://numpy.org>`_
-* `Matplotlib <http://matplotlib.org>`_
-* `silx <http://www.silx.org>`_
-
-On current Linux distributions, both Python 2 and Python 3 should be present. Start by checking the installed Python 3 version:
-
-.. code:: sh
-
-    python3 -V
-
-If the version number is at least 3.5, you can install Crispy and all dependencies using pip:
+Pip is the package manager for Python, and before you can use it to install
+Crispy, you have to make sure that you have a working Python distribution. On
+macOS and Windows, you can install Python using the `official installers
+<https://www.python.org/downloads>`_. In particular, for Windows, you should
+install the 64-bit version of Python and make sure that you select to add
+Python to the system's PATH during the installation.
 
 .. code:: sh
 
-    python3 -m pip install --upgrade wheel cython numpy matplotlib==3.2.1 PySide6==5.13.2 silx==0.11 
-    python3 -m pip install --upgrade --no-deps --force crispy
+    python3 -m pip install crispy
 
 After the installation finishes, you should be able to start the program from
 the command line:

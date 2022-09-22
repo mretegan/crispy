@@ -13,9 +13,9 @@ import contextlib
 import logging
 import os
 
-from PySide6.QtCore import QItemSelectionModel, QModelIndex, QPoint, Qt, Signal
-from PySide6.QtGui import QAction, QIcon
-from PySide6.QtWidgets import QDockWidget, QFileDialog, QMenu, QWidget
+from qtpy.QtCore import QItemSelectionModel, QModelIndex, QPoint, Qt, Signal
+from qtpy.QtGui import QAction, QIcon
+from qtpy.QtWidgets import QDockWidget, QFileDialog, QMenu, QWidget
 from qtpy.uic import loadUi
 
 from crispy import resourceAbsolutePath

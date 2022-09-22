@@ -11,8 +11,8 @@
 import logging
 import sys
 
-from PySide6.QtGui import QFontDatabase
-from PySide6.QtWidgets import QCheckBox, QComboBox, QDataWidgetMapper
+from qtpy.QtGui import QFontDatabase
+from qtpy.QtWidgets import QCheckBox, QComboBox, QDataWidgetMapper
 
 from crispy.views import Delegate
 

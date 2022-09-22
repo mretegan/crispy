@@ -13,8 +13,8 @@ import logging
 import os
 from itertools import cycle
 
-from PySide6.QtCore import QTimer
-from PySide6.QtWidgets import QApplication, QDialog
+from qtpy.QtCore import QTimer
+from qtpy.QtWidgets import QApplication, QDialog
 from qtpy.uic import loadUi
 
 from crispy import resourceAbsolutePath

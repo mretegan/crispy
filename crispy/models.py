@@ -12,11 +12,7 @@
 
 import logging
 
-from PySide6.QtCore import (
-    QAbstractItemModel,
-    QModelIndex,
-    Qt,
-)
+from qtpy.QtCore import QAbstractItemModel, QModelIndex, Qt
 
 from crispy.items import RootItem
 

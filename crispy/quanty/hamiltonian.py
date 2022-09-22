@@ -17,7 +17,8 @@ import os
 from math import factorial
 
 import h5py
-from PySide6.QtCore import QLocale, Qt
+from qtpy.QtCore import QLocale, Qt
+
 from crispy import resourceAbsolutePath
 from crispy.items import BaseItem, BoolItem, DoubleItem, IntItem, SelectableItem
 

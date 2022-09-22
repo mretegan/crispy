@@ -13,10 +13,8 @@ import logging
 import sys
 
 import matplotlib.lines as mlines
-
-from PySide6.QtCore import QSize
-from PySide6.QtWidgets import QMenu, QToolBar
-
+from qtpy.QtCore import QSize
+from qtpy.QtWidgets import QMenu, QToolBar
 from silx.gui.plot import PlotWidget, items
 from silx.gui.plot.actions.control import (
     ColormapAction,
