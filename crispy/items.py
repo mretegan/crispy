@@ -15,14 +15,7 @@ import logging
 import weakref
 
 import numpy as np
-from PySide6.QtCore import (
-    QAbstractItemModel,
-    QLocale,
-    QModelIndex,
-    QObject,
-    Qt,
-    Signal,
-)
+from qtpy.QtCore import QAbstractItemModel, QLocale, QModelIndex, QObject, Qt, Signal
 
 logger = logging.getLogger(__name__)
 

@@ -12,8 +12,8 @@
 import logging
 import os
 
-from PySide6.QtCore import QSize, QPoint, Signal
-from PySide6.QtWidgets import QDialog, QDialogButtonBox, QFileDialog
+from qtpy.QtCore import QPoint, QSize, Signal
+from qtpy.QtWidgets import QDialog, QDialogButtonBox, QFileDialog
 from qtpy.uic import loadUi
 
 from crispy import resourceAbsolutePath

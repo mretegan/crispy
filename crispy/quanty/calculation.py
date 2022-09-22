@@ -18,7 +18,7 @@ import re
 import subprocess
 from functools import lru_cache
 
-from PySide6.QtCore import QProcess, Qt, Signal
+from qtpy.QtCore import QProcess, Qt, Signal
 
 from crispy import resourceAbsolutePath
 from crispy.config import Config

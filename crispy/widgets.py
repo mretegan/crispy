@@ -11,15 +11,15 @@
 
 import logging
 
-from PySide6.QtWidgets import QCheckBox, QComboBox, QLineEdit
-from PySide6.QtGui import (
+from qtpy.QtCore import QEvent, QRegularExpression, Qt
+from qtpy.QtGui import (
+    QColor,
     QDoubleValidator,
     QIntValidator,
-    QRegularExpressionValidator,
     QPalette,
-    QColor,
+    QRegularExpressionValidator,
 )
-from PySide6.QtCore import QRegularExpression, Qt, QEvent
+from qtpy.QtWidgets import QCheckBox, QComboBox, QLineEdit
 
 logger = logging.getLogger(__name__)
 

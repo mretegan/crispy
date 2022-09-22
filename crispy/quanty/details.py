@@ -11,8 +11,8 @@
 
 import os
 
-from PySide6.QtCore import QPoint, QSize
-from PySide6.QtWidgets import QDialog, QWidget
+from qtpy.QtCore import QPoint, QSize
+from qtpy.QtWidgets import QDialog, QWidget
 from qtpy.uic import loadUi
 
 from crispy import resourceAbsolutePath
