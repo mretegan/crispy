@@ -14,7 +14,7 @@ import logging
 import os
 
 from PySide6.QtCore import QItemSelectionModel, QModelIndex, QPoint, Qt, Signal
-from PySide6.QtGui import QIcon, QAction
+from PySide6.QtGui import QAction, QIcon
 from PySide6.QtWidgets import QDockWidget, QFileDialog, QMenu, QWidget
 from qtpy.uic import loadUi
 
@@ -397,7 +397,16 @@ class DockWidget(QDockWidget):
         self.generalPage.comboBoxChanged.connect(self.populate)
         self.resultsPage.currentIndexChanged.connect(self.populate)
 
+        path = os.path.join("icons", "save.svg")
+        icon = QIcon(resourceAbsolutePath(path))
+        self.saveInputAsPushButton.setIcon(icon)
+
         self.saveInputAsPushButton.clicked.connect(self.saveInputAs)
+
+        path = os.path.join("icons", "play.svg")
+        icon = QIcon(resourceAbsolutePath(path))
+        self.calculationPushButton.setIcon(icon)
+        
         self.calculationPushButton.clicked.connect(self.run)
 
         # Set up the actions.

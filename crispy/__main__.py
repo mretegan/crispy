@@ -18,7 +18,7 @@ import warnings
 from urllib.error import URLError
 from urllib.request import Request, urlopen
 
-from PySide6.QtCore import (
+from qtpy.QtCore import (
     QByteArray,
     QCoreApplication,
     QLocale,
@@ -28,8 +28,8 @@ from PySide6.QtCore import (
     QThread,
     Signal,
 )
-from PySide6.QtGui import QAction, QIcon
-from PySide6.QtWidgets import QApplication, QDialog, QMainWindow, QPlainTextEdit
+from qtpy.QtGui import QAction, QIcon
+from qtpy.QtWidgets import QApplication, QDialog, QMainWindow, QPlainTextEdit
 from qtpy.uic import loadUi
 
 from crispy import resourceAbsolutePath, version
@@ -52,12 +52,12 @@ class MainWindow(QMainWindow):
         super().__init__(parent=parent)
 
         uiPath = os.path.join("uis", "main.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)  # , package="crispy")
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
 
         self.setWindowTitle("Crispy")
 
         # Set the icon.
-        iconPath = os.path.join("crispy.png")
+        iconPath = os.path.join("icons", "crispy.svg")
         self.setWindowIcon(QIcon(resourceAbsolutePath(iconPath)))
 
         # Setup the logger widget.
