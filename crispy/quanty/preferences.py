@@ -12,9 +12,9 @@
 import logging
 import os
 
-from PyQt5.QtCore import QPoint, QSize, pyqtSignal
-from PyQt5.QtWidgets import QDialog, QDialogButtonBox, QFileDialog
-from PyQt5.uic import loadUi
+from PySide6.QtCore import QSize, QPoint, Signal
+from PySide6.QtWidgets import QDialog, QDialogButtonBox, QFileDialog
+from qtpy.uic import loadUi
 
 from crispy import resourceAbsolutePath
 from crispy.config import Config
@@ -25,13 +25,13 @@ settings = Config().read()
 
 class PreferencesDialog(QDialog):
 
-    settingsChanged = pyqtSignal()
+    settingsChanged = Signal()
 
     def __init__(self, parent):
         super().__init__(parent)
 
         uiPath = os.path.join("quanty", "uis", "preferences.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)  # , package="crispy")
 
         self.pathBrowsePushButton.clicked.connect(self.setExecutablePath)
 

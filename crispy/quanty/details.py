@@ -11,9 +11,9 @@
 
 import os
 
-from PyQt5.QtCore import QPoint, QSize
-from PyQt5.QtWidgets import QDialog, QWidget
-from PyQt5.uic import loadUi
+from PySide6.QtCore import QPoint, QSize
+from PySide6.QtWidgets import QDialog, QWidget
+from qtpy.uic import loadUi
 
 from crispy import resourceAbsolutePath
 from crispy.config import Config
@@ -27,7 +27,7 @@ class AxisWidget(QWidget):
         super().__init__(parent=parent)
 
         uiPath = os.path.join("quanty", "uis", "details", "axis.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)  # , package="crispy")
 
         self.mappers = []
 
@@ -57,7 +57,7 @@ class DetailsDialog(QDialog):
         super().__init__(parent=parent)
 
         uiPath = os.path.join("quanty", "uis", "details", "main.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)  # , package="crispy")
 
         font = fixedFont()
         self.inputText.setFont(font)

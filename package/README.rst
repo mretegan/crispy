@@ -4,7 +4,7 @@ Building Stand-Alone Packages for Macintosh and Windows Operating Systems
 The current version was compiled using:
 
 * Python 3.7.9
-* PyQt5 5.15.1
+* PySide6 5.15.1
 * Numpy 1.19.2
 * Matplotlib 3.2.2
 * silx 0.13.2
@@ -66,7 +66,7 @@ OS X 10.10
   ImportError: dlopen(/Users/marius/Crispy.app/Contents/MacOS/PyQt5/QtCore.abi3.so, 2): Symbol not found: __os_activity_create
     Referenced from: /Users/marius/Crispy.app/Contents/MacOS/PyQt5/../QtCore (which was built for Mac OS X 10.13)
     Expected in: /usr/lib/libSystem.B.dylib
-   in /Users/marius/Crispy.app/Contents/MacOS/PyQt5/../QtCore
+   in /Users/marius/Crispy.app/Contents/MacOS/PySide6/../QtCore
   [1874] Failed to execute script main
 
 **Using MacPorts**
