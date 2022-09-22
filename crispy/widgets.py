@@ -11,13 +11,13 @@
 
 import logging
 
-from PyQt6.QtCore import QEvent, QRegExp, Qt
+from PyQt6.QtCore import QEvent, QRegularExpression, Qt
 from PyQt6.QtGui import (
     QColor,
     QDoubleValidator,
     QIntValidator,
     QPalette,
-    QRegExpValidator,
+    QRegularExpressionValidator,
 )
 from PyQt6.QtWidgets import QCheckBox, QComboBox, QLineEdit
 
@@ -116,13 +116,13 @@ class DoubleLineEdit(LineEdit):
 class Vector3DLineEdit(LineEdit):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.regex = QRegExp()
+        self.regex = QRegularExpression()
         # Regex that matches the vectors input format, e.g. (1, 0, 1), (-1,0,1)
         # + and - are allowed and any number of spaces after comma. The regex has
         # groups that can be captured.
         # pylint: disable=anomalous-backslash-in-string
         self.regex.setPattern("\\(([+-]?\d?),\s*([+-]?\d?),\s*([+-]?\d?)\\)")
-        self.validator = QRegExpValidator(self.regex, self)
+        self.validator = QRegularExpressionValidator(self.regex, self)
         self.setValidator(self.validator)
 
 
