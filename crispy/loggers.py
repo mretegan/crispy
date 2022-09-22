@@ -12,7 +12,7 @@
 import logging
 import os
 
-from PyQt5.QtCore import QObject, pyqtSignal
+from PySide6.QtCore import QObject, Signal
 
 from crispy.config import Config
 
@@ -45,8 +45,10 @@ def setUpLoggers():
     logger.info(message)
 
 
+# https://stackoverflow.com/questions/28655198/best-way-to-display-logs-in-pyqt
+# I just couldn't make this to work on PySide2 as you can't have several inheritance with QObject. To make it work I had to use old signals syntax like this
 class Handler(logging.Handler, QObject):
-    logUpdated = pyqtSignal(str)
+    logUpdated = Signal(str)
 
     def __init__(self, parent=None):
         QObject.__init__(self, parent=parent)
@@ -57,7 +59,7 @@ class Handler(logging.Handler, QObject):
 
     def emit(self, record):
         message = self.format(record)
-        self.logUpdated.emit(message)
+        # self.logUpdated.emit()
 
 
 class StatusBarHandler(Handler):

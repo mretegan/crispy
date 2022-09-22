@@ -365,14 +365,14 @@
    <header>crispy.widgets</header>
   </customwidget>
   <customwidget>
-   <class>IntLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>crispy.widgets</header>
-  </customwidget>
-  <customwidget>
    <class>TreeView</class>
    <extends>QTreeView</extends>
    <header>crispy.views</header>
+  </customwidget>
+  <customwidget>
+   <class>IntLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>crispy.widgets</header>
   </customwidget>
   <customwidget>
    <class>CheckBox</class>

@@ -13,9 +13,9 @@ import logging
 import os
 from itertools import cycle
 
-from PyQt5.QtCore import QTimer
-from PyQt5.QtWidgets import QApplication, QDialog
-from PyQt5.uic import loadUi
+from PySide6.QtCore import QTimer
+from PySide6.QtWidgets import QApplication, QDialog
+from qtpy.uic import loadUi
 
 from crispy import resourceAbsolutePath
 
@@ -27,7 +27,7 @@ class ProgressDialog(QDialog):
         super().__init__(parent)
 
         uiPath = os.path.join("quanty", "uis", "progress.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)  # , package="crispy")
 
         self.message = "The calculation is running. Please wait"
         self.dots = cycle([".", "..", "..."])

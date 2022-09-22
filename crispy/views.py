@@ -12,8 +12,8 @@
 
 import logging
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QStyledItemDelegate, QTableView, QTreeView
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QStyledItemDelegate, QTableView, QTreeView
 
 from crispy.items import ComboItem, DoubleItem, IntItem, Vector3DItem
 from crispy.widgets import ComboBox, DoubleLineEdit, IntLineEdit, Vector3DLineEdit

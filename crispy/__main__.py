@@ -18,10 +18,19 @@ import warnings
 from urllib.error import URLError
 from urllib.request import Request, urlopen
 
-from PyQt5.QtCore import QByteArray, QLocale, QPoint, QSize, Qt, QThread, pyqtSignal
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QAction, QApplication, QDialog, QMainWindow, QPlainTextEdit
-from PyQt5.uic import loadUi
+from PySide6.QtCore import (
+    QByteArray,
+    QCoreApplication,
+    QLocale,
+    QPoint,
+    QSize,
+    Qt,
+    QThread,
+    Signal,
+)
+from PySide6.QtGui import QAction, QIcon
+from PySide6.QtWidgets import QApplication, QDialog, QMainWindow, QPlainTextEdit
+from qtpy.uic import loadUi
 
 from crispy import resourceAbsolutePath, version
 from crispy.config import Config
@@ -43,7 +52,7 @@ class MainWindow(QMainWindow):
         super().__init__(parent=parent)
 
         uiPath = os.path.join("uis", "main.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)  # , package="crispy")
 
         self.setWindowTitle("Crispy")
 
@@ -137,7 +146,7 @@ class MainWindow(QMainWindow):
 
 class CheckUpdateThread(QThread):
 
-    updateAvailable = pyqtSignal()
+    updateAvailable = Signal()
 
     @staticmethod
     def _getSiteVersion():
@@ -177,7 +186,7 @@ class UpdateAvailableDialog(QDialog):
         super().__init__(parent)
 
         uiPath = os.path.join("uis", "update.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self, package="crispy")
 
 
 class AboutDialog(QDialog):
@@ -185,7 +194,7 @@ class AboutDialog(QDialog):
         super().__init__(parent)
 
         uiPath = os.path.join("uis", "about.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)  # , package="crispy")
 
         self.nameLabel.setText(f"Crispy {version}")
 
@@ -212,6 +221,7 @@ class AboutDialog(QDialog):
 
 
 def main():
+    QCoreApplication.setAttribute(Qt.AA_ShareOpenGLContexts)
     app = QApplication([])
 
     # This must be done after the application is instantiated.

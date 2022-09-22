@@ -13,10 +13,10 @@ import contextlib
 import logging
 import os
 
-from PyQt5.QtCore import QItemSelectionModel, QModelIndex, QPoint, Qt, pyqtSignal
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QAction, QDockWidget, QFileDialog, QMenu, QWidget
-from PyQt5.uic import loadUi
+from PySide6.QtCore import QItemSelectionModel, QModelIndex, QPoint, Qt, Signal
+from PySide6.QtGui import QIcon, QAction
+from PySide6.QtWidgets import QDockWidget, QFileDialog, QMenu, QWidget
+from qtpy.uic import loadUi
 
 from crispy import resourceAbsolutePath
 from crispy.config import Config
@@ -36,7 +36,7 @@ class AxisWidget(QWidget):
         super().__init__(parent=parent)
 
         uiPath = os.path.join("quanty", "uis", "axis.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)  # , package="crispy")
 
         self.mappers = []
 
@@ -60,13 +60,13 @@ class AxisWidget(QWidget):
 
 class GeneralSetupPage(QWidget):
 
-    comboBoxChanged = pyqtSignal()
+    comboBoxChanged = Signal()
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
         uiPath = os.path.join("quanty", "uis", "general.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)  # , package="crispy")
 
         self.xAxis = AxisWidget()
         self.yAxis = AxisWidget()
@@ -125,7 +125,7 @@ class HamiltonianSetupPage(QWidget):
         super().__init__(parent=parent)
 
         uiPath = os.path.join("quanty", "uis", "hamiltonian.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)  # , package="crispy")
 
         self.mappers = []
         # This is needed for the updateAutoStates.
@@ -192,13 +192,13 @@ class HamiltonianSetupPage(QWidget):
 class ResultsPage(QWidget):
     # pylint: disable=too-many-instance-attributes
 
-    currentIndexChanged = pyqtSignal(QModelIndex)
+    currentIndexChanged = Signal(QModelIndex)
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
         uiPath = os.path.join("quanty", "uis", "results.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)  # , package="crispy")
 
         self.detailsDialog = DetailsDialog(parent=self)
 
@@ -372,7 +372,7 @@ class DockWidget(QDockWidget):
         super().__init__(parent=parent)
 
         uiPath = os.path.join("quanty", "uis", "main.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
+        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)  # , package="crispy")
 
         self.model = TreeModel()
 

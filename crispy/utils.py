@@ -11,8 +11,8 @@
 import logging
 import sys
 
-from PyQt5.QtGui import QFontDatabase
-from PyQt5.QtWidgets import QApplication, QCheckBox, QComboBox, QDataWidgetMapper
+from PySide6.QtGui import QFontDatabase
+from PySide6.QtWidgets import QCheckBox, QComboBox, QDataWidgetMapper
 
 from crispy.views import Delegate
 
@@ -45,14 +45,14 @@ def setMappings(mappings):
             signal = widget.stateChanged
             try:
                 signal.disconnect()
-            except TypeError:
+            except (TypeError, RuntimeError):
                 pass
             signal.connect(mapper.submit)
         elif isinstance(widget, QComboBox):
             signal = widget.currentTextChanged
             try:
                 signal.disconnect()
-            except TypeError:
+            except (TypeError, RuntimeError):
                 pass
             signal.connect(mapper.submit)
         mappers.append(mapper)

@@ -15,13 +15,13 @@ import logging
 import weakref
 
 import numpy as np
-from PyQt5.QtCore import (
+from PySide6.QtCore import (
     QAbstractItemModel,
     QLocale,
     QModelIndex,
     QObject,
     Qt,
-    pyqtSignal,
+    Signal,
 )
 
 logger = logging.getLogger(__name__)
@@ -31,7 +31,7 @@ class BaseItem(QObject):
     # pylint: disable=too-many-instance-attributes, too-many-public-methods
     """Base class for the items of the tree model."""
 
-    dataChanged = pyqtSignal(int)
+    dataChanged = Signal(int)
 
     def __init__(self, parent=None, name=None, value=None):
         super().__init__(parent=parent)
@@ -55,7 +55,7 @@ class BaseItem(QObject):
         # This might be overkill, but it is better to be on the safe side.
         try:
             self.dataChanged.disconnect()
-        except TypeError:
+        except (TypeError, RuntimeError) as e:
             pass
         self.dataChanged.connect(self._modelDataChanged)
 

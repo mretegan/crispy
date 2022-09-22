@@ -18,7 +18,7 @@ import re
 import subprocess
 from functools import lru_cache
 
-from PyQt5.QtCore import QProcess, Qt, pyqtSignal
+from PySide6.QtCore import QProcess, Qt, Signal
 
 from crispy import resourceAbsolutePath
 from crispy.config import Config
@@ -358,8 +358,8 @@ class MagneticField(DoubleItem):
 
 class Runner(QProcess):
 
-    outputUpdated = pyqtSignal(str)
-    successful = pyqtSignal(bool)
+    outputUpdated = Signal(str)
+    successful = Signal(bool)
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
@@ -454,7 +454,7 @@ class Runner(QProcess):
 class Calculation(SelectableItem):
     # pylint: disable=all
 
-    titleChanged = pyqtSignal(str)
+    titleChanged = Signal(str)
 
     def __init__(
         self,
