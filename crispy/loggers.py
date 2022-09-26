@@ -10,6 +10,7 @@
 
 import logging
 import os
+from functools import cached_property
 
 from PyQt5.QtCore import QObject, pyqtSignal
 
@@ -44,19 +45,24 @@ def setUpLoggers():
     logger.info(message)
 
 
-class Handler(logging.Handler, QObject):
-    logUpdated = pyqtSignal(str)
+class QHandler(QObject):
+    logUpdated = Signal(str)
 
-    def __init__(self, parent=None):
-        QObject.__init__(self, parent=parent)
-        logging.Handler.__init__(self)
+
+class Handler(logging.Handler):
+    def __init__(self):
         formatter = logging.Formatter("%(message)s")
         self.setFormatter(formatter)
         self.setLevel(logging.INFO)
+        super().__init__()
+
+    @cached_property
+    def bridge(self):
+        return QHandler()
 
     def emit(self, record):
         message = self.format(record)
-        self.logUpdated.emit(message)
+        self.bridge.logUpdated.emit(message)
 
 
 class StatusBarHandler(Handler):

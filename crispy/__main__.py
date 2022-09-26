@@ -81,7 +81,7 @@ class MainWindow(QMainWindow):
         l = logging.getLogger("crispy")
         handler = StatusBarHandler()
         l.addHandler(handler)
-        handler.logUpdated.connect(self.updateStatusBar)
+        handler.bridge.logUpdated.connect(self.updateStatusBar)
 
         handler = OutputHandler()
         l.addHandler(handler)
