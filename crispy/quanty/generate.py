@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# coding: utf-8
 ###################################################################
 # Copyright (c) 2016-2022 European Synchrotron Radiation Facility #
 #                                                                 #
@@ -77,7 +76,7 @@ def element_calculations(symbol=None, charge=None):
 def subshell_calculations(subshell="all"):
     """Generator of all possible calculations for a given subshell."""
     if subshell == "all":
-        subshells = CALCULATIONS.keys()
+        subshells = list(CALCULATIONS.keys())
     else:
         subshells = (subshell,)
     for subshell in subshells:
@@ -170,7 +169,7 @@ def generate_parameters(symbols):
                 # Add the atomic parameters.
                 subroot = root + "/Atomic"
                 for parameter, value in conf.parameters.items():
-                    path = subroot + "/{:s}".format(parameter)
+                    path = subroot + f"/{parameter:s}"
                     h5[path] = value
 
                 # Calculate the lowest eigenvalue of the atomic Hamiltonian.
@@ -184,7 +183,7 @@ def generate_parameters(symbols):
                 if parameters is not None:
                     subroot = root + "/3d-4p Hybridization"
                     for parameter, value in parameters.items():
-                        path = subroot + "/{:s}".format(parameter)
+                        path = subroot + f"/{parameter:s}"
                         h5[path] = value
 
 

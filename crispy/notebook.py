@@ -1,4 +1,3 @@
-# coding: utf-8
 ###################################################################
 # Copyright (c) 2016-2022 European Synchrotron Radiation Facility #
 #                                                                 #
@@ -16,7 +15,7 @@ from crispy.quanty.calculation import Element
 
 
 def prettify(data, level=0):
-    output = str()
+    output = ""
     indent = 2 * level * " "
     for key, value in data.items():
         if isinstance(value, dict):
@@ -259,7 +258,7 @@ class Calculation:
         return self._calculation.output
 
     def run(self):
-        self._calculation.runner.output = str()
+        self._calculation.runner.output = ""
         self._calculation.run()
         self._calculation.runner.waitForFinished(-1)
         self.spectra.has_data = True
@@ -294,7 +293,7 @@ class Config:
         elif name == "Remove Files":
             name = "RemoveFiles"
         else:
-            print("Unknown setting:", name)
+            print(f"Unknown setting: {name}")
             return
         self.settings.setValue(f"Quanty/{name}", value)
         self.settings.sync()

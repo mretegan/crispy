@@ -1,4 +1,3 @@
-# coding: utf-8
 ###################################################################
 # Copyright (c) 2016-2022 European Synchrotron Radiation Facility #
 #                                                                 #
@@ -44,7 +43,7 @@ class CustomProfileWindow(ProfileWindow):
     def __init__(self, parent=None, backend=None):
         super().__init__(parent=parent, backend=backend)
 
-        self.setWindowTitle(str())
+        self.setWindowTitle("")
 
     @staticmethod
     def createPlot1D(parent, backend):
