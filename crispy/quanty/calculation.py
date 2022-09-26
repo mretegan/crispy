@@ -1,4 +1,3 @@
-# coding: utf-8
 ###################################################################
 # Copyright (c) 2016-2022 European Synchrotron Radiation Facility #
 #                                                                 #
@@ -371,7 +370,7 @@ class Runner(QProcess):
         self.readyRead.connect(self.updateOutput)
         self.finished.connect(self.checkExitCodes)
 
-        self.output = str()
+        self.output = ""
 
     def run(self, inputName):
         self.startingTime = datetime.datetime.now()

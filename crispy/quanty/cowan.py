@@ -1,4 +1,3 @@
-# coding: utf-8
 ###################################################################
 # Copyright (c) 2016-2022 European Synchrotron Radiation Facility #
 #                                                                 #
@@ -139,7 +138,7 @@ class Cowan:
         occupancies = configuration.occupancies
         subshells = configuration.subshells
 
-        name = str()
+        name = ""
         for subshell, occupancy in zip(subshells, occupancies):
             # For 5d elements, the 4f occupied subshells must be included explicitly.
             if "5d" in subshell and "4f" not in subshells:

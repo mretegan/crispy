@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# coding: utf-8
 ###################################################################
 # Copyright (c) 2016-2022 European Synchrotron Radiation Facility #
 #                                                                 #
@@ -25,7 +24,7 @@ from crispy.notebook import calculation
 def get_test_data():
     path = os.path.join(os.path.dirname(__file__), "test_data.yaml")
     with open(path, encoding="utf-8") as f:
-        yield from yaml.load(f, Loader=yaml.FullLoader).items()
+        yield from list(yaml.load(f, Loader=yaml.FullLoader).items())
 
 
 def set_hamiltonian_parameters(calc, parameters):
