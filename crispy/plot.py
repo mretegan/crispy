@@ -45,8 +45,7 @@ class CustomProfileWindow(ProfileWindow):
 
         self.setWindowTitle("")
 
-    @staticmethod
-    def createPlot1D(parent, backend):
+    def createPlot1D(self, parent, backend):
         return CustomPlotWidget(parent=parent, backend=backend)
 
 
