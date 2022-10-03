@@ -3,8 +3,6 @@ Downloads
 
 .. table::
     :widths: 1 1 1
-    :column-alignment: center center center
-    :column-wrapping: false false true
     :align: center
 
     +----------------------------------+-------------------------------+--------------------------------------------+
