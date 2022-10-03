@@ -46,7 +46,7 @@ def setUpLoggers():
 
 
 class QHandler(QObject):
-    logUpdated = Signal(str)
+    logUpdated = pyqtSignal(str)
 
 
 class Handler(logging.Handler):
