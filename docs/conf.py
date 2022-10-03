@@ -12,7 +12,6 @@ extensions = [
     "sphinx.ext.mathjax",
     "sphinx.ext.ifconfig",
     "sphinx.ext.githubpages",
-    "cloud_sptheme.ext.table_styling",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
