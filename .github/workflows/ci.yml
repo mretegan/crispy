@@ -11,92 +11,92 @@ jobs:
   check-style:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.9
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
 
-    - name: Install requirements
-      run: |
-        python -m pip install --upgrade pip
-        pip install black
+      - name: Install requirements
+        run: |
+          python -m pip install --upgrade pip
+          pip install black
 
-    - name: Check style
-      run: |
-        black crispy
+      - name: Check style
+        run: |
+          black crispy
 
   test:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.9
-  
-    - name: Install requirements
-      run: |
-        python -m pip install --upgrade pip
-        pip install .[test]
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
 
-    - name: Run tests
-      run: |
-        pytest    
+      - name: Install requirements
+        run: |
+          python -m pip install --upgrade pip
+          pip install .[test]
+
+      - name: Run tests
+        run: |
+          pytest
 
   build-binaries:
     runs-on: ${{ matrix.os }}
 
     strategy:
-      max-parallel: 6
+      max-parallel: 8
       fail-fast: false
       matrix:
-        os: [macos-10.15, windows-2019]
-        python-version: [3.8, 3.9, "3.10"]
+        os: [macos-latest, windows-latest]
+        python-version: [3.7, 3.8, 3.9, "3.10"]
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - name: Install packaging dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install .[dev]
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Install Inno Setup
-      if: runner.os == 'Windows'
-      run: | 
+      - name: Install packaging dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install .[dev]
+
+      - name: Install Inno Setup
+        if: runner.os == 'Windows'
+        run: |
           choco install innosetup
 
-    - name: Run PyInstaller
-      run: |
-        cd package
-        pyinstaller --noconfirm crispy.spec
-        cd ..
+      - name: Run PyInstaller
+        run: |
+          cd package
+          pyinstaller --noconfirm crispy.spec
+          cd ..
 
-    - name: Recursively list folder
-      run: |
-        ls -R 
+      - name: Recursively list folder
+        run: |
+          ls -R
 
-    - name: Upload the Windows installer
-      uses: actions/upload-artifact@v2
-      if: runner.os == 'Windows'
-      with:
-        name: Crispy-Windows-2019-Python-${{ matrix.python-version }}
-        path : package\artifacts\*.exe
+      - name: Upload the Windows installer
+        uses: actions/upload-artifact@v2
+        if: runner.os == 'Windows'
+        with:
+          name: Crispy-Windows-2019-Python-${{ matrix.python-version }}
+          path: package\artifacts\*.exe
 
-    - name: Upload the macOS app
-      uses: actions/upload-artifact@v2
-      if: runner.os == 'macOS'
-      with:
-        name: Crispy-macOS-10.15-Python-${{ matrix.python-version }}
-        path : package/artifacts/*.dmg
+      - name: Upload the macOS app
+        uses: actions/upload-artifact@v2
+        if: runner.os == 'macOS'
+        with:
+          name: Crispy-macOS-10.15-Python-${{ matrix.python-version }}
+          path: package/artifacts/*.dmg
