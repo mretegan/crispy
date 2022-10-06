@@ -11,7 +11,7 @@
 import os
 
 import xraydb
-from ruamel import yaml
+from ruamel.yaml import YAML
 
 from crispy import resourceAbsolutePath
 
@@ -19,4 +19,5 @@ XDB = xraydb.XrayDB()
 
 path = os.path.join("quanty", "calculations.yaml")
 with open(resourceAbsolutePath(path), encoding="utf-8") as fp:
-    CALCULATIONS = yaml.load(fp, Loader=yaml.Loader)
+    yaml = YAML(pure=True)
+    CALCULATIONS = yaml.load(fp)

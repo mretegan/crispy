@@ -15,7 +15,7 @@ import os
 
 import numpy as np
 import pytest
-from ruamel import yaml
+from ruamel.yaml import YAML
 
 from crispy.config import Config
 from crispy.notebook import calculation
@@ -24,7 +24,8 @@ from crispy.notebook import calculation
 def get_test_data():
     path = os.path.join(os.path.dirname(__file__), "test_data.yaml")
     with open(path, encoding="utf-8") as f:
-        yield from list(yaml.load(f, Loader=yaml.Loader).items())
+        yaml = YAML(pure=True)
+        yield from list(yaml.load(f).items())
 
 
 def set_hamiltonian_parameters(calc, parameters):
