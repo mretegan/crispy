@@ -50,7 +50,7 @@ def test_calculation(test_data, tmp_path):
     #     shutil.rmtree(tmp_path)
     # os.makedirs(tmp_path, exist_ok=True)
 
-    settings = Config().settings
+    settings = Config().read()
     settings.setValue("CurrentPath", tmp_path)
 
     calc = calculation(*parameters["args"])

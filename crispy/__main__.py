@@ -219,7 +219,7 @@ def main():
     QLocale.setDefault(locale)
 
     config = Config()
-    config.removeOldFiles()
+    config.prune()
 
     setUpLoggers()
 
