@@ -427,7 +427,7 @@ class Runner(QProcess):
 
     @property
     def executablePath(self):
-        path = Config().read().value("Quanty/Path")
+        path = settings.value("Quanty/Path")
 
         if path is None:
             message = (

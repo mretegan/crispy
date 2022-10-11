@@ -8,9 +8,9 @@
 ###################################################################
 """The modules provides a class to deal with the configuration."""
 
-import contextlib
 import logging
 import os
+import shutil
 import sys
 
 from packaging.version import parse
@@ -28,56 +28,47 @@ class Config:
 
     @property
     def path(self):
-        return os.path.split(self.settings.fileName())[0]
-
-    @property
-    def settings(self):
-        settings = QSettings(
-            QSettings.IniFormat, QSettings.UserScope, self.name, "settings"
-        )
-        # Set default values if the config file is empty or was not created.
-        if not settings.allKeys():
-            logger.debug("Loading default settings.")
-
-            settings.beginGroup("Quanty")
-            settings.setValue("Path", self.findQuanty())
-            settings.setValue("Verbosity", "0x0000")
-            settings.setValue("DenseBorder", "2000")
-            settings.setValue("ShiftSpectra", True)
-            settings.setValue("RemoveFiles", True)
-            settings.endGroup()
-
-            settings.setValue("CheckForUpdates", True)
-            settings.setValue("CurrentPath", os.path.expanduser("~"))
-            settings.setValue("Version", version)
-
-            settings.sync()
-        return settings
+        return os.path.split(self.read().fileName())[0]
 
     def read(self):
-        return self.settings
+        return QSettings(
+            QSettings.IniFormat, QSettings.UserScope, self.name, "settings"
+        )
 
-    def removeOldFiles(self):
-        """Function that removes the settings from previous versions."""
+    def default(self):
+        """Set default settings."""
+        settings = self.read()
+        settings.clear()
 
-        # This is the very first way settings were stored.
+        logger.debug("Setting the default values.")
+
+        settings.beginGroup("Quanty")
+        settings.setValue("Path", self.findQuanty())
+        settings.setValue("Verbosity", "0x0000")
+        settings.setValue("DenseBorder", "2000")
+        settings.setValue("ShiftSpectra", True)
+        settings.setValue("RemoveFiles", True)
+        settings.endGroup()
+
+        settings.setValue("CheckForUpdates", True)
+        settings.setValue("CurrentPath", os.path.expanduser("~"))
+        settings.setValue("Version", version)
+
+        settings.sync()
+
+    def prune(self):
+        """Remove previous config files."""
+
         root = QStandardPaths.standardLocations(QStandardPaths.GenericConfigLocation)[0]
         path = os.path.join(root, self.name)
+        if os.path.exists(path):
+            shutil.rmtree(path, ignore_errors=True)
 
-        if parse(version) < parse("0.7.0"):
-            with contextlib.suppress(IOError, OSError):
-                os.remove(os.path.join(path, "settings.json"))
-                os.rmdir(path)
-                logger.debug("Removed old configuration file.")
-        # Remove all configuration files before the first proper calendar
-        # versioning release.
-        # TODO: Change this to only check version 2022.0 before release.
-        if parse(version) <= parse("0.7.3") or parse(version) < parse("2022.0.dev0"):
-            root, _ = os.path.split(self.settings.fileName())
-            for file in ("settings.ini", "settings-new.ini"):
-                with contextlib.suppress(IOError, OSError):
-                    os.remove(os.path.join(root, file))
-                    logger.debug("Removed old configuration file: %s.", file)
+        versionFromSettings = self.read().value("Version")
+        if versionFromSettings is None or parse(versionFromSettings) != parse(version):
+            path, _ = os.path.split(self.read().fileName())
+            shutil.rmtree(path, ignore_errors=True)
+            self.default()
 
     @staticmethod
     def findQuanty():
@@ -116,5 +107,5 @@ class Config:
         return path
 
     def setQuantyPath(self, path):
-        self.settings.setValue("Quanty/Path", path)
-        self.settings.sync()
+        self.read().setValue("Quanty/Path", path)
+        self.read().sync()

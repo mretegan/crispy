@@ -207,6 +207,9 @@ class Calculation:
     def __init__(
         self, element="Ni2+", symmetry="Oh", experiment="XAS", edge="L2,3 (2p)"
     ):
+        config = _Config()
+        config.prune()
+
         element = Element(parent=None, value=element)
         self._model = TreeModel()
         self._calculation = _Calculation(
@@ -284,9 +287,6 @@ def calculation(element, symmetry, experiment, edge):
 
 
 class Config:
-    def __init__(self):
-        self.settings = _Config().read()
-
     def set_setting(self, name, value):
         if name == "Shift Spectra":
             name = "ShiftSpectra"
@@ -295,8 +295,10 @@ class Config:
         else:
             print(f"Unknown setting: {name}")
             return
-        self.settings.setValue(f"Quanty/{name}", value)
-        self.settings.sync()
+
+        settings = _Config().read()
+        settings.setValue(f"Quanty/{name}", value)
+        settings.sync()
 
 
 def main():
