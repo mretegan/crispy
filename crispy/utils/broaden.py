@@ -70,8 +70,8 @@ def convolve_fft(array, kernel):
     https://github.com/astropy/astropy/blob/master/astropy/convolution/convolve.py
     """
 
-    array = np.asarray(array, dtype=np.complex)
-    kernel = np.asarray(kernel, dtype=np.complex)
+    array = np.asarray(array, dtype=np.cfloat)
+    kernel = np.asarray(kernel, dtype=np.cfloat)
 
     if array.ndim != kernel.ndim:
         raise ValueError("Image and kernel must have same number of "
@@ -95,13 +95,13 @@ def convolve_fft(array, kernel):
     kernel_slices = tuple(kernel_slices)
 
     if not np.all(new_shape == array_shape):
-        big_array = np.zeros(new_shape, dtype=np.complex)
+        big_array = np.zeros(new_shape, dtype=np.cfloat)
         big_array[array_slices] = array
     else:
         big_array = array
 
     if not np.all(new_shape == kernel_shape):
-        big_kernel = np.zeros(new_shape, dtype=np.complex)
+        big_kernel = np.zeros(new_shape, dtype=np.cfloat)
         big_kernel[kernel_slices] = kernel
     else:
         big_kernel = kernel
