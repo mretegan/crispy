@@ -50,10 +50,7 @@ def get_readme():
 
 
 def get_version():
-    from crispy import version
-    return version.strictversion
-
-
+    return "0.7.4"
 def get_requirements():
     requirements = list()
     with open('requirements.txt') as fp:

@@ -48,7 +48,7 @@ What's new:
 
 v0.6.1 (2018-06-05)
 -------------------
-This is a bug fix release.
+This is a bug-fix release.
 
 v0.6.0 (2018-06-03)
 -------------------
@@ -109,7 +109,7 @@ What's new:
 
 v0.1.0 (2016-08-21)
 -------------------
-First release of Crispy:
+The first release of Crispy:
 
 * support for the calculation of core-level spectra using Quanty, including:
 

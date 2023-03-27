@@ -42,8 +42,7 @@ from setuptools import setup
 
 
 def get_version():
-    from crispy import version
-    return version.strictversion
+    return "0.7.4"
 
 
 def clean_folders(folders):

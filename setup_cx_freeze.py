@@ -43,8 +43,7 @@ from cx_Freeze import setup, Executable
 
 
 def get_version():
-    from crispy import version
-    return version.strictversion
+    return "0.7.4"
 
 
 def create_installer():
