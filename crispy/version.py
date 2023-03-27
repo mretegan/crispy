@@ -49,7 +49,8 @@ Thus 2.1.0a3 is hexversion 0x020100a3.
 
 """
 
-from __future__ import absolute_import, print_function, division
+from __future__ import absolute_import, division, print_function
+
 __authors__ = ['Jérôme Kieffer']
 __license__ = 'MIT'
 __date__ = '08/08/2016'
@@ -66,12 +67,13 @@ RELEASE_LEVEL_VALUE = {'dev': 0,
 MAJOR = 0
 MINOR = 7
 MICRO = 4
-RELEV = 'dev'  # <16
+RELEV = 'final'  # <16
 SERIAL = 0  # <16
 
 date = __date__
 
 from collections import namedtuple
+
 _version_info = namedtuple('version_info', ['major', 'minor', 'micro', 'releaselevel', 'serial'])
 
 version_info = _version_info(MAJOR, MINOR, MICRO, RELEV, SERIAL)
@@ -94,7 +96,7 @@ def calc_hexversion(major=0, minor=0, micro=0, releaselevel='dev', serial=0):
     :param micro: integer
     :param relev: integer or string
     :param serial: integer
-    :return: integerm always increasing with revision numbers
+    :return: integers always increasing with revision numbers
     """
     try:
         releaselevel = int(releaselevel)

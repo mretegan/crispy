@@ -1,9 +1,13 @@
 Changelog
 =========
 
+v0.7.4 (2023-03-08)
+-------------------
+A bug-fixing release to make the package installable using pip.
+
 v0.7.3 (2019-06-26)
 -------------------
-This is a bug fixing release.
+This is a bug-fixing release.
 
 v0.7.2 (2019-02-01)
 -------------------
