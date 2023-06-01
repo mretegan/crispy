@@ -30,7 +30,7 @@ Downloads
   <https://www.virustotal.com>`_. Also please make sure that you first uninstall
   older versions of Crispy before you proceed with the new installation.
 - You can download older versions from the `releases
-  <https://github.com/mretegan/crispy/releases>`_ page on Github.
+  <https://github.com/mretegan/crispy/releases>`_ page on GitHub.
 
 .. |Windows| image:: assets/windows.png
     :width: 90pt
