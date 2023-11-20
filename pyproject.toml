@@ -1,4 +1,93 @@
-[tool.pytest.ini_options]
-filterwarnings = [
-    "ignore::DeprecationWarning",
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = [
+    "setuptools>=61.2",
+    "wheel",
 ]
+
+[project]
+name = "crispy"
+description = "Core-Level Spectroscopy Simulations in Python"
+keywords = [
+    "gui",
+    "science",
+    "simulation",
+    "spectroscopy",
+    "synchrotron",
+]
+readme = "README.rst"
+authors = [{ name = "Marius Retegan", email = "marius.retegan@esrf.fr" }]
+license = { text = "MIT" }
+classifiers = [
+    "Environment :: X11 Applications :: Qt",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "h5py",
+    "matplotlib",
+    "numpy",
+    "packaging",
+    "PyQt5",
+    "ruamel.yaml",
+    "silx",
+    "wheel",
+    "xraydb",
+]
+dynamic = [
+    "version",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+namespaces = false
+
+[tool.setuptools.dynamic]
+version = { attr = "crispy.__version__" }
+
+[project.urls]
+Changelog = "https://github.com/mretegan/crispy/blob/main/CHANGELOG.rst"
+Documentation = "https://www.esrf.fr/computing/scientific/crispy"
+Downloads = "https://github.com/mretegan/crispy/releases"
+Homepage = "https://github.com/mretegan/crispy"
+Source = "https://github.com/mretegan/crispy"
+Tracker = "https://github.com/mretegan/crispy/issues"
+[project.optional-dependencies]
+all = [
+    "black",
+    "mypy",
+    "pyinstaller@ https://github.com/pyinstaller/pyinstaller/archive/develop.zip",
+    "pylint",
+    "pytest",
+    "sphinx",
+    "sphinx-rtd-theme",
+    "twine",
+]
+dev = [
+    "black",
+    "mypy",
+    "pyinstaller@ https://github.com/pyinstaller/pyinstaller/archive/develop.zip",
+    "pylint",
+    "pytest",
+    "twine",
+]
+doc = [
+    "sphinx",
+    "sphinx-rtd-theme",
+]
+test = [
+    "pytest",
+]
+[project.gui-scripts]
+crispy = "crispy.__main__:main"
