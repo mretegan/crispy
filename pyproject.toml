@@ -1,20 +1,11 @@
 [build-system]
 build-backend = "setuptools.build_meta"
-requires = [
-    "setuptools>=61.2",
-    "wheel",
-]
+requires = ["setuptools>=61.2", "wheel"]
 
 [project]
 name = "crispy"
 description = "Core-Level Spectroscopy Simulations in Python"
-keywords = [
-    "gui",
-    "science",
-    "simulation",
-    "spectroscopy",
-    "synchrotron",
-]
+keywords = ["gui", "science", "simulation", "spectroscopy", "synchrotron"]
 readme = "README.rst"
 authors = [{ name = "Marius Retegan", email = "marius.retegan@esrf.fr" }]
 license = { text = "MIT" }
@@ -45,9 +36,7 @@ dependencies = [
     "wheel",
     "xraydb",
 ]
-dynamic = [
-    "version",
-]
+dynamic = ["version"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -82,12 +71,7 @@ dev = [
     "pytest",
     "twine",
 ]
-doc = [
-    "sphinx",
-    "sphinx-rtd-theme",
-]
-test = [
-    "pytest",
-]
+doc = ["sphinx", "sphinx-rtd-theme"]
+test = ["pytest"]
 [project.gui-scripts]
 crispy = "crispy.__main__:main"
