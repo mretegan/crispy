@@ -10,9 +10,7 @@
 
 import os
 
-from PyQt5.QtCore import QPoint, QSize
-from PyQt5.QtWidgets import QDialog, QWidget
-from PyQt5.uic import loadUi
+from silx.gui.qt import QDialog, QPoint, QSize, QWidget, loadUi
 
 from crispy import resourceAbsolutePath
 from crispy.config import Config

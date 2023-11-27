@@ -12,7 +12,7 @@ import copy
 import logging
 
 import numpy as np
-from PyQt5.QtCore import Qt
+from silx.gui.qt import Qt
 
 from crispy.broaden import broaden
 from crispy.items import BaseItem, SelectableItem

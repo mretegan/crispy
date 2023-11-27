@@ -17,16 +17,27 @@ import warnings
 from urllib.error import URLError
 from urllib.request import Request, urlopen
 
-from PyQt5.QtCore import QByteArray, QLocale, QPoint, QSize, Qt, QThread, pyqtSignal
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QAction, QApplication, QDialog, QMainWindow, QPlainTextEdit
-from PyQt5.uic import loadUi
+import PyQt6.QtCore  # noqa: F401
+from silx.gui.qt import (
+    QAction,
+    QApplication,
+    QByteArray,
+    QDialog,
+    QIcon,
+    QLocale,
+    QMainWindow,
+    QPlainTextEdit,
+    QPoint,
+    QSize,
+    Qt,
+    QThread,
+    loadUi,
+    pyqtSignal,
+)
 
 from crispy import resourceAbsolutePath, version
 from crispy.config import Config
 from crispy.loggers import OutputHandler, StatusBarHandler, setUpLoggers
-
-# pylint: disable=unused-import
 from crispy.plot import MainPlotWidget
 from crispy.quanty.main import DockWidget
 from crispy.utils import fixedFont
@@ -131,11 +142,10 @@ class MainWindow(QMainWindow):
         settings.sync()
 
     def openAboutDialog(self):
-        self.aboutDialog.exec_()
+        self.aboutDialog.exec()
 
 
 class CheckUpdateThread(QThread):
-
     updateAvailable = pyqtSignal()
 
     @staticmethod
@@ -228,7 +238,7 @@ def main():
     window.show()
     logger.info("Ready.")
 
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
 
 
 if __name__ == "__main__":

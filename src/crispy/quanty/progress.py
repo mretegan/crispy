@@ -12,9 +12,7 @@ import logging
 import os
 from itertools import cycle
 
-from PyQt5.QtCore import QTimer
-from PyQt5.QtWidgets import QApplication, QDialog
-from PyQt5.uic import loadUi
+from silx.gui.qt import QApplication, QDialog, QTimer, loadUi
 
 from crispy import resourceAbsolutePath
 
@@ -53,7 +51,7 @@ def main():
     dialog = ProgressDialog()
     dialog.show()
 
-    app.exec_()
+    app.exec()
 
 
 if __name__ == "__main__":

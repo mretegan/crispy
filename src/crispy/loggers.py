@@ -12,7 +12,7 @@ import logging
 import os
 from functools import cached_property
 
-from PyQt5.QtCore import QObject, pyqtSignal
+from silx.gui.qt import QObject, pyqtSignal
 
 from crispy.config import Config
 

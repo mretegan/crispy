@@ -17,7 +17,7 @@ import re
 import subprocess
 from functools import lru_cache
 
-from PyQt5.QtCore import QProcess, Qt, pyqtSignal
+from silx.gui.qt import QProcess, Qt, pyqtSignal
 
 from crispy import resourceAbsolutePath
 from crispy.config import Config
@@ -356,7 +356,6 @@ class MagneticField(DoubleItem):
 
 
 class Runner(QProcess):
-
     outputUpdated = pyqtSignal(str)
     successful = pyqtSignal(bool)
 
@@ -465,7 +464,6 @@ class Calculation(SelectableItem):
         hamiltonian=True,
         parent=None,
     ):
-
         super().__init__(parent=parent, name="Calculation")
 
         # Set the very special ancestor, in this case self.

@@ -16,7 +16,7 @@ import os
 from math import factorial
 
 import h5py
-from PyQt5.QtCore import QLocale, Qt
+from silx.gui.qt import QLocale, Qt
 
 from crispy import resourceAbsolutePath
 from crispy.items import BaseItem, BoolItem, DoubleItem, IntItem, SelectableItem

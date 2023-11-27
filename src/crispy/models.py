@@ -11,7 +11,7 @@
 
 import logging
 
-from PyQt5.QtCore import QAbstractItemModel, QModelIndex, Qt, QVariant
+from silx.gui.qt import QAbstractItemModel, QModelIndex, Qt
 
 from crispy.items import RootItem
 
@@ -84,7 +84,7 @@ class TreeModel(QAbstractItemModel):
                 return self._header[section]
             if orientation == Qt.Vertical:
                 return section + 1
-        return QVariant(None)
+        return None
 
     def header(self):
         return self._header

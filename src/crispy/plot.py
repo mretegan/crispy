@@ -12,8 +12,6 @@ import logging
 import sys
 
 import matplotlib.lines as mlines
-from PyQt5.QtCore import QSize
-from PyQt5.QtWidgets import QMenu, QToolBar
 from silx.gui.plot import PlotWidget, items
 from silx.gui.plot.actions.control import (
     ColormapAction,
@@ -35,6 +33,7 @@ from silx.gui.plot.tools.profile.rois import (
     ProfileImageLineROI,
     ProfileImageVerticalLineROI,
 )
+from silx.gui.qt import QMenu, QSize, QToolBar
 
 logger = logging.getLogger(__name__)
 
@@ -106,7 +105,7 @@ class CustomPlotWidget(PlotWidget):
         contextMenu.addAction(zoomBackAction)
         contextMenu.addAction(crosshairAction)
 
-        contextMenu.exec_(event.globalPos())
+        contextMenu.exec(event.globalPos())
 
     def addInteractiveToolBar(self):
         self.interactiveToolBar = QToolBar("Interaction", parent=self)

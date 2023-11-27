@@ -14,7 +14,7 @@ import logging
 import weakref
 
 import numpy as np
-from PyQt5.QtCore import (
+from silx.gui.qt import (
     QAbstractItemModel,
     QLocale,
     QModelIndex,

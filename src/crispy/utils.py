@@ -10,8 +10,13 @@
 import logging
 import sys
 
-from PyQt5.QtGui import QFontDatabase
-from PyQt5.QtWidgets import QApplication, QCheckBox, QComboBox, QDataWidgetMapper
+from silx.gui.qt import (
+    QApplication,
+    QCheckBox,
+    QComboBox,
+    QDataWidgetMapper,
+    QFontDatabase,
+)
 
 from crispy.views import Delegate
 

@@ -14,7 +14,7 @@ import shutil
 import sys
 
 from packaging.version import parse
-from PyQt5.QtCore import QSettings, QStandardPaths
+from silx.gui.qt import QSettings, QStandardPaths
 
 from crispy import resourceAbsolutePath, version
 

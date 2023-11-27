@@ -12,10 +12,20 @@ import contextlib
 import logging
 import os
 
-from PyQt5.QtCore import QItemSelectionModel, QModelIndex, QPoint, Qt, pyqtSignal
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QAction, QDockWidget, QFileDialog, QMenu, QWidget
-from PyQt5.uic import loadUi
+from silx.gui.qt import (
+    QAction,
+    QDockWidget,
+    QFileDialog,
+    QIcon,
+    QItemSelectionModel,
+    QMenu,
+    QModelIndex,
+    QPoint,
+    Qt,
+    QWidget,
+    loadUi,
+    pyqtSignal,
+)
 
 from crispy import resourceAbsolutePath
 from crispy.config import Config
@@ -58,7 +68,6 @@ class AxisWidget(QWidget):
 
 
 class GeneralSetupPage(QWidget):
-
     comboBoxChanged = pyqtSignal()
 
     def __init__(self, parent=None):
@@ -356,7 +365,7 @@ class ResultsPage(QWidget):
         # done already when the selection changes.
         index = self.view.indexAt(position)
         self.showDetailsDialogAction.setEnabled(index.internalPointer() is not None)
-        self.contextMenu.exec_(self.view.mapToGlobal(position))
+        self.contextMenu.exec(self.view.mapToGlobal(position))
 
     def showDetailsDialog(self):
         result = self.currentIndex.internalPointer()
