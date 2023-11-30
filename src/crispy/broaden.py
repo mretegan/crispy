@@ -9,6 +9,7 @@
 """The module implements fast FFT broadening."""
 
 from math import ceil
+
 import numpy as np
 
 
@@ -55,7 +56,7 @@ def convolve_fft(array, kernel):
 
     array_slices = []
     kernel_slices = []
-    for (new_dimsize, array_dimsize, kernel_dimsize) in zip(
+    for new_dimsize, array_dimsize, kernel_dimsize in zip(
         new_shape, array.shape, kernel.shape
     ):
         center = new_dimsize - (new_dimsize + 1) // 2
