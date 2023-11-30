@@ -48,7 +48,7 @@ Tracker = "https://github.com/mretegan/crispy/issues"
 
 [project.optional-dependencies]
 all = [".[dev,doc]"]
-dev = ["black", "pytest", "twine", "pyinstaller"]
+dev = ["black", "pytest", "twine", "pyinstaller", "black", "black[jupyter]"]
 doc = ["sphinx", "sphinx-rtd-theme"]
 
 [project.gui-scripts]
