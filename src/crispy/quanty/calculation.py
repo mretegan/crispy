@@ -385,10 +385,13 @@ class Runner(QProcess):
         logger.info(message)
 
     def checkExitCodes(self, exitCode, exitStatus):
+        logger.debug(
+            f"Quanty calculation exit code: {exitCode} and status: {exitStatus}"
+        )
         self.endingTime = datetime.datetime.now()
 
         successful = False
-        if exitStatus == 0 and exitCode == 0:
+        if exitStatus == QProcess.ExitStatus.NormalExit:
             message = "Quanty has finished successfully in "
             delta = self.runningTime
             hours, reminder = divmod(delta, 3600)
@@ -402,16 +405,24 @@ class Runner(QProcess):
                 message += f"{seconds} seconds."
             logger.info(message)
             successful = True
-        elif exitStatus == 0 and exitCode == 1:
+        elif exitStatus == QProcess.ExitStatus.CrashExit:
             message = (
                 "Quanty has finished unsuccessfully. "
                 "Check the logging window for more details."
             )
-            logger.info(message)
-        # exitCode is platform dependent; exitStatus is always 1.
-        elif exitStatus == 1:
-            message = "Quanty was stopped."
-            logger.info(message)
+            logger.error(message)
+        # elif exitStatus == 0 and exitCode == 1:
+        #     message = (
+        #         "Quanty has finished unsuccessfully. "
+        #         "Check the logging window for more details."
+        #     )
+        #     logger.info(message)
+        # # exitCode is platform dependent; exitStatus is always 1.
+        # elif exitStatus == 1:
+        #     message = "Quanty was stopped."
+        #     logger.info(message)
+        else:
+            message = "The exit status was not recognized."
         self.successful.emit(successful)
 
     def updateOutput(self):
@@ -746,6 +757,7 @@ class Calculation(SelectableItem):
         if not successful:
             return
         # TODO: Check if loading the spectra was successful.
+        # It would avoid could not read spectrum error messages.
         self.spectra.load()
 
         # Clean files.
