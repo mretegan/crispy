@@ -45,6 +45,9 @@ namespaces = false
 [tool.setuptools.dynamic]
 version = { attr = "crispy.__version__" }
 
+[tool.mypy]
+ignore_missing_imports = true
+
 [project.urls]
 Changelog = "https://github.com/mretegan/crispy/blob/main/CHANGELOG.rst"
 Documentation = "https://www.esrf.fr/computing/scientific/crispy"
