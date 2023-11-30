@@ -252,7 +252,7 @@ class SpectraToInteract(BaseItem):
     @property
     def selected(self):
         for spectrum in self.all:
-            if spectrum.checkState:
+            if spectrum.isEnabled():
                 yield spectrum.name
 
     @selected.setter
@@ -367,7 +367,7 @@ class Spectra(BaseItem):
                 spectrum = Spectrum2D(parent=self.toPlot, name=name)
 
             spectrum.suffix = suffix
-            # Load before setting the check state to trigger plotting?
+            # Load before setting the check state to trigger plotting.
             spectrum.load()
             spectrum.checkState = Qt.Checked if selected else Qt.Unchecked
 

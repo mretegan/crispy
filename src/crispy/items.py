@@ -300,7 +300,7 @@ class SelectableItem(BaseItem):
         self.checkState = Qt.Unchecked
 
     def isEnabled(self):
-        return bool(self.checkState)
+        return self.checkState == Qt.Checked
 
     def flags(self, column):
         flags = super().flags(column)

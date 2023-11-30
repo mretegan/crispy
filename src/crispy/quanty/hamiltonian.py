@@ -170,7 +170,7 @@ class HamiltonianTerm(SelectableItem):
 
         # Use the name of the class to generate the name of the replacement.
         name = type(self).__name__
-        replacements[name] = bool(self.checkState)
+        replacements[name] = self.isEnabled()
 
         def formatName(name):
             CONVERTERS = {
