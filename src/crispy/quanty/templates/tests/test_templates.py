@@ -14,6 +14,7 @@ import glob
 import os
 
 import numpy as np
+import PyQt6.QtCore  # noqa: F401
 import pytest
 from ruamel.yaml import YAML
 
@@ -51,6 +52,7 @@ def test_calculation(test_data, tmp_path):
     # os.makedirs(tmp_path, exist_ok=True)
 
     settings = Config().read()
+    # TODO: Save the current path before altering it.
     settings.setValue("CurrentPath", tmp_path)
 
     calc = calculation(*parameters["args"])
