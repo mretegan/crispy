@@ -192,10 +192,6 @@
        <property name="toolTip">
         <string>Lorentzian settings</string>
        </property>
-       <property name="icon">
-        <iconset>
-         <normaloff>../../icons/cog.svg</normaloff>../../icons/cog.svg</iconset>
-       </property>
       </widget>
      </item>
      <item row="0" column="3">

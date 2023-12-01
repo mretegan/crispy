@@ -49,14 +49,14 @@ def setMappings(mappings):
             signal = widget.stateChanged
             try:
                 signal.disconnect()
-            except TypeError:
+            except (TypeError, RuntimeError):
                 pass
             signal.connect(mapper.submit)
         elif isinstance(widget, QComboBox):
             signal = widget.currentTextChanged
             try:
                 signal.disconnect()
-            except TypeError:
+            except (TypeError, RuntimeError):
                 pass
             signal.connect(mapper.submit)
         mappers.append(mapper)

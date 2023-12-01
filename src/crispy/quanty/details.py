@@ -10,10 +10,11 @@
 
 import os
 
-from silx.gui.qt import QDialog, QPoint, QSize, QWidget, loadUi
+from silx.gui.qt import QDialog, QPoint, QSize, QWidget
 
 from crispy import resourceAbsolutePath
 from crispy.config import Config
+from crispy.uic import loadUi
 from crispy.utils import fixedFont, setMappings
 
 settings = Config().read()

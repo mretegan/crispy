@@ -23,7 +23,6 @@ from silx.gui.qt import (
     QPoint,
     Qt,
     QWidget,
-    loadUi,
     pyqtSignal,
 )
 
@@ -34,6 +33,7 @@ from crispy.quanty.calculation import Calculation
 from crispy.quanty.details import DetailsDialog
 from crispy.quanty.preferences import PreferencesDialog
 from crispy.quanty.progress import ProgressDialog
+from crispy.uic import loadUi
 from crispy.utils import findQtObject, setMappings
 
 logger = logging.getLogger(__name__)
@@ -46,6 +46,9 @@ class AxisWidget(QWidget):
 
         uiPath = os.path.join("quanty", "uis", "axis.ui")
         loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
+
+        iconPath = resourceAbsolutePath(os.path.join("icons", "cog.svg"))
+        self.lorentzianToolButton.setIcon(QIcon(iconPath))
 
         self.mappers = []
 
@@ -381,6 +384,12 @@ class DockWidget(QDockWidget):
 
         uiPath = os.path.join("quanty", "uis", "main.ui")
         loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
+
+        iconPath = resourceAbsolutePath(os.path.join("icons", "save.svg"))
+        self.saveInputAsPushButton.setIcon(QIcon(iconPath))
+
+        iconPath = resourceAbsolutePath(os.path.join("icons", "play.svg"))
+        self.calculationPushButton.setIcon(QIcon(iconPath))
 
         self.model = TreeModel()
 

@@ -17,12 +17,12 @@ from silx.gui.qt import (
     QFileDialog,
     QPoint,
     QSize,
-    loadUi,
     pyqtSignal,
 )
 
 from crispy import resourceAbsolutePath
 from crispy.config import Config
+from crispy.uic import loadUi
 
 logger = logging.getLogger(__name__)
 settings = Config().read()

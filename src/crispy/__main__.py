@@ -25,12 +25,12 @@ from silx.gui.qt import (
     QIcon,
     QLocale,
     QMainWindow,
+    QPixmap,
     QPlainTextEdit,
     QPoint,
     QSize,
     Qt,
     QThread,
-    loadUi,
     pyqtSignal,
 )
 
@@ -39,6 +39,7 @@ from crispy.config import Config
 from crispy.loggers import OutputHandler, StatusBarHandler, setUpLoggers
 from crispy.plot import MainPlotWidget  # noqa: F401
 from crispy.quanty.main import DockWidget
+from crispy.uic import loadUi
 from crispy.utils import fixedFont
 
 logger = logging.getLogger("crispy.main")
@@ -199,6 +200,9 @@ class AboutDialog(QDialog):
 
         self.updateCheckBox.stateChanged.connect(self.updateCheckBoxStateChanged)
         self.updateCheckBox.setChecked(settings.value("CheckForUpdates", type=bool))
+
+        iconPath = resourceAbsolutePath(os.path.join("icons", "crispy.svg"))
+        self.iconLabel.setPixmap(QPixmap(iconPath))
 
         if settings.value("CheckForUpdates", type=bool):
             self.runUpdateCheck()

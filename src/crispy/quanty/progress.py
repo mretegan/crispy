@@ -12,9 +12,10 @@ import logging
 import os
 from itertools import cycle
 
-from silx.gui.qt import QApplication, QDialog, QTimer, loadUi
+from silx.gui.qt import QApplication, QDialog, QTimer
 
 from crispy import resourceAbsolutePath
+from crispy.uic import loadUi
 
 logger = logging.getLogger(__name__)
 

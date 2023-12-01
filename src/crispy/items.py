@@ -54,7 +54,7 @@ class BaseItem(QObject):
         # This might be overkill, but it is better to be on the safe side.
         try:
             self.dataChanged.disconnect()
-        except TypeError:
+        except (TypeError, RuntimeError):
             pass
         self.dataChanged.connect(self._modelDataChanged)
 
