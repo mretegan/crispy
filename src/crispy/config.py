@@ -72,23 +72,21 @@ class Config:
 
     @staticmethod
     def findQuanty():
+        executable = "Quanty"
         if sys.platform == "win32":
-            executable = "Quanty.exe"
+            executable = f"{executable}.exe"
             localPath = resourceAbsolutePath(os.path.join("quanty", "bin", "win32"))
         elif sys.platform == "darwin":
-            executable = "Quanty"
             localPath = resourceAbsolutePath(os.path.join("quanty", "bin", "darwin"))
         elif sys.platform == "linux":
-            executable = "Quanty"
             localPath = resourceAbsolutePath(os.path.join("quanty", "bin", "linux"))
         else:
             localPath = None
-            executable = "Quanty"
 
-        envPath = QStandardPaths.findExecutable(executable)
         if localPath is not None:
             localPath = QStandardPaths.findExecutable(executable, [localPath])
 
+        envPath = QStandardPaths.findExecutable(executable)
         # Check if Quanty is in the paths defined in the $PATH.
         if envPath:
             path = envPath
