@@ -17,7 +17,6 @@ import warnings
 from urllib.error import URLError
 from urllib.request import Request, urlopen
 
-import PyQt6.QtCore  # noqa: F401
 from silx.gui.qt import (
     QAction,
     QApplication,
@@ -38,7 +37,7 @@ from silx.gui.qt import (
 from crispy import resourceAbsolutePath, version
 from crispy.config import Config
 from crispy.loggers import OutputHandler, StatusBarHandler, setUpLoggers
-from crispy.plot import MainPlotWidget
+from crispy.plot import MainPlotWidget  # noqa: F401
 from crispy.quanty.main import DockWidget
 from crispy.utils import fixedFont
 
