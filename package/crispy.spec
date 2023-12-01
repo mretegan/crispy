@@ -1,20 +1,19 @@
-# pylint: disable=all
+# ruff: noqa: F821
 # type: ignore
 """PyInstaller script to build the application for macOS and Windows."""
 
-import os
 import logging
-import sys
+import os
 import subprocess
-
-from PyInstaller.utils.hooks import collect_data_files, collect_submodules
+import sys
 
 from crispy import version
+from PyInstaller.utils.hooks import collect_data_files, collect_submodules
 
 logger = logging.getLogger("pyinstaller")
 
 block_cipher = None
-package_path = "../crispy"
+package_path = "../src/crispy"
 
 if sys.platform == "darwin":
     icon = "crispy.icns"
