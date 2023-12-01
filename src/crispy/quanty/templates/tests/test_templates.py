@@ -14,7 +14,6 @@ import glob
 import os
 
 import numpy as np
-import PyQt6.QtCore  # noqa: F401
 import pytest
 from ruamel.yaml import YAML
 
