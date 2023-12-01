@@ -30,7 +30,7 @@ dependencies = [
     "matplotlib",
     "numpy",
     "packaging",
-    "PyQt6",
+    "pyqt6",
     "ruamel.yaml",
     "silx",
     "wheel",
