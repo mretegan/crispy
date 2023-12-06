@@ -29,9 +29,16 @@ logger = logging.getLogger(__name__)
 
 class ComboBox(QComboBox):
     def setItems(self, items, currentItem):
+        logger.debug("Number of items in combo box: %s", self.count())
         self.blockSignals(True)
+        # FIXME: The crash happens here.
+        # for _ in range(self.count()):
+        #     self.removeItem(0)
+        #     logger.debug("Remaining items: %s", self.count())
         self.clear()
+        logger.debug("Adding items to combo box: %s", items)
         self.addItems(items)
+        logger.debug("Setting current item: %s", currentItem)
         self.setCurrentText(currentItem)
         self.blockSignals(False)
 

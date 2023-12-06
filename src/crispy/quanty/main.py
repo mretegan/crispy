@@ -95,8 +95,10 @@ class GeneralSetupPage(QWidget):
         pass
 
     def populate(self, state):
+        logger.debug("Start populating the general setup page.")
         model = state.model()
 
+        logger.debug("Start populating the symbol combo box.")
         self.symbolComboBox.setItems(state.symbols, state.element.symbol)
         self.chargeComboBox.setItems(state.charges, state.element.charge)
         self.symmetryComboBox.setItems(state.symmetries, state.symmetry.value)
@@ -129,6 +131,7 @@ class GeneralSetupPage(QWidget):
         self.spectraView.hideColumn(2)
         self.spectraView.setHeaderHidden(True)
         self.spectraView.expandAll()
+        logger.debug("Finished populating the general setup page.")
 
 
 class HamiltonianSetupPage(QWidget):
@@ -143,6 +146,7 @@ class HamiltonianSetupPage(QWidget):
         self.hamiltonian = None
 
     def populate(self, state):
+        logger.debug("Start populating the Hamiltonian Setup page.")
         hamiltonian = state.hamiltonian
         self.hamiltonian = hamiltonian
         model = state.model()
@@ -187,6 +191,7 @@ class HamiltonianSetupPage(QWidget):
         # in turn will cause the numberOfStates to be reset to the maximum number.
         # self.nStatesAutoCheckBox.stateChanged.disconnect()
         self.nStatesAutoCheckBox.stateChanged.connect(self.updateAutoStates)
+        logger.debug("Finished populating the Hamiltonian Setup page.")
 
     def updateParametersView(self):
         index = self.termsView.currentIndex()
@@ -435,6 +440,7 @@ class DockWidget(QDockWidget):
 
     @state.setter
     def state(self, value):
+        logger.debug("Start setting the state.")
         # Except for the case when the method is called from __init__,
         # self.state should be assigned to the results model, so disconnect
         # only the signals that are not relevant anymore.
@@ -442,16 +448,20 @@ class DockWidget(QDockWidget):
             self.state.runner.outputUpdated.disconnect()
         self._state = value
 
+        logger.debug("Start populating the widgets.")
         self.generalPage.populate(self.state)
         self.hamiltonianPage.populate(self.state)
 
+        logger.debug("Start connecting the signals.")
         self.state.runner.outputUpdated.connect(self.updateLogger)
         self.state.runner.successful.connect(self.successful)
         self.state.titleChanged.connect(self.updateMainWindowTitle)
 
+        logger.debug("Start updating the title.")
         self.updateMainWindowTitle(self.state.value)
 
     def populate(self, index=None):
+        logger.debug("Start populating the widgets.")
         # Remove the previous state from the root item's children.
         rootItem = self.model.rootItem()
         for child in rootItem.children():
@@ -500,6 +510,7 @@ class DockWidget(QDockWidget):
         logger.debug("Finished copying the parameters.")
 
         self.state = state
+        logger.debug("Finished populating the widgets.")
 
     def run(self):
         progress = ProgressDialog(self)
