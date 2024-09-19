@@ -47,7 +47,7 @@ Source = "https://github.com/mretegan/crispy"
 Tracker = "https://github.com/mretegan/crispy/issues"
 
 [project.optional-dependencies]
-devel = ["black", "pytest", "twine", "pyinstaller", "black", "black[jupyter]"]
+devel = ["pytest", "twine", "pyinstaller", "ruff"]
 docs = ["sphinx", "sphinx-rtd-theme"]
 
 [project.gui-scripts]
@@ -60,5 +60,5 @@ namespaces = false
 [tool.setuptools.dynamic]
 version = { attr = "crispy.__version__" }
 
-[tool.mypy]
-ignore_missing_imports = true
+# [tool.mypy]
+# ignore_missing_imports = true

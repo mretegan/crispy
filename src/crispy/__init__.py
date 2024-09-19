@@ -1,14 +1,14 @@
 ###################################################################
-# Copyright (c) 2016-2022 European Synchrotron Radiation Facility #
+# Copyright (c) 2016-2024 European Synchrotron Radiation Facility #
 #                                                                 #
 # Author: Marius Retegan                                          #
 #                                                                 #
 # This work is licensed under the terms of the MIT license.       #
 # For further information, see https://github.com/mretegan/crispy #
 ###################################################################
-"""This is the crispy package."""
-__version__ = "2023.0.dev0"
+"""This is the Crispy package."""
 
+__version__ = "0.8.0dev"
 import os
 import sys
 

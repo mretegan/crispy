@@ -1,5 +1,5 @@
 ###################################################################
-# Copyright (c) 2016-2022 European Synchrotron Radiation Facility #
+# Copyright (c) 2016-2024 European Synchrotron Radiation Facility #
 #                                                                 #
 # Author: Marius Retegan                                          #
 #                                                                 #
@@ -8,7 +8,6 @@
 ###################################################################
 # pylint: disable=import-outside-toplevel
 """The Quanty Hamiltonian and terms."""
-
 
 import copy
 import logging

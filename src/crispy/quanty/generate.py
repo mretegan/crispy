@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 ###################################################################
-# Copyright (c) 2016-2022 European Synchrotron Radiation Facility #
+# Copyright (c) 2016-2024 European Synchrotron Radiation Facility #
 #                                                                 #
 # Author: Marius Retegan                                          #
 #                                                                 #

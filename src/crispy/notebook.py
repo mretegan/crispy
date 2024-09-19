@@ -1,5 +1,5 @@
 ###################################################################
-# Copyright (c) 2016-2022 European Synchrotron Radiation Facility #
+# Copyright (c) 2016-2024 European Synchrotron Radiation Facility #
 #                                                                 #
 # Author: Marius Retegan                                          #
 #                                                                 #
@@ -108,9 +108,9 @@ class Hamiltonian:
         general_data["Gk"] = self._hamiltonian.gk.value
         general_data["Zeta"] = self._hamiltonian.zeta.value
         general_data["Number of States"] = self._hamiltonian.numberOfStates.value
-        general_data[
-            "Number of Configurations"
-        ] = self._hamiltonian.numberOfConfigurations.value
+        general_data["Number of Configurations"] = (
+            self._hamiltonian.numberOfConfigurations.value
+        )
         data["General"] = general_data
         for term in self._hamiltonian.terms.children():
             for hamiltonian in term.children():
@@ -119,9 +119,9 @@ class Hamiltonian:
                     scale_factor = getattr(parameter, "scaleFactor", None)
                     if scale_factor is not None:
                         parameter_data.append(scale_factor)
-                    data["Terms"][term.name][hamiltonian.name][
-                        parameter.name
-                    ] = parameter_data
+                    data["Terms"][term.name][hamiltonian.name][parameter.name] = (
+                        parameter_data
+                    )
         return prettify(data)
 
     def _repr_pretty_(self, p, cycle):
