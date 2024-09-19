@@ -101,7 +101,7 @@ please cite the following reference (change the version number if required)::
 
     @misc{retegan_crispy,
       author       = {Retegan, Marius},
-      title        = {Crispy: v0.7.3},
+      title        = {Crispy: v0.7.4},
       year         = {2019},
       doi          = {10.5281/zenodo.1008184},
       url          = {https://dx.doi.org/10.5281/zenodo.1008184}
