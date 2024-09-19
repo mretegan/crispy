@@ -20,10 +20,10 @@ jobs:
       - name: Install requirements
         run: |
           python -m pip install --upgrade pip
-          pip install .[dev]
+          pip install .[devel]
       - name: Check style
         run: |
-          black --check .
+          ruff format --check .
 
   test:
     runs-on: ubuntu-latest
@@ -40,7 +40,7 @@ jobs:
       - name: Install requirements
         run: |
           python -m pip install --upgrade pip
-          pip install .[dev]
+          pip install .[devel]
           pip list
       - name: Run tests
         run: |
@@ -53,7 +53,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-latest, windows-latest]
-        python-version: [3.8, "3.10", "3.12"]
+        python-version: ["3.8", "3.10", "3.12"]
     steps:
       - name: Checkout
         uses: actions/checkout@v3

@@ -157,9 +157,9 @@ class Configuration:
             self.shells = (valenceShell,)
             self.occupancies = (valenceOccupancy,)
 
-        self.subshells = tuple([
-            f"{level}{shell}" for level, shell in zip(self.levels, self.shells)
-        ])
+        self.subshells = tuple(
+            [f"{level}{shell}" for level, shell in zip(self.levels, self.shells)]
+        )
 
         self._value = value
 
