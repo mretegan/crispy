@@ -90,26 +90,16 @@ jobs:
         run: |
           ls -R
 
-      - name: Get version
-        id: crispy_version
-        run: |
-            echo "VERSION=$(python -c 'from crispy import __version__; print(__version__)')" >> $GITHUB_ENV
-
-      - name: Get the architecture 
-        id: architecture
-        run: |
-            echo "ARCH=$(python -c 'import platform; print(platform.machine().lower())')" >> $GITHUB_ENV
-
       - name: Upload the Windows installer
         uses: actions/upload-artifact@v4
         if: runner.os == 'Windows'
         with:
-          name: Crispy-${{ env.VERSION }}-${{ env.ARCH }}
+          name: Crispy-${{ runner.os }}-${{ runner.arch }}
           path: package\artifacts\*.exe
 
-      - name: Upload the macOS app
+      - name: Upload the macOS application
         uses: actions/upload-artifact@v4
         if: runner.os == 'macOS'
         with:
-          name: Crispy-${{ env.VERSION }}-${{ env.ARCH }}
+          name: Crispy-${{ runner.os }}-${{ runner.arch }}
           path: package/artifacts/*.dmg
