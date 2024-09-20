@@ -40,7 +40,7 @@ for package in ("xraydb", "silx.resources"):
 
 hiddenimports = collect_submodules("fabio")
 
-a = Analysis(
+a = Analysis(  # noqa: F821
     [os.path.join(package_path, "__main__.py")],
     pathex=[],
     binaries=[],
@@ -55,9 +55,9 @@ a = Analysis(
     noarchive=False,
 )
 
-pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
+pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)  # noqa: F821
 
-exe = EXE(
+exe = EXE(  # noqa: F821
     pyz,
     a.scripts,
     [],
@@ -71,7 +71,7 @@ exe = EXE(
     icon=icon,
 )
 
-coll = COLLECT(
+coll = COLLECT(  # noqa: F821
     exe,
     a.binaries,
     a.zipfiles,
@@ -82,7 +82,7 @@ coll = COLLECT(
     name="Crispy",
 )
 
-app = BUNDLE(
+app = BUNDLE(  # noqa: F821
     coll,
     name="Crispy.app",
     icon=icon,

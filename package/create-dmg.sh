@@ -42,14 +42,14 @@ ln -s /Applications/ "${TEMPLATE}"/Applications
 mkdir "${TEMPLATE}"/.fseventsd
 touch "${TEMPLATE}"/.fseventsd/no_log
 
+echo "Sleeping for a second."
+sleep 1
+
 echo "Creating the temporary disk image."
 hdiutil create -format UDRW -volname Crispy -fs HFS+ \
        -fsargs '-c c=64,a=16,e=16' \
        -srcfolder "${TEMPLATE}" \
        "${TEMPLATE_DMG}"
-
-echo "Sleeping for a second."
-sleep 1
 
 hdiutil detach /Volumes/Crispy -force || true
 
