@@ -93,10 +93,10 @@ jobs:
       - name: Get version
         id: crispy_version
         run: |
-          if [[ "$OSTYPE" == "darwin"* ]] || [[ "$OSTYPE" == "linux-gnu"* ]]; then
-            VERSION=$(pip show crispy | grep Version | awk '{print $2}')
-          else
+          if [ ${{ runner.os }} == 'Windows' ]; then
             VERSION=$(pip show crispy | Select-String "Version" | ForEach-Object { $_.Line -replace 'Version: ', '' })
+          else
+            VERSION=$(pip show crispy | grep Version | awk '{print $2}')
           fi
           echo "::set-output name=VERSION::$VERSION"
         shell: bash

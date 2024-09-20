@@ -46,7 +46,7 @@ echo "Sleeping for a few seconds."
 sleep 5
 
 echo "Creating the temporary disk image."
-hdiutil create -verbose -format UDRW -volname Crispy -fs HFS+ \
+hdiutil create -verbose -format UDRW -volname Crispy -fs APFS \
        -srcfolder "${TEMPLATE}" \
        "${TEMPLATE_DMG}"
 
