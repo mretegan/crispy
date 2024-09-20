@@ -42,16 +42,19 @@ ln -s /Applications/ "${TEMPLATE}"/Applications
 mkdir "${TEMPLATE}"/.fseventsd
 touch "${TEMPLATE}"/.fseventsd/no_log
 
-lsof | grep "${TEMPLATE}"
-lsof | grep "${TEMPLATE_DMG}"
+echo "Sleeping for a few seconds."
+sleep 3
 
 echo "Creating the temporary disk image."
-hdiutil create -format UDRW -volname Crispy -fs HFS+ \
-       -fsargs '-c c=64,a=16,e=16' \
+hdiutil create -verbose -format UDRW -volname Crispy -fs HFS+ \
        -srcfolder "${TEMPLATE}" \
        "${TEMPLATE_DMG}"
 
-hdiutil detach /Volumes/Crispy -force || true
+echo "Sleeping for a few seconds."
+sleep 3
+
+echo "Detaching the temporary disk image if it's still attached."
+hdiutil detach -verbose /Volumes/Crispy -force || true
 
 echo "Attaching the temporary disk image in read/write mode."
 MOUNT_OUTPUT=$(hdiutil attach -readwrite -noverify -noautoopen "${TEMPLATE_DMG}" | grep '^/dev/')
