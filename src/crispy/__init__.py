@@ -8,7 +8,7 @@
 ###################################################################
 """This is the Crispy package."""
 
-__version__ = "0.8.0dev"
+__version__ = "0.8.0dev0"
 import os
 import sys
 

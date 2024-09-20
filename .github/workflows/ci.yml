@@ -93,35 +93,27 @@ jobs:
       - name: Get version
         id: crispy_version
         run: |
-          if [ ${{ runner.os }} == 'Windows' ]; then
-            VERSION=$(pip show crispy | Select-String "Version" | ForEach-Object { $_.Line -replace 'Version: ', '' })
-          else
-            VERSION=$(pip show crispy | grep Version | awk '{print $2}')
-          fi
-          echo "::set-output name=VERSION::$VERSION"
-        shell: bash
-        
+            echo "VERSION=$(python -c 'from crispy import __version__; print(__version__)')" >> $GITHUB_ENV
 
       - name: Define the architecture based on the runner architecture
         id: architecture
         run: |
           if [ ${{ runner.arch }} == 'X64' ]; then
-            export ARCH='x64'
+            echo "ARCH=x64" >> $GITHUB_ENV
           else
-            export ARCH='arm64'
+            echo "ARCH=arm64" >> $GITHUB_ENV
           fi
-          echo "::set-output name=ARCH::$ARCH"
 
       - name: Upload the Windows installer
         uses: actions/upload-artifact@v4
         if: runner.os == 'Windows'
         with:
-          name: Crispy-${{ steps.crispy_version.outputs.VERSION }}-${{ steps.architecture.outputs.ARCH }}
+          name: Crispy-${{ env.VERSION }}-${{ env.ARCH }}
           path: package\artifacts\*.exe
 
       - name: Upload the macOS app
         uses: actions/upload-artifact@v4
         if: runner.os == 'macOS'
         with:
-          name: Crispy-${{ steps.crispy_version.outputs.VERSION }}-${{ steps.architecture.outputs.ARCH  }}
+          name: Crispy-${{ env.VERSION }}-${{ env.ARCH }}
           path: package/artifacts/*.dmg
