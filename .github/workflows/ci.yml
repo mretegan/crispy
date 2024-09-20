@@ -94,12 +94,12 @@ jobs:
         uses: actions/upload-artifact@v4
         if: runner.os == 'Windows'
         with:
-          name: Crispy-${{ runner.os }}-${{ runner.arch }}
+          name: Crispy-${{ runner.os }}-${{ runner.arch }}-Python-${{ matrix.python-version }}
           path: package\artifacts\*.exe
 
       - name: Upload the macOS application
         uses: actions/upload-artifact@v4
         if: runner.os == 'macOS'
         with:
-          name: Crispy-${{ runner.os }}-${{ runner.arch }}
+          name: Crispy-${{ runner.os }}-${{ runner.arch }}-Python-${{ matrix.python-version }}
           path: package/artifacts/*.dmg
