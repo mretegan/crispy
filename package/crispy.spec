@@ -1,19 +1,15 @@
-# ruff: noqa: F821
 # type: ignore
 """PyInstaller script to build the application for macOS and Windows."""
 
-import logging
 import os
 import subprocess
 import sys
 
 from crispy import version
-from PyInstaller.utils.hooks import collect_data_files, collect_submodules
-
-logger = logging.getLogger("pyinstaller")
+from PyInstaller.utils.hooks import collect_data_files, collect_submodules, logger
 
 block_cipher = None
-package_path = "../src/crispy"
+package_path = os.path.abspath(os.path.join("..", "src", "crispy"))
 
 if sys.platform == "darwin":
     icon = "crispy.icns"
@@ -22,11 +18,20 @@ elif sys.platform == "win32":
 icon = os.path.join(os.getcwd(), icon)
 logger.info(icon)
 
-datas = [
-    (os.path.join(package_path, "uis"), "uis"),
-    (os.path.join(package_path, "icons"), "icons"),
-    (os.path.join(package_path, "quanty"), "quanty"),
+data_paths = [
+    ["uis", "*.ui"], 
+    ["icons", "*.svg"], 
+    ["quanty", "calculations.yaml"],
+    ["quanty", "parameters", "*.h5"], 
+    ["quanty", "templates", "*.lua"],
+    ["quanty", "uis", "*.ui"],
+    ["quanty", "uis", "details", "*.ui"],
+    ["quanty", "bin", sys.platform, "*"],
 ]
+
+datas = []
+for data_path in data_paths:
+    datas.append((os.path.join(package_path, *data_path), os.path.join(*data_path[:-1])))
 
 for package in ("xraydb", "silx.resources"):
     datas.extend(collect_data_files(package))
@@ -64,14 +69,6 @@ exe = EXE(
     icon=icon,
 )
 
-# Remove the MKL libraries.
-for binary in sorted(a.binaries):
-    name, _, _ = binary
-    for key in ("mkl",):
-        if key in name:
-            a.binaries.remove(binary)
-            logger.info(f"Removed {name}.")
-
 coll = COLLECT(
     exe,
     a.binaries,
@@ -103,19 +100,6 @@ app = BUNDLE(
 
 # Post build actions.
 if sys.platform == "darwin":
-    # Remove the signature from the Python interpreter.
-    # see https://github.com/pyinstaller/pyinstaller/issues/5062.
-    subprocess.call(
-        [
-            "codesign",
-            "--remove-signature",
-            os.path.join("dist", "Crispy.app", "Contents", "MacOS", "Python"),
-        ]
-    )
-    # Remove Quanty's Windows and Linux binaries.
-    root = os.path.join("dist", "Crispy.app", "Contents", "Resources", "quanty", "bin")
-    os.remove(os.path.join(root, "win32", "Quanty.exe"))
-    os.remove(os.path.join(root, "linux", "Quanty"))
 
     # Remove the extended attributes from the MacOS application as this causes
     # the application to fail to launch ("is damaged and can’t be opened. You

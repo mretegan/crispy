@@ -17,8 +17,11 @@ TEMPLATE="${ARTIFACTS}"/template
 TEMPLATE_DMG="${ARTIFACTS}"/template.dmg
 DMG="${ARTIFACTS}"/Crispy.dmg
 
-# Create the artifacts folder if if doesn't exits
-[ ! -d "$ARTIFACTS" ] && mkdir -p "$ARTIFACTS"
+# Remove the artifacts folder if it exists.
+[ -d "$ARTIFACTS" ] && rm -rf "$ARTIFACTS"
+
+# Create the artifacts folder.
+mkdir -p "$ARTIFACTS"
 
 echo "Removing previous images."
 if [[ -e "${DMG}" ]]; then rm -rf "${DMG}"; fi
@@ -45,18 +48,18 @@ hdiutil create -format UDRW -volname Crispy -fs HFS+ \
        -srcfolder "${TEMPLATE}" \
        "${TEMPLATE_DMG}"
 
+echo "Sleeping for a second."
+sleep 1
+
 hdiutil detach /Volumes/Crispy -force || true
 
-echo 'Attaching the temporary disk image in read/write mode.'
+echo "Attaching the temporary disk image in read/write mode."
 MOUNT_OUTPUT=$(hdiutil attach -readwrite -noverify -noautoopen "${TEMPLATE_DMG}" | grep '^/dev/')
 DEV_NAME=$(echo -n "${MOUNT_OUTPUT}" | head -n 1 | awk '{print $1}')
 MOUNT_POINT=$(echo -n "${MOUNT_OUTPUT}" | tail -n 1 | awk '{print $3}')
 
-echo 'Fixing permissions.'
+echo "Fixing permissions."
 chmod -Rf go-w "${TEMPLATE}" || true
-
-# Makes the disk image window open automatically when mounted.
-bless -openfolder "${MOUNT_POINT}"
 
 # Hides background directory even more.
 SetFile -a V "${MOUNT_POINT}"/.background
@@ -65,7 +68,10 @@ SetFile -a V "${MOUNT_POINT}"/.background
 SetFile -a C "${MOUNT_POINT}"
 
 echo "Detaching the temporary disk image"
-hdiutil detach "${DEV_NAME}" -force
+hdiutil detach "${DEV_NAME}" -force || true
+
+echo "Sleeping again for a second."
+sleep 1
 
 if [[ -e "${DMG}" ]]; then rm -rf "${DMG}"; fi
 
