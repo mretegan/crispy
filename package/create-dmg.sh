@@ -42,8 +42,8 @@ ln -s /Applications/ "${TEMPLATE}"/Applications
 mkdir "${TEMPLATE}"/.fseventsd
 touch "${TEMPLATE}"/.fseventsd/no_log
 
-echo "Sleeping for a second."
-sleep 1
+lsof | grep "${TEMPLATE}"
+lsof | grep "${TEMPLATE_DMG}"
 
 echo "Creating the temporary disk image."
 hdiutil create -format UDRW -volname Crispy -fs HFS+ \
@@ -66,9 +66,6 @@ SetFile -a V "${MOUNT_POINT}"/.background
 
 # Sets the custom icon volume flag so that volume has nice icon.
 SetFile -a C "${MOUNT_POINT}"
-
-echo "Sleeping again for a second."
-sleep 1
 
 echo "Detaching the temporary disk image"
 hdiutil detach "${DEV_NAME}" -force || true
