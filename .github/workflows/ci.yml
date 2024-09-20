@@ -100,12 +100,12 @@ jobs:
         uses: actions/upload-artifact@v4
         if: runner.os == 'Windows'
         with:
-          name: Crispy-${{ steps.crispy_version.outputs.VERSION }}-${{ runner.arch | lower }}
+          name: Crispy-${{ steps.crispy_version.outputs.VERSION }}-${{ toLower(runner.arch) }}
           path: package\artifacts\*.exe
 
       - name: Upload the macOS app
         uses: actions/upload-artifact@v4
         if: runner.os == 'macOS'
         with:
-          name: Crispy-${{ steps.crispy_version.outputs.VERSION }}-${{ runner.arch | lower }}
+          name: Crispy-${{ steps.crispy_version.outputs.VERSION }}-${{ toLower(runner.arch) }}
           path: package/artifacts/*.dmg
