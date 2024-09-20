@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# pylint: disable=redefined-builtin
 
 from datetime import datetime
 

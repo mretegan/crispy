@@ -285,7 +285,6 @@ class Shift(DoubleItem):
 
 
 class Axis(BaseItem):
-    # pylint: disable=too-many-instance-attributes
     def __init__(self, parent=None, name="Axis"):
         super().__init__(parent=parent, name=name)
 

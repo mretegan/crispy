@@ -7,7 +7,6 @@
 # This work is licensed under the terms of the MIT license.       #
 # For further information, see https://github.com/mretegan/crispy #
 ###################################################################
-# pylint: disable=redefined-outer-name
 
 """Quanty templates tests"""
 

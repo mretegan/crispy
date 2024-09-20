@@ -62,7 +62,6 @@ class Element(BaseItem):
 
     @property
     def valenceBlock(self):
-        # pylint: disable=unsubscriptable-object
         """Name of the valence block."""
         return self.valenceSubshell[-1]
 
@@ -107,7 +106,6 @@ class Element(BaseItem):
 
 
 class Configuration:
-    # pylint: disable=too-many-instance-attributes
     def __init__(self, value=None):
         self.value = value
         self.energy = None
@@ -157,9 +155,9 @@ class Configuration:
             self.shells = (valenceShell,)
             self.occupancies = (valenceOccupancy,)
 
-        self.subshells = tuple(
-            [f"{level}{shell}" for level, shell in zip(self.levels, self.shells)]
-        )
+        self.subshells = tuple([
+            f"{level}{shell}" for level, shell in zip(self.levels, self.shells)
+        ])
 
         self._value = value
 
@@ -461,8 +459,6 @@ class Runner(QProcess):
 
 
 class Calculation(SelectableItem):
-    # pylint: disable=all
-
     titleChanged = pyqtSignal(str)
 
     def __init__(

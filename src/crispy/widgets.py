@@ -130,7 +130,6 @@ class Vector3DLineEdit(LineEdit):
         # Regex that matches the vectors input format, e.g. (1, 0, 1), (-1,0,1)
         # + and - are allowed and any number of spaces after comma. The regex has
         # groups that can be captured.
-        # pylint: disable=anomalous-backslash-in-string
         self.regex.setPattern("\\(([+-]?\d?),\s*([+-]?\d?),\s*([+-]?\d?)\\)")
         self.validator = QRegularExpressionValidator(self.regex, self)
         self.setValidator(self.validator)

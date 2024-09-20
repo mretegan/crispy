@@ -49,7 +49,6 @@ class CustomProfileWindow(ProfileWindow):
 
 
 class CustomPlotWidget(PlotWidget):
-    # pylint: disable=too-many-instance-attributes
     def __init__(self, parent=None, backend="matplotlib"):
         super().__init__(parent=parent, backend=backend)
 
@@ -237,7 +236,6 @@ class MainPlotWidget(CustomPlotWidget):
         self.profileWindow.close()
 
     def addCurve(self, x, y, **kwargs):
-        # pylint: disable=arguments-differ
         super().addCurve(x, y, **kwargs)
         self.addLegend()
 

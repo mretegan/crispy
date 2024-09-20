@@ -6,7 +6,6 @@
 # This work is licensed under the terms of the MIT license.       #
 # For further information, see https://github.com/mretegan/crispy #
 ###################################################################
-# pylint: disable=unused-argument, no-self-use
 """Items for custom models."""
 
 import copy
@@ -27,7 +26,6 @@ logger = logging.getLogger(__name__)
 
 
 class BaseItem(QObject):
-    # pylint: disable=too-many-instance-attributes, too-many-public-methods
     """Base class for the items of the tree model."""
 
     dataChanged = pyqtSignal(int)
@@ -168,7 +166,6 @@ class BaseItem(QObject):
             # )
             self._model = None if model is None else weakref.ref(model)
             for child in self.children():
-                # pylint: disable=protected-access
                 child._updateModel(model)
 
     def index(self, column=0):

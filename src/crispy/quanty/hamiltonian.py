@@ -137,8 +137,6 @@ class HamiltonianParameter(DoubleItem):
 
 
 class HamiltonianTerm(SelectableItem):
-    # pylint: disable=too-many-instance-attributes
-
     def __init__(self, parent=None, name=None):
         super().__init__(parent=parent, name=name)
         self._checkState = Qt.Unchecked
@@ -569,8 +567,6 @@ class NumberOfConfigurations(IntItem):
 
 
 class Hamiltonian(BaseItem):
-    # pylint: disable=too-many-instance-attributes
-
     def __init__(self, parent):
         super().__init__(parent=parent, name="Hamiltonian")
 

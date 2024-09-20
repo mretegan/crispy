@@ -184,7 +184,6 @@ class Cowan:
                 os.remove(filename)
 
     def parse_rcn_output(self):
-        # pylint: disable=too-many-branches
         """Parse the output of the RCN program to get the values of the parameters."""
 
         subshells = self.configuration.subshells

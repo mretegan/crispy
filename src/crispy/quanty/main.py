@@ -206,8 +206,6 @@ class HamiltonianSetupPage(QWidget):
 
 
 class ResultsPage(QWidget):
-    # pylint: disable=too-many-instance-attributes
-
     currentIndexChanged = pyqtSignal(QModelIndex)
 
     def __init__(self, parent=None):
@@ -383,7 +381,6 @@ class ResultsPage(QWidget):
 
 
 class DockWidget(QDockWidget):
-    # pylint: disable=too-many-instance-attributes
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
@@ -557,7 +554,6 @@ class DockWidget(QDockWidget):
         # done would be lost.
         # This must be super confusing, but it is just a copy of the title from
         # a state that is in results model, to the current state.
-        # pylint: disable=protected-access
         self.state._value = title
         self.parent().setWindowTitle(f"Crispy - {title}")
 

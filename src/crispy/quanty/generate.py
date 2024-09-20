@@ -188,7 +188,6 @@ def generate_parameters(symbols):
 
 
 def generate_templates():
-    # pylint: disable=all
     """Generate the templates for the Quanty calculations."""
     for calculation in subshell_calculations():
         element = calculation.element
