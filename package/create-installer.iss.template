@@ -63,10 +63,10 @@ begin
   // 2 - error executing the UnInstallString
   // 3 - successfully executed the UnInstallString
 
-  // default return value
+  // Default return value
   Result := 0;
 
-  // get the uninstall string of the old app
+  // Get the uninstall string of the old app
   sUnInstallString := GetUninstallString();
   if sUnInstallString <> '' then begin
     sUnInstallString := RemoveQuotes(sUnInstallString);

@@ -23,6 +23,7 @@ data_paths = [
     ["icons", "*.svg"],
     ["quanty", "calculations.yaml"],
     ["quanty", "parameters", "*.h5"],
+    ["quanty", "parameters", "p-d_hybridization", "parameters.dat"],
     ["quanty", "templates", "*.lua"],
     ["quanty", "uis", "*.ui"],
     ["quanty", "uis", "details", "*.ui"],
