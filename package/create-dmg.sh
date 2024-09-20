@@ -67,11 +67,11 @@ SetFile -a V "${MOUNT_POINT}"/.background
 # Sets the custom icon volume flag so that volume has nice icon.
 SetFile -a C "${MOUNT_POINT}"
 
-echo "Detaching the temporary disk image"
-hdiutil detach "${DEV_NAME}" -force || true
-
 echo "Sleeping again for a second."
 sleep 1
+
+echo "Detaching the temporary disk image"
+hdiutil detach "${DEV_NAME}" -force || true
 
 if [[ -e "${DMG}" ]]; then rm -rf "${DMG}"; fi
 

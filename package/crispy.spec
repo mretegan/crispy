@@ -19,10 +19,10 @@ icon = os.path.join(os.getcwd(), icon)
 logger.info(icon)
 
 data_paths = [
-    ["uis", "*.ui"], 
-    ["icons", "*.svg"], 
+    ["uis", "*.ui"],
+    ["icons", "*.svg"],
     ["quanty", "calculations.yaml"],
-    ["quanty", "parameters", "*.h5"], 
+    ["quanty", "parameters", "*.h5"],
     ["quanty", "templates", "*.lua"],
     ["quanty", "uis", "*.ui"],
     ["quanty", "uis", "details", "*.ui"],
@@ -31,7 +31,9 @@ data_paths = [
 
 datas = []
 for data_path in data_paths:
-    datas.append((os.path.join(package_path, *data_path), os.path.join(*data_path[:-1])))
+    datas.append(
+        (os.path.join(package_path, *data_path), os.path.join(*data_path[:-1]))
+    )
 
 for package in ("xraydb", "silx.resources"):
     datas.extend(collect_data_files(package))
@@ -100,7 +102,6 @@ app = BUNDLE(
 
 # Post build actions.
 if sys.platform == "darwin":
-
     # Remove the extended attributes from the MacOS application as this causes
     # the application to fail to launch ("is damaged and can’t be opened. You
     # should move it to the Trash").
@@ -116,11 +117,6 @@ if sys.platform == "darwin":
     )
 
 elif sys.platform == "win32":
-    # Remove Quanty's macOS and Linux binaries.
-    root = os.path.join("dist", "Crispy", "quanty", "bin")
-    os.remove(os.path.join(root, "darwin", "Quanty"))
-    os.remove(os.path.join(root, "linux", "Quanty"))
-
     # Create the Inno Setup script.
     root = os.path.join(os.getcwd(), "assets")
     name = "create-installer.iss"
