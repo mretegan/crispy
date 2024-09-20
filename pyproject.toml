@@ -29,11 +29,9 @@ dependencies = [
     "h5py",
     "matplotlib",
     "numpy",
-    "packaging",
-    "pyside6",
+    "pyqt6",
     "ruamel.yaml",
     "silx",
-    "wheel",
     "xraydb",
 ]
 dynamic = ["version"]
@@ -47,7 +45,15 @@ Source = "https://github.com/mretegan/crispy"
 Tracker = "https://github.com/mretegan/crispy/issues"
 
 [project.optional-dependencies]
-devel = ["pytest", "twine", "pyinstaller", "ruff"]
+devel = [
+    "packaging",
+    "pyinstaller",
+    "pyinstaller-hooks-contrib",
+    "pytest",
+    "ruff",
+    "twine",
+    "wheel",
+]
 docs = ["sphinx", "sphinx-rtd-theme"]
 
 [project.gui-scripts]
