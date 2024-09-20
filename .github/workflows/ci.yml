@@ -96,16 +96,26 @@ jobs:
           VERSION=$(pip show crispy | grep Version | awk '{print $2}')
           echo "::set-output name=VERSION::$VERSION"
 
+      - name: Define the architecture based on the runner architecture
+        id: architecture
+        run: |
+          if [ ${{ runner.arch }} == 'X64' ]; then
+            export ARCH='x64'
+          else
+            export ARCH='arm64'
+          fi
+          echo "::set-output name=ARCH::$ARCH"
+
       - name: Upload the Windows installer
         uses: actions/upload-artifact@v4
         if: runner.os == 'Windows'
         with:
-          name: Crispy-${{ steps.crispy_version.outputs.VERSION }}-${{ toLower(runner.arch) }}
+          name: Crispy-${{ steps.crispy_version.outputs.VERSION }}-${{ steps.architecture.outputs.ARCH }}
           path: package\artifacts\*.exe
 
       - name: Upload the macOS app
         uses: actions/upload-artifact@v4
         if: runner.os == 'macOS'
         with:
-          name: Crispy-${{ steps.crispy_version.outputs.VERSION }}-${{ toLower(runner.arch) }}
+          name: Crispy-${{ steps.crispy_version.outputs.VERSION }}-${{ steps.architecture.outputs.ARCH  }}
           path: package/artifacts/*.dmg
