@@ -43,7 +43,7 @@ mkdir "${TEMPLATE}"/.fseventsd
 touch "${TEMPLATE}"/.fseventsd/no_log
 
 echo "Sleeping for a few seconds."
-sleep 3
+sleep 5
 
 echo "Creating the temporary disk image."
 hdiutil create -verbose -format UDRW -volname Crispy -fs HFS+ \
@@ -51,7 +51,7 @@ hdiutil create -verbose -format UDRW -volname Crispy -fs HFS+ \
        "${TEMPLATE_DMG}"
 
 echo "Sleeping for a few seconds."
-sleep 3
+sleep 5
 
 echo "Detaching the temporary disk image if it's still attached."
 hdiutil detach -verbose /Volumes/Crispy -force || true
@@ -70,14 +70,20 @@ SetFile -a V "${MOUNT_POINT}"/.background
 # Sets the custom icon volume flag so that volume has nice icon.
 SetFile -a C "${MOUNT_POINT}"
 
+echo "Sleeping for a few seconds."
+sleep 5
+
 echo "Detaching the temporary disk image"
 hdiutil detach "${DEV_NAME}" -force || true
 
 if [[ -e "${DMG}" ]]; then rm -rf "${DMG}"; fi
 
-echo 'Converting the temporary image to a compressed image.'
+echo "Sleeping for a few seconds."
+sleep 5
+
+echo "Converting the temporary image to a compressed image."
 hdiutil convert "${TEMPLATE_DMG}" -format UDZO -imagekey zlib-level=9 -o "${DMG}"
 
-echo 'Cleaning up.'
+echo "Cleaning up."
 rm -rf "${TEMPLATE}"
 rm -rf "${TEMPLATE_DMG}"

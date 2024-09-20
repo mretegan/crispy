@@ -59,7 +59,7 @@ jobs:
       max-parallel: 6
       fail-fast: false
       matrix:
-        os: [ macos-13, macos-latest,windows-latest]
+        os: [ macos-13, macos-14, windows-2019 ]
         python-version: ["3.12",]
     steps:
       - name: Checkout
@@ -93,8 +93,14 @@ jobs:
       - name: Get version
         id: crispy_version
         run: |
-          VERSION=$(pip show crispy | grep Version | awk '{print $2}')
+          if [[ "$OSTYPE" == "darwin"* ]] || [[ "$OSTYPE" == "linux-gnu"* ]]; then
+            VERSION=$(pip show crispy | grep Version | awk '{print $2}')
+          else
+            VERSION=$(pip show crispy | Select-String "Version" | ForEach-Object { $_.Line -replace 'Version: ', '' })
+          fi
           echo "::set-output name=VERSION::$VERSION"
+        shell: bash
+        
 
       - name: Define the architecture based on the runner architecture
         id: architecture
