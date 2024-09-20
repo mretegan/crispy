@@ -98,7 +98,7 @@ jobs:
       - name: Get the architecture 
         id: architecture
         run: |
-            echo "ARCH=$(python -c 'import platform; print(platform.machine().lower()')" >> $GITHUB_ENV
+            echo "ARCH=$(python -c 'import platform; print(platform.machine().lower())')" >> $GITHUB_ENV
 
       - name: Upload the Windows installer
         uses: actions/upload-artifact@v4
