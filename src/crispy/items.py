@@ -367,14 +367,14 @@ class Vector3DItem(BaseItem):
             # Qt doesn't know how to represent a Numpy array, so we create a digestible
             # representation for it.
             if column == 1:
-                return repr(tuple(self.value))
+                return f"({self.value[0]}, {self.value[1]}, {self.value[2]})"
         return super().data(column, role)
 
     def setData(self, column, value, role=Qt.EditRole):
         if role == Qt.EditRole:
             if column == 1:
                 # Convert the value to a Numpy array.
-                self.value = np.fromstring(value[1:-1], dtype=np.int32, sep=",")
+                self.value = np.fromstring(value[1:-1], dtype=int, sep=",")
             return True
         return super().setData(column, value, role)
 
