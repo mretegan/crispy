@@ -139,7 +139,6 @@ class HamiltonianParameter(DoubleItem):
 class HamiltonianTerm(SelectableItem):
     def __init__(self, parent=None, name=None):
         super().__init__(parent=parent, name=name)
-        self._checkState = Qt.Unchecked
 
         # Makes things easier to call.
         calculation = self.ancestor
@@ -237,7 +236,7 @@ class AtomicTerm(HamiltonianTerm):
                     scaleFactor = self.scaleFactorFromName(parameterName)
                     HamiltonianParameter(hamiltonian, parameterName, value, scaleFactor)
 
-        self._checkState = Qt.Checked
+        self.enable()
 
     def setData(self, column, value, role=Qt.EditRole):
         if role == Qt.CheckStateRole:
@@ -276,7 +275,7 @@ class CrystalFieldTerm(HamiltonianTerm):
                 parameterName = parameterName + f"({self.subshell})"
                 HamiltonianParameter(hamiltonian, parameterName, value, None)
 
-        self._checkState = Qt.Checked
+        self.enable()
 
 
 class LigandHybridizationTerm(HamiltonianTerm):
@@ -320,9 +319,10 @@ class LigandHybridizationTerm(HamiltonianTerm):
                     siblings.append(sibling)
 
             # At the moment only one type of ligands hybridization is possible.
+            value = Qt.CheckState(value)
             for sibling in siblings:
-                if value == Qt.Checked and sibling is not self:
-                    sibling.checkState = Qt.Unchecked
+                if value == Qt.CheckState.Checked and sibling is not self:
+                    sibling.disable()
                     sibling.dataChanged.emit(1)
 
         return super().setData(column, value, role)
@@ -397,8 +397,6 @@ class MagneticFieldTerm(HamiltonianTerm):
             for parameterName in ("Bx", "By", "Bz"):
                 HamiltonianParameter(hamiltonian, parameterName, 0.0, None)
 
-        self._checkState = Qt.Unchecked
-
 
 class ExchangeFieldTerm(HamiltonianTerm):
     def __init__(self, parent=None, name="Exchange Field"):
@@ -408,8 +406,6 @@ class ExchangeFieldTerm(HamiltonianTerm):
             hamiltonian = BaseItem(self, hamiltonianName)
             for parameterName in ("Hx", "Hy", "Hz"):
                 HamiltonianParameter(hamiltonian, parameterName, 0.0, None)
-
-        self._checkState = Qt.Unchecked
 
 
 class HamiltonianTerms(BaseItem):
@@ -533,7 +529,7 @@ class NumberOfConfigurations(IntItem):
         """The number of configurations used in the calculation."""
         configurations = 1
         for term in self.parent().terms.children():
-            if "Ligands" in term.name and term.checkState == Qt.Checked:
+            if "Ligands" in term.name and term.isEnabled():
                 configurations += 1
         return configurations
 
@@ -545,9 +541,9 @@ class NumberOfConfigurations(IntItem):
 
         maximum = 1
         for term in self.parent().terms.children():
-            if "LMCT" in term.name and term.checkState == Qt.Checked:
+            if "LMCT" in term.name and term.isEnabled():
                 maximum += norbs - nel
-            elif "MLCT" in term.name and term.checkState == Qt.Checked:
+            elif "MLCT" in term.name and term.isEnabled():
                 maximum += nel
         return maximum
 
@@ -587,7 +583,7 @@ class Hamiltonian(BaseItem):
 
     def isTermEnabled(self, termType):
         for term in self.terms.children():
-            if isinstance(term, termType) and term.checkState == Qt.Checked:
+            if isinstance(term, termType) and term.isEnabled():
                 return True
         return False
 

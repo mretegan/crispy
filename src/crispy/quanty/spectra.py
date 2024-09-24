@@ -129,7 +129,7 @@ class Spectrum1D(Spectrum):
         self.signal = broaden(self.signal, fwhm, kind="gaussian")
 
     def plot(self, plotWidget):
-        if not self.checkState:
+        if not self.isEnabled():
             return
         calculation = self.ancestor
         index = calculation.childPosition() + 1
@@ -221,7 +221,7 @@ class Spectrum2D(Spectrum1D):
         self.signal = broaden(self.signal, fwhm, kind="gaussian")
 
     def plot(self, plotWidget):
-        if not self.checkState:
+        if not self.isEnabled():
             return
         calculation = self.ancestor
         index = calculation.childPosition() + 1
@@ -259,9 +259,9 @@ class SpectraToInteract(BaseItem):
     def selected(self, names):
         for spectrum in self.all:
             if spectrum.name in names:
-                spectrum.checkState = Qt.Checked
+                spectrum.enable()
             else:
-                spectrum.checkState = Qt.Unchecked
+                spectrum.disable()
 
 
 class SpectraToCalculate(SpectraToInteract):
@@ -285,13 +285,12 @@ class SpectraToCalculate(SpectraToInteract):
             "RIXS": {"Powder/Solution": ("Resonant Inelastic",)},
         }
 
-        checkState = Qt.Checked
         for sample, spectraNames in SPECTRA[experiment.value].items():
             sample = Sample(parent=self, name=sample)
             for spectrumName in spectraNames:
                 spectrum = Spectrum(parent=sample, name=spectrumName)
-                spectrum._checkState = checkState
-                checkState = Qt.Unchecked
+                if spectrumName == "Isotropic Absorption":
+                    spectrum.enable()
 
     @property
     def all(self):
@@ -369,7 +368,7 @@ class Spectra(BaseItem):
             spectrum.suffix = suffix
             # Load before setting the check state to trigger plotting.
             spectrum.load()
-            spectrum.checkState = Qt.Checked if selected else Qt.Unchecked
+            spectrum.enable() if selected else spectrum.disable()
 
         for name in self.toCalculate.selected:
             addSpectrum(name)

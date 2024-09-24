@@ -83,9 +83,6 @@ class BaseItem(QObject):
         if model is None:
             raise TypeError("The model needs to be defined.")
         index = self.model().createIndex(self.childPosition(), column, self)
-        # logger.info(
-        #     "Item = %s, Data = %s, Model = %s", *(self, self.data(column), self.model())
-        # )
         self.model().dataChanged.emit(index, index)
 
     def parent(self):
@@ -118,8 +115,6 @@ class BaseItem(QObject):
                 model = parent
             elif isinstance(parent, BaseItem):
                 model = parent.model()
-
-            # logger.debug("Item = %s, Parent = %s, Model = %s", *(self, parent, model))
 
             self._updateModel(model)
 
@@ -217,7 +212,7 @@ class BaseItem(QObject):
             return None
 
     def findChild(self, name):
-        # Yield from an empty list if there are not children.
+        # Yield from an empty list if there are no children.
         if not self.children():
             yield from ()
 
@@ -268,7 +263,7 @@ class BaseItem(QObject):
 class SelectableItem(BaseItem):
     def __init__(self, parent=None, name=None, value=None):
         super().__init__(parent=parent, name=name, value=value)
-        self._checkState = Qt.Unchecked
+        self.disable()
 
     def data(self, column, role=Qt.DisplayRole):
         if role == Qt.CheckStateRole:
@@ -287,17 +282,17 @@ class SelectableItem(BaseItem):
 
     @checkState.setter
     def checkState(self, value):
-        self._checkState = value
+        self._checkState = Qt.CheckState(value)
         self.dataChanged.emit(0)
 
     def enable(self):
-        self.checkState = Qt.Checked
+        self.checkState = Qt.CheckState.Checked
 
     def disable(self):
-        self.checkState = Qt.Unchecked
+        self.checkState = Qt.CheckState.Unchecked
 
     def isEnabled(self):
-        return self.checkState == Qt.Checked
+        return self.checkState == Qt.CheckState.Checked
 
     def flags(self, column):
         flags = super().flags(column)

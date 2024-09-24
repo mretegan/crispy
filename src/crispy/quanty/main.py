@@ -200,7 +200,7 @@ class HamiltonianSetupPage(QWidget):
 
     def updateAutoStates(self, value):
         # Reset the number of states to the maximum if the box is checked.
-        if value == Qt.Checked:
+        if value == Qt.CheckState.Checked:
             self.hamiltonian.numberOfStates.reset()
         self.nStatesLineEdit.setEnabled(not value)
 
@@ -259,7 +259,7 @@ class ResultsPage(QWidget):
         selectionModel = self.view.selectionModel()
         selectionModel.selectionChanged.connect(self.selectionChanged)
 
-        # TODO: How to distinguish between a dataChanged related to change in
+        # TODO: How to distinguish between a dataChanged related to a change in
         # the name and a change in the checked state? Only the last one should
         # trigger the actions.
         self.model.dataChanged.connect(self.plot)
@@ -332,16 +332,17 @@ class ResultsPage(QWidget):
                     or not last.experiment.isTwoDimensional
                     and calculation.experiment.isTwoDimensional
                 ):
-                    calculation.checkState = Qt.Unchecked
+                    calculation.checkState = Qt.CheckState.Unchecked
             self.model.blockSignals(False)
 
-        # Make a list with the checked calculations.
-        calculations = [c for c in calculations if c.checkState]
+        # Remove the calculations that are not checked.
+        calculations = [c for c in calculations if c.isEnabled()]
+
         if not calculations:
             return
 
-        for item in calculations:
-            item.spectra.plot(plotWidget=plotWidget)
+        for calculation in calculations:
+            calculation.spectra.plot(plotWidget=plotWidget)
 
         # Reset the plot widget if nothing new was plotted.
         if plotWidget.isEmpty():
@@ -350,6 +351,9 @@ class ResultsPage(QWidget):
         # Emit the dataChanged() signal to inform the views that some things
         # might have changed in the model. Use an invalid index to return early
         # when this function is called again.
+        # The function is called again because the plot() method is connected to
+        # the dataChanged() signal so we use a invalid index to return early (see
+        # the beginning of the function).
         self.model.dataChanged.emit(QModelIndex(), QModelIndex())
 
     def selectionChanged(self):
@@ -573,7 +577,7 @@ class DockWidget(QDockWidget):
 
         # Move the state to the results model.
         self.state.setParent(self.resultsPage.model.rootItem())
-        self.state.checkState = Qt.Checked
+        self.state.checkState = Qt.CheckState.Checked
         index = self.state.index()
         self.resultsPage.view.setCurrentIndex(index)
 
