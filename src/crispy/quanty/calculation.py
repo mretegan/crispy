@@ -447,7 +447,7 @@ class Runner(QProcess):
         # Test the executable.
         with open(os.devnull, "w", encoding="utf-8") as fp:
             try:
-                subprocess.call(path, stdout=fp, stderr=fp)
+                subprocess.call([path, "test.lua"], stdout=fp, stderr=fp)
             except FileNotFoundError as e:
                 message = (
                     "The Quanty executable is not working properly. "
