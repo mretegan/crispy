@@ -342,7 +342,7 @@ class ResultsPage(QWidget):
             return
 
         for calculation in calculations:
-            calculation.spectra.plot(plotWidget=plotWidget)
+            calculation.spectra.plot(plotWidget)
 
         # Reset the plot widget if nothing new was plotted.
         if plotWidget.isEmpty():

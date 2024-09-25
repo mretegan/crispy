@@ -6,7 +6,6 @@
 # This work is licensed under the terms of the MIT license.       #
 # For further information, see https://github.com/mretegan/crispy #
 ###################################################################
-# pylint: disable=import-outside-toplevel
 """The Quanty Hamiltonian and terms."""
 
 import copy

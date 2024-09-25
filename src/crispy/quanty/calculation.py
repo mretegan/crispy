@@ -612,7 +612,7 @@ class Calculation(SelectableItem):
         subshells = "".join(self.edge.coreSubshells)
         return f"{valenceSubshell}_{symmetry}_{experiment}_{subshells}.lua"
 
-    @property  # type: ignore
+    @property
     # TODO: Why is this cached?
     @lru_cache()
     def configurations(self):
@@ -742,6 +742,10 @@ class Calculation(SelectableItem):
             fp.write(self.input)
 
     def run(self):
+        # Raise an error if there are no spectra to calculate.
+        if list(self.spectra.toCalculate.selected) == []:
+            logger.error("No spectra to calculate.")
+            raise RuntimeError
         # Don't crash if something went wrong when saving the input file.
         try:
             self.saveInput()

@@ -12,13 +12,50 @@ import copy
 import logging
 
 import numpy as np
-from silx.gui.qt import Qt
 
 from crispy.broaden import broaden
 from crispy.items import BaseItem, SelectableItem
 from crispy.quanty.hamiltonian import PdHybridizationTerm
 
 logger = logging.getLogger(__name__)
+
+
+SPECTRA_TO_CALCULATE = {
+    "XAS": {
+        "Powder/Solution": ("Isotropic Absorption",),
+        "Single Crystal/Thin Film": (
+            "Absorption",
+            "Circular Dichroic",
+            "Linear Dichroic",
+        ),
+    },
+    "XES": {"Powder/Solution": ("Emission",)},
+    "XPS": {"Powder/Solution": ("Photoemission",)},
+    "RIXS": {"Powder/Solution": ("Resonant Inelastic",)},
+}
+
+
+SPECTRA = {
+    "Isotropic Absorption": ("iso", None),
+    "Isotropic Absorption (Dipolar)": ("iso_dip", None),
+    "Isotropic Absorption (Quadrupolar)": ("iso_quad", None),
+    "Absorption": ("k", None),
+    "Absorption (Dipolar)": ("k_dip", None),
+    "Absorption (Quadrupolar)": ("k_quad", None),
+    "Circular Dichroic": ("cd", "(R-L)"),
+    "Circular Dichroic (Dipolar)": ("cd_dip", "(R-L)"),
+    "Circular Dichroic (Quadrupolar)": ("cd_quad", "(R-L)"),
+    "Right Polarized": ("r", "(R)"),
+    "Left Polarized": ("l", "(L)"),
+    "Linear Dichroic": ("ld", "(V-H)"),
+    "Linear Dichroic (Dipolar)": ("ld_dip", "(V-H)"),
+    "Linear Dichroic (Quadrupolar)": ("ld_quad", "(V-H)"),
+    "Vertical Polarized": ("v", "(V)"),
+    "Horizontal Polarized": ("h", "(H)"),
+    "Resonant Inelastic": ("iso", None),
+    "Photoemission": ("pho", None),
+    "Emission": ("emi", None),
+}
 
 
 class Spectrum(SelectableItem):
@@ -128,12 +165,12 @@ class Spectrum1D(Spectrum):
         fwhm = value / self.axes.xaxis.interval
         self.signal = broaden(self.signal, fwhm, kind="gaussian")
 
-    def plot(self, plotWidget):
-        if not self.isEnabled():
+    def plot(self, plotWidget=None):
+        if not self.isEnabled() or plotWidget is None:
             return
         calculation = self.ancestor
-        index = calculation.childPosition() + 1
-        legend = f"{index}-{self.suffix}"
+        index = calculation.childPosition()
+        legend = f"{index + 1}-{self.suffix}"
         plotWidget.addCurve(self.x, self.signal, legend=legend)
 
     def copyFrom(self, item):
@@ -220,16 +257,12 @@ class Spectrum2D(Spectrum1D):
 
         self.signal = broaden(self.signal, fwhm, kind="gaussian")
 
-    def plot(self, plotWidget):
-        if not self.isEnabled():
+    def plot(self, plotWidget=None):
+        if not self.isEnabled() or plotWidget is None:
             return
         calculation = self.ancestor
         index = calculation.childPosition() + 1
-        MAPPINGS = {
-            "iso": "Iso",
-        }
-        name = MAPPINGS[self.suffix]
-        legend = f"{index}-{name}"
+        legend = f"{index}-{self.suffix}"
         plotWidget.addImage(
             self.signal, origin=self.origin, scale=self.axesScale, legend=legend
         )
@@ -237,11 +270,6 @@ class Spectrum2D(Spectrum1D):
     def copyFrom(self, item):
         super().copyFrom(item)
         self.y = copy.deepcopy(item.y)
-
-
-class Sample(BaseItem):
-    def __init__(self, parent=None, name=None):
-        super().__init__(parent=parent, name=name)
 
 
 class SpectraToInteract(BaseItem):
@@ -271,25 +299,11 @@ class SpectraToCalculate(SpectraToInteract):
         calculation = self.ancestor
         experiment = calculation.experiment
 
-        SPECTRA = {
-            "XAS": {
-                "Powder/Solution": ("Isotropic Absorption",),
-                "Single Crystal/Thin Film": (
-                    "Absorption",
-                    "Circular Dichroic",
-                    "Linear Dichroic",
-                ),
-            },
-            "XES": {"Powder/Solution": ("Emission",)},
-            "XPS": {"Powder/Solution": ("Photoemission",)},
-            "RIXS": {"Powder/Solution": ("Resonant Inelastic",)},
-        }
-
-        for sample, spectraNames in SPECTRA[experiment.value].items():
+        for sample, spectraNames in SPECTRA_TO_CALCULATE[experiment.value].items():
             sample = Sample(parent=self, name=sample)
             for spectrumName in spectraNames:
                 spectrum = Spectrum(parent=sample, name=spectrumName)
-                if spectrumName == "Isotropic Absorption":
+                if spectrumName in ("Isotropic Absorption", "Resonant Inelastic"):
                     spectrum.enable()
 
     @property
@@ -329,59 +343,37 @@ class Spectra(BaseItem):
             value = value[:-2] + "} "
         return {"SpectraToCalculate": value}
 
-    def load(self):
+    def addSpectrum(self, name, selected=True):
         calculation = self.ancestor
         experiment = calculation.experiment
+        suffix, symbol = SPECTRA[name]
+        if symbol is not None:
+            name = f"{name} {symbol}"
 
-        SPECTRA = {
-            "Isotropic Absorption": ("iso", None),
-            "Isotropic Absorption (Dipolar)": ("iso_dip", None),
-            "Isotropic Absorption (Quadrupolar)": ("iso_quad", None),
-            "Absorption": ("k", None),
-            "Absorption (Dipolar)": ("k_dip", None),
-            "Absorption (Quadrupolar)": ("k_quad", None),
-            "Circular Dichroic": ("cd", "(R-L)"),
-            "Circular Dichroic (Dipolar)": ("cd_dip", "(R-L)"),
-            "Circular Dichroic (Quadrupolar)": ("cd_quad", "(R-L)"),
-            "Right Polarized": ("r", "(R)"),
-            "Left Polarized": ("l", "(L)"),
-            "Linear Dichroic": ("ld", "(V-H)"),
-            "Linear Dichroic (Dipolar)": ("ld_dip", "(V-H)"),
-            "Linear Dichroic (Quadrupolar)": ("ld_quad", "(V-H)"),
-            "Vertical Polarized": ("v", "(V)"),
-            "Horizontal Polarized": ("h", "(H)"),
-            "Resonant Inelastic": ("iso", None),
-            "Photoemission": ("pho", None),
-            "Emission": ("emi", None),
-        }
+        if experiment.isOneDimensional:
+            spectrum = Spectrum1D(parent=self.toPlot, name=name)
+        else:
+            spectrum = Spectrum2D(parent=self.toPlot, name=name)
 
-        def addSpectrum(name, selected=True):
-            suffix, symbol = SPECTRA[name]
-            if symbol is not None:
-                name = f"{name} {symbol}"
+        spectrum.suffix = suffix
+        # Load before setting the check state to trigger plotting.
+        spectrum.load()
+        spectrum.enable() if selected else spectrum.disable()
 
-            if experiment.isOneDimensional:
-                spectrum = Spectrum1D(parent=self.toPlot, name=name)
-            else:
-                spectrum = Spectrum2D(parent=self.toPlot, name=name)
-
-            spectrum.suffix = suffix
-            # Load before setting the check state to trigger plotting.
-            spectrum.load()
-            spectrum.enable() if selected else spectrum.disable()
-
+    def load(self):
+        calculation = self.ancestor
         for name in self.toCalculate.selected:
-            addSpectrum(name)
+            self.addSpectrum(name)
             # The case of calculations with p-d hybridization.
             if calculation.hamiltonian.isTermEnabled(PdHybridizationTerm):
-                addSpectrum(f"{name} (Dipolar)", selected=False)
-                addSpectrum(f"{name} (Quadrupolar)", selected=False)
+                self.addSpectrum(f"{name} (Dipolar)", selected=False)
+                self.addSpectrum(f"{name} (Quadrupolar)", selected=False)
             if name == "Circular Dichroic":
-                addSpectrum("Right Polarized", selected=False)
-                addSpectrum("Left Polarized", selected=False)
+                self.addSpectrum("Right Polarized", selected=False)
+                self.addSpectrum("Left Polarized", selected=False)
             elif name == "Linear Dichroic":
-                addSpectrum("Vertical Polarized", selected=False)
-                addSpectrum("Horizontal Polarized", selected=False)
+                self.addSpectrum("Vertical Polarized", selected=False)
+                self.addSpectrum("Horizontal Polarized", selected=False)
 
     def plot(self, plotWidget=None):
         if plotWidget is None:
@@ -391,8 +383,13 @@ class Spectra(BaseItem):
         plotWidget.setGraphXLabel(xlabel)
         plotWidget.setGraphYLabel(ylabel)
         for spectrum in self.toPlot.children():
-            spectrum.plot(plotWidget=plotWidget)
+            spectrum.plot(plotWidget)
 
     def copyFrom(self, item):
         super().copyFrom(item)
         self.toCalculate.copyFrom(item.toCalculate)
+
+
+class Sample(BaseItem):
+    def __init__(self, parent=None, name=None):
+        super().__init__(parent=parent, name=name)
