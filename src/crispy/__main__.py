@@ -36,7 +36,7 @@ from silx.gui.qt import (
 
 from crispy import resourceAbsolutePath, version
 from crispy.config import Config
-from crispy.loggers import OutputHandler, StatusBarHandler, setUpLoggers
+from crispy.loggers import StatusBarHandler, setUpLoggers
 from crispy.plot import MainPlotWidget  # noqa: F401
 from crispy.quanty.main import DockWidget
 from crispy.uic import loadUi
@@ -89,13 +89,13 @@ class MainWindow(QMainWindow):
         menu.addAction(self.openAboutDialogAction)
 
         # Register a handler to display messages in the status bar.
-        l = logging.getLogger("crispy")
+        logger = logging.getLogger("crispy")
         handler = StatusBarHandler()
-        l.addHandler(handler)
+        logger.addHandler(handler)
+        # If I don't set the level here, the handler will also display debug
+        # messages, even though the level is set to INFO in the __init__ method.
+        handler.setLevel(logging.INFO)
         handler.bridge.logUpdated.connect(self.updateStatusBar)
-
-        handler = OutputHandler()
-        l.addHandler(handler)
 
     def updateStatusBar(self, message):
         self.statusBar().showMessage(message, 3000)

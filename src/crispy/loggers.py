@@ -68,7 +68,3 @@ class Handler(logging.Handler):
 
 class StatusBarHandler(Handler):
     pass
-
-
-class OutputHandler(Handler):
-    pass
