@@ -169,11 +169,11 @@ class Spectra:
             if spectrum.name == name:
                 spectrum.disable()
 
-    def get_calculated_data(self):
+    def get_all_calculated(self):
         if not self.has_data:
             return None
         data = []
-        for spectrum in self.spectra.toPlot.children():
+        for spectrum in self.spectra.toPlot.all:
             data.append(spectrum)
         return data
 
@@ -182,7 +182,7 @@ class Spectra:
         i = calculation.childPosition()
         if ax is None:
             return
-        for spectrum in self.get_calculated_data():
+        for spectrum in self.get_all_calculated():
             if spectra is not None and spectrum.name not in spectra:
                 continue
             ax.plot(
