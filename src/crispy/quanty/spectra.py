@@ -12,6 +12,7 @@ import copy
 import logging
 
 import numpy as np
+import silx
 
 from crispy.broaden import broaden
 from crispy.items import BaseItem, SelectableItem
@@ -36,26 +37,28 @@ SPECTRA_TO_CALCULATE = {
 
 
 SPECTRA = {
-    "Isotropic Absorption": ("iso", None),
-    "Isotropic Absorption (Dipolar)": ("iso_dip", None),
-    "Isotropic Absorption (Quadrupolar)": ("iso_quad", None),
-    "Absorption": ("k", None),
-    "Absorption (Dipolar)": ("k_dip", None),
-    "Absorption (Quadrupolar)": ("k_quad", None),
-    "Circular Dichroic": ("cd", "(R-L)"),
-    "Circular Dichroic (Dipolar)": ("cd_dip", "(R-L)"),
-    "Circular Dichroic (Quadrupolar)": ("cd_quad", "(R-L)"),
-    "Right Polarized": ("r", "(R)"),
-    "Left Polarized": ("l", "(L)"),
-    "Linear Dichroic": ("ld", "(V-H)"),
-    "Linear Dichroic (Dipolar)": ("ld_dip", "(V-H)"),
-    "Linear Dichroic (Quadrupolar)": ("ld_quad", "(V-H)"),
-    "Vertical Polarized": ("v", "(V)"),
-    "Horizontal Polarized": ("h", "(H)"),
-    "Resonant Inelastic": ("iso", None),
-    "Photoemission": ("pho", None),
-    "Emission": ("emi", None),
+    "Isotropic Absorption": ("iso", None, "-"),
+    "Isotropic Absorption (Dipolar)": ("iso_dip", None, "-"),
+    "Isotropic Absorption (Quadrupolar)": ("iso_quad", None, "-"),
+    "Absorption": ("k", None, "-"),
+    "Absorption (Dipolar)": ("k_dip", None, "-"),
+    "Absorption (Quadrupolar)": ("k_quad", None, "-"),
+    "Circular Dichroic": ("cd", "(R-L)", "-."),
+    "Circular Dichroic (Dipolar)": ("cd_dip", "(R-L)", "-"),
+    "Circular Dichroic (Quadrupolar)": ("cd_quad", "(R-L)", "-"),
+    "Right Polarized": ("r", "(R)", "--"),
+    "Left Polarized": ("l", "(L)", ":"),
+    "Linear Dichroic": ("ld", "(V-H)", "-."),
+    "Linear Dichroic (Dipolar)": ("ld_dip", "(V-H)", "-"),
+    "Linear Dichroic (Quadrupolar)": ("ld_quad", "(V-H)", "-"),
+    "Vertical Polarized": ("v", "(V)", "--"),
+    "Horizontal Polarized": ("h", "(H)", ":"),
+    "Resonant Inelastic": ("iso", None, None),
+    "Photoemission": ("pho", None, "-"),
+    "Emission": ("emi", None, "-"),
 }
+
+DEFAULT_COLORS = tuple(silx.config.DEFAULT_PLOT_CURVE_COLORS)
 
 
 class Spectrum(SelectableItem):
@@ -67,6 +70,7 @@ class Spectrum(SelectableItem):
     def __init__(self, parent=None, name=None):
         super().__init__(parent=parent, name=name)
         self.suffix = None
+        self.lineStyle = "-"
 
     def copyFrom(self, item):
         super().copyFrom(item)
@@ -171,7 +175,14 @@ class Spectrum1D(Spectrum):
         calculation = self.ancestor
         index = calculation.childPosition()
         legend = f"{index + 1}-{self.suffix}"
-        plotWidget.addCurve(self.x, self.signal, legend=legend)
+        i = index % len(DEFAULT_COLORS)
+        plotWidget.addCurve(
+            self.x,
+            self.signal,
+            legend=legend,
+            linestyle=self.lineStyle,
+            color=DEFAULT_COLORS[i],
+        )
 
     def copyFrom(self, item):
         super().copyFrom(item)
@@ -346,12 +357,13 @@ class Spectra(BaseItem):
     def addSpectrum(self, name, selected=True):
         calculation = self.ancestor
         experiment = calculation.experiment
-        suffix, symbol = SPECTRA[name]
+        suffix, symbol, linestyle = SPECTRA[name]
         if symbol is not None:
             name = f"{name} {symbol}"
 
         if experiment.isOneDimensional:
             spectrum = Spectrum1D(parent=self.toPlot, name=name)
+            spectrum.lineStyle = linestyle
         else:
             spectrum = Spectrum2D(parent=self.toPlot, name=name)
 
