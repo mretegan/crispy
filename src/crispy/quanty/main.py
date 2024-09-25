@@ -531,7 +531,8 @@ class DockWidget(QDockWidget):
         self.state.runner.successful.connect(progress.accept)
         try:
             self.state.run()
-        except RuntimeError:
+        except RuntimeError as e:
+            logger.error(e)
             return
         progress.show()
 

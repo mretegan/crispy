@@ -376,7 +376,7 @@ class Runner(QProcess):
         try:
             self.start(self.executablePath, (inputName,))
         except (FileNotFoundError, PermissionError) as e:
-            raise RuntimeError from e
+            raise RuntimeError(e)
 
         cwd = os.getcwd()
         message = f"Running Quanty {inputName} in the folder {cwd}."
@@ -453,12 +453,10 @@ class Runner(QProcess):
                     "The Quanty executable is not working properly. "
                     "Is the PATH set correctly?"
                 )
-                logger.error(message)
-                raise e
+                raise FileNotFoundError(message) from e
             except PermissionError as e:
                 message = "The Quanty executable does not have the correct permissions."
-                logger.error(message)
-                raise e
+                raise PermissionError(message) from e
         return path
 
 
@@ -740,7 +738,9 @@ class Calculation(SelectableItem):
     #     return f"Summary for {self.value}"
 
     def saveInput(self):
-        # TODO: Is this too hidden?
+        currentPath = settings.value("CurrentPath")
+        if not os.path.exists(currentPath):
+            raise FileNotFoundError("The current path does not exist.")
         os.chdir(settings.value("CurrentPath"))
         with open(self.inputName, "w", encoding="utf-8") as fp:
             fp.write(self.input)
@@ -748,13 +748,11 @@ class Calculation(SelectableItem):
     def run(self):
         # Raise an error if there are no spectra to calculate.
         if list(self.spectra.toCalculate.selected) == []:
-            logger.error("No spectra to calculate.")
-            raise RuntimeError
-        # Don't crash if something went wrong when saving the input file.
+            raise RuntimeError("No spectra to calculate.")
         try:
             self.saveInput()
-        except FileNotFoundError:
-            return
+        except FileNotFoundError as e:
+            raise RuntimeError(e)
         self.runner.run(self.inputName)
 
     def process(self, successful):
