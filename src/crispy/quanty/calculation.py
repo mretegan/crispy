@@ -375,8 +375,8 @@ class Runner(QProcess):
         # Run Quanty using QProcess.
         try:
             self.start(self.executablePath, (inputName,))
-        except FileNotFoundError as error:
-            raise RuntimeError from error
+        except (FileNotFoundError, PermissionError) as e:
+            raise RuntimeError from e
 
         cwd = os.getcwd()
         message = f"Running Quanty {inputName} in the folder {cwd}."
@@ -453,6 +453,10 @@ class Runner(QProcess):
                     "The Quanty executable is not working properly. "
                     "Is the PATH set correctly?"
                 )
+                logger.error(message)
+                raise e
+            except PermissionError as e:
+                message = "The Quanty executable does not have the correct permissions."
                 logger.error(message)
                 raise e
         return path
