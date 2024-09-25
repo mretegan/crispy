@@ -208,6 +208,7 @@ class HamiltonianSetupPage(QWidget):
 class ResultsPage(QWidget):
     currentIndexChanged = pyqtSignal(QModelIndex)
 
+    # TODO: Implement saving an loading results.
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
@@ -223,31 +224,31 @@ class ResultsPage(QWidget):
             icon, "Show Details", self, triggered=self.showDetailsDialog
         )
 
-        path = os.path.join("icons", "save.svg")
-        icon = QIcon(resourceAbsolutePath(path))
-        self.saveSelectedResultsAsAction = QAction(
-            icon, "Save Selected Results As...", self, triggered=self.saveSelected
-        )
+        # path = os.path.join("icons", "save.svg")
+        # icon = QIcon(resourceAbsolutePath(path))
+        # self.saveSelectedResultsAsAction = QAction(
+        #     icon, "Save Highlighted Results As...", self, triggered=self.saveHighlighted
+        # )
 
         path = os.path.join("icons", "trash.svg")
         icon = QIcon(resourceAbsolutePath(path))
         self.removeSelectedResultsAction = QAction(
-            icon, "Remove Selected Results", self, triggered=self.removeSelected
+            icon, "Remove Highlighted Results", self, triggered=self.removeHighlighted
         )
 
-        path = os.path.join("icons", "folder-open.svg")
-        icon = QIcon(resourceAbsolutePath(path))
-        self.loadResultsAction = QAction(
-            icon, "Load Results", self, triggered=self.load
-        )
+        # path = os.path.join("icons", "folder-open.svg")
+        # icon = QIcon(resourceAbsolutePath(path))
+        # self.loadResultsAction = QAction(
+        #     icon, "Load Results", self, triggered=self.load
+        # )
 
         self.contextMenu = QMenu("Results Context Menu", self)
         self.contextMenu.addAction(self.showDetailsDialogAction)
-        self.contextMenu.addSeparator()
-        self.contextMenu.addAction(self.saveSelectedResultsAsAction)
+        # self.contextMenu.addSeparator()
+        # self.contextMenu.addAction(self.saveSelectedResultsAsAction)
         self.contextMenu.addAction(self.removeSelectedResultsAction)
-        self.contextMenu.addSeparator()
-        self.contextMenu.addAction(self.loadResultsAction)
+        # self.contextMenu.addSeparator()
+        # self.contextMenu.addAction(self.loadResultsAction)
 
         self.view.setContextMenuPolicy(Qt.CustomContextMenu)
         self.view.customContextMenuRequested[QPoint].connect(
@@ -278,13 +279,13 @@ class ResultsPage(QWidget):
         self._currentIndex = value
         self.currentIndexChanged.emit(value)
 
-    def removeSelected(self):
+    def getHighlighted(self):
         indexes = self.view.selectedIndexes()
+        items = [index.internalPointer() for index in indexes]
+        return items
 
-        items = []
-        for index in reversed(indexes):
-            item = index.internalPointer()
-            items.append(item)
+    def removeHighlighted(self):
+        items = self.getHighlighted()
 
         for item in items:
             item.setParent(None)
@@ -299,8 +300,19 @@ class ResultsPage(QWidget):
 
         self.model.dataChanged.emit(self.currentIndex, self.currentIndex)
 
-    def saveSelected(self):
-        pass
+    def saveHighlighted(self):
+        items = self.getHighlighted()
+        if not items:
+            return
+
+        path, _ = QFileDialog.getSaveFileName(
+            self,
+            "Save Highlighted Results As",
+            filter="Python pickle files (*.pkl)",
+        )
+
+        if not path:
+            return
 
     def load(self):
         pass
@@ -367,7 +379,7 @@ class ResultsPage(QWidget):
     def showResultsContextMenu(self, position):
         selected = bool(self.view.selectedIndexes())
         self.removeSelectedResultsAction.setEnabled(selected)
-        self.saveSelectedResultsAsAction.setEnabled(selected)
+        # self.saveSelectedResultsAsAction.setEnabled(selected)
 
         # Enable the action only if there is a valid item under the cursor.
         # TODO: Probably also check if the item is of a valid class.
