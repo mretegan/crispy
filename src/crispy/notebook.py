@@ -23,7 +23,7 @@ def prettify(data, level=0):
             output += prettify(value, level + 1)
         else:
             if isinstance(value, bool):
-                value = "True" if value else "False"
+                value = "✓︎" if value else "✗"
             output += f"{indent}{key}: {value}"
         if key != list(data)[-1]:
             output += "\n"
@@ -172,26 +172,26 @@ class Spectra:
     def get_calculated_data(self):
         if not self.has_data:
             return None
-        data = Tree()
+        data = []
         for spectrum in self.spectra.toPlot.children():
-            data[spectrum.name] = {
-                "x": spectrum.x,
-                "signal": spectrum.signal,
-                "suffix": spectrum.suffix,
-                "raw": spectrum,
-            }
-            if getattr(spectrum, "y", None) is not None:
-                data[spectrum.name].update({"y": spectrum.y})
+            data.append(spectrum)
         return data
 
     def plot(self, spectra=None, ax=None):
+        calculation = self.spectra.parent()
+        i = calculation.childPosition()
         if ax is None:
             return
-        for data in self.get_calculated_data().values():
-            spectrum = data["raw"]
+        for spectrum in self.get_calculated_data():
             if spectra is not None and spectrum.name not in spectra:
                 continue
-            ax.plot(spectrum.x, spectrum.signal, label=spectrum.name)
+            ax.plot(
+                spectrum.x,
+                spectrum.signal,
+                label=spectrum.name,
+                color=f"C{i}",
+                linestyle=spectrum.lineStyle,
+            )
 
     def __str__(self):
         data = Tree()

@@ -55,6 +55,7 @@ devel = [
     "wheel",
 ]
 docs = ["sphinx", "sphinx-rtd-theme"]
+notebook = ["jupyter", "ipympl"]
 
 [project.gui-scripts]
 crispy = "crispy.__main__:main"
