@@ -74,3 +74,6 @@ artifacts
 
 # Files created by JetBrains IDEs
 . idea
+
+# Affinity Designer 2 files
+*.afdesign

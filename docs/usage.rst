@@ -26,7 +26,7 @@ After the interactive session was opened, load the required modules:
 
 .. code:: sh
 
-    module load conda; module load spectroscopy; module load quanty
+    module load spectroscopy; module load quanty
 
 The ``crispy`` command should now be available. Type it in the terminal to
 start the program.

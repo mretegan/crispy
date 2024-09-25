@@ -5,12 +5,13 @@ Downloads
     :widths: 1 1 1
     :align: center
 
-    +----------------------------------+-------------------------------+--------------------------------------------+
-    | |Windows|                        | |macOS|                       | |Linux|                                    |
-    +----------------------------------+-------------------------------+--------------------------------------------+
-    | `Crispy-0.7.3-x64.exe (64-bit)`_ | `Crispy-0.7.3.dmg (64-bit)`_  | See the                                    |
-    |                                  |                               | :doc:`installation <installation>` page.   |
-    +----------------------------------+-------------------------------+--------------------------------------------+
+    +-------------------------+---------------------------------+--------------------------------------------+
+    | |Windows|               |   |macOS|                       | |Linux|                                    |
+    +-------------------------+---------------------------------+--------------------------------------------+
+    | `Crispy-0.8.0-x64.exe`_ | `Crispy-0.8.0-arm.dmg`_         | See the                                    |
+    |                         |                                 | :doc:`installation <installation>` page.   |
+    |                         | `Crispy-0.8.0-x64.dmg`_         |                                            |
+    +-------------------------+---------------------------------+--------------------------------------------+
 
 - Always check if there are known `bugs
   <https://github.com/mretegan/crispy/issues?q=is%3Aissue+is%3Aopen+label%3Abug+>`_
@@ -18,12 +19,15 @@ Downloads
 - The packages include the latest version of Quanty available at the time of
   the Crispy release. Therefore, if you haven't done so already, **please
   register** on the `Quanty <http://quanty.org/start?do=register>`_ website.
-- The macOS application is not signed and you will get an error when you try to
+- For **macOS**, the application is available for both *Intel* and *Apple Silicon*
+  processors. The *Intel* version is the default download. If you have an *Apple
+  Silicon* processor, please download the *arm* version.
+- The **macOS** application is not signed and you will get an error when you try to
   launch it the first time. You can grant an exception for Crispy by clicking
   the "Open Anyway" button in the General panel of Security & Privacy
   preferences.  You can find more about this in the `official documentation
   <https://support.apple.com/kb/PH25088?locale=en_US>`_.
-- On Windows, some antivirus programs might block the installation of the
+- On **Windows**, some antivirus programs might block the installation of the
   application and even delete the installer from the disk. I assume that this
   is because the installer is not signed. Please rest assured that all releases
   are scanned using multiple antivirus programs on `VirusTotal
@@ -33,20 +37,22 @@ Downloads
   <https://github.com/mretegan/crispy/releases>`_ page on GitHub.
 
 .. |Windows| image:: assets/windows.png
-    :width: 90pt
+    :width: 120pt
     :align: middle
-    :target: `Crispy-0.7.3-x64.exe (64-bit)`_
+    :target: `Crispy-0.8.0-x64.exe`_
 
 .. |macOS| image:: assets/apple.png
-    :width: 90pt
+    :width: 120pt
     :align: middle
-    :target: `Crispy-0.7.3.dmg (64-bit)`_
+    :target: `Crispy-0.8.0-x64.dmg`_
 
 .. |Linux| image:: assets/linux.png
-    :width: 90pt
+    :width: 120pt
     :align: middle
     :target: installation.html
 
-.. _Crispy-0.7.3-x64.exe (64-bit): https://github.com/mretegan/crispy/releases/download/v0.7.3/Crispy-0.7.3-x64.exe
+.. _Crispy-0.8.0-x64.exe: https://github.com/mretegan/crispy/releases/download/v0.8.0/Crispy-0.8.0-x64.exe
 
-.. _Crispy-0.7.3.dmg (64-bit): https://github.com/mretegan/crispy/releases/download/v0.7.3/Crispy-0.7.3.dmg
+.. _Crispy-0.8.0-x64.dmg: https://github.com/mretegan/crispy/releases/download/v0.8.0/Crispy-0.8.0-x64.dmg
+
+.. _Crispy-0.8.0-arm.dmg: https://github.com/mretegan/crispy/releases/download/v0.8.0/Crispy-0.8.0-arm.dmg
