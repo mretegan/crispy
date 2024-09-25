@@ -64,6 +64,11 @@ class LineEdit(QLineEdit):
         super().__init__(*args, **kwargs)
         self.validator = None
         self.currentText = None
+
+        palette = self.palette()
+        self.defaulBakgroundColor = palette.color(QPalette.ColorRole.Base)
+        self.alternateBackgroundColor = palette.color(QPalette.ColorRole.AlternateBase)
+
         self.textEdited.connect(self.updateBackgroundColor)
         self.installEventFilter(self)
 
@@ -72,15 +77,10 @@ class LineEdit(QLineEdit):
         super().focusInEvent(event)
 
     def focusOutEvent(self, event):
-        self.setBackgroundColor("#FFFFFF")
+        self.setBackgroundColor(self.defaulBakgroundColor)
         if not self.text():
             self.setText(self.currentText)
         super().focusOutEvent(event)
-
-    def setTextColor(self, color):
-        palette = self.palette()
-        palette.setColor(QPalette.Text, QColor(color))
-        self.setPalette(palette)
 
     def setBackgroundColor(self, color):
         palette = self.palette()
@@ -90,11 +90,11 @@ class LineEdit(QLineEdit):
     def eventFilter(self, source, event):
         if event.type() == QEvent.KeyPress:
             if event.key() in (Qt.Key_Return, Qt.Key_Enter):
-                self.setBackgroundColor("#FFFFFF")
+                self.setBackgroundColor(self.defaulBakgroundColor)
         return super().eventFilter(source, event)
 
     def updateBackgroundColor(self):
-        self.setBackgroundColor("#FFFF8D")
+        self.setBackgroundColor(self.alternateBackgroundColor)
 
     def setModelData(self, model, index):
         value = self.text()
