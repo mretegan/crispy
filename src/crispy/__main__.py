@@ -88,6 +88,7 @@ class MainWindow(QMainWindow):
             "Start Jupyter Lab", self, triggered=self.runJupyter
         )
         menu.addAction(self.runJupyterAction)
+
         menu = self.menuBar().addMenu("Help")
         self.openAboutDialogAction = QAction(
             "About Crispy", self, triggered=self.openAboutDialog
@@ -152,12 +153,7 @@ class MainWindow(QMainWindow):
 
     def runJupyter(self):
         process = QProcess()
-        if hasattr(sys, "_MEIPASS"):
-            path = os.path.join(sys._MEIPASS, "jupyter-lab")
-        else:
-            path = "jupyter-lab"
-
-        process.setProgram(path)
+        process.setProgram("jupyter-lab")
         process.setArguments([f"--notebook-dir={os.path.expanduser('~')}"])
         process.startDetached()
 
