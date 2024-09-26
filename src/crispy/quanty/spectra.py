@@ -18,6 +18,8 @@ from crispy.broaden import broaden
 from crispy.items import BaseItem, SelectableItem
 from crispy.quanty.hamiltonian import PdHybridizationTerm
 
+from silx.gui.qt import Qt
+
 logger = logging.getLogger(__name__)
 
 
@@ -310,12 +312,13 @@ class SpectraToCalculate(SpectraToInteract):
         calculation = self.ancestor
         experiment = calculation.experiment
 
+        checkState = Qt.CheckState.Checked
         for sample, spectraNames in SPECTRA_TO_CALCULATE[experiment.value].items():
             sample = Sample(parent=self, name=sample)
             for spectrumName in spectraNames:
                 spectrum = Spectrum(parent=sample, name=spectrumName)
-                if spectrumName in ("Isotropic Absorption", "Resonant Inelastic"):
-                    spectrum.enable()
+                spectrum.checkState = checkState
+                checkState = Qt.CheckState.Unchecked
 
     @property
     def all(self):
