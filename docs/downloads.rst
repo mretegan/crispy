@@ -23,10 +23,11 @@ Downloads
   processors. The *Intel* version is the default download. If you have an *Apple
   Silicon* processor, please download the *arm* version.
 - The **macOS** application is not signed and you will get an error when you try to
-  launch it the first time. You can grant an exception for Crispy by clicking
-  the "Open Anyway" button in the General panel of Security & Privacy
-  preferences.  You can find more about this in the `official documentation
-  <https://support.apple.com/kb/PH25088?locale=en_US>`_.
+  launch it the first time. To fix it, execute the following command in the
+  Terminal application: 
+  
+    ``xattr -cr /Applications/Crispy.app``
+
 - On **Windows**, some antivirus programs might block the installation of the
   application and even delete the installer from the disk. I assume that this
   is because the installer is not signed. Please rest assured that all releases
