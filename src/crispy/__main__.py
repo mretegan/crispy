@@ -10,6 +10,7 @@
 
 import json
 import logging
+import numpy as np
 import os
 import socket
 import sys
@@ -32,6 +33,7 @@ from silx.gui.qt import (
     Qt,
     QThread,
     QProcess,
+    QFileDialog,
     pyqtSignal,
 )
 
@@ -84,10 +86,15 @@ class MainWindow(QMainWindow):
         menu.addAction(self.quantyDockWidget.showHideAction)
 
         menu = self.menuBar().addMenu("Tools")
-        self.runJupyterAction = QAction(
-            "Start Jupyter Lab", self, triggered=self.runJupyter
+        self.loadExternalDataAction = QAction(
+            "Load External Data", self, triggered=self.loadExternalData
         )
-        menu.addAction(self.runJupyterAction)
+        menu.addAction(self.loadExternalDataAction)
+
+        self.runJupyterLabAction = QAction(
+            "Start Jupyter Lab", self, triggered=self.runJupyterLab
+        )
+        menu.addAction(self.runJupyterLabAction)
 
         menu = self.menuBar().addMenu("Help")
         self.openAboutDialogAction = QAction(
@@ -151,7 +158,21 @@ class MainWindow(QMainWindow):
     def openAboutDialog(self):
         self.aboutDialog.exec()
 
-    def runJupyter(self):
+    def loadExternalData(self):
+        dialog = QFileDialog()
+        path, _ = dialog.getOpenFileName(self, "Select File")
+
+        if path:
+            try:
+                x, y = np.loadtxt(path, unpack=True)
+            except ValueError:
+                logger.error(f"Failed to load data from {path}")
+                return
+
+            name = os.path.splitext(os.path.basename(path))[0]
+            self.quantyDockWidget.addExternalData(name, x, y)
+
+    def runJupyterLab(self):
         process = QProcess()
         process.setProgram("jupyter-lab")
         process.setArguments([f"--notebook-dir={os.path.expanduser('~')}"])

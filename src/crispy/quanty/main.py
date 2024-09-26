@@ -31,6 +31,7 @@ from crispy.config import Config
 from crispy.models import TreeModel
 from crispy.quanty.calculation import Calculation
 from crispy.quanty.details import DetailsDialog
+from crispy.quanty.external import ExternalData
 from crispy.quanty.preferences import PreferencesDialog
 from crispy.quanty.progress import ProgressDialog
 from crispy.uic import loadUi
@@ -331,12 +332,12 @@ class ResultsPage(QWidget):
         pass
 
     def plot(self, *args):
-        calculations = self.model.rootItem().children()
+        children = self.model.rootItem().children()
 
         index, *_ = args
         # Return if the index is invalid but there are still calculations in
         # the model.
-        if not index.isValid() and calculations:
+        if not index.isValid() and children:
             return
         # Get the last item the user has changed.
         last = index.internalPointer()
@@ -345,29 +346,34 @@ class ResultsPage(QWidget):
         plotWidget = findQtObject(name="plotWidget")
         plotWidget.reset()
 
-        if not calculations:
+        if not children:
             return
 
         if isinstance(last, Calculation):
             self.model.blockSignals(True)
-            for calculation in calculations:
+            for child in children:
+                if isinstance(child, ExternalData):
+                    continue
                 if (
                     last.experiment.isTwoDimensional
-                    and last != calculation
+                    and last != child
                     or not last.experiment.isTwoDimensional
-                    and calculation.experiment.isTwoDimensional
+                    and child.experiment.isTwoDimensional
                 ):
-                    calculation.checkState = Qt.CheckState.Unchecked
+                    child.checkState = Qt.CheckState.Unchecked
             self.model.blockSignals(False)
 
         # Remove the calculations that are not checked.
-        calculations = [c for c in calculations if c.isEnabled()]
+        children = [c for c in children if c.isEnabled()]
 
-        if not calculations:
+        if not children:
             return
 
-        for calculation in calculations:
-            calculation.spectra.plot(plotWidget)
+        for child in children:
+            if isinstance(child, Calculation):
+                child.spectra.plot(plotWidget)
+            elif isinstance(child, ExternalData):
+                child.plot(plotWidget)
 
         # Reset the plot widget if nothing new was plotted.
         if plotWidget.isEmpty():
@@ -494,6 +500,8 @@ class DockWidget(QDockWidget):
             child.setParent(None)
 
         result = index.internalPointer() if index is not None else None
+        if isinstance(result, ExternalData):
+            return
 
         if result is not None:
             symbol = result.element.symbol
@@ -537,6 +545,12 @@ class DockWidget(QDockWidget):
 
         self.state = state
         logger.debug("Finished populating the widgets.")
+
+    def addExternalData(self, name, x, y):
+        parent = self.resultsPage.model.rootItem()
+        experiment = ExternalData(parent, name, x, y)
+        index = experiment.index()
+        self.resultsPage.view.setCurrentIndex(index)
 
     def run(self):
         progress = ProgressDialog(self)

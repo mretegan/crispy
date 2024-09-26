@@ -16,6 +16,7 @@ from crispy import resourceAbsolutePath
 from crispy.config import Config
 from crispy.uic import loadUi
 from crispy.utils import fixedFont, setMappings
+from crispy.quanty.external import ExternalData
 
 settings = Config().read()
 
@@ -92,6 +93,12 @@ class DetailsDialog(QDialog):
 
     def populate(self, result):
         self.clear()
+
+        if isinstance(result, ExternalData):
+            self.spectraView.setModel(result.model())
+            index = result.model().indexFromItem(result)
+            self.spectraView.setRootIndex(index)
+            return
 
         if result is None:
             return
