@@ -31,6 +31,7 @@ from silx.gui.qt import (
     QSize,
     Qt,
     QThread,
+    QProcess,
     pyqtSignal,
 )
 
@@ -88,6 +89,12 @@ class MainWindow(QMainWindow):
         )
         menu.addAction(self.openAboutDialogAction)
 
+        menu = self.menuBar().addMenu("Tools")
+        self.runJupyterAction = QAction(
+            "Start Jupyter Lab", self, triggered=self.runJupyter
+        )
+        menu.addAction(self.runJupyterAction)
+
         # Register a handler to display messages in the status bar.
         logger = logging.getLogger("crispy")
         handler = StatusBarHandler()
@@ -143,6 +150,12 @@ class MainWindow(QMainWindow):
 
     def openAboutDialog(self):
         self.aboutDialog.exec()
+
+    def runJupyter(self):
+        process = QProcess()
+        process.setProgram("jupyter-lab")
+        process.setArguments([f"--notebook-dir={os.path.expanduser('~')}"])
+        process.startDetached()
 
 
 class CheckUpdateThread(QThread):
