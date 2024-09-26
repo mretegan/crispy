@@ -83,17 +83,16 @@ class MainWindow(QMainWindow):
         menu.addSeparator()
         menu.addAction(self.quantyDockWidget.showHideAction)
 
-        menu = self.menuBar().addMenu("Help")
-        self.openAboutDialogAction = QAction(
-            "About Crispy", self, triggered=self.openAboutDialog
-        )
-        menu.addAction(self.openAboutDialogAction)
-
         menu = self.menuBar().addMenu("Tools")
         self.runJupyterAction = QAction(
             "Start Jupyter Lab", self, triggered=self.runJupyter
         )
         menu.addAction(self.runJupyterAction)
+        menu = self.menuBar().addMenu("Help")
+        self.openAboutDialogAction = QAction(
+            "About Crispy", self, triggered=self.openAboutDialog
+        )
+        menu.addAction(self.openAboutDialogAction)
 
         # Register a handler to display messages in the status bar.
         logger = logging.getLogger("crispy")
