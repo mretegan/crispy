@@ -156,16 +156,16 @@ class Axis:
 
 class Spectra:
     def __init__(self, spectra):
-        self.spectra = spectra
+        self._spectra = spectra
         self.has_data = False
 
     def enable(self, name=None):
-        for spectrum in self.spectra.toCalculate.all:
+        for spectrum in self._spectra.toCalculate.all:
             if spectrum.name == name:
                 spectrum.enable()
 
     def disable(self, name=None):
-        for spectrum in self.spectra.toCalculate.all:
+        for spectrum in self._spectra.toCalculate.all:
             if spectrum.name == name:
                 spectrum.disable()
 
@@ -173,12 +173,12 @@ class Spectra:
         if not self.has_data:
             return None
         data = []
-        for spectrum in self.spectra.toPlot.all:
+        for spectrum in self._spectra.toPlot.all:
             data.append(spectrum)
         return data
 
     def plot(self, spectra=None, ax=None):
-        calculation = self.spectra.parent()
+        calculation = self._spectra.parent()
         i = calculation.childPosition()
         if ax is None:
             return
@@ -195,7 +195,7 @@ class Spectra:
 
     def __str__(self):
         data = Tree()
-        for spectrum in self.spectra.toCalculate.all:
+        for spectrum in self._spectra.toCalculate.all:
             data[spectrum.name] = spectrum.isEnabled()
         return prettify(data)
 
