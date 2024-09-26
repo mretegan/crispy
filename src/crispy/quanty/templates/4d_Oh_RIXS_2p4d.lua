@@ -32,9 +32,9 @@ ExperimentalShift1 = $XExperimentalShift -- Experimental edge or line energy (eV
 Gaussian1 = $XGaussian -- Gaussian FWHM (eV).
 Gamma1 = $XGamma -- Lorentzian FWHM used in the spectra calculation (eV).
 
-WaveVector = $XWaveVector -- Wave vector.
-Ev = $XFirstPolarization -- Vertical polarization.
-Eh = $XSecondPolarization -- Horizontal polarization.
+WaveVectorIn = $XWaveVector -- Incident wave vector.
+EpsSigmaIn = $XFirstPolarization -- Incident sigma polarization.
+EpsPiIn = $XSecondPolarization -- Incident pi polarization.
 
 -- Y-axis parameters.
 Emin2 = $YEmin -- Minimum value of the energy range (eV).
@@ -45,9 +45,9 @@ ExperimentalShift2 = $YExperimentalShift -- Experimental edge or line energy (eV
 Gaussian2 = $YGaussian -- Gaussian FWHM (eV).
 Gamma2 = $YGamma -- Lorentzian FWHM used in the spectra calculation (eV).
 
-WaveVector = $YWaveVector -- Wave vector.
-Ev = $YFirstPolarization -- Vertical polarization.
-Eh = $YSecondPolarization -- Horizontal polarization.
+WaveVectorOut = $YWaveVector -- Scattered wave vector.
+EpsSigmaOut = $YFirstPolarization -- Scattered sigma polarization.
+EpsPiOut = $YSecondPolarization -- Scattered pi polarization.
 
 SpectraToCalculate = $SpectraToCalculate -- Types of spectra to calculate.
 DenseBorder = $DenseBorder -- Number of determinants where we switch from dense methods to sparse methods.
@@ -760,10 +760,10 @@ end
 --------------------------------------------------------------------------------
 Temperature = Temperature * EnergyUnits.Kelvin.value
 
-Sk = DotProduct(WaveVector, {Sx, Sy, Sz})
-Lk = DotProduct(WaveVector, {Lx, Ly, Lz})
-Jk = DotProduct(WaveVector, {Jx, Jy, Jz})
-Tk = DotProduct(WaveVector, {Tx, Ty, Tz})
+Sk = DotProduct(WaveVectorIn, {Sx, Sy, Sz})
+Lk = DotProduct(WaveVectorIn, {Lx, Ly, Lz})
+Jk = DotProduct(WaveVectorIn, {Jx, Jy, Jz})
+Tk = DotProduct(WaveVectorIn, {Tx, Ty, Tz})
 
 Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_4d, N_2p, N_4d, "dZ"}
 Header = "Analysis of the %s Hamiltonian:\n"

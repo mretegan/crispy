@@ -412,7 +412,10 @@ class Axis(BaseItem):
     def coreholeWidth(self):
         calculation = self.ancestor
         label = calculation.edge.labels[self.idx]
-        coreholeWidth = XDB.corehole_width(calculation.element.symbol, label)
+        try:
+            coreholeWidth = XDB.corehole_width(calculation.element.symbol, label)
+        except KeyError:
+            coreholeWidth = 0.1
 
         try:
             coreholeWidth = float(coreholeWidth)

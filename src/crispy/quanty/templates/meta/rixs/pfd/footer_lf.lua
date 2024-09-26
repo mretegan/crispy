@@ -3,10 +3,10 @@
 --------------------------------------------------------------------------------
 Temperature = Temperature * EnergyUnits.Kelvin.value
 
-Sk = DotProduct(WaveVector, {Sx, Sy, Sz})
-Lk = DotProduct(WaveVector, {Lx, Ly, Lz})
-Jk = DotProduct(WaveVector, {Jx, Jy, Jz})
-Tk = DotProduct(WaveVector, {Tx, Ty, Tz})
+Sk = DotProduct(WaveVectorIn, {Sx, Sy, Sz})
+Lk = DotProduct(WaveVectorIn, {Lx, Ly, Lz})
+Jk = DotProduct(WaveVectorIn, {Jx, Jy, Jz})
+Tk = DotProduct(WaveVectorIn, {Tx, Ty, Tz})
 
 Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_#m, N_#i, N_#m, "dZ"}
 Header = "Analysis of the %s Hamiltonian:\n"
