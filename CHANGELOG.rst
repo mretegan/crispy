@@ -4,7 +4,7 @@ Changelog
 v0.8.0 (2024-09-26)
 -------------------
 * A complete rewrite to use a more flexible and modular architecture.
-* Fixed all the bugs and issues that were present in the previous versions.
+* Fixed the bugs and issues that were present in the previous versions.
 
 v0.7.4 (2023-03-30)
 -------------------
