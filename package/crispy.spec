@@ -62,7 +62,7 @@ exe = EXE(  # noqa: F821
     pyz,
     a.scripts,
     [],
-    exclude_binaries=True,
+    exclude_binaries=False,
     name="Crispy",
     debug=False,
     bootloader_ignore_signals=False,
