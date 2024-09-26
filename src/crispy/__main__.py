@@ -153,7 +153,12 @@ class MainWindow(QMainWindow):
 
     def runJupyter(self):
         process = QProcess()
-        process.setProgram("jupyter-lab")
+        if hasattr(sys, "_MEIPASS"):
+            path = os.path.join(sys._MEIPASS, "jupyter-lab")
+        else:
+            path = "jupyter-lab"
+
+        process.setProgram(path)
         process.setArguments([f"--notebook-dir={os.path.expanduser('~')}"])
         process.startDetached()
 
