@@ -46,6 +46,7 @@ Tracker = "https://github.com/mretegan/crispy/issues"
 
 [project.optional-dependencies]
 devel = [
+    "build",
     "packaging",
     "pyinstaller",
     "pyinstaller-hooks-contrib",
