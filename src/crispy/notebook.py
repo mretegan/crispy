@@ -287,6 +287,10 @@ def calculation(element, symmetry, experiment, edge):
 
 
 class Config:
+    def default(self):
+        settings = _Config()
+        settings.default()
+
     def set_setting(self, name, value):
         if name == "Shift Spectra":
             name = "ShiftSpectra"
