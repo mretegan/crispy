@@ -22,7 +22,7 @@ jobs:
       - name: Install requirements
         run: |
           python -m pip install --upgrade pip
-          pip install .[devel]
+          pip install .[pyqt6,devel]
 
       - name: Check style
         run: |
@@ -46,7 +46,7 @@ jobs:
       - name: Install requirements
         run: |
           python -m pip install --upgrade pip
-          pip install .[devel]
+          pip install .[pyqt6,devel]
           pip list
           
       - name: Run tests
@@ -73,7 +73,7 @@ jobs:
       - name: Install packaging dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install .[devel,notebook]
+          pip install .[pyqt6,devel,notebook]
 
       - name: Install Inno Setup
         if: runner.os == 'Windows'

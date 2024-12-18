@@ -25,15 +25,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
 ]
 requires-python = ">=3.8"
-dependencies = [
-    "h5py",
-    "matplotlib",
-    "numpy",
-    "pyqt6",
-    "ruamel.yaml",
-    "silx",
-    "xraydb",
-]
+dependencies = ["h5py", "matplotlib", "numpy", "ruamel.yaml", "silx", "xraydb"]
 dynamic = ["version"]
 
 [project.urls]
@@ -45,6 +37,8 @@ Source = "https://github.com/mretegan/crispy"
 Tracker = "https://github.com/mretegan/crispy/issues"
 
 [project.optional-dependencies]
+pyqt5 = ["pyqt5"]
+pyqt6 = ["pyqt6"]
 devel = [
     "build",
     "packaging",
