@@ -50,7 +50,7 @@
       charges: [2+, 3+]
   experiments:
     - name: XAS
-      edges: ["L1 (2s)", "L2,3 (2p)", "M1 (3s)", "M2,3 (3p)", "N1 (4s)", "N2,3 (4p)"]
+      edges: ["L1 (2s)", "L2,3 (2p)", "M1 (3s)", "M2,3 (3p)", "M4,5 (3d)", "N1 (4s)", "N2,3 (4p)"]
       symmetries: ["Oh", "D4h", "Td", "C3v", "D3h"]
     - name: XPS
       edges: ["L1 (2s)", "L2,3 (2p)", "M1 (3s)", "M2,3 (3p)", "M4,5 (3d)", "N1 (4s)", "N2,3 (4p)"]
@@ -118,10 +118,10 @@
       charges: [2+, 3+, 4+]
   experiments:
     - name: XAS
-      edges: ["L1 (2s)", "L2,3 (2p)", "M1 (3s)", "M2,3 (3p)", "N1 (4s)", "N2,3 (4p)", "O1 (5s)", "O2,3 (5p)"]
+      edges: ["L1 (2s)", "L2,3 (2p)", "M1 (3s)", "M2,3 (3p)", "M4,5 (3d)", "N1 (4s)", "N2,3 (4p)", "N4,5 (4d)", "O1 (5s)", "O2,3 (5p)"]
       symmetries: ["Oh", "D4h", "Td", "C3v", "D3h"]
     - name: XPS
-      edges: ["L1 (2s)", "L2,3 (2p)", "M1 (3s)", "M2,3 (3p)", "N1 (4s)", "N2,3 (4p)", "O1 (5s)", "O2,3 (5p)"]
+      edges: ["L1 (2s)", "L2,3 (2p)", "M1 (3s)", "M2,3 (3p)", "M4,5 (3d)", "N1 (4s)", "N2,3 (4p)", "N4,5 (4d)", "O1 (5s)", "O2,3 (5p)"]
       symmetries: ["Oh", "D4h", "Td", "C3v", "D3h"]
     - name: RIXS
       edges: ["L2,3-O4,5 (2p5d)"]
