@@ -58,7 +58,7 @@ ExchangeFieldTerm = $ExchangeFieldTerm
 NBosons = 0
 NFermions = 20
 
-NElectrons_3d = 10 
+NElectrons_3d = 10
 NElectrons_4d = $NElectrons_4d
 
 IndexDn_3d = {0, 2, 4, 6, 8}
@@ -108,13 +108,12 @@ if AtomicTerm then
     F2_4d_4d = NewOperator("U", NFermions, IndexUp_4d, IndexDn_4d, {0, 1, 0})
     F4_4d_4d = NewOperator("U", NFermions, IndexUp_4d, IndexDn_4d, {0, 0, 1})
 
-    F0_3d_4d = NewOperator("U", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_4d, IndexDn_4d, {1, 0, 0}, {0, 0, 0});
-    F2_3d_4d = NewOperator("U", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_4d, IndexDn_4d, {0, 1, 0}, {0, 0, 0});
-    F4_3d_4d = NewOperator("U", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_4d, IndexDn_4d, {0, 0, 1}, {0, 0, 0});
-    G0_3d_4d = NewOperator("U", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_4d, IndexDn_4d, {0, 0, 0}, {1, 0, 0});
-    G2_3d_4d = NewOperator("U", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_4d, IndexDn_4d, {0, 0, 0}, {0, 1, 0});
-    G4_3d_4d = NewOperator("U", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_4d, IndexDn_4d, {0, 0, 0}, {0, 0, 1});    
-
+    F0_3d_4d = NewOperator("U", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_4d, IndexDn_4d, {1, 0, 0}, {0, 0, 0})
+    F2_3d_4d = NewOperator("U", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_4d, IndexDn_4d, {0, 1, 0}, {0, 0, 0})
+    F4_3d_4d = NewOperator("U", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_4d, IndexDn_4d, {0, 0, 1}, {0, 0, 0})
+    G0_3d_4d = NewOperator("U", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_4d, IndexDn_4d, {0, 0, 0}, {1, 0, 0})
+    G2_3d_4d = NewOperator("U", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_4d, IndexDn_4d, {0, 0, 0}, {0, 1, 0})
+    G4_3d_4d = NewOperator("U", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_4d, IndexDn_4d, {0, 0, 0}, {0, 0, 1})
 
     U_4d_4d_i = $U(4d,4d)_i_value
     F2_4d_4d_i = $F2(4d,4d)_i_value * $F2(4d,4d)_i_scaleFactor
@@ -148,10 +147,10 @@ if AtomicTerm then
         + G0_3d_4d_f * G0_3d_4d
         + G2_3d_4d_f * G2_3d_4d
         + G4_3d_4d_f * G4_3d_4d)
-    
+
     ldots_4d = NewOperator("ldots", NFermions, IndexUp_4d, IndexDn_4d)
 
-    ldots_3d = NewOperator("ldots", NFermions, IndexUp_3d, IndexDn_3d)    
+    ldots_3d = NewOperator("ldots", NFermions, IndexUp_3d, IndexDn_3d)
 
     zeta_4d_i = $zeta(4d)_i_value * $zeta(4d)_i_scaleFactor
 
@@ -161,7 +160,7 @@ if AtomicTerm then
     H_i = H_i + Chop(
           zeta_4d_i * ldots_4d)
 
-    H_f = H_f + Chop( 
+    H_f = H_f + Chop(
           zeta_4d_f * ldots_4d
         + zeta_3d_f * ldots_3d)
 end
@@ -210,7 +209,7 @@ if LmctLigandsHybridizationTerm then
     Delta_4d_L1_f = $Delta(4d,L1)_f_value
     E_4d_f = (20 * Delta_4d_L1_f - U_4d_4d_f * NElectrons_4d^2 - 39 * U_4d_4d_f * NElectrons_4d - 380 * U_3d_4d_f) / (2 * NElectrons_4d + 40)
     E_3d_f = (20 * Delta_4d_L1_f + U_4d_4d_f * NElectrons_4d^2 + U_4d_4d_f * NElectrons_4d - 2 * U_3d_4d_f * NElectrons_4d^2 - 22 * U_3d_4d_f * NElectrons_4d - 20 * U_3d_4d_f) / (2 * NElectrons_4d + 40)
-    E_L1_f = (-2 * Delta_4d_L1_f * NElectrons_4d - 20 * Delta_4d_L1_f + U_4d_4d_f * NElectrons_4d^2 + U_4d_4d_f * NElectrons_4d + 20 * U_3d_4d_f * NElectrons_4d + 20 * U_3d_4d_f) / (2 * NElectrons_4d + 40)
+    E_L1_f = (-2 * Delta_4d_L1_f * NElectrons_4d - 20 * Delta_4d_L1_f + U_4d_4d_f * NElectrons_4d^2 + U_4d_4d_f * NElectrons_4d + 20 * U_3d_4d_f * NElectrons_4d + 20 * U_3d_4d_f) / (2 * NElectrons_4d + 40)    
 
     H_i = H_i + Chop(
           E_4d_i * N_4d
@@ -262,7 +261,7 @@ if MlctLigandsHybridizationTerm then
     Delta_4d_L2_f = $Delta(4d,L2)_f_value
     E_4d_f = (-U_4d_4d_f * NElectrons_4d^2 - 19 * U_4d_4d_f * NElectrons_4d - 180 * U_3d_4d_f) / (2 * NElectrons_4d + 20) 
     E_3d_f = (U_4d_4d_f * NElectrons_4d^2 + U_4d_4d_f * NElectrons_4d - 2 * U_3d_4d_f * NElectrons_4d^2 - 2 * U_3d_4d_f * NElectrons_4d) / (2 * NElectrons_4d + 20)
-    E_L2_f = (2 * Delta_4d_L2_f * NElectrons_4d + 20 * Delta_4d_L2_f + U_4d_4d_f * NElectrons_4d^2 - U_4d_4d_f * NElectrons_4d - 20 * U_4d_4d_f + 20 * U_3d_4d_f * NElectrons_4d + 20 * U_3d_4d_f) / (2 * NElectrons_4d + 20)
+    E_L2_f = (2 * Delta_4d_L2_f * NElectrons_4d + 20 * Delta_4d_L2_f + U_4d_4d_f * NElectrons_4d^2 - U_4d_4d_f * NElectrons_4d - 20 * U_4d_4d_f + 20 * U_3d_4d_f * NElectrons_4d + 20 * U_3d_4d_f) / (2 * NElectrons_4d + 20)     
 
     H_i = H_i + Chop(
           E_4d_i * N_4d

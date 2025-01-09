@@ -96,7 +96,7 @@
       edges: ["L2,3 (2p)", "M2,3 (3p)", "M4,5 (3d)", "N2,3 (4p)", "N4,5 (4d)"]
       symmetries: ["Oh"]
     - name: RIXS
-      edges: ["L2,3-M4,5 (2p3d)", "L2,3-N4,5 (2p4d)"]
+      edges: ["L2,3-M4,5 (2p3d)", "L2,3-N4,5 (2p4d)", "M4,5-N6,7 (3d4f)"]
       symmetries: ["Oh"]
 5d:
   elements:

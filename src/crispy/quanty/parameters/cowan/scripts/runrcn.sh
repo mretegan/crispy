@@ -1,8 +1,9 @@
 #!/bin/sh
 
-# BASEDIR=$(dirname "$0")
-# export DYLD_LIBRARY_PATH=$BASEDIR/../bin/darwin:$DYLD_LIBRARY_PATH
-# env | grep DYLD_LIBRARY_PATH
+if [[ "$(uname)" == "Darwin" ]]; then
+    BASEDIR=$(dirname "$0")
+    export DYLD_LIBRARY_PATH=$BASEDIR/../bin/darwin:$DYLD_LIBRARY_PATH
+fi
 
 # Script that runs the rcn program from the TTMult suite.
 # Note that the input file $NAME.rcn has to be created.
