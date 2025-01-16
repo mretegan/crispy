@@ -30,7 +30,7 @@ dynamic = ["version"]
 
 [project.urls]
 Changelog = "https://github.com/mretegan/crispy/blob/main/CHANGELOG.rst"
-Documentation = "https://www.esrf.fr/computing/scientific/crispy"
+Documentation = "https://crispy.esrf.fr"
 Downloads = "https://github.com/mretegan/crispy/releases"
 Homepage = "https://github.com/mretegan/crispy"
 Source = "https://github.com/mretegan/crispy"

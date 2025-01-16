@@ -184,7 +184,7 @@ class CheckUpdateThread(QThread):
 
     @staticmethod
     def _getSiteVersion():
-        URL = "http://www.esrf.eu/computing/scientific/crispy/version.json"
+        URL = "https://crispy.esrf.fr/version.json"
 
         request = Request(URL)
         request.add_header("Cache-Control", "max-age=0")

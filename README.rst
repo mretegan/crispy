@@ -33,7 +33,7 @@ Latest Release
 
 The easiest way to install Crispy on Windows and macOS operating systems is to
 use the installers provided on the project's `downloads page
-<http://www.esrf.eu/computing/scientific/crispy/downloads.html>`_.
+<https://crispy.esrf.fr/en/latest/downloads.html>`_.
 
 **Using pip**
 
