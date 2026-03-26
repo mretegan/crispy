@@ -46,9 +46,9 @@ def element_subshell(symbol):
 
 def element_calculations(symbol=None, charge=None):
     """Generator of all possible calculations for a given element."""
-    assert (
-        symbol is not None and charge is not None
-    ), "The symbol and charge must be provided."
+    assert symbol is not None and charge is not None, (
+        "The symbol and charge must be provided."
+    )
     subshell = element_subshell(symbol)
     experiments = CALCULATIONS[subshell]["experiments"]
     for experiment in experiments:

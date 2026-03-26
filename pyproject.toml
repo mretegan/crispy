@@ -18,14 +18,13 @@ classifiers = [
     "Operating System :: Microsoft :: Windows",
     "Operating System :: POSIX :: Linux",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
 ]
-requires-python = ">=3.8"
-dependencies = ["h5py", "matplotlib", "numpy", "ruamel.yaml", "silx", "xraydb"]
+requires-python = ">=3.10"
+dependencies = ["h5py", "matplotlib", "numpy", "pyqt6", "ruamel.yaml", "silx", "xraydb"]
 dynamic = ["version"]
 
 [project.urls]
@@ -37,20 +36,20 @@ Source = "https://github.com/mretegan/crispy"
 Tracker = "https://github.com/mretegan/crispy/issues"
 
 [project.optional-dependencies]
-pyqt5 = ["pyqt5"]
-pyqt6 = ["pyqt6"]
-devel = [
-    "build",
-    "packaging",
-    "pyinstaller",
-    "pyinstaller-hooks-contrib",
+dev = [
+    "pre-commit",
     "pytest",
+    "pytest-qt",
     "ruff",
-    "twine",
-    "wheel",
 ]
 docs = ["sphinx", "sphinx-rtd-theme"]
 notebook = ["jupyter", "ipympl"]
+bundle = [
+    "build",
+    "pyinstaller",
+    "pyinstaller-hooks-contrib",
+    "twine",
+]
 
 [project.gui-scripts]
 crispy = "crispy.__main__:main"
@@ -62,5 +61,23 @@ namespaces = false
 [tool.setuptools.dynamic]
 version = { attr = "crispy.__version__" }
 
-# [tool.mypy]
-# ignore_missing_imports = true
+[tool.ruff]
+target-version = "py310"
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    "E",     # pycodestyle errors
+    "W",     # pycodestyle warnings
+    "F",     # pyflakes
+    "I",     # isort
+    "UP",    # pyupgrade
+    "B",     # flake8-bugbear
+    "SIM",   # flake8-simplify
+    "N",     # pep8-naming
+    "C4",    # flake8-comprehensions
+    "RUF",   # ruff-specific rules
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["crispy"]
