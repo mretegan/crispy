@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  style:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -23,7 +23,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install .[dev]
 
-      - name: Check style
+      - name: Lint and format check
         run: |
           # ruff check .
           ruff format --check .
