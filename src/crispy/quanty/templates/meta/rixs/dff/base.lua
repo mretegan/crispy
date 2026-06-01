@@ -65,10 +65,10 @@ if AtomicTerm then
         + G5_#i_#m_m * G5_#i_#m)
 
       H_f = H_f + Chop(
-            F0_#m_#m_i * F0_#m_#m
-          + F2_#m_#m_i * F2_#m_#m
-          + F4_#m_#m_i * F4_#m_#m
-          + F6_#m_#m_i * F6_#m_#m)        
+            F0_#m_#m_f * F0_#m_#m
+          + F2_#m_#m_f * F2_#m_#m
+          + F4_#m_#m_f * F4_#m_#m
+          + F6_#m_#m_f * F6_#m_#m)
 
     ldots_#m = NewOperator("ldots", NFermions, IndexUp_#m, IndexDn_#m)
 
@@ -89,7 +89,7 @@ if AtomicTerm then
         + zeta_#i_m * ldots_#i)
 
      H_f = H_f + Chop(
-          zeta_#m_i * ldots_#m)        
+          zeta_#m_f * ldots_#m)
 end
 
 #symmetry_term

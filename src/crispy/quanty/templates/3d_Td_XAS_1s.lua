@@ -179,9 +179,9 @@ if PdHybridizationTerm then
     G1_3d_4p_i = $G1(3d,4p)_i_value * $G1(3d,4p)_i_scaleFactor
     G3_3d_4p_i = $G3(3d,4p)_i_value * $G3(3d,4p)_i_scaleFactor
 
-    F2_3d_4p_f = $F2(3d,4p)_i_value * $F2(3d,4p)_i_scaleFactor
-    G1_3d_4p_f = $G1(3d,4p)_i_value * $G1(3d,4p)_i_scaleFactor
-    G3_3d_4p_f = $G3(3d,4p)_i_value * $G3(3d,4p)_i_scaleFactor
+    F2_3d_4p_f = $F2(3d,4p)_f_value * $F2(3d,4p)_f_scaleFactor
+    G1_3d_4p_f = $G1(3d,4p)_f_value * $G1(3d,4p)_f_scaleFactor
+    G3_3d_4p_f = $G3(3d,4p)_f_value * $G3(3d,4p)_f_scaleFactor
     G1_1s_4p_f = $G1(1s,4p)_f_value * $G1(1s,4p)_f_scaleFactor
 
     H_i = H_i + Chop(

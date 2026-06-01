@@ -200,12 +200,12 @@ if CrystalFieldTerm then
     io.write("Irrep.         E\n")
     io.write("================\n")
     io.write(string.format("a1(t2g) %8.3f\n", -4 * Dq_3d_i - 2 * Dsigma_3d_i - 6 * Dtau_3d_i))
-    io.write(string.format("e(eg)   %8.3f\n", 6 * Dq_3d_i + 7 / 3 * Dtau_3d_i))
     io.write(string.format("e(t2g)  %8.3f\n", -4 * Dq_3d_i + Dsigma_3d_i + 2 / 3 * Dtau_3d_i))
+    io.write(string.format("e(eg)   %8.3f\n", 6 * Dq_3d_i + 7 / 3 * Dtau_3d_i))
     io.write("================\n")
     io.write("For the C3v symmetry, the crystal field Hamiltonian is not necessarily diagonal in\n")
     io.write("the basis of the irreducible representations. See the König and Kremer book, page 56.\n")
-    io.write(string.format("The non-digonal element <e(t2g)|H|e(eg)> is %.3f.\n", -math.sqrt(2) / 3 * (3 * Dsigma_2p_i - 5 * Dtau_2p_i)))
+    io.write(string.format("The non-diagonal element <e(t2g)|H|e(eg)> is %.3f.\n", -math.sqrt(2) / 3 * (3 * Dsigma_3d_i - 5 * Dtau_3d_i)))
     io.write("\n")
 
 

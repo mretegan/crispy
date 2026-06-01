@@ -160,10 +160,10 @@ if AtomicTerm then
         + G5_3d_4f_m * G5_3d_4f)
 
       H_f = H_f + Chop(
-            F0_4f_4f_i * F0_4f_4f
-          + F2_4f_4f_i * F2_4f_4f
-          + F4_4f_4f_i * F4_4f_4f
-          + F6_4f_4f_i * F6_4f_4f)        
+            F0_4f_4f_f * F0_4f_4f
+          + F2_4f_4f_f * F2_4f_4f
+          + F4_4f_4f_f * F4_4f_4f
+          + F6_4f_4f_f * F6_4f_4f)
 
     ldots_4f = NewOperator("ldots", NFermions, IndexUp_4f, IndexDn_4f)
 
@@ -184,7 +184,7 @@ if AtomicTerm then
         + zeta_3d_m * ldots_3d)
 
      H_f = H_f + Chop(
-          zeta_4f_i * ldots_4f)        
+          zeta_4f_f * ldots_4f)
 end
 
 --------------------------------------------------------------------------------
@@ -487,11 +487,9 @@ end
 -- Define the restrictions and set the number of initial states.
 --------------------------------------------------------------------------------
 InitialRestrictions = {NFermions, NBosons, {"1111111111 00000000000000", NElectrons_3d, NElectrons_3d},
-                                           {"0000000000 00000000000000", NElectrons_4f, NElectrons_4f},
                                            {"0000000000 11111111111111", NElectrons_4f, NElectrons_4f}}
 
 IntermediateRestrictions = {NFermions, NBosons, {"1111111111 00000000000000", NElectrons_3d - 1, NElectrons_3d - 1},
-                                                {"0000000000 00000000000000", NElectrons_4f, NElectrons_4f},
                                                 {"0000000000 11111111111111", NElectrons_4f + 1, NElectrons_4f + 1}}
 
 FinalRestrictions = InitialRestrictions
@@ -500,12 +498,10 @@ CalculationRestrictions = nil
 
 if LmctLigandsHybridizationTerm then
     InitialRestrictions = {NFermions, NBosons, {"1111111111 00000000000000 00000000000000", NElectrons_3d, NElectrons_3d},
-                                               {"0000000000 00000000000000 00000000000000", NElectrons_4f, NElectrons_4f},
                                                {"0000000000 11111111111111 00000000000000", NElectrons_4f, NElectrons_4f},
                                                {"0000000000 00000000000000 11111111111111", NElectrons_L1, NElectrons_L1}}
 
     IntermediateRestrictions = {NFermions, NBosons, {"1111111111 00000000000000 00000000000000", NElectrons_3d - 1, NElectrons_3d - 1},
-                                                    {"0000000000 00000000000000 00000000000000", NElectrons_4f, NElectrons_4f},
                                                     {"0000000000 11111111111111 00000000000000", NElectrons_4f + 1, NElectrons_4f + 1},
                                                     {"0000000000 00000000000000 11111111111111", NElectrons_L1, NElectrons_L1}}
 

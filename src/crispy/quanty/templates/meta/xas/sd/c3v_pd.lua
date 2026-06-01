@@ -20,7 +20,7 @@ if CrystalFieldTerm then
     io.write("================\n")
     io.write("For the C3v symmetry, the crystal field Hamiltonian is not necessarily diagonal in\n")
     io.write("the basis of the irreducible representations. See the König and Kremer book, page 56.\n")
-    io.write(string.format("The non-digonal element <e(t2g)|H|e(eg)> is %.3f.\n", -math.sqrt(2) / 3 * (3 * Dsigma_#f_i - 5 * Dtau_#f_i)))
+    io.write(string.format("The non-diagonal element <e(t2g)|H|e(eg)> is %.3f.\n", -math.sqrt(2) / 3 * (3 * Dsigma_#f_i - 5 * Dtau_#f_i)))
     io.write("\n")
 
     Dq_#f_f = $10Dq(#f)_f_value / 10.0
@@ -52,9 +52,9 @@ if PdHybridizationTerm then
   G1_#f_4p_i = $G1(#f,4p)_i_value * $G1(#f,4p)_i_scaleFactor
   G3_#f_4p_i = $G3(#f,4p)_i_value * $G3(#f,4p)_i_scaleFactor
 
-  F2_#f_4p_f = $F2(#f,4p)_i_value * $F2(#f,4p)_i_scaleFactor
-  G1_#f_4p_f = $G1(#f,4p)_i_value * $G1(#f,4p)_i_scaleFactor
-  G3_#f_4p_f = $G3(#f,4p)_i_value * $G3(#f,4p)_i_scaleFactor
+  F2_#f_4p_f = $F2(#f,4p)_f_value * $F2(#f,4p)_f_scaleFactor
+  G1_#f_4p_f = $G1(#f,4p)_f_value * $G1(#f,4p)_f_scaleFactor
+  G3_#f_4p_f = $G3(#f,4p)_f_value * $G3(#f,4p)_f_scaleFactor
   G1_#i_4p_f = $G1(#i,4p)_f_value * $G1(#i,4p)_f_scaleFactor
 
   H_i = H_i + Chop(

@@ -169,7 +169,7 @@ if CrystalFieldTerm then
     io.write("================\n")
     io.write("For the C3v symmetry, the crystal field Hamiltonian is not necessarily diagonal in\n")
     io.write("the basis of the irreducible representations. See the König and Kremer book, page 56.\n")
-    io.write(string.format("The non-digonal element <e(t2g)|H|e(eg)> is %.3f.\n", -math.sqrt(2) / 3 * (3 * Dsigma_5d_i - 5 * Dtau_5d_i)))
+    io.write(string.format("The non-diagonal element <e(t2g)|H|e(eg)> is %.3f.\n", -math.sqrt(2) / 3 * (3 * Dsigma_5d_i - 5 * Dtau_5d_i)))
     io.write("\n")
 
     Dq_5d_f = $10Dq(5d)_f_value / 10.0

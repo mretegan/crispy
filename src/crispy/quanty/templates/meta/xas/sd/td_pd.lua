@@ -42,9 +42,9 @@ if PdHybridizationTerm then
     G1_#f_4p_i = $G1(#f,4p)_i_value * $G1(#f,4p)_i_scaleFactor
     G3_#f_4p_i = $G3(#f,4p)_i_value * $G3(#f,4p)_i_scaleFactor
 
-    F2_#f_4p_f = $F2(#f,4p)_i_value * $F2(#f,4p)_i_scaleFactor
-    G1_#f_4p_f = $G1(#f,4p)_i_value * $G1(#f,4p)_i_scaleFactor
-    G3_#f_4p_f = $G3(#f,4p)_i_value * $G3(#f,4p)_i_scaleFactor
+    F2_#f_4p_f = $F2(#f,4p)_f_value * $F2(#f,4p)_f_scaleFactor
+    G1_#f_4p_f = $G1(#f,4p)_f_value * $G1(#f,4p)_f_scaleFactor
+    G3_#f_4p_f = $G3(#f,4p)_f_value * $G3(#f,4p)_f_scaleFactor
     G1_#i_4p_f = $G1(#i,4p)_f_value * $G1(#i,4p)_f_scaleFactor
 
     H_i = H_i + Chop(
