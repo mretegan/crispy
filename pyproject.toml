@@ -24,7 +24,15 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
 ]
 requires-python = ">=3.10"
-dependencies = ["h5py", "matplotlib", "numpy", "pyqt6", "ruamel.yaml", "silx", "xraydb"]
+dependencies = [
+    "h5py",
+    "matplotlib",
+    "numpy",
+    "pyqt6",
+    "ruamel.yaml",
+    "silx[full_no_qt]",
+    "xraydb",
+]
 dynamic = ["version"]
 
 [project.urls]
@@ -36,20 +44,10 @@ Source = "https://github.com/mretegan/crispy"
 Tracker = "https://github.com/mretegan/crispy/issues"
 
 [project.optional-dependencies]
-dev = [
-    "pre-commit",
-    "pytest",
-    "pytest-qt",
-    "ruff",
-]
+dev = ["pre-commit", "pytest", "pytest-qt", "ruff"]
 docs = ["sphinx", "sphinx-rtd-theme"]
 notebook = ["jupyter", "ipympl"]
-bundle = [
-    "build",
-    "pyinstaller",
-    "pyinstaller-hooks-contrib",
-    "twine",
-]
+bundle = ["build", "pyinstaller", "pyinstaller-hooks-contrib", "twine"]
 
 [project.gui-scripts]
 crispy = "crispy.__main__:main"
@@ -67,16 +65,21 @@ line-length = 88
 
 [tool.ruff.lint]
 select = [
-    "E",     # pycodestyle errors
-    "W",     # pycodestyle warnings
-    "F",     # pyflakes
-    "I",     # isort
-    "UP",    # pyupgrade
-    "B",     # flake8-bugbear
-    "SIM",   # flake8-simplify
-    "N",     # pep8-naming
-    "C4",    # flake8-comprehensions
-    "RUF",   # ruff-specific rules
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "SIM", # flake8-simplify
+    "N",   # pep8-naming
+    "C4",  # flake8-comprehensions
+    "RUF", # ruff-specific rules
+]
+ignore = [
+    "N802", # function name should be lowercase
+    "N803", # argument name should be lowercase
+    "N806", # variable in function should be lowercase
 ]
 
 [tool.ruff.lint.isort]
