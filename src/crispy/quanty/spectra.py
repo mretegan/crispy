@@ -164,10 +164,9 @@ class Spectrum1D(Spectrum):
         if value == "none":
             return
         if value == "maximum":
-            absmax = np.abs(self.signal).max()
-            self.signal = self.signal / absmax
+            self.signal = self.signal / np.abs(self.signal).max()
         elif value == "area":
-            area = np.abs(np.trapz(self.signal, self.x))
+            area = np.abs(np.trapezoid(self.signal, self.x))
             self.signal = self.signal / area
 
     def gaussian(self, value=None):
