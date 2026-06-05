@@ -22,14 +22,17 @@ logger = logging.getLogger(__name__)
 
 
 class Cowan:
-    """Calculate the parameters of an electronic configuration using Cowan's programs."""
+    """Calculate atomic parameters of an electronic configuration."""
 
-    RCN_HEADER = "22 -9    2   10  1.0    5.E-06    1.E-09-2   130   1.0  0.65  0.0 0.50 0.0  0.7\n"
+    RCN_HEADER = (
+        "22 -9    2   10  1.0    5.E-06    1.E-09-2   130   1.0  0.65  "
+        "0.0 0.50 0.0  0.7\n"
+    )
     RCN = "runrcn.sh"
 
     RYDBERG_TO_EV = 13.605693122994  # The value in Cowan's programs is 13.60580.
 
-    NAMES = {
+    NAMES = {  # noqa: RUF012
         "d": ("U({0:s},{0:s})", "F2({0:s},{0:s})", "F4({0:s},{0:s})", "ζ({0:s})"),
         "s,d": (
             "U({1:s},{1:s})",
@@ -152,7 +155,7 @@ class Cowan:
         subshells = configuration.subshells
 
         name = ""
-        for subshell, occupancy in zip(subshells, occupancies):
+        for subshell, occupancy in zip(subshells, occupancies, strict=False):
             # For 5d elements, the 4f occupied subshells must be included explicitly.
             if "5d" in subshell and "4f" not in subshells:
                 subshell = "4f14 5d"

@@ -249,7 +249,7 @@ class Edge(BaseItem):
         """Edge or line labels needed to interrogate xraydb database."""
 
         CONVERTERS = {
-            "Kɑ": "Ka1",
+            "Kɑ": "Ka1",  # noqa: RUF001
             "Kβ": "Kb1",
             "K": "K",
             "L1": "L1",
