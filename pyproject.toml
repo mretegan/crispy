@@ -72,14 +72,8 @@ select = [
     "UP",  # pyupgrade
     "B",   # flake8-bugbear
     "SIM", # flake8-simplify
-    "N",   # pep8-naming
     "C4",  # flake8-comprehensions
     "RUF", # ruff-specific rules
-]
-ignore = [
-    "N802", # function name should be lowercase
-    "N803", # argument name should be lowercase
-    "N806", # variable in function should be lowercase
 ]
 
 [tool.ruff.lint.isort]
