@@ -155,9 +155,10 @@ class Configuration:
             self.shells = (valenceShell,)
             self.occupancies = (valenceOccupancy,)
 
-        self.subshells = tuple(
-            [f"{level}{shell}" for level, shell in zip(self.levels, self.shells)]
-        )
+        self.subshells = tuple([
+            f"{level}{shell}"
+            for level, shell in zip(self.levels, self.shells, strict=False)
+        ])
 
         self._value = value
 
@@ -192,7 +193,7 @@ class Configuration:
     def fromSubshellsAndOccupancies(cls, subshells, occupancies):
         value = ",".join(
             f"{subshell:s}{occupancy:d}"
-            for subshell, occupancy in zip(subshells, occupancies)
+            for subshell, occupancy in zip(subshells, occupancies, strict=False)
         )
         return cls(value=value)
 
@@ -377,7 +378,7 @@ class Runner(QProcess):
         try:
             self.start(self.executablePath, (inputName,))
         except (FileNotFoundError, PermissionError) as e:
-            raise RuntimeError(e)
+            raise RuntimeError(e) from e
 
         cwd = os.getcwd()
         message = f"Running Quanty {inputName} in the folder {cwd}."
@@ -569,8 +570,19 @@ class Calculation(SelectableItem):
         self.dataChanged.emit(0)
         self.titleChanged.emit(value)
 
+    @property
+    def label(self):
+        """Human-readable name shown in the results view."""
+        edge = self.edge.value.split(" (")[0]
+        return (
+            f"{self.element.value} {self.experiment.value} "
+            f"{edge} ({self.symmetry.value})"
+        )
+
     def data(self, column, role=Qt.DisplayRole):
         if role in (Qt.EditRole, Qt.DisplayRole, Qt.UserRole):
+            if column == 0:
+                return self.label
             column = 0 if column == 1 else 1
         return super().data(column, role)
 
@@ -580,12 +592,7 @@ class Calculation(SelectableItem):
         return super().setData(column, value, role)
 
     def flags(self, column):
-        return (
-            Qt.ItemIsEnabled
-            | Qt.ItemIsSelectable
-            | Qt.ItemIsEditable
-            | Qt.ItemIsUserCheckable
-        )
+        return Qt.ItemIsEnabled | Qt.ItemIsSelectable | Qt.ItemIsUserCheckable
 
     @property
     def symbols(self):
@@ -753,7 +760,7 @@ class Calculation(SelectableItem):
         try:
             self.saveInput()
         except FileNotFoundError as e:
-            raise RuntimeError(e)
+            raise RuntimeError(e) from e
         self.runner.run(self.inputName)
 
     def process(self, successful):

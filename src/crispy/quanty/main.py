@@ -239,7 +239,8 @@ class ResultsPage(QWidget):
         # path = os.path.join("icons", "save.svg")
         # icon = QIcon(resourceAbsolutePath(path))
         # self.saveSelectedResultsAsAction = QAction(
-        #     icon, "Save Highlighted Results As...", self, triggered=self.saveHighlighted
+        #     icon, "Save Highlighted Results As...",
+        #     self, triggered=self.saveHighlighted
         # )
 
         path = os.path.join("icons", "trash.svg")
@@ -479,7 +480,7 @@ class DockWidget(QDockWidget):
         self.state.titleChanged.connect(self.updateMainWindowTitle)
 
         logger.debug("Start updating the title.")
-        self.updateMainWindowTitle(self.state.value)
+        self.updateMainWindowTitle()
 
     def populate(self, index=None):
         logger.debug("Start populating the widgets.")
@@ -578,17 +579,10 @@ class DockWidget(QDockWidget):
     def updateLogger(self, data):
         self.parent().loggerWidget.appendPlainText(data)
 
-    def updateMainWindowTitle(self, title):
-        # In the scenario that the user updates the title of a calculation in
-        # the results page, we use that title to set the title of the current
-        # state. Another way to achieve this is to reselect the item in the
-        # view, which would trigger the generation of a new state with the new
-        # title. However, this way all the parameter changes the user has
-        # done would be lost.
-        # This must be super confusing, but it is just a copy of the title from
-        # a state that is in results model, to the current state.
-        self.state._value = title
-        self.parent().setWindowTitle(f"Crispy - {title}")
+    def updateMainWindowTitle(self, title=None):
+        # The window title shows the same human-readable label as the results
+        # view.
+        self.parent().setWindowTitle(f"Crispy - {self.state.label}")
 
     def successful(self, successful):
         # Scroll to the bottom of the logger widget.
