@@ -281,6 +281,7 @@ class ResultsPage(QWidget):
         )
 
         self._currentIndex = QModelIndex()
+        self._plotting = False
 
     @property
     def currentIndex(self):
@@ -310,7 +311,7 @@ class ResultsPage(QWidget):
         else:
             self.currentIndex = QModelIndex()
 
-        self.model.dataChanged.emit(self.currentIndex, self.currentIndex)
+        self.plot(self.currentIndex)
 
     def saveHighlighted(self):
         items = self.getHighlighted()
@@ -330,15 +331,16 @@ class ResultsPage(QWidget):
         pass
 
     def plot(self, *args):
-        children = self.model.rootItem().children()
+        # Unchecking calculations below changes the model, which emits
+        # dataChanged and re-enters this method. Guard against that recursion.
+        if self._plotting:
+            return
 
         index, *_ = args
-        # Return if the index is invalid but there are still calculations in
-        # the model.
-        if not index.isValid() and children:
-            return
-        # Get the last item the user has changed.
-        last = index.internalPointer()
+        # Get the last item the user has changed (None for an invalid index).
+        last = index.internalPointer() if index.isValid() else None
+
+        children = self.model.rootItem().children()
 
         # Always reset the plot widget.
         plotWidget = findQtObject(name="plotWidget")
@@ -347,41 +349,32 @@ class ResultsPage(QWidget):
         if not children:
             return
 
-        if isinstance(last, Calculation):
-            self.model.blockSignals(True)
+        self._plotting = True
+        try:
+            if isinstance(last, Calculation):
+                for child in children:
+                    if isinstance(child, ExternalData):
+                        continue
+                    if (last.experiment.isTwoDimensional and last != child) or (
+                        not last.experiment.isTwoDimensional
+                        and child.experiment.isTwoDimensional
+                    ):
+                        child.checkState = Qt.CheckState.Unchecked
+
+            # Plot the calculations that are checked.
             for child in children:
-                if isinstance(child, ExternalData):
+                if not child.isEnabled():
                     continue
-                if (last.experiment.isTwoDimensional and last != child) or (
-                    not last.experiment.isTwoDimensional
-                    and child.experiment.isTwoDimensional
-                ):
-                    child.checkState = Qt.CheckState.Unchecked
-            self.model.blockSignals(False)
+                if isinstance(child, Calculation):
+                    child.spectra.plot(plotWidget)
+                elif isinstance(child, ExternalData):
+                    child.plot(plotWidget)
 
-        # Remove the calculations that are not checked.
-        children = [c for c in children if c.isEnabled()]
-
-        if not children:
-            return
-
-        for child in children:
-            if isinstance(child, Calculation):
-                child.spectra.plot(plotWidget)
-            elif isinstance(child, ExternalData):
-                child.plot(plotWidget)
-
-        # Reset the plot widget if nothing new was plotted.
-        if plotWidget.isEmpty():
-            plotWidget.reset()
-
-        # Emit the dataChanged() signal to inform the views that some things
-        # might have changed in the model. Use an invalid index to return early
-        # when this function is called again.
-        # The function is called again because the plot() method is connected to
-        # the dataChanged() signal so we use a invalid index to return early (see
-        # the beginning of the function).
-        self.model.dataChanged.emit(QModelIndex(), QModelIndex())
+            # Reset the plot widget if nothing new was plotted.
+            if plotWidget.isEmpty():
+                plotWidget.reset()
+        finally:
+            self._plotting = False
 
     def selectionChanged(self):
         indexes = self.view.selectedIndexes()
