@@ -617,7 +617,7 @@ class Calculation(SelectableItem):
 
     @property
     # TODO: Why is this cached?
-    @lru_cache()
+    @lru_cache
     def configurations(self):
         """Determine the electronic configurations involved in a calculation."""
         valenceSubshell = self.element.valenceSubshell

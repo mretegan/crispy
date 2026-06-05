@@ -10,30 +10,29 @@
 
 import json
 import logging
-import numpy as np
 import os
-import socket
 import sys
 import warnings
 from urllib.error import URLError
 from urllib.request import Request, urlopen
 
+import numpy as np
 from silx.gui.qt import (
     QAction,
     QApplication,
     QByteArray,
     QDialog,
+    QFileDialog,
     QIcon,
     QLocale,
     QMainWindow,
     QPixmap,
     QPlainTextEdit,
     QPoint,
+    QProcess,
     QSize,
     Qt,
     QThread,
-    QProcess,
-    QFileDialog,
     pyqtSignal,
 )
 
@@ -191,7 +190,7 @@ class CheckUpdateThread(QThread):
 
         try:
             response = urlopen(request, timeout=5)
-        except (URLError, socket.timeout):
+        except (TimeoutError, URLError):
             return None
 
         try:

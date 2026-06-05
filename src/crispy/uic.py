@@ -63,6 +63,7 @@ __all__ = ["loadUi", "loadUiType"]
 # DEALINGS IN THE SOFTWARE.
 
 import logging
+
 import silx.gui.qt
 
 logger = logging.getLogger(__name__)

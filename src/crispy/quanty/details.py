@@ -14,9 +14,9 @@ from silx.gui.qt import QDialog, QPoint, QSize, QWidget
 
 from crispy import resourceAbsolutePath
 from crispy.config import Config
+from crispy.quanty.external import ExternalData
 from crispy.uic import loadUi
 from crispy.utils import fixedFont, setMappings
-from crispy.quanty.external import ExternalData
 
 settings = Config().read()
 
