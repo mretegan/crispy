@@ -52,7 +52,7 @@ def test_calculation(test_data, tmp_path):
 
     settings = Config().read()
     # TODO: Save the current path before altering it.
-    settings.setValue("CurrentPath", tmp_path)
+    settings.setValue("CurrentPath", str(tmp_path))
 
     calc = calculation(*parameters["args"])
 
