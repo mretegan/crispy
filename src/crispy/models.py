@@ -23,9 +23,11 @@ class TreeModel(QAbstractItemModel):
         self._rootItem = RootItem(parent=self)
         self._header = ["Name", "Value", "Scale Factor"]
 
-    def index(self, row, column, parent=QModelIndex()):
+    def index(self, row, column, parent=None):
         """Return the index of the item in the model specified by row, column, and
         parent index."""
+        if parent is None:
+            parent = QModelIndex()
         # If the item has no parent it is the root item. Otherwise, get the parent item
         # from the parent index.
         if not parent.isValid():
@@ -58,11 +60,13 @@ class TreeModel(QAbstractItemModel):
 
         return self.createIndex(parentItem.childPosition(), 0, parentItem)
 
-    def rowCount(self, parent=QModelIndex()):
+    def rowCount(self, parent=None):
+        if parent is None:
+            parent = QModelIndex()
         item = self.itemFromIndex(parent)
         return item.rowCount()
 
-    def columnCount(self, parent=QModelIndex()):
+    def columnCount(self, parent=None):
         return len(self.header())
 
     def data(self, index, role=Qt.DisplayRole):
@@ -73,9 +77,7 @@ class TreeModel(QAbstractItemModel):
     def setData(self, index, value, role=Qt.EditRole):
         item = self.itemFromIndex(index)
         column = index.column()
-        if item.setData(column, value, role):
-            return True
-        return False
+        return bool(item.setData(column, value, role))
 
     def headerData(self, section, orientation, role):
         if role == Qt.DisplayRole:
