@@ -75,10 +75,7 @@ def element_calculations(symbol=None, charge=None):
 
 def subshell_calculations(subshell="all"):
     """Generator of all possible calculations for a given subshell."""
-    if subshell == "all":
-        subshells = list(CALCULATIONS.keys())
-    else:
-        subshells = (subshell,)
+    subshells = list(CALCULATIONS.keys()) if subshell == "all" else (subshell,)
     for subshell in subshells:
         element = CALCULATIONS[subshell]["elements"][0]
         symbol = element["symbol"]
@@ -122,7 +119,7 @@ def unique_configurations(element):
                     parent=model,
                 )
                 configurations.extend(calculation.configurations)
-    return sorted(list(set(configurations)))
+    return sorted(set(configurations))
 
 
 def read_hybridization_parameters(symbol, conf):

@@ -15,7 +15,6 @@ import logging
 import os
 import re
 import subprocess
-from functools import lru_cache
 
 from silx.gui.qt import QProcess, Qt, pyqtSignal
 
@@ -623,8 +622,6 @@ class Calculation(SelectableItem):
         return f"{valenceSubshell}_{symmetry}_{experiment}_{subshells}.lua"
 
     @property
-    # TODO: Why is this cached?
-    @lru_cache
     def configurations(self):
         """Determine the electronic configurations involved in a calculation."""
         valenceSubshell = self.element.valenceSubshell
