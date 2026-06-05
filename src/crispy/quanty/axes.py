@@ -134,26 +134,34 @@ class WaveVector(LightVector):
 
     @value.setter
     def value(self, value):
+        value = np.asarray(value, dtype=np.float64)
         if np.all(value == 0):
             raise ValueError("The wave vector cannot be null.")
 
-        photon = self.parent()
-        k, e1 = value, photon.e1.value
-        # If the wave and polarization vectors are not perpendicular, select a new
-        # perpendicular vector for the polarization.
-        if np.dot(k, e1) != 0:
-            if k[2] != 0 or (-k[0] - k[1]) != 0:
-                e1 = np.array([k[2], k[2], -k[0] - k[1]])
-            else:
-                e1 = np.array([-k[2] - k[1], k[0], k[0]])
-
         self._value = value
-        photon.e1.value = e1
-        photon.e2.value = np.cross(e1, k)
+        photon = self.parent()
+        photon.e1.value = self.perpendicular_component(photon.e1.value)
+
+    def perpendicular_component(self, vector):
+        """Project vector onto the plane perpendicular to this wave vector.
+
+        If the vector is (nearly) parallel to the wave vector, an arbitrary
+        perpendicular vector is returned so that the polarization is always
+        well defined.
+        """
+        vector = np.asarray(vector, dtype=np.float64)
+        direction = self.value / np.linalg.norm(self.value)
+        result = vector - np.dot(vector, direction) * direction
+        if np.linalg.norm(result) < 1e-10:
+            fallback = np.array([1.0, 0.0, 0.0])
+            if abs(np.dot(fallback, direction)) > 0.9:
+                fallback = np.array([0.0, 1.0, 0.0])
+            result = fallback - np.dot(fallback, direction) * direction
+        return result
 
 
-class FirstPolarization(LightVector):
-    def __init__(self, parent=None, name="First Polarization", value=None):
+class Polarization(LightVector):
+    def __init__(self, parent=None, name="Polarization", value=None):
         super().__init__(parent=parent, name=name, value=value)
 
     @property
@@ -162,21 +170,14 @@ class FirstPolarization(LightVector):
 
     @value.setter
     def value(self, value):
+        value = np.asarray(value, dtype=np.float64)
         if np.all(value == 0):
             raise ValueError("The polarization vector cannot be null.")
 
         photon = self.parent()
-        if np.dot(photon.k.value, value) != 0:
-            raise ValueError(
-                "The wave and polarization vectors need to be perpendicular."
-            )
-        self._value = value
-        photon.e2.value = np.cross(value, photon.k.value)
-
-
-class SecondPolarization(LightVector):
-    def __init__(self, parent=None, name="Second Polarization", value=None):
-        super().__init__(parent=parent, name=name, value=value)
+        # Project onto the plane perpendicular to the wave vector, so that any
+        # user-provided vector yields a valid polarization.
+        self._value = photon.k.perpendicular_component(value)
 
 
 class Photon(BaseItem):
@@ -184,22 +185,19 @@ class Photon(BaseItem):
         super().__init__(parent=parent, name=name)
 
         self.k = WaveVector(parent=self, value=np.array([0, 0, 1]))
-        self.e1 = FirstPolarization(parent=self, value=np.array([0, 1, 0]))
-        self.e2 = SecondPolarization(parent=self, value=np.array([1, 0, 0]))
+        self.e1 = Polarization(parent=self, value=np.array([0, 1, 0]))
 
     @property
     def replacements(self):
         return {
             "WaveVector": self.k.replacements,
-            "FirstPolarization": self.e1.replacements,
-            "SecondPolarization": self.e2.replacements,
+            "Polarization": self.e1.replacements,
         }
 
     def copyFrom(self, item):
         super().copyFrom(item)
         self.k.copyFrom(item.k)
         self.e1.copyFrom(item.e1)
-        self.e2.copyFrom(item.e2)
 
 
 class IncidentPhoton(Photon):
@@ -440,6 +438,11 @@ class Axis(BaseItem):
         # outside.
         replacements.update(self.lorentzian.replacements)
         replacements.update(self.gaussian.replacements)
+
+        # Each photon contributes a single polarization, perpendicular to its
+        # own wave vector. For XAS/XPS the orthogonal polarization is derived in
+        # the Quanty template; for RIXS the incident and scattered polarizations
+        # are independent.
         replacements.update(self.photon.replacements)
 
         prefix = self.name[0]
@@ -463,6 +466,12 @@ class XAxis(Axis):
     def __init__(self, parent=None, name="X-axis"):
         super().__init__(parent=parent, name=name)
         self.photon = IncidentPhoton(parent=self)
+
+        # For one-dimensional experiments (XAS, XPS) the incident polarization
+        # defaults to horizontal, the natural polarization of synchrotron light.
+        # The orthogonal polarization is derived in the Quanty template.
+        if self.ancestor.experiment.isOneDimensional:
+            self.photon.e1._value = np.array([1, 0, 0])
 
     @property
     def label(self):

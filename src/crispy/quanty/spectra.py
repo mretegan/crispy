@@ -13,12 +13,11 @@ import logging
 
 import numpy as np
 import silx
+from silx.gui.qt import Qt
 
 from crispy.broaden import broaden
 from crispy.items import BaseItem, SelectableItem
 from crispy.quanty.hamiltonian import PdHybridizationTerm
-
-from silx.gui.qt import Qt
 
 logger = logging.getLogger(__name__)
 
@@ -34,31 +33,35 @@ SPECTRA_TO_CALCULATE = {
     },
     "XES": {"Powder/Solution": ("Emission",)},
     "XPS": {"Powder/Solution": ("Photoemission",)},
-    "RIXS": {"Powder/Solution": ("Resonant Inelastic",)},
+    "RIXS": {"Single Crystal/Thin Film": ("Resonant Inelastic",)},
 }
 
 
+# Each entry maps a spectrum name to its (suffix, symbol, label, linestyle).
+# The label is the text shown in the plot legend.
+# fmt: off
 SPECTRA = {
-    "Isotropic Absorption": ("iso", None, "-"),
-    "Isotropic Absorption (Dipolar)": ("iso_dip", None, "-"),
-    "Isotropic Absorption (Quadrupolar)": ("iso_quad", None, "-"),
-    "Absorption": ("k", None, "-"),
-    "Absorption (Dipolar)": ("k_dip", None, "-"),
-    "Absorption (Quadrupolar)": ("k_quad", None, "-"),
-    "Circular Dichroic": ("cd", "(R-L)", "-."),
-    "Circular Dichroic (Dipolar)": ("cd_dip", "(R-L)", "-"),
-    "Circular Dichroic (Quadrupolar)": ("cd_quad", "(R-L)", "-"),
-    "Right Polarized": ("r", "(R)", "--"),
-    "Left Polarized": ("l", "(L)", ":"),
-    "Linear Dichroic": ("ld", "(V-H)", "-."),
-    "Linear Dichroic (Dipolar)": ("ld_dip", "(V-H)", "-"),
-    "Linear Dichroic (Quadrupolar)": ("ld_quad", "(V-H)", "-"),
-    "Vertical Polarized": ("v", "(V)", "--"),
-    "Horizontal Polarized": ("h", "(H)", ":"),
-    "Resonant Inelastic": ("iso", None, None),
-    "Photoemission": ("pho", None, "-"),
-    "Emission": ("emi", None, "-"),
+    "Isotropic Absorption": ("iso", None, "Isotropic Absorption", "-"),
+    "Isotropic Absorption (Dipolar)": ("iso_dip", None, "Isotropic Absorption (Dipolar)", "-"),  # noqa: E501
+    "Isotropic Absorption (Quadrupolar)": ("iso_quad", None, "Isotropic Absorption (Quadrupolar)", "-"),  # noqa: E501
+    "Absorption": ("k", None, "Absorption", "-"),
+    "Absorption (Dipolar)": ("k_dip", None, "Absorption (Dipolar)", "-"),
+    "Absorption (Quadrupolar)": ("k_quad", None, "Absorption (Quadrupolar)", "-"),
+    "Circular Dichroic": ("cd", "(R-L)", "CD (R-L)", "-."),
+    "Circular Dichroic (Dipolar)": ("cd_dip", "(R-L)", "CD (R-L, Dipolar)", "-"),
+    "Circular Dichroic (Quadrupolar)": ("cd_quad", "(R-L)", "CD (R-L, Quadrupolar)", "-"),  # noqa: E501
+    "Right Polarized": ("r", "(R)", "CD (R)", "--"),
+    "Left Polarized": ("l", "(L)", "CD (L)", ":"),
+    "Linear Dichroic": ("ld", "(V-H)", "LD (V-H)", "-."),
+    "Linear Dichroic (Dipolar)": ("ld_dip", "(V-H)", "LD (V-H, Dipolar)", "-"),
+    "Linear Dichroic (Quadrupolar)": ("ld_quad", "(V-H)", "LD (V-H, Quadrupolar)", "-"),
+    "Vertical Polarized": ("v", "(V)", "LD (V)", "--"),
+    "Horizontal Polarized": ("h", "(H)", "LD (H)", ":"),
+    "Resonant Inelastic": ("k", None, "Resonant Inelastic", None),
+    "Photoemission": ("pho", None, "Photoemission", "-"),
+    "Emission": ("emi", None, "Emission", "-"),
 }
+# fmt: on
 
 DEFAULT_COLORS = tuple(silx.config.DEFAULT_PLOT_CURVE_COLORS)
 
@@ -72,11 +75,13 @@ class Spectrum(SelectableItem):
     def __init__(self, parent=None, name=None):
         super().__init__(parent=parent, name=name)
         self.suffix = None
+        self.label = None
         self.lineStyle = "-"
 
     def copyFrom(self, item):
         super().copyFrom(item)
         self.suffix = copy.deepcopy(item.suffix)
+        self.label = copy.deepcopy(item.label)
 
 
 class Spectrum1D(Spectrum):
@@ -120,7 +125,7 @@ class Spectrum1D(Spectrum):
 
         try:
             self.raw = np.loadtxt(filename, skiprows=5)
-        except (OSError, IOError):
+        except OSError:
             message = f"Could not read spectrum {filename}."
             logger.info(message)
             self.setParent(None)
@@ -176,7 +181,7 @@ class Spectrum1D(Spectrum):
             return
         calculation = self.ancestor
         index = calculation.childPosition()
-        legend = f"{index + 1}-{self.suffix}"
+        legend = f"{index + 1} · {self.label}"
         i = index % len(DEFAULT_COLORS)
         plotWidget.addCurve(
             self.x,
@@ -275,7 +280,7 @@ class Spectrum2D(Spectrum1D):
             return
         calculation = self.ancestor
         index = calculation.childPosition() + 1
-        legend = f"{index}-{self.suffix}"
+        legend = f"{index} · {self.label}"
         plotWidget.addImage(
             self.signal, origin=self.origin, scale=self.axesScale, legend=legend
         )
@@ -360,7 +365,7 @@ class Spectra(BaseItem):
     def addSpectrum(self, name, selected=True):
         calculation = self.ancestor
         experiment = calculation.experiment
-        suffix, symbol, linestyle = SPECTRA[name]
+        suffix, symbol, label, linestyle = SPECTRA[name]
         if symbol is not None:
             name = f"{name} {symbol}"
 
@@ -371,6 +376,7 @@ class Spectra(BaseItem):
             spectrum = Spectrum2D(parent=self.toPlot, name=name)
 
         spectrum.suffix = suffix
+        spectrum.label = label
         # Load before setting the check state to trigger plotting.
         spectrum.load()
         spectrum.enable() if selected else spectrum.disable()

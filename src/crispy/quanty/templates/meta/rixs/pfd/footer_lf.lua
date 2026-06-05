@@ -47,8 +47,8 @@ Tx_#f_#i = NewOperator("CF", NFermions, IndexUp_#i, IndexDn_#i, IndexUp_#f, Inde
 Ty_#f_#i = NewOperator("CF", NFermions, IndexUp_#i, IndexDn_#i, IndexUp_#f, IndexDn_#f, {{1, -1, t * I}, {1, 1,  t * I}})
 Tz_#f_#i = NewOperator("CF", NFermions, IndexUp_#i, IndexDn_#i, IndexUp_#f, IndexDn_#f, {{1,  0, 1    }                })
 
-T_#i_#m = {Txy_#i_#m, Txz_#i_#m, Tyz_#i_#m, Tx2y2_#i_#m, Tz2_#i_#m}
-T_#f_#i = {Tx_#f_#i, Ty_#f_#i, Tz_#f_#i}
+T_#i_#m = {CalculateT({Txy_#i_#m, Txz_#i_#m, Tyz_#i_#m, Tx2y2_#i_#m, Tz2_#i_#m}, EpsIn, WaveVectorIn)}
+T_#f_#i = {CalculateT({Tx_#f_#i, Ty_#f_#i, Tz_#f_#i}, EpsOut, WaveVectorOut)}
 
 if ShiftSpectra then
     Emin1 = Emin1 - (ZeroShift1 + ExperimentalShift1)
@@ -63,24 +63,7 @@ else
     G = CreateResonantSpectra(H_m, H_f, T_#i_#m, T_#f_#i, Psis_i, {{"Emin1", Emin1}, {"Emax1", Emax1}, {"NE1", NPoints1}, {"Gamma1", Gamma1}, {"Emin2", Emin2}, {"Emax2", Emax2}, {"NE2", NPoints2}, {"Gamma2", Gamma2}, {"Restrictions1", CalculationRestrictions}, {"Restrictions2", CalculationRestrictions}, {"DenseBorder", DenseBorder}})
 end
 
-Giso = 0
-Shift = 0
-for i = 1, #Psis_i do
-    for j = 1, #T_#i_#m * #T_#f_#i do
-        Indexes = {}
-        for k = 1, NPoints1 + 1 do
-            table.insert(Indexes, k + Shift)
-        end
-        Giso = Giso + Spectra.Element(G, Indexes) * dZ_i[i]
-        Shift = Shift + NPoints1 + 1
-    end
-end
-
 -- The Gaussian broadening is done using the same value for the two dimensions.
 Gaussian = math.min(Gaussian1, Gaussian2)
-if Gaussian ~= 0 then
-    Giso.Broaden(Gaussian, 0.0)
-end
-
-Giso = -1 / math.pi * Giso
-Giso.Print({{"file", Prefix .. "_iso.spec"}})
+G = GetResonantSpectrum(G, dZ_i, #T_#i_#m * #T_#f_#i, #Psis_i, NPoints1)
+SaveSpectrum(G, Prefix .. "_k", Gaussian, 0.0)

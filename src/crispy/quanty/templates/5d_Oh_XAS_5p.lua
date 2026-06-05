@@ -33,8 +33,7 @@ Lorentzian = $XLorentzian -- Lorentzian FWHM (eV).
 Gamma = $XGamma -- Lorentzian FWHM used in the spectra calculation (eV).
 
 WaveVector = $XWaveVector -- Wave vector.
-Ev = $XFirstPolarization -- Vertical polarization.
-Eh = $XSecondPolarization -- Horizontal polarization.
+Eps = $XPolarization -- Polarization.
 
 SpectraToCalculate = $SpectraToCalculate -- Types of spectra to calculate.
 DenseBorder = $DenseBorder -- Number of determinants where we switch from dense methods to sparse methods.
@@ -485,13 +484,40 @@ function SaveSpectrum(G, Filename, Gaussian, Lorentzian, Pcl)
     G.Print({{"file", Filename .. ".spec"}})
 end
 
-function CalculateT(Basis, Eps, K)
+function GetResonantSpectrum(G, dZ, NOperators, NPsis, NPoints)
+    -- Sum the resonant spectrum over the operator combinations and wavefunctions,
+    -- weighted by the Boltzmann probabilities. The spectra object returned by
+    -- CreateResonantSpectra contains one block of (NPoints + 1) rows for each
+    -- operator combination and wavefunction.
+    --
+    -- @param G userdata: Spectra object returned by CreateResonantSpectra.
+    -- @param dZ table: Boltzmann prefactors for each wavefunction.
+    -- @param NOperators number: Number of transition operator combinations.
+    -- @param NPsis number: Number of wavefunctions.
+    -- @param NPoints number: Number of points along the incident energy axis.
+
+    local Spectrum = 0
+    local Shift = 0
+    for i = 1, NPsis do
+        for _ = 1, NOperators do
+            local Indexes = {}
+            for k = 1, NPoints + 1 do
+                table.insert(Indexes, k + Shift)
+            end
+            Spectrum = Spectrum + Spectra.Element(G, Indexes) * dZ[i]
+            Shift = Shift + NPoints + 1
+        end
+    end
+    return Spectrum
+end
+
+function CalculateT(Basis, Eps, WaveVector)
     -- Calculate the transition operator in the basis of tesseral harmonics for
     -- an arbitrary polarization and wave-vector (for quadrupole operators).
     --
     -- @param Basis table: Operators forming the basis.
     -- @param Eps table: Cartesian components of the polarization vector.
-    -- @param K table: Cartesian components of the wave-vector.
+    -- @param WaveVector table: Cartesian components of the wave-vector.
 
     if #Basis == 3 then
         -- The basis for the dipolar operators must be in the order x, y, z.
@@ -500,11 +526,11 @@ function CalculateT(Basis, Eps, K)
           + Eps[3] * Basis[3]
     elseif #Basis == 5 then
         -- The basis for the quadrupolar operators must be in the order xy, xz, yz, x2y2, z2.
-        T = (Eps[1] * K[2] + Eps[2] * K[1]) / math.sqrt(3) * Basis[1]
-          + (Eps[1] * K[3] + Eps[3] * K[1]) / math.sqrt(3) * Basis[2]
-          + (Eps[2] * K[3] + Eps[3] * K[2]) / math.sqrt(3) * Basis[3]
-          + (Eps[1] * K[1] - Eps[2] * K[2]) / math.sqrt(3) * Basis[4]
-          + (Eps[3] * K[3]) * Basis[5]
+        T = (Eps[1] * WaveVector[2] + Eps[2] * WaveVector[1]) / math.sqrt(3) * Basis[1]
+          + (Eps[1] * WaveVector[3] + Eps[3] * WaveVector[1]) / math.sqrt(3) * Basis[2]
+          + (Eps[2] * WaveVector[3] + Eps[3] * WaveVector[2]) / math.sqrt(3) * Basis[3]
+          + (Eps[1] * WaveVector[1] - Eps[2] * WaveVector[2]) / math.sqrt(3) * Basis[4]
+          + (Eps[3] * WaveVector[3]) * Basis[5]
     end
     return Chop(T)
 end
@@ -715,19 +741,25 @@ Tx_5p_5d = NewOperator("CF", NFermions, IndexUp_5d, IndexDn_5d, IndexUp_5p, Inde
 Ty_5p_5d = NewOperator("CF", NFermions, IndexUp_5d, IndexDn_5d, IndexUp_5p, IndexDn_5p, {{1, -1, t * I}, {1, 1, t * I}})
 Tz_5p_5d = NewOperator("CF", NFermions, IndexUp_5d, IndexDn_5d, IndexUp_5p, IndexDn_5p, {{1, 0, 1}})
 
-Er = {t * (Eh[1] - I * Ev[1]),
-      t * (Eh[2] - I * Ev[2]),
-      t * (Eh[3] - I * Ev[3])}
+Epsh = Eps
 
-El = {-t * (Eh[1] + I * Ev[1]),
-      -t * (Eh[2] + I * Ev[2]),
-      -t * (Eh[3] + I * Ev[3])}
+Epsv = {WaveVector[2] * Epsh[3] - WaveVector[3] * Epsh[2],
+        WaveVector[3] * Epsh[1] - WaveVector[1] * Epsh[3],
+        WaveVector[1] * Epsh[2] - WaveVector[2] * Epsh[1]}
+
+Epsr = {t * (Epsh[1] - I * Epsv[1]),
+        t * (Epsh[2] - I * Epsv[2]),
+        t * (Epsh[3] - I * Epsv[3])}
+
+Epsl = {-t * (Epsh[1] + I * Epsv[1]),
+        -t * (Epsh[2] + I * Epsv[2]),
+        -t * (Epsh[3] + I * Epsv[3])}
 
 local T = {Tx_5p_5d, Ty_5p_5d, Tz_5p_5d}
-Tv_5p_5d = CalculateT(T, Ev)
-Th_5p_5d = CalculateT(T, Eh)
-Tr_5p_5d = CalculateT(T, Er)
-Tl_5p_5d = CalculateT(T, El)
+Tv_5p_5d = CalculateT(T, Epsv)
+Th_5p_5d = CalculateT(T, Epsh)
+Tr_5p_5d = CalculateT(T, Epsr)
+Tl_5p_5d = CalculateT(T, Epsl)
 Tk_5p_5d = CalculateT(T, WaveVector)
 
 -- Initialize a table with the available spectra and the required operators.

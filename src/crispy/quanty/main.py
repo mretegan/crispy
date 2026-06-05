@@ -65,10 +65,11 @@ class AxisWidget(QWidget):
             (self.lorentzianLineEdit, axis.lorentzian),
             (self.kLineEdit, axis.photon.k),
             (self.e1LineEdit, axis.photon.e1),
-            (self.e2LineEdit, axis.photon.e2),
         )
         self.mappers = setMappings(MAPPINGS)
         self.lorentzianToolButton.setVisible(False)
+        self.e2Label.setVisible(False)
+        self.e2LineEdit.setVisible(False)
 
 
 class GeneralSetupPage(QWidget):
@@ -123,19 +124,16 @@ class GeneralSetupPage(QWidget):
             self.axesTabWidget.addTab(self.yAxis, None)
             self.axesTabWidget.setTabText(1, state.axes.yaxis.label)
             self.yAxis.populate(state.axes.yaxis)
-            self.xAxis.e1Label.setText("ε<sub>σ</sub> (x, y, z)")
-            self.xAxis.e2Label.setText("ε<sub>π</sub> (x, y, z)")
-            self.xAxis.kLineEdit.setDisabled(True)
-            self.xAxis.e1LineEdit.setDisabled(True)
+            self.xAxis.e1Label.setText("ε (x, y, z)")
+            self.xAxis.kLineEdit.setEnabled(True)
+            self.xAxis.e1LineEdit.setEnabled(True)
             self.yAxis.kLabel.setText("k' (x, y, z)")
-            self.yAxis.e1Label.setText("ε'<sub>σ</sub> (x, y, z)")
-            self.yAxis.e2Label.setText("ε'<sub>π</sub> (x, y, z)")
-            self.yAxis.kLineEdit.setDisabled(True)
-            self.yAxis.e1LineEdit.setDisabled(True)
+            self.yAxis.e1Label.setText("ε' (x, y, z)")
+            self.yAxis.kLineEdit.setEnabled(True)
+            self.yAxis.e1LineEdit.setEnabled(True)
         else:
             self.axesTabWidget.removeTab(1)
-            self.xAxis.e1Label.setText("ε<sub>v</sub> (x, y, z)")
-            self.xAxis.e2Label.setText("ε<sub>h</sub> (x, y, z)")
+            self.xAxis.e1Label.setText("ε (x, y, z)")
             self.xAxis.kLineEdit.setEnabled(True)
             self.xAxis.e1LineEdit.setEnabled(True)
 
@@ -354,10 +352,8 @@ class ResultsPage(QWidget):
             for child in children:
                 if isinstance(child, ExternalData):
                     continue
-                if (
-                    last.experiment.isTwoDimensional
-                    and last != child
-                    or not last.experiment.isTwoDimensional
+                if (last.experiment.isTwoDimensional and last != child) or (
+                    not last.experiment.isTwoDimensional
                     and child.experiment.isTwoDimensional
                 ):
                     child.checkState = Qt.CheckState.Unchecked
@@ -583,7 +579,7 @@ class DockWidget(QDockWidget):
             self.currentPath = path
             try:
                 self.state.saveInput()
-            except (IOError, OSError):
+            except OSError:
                 return
 
     def updateLogger(self, data):

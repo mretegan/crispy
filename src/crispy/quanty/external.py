@@ -13,5 +13,5 @@ class ExternalData(SelectableItem):
 
     def plot(self, plotWidget):
         index = self.childPosition()
-        legend = f"{index + 1}-{self.name}"
+        legend = f"{index + 1} · {self.name}"
         plotWidget.addCurve(self.x, self.y, legend=legend)

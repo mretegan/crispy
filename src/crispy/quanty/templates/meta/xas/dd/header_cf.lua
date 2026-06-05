@@ -33,8 +33,7 @@ Lorentzian = $XLorentzian -- Lorentzian FWHM (eV).
 Gamma = $XGamma -- Lorentzian FWHM used in the spectra calculation (eV).
 
 WaveVector = $XWaveVector -- Wave vector.
-Ev = $XFirstPolarization -- Vertical polarization.
-Eh = $XSecondPolarization -- Horizontal polarization.
+Eps = $XPolarization -- Polarization.
 
 SpectraToCalculate = $SpectraToCalculate -- Types of spectra to calculate.
 DenseBorder = $DenseBorder -- Number of determinants where we switch from dense methods to sparse methods.

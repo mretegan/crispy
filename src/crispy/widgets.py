@@ -9,6 +9,7 @@
 """Custom widgets."""
 
 import logging
+import re
 
 from silx.gui.qt import (
     QCheckBox,
@@ -19,8 +20,6 @@ from silx.gui.qt import (
     QIntValidator,
     QLineEdit,
     QPalette,
-    QRegularExpression,
-    QRegularExpressionValidator,
     Qt,
 )
 
@@ -88,9 +87,11 @@ class LineEdit(QLineEdit):
         self.setPalette(palette)
 
     def eventFilter(self, source, event):
-        if event.type() == QEvent.KeyPress:
-            if event.key() in (Qt.Key_Return, Qt.Key_Enter):
-                self.setBackgroundColor(self.defaulBakgroundColor)
+        if event.type() == QEvent.KeyPress and event.key() in (
+            Qt.Key_Return,
+            Qt.Key_Enter,
+        ):
+            self.setBackgroundColor(self.defaulBakgroundColor)
         return super().eventFilter(source, event)
 
     def updateBackgroundColor(self):
@@ -124,15 +125,22 @@ class DoubleLineEdit(LineEdit):
 
 
 class Vector3DLineEdit(LineEdit):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.regex = QRegularExpression()
-        # Regex that matches the vectors input format, e.g. (1, 0, 1), (-1,0,1)
-        # + and - are allowed and any number of spaces after comma. The regex has
-        # groups that can be captured.
-        self.regex.setPattern(r"\(([+-]?\d?),\s*([+-]?\d?),\s*([+-]?\d?)\)")
-        self.validator = QRegularExpressionValidator(self.regex, self)
-        self.setValidator(self.validator)
+    # Regex that matches the vectors input format, e.g. (1, 0, 1), (-1, 0, 1),
+    # (0, 0.5, 0.87). Each component is a signed integer or decimal number. Any number
+    # of spaces after the comma is allowed.
+    VECTOR_COMPONENT = r"[+-]?(?:\d+\.?\d*|\.\d+)"
+    regex = re.compile(
+        rf"\(\s*{VECTOR_COMPONENT},\s*{VECTOR_COMPONENT},\s*{VECTOR_COMPONENT}\s*\)"
+    )
+
+    def setModelData(self, model, index):
+        # Validate only on submission rather than with a live QValidator, which would
+        # block intermediate keystrokes and move the cursor while editing. A malformed
+        # vector raises ValueError, which the delegate catches to revert the edit.
+        value = self.text()
+        if not self.regex.fullmatch(value):
+            raise ValueError(f"Invalid vector format: {value}")
+        super().setModelData(model, index)
 
 
 class CheckBox(QCheckBox):

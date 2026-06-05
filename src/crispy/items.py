@@ -318,9 +318,8 @@ class IntItem(BaseItem):
                     return QLocale().toString(self.value)
                 except TypeError:
                     return self.value
-        elif role in (Qt.UserRole,):
-            if column == 1:
-                return self.value
+        elif role in (Qt.UserRole,) and column == 1:
+            return self.value
         return super().data(column, role)
 
     def setData(self, column, value, role=Qt.EditRole):
@@ -335,12 +334,11 @@ class IntItem(BaseItem):
 
 class DoubleItem(BaseItem):
     def data(self, column, role=Qt.DisplayRole):
-        if role in (Qt.EditRole, Qt.DisplayRole):
-            if column == 1:
-                try:
-                    return QLocale().toString(self._value)
-                except TypeError:
-                    return self._value
+        if role in (Qt.EditRole, Qt.DisplayRole) and column == 1:
+            try:
+                return QLocale().toString(self._value)
+            except TypeError:
+                return self._value
         return super().data(column, role)
 
     def setData(self, column, value, role=Qt.EditRole):
@@ -355,21 +353,18 @@ class DoubleItem(BaseItem):
 
 class Vector3DItem(BaseItem):
     def data(self, column, role=Qt.DisplayRole):
-        # Qt.EditRole is needed to properly show the Numpy array in the
-        # VectorLineEdit. Because of this the delegates must rely on the Qt.UserRole
-        # to identify the type editor needed for the data.
-        if role in (Qt.DisplayRole, Qt.EditRole):
-            # Qt doesn't know how to represent a Numpy array, so we create a digestible
-            # representation for it.
-            if column == 1:
-                return f"({self.value[0]}, {self.value[1]}, {self.value[2]})"
+        # Qt cannot represent a Numpy array, so return a string for both DisplayRole
+        # and EditRole (needed to show the array in the VectorLineEdit). Delegates rely
+        # on Qt.UserRole instead to identify the type editor needed for the data.
+        if role in (Qt.DisplayRole, Qt.EditRole) and column == 1:
+            return f"({self.value[0]}, {self.value[1]}, {self.value[2]})"
         return super().data(column, role)
 
     def setData(self, column, value, role=Qt.EditRole):
         if role == Qt.EditRole:
             if column == 1:
                 # Convert the value to a Numpy array.
-                self.value = np.fromstring(value[1:-1], dtype=int, sep=",")
+                self.value = np.fromstring(value[1:-1], dtype=float, sep=",")
             return True
         return super().setData(column, value, role)
 
@@ -388,9 +383,8 @@ class BoolItem(BaseItem):
         if role in (Qt.EditRole,):
             if column == 1:
                 return None
-        elif role in (Qt.DisplayRole, Qt.UserRole):
-            if column == 1:
-                return self.value
+        elif role in (Qt.DisplayRole, Qt.UserRole) and column == 1:
+            return self.value
         return super().data(column, role)
 
     def setData(self, column, value, role=Qt.EditRole):

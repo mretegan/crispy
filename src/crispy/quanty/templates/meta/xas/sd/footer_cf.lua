@@ -34,19 +34,25 @@ Tyz_#i_#f   = NewOperator("CF", NFermions, IndexUp_#f, IndexDn_#f, IndexUp_#i, I
 Tx2y2_#i_#f = NewOperator("CF", NFermions, IndexUp_#f, IndexDn_#f, IndexUp_#i, IndexDn_#i, {{2, -2, t    }, {2, 2,  t    }})
 Tz2_#i_#f   = NewOperator("CF", NFermions, IndexUp_#f, IndexDn_#f, IndexUp_#i, IndexDn_#i, {{2,  0, 1    }                })
 
-Er = {t * (Eh[1] - I * Ev[1]),
-      t * (Eh[2] - I * Ev[2]),
-      t * (Eh[3] - I * Ev[3])}
+Epsh = Eps
 
-El = {-t * (Eh[1] + I * Ev[1]),
-      -t * (Eh[2] + I * Ev[2]),
-      -t * (Eh[3] + I * Ev[3])}
+Epsv = {WaveVector[2] * Epsh[3] - WaveVector[3] * Epsh[2],
+        WaveVector[3] * Epsh[1] - WaveVector[1] * Epsh[3],
+        WaveVector[1] * Epsh[2] - WaveVector[2] * Epsh[1]}
+
+Epsr = {t * (Epsh[1] - I * Epsv[1]),
+        t * (Epsh[2] - I * Epsv[2]),
+        t * (Epsh[3] - I * Epsv[3])}
+
+Epsl = {-t * (Epsh[1] + I * Epsv[1]),
+        -t * (Epsh[2] + I * Epsv[2]),
+        -t * (Epsh[3] + I * Epsv[3])}
 
 local T = {Txy_#i_#f, Txz_#i_#f, Tyz_#i_#f, Tx2y2_#i_#f, Tz2_#i_#f}
-Tv_#i_#f = CalculateT(T, Ev, WaveVector)
-Th_#i_#f = CalculateT(T, Eh, WaveVector)
-Tr_#i_#f = CalculateT(T, Er, WaveVector)
-Tl_#i_#f = CalculateT(T, El, WaveVector)
+Tv_#i_#f = CalculateT(T, Epsv, WaveVector)
+Th_#i_#f = CalculateT(T, Epsh, WaveVector)
+Tr_#i_#f = CalculateT(T, Epsr, WaveVector)
+Tl_#i_#f = CalculateT(T, Epsl, WaveVector)
 Tk_#i_#f = CalculateT(T, WaveVector, WaveVector)
 
 -- Initialize a table with the available spectra and the required operators.

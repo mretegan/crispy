@@ -33,8 +33,7 @@ Gaussian1 = $XGaussian -- Gaussian FWHM (eV).
 Gamma1 = $XGamma -- Lorentzian FWHM used in the spectra calculation (eV).
 
 WaveVectorIn = $XWaveVector -- Incident wave vector.
-EpsSigmaIn = $XFirstPolarization -- Incident sigma polarization.
-EpsPiIn = $XSecondPolarization -- Incident pi polarization.
+EpsIn = $XPolarization -- Incident polarization.
 
 -- Y-axis parameters.
 Emin2 = $YEmin -- Minimum value of the energy range (eV).
@@ -46,8 +45,7 @@ Gaussian2 = $YGaussian -- Gaussian FWHM (eV).
 Gamma2 = $YGamma -- Lorentzian FWHM used in the spectra calculation (eV).
 
 WaveVectorOut = $YWaveVector -- Scattered wave vector.
-EpsSigmaOut = $YFirstPolarization -- Scattered sigma polarization.
-EpsPiOut = $YSecondPolarization -- Scattered pi polarization.
+EpsOut = $YPolarization -- Scattered polarization.
 
 SpectraToCalculate = $SpectraToCalculate -- Types of spectra to calculate.
 DenseBorder = $DenseBorder -- Number of determinants where we switch from dense methods to sparse methods.
@@ -425,13 +423,40 @@ function SaveSpectrum(G, Filename, Gaussian, Lorentzian, Pcl)
     G.Print({{"file", Filename .. ".spec"}})
 end
 
-function CalculateT(Basis, Eps, K)
+function GetResonantSpectrum(G, dZ, NOperators, NPsis, NPoints)
+    -- Sum the resonant spectrum over the operator combinations and wavefunctions,
+    -- weighted by the Boltzmann probabilities. The spectra object returned by
+    -- CreateResonantSpectra contains one block of (NPoints + 1) rows for each
+    -- operator combination and wavefunction.
+    --
+    -- @param G userdata: Spectra object returned by CreateResonantSpectra.
+    -- @param dZ table: Boltzmann prefactors for each wavefunction.
+    -- @param NOperators number: Number of transition operator combinations.
+    -- @param NPsis number: Number of wavefunctions.
+    -- @param NPoints number: Number of points along the incident energy axis.
+
+    local Spectrum = 0
+    local Shift = 0
+    for i = 1, NPsis do
+        for _ = 1, NOperators do
+            local Indexes = {}
+            for k = 1, NPoints + 1 do
+                table.insert(Indexes, k + Shift)
+            end
+            Spectrum = Spectrum + Spectra.Element(G, Indexes) * dZ[i]
+            Shift = Shift + NPoints + 1
+        end
+    end
+    return Spectrum
+end
+
+function CalculateT(Basis, Eps, WaveVector)
     -- Calculate the transition operator in the basis of tesseral harmonics for
     -- an arbitrary polarization and wave-vector (for quadrupole operators).
     --
     -- @param Basis table: Operators forming the basis.
     -- @param Eps table: Cartesian components of the polarization vector.
-    -- @param K table: Cartesian components of the wave-vector.
+    -- @param WaveVector table: Cartesian components of the wave-vector.
 
     if #Basis == 3 then
         -- The basis for the dipolar operators must be in the order x, y, z.
@@ -440,11 +465,11 @@ function CalculateT(Basis, Eps, K)
           + Eps[3] * Basis[3]
     elseif #Basis == 5 then
         -- The basis for the quadrupolar operators must be in the order xy, xz, yz, x2y2, z2.
-        T = (Eps[1] * K[2] + Eps[2] * K[1]) / math.sqrt(3) * Basis[1]
-          + (Eps[1] * K[3] + Eps[3] * K[1]) / math.sqrt(3) * Basis[2]
-          + (Eps[2] * K[3] + Eps[3] * K[2]) / math.sqrt(3) * Basis[3]
-          + (Eps[1] * K[1] - Eps[2] * K[2]) / math.sqrt(3) * Basis[4]
-          + (Eps[3] * K[3]) * Basis[5]
+        T = (Eps[1] * WaveVector[2] + Eps[2] * WaveVector[1]) / math.sqrt(3) * Basis[1]
+          + (Eps[1] * WaveVector[3] + Eps[3] * WaveVector[1]) / math.sqrt(3) * Basis[2]
+          + (Eps[2] * WaveVector[3] + Eps[3] * WaveVector[2]) / math.sqrt(3) * Basis[3]
+          + (Eps[1] * WaveVector[1] - Eps[2] * WaveVector[2]) / math.sqrt(3) * Basis[4]
+          + (Eps[3] * WaveVector[3]) * Basis[5]
     end
     return Chop(T)
 end
@@ -643,8 +668,8 @@ Tx_3p_1s = NewOperator("CF", NFermions, IndexUp_1s, IndexDn_1s, IndexUp_3p, Inde
 Ty_3p_1s = NewOperator("CF", NFermions, IndexUp_1s, IndexDn_1s, IndexUp_3p, IndexDn_3p, {{1, -1, t * I}, {1, 1,  t * I}})
 Tz_3p_1s = NewOperator("CF", NFermions, IndexUp_1s, IndexDn_1s, IndexUp_3p, IndexDn_3p, {{1,  0, 1    }                })
 
-T_1s_3d = {Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}
-T_3p_1s = {Tx_3p_1s, Ty_3p_1s, Tz_3p_1s}
+T_1s_3d = {CalculateT({Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}, EpsIn, WaveVectorIn)}
+T_3p_1s = {CalculateT({Tx_3p_1s, Ty_3p_1s, Tz_3p_1s}, EpsOut, WaveVectorOut)}
 
 if ShiftSpectra then
     Emin1 = Emin1 - (ZeroShift1 + ExperimentalShift1)
@@ -659,24 +684,7 @@ else
     G = CreateResonantSpectra(H_m, H_f, T_1s_3d, T_3p_1s, Psis_i, {{"Emin1", Emin1}, {"Emax1", Emax1}, {"NE1", NPoints1}, {"Gamma1", Gamma1}, {"Emin2", Emin2}, {"Emax2", Emax2}, {"NE2", NPoints2}, {"Gamma2", Gamma2}, {"Restrictions1", CalculationRestrictions}, {"Restrictions2", CalculationRestrictions}, {"DenseBorder", DenseBorder}})
 end
 
-Giso = 0
-Shift = 0
-for i = 1, #Psis_i do
-    for j = 1, #T_1s_3d * #T_3p_1s do
-        Indexes = {}
-        for k = 1, NPoints1 + 1 do
-            table.insert(Indexes, k + Shift)
-        end
-        Giso = Giso + Spectra.Element(G, Indexes) * dZ_i[i]
-        Shift = Shift + NPoints1 + 1
-    end
-end
-
 -- The Gaussian broadening is done using the same value for the two dimensions.
 Gaussian = math.min(Gaussian1, Gaussian2)
-if Gaussian ~= 0 then
-    Giso.Broaden(Gaussian, 0.0)
-end
-
-Giso = -1 / math.pi * Giso
-Giso.Print({{"file", Prefix .. "_iso.spec"}})
+G = GetResonantSpectrum(G, dZ_i, #T_1s_3d * #T_3p_1s, #Psis_i, NPoints1)
+SaveSpectrum(G, Prefix .. "_k", Gaussian, 0.0)
