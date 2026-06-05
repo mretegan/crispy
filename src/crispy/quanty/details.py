@@ -16,7 +16,8 @@ from crispy import resourceAbsolutePath
 from crispy.config import Config
 from crispy.quanty.external import ExternalData
 from crispy.uic import loadUi
-from crispy.utils import fixedFont, setMappings
+from crispy.utils import fixedFont
+from crispy.views import setMappings
 
 settings = Config().read()
 

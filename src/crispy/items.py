@@ -22,6 +22,8 @@ from silx.gui.qt import (
     pyqtSignal,
 )
 
+from crispy.utils import disconnectSignal
+
 logger = logging.getLogger(__name__)
 
 
@@ -49,11 +51,7 @@ class BaseItem(QObject):
                 self._ancestor = None
 
         self.setParent(parent)
-        # This might be overkill, but it is better to be on the safe side.
-        try:
-            self.dataChanged.disconnect()
-        except (TypeError, RuntimeError):
-            pass
+        disconnectSignal(self.dataChanged)
         self.dataChanged.connect(self._modelDataChanged)
 
     @property

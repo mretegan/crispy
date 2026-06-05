@@ -10,58 +10,29 @@
 
 import logging
 import sys
+import warnings
 
 from silx.gui.qt import (
     QApplication,
-    QCheckBox,
-    QComboBox,
-    QDataWidgetMapper,
     QFontDatabase,
 )
-
-from crispy.views import Delegate
 
 logger = logging.getLogger(__name__)
 
 
-def setMappings(mappings):
-    """Set the mappings between the model and widgets.
-    TODO:
-        - Should this be extended to accept other columns?
-        - Check if it has a model already.
+def disconnectSignal(signal):
+    """Disconnect all slots from a signal, ignoring the case where none are connected.
+
+    PyQt raises TypeError/RuntimeError when nothing is connected, while PySide6
+    instead emits a RuntimeWarning from libpyside. Handle both so the signal can
+    be cleared silently before reconnecting.
     """
-    column = 1
-    mappers = []
-    for widget, obj in mappings:
-        mapper = QDataWidgetMapper(widget)
-        # logger.debug(obj.model())
-        mapper.setModel(obj.model())
-        mapper.addMapping(widget, column)
-        delegate = Delegate(widget)
-        mapper.setItemDelegate(delegate)
-        mapper.setRootIndex(obj.parent().index())
-        mapper.setCurrentModelIndex(obj.index())
-        # QDataWidgetMapper needs a focus event to notice a change in the data.
-        # To make sure the model is informed about the change, I connected the
-        # stateChanged signal of the QCheckBox to the submit slot of the
-        # QDataWidgetMapper. The same idea goes for the QComboBox.
-        # https://bugreports.qt.io/browse/QTBUG-1818
-        if isinstance(widget, QCheckBox):
-            signal = widget.stateChanged
-            try:
-                signal.disconnect()
-            except (TypeError, RuntimeError):
-                pass
-            signal.connect(mapper.submit)
-        elif isinstance(widget, QComboBox):
-            signal = widget.currentTextChanged
-            try:
-                signal.disconnect()
-            except (TypeError, RuntimeError):
-                pass
-            signal.connect(mapper.submit)
-        mappers.append(mapper)
-    return mappers
+    try:
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", RuntimeWarning)
+            signal.disconnect()
+    except (TypeError, RuntimeError):
+        pass
 
 
 def fixedFont():

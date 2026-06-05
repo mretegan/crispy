@@ -10,12 +10,55 @@
 
 import logging
 
-from silx.gui.qt import QStyledItemDelegate, Qt, QTableView, QTreeView
+from silx.gui.qt import (
+    QCheckBox,
+    QComboBox,
+    QDataWidgetMapper,
+    QStyledItemDelegate,
+    Qt,
+    QTableView,
+    QTreeView,
+)
 
 from crispy.items import ComboItem, DoubleItem, IntItem, Vector3DItem
+from crispy.utils import disconnectSignal
 from crispy.widgets import ComboBox, DoubleLineEdit, IntLineEdit, Vector3DLineEdit
 
 logger = logging.getLogger(__name__)
+
+
+def setMappings(mappings):
+    """Set the mappings between the model and widgets.
+    TODO:
+        - Should this be extended to accept other columns?
+        - Check if it has a model already.
+    """
+    column = 1
+    mappers = []
+    for widget, obj in mappings:
+        mapper = QDataWidgetMapper(widget)
+        # logger.debug(obj.model())
+        mapper.setModel(obj.model())
+        mapper.addMapping(widget, column)
+        delegate = Delegate(widget)
+        mapper.setItemDelegate(delegate)
+        mapper.setRootIndex(obj.parent().index())
+        mapper.setCurrentModelIndex(obj.index())
+        # QDataWidgetMapper needs a focus event to notice a change in the data.
+        # To make sure the model is informed about the change, I connected the
+        # stateChanged signal of the QCheckBox to the submit slot of the
+        # QDataWidgetMapper. The same idea goes for the QComboBox.
+        # https://bugreports.qt.io/browse/QTBUG-1818
+        if isinstance(widget, QCheckBox):
+            signal = widget.stateChanged
+            disconnectSignal(signal)
+            signal.connect(mapper.submit)
+        elif isinstance(widget, QComboBox):
+            signal = widget.currentTextChanged
+            disconnectSignal(signal)
+            signal.connect(mapper.submit)
+        mappers.append(mapper)
+    return mappers
 
 
 class Delegate(QStyledItemDelegate):

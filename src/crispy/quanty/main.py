@@ -35,7 +35,8 @@ from crispy.quanty.external import ExternalData
 from crispy.quanty.preferences import PreferencesDialog
 from crispy.quanty.progress import ProgressDialog
 from crispy.uic import loadUi
-from crispy.utils import findQtObject, setMappings
+from crispy.utils import findQtObject
+from crispy.views import setMappings
 
 logger = logging.getLogger(__name__)
 settings = Config().read()
