@@ -334,7 +334,7 @@ class SpectraToCalculate(SpectraToInteract):
         # The order or the spectra should be the same in both objects.
         old = list(self.all)
         new = list(item.all)
-        for o, n in zip(old, new):
+        for o, n in zip(old, new, strict=False):
             o.copyFrom(n)
 
 
