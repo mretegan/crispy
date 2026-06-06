@@ -58,10 +58,18 @@ class LineEdit(QLineEdit):
 
         palette = self.palette()
         self.defaulBakgroundColor = palette.color(QPalette.ColorRole.Base)
-        self.alternateBackgroundColor = palette.color(QPalette.ColorRole.AlternateBase)
+        # Amber tint marking an edited but uncommitted value. The shade is chosen
+        # from the theme's lightness so the value stays readable against the
+        # theme's text color in both dark and light mode.
+        if self.defaulBakgroundColor.lightness() < 128:
+            self.modifiedBackgroundColor = QColor("#4d3a00")
+        else:
+            self.modifiedBackgroundColor = QColor("#fff3cd")
 
         self.textEdited.connect(self.updateBackgroundColor)
         self.installEventFilter(self)
+
+        self.setBackgroundColor(self.defaulBakgroundColor)
 
     def focusInEvent(self, event):
         self.currentText = self.text()
@@ -74,9 +82,17 @@ class LineEdit(QLineEdit):
         super().focusOutEvent(event)
 
     def setBackgroundColor(self, color):
-        palette = self.palette()
-        palette.setColor(QPalette.Base, QColor(color))
-        self.setPalette(palette)
+        # The native macOS style renders QLineEdit with mismatched corners and
+        # ignores QPalette.Base, so the appearance is driven entirely through a
+        # stylesheet. A full box model is required for the background fill to
+        # apply and for the corners to render consistently.
+        self.setStyleSheet(
+            f"QLineEdit {{ background-color: {QColor(color).name()}; "
+            "color: palette(text); "
+            "border: 1px solid palette(mid); border-radius: 4px; "
+            "padding: 1px 3px; } "
+            "QLineEdit:focus { border: 1px solid palette(highlight); }"
+        )
 
     def eventFilter(self, source, event):
         if event.type() == QEvent.KeyPress and event.key() in (
@@ -87,7 +103,7 @@ class LineEdit(QLineEdit):
         return super().eventFilter(source, event)
 
     def updateBackgroundColor(self):
-        self.setBackgroundColor(self.alternateBackgroundColor)
+        self.setBackgroundColor(self.modifiedBackgroundColor)
 
     def setModelData(self, model, index):
         value = self.text()

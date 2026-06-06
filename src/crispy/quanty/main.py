@@ -407,17 +407,14 @@ class DockWidget(QDockWidget):
         self.preferencesDialog = PreferencesDialog(self)
         self.preferencesDialog.settingsChanged.connect(self.populate)
 
-        # Remove the placeholder page.
-        self.toolBox.removeItem(0)
-
         self.generalPage = GeneralSetupPage()
-        self.toolBox.addItem(self.generalPage, "General Setup")
+        self.tabWidget.addTab(self.generalPage, "General Setup")
 
         self.hamiltonianPage = HamiltonianSetupPage()
-        self.toolBox.addItem(self.hamiltonianPage, "Hamiltonian Setup")
+        self.tabWidget.addTab(self.hamiltonianPage, "Hamiltonian Setup")
 
         self.resultsPage = ResultsPage()
-        self.toolBox.addItem(self.resultsPage, "Results")
+        self.tabWidget.addTab(self.resultsPage, "Results")
 
         # Setup the initial state and populate the widgets.
         self.state = Calculation(parent=self.model.rootItem())
@@ -576,11 +573,8 @@ class DockWidget(QDockWidget):
         if not successful:
             return
 
-        # If the "Hamiltonian Setup" page is currently selected, when the
-        # current widget is set to the "Results Page", the former is not
-        # displayed. To avoid this we switch first to the "General Setup" page.
-        self.toolBox.setCurrentWidget(self.generalPage)
-        self.toolBox.setCurrentWidget(self.resultsPage)
+        # Switch to the results page once the calculation has finished.
+        self.tabWidget.setCurrentWidget(self.resultsPage)
 
         # Move the state to the results model.
         self.state.setParent(self.resultsPage.model.rootItem())
