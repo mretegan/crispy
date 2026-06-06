@@ -466,6 +466,10 @@ class DockWidget(QDockWidget):
 
     def populate(self, index=None):
         logger.debug("Start populating the widgets.")
+        # Keep a reference to the current calculation before it is detached so
+        # its parameters can be reused when only the symmetry changes.
+        previous = self.state
+
         # Remove the previous state from the root item's children.
         rootItem = self.model.rootItem()
         for child in rootItem.children():
@@ -488,16 +492,30 @@ class DockWidget(QDockWidget):
             experiment = self.generalPage.experimentComboBox.currentText()
             edge = self.generalPage.edgeComboBox.currentText()
 
-            # TODO: Try to copy some of the parameters from the previous state.
-            # Things that could be copied:
-            #   - temperature
-            #   - magnetic field
-            #   - polarizations and wave vector (partially for polarizations?)
-            #   - spectra to calculate (depending on the experiment)
-            # If only the symmetry is changed, all the parameters should stay the same
-            # except for the Hamiltonian term of course.
-            # If only the charge is changed, most of the interface parameters stay the
-            # same. Maybe add an option to always reset them if the user wants.
+        # Detect whether the user changed only the symmetry. In that case the
+        # symmetry-independent parameters are preserved and only the
+        # symmetry-dependent Hamiltonian terms are regenerated.
+        symmetryOnly = (
+            result is None
+            and symbol == previous.element.symbol
+            and charge == previous.element.charge
+            and experiment == previous.experiment.value
+            and edge == previous.edge.value
+            and symmetry != previous.symmetry.value
+        )
+
+        # Detect whether the user changed only the charge. In that case the
+        # charge-independent parameters are preserved and only the
+        # configuration-dependent parts (atomic parameters and the numbers of
+        # states and configurations) are regenerated.
+        chargeOnly = (
+            result is None
+            and symbol == previous.element.symbol
+            and symmetry == previous.symmetry.value
+            and experiment == previous.experiment.value
+            and edge == previous.edge.value
+            and charge != previous.element.charge
+        )
 
         logger.debug("Start creating a new calculation.")
         state = Calculation(
@@ -513,15 +531,23 @@ class DockWidget(QDockWidget):
         logger.debug("Start copying the parameters.")
         if result is not None:
             state.copyFrom(result)
+        elif symmetryOnly:
+            state.copyFromExceptSymmetry(previous)
+        elif chargeOnly:
+            state.copyFromExceptCharge(previous)
+        else:
+            # For any other change (element, experiment, or edge) the
+            # experimental conditions still apply and are carried over.
+            state.copyExperimentalConditions(previous)
         logger.debug("Finished copying the parameters.")
 
         self.state = state
         logger.debug("Finished populating the widgets.")
 
-    def addExternalData(self, data, name):
+    def addExternalData(self, raw, name):
         parent = self.resultsPage.model.rootItem()
-        experiment = ExternalData(data, parent=parent, name=name)
-        index = experiment.index()
+        externalData = ExternalData(raw, parent=parent, name=name)
+        index = externalData.index()
         self.resultsPage.view.setCurrentIndex(index)
 
     def run(self):

@@ -798,6 +798,34 @@ class Calculation(SelectableItem):
         self.spectra.copyFrom(item.spectra)
         self.hamiltonian.copyFrom(item.hamiltonian)
 
+    def copyFromExceptSymmetry(self, item):
+        """Copy the symmetry-independent parameters from another calculation."""
+        self.temperature.copyFrom(item.temperature)
+        self.magneticField.copyFrom(item.magneticField)
+        self.axes.copyFrom(item.axes)
+        self.spectra.copyFrom(item.spectra)
+        self.hamiltonian.copyFromExceptSymmetry(item.hamiltonian)
+
+    def copyFromExceptCharge(self, item):
+        """Copy the charge-independent parameters from another calculation.
+
+        The atomic parameters and the numbers of states and configurations depend
+        on the electronic configuration, which changes with the charge, so they
+        keep the values generated for the new charge. The calculation name is left
+        untouched so that it reflects that charge.
+        """
+        self.temperature.copyFrom(item.temperature)
+        self.magneticField.copyFrom(item.magneticField)
+        self.axes.copyFrom(item.axes)
+        self.spectra.copyFrom(item.spectra)
+        self.hamiltonian.copyFromExceptCharge(item.hamiltonian)
+
+    def copyExperimentalConditions(self, item):
+        """Copy the experimental conditions from another calculation."""
+        self.temperature.copyFrom(item.temperature)
+        self.magneticField.value = item.magneticField.value
+        self.axes.copyGaussianBroadening(item.axes)
+
 
 def main():
     pass

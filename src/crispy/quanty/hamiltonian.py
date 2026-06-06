@@ -407,6 +407,22 @@ class ExchangeFieldTerm(HamiltonianTerm):
 
 
 class HamiltonianTerms(BaseItem):
+    # Term types whose parameters depend on the symmetry. They are regenerated
+    # with the defaults of the new symmetry, while all other terms are copied
+    # across a symmetry change. They are identified by type rather than by name
+    # because the ligand and pd hybridization names embed the valence subshell.
+    SYMMETRY_DEPENDENT_TERMS = (
+        CrystalFieldTerm,
+        LigandHybridizationTerm,
+        PdHybridizationTerm,
+    )
+
+    # Term types whose parameters depend on the charge. The atomic parameters are
+    # read for the electronic configuration, which changes with the charge, so
+    # the atomic term is regenerated while all other terms are copied across a
+    # charge change.
+    CHARGE_DEPENDENT_TERMS = (AtomicTerm,)
+
     def __init__(self, parent=None):
         super().__init__(parent=parent, name="Hamiltonian Terms")
 
@@ -476,6 +492,26 @@ class HamiltonianTerms(BaseItem):
         new = item.children()
         for o, n in zip(old, new, strict=False):
             o.copyFrom(n)
+
+    def copyTermsExcept(self, item, dependentTypes):
+        """Copy terms from item by name, skipping the dependent term types.
+
+        Terms are matched by name rather than by position because the set of
+        terms can differ between the two calculations. The dependent terms are
+        left at the defaults generated for the new calculation.
+        """
+        source = {term.name: term for term in item.children()}
+        for term in self.children():
+            if isinstance(term, dependentTypes):
+                continue
+            if term.name in source:
+                term.copyFrom(source[term.name])
+
+    def copyFromExceptSymmetry(self, item):
+        self.copyTermsExcept(item, self.SYMMETRY_DEPENDENT_TERMS)
+
+    def copyFromExceptCharge(self, item):
+        self.copyTermsExcept(item, self.CHARGE_DEPENDENT_TERMS)
 
 
 class NumberOfStates(IntItem):
@@ -610,3 +646,35 @@ class Hamiltonian(BaseItem):
         self.terms.copyFrom(item.terms)
         self.synchronizeParameters.copyFrom(item.synchronizeParameters)
         self.numberOfConfigurations.copyFrom(item.numberOfConfigurations)
+
+    def copyFromExceptSymmetry(self, item):
+        """Copy the symmetry-independent parts of the Hamiltonian.
+
+        The number of configurations is derived from the symmetry-dependent
+        ligand terms, so it is left at the value computed for the new symmetry
+        instead of being copied.
+        """
+        self.fk.copyFrom(item.fk)
+        self.gk.copyFrom(item.gk)
+        self.zeta.copyFrom(item.zeta)
+        self.numberOfStates.copyFrom(item.numberOfStates)
+        self.synchronizeParameters.copyFrom(item.synchronizeParameters)
+        self.terms.copyFromExceptSymmetry(item.terms)
+
+    def copyFromExceptCharge(self, item):
+        """Copy the charge-independent parts of the Hamiltonian.
+
+        The number of states and the number of configurations depend on the
+        valence occupancy, which changes with the charge, so they are left at the
+        values computed for the new charge. The global scale factors are copied
+        and then propagated to the regenerated atomic term so that its individual
+        scale factors match.
+        """
+        self.fk.copyFrom(item.fk)
+        self.gk.copyFrom(item.gk)
+        self.zeta.copyFrom(item.zeta)
+        self.synchronizeParameters.copyFrom(item.synchronizeParameters)
+        self.terms.copyFromExceptCharge(item.terms)
+
+        for scaleFactor in (self.fk, self.gk, self.zeta):
+            scaleFactor.updateIndividualScaleFactors(scaleFactor.value)

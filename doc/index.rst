@@ -29,6 +29,7 @@ Contents
     downloads
     installation
     usage
+    editing
     tutorials/index
     citation
     changelog

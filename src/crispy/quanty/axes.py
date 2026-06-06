@@ -516,3 +516,11 @@ class Axes(BaseItem):
         self.xaxis.copyFrom(item.xaxis)
         if getattr(self, "yaxis", None) is not None:
             self.yaxis.copyFrom(item.yaxis)
+
+    def copyGaussianBroadening(self, item):
+        """Copy the Gaussian broadening from another set of axes."""
+        self.xaxis.gaussian.copyFrom(item.xaxis.gaussian)
+        hasYAxis = getattr(self, "yaxis", None) is not None
+        sourceHasYAxis = getattr(item, "yaxis", None) is not None
+        if hasYAxis and sourceHasYAxis:
+            self.yaxis.gaussian.copyFrom(item.yaxis.gaussian)
