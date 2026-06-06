@@ -98,6 +98,10 @@ def merge(arm_root, x86_root, out_root):
         if "dir" in (arm.get(relative), x86.get(relative)):
             os.makedirs(os.path.join(out_root, relative), exist_ok=True)
 
+    # Mach-O binaries that exist for only one architecture cannot be made
+    # universal; collect them and report all of them together at the end.
+    single_arch = []
+
     for relative in all_paths:
         arm_kind = arm.get(relative)
         x86_kind = x86.get(relative)
@@ -120,11 +124,8 @@ def merge(arm_root, x86_root, out_root):
         if arm_kind is None or x86_kind is None:
             present = arm_path if arm_kind else x86_path
             if macho_kind(present):
-                sys.exit(
-                    f"ERROR: Mach-O binary present in only one architecture: "
-                    f"{relative}. The merged app would crash on the missing "
-                    f"architecture."
-                )
+                single_arch.append(relative)
+                continue
             print(f"WARNING: data file present in only one architecture: {relative}")
             shutil.copy2(present, out_path)
             continue
@@ -142,13 +143,20 @@ def merge(arm_root, x86_root, out_root):
             # Already-universal binary that merely differs in signature bytes.
             shutil.copy2(arm_path if arm_macho == "fat" else x86_path, out_path)
         elif bool(arm_macho) != bool(x86_macho):
-            sys.exit(
-                f"ERROR: {relative} is Mach-O in one architecture but not the "
-                f"other; cannot merge."
-            )
+            single_arch.append(relative)
         else:
             print(f"WARNING: data file differs, using arm64: {relative}")
             shutil.copy2(arm_path, out_path)
+
+    if single_arch:
+        listing = "\n".join(f"  - {p}" for p in sorted(single_arch))
+        sys.exit(
+            "ERROR: these Mach-O binaries exist for only one architecture, so "
+            "the merged app would crash on the missing one:\n"
+            f"{listing}\n"
+            "Make the dependency sets identical across both builds (exclude the "
+            "package in crispy.spec, or install it on both runners)."
+        )
 
 
 def main():

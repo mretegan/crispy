@@ -102,7 +102,11 @@ a = Analysis(  # noqa: F821
     hiddenimports=hiddenimports,
     hookspath=[],
     runtime_hooks=[],
-    excludes=[],
+    # greenlet is pulled in on x86_64 only: SQLAlchemy (via xraydb) requires it
+    # through a platform_machine marker that lists x86_64 but not macOS arm64.
+    # crispy uses SQLAlchemy synchronously and never imports greenlet, so
+    # excluding it keeps the two architecture builds symmetric for merging.
+    excludes=["greenlet"],
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
     cipher=block_cipher,
@@ -147,7 +151,7 @@ if sys.platform == "darwin":
             "CFBundleShortVersionString": version,
             "CFBundleVersion": "Crispy " + version,
             "LSTypeIsPackage": True,
-            "LSMinimumSystemVersion": "10.13.0",
+            "LSMinimumSystemVersion": "14.0",
             "NSHumanReadableCopyright": "MIT",
             "NSHighResolutionCapable": True,
             "NSPrincipalClass": "NSApplication",
