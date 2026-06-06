@@ -3,16 +3,15 @@
 """Tests for carrying parameters over when a single selection changes."""
 
 import pytest
-from silx.gui import qt
 
 from crispy.models import TreeModel
 from crispy.quanty.calculation import Calculation
 
 
-@pytest.fixture(scope="module", autouse=True)
-def qapp():
-    app = qt.QApplication.instance() or qt.QApplication([])
-    yield app
+@pytest.fixture(autouse=True)
+def _qapp(qapp):
+    """Ensure a QApplication (provided by pytest-qt) exists for every test."""
+    return qapp
 
 
 def make_calculation(symmetry, parent):
@@ -210,9 +209,7 @@ def test_gaussian_broadening_partial_when_adding_second_axis():
 
 def atomic_values(calculation):
     term = find_term(calculation, "Atomic")
-    return {
-        (p.parent().name, p.name): round(p.value, 4) for p in term.parameters
-    }
+    return {(p.parent().name, p.name): round(p.value, 4) for p in term.parameters}
 
 
 def test_charge_change_regenerates_atomic_and_preserves_the_rest():
