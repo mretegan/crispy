@@ -157,7 +157,7 @@ if sys.platform == "darwin":
         info_plist={
             "CFBundleIdentifier": "com.github.mretegan.crispy",
             "CFBundleShortVersionString": version,
-            "CFBundleVersion": "Crispy " + version,
+            "CFBundleVersion": version,
             "LSTypeIsPackage": True,
             "LSMinimumSystemVersion": "14.0",
             "NSHumanReadableCopyright": "MIT",

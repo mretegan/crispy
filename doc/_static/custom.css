@@ -1,0 +1,6 @@
+/* Center the platform icons and download links in the Downloads table. */
+.download-table th,
+.download-table td {
+    text-align: center !important;
+    vertical-align: middle !important;
+}

@@ -50,6 +50,8 @@ jobs:
     name: Merge, sign, and notarize the universal macOS app
     needs: build-macos
     runs-on: macos-15
+    permissions:
+      contents: write  # so the universal DMG can be attached to the release
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -105,7 +107,7 @@ jobs:
 
           bash create-dmg.sh
           bash notarize.sh
-          mv artifacts/Crispy.dmg "artifacts/Crispy-${VERSION}-macos-universal2.dmg"
+          mv artifacts/Crispy.dmg "artifacts/Crispy-${VERSION}-universal2.dmg"
 
       - name: Upload the universal macOS application
         uses: actions/upload-artifact@v6
@@ -113,9 +115,19 @@ jobs:
           name: Crispy-macOS-universal2
           path: package/artifacts/*.dmg
 
+      - name: Attach the DMG to the release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "${{ github.event.release.tag_name }}" package/artifacts/*.dmg --clobber
+
   build-windows:
     name: Build Windows installer
     runs-on: windows-2022
+    permissions:
+      contents: write  # so the VirusTotal step can add its report link to the release notes
+    env:
+      VT_API_KEY: ${{ secrets.VT_API_KEY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -145,3 +157,20 @@ jobs:
           path: |
             package/artifacts/*.exe
             package/artifacts/*.zip
+
+      # Skipped when VT_API_KEY is unset; never fails the build on a scan error.
+      - name: Scan the installer on VirusTotal
+        if: ${{ env.VT_API_KEY != '' }}
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          pip install vt-py
+          python package/scan-virustotal.py
+
+      - name: Attach the installer to the release
+        if: github.event_name == 'release'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "${{ github.event.release.tag_name }}" package/artifacts/*.exe package/artifacts/*.zip --clobber
