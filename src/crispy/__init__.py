@@ -9,6 +9,6 @@ version = __version__
 
 # https://stackoverflow.com/questions/7674790/bundling-data-files-with-pyinstaller-onefile
 def resourceAbsolutePath(relativePath):
-    """Get the absolute path to a resource. Works for development and for PyInstaller."""
+    """Get the absolute path to a resource."""
     basePath = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__)))
     return os.path.join(basePath, relativePath)

@@ -324,7 +324,7 @@ class Axis(BaseItem):
 
         baseConfigurationValue = ",".join(
             f"{subshell}{occupancy}"
-            for subshell, occupancy in zip(subshells, occupancies)
+            for subshell, occupancy in zip(subshells, occupancies, strict=False)
         )
 
         if self.configuration.hasCore:
@@ -361,7 +361,7 @@ class Axis(BaseItem):
                 limits = [-STEP, STEP]
             else:
                 subshell = calculation.element.valenceSubshell
-                if subshell in ("3d",):
+                if subshell in ("3d",):  # noqa: SIM108
                     limits = [-STEP, 3 * STEP]
                 else:
                     limits = [-STEP, 2 * STEP]
@@ -505,7 +505,9 @@ class Axes(BaseItem):
             self.xaxis.npoints.reset()
             self.xaxis.lorentzian.dataChanged.connect(self.xaxis.npoints.reset)
             self.yaxis = YAxis(parent=self)
-            self.labels = [f"{l} (eV)" for l in (self.xaxis.label, self.yaxis.label)]
+            self.labels = [
+                f"{labels} (eV)" for labels in (self.xaxis.label, self.yaxis.label)
+            ]
 
     def copyFrom(self, item):
         super().copyFrom(item)

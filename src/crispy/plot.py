@@ -68,7 +68,9 @@ class CustomPlotWidget(PlotWidget):
 
     def showPositionInfo(self, x, y, xPixel, yPixel):
         # For images get also the data at the x and y coordinates.
-        condition = lambda item: isinstance(item, items.ImageBase)
+        def condition(item):
+            return isinstance(item, items.ImageBase)
+
         data = None
         for picked in self.pickItems(xPixel, yPixel, condition):
             image = picked.getItem()

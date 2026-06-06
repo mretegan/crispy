@@ -49,7 +49,7 @@ def convolve_fft(array, kernel):
     array_slices = []
     kernel_slices = []
     for new_dimsize, array_dimsize, kernel_dimsize in zip(
-        new_shape, array.shape, kernel.shape
+        new_shape, array.shape, kernel.shape, strict=False
     ):
         center = new_dimsize - (new_dimsize + 1) // 2
         array_slices += [

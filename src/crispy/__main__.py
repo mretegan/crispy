@@ -129,10 +129,7 @@ class MainWindow(QMainWindow):
             self.move(QPoint(pos))
 
         splitter = settings.value("Splitter")
-        if splitter is not None:
-            sizes = [int(size) for size in splitter]
-        else:
-            sizes = [6, 1]
+        sizes = [int(size) for size in splitter] if splitter is not None else [6, 1]
         self.splitter.setSizes(sizes)
         settings.endGroup()
 

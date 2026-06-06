@@ -26,7 +26,7 @@ master_doc = "index"
 # General information about the project.
 project = "Crispy"
 copyright = (
-    f"2016–{datetime.now().year}, Marius Retegan, "
+    f"2016-{datetime.now().year}, Marius Retegan, "
     "European Synchrotron Radiation Facility, Grenoble, France"
 )
 author = "Marius Retegan"

@@ -163,10 +163,10 @@ class HamiltonianTerm(SelectableItem):
             CONVERTERS = {
                 "ζ": "zeta",
                 "Δ": "Delta",
-                "σ": "sigma",
+                "σ": "sigma",  # noqa: RUF001
                 "τ": "tau",
                 "μ": "mu",
-                "ν": "nu",
+                "ν": "nu",  # noqa: RUF001
             }
             for greek, latin in CONVERTERS.items():
                 name = name.replace(greek, latin)
@@ -204,7 +204,7 @@ class HamiltonianTerm(SelectableItem):
         super().copyFrom(item)
         old = list(self.parameters)
         new = list(item.parameters)
-        for o, n in zip(old, new):
+        for o, n in zip(old, new, strict=False):
             o.copyFrom(n)
 
 
@@ -218,7 +218,7 @@ class AtomicTerm(HamiltonianTerm):
 
         with h5py.File(path, "r") as h5:
             for configuration, (hamiltonianName, _) in zip(
-                self.configurations, self.hamiltonianNames
+                self.configurations, self.hamiltonianNames, strict=False
             ):
                 hamiltonian = BaseItem(self, hamiltonianName)
                 parameters = h5[f"{configuration}/{self.name}"]
@@ -249,9 +249,9 @@ class CrystalFieldTerm(HamiltonianTerm):
             elif self.symmetry.value == "D4h":
                 names, values = ("10Dq", "Ds", "Dt"), (1.0, 0.0, 0.0)
             elif self.symmetry.value == "D3h":
-                names, values = ("Dμ", "Dν"), (0.1, -0.1)
+                names, values = ("Dμ", "Dν"), (0.1, -0.1)  # noqa: RUF001
             elif self.symmetry.value == "C3v":
-                names, values = ("10Dq", "Dσ", "Dτ"), (1.0, 0.0, 0.0)
+                names, values = ("10Dq", "Dσ", "Dτ"), (1.0, 0.0, 0.0)  # noqa: RUF001
             else:
                 raise ValueError("Unknown symmetry.")
         elif self.block == "f":
@@ -261,7 +261,7 @@ class CrystalFieldTerm(HamiltonianTerm):
 
         for hamiltonianName, _ in self.hamiltonianNames:
             hamiltonian = BaseItem(self, hamiltonianName)
-            for parameterName, value in zip(names, values):
+            for parameterName, value in zip(names, values, strict=False):
                 # Extend the parameterName to include the subshell.
                 parameterName = parameterName + f"({self.subshell})"
                 HamiltonianParameter(hamiltonian, parameterName, value, None)
@@ -434,23 +434,24 @@ class HamiltonianTerms(BaseItem):
                     )
 
             # Add pd-hybridization term.
-            if calculation.symmetry.value in ("Td", "C3v"):
-                if (
-                    calculation.edge.value == "K (1s)"
-                    and calculation.experiment.value == "XAS"
-                ):
-                    valenceSubshell = calculation.element.valenceSubshell
-                    name = f"{valenceSubshell}-4p Hybridization"
-                    self.pdHybridization = PdHybridizationTerm(parent=self, name=name)
-
-        if calculation.element.valenceBlock == "f":
-            # Add ligands hybridization term.
-            if calculation.symmetry.value in ("Oh",):
+            if (
+                calculation.symmetry.value in ("Td", "C3v")
+                and calculation.edge.value == "K (1s)"
+                and calculation.experiment.value == "XAS"
+            ):
                 valenceSubshell = calculation.element.valenceSubshell
-                name = f"{valenceSubshell}-Ligands Hybridization (LMCT)"
-                self.lmctLigandsHybridization = LmctLigandsHybridizationTerm(
-                    parent=self, name=name
-                )
+                name = f"{valenceSubshell}-4p Hybridization"
+                self.pdHybridization = PdHybridizationTerm(parent=self, name=name)
+
+        # Add ligands hybridization term.
+        if calculation.element.valenceBlock == "f" and calculation.symmetry.value in (
+            "Oh",
+        ):
+            valenceSubshell = calculation.element.valenceSubshell
+            name = f"{valenceSubshell}-Ligands Hybridization (LMCT)"
+            self.lmctLigandsHybridization = LmctLigandsHybridizationTerm(
+                parent=self, name=name
+            )
 
         # In all calculations it should be possible to add a magnetic and an
         # exchange field, and they should be placed at the end.
@@ -466,7 +467,7 @@ class HamiltonianTerms(BaseItem):
         # Copy the Hamiltonian terms.
         old = self.children()
         new = item.children()
-        for o, n in zip(old, new):
+        for o, n in zip(old, new, strict=False):
             o.copyFrom(n)
 
 
