@@ -2,14 +2,61 @@
 
 import os
 
-from silx.gui.qt import QDialog, QPoint, QSize, QWidget
+from silx.gui.qt import (
+    QDialog,
+    QPoint,
+    QSize,
+    QTextBlockFormat,
+    QTextCursor,
+    QWidget,
+)
 
 from crispy import resourceAbsolutePath
 from crispy.config import Config
+from crispy.items import SelectableItem
 from crispy.quanty.external import ExternalData
 from crispy.uic import loadUi
 from crispy.utils import fixedFont
 from crispy.views import setMappings
+
+
+def nodeLabel(item):
+    """Build the single-line label of an item for the Hamiltonian tree."""
+    name = item.data(0)
+    text = "" if name is None else str(name)
+
+    value = item.data(1)
+    if value is not None and value != "":
+        text = f"{text}: {value}"
+
+    # Only Hamiltonian parameters carry a scale factor in column 2.
+    scaleFactor = item.data(2)
+    if scaleFactor is not None and scaleFactor != "":
+        text = f"{text} (×{scaleFactor})"  # noqa: RUF001
+
+    # Show whether a checkable term is included in the calculation.
+    if isinstance(item, SelectableItem):
+        mark = "x" if item.isEnabled() else " "
+        text = f"[{mark}] {text}"
+
+    return text
+
+
+def hamiltonianAsText(hamiltonian):
+    """Render the Hamiltonian item subtree as `tree`-style text."""
+
+    def appendBranch(item, prefix, lines):
+        children = item.children()
+        for index, child in enumerate(children):
+            isLast = index == len(children) - 1
+            connector = "└── " if isLast else "├── "
+            lines.append(f"{prefix}{connector}{nodeLabel(child)}")
+            extension = "    " if isLast else "│   "
+            appendBranch(child, prefix + extension, lines)
+
+    lines = [nodeLabel(hamiltonian)]
+    appendBranch(hamiltonian, "", lines)
+    return "\n".join(lines)
 
 
 class AxisWidget(QWidget):
@@ -52,6 +99,7 @@ class DetailsDialog(QDialog):
         font = fixedFont()
         self.inputText.setFont(font)
         self.outputText.setFont(font)
+        self.hamiltonianText.setFont(font)
         # self.summaryText.setFont(font)
 
         self.xAxis = AxisWidget()
@@ -82,17 +130,26 @@ class DetailsDialog(QDialog):
         self.outputText.clear()
         # self.summaryText.clear()
 
+        self.hamiltonianText.clear()
+
     def populate(self, result):
         self.clear()
 
+        # The Hamiltonian tab is only meaningful for calculations.
+        hamiltonianTabIndex = self.tabWidget.indexOf(self.hamiltonianTabWidget)
+
         if isinstance(result, ExternalData):
+            self.tabWidget.setTabEnabled(hamiltonianTabIndex, False)
             self.spectraView.setModel(result.model())
             index = result.model().indexFromItem(result)
             self.spectraView.setRootIndex(index)
             return
 
         if result is None:
+            self.tabWidget.setTabEnabled(hamiltonianTabIndex, False)
             return
+
+        self.tabWidget.setTabEnabled(hamiltonianTabIndex, True)
 
         MAPPINGS = (
             (self.scaleLineEdit, result.axes.scale),
@@ -115,6 +172,11 @@ class DetailsDialog(QDialog):
         index = model.indexFromItem(result.spectra.toPlot)
         self.spectraView.setRootIndex(index)
 
+        # Display the whole Hamiltonian subtree (terms, sub-Hamiltonians, and
+        # their parameters) as a `tree`-style text representation.
+        self.hamiltonianText.setPlainText(hamiltonianAsText(result.hamiltonian))
+        self.setLineSpacing(self.hamiltonianText, 130)
+
         self.inputText.setPlainText(result.input)
         self.outputText.setPlainText(result.output)
         # self.summaryText.setPlainText(result.summary)
@@ -122,6 +184,15 @@ class DetailsDialog(QDialog):
         if result.value is not None:
             title = f"Details for {result.value}"
             self.setWindowTitle(title)
+
+    @staticmethod
+    def setLineSpacing(widget, percent):
+        """Set the line spacing of a text edit as a percentage of the line height."""
+        cursor = widget.textCursor()
+        cursor.select(QTextCursor.Document)
+        blockFormat = QTextBlockFormat()
+        blockFormat.setLineHeight(percent, QTextBlockFormat.ProportionalHeight.value)
+        cursor.mergeBlockFormat(blockFormat)
 
     def showEvent(self, event):
         self.loadSettings()

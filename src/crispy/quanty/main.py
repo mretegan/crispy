@@ -390,6 +390,7 @@ class ResultsPage(QWidget):
         self.detailsDialog.populate(result)
         self.detailsDialog.show()
         self.detailsDialog.raise_()
+        self.detailsDialog.activateWindow()
 
 
 class DockWidget(QDockWidget):
