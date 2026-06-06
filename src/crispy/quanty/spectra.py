@@ -91,11 +91,26 @@ class Spectrum1D(Spectrum):
 
         self.axes = self.ancestor.axes
 
-        self.axes.scale.dataChanged.connect(self.process)
-        self.axes.normalization.dataChanged.connect(self.process)
+        for trigger in self.reprocessingTriggers:
+            trigger.connect(self.process)
 
-        self.axes.xaxis.shift.dataChanged.connect(self.process)
-        self.axes.xaxis.gaussian.dataChanged.connect(self.process)
+    @property
+    def reprocessingTriggers(self):
+        """Signals whose emission requires the spectrum to be reprocessed."""
+        return (
+            self.axes.scale.dataChanged,
+            self.axes.normalization.dataChanged,
+            self.axes.xaxis.shift.dataChanged,
+            self.axes.xaxis.gaussian.dataChanged,
+        )
+
+    def disconnectFromAxes(self):
+        """Stop reprocessing on axis changes once the spectrum is discarded."""
+        for trigger in self.reprocessingTriggers:
+            try:
+                trigger.disconnect(self.process)
+            except (TypeError, RuntimeError):
+                pass
 
     @property
     def signal(self):
@@ -120,10 +135,12 @@ class Spectrum1D(Spectrum):
         except OSError:
             message = f"Could not read spectrum {filename}."
             logger.info(message)
+            self.disconnectFromAxes()
             self.setParent(None)
-            return
+            return False
 
         self.process()
+        return True
 
     def copy(self):
         self.x = self.raw[:, 0].copy()
@@ -196,8 +213,13 @@ class Spectrum2D(Spectrum1D):
         super().__init__(parent=parent, name=name)
         self.y = None
 
-        self.axes.yaxis.shift.dataChanged.connect(self.process)
-        self.axes.yaxis.gaussian.dataChanged.connect(self.process)
+    @property
+    def reprocessingTriggers(self):
+        return (
+            *super().reprocessingTriggers,
+            self.axes.yaxis.shift.dataChanged,
+            self.axes.yaxis.gaussian.dataChanged,
+        )
 
     @property
     def xScale(self):
@@ -368,8 +390,10 @@ class Spectra(BaseItem):
 
         spectrum.suffix = suffix
         spectrum.label = label
-        # Load before setting the check state to trigger plotting.
-        spectrum.load()
+        # Load before setting the check state to trigger plotting. Skip a
+        # spectrum whose file could not be read; it has been discarded.
+        if not spectrum.load():
+            return
         spectrum.enable() if selected else spectrum.disable()
 
     def load(self):

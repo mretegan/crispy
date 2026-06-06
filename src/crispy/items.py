@@ -70,10 +70,13 @@ class BaseItem(QObject):
 
     def _modelDataChanged(self, column):
         model = self.model()
-        if model is None:
-            raise TypeError("The model needs to be defined.")
-        index = self.model().createIndex(self.childPosition(), column, self)
-        self.model().dataChanged.emit(index, index)
+        parent = self.parent()
+        # A detached or unparented item is not shown in any view, so there is
+        # nothing to notify.
+        if model is None or parent is None:
+            return
+        index = model.createIndex(self.childPosition(), column, self)
+        model.dataChanged.emit(index, index)
 
     def parent(self):
         return self._parent() if self._parent is not None else None
