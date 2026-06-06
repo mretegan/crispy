@@ -23,9 +23,11 @@ class Config:
         return os.path.split(self.read().fileName())[0]
 
     def read(self):
-        return QSettings(
+        settings = QSettings(
             QSettings.IniFormat, QSettings.UserScope, self.name, "settings"
         )
+        settings.sync()
+        return settings
 
     def default(self):
         """Set default settings."""

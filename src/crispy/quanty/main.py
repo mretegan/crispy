@@ -31,7 +31,6 @@ from crispy.utils import findQtObject
 from crispy.views import setMappings
 
 logger = logging.getLogger(__name__)
-settings = Config().read()
 
 
 class AxisWidget(QWidget):
@@ -594,9 +593,12 @@ class DockWidget(QDockWidget):
 
     @property
     def currentPath(self):
+        settings = Config().read()
         return settings.value("CurrentPath")
 
     @currentPath.setter
     def currentPath(self, value):
         path = os.path.dirname(value)
+        settings = Config().read()
         settings.setValue("CurrentPath", path)
+        settings.sync()

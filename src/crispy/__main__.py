@@ -39,8 +39,6 @@ from crispy.utils import fixedFont
 logger = logging.getLogger("crispy.main")
 warnings.filterwarnings("ignore", category=UserWarning)
 
-settings = Config().read()
-
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -114,6 +112,7 @@ class MainWindow(QMainWindow):
         super().closeEvent(event)
 
     def loadSettings(self):
+        settings = Config().read()
         settings.beginGroup("MainWindow")
 
         state = settings.value("State")
@@ -134,13 +133,13 @@ class MainWindow(QMainWindow):
         settings.endGroup()
 
     def saveSettings(self):
+        settings = Config().read()
         settings.beginGroup("MainWindow")
         settings.setValue("State", self.saveState())
         settings.setValue("Size", self.size())
         settings.setValue("Position", self.pos())
         settings.setValue("Splitter", self.splitter.sizes())
         settings.endGroup()
-
         settings.sync()
 
     def openAboutDialog(self):
@@ -220,6 +219,8 @@ class AboutDialog(QDialog):
 
         self.nameLabel.setText(f"Crispy {version}")
 
+        settings = Config().read()
+
         self.updateCheckBox.stateChanged.connect(self.updateCheckBoxStateChanged)
         self.updateCheckBox.setChecked(settings.value("CheckForUpdates", type=bool))
 
@@ -231,7 +232,9 @@ class AboutDialog(QDialog):
 
     def updateCheckBoxStateChanged(self):
         updateCheck = self.updateCheckBox.isChecked()
+        settings = Config().read()
         settings.setValue("CheckForUpdates", updateCheck)
+        settings.sync()
         if updateCheck:
             self.runUpdateCheck()
 

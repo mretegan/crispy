@@ -14,7 +14,6 @@ from crispy.items import BaseItem, ComboItem, DoubleItem, IntItem, Vector3DItem
 from crispy.quanty import XDB
 
 logger = logging.getLogger(__name__)
-settings = Config().read()
 
 
 class Broadening(DoubleItem):
@@ -370,6 +369,7 @@ class Axis(BaseItem):
         limits = [limit - self.zeroShift for limit in limits]
 
         shift = 0.0
+        settings = Config().read()
         shiftSpectra = settings.value("Quanty/ShiftSpectra", type=bool)
         if shiftSpectra:
             shift = self.zeroShift + self.experimentalShift

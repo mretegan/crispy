@@ -17,7 +17,6 @@ from crispy.config import Config
 from crispy.uic import loadUi
 
 logger = logging.getLogger(__name__)
-settings = Config().read()
 
 
 class PreferencesDialog(QDialog):
@@ -47,11 +46,14 @@ class PreferencesDialog(QDialog):
         super().closeEvent(event)
 
     def loadSettings(self):
+        settings = Config().read()
         settings.beginGroup("Quanty")
 
         size = settings.value("Size")
         if size is not None:
             self.resize(QSize(size))
+        else:
+            self.adjustSize()
 
         pos = settings.value("Position")
         if pos is not None:
@@ -76,6 +78,7 @@ class PreferencesDialog(QDialog):
         settings.endGroup()
 
     def saveSettings(self):
+        settings = Config().read()
         settings.beginGroup("Quanty")
         settings.setValue("Path", self.pathLineEdit.text())
         settings.setValue("Verbosity", self.verbosityLineEdit.text())

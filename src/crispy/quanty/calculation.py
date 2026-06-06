@@ -19,7 +19,6 @@ from crispy.quanty.hamiltonian import Hamiltonian
 from crispy.quanty.spectra import Spectra
 
 logger = logging.getLogger(__name__)
-settings = Config().read()
 
 
 SUBSHELLS = {
@@ -430,6 +429,7 @@ class Runner(QProcess):
 
     @property
     def executablePath(self):
+        settings = Config().read()
         path = settings.value("Quanty/Path")
 
         if path is None:
@@ -679,10 +679,13 @@ class Calculation(SelectableItem):
 
     @property
     def replacements(self):
-        """Replacements dictionary used to fill the calculation template. The
-        construction of more complex items is delegated to the respective object.
+        """Replacements dictionary used to fill the calculation template.
+
+        The construction of more complex items is delegated to the respective object.
         """
         replacements = {}
+
+        settings = Config().read()
 
         # Values defined in another places.
         replacements["Verbosity"] = settings.value("Quanty/Verbosity")
@@ -741,6 +744,7 @@ class Calculation(SelectableItem):
     #     return f"Summary for {self.value}"
 
     def saveInput(self):
+        settings = Config().read()
         currentPath = settings.value("CurrentPath")
         if not os.path.exists(currentPath):
             raise FileNotFoundError("The current path does not exist.")
@@ -760,6 +764,7 @@ class Calculation(SelectableItem):
         self.runner.run(self.inputName)
 
     def process(self, successful):
+        settings = Config().read()
         if not successful:
             # The run did not finish successfully. If the user stopped it
             # deliberately, still honor the "Remove Files" preference; after a

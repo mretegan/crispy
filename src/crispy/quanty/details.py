@@ -11,8 +11,6 @@ from crispy.uic import loadUi
 from crispy.utils import fixedFont
 from crispy.views import setMappings
 
-settings = Config().read()
-
 
 class AxisWidget(QWidget):
     def __init__(self, parent=None):
@@ -134,6 +132,7 @@ class DetailsDialog(QDialog):
         super().closeEvent(event)
 
     def loadSettings(self):
+        settings = Config().read()
         settings.beginGroup("DetailsDialog")
 
         size = settings.value("Size")
@@ -147,9 +146,9 @@ class DetailsDialog(QDialog):
         settings.endGroup()
 
     def saveSettings(self):
+        settings = Config().read()
         settings.beginGroup("DetailsDialog")
         settings.setValue("Size", self.size())
         settings.setValue("Position", self.pos())
         settings.endGroup()
-
         settings.sync()

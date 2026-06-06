@@ -42,9 +42,10 @@ def test_calculation(test_data, tmp_path):
     #     shutil.rmtree(tmp_path)
     # os.makedirs(tmp_path, exist_ok=True)
 
-    settings = Config().read()
     # TODO: Save the current path before altering it.
+    settings = Config().read()
     settings.setValue("CurrentPath", str(tmp_path))
+    settings.sync()
 
     calc = calculation(*parameters["args"])
 
