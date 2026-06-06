@@ -9,6 +9,7 @@ from urllib.error import URLError
 from urllib.request import Request, urlopen
 
 import numpy as np
+from packaging.version import InvalidVersion, parse
 from silx.gui.qt import (
     QAction,
     QApplication,
@@ -170,11 +171,12 @@ class CheckUpdateThread(QThread):
     updateAvailable = pyqtSignal()
 
     @staticmethod
-    def _getSiteVersion():
-        URL = "https://crispy.esrf.fr/version.json"
+    def _getLatestVersion():
+        URL = "https://pypi.org/pypi/crispy/json"
 
         request = Request(URL)
         request.add_header("Cache-Control", "max-age=0")
+        request.add_header("User-Agent", f"crispy/{version}")
 
         try:
             response = urlopen(request, timeout=5)
@@ -186,17 +188,24 @@ class CheckUpdateThread(QThread):
         except Exception:
             return None
 
-        return data["version"]
+        return data.get("info", {}).get("version")
 
     def run(self):
-        # TODO: The implementation is not ideal. The run() method of the parent
-        # class is not called.
         # Wait a few seconds to avoid too much work at startup.
-        seconds = 1
-        self.sleep(seconds)
-        siteVersion = self._getSiteVersion()
+        self.sleep(1)
 
-        if siteVersion is not None and version < siteVersion:
+        latestVersion = self._getLatestVersion()
+        if latestVersion is None:
+            logger.info("Could not check for updates.")
+            return
+
+        try:
+            outdated = parse(version) < parse(latestVersion)
+        except InvalidVersion:
+            logger.info("Could not check for updates.")
+            return
+
+        if outdated:
             self.updateAvailable.emit()
         else:
             logger.info("There are no updates.")
@@ -213,6 +222,8 @@ class UpdateAvailableDialog(QDialog):
 class AboutDialog(QDialog):
     def __init__(self, parent):
         super().__init__(parent)
+
+        self._updateThread = None
 
         uiPath = os.path.join("uis", "about.ui")
         loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
@@ -239,9 +250,14 @@ class AboutDialog(QDialog):
             self.runUpdateCheck()
 
     def runUpdateCheck(self):
+        # Avoid starting a second check while one is already running.
+        if self._updateThread is not None and self._updateThread.isRunning():
+            return
+
         thread = CheckUpdateThread(self)
-        thread.start()
         thread.updateAvailable.connect(self.informAboutAvailableUpdate)
+        self._updateThread = thread
+        thread.start()
 
     def informAboutAvailableUpdate(self):
         updateAvailableDialog = UpdateAvailableDialog(self.parent())
