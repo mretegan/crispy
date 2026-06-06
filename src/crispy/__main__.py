@@ -152,13 +152,13 @@ class MainWindow(QMainWindow):
 
         if path:
             try:
-                data = np.loadtxt(path)
+                raw = np.loadtxt(path)
             except ValueError:
                 logger.error(f"Failed to load data from {path}")
                 return
 
             name = os.path.splitext(os.path.basename(path))[0]
-            self.quantyDockWidget.addExternalData(data, name)
+            self.quantyDockWidget.addExternalData(raw, name)
 
     def runJupyterLab(self):
         process = QProcess()
