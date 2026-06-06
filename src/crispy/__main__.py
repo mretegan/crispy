@@ -52,7 +52,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Crispy")
 
         # Set the icon.
-        iconPath = os.path.join("crispy.png")
+        iconPath = os.path.join("icons", "crispy.svg")
         self.setWindowIcon(QIcon(resourceAbsolutePath(iconPath)))
 
         # Setup the logger widget.

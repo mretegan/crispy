@@ -270,7 +270,7 @@ class ResultsPage(QWidget):
         )
 
         self._currentIndex = QModelIndex()
-        self._plotting = False
+        self.plotting = False
 
     @property
     def currentIndex(self):
@@ -322,7 +322,7 @@ class ResultsPage(QWidget):
     def plot(self, *args):
         # Unchecking calculations below changes the model, which emits
         # dataChanged and re-enters this method. Guard against that recursion.
-        if self._plotting:
+        if self.plotting:
             return
 
         index, *_ = args
@@ -338,7 +338,7 @@ class ResultsPage(QWidget):
         if not children:
             return
 
-        self._plotting = True
+        self.plotting = True
         try:
             if isinstance(last, Calculation):
                 for child in children:
@@ -363,7 +363,7 @@ class ResultsPage(QWidget):
             if plotWidget.isEmpty():
                 plotWidget.reset()
         finally:
-            self._plotting = False
+            self.plotting = False
 
     def selectionChanged(self):
         indexes = self.view.selectedIndexes()

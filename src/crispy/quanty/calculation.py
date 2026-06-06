@@ -553,6 +553,10 @@ class Calculation(SelectableItem):
         self.runner = Runner()
         self.runner.successful.connect(self.process)
 
+        # Tracks whether the current run was stopped by the user, as opposed to
+        # finishing or crashing on its own.
+        self.stopped = False
+
     @property
     def value(self):
         return self._value
@@ -752,10 +756,16 @@ class Calculation(SelectableItem):
             self.saveInput()
         except FileNotFoundError as e:
             raise RuntimeError(e) from e
+        self.stopped = False
         self.runner.run(self.inputName)
 
     def process(self, successful):
         if not successful:
+            # The run did not finish successfully. If the user stopped it
+            # deliberately, still honor the "Remove Files" preference; after a
+            # genuine crash the files are kept so they can be used for debugging.
+            if self.stopped and settings.value("Quanty/RemoveFiles", type=bool):
+                self.clean()
             return
         # TODO: Check if loading the spectra was successful.
         # It would avoid could not read spectrum error messages.
@@ -766,6 +776,7 @@ class Calculation(SelectableItem):
             self.clean()
 
     def stop(self):
+        self.stopped = True
         self.runner.kill()
 
     def clean(self):
