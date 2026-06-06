@@ -29,6 +29,7 @@ dependencies = [
     "h5py",
     "matplotlib",
     "numpy",
+    "packaging",
     "pyside6",
     "qtawesome",
     "ruamel.yaml",
