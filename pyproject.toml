@@ -29,6 +29,7 @@ dependencies = [
     "matplotlib",
     "numpy",
     "pyqt6",
+    "qtawesome",
     "ruamel.yaml",
     "silx[full_no_qt]",
     "xraydb",

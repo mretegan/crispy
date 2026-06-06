@@ -12,11 +12,11 @@ import contextlib
 import logging
 import os
 
+import qtawesome as qta
 from silx.gui.qt import (
     QAction,
     QDockWidget,
     QFileDialog,
-    QIcon,
     QItemSelectionModel,
     QMenu,
     QModelIndex,
@@ -49,8 +49,7 @@ class AxisWidget(QWidget):
         uiPath = os.path.join("quanty", "uis", "axis.ui")
         loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
 
-        iconPath = resourceAbsolutePath(os.path.join("icons", "cog.svg"))
-        self.lorentzianToolButton.setIcon(QIcon(iconPath))
+        self.lorentzianToolButton.setIcon(qta.icon("fa6s.gear"))
 
         self.mappers = []
 
@@ -231,27 +230,23 @@ class ResultsPage(QWidget):
         self.detailsDialog = DetailsDialog(parent=self)
 
         # Add a context menu to the view.
-        path = os.path.join("icons", "clipboard.svg")
-        icon = QIcon(resourceAbsolutePath(path))
+        icon = qta.icon("fa6s.clipboard")
         self.showDetailsDialogAction = QAction(
             icon, "Show Details", self, triggered=self.showDetailsDialog
         )
 
-        # path = os.path.join("icons", "save.svg")
-        # icon = QIcon(resourceAbsolutePath(path))
+        # icon = qta.icon("fa6s.floppy-disk")
         # self.saveSelectedResultsAsAction = QAction(
         #     icon, "Save Highlighted Results As...",
         #     self, triggered=self.saveHighlighted
         # )
 
-        path = os.path.join("icons", "trash.svg")
-        icon = QIcon(resourceAbsolutePath(path))
+        icon = qta.icon("fa6s.trash")
         self.removeSelectedResultsAction = QAction(
             icon, "Remove Highlighted Results", self, triggered=self.removeHighlighted
         )
 
-        # path = os.path.join("icons", "folder-open.svg")
-        # icon = QIcon(resourceAbsolutePath(path))
+        # icon = qta.icon("fa6s.folder-open")
         # self.loadResultsAction = QAction(
         #     icon, "Load Results", self, triggered=self.load
         # )
@@ -413,11 +408,8 @@ class DockWidget(QDockWidget):
         uiPath = os.path.join("quanty", "uis", "main.ui")
         loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
 
-        iconPath = resourceAbsolutePath(os.path.join("icons", "save.svg"))
-        self.saveInputAsPushButton.setIcon(QIcon(iconPath))
-
-        iconPath = resourceAbsolutePath(os.path.join("icons", "play.svg"))
-        self.calculationPushButton.setIcon(QIcon(iconPath))
+        self.saveInputAsPushButton.setIcon(qta.icon("fa6s.floppy-disk"))
+        self.calculationPushButton.setIcon(qta.icon("fa6s.play", color="#4caf50"))
 
         self.model = TreeModel()
 

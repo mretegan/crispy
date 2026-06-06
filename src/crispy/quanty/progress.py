@@ -12,6 +12,7 @@ import logging
 import os
 from itertools import cycle
 
+import qtawesome as qta
 from silx.gui.qt import QApplication, QDialog, QTimer
 
 from crispy import resourceAbsolutePath
@@ -32,6 +33,7 @@ class ProgressDialog(QDialog):
         self.currentMessage = self.message + next(self.dots)
 
         self.label.setText(self.currentMessage)
+        self.cancelButton.setIcon(qta.icon("fa6s.stop", color="#e53935"))
         self.cancelButton.clicked.connect(self.reject)
 
         timer = QTimer(self, interval=750, timeout=self.changeMessage)
