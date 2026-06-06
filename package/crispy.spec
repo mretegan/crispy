@@ -37,7 +37,7 @@ package_path = os.path.join(project_path, "src", "crispy")
 
 def create_license_file(filename):
     """Generate a LICENSE file with the licenses of the main dependencies."""
-    import PyQt6.QtCore
+    import PySide6.QtCore
 
     with open(filename, "w") as f:
         f.write(
@@ -47,7 +47,7 @@ This is free software.
 It includes many software packages with different licenses:
 
 - Python ({sys.version}): PSF license, https://www.python.org/
-- Qt ({PyQt6.QtCore.QT_VERSION_STR}): GNU Lesser General Public License v3, https://www.qt.io/
+- Qt ({PySide6.QtCore.qVersion()}): GNU Lesser General Public License v3, https://www.qt.io/
 """
         )
         for dist in sorted(
@@ -112,7 +112,9 @@ a = Analysis(  # noqa: F821
     #    to the pure-Python wheel without them.
     # Excluding both keeps the builds symmetric; SQLAlchemy uses its pure-Python
     # fallbacks (negligible cost for xraydb's small queries).
-    excludes=["greenlet", "sqlalchemy.cyextension"],
+    #
+    # PyQt5/PyQt6 are excluded so the frozen app always uses PySide6.
+    excludes=["greenlet", "sqlalchemy.cyextension", "PyQt5", "PyQt6"],
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
     cipher=block_cipher,

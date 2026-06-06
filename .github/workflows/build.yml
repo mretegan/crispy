@@ -47,7 +47,7 @@ jobs:
           path: package/Crispy-${{ matrix.arch }}.app.tar.gz
 
   merge-macos:
-    name: Merge, sign and notarize the universal macOS app
+    name: Merge, sign, and notarize the universal macOS app
     needs: build-macos
     runs-on: macos-15
     steps:

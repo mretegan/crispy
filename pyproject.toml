@@ -29,7 +29,7 @@ dependencies = [
     "h5py",
     "matplotlib",
     "numpy",
-    "pyqt6",
+    "pyside6",
     "qtawesome",
     "ruamel.yaml",
     "silx[full_no_qt]",
