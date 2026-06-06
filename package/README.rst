@@ -1,98 +1,82 @@
-Building Stand-Alone Packages for Macintosh and Windows Operating Systems
-=========================================================================
+Generate Crispy installers
+==========================
 
-The current version was compiled using:
+Pre-requisites
+--------------
 
-* Python 3.7.9
-* PyQt5 5.15.1
-* Numpy 1.19.2
-* Matplotlib 3.2.2
-* silx 0.13.2
-* XrayDb 4.4.4
-* h5py 2.10.0
-* PyInstaller 4.1.dev0
+On all platforms, install Crispy together with its bundling dependencies, from
+the source directory::
 
+    pip install .[bundle,notebook]
 
-Macintosh
----------
+This pulls in PyInstaller. All the commands below are run from the ``package``
+folder of the source directory.
 
-1. Install XCode and Command Line Tools.
-2. Install the official Python distribution.
-3. Install h5py:
-
-    Note: On macOS 10.13 the are no issues with using the h5py wheel, so there
-    is no need to compile hdf5.
-
-   * curl -O https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.7/src/hdf5-1.10.7.tar.gz
-   * tar -xzvf hdf5-1.10.7.tar.gz
-   * cd hdf5-1.10.7
-   * ./configure  --prefix=$HOME/hdf5 --enable-cxx
-   * make
-   * make install
-
-4. Create a Python virtual environment and activate it:
-
-   * python3 -m venv crispy-build
-   * source crispy-build/bin/activate
-   * python3 -m pip install --upgrade pip
-
-5. Set environment variables:
-
-   * export HDF5_DIR=$HOME/hdf5 (not needed, see above)
-
-6. Install crispy:
-
-   * pip3 install .[dev]
-
-7. Run the ``pyinstaller`` script. This will automatically create a .dmg file:
-
-   *  rm -fr dist build artifacts; pyinstaller --noconfirm crispy.spec
-
-
-OS X 10.10
-**********
-
-**Using the Official Python**
-
-- There is an issue with the Python 3.7.9 being signed:
-  https://github.com/pyinstaller/pyinstaller/issues/5062.
-- The built app segmentation faults on macOS 10.15, while on 10.10, the same as
-  the build system, gives the following error (after removing the signature):
-
-.. code-block:: sh
-
-  Traceback (most recent call last):
-    File "crispy/__main__.py", line 17, in <module>
-  ImportError: dlopen(/Users/marius/Crispy.app/Contents/MacOS/PyQt5/QtCore.abi3.so, 2): Symbol not found: __os_activity_create
-    Referenced from: /Users/marius/Crispy.app/Contents/MacOS/PyQt5/../QtCore (which was built for Mac OS X 10.13)
-    Expected in: /usr/lib/libSystem.B.dylib
-   in /Users/marius/Crispy.app/Contents/MacOS/PyQt5/../QtCore
-  [1874] Failed to execute script main
-
-**Using MacPorts**
-
-qt5-qtbase cannot be installed as it requires macOS 10.12 or later.
-
-
-macOS 10.13
-***********
-Dependencies are installed using ``pip``.
 
 Windows
 -------
-1. Install Microsoft Visual C++ Build Tools (only needed for installing
-   no-binary packages).
-2. Install the official Python distribution.
-3. Create a Python virtual environment and activate it:
 
-   * python3 -m venv crispy-build
-   * crispy-build\Scripts\activate.bat
-   * python3 -m pip install --upgrade pip
+Run::
 
-4. Install crispy:
+    pyinstaller --noconfirm crispy.spec
 
-   * pip3 install .[dev]
+This generates ``dist\Crispy``, then runs Inno Setup to create the installer and
+a zip archive of the application in ``artifacts``.
 
-5. Run the ``pyinstaller`` script. This will automatically create a .dmg file:
 
-   *  rmdir /Q /S build dist artifacts; pyinstaller --noconfirm crispy.spec
+macOS
+-----
+
+The distributed application is a single **universal2** bundle that runs natively
+on both Apple Silicon and Intel machines. Because Crispy's dependency wheels are
+single-architecture, the universal bundle is assembled by building once per
+architecture and fusing the two builds.
+
+1. On an **Apple Silicon (arm64)** machine and on an **Intel (x86_64)** machine,
+   build the application::
+
+       pyinstaller --noconfirm crispy.spec
+
+   On macOS this only produces the app bundle in ``dist/Crispy.app``; it does not
+   sign, package or notarize it.
+
+2. Collect the two ``dist/Crispy.app`` bundles and fuse them into one universal
+   bundle with ``lipo``::
+
+       python merge-universal.py arm64/Crispy.app x86_64/Crispy.app dist/Crispy.app
+
+3. Sign the merged bundle, pack it into a disk image and notarize it::
+
+       bash codesign.sh
+       bash create-dmg.sh
+       bash notarize.sh
+
+   This produces ``artifacts/Crispy.dmg``.
+
+In continuous integration this whole sequence is run automatically (see
+``.github/workflows/build.yml``): the two architectures are built on separate
+runners, merged on one of them, then signed, packed and notarized.
+
+Signing and notarization are only performed if the following environment
+variables are set; otherwise ``codesign.sh`` and ``notarize.sh`` exit without
+doing anything, leaving an unsigned application:
+
+- ``APPLE_ID``: The Apple ID used to generate the certificate and the
+  application-specific password.
+- ``APPLE_TEAM_ID``: The Apple Team ID associated with the Apple ID.
+- ``CERTIFICATE_BASE64``: The Apple Developer ID Application Certificate exported
+  as a ``.p12`` file and encoded in base64.
+- ``CERTIFICATE_PASSWORD``: The password to decode the ``.p12`` file, as set when
+  exporting the certificate.
+- ``KEYCHAIN_PASSWORD``: The password used for the temporary keychain created to
+  import the certificate. It can be any value; it only protects the temporary
+  keychain.
+- ``APPLICATION_SPECIFIC_PASSWORD``: An application-specific password generated
+  for the Apple ID and used to connect to the notarization service.
+
+A number of steps are needed to create the certificate and the
+application-specific password. Step-by-step instructions can be found here:
+`Mac Signing and Notarization Demo
+<https://github.com/omkarcloud/macos-code-signing-example>`_. Even though the
+instructions are for a different application type, the steps to create the
+required credentials are the same.
