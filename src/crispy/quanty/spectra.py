@@ -58,7 +58,7 @@ SPECTRA = {
 DEFAULT_COLORS = tuple(silx.config.DEFAULT_PLOT_CURVE_COLORS)
 
 
-class Spectrum(SelectableItem):
+class BaseSpectrum(SelectableItem):
     """Base class for spectrum objects.
 
     The objects don't necessary have to have data.
@@ -76,11 +76,11 @@ class Spectrum(SelectableItem):
         self.label = copy.deepcopy(item.label)
 
 
-class Spectrum1D(Spectrum):
-    """One-dimensional spectrum.
+class DataSpectrum(BaseSpectrum):
+    """Base class for spectra that hold data and are processed for plotting.
 
-    The number of points of a Quanty spectrum is equal to N + 1, where N
-    is the number of points specified in the input.
+    Subclasses implement the per-dimensionality pipeline steps used by
+    process(): copy(), shift(), normalize() and gaussian(), as well as plot().
     """
 
     def __init__(self, parent=None, name=None):
@@ -94,6 +94,16 @@ class Spectrum1D(Spectrum):
         for trigger in self.reprocessingTriggers:
             trigger.connect(self.process)
 
+
+
+    def disconnectFromAxes(self):
+        """Stop reprocessing on axis changes once the spectrum is discarded."""
+        for trigger in self.reprocessingTriggers:
+            try:
+                trigger.disconnect(self.process)
+            except (TypeError, RuntimeError):
+                pass
+    
     @property
     def reprocessingTriggers(self):
         """Signals whose emission requires the spectrum to be reprocessed."""
@@ -103,15 +113,6 @@ class Spectrum1D(Spectrum):
             self.axes.xaxis.shift.dataChanged,
             self.axes.xaxis.gaussian.dataChanged,
         )
-
-    def disconnectFromAxes(self):
-        """Stop reprocessing on axis changes once the spectrum is discarded."""
-        for trigger in self.reprocessingTriggers:
-            try:
-                trigger.disconnect(self.process)
-            except (TypeError, RuntimeError):
-                pass
-
     @property
     def signal(self):
         return self._signal
@@ -142,10 +143,6 @@ class Spectrum1D(Spectrum):
         self.process()
         return True
 
-    def copy(self):
-        self.x = self.raw[:, 0].copy()
-        self.signal = self.raw[:, 2].copy()
-
     def process(self):
         self.copy()
         self.shift()
@@ -154,17 +151,35 @@ class Spectrum1D(Spectrum):
         self.gaussian()
         self.dataChanged.emit(1)
 
-    def shift(self, value=None):
-        if value is None:
-            value = self.axes.xaxis.shift.value
-        self.x = self.x + value
-
     def scale(self, value=None):
         if value is None:
             value = self.axes.scale.value
         if value <= 0:
             return
         self.signal = self.signal * value
+
+    def copyFrom(self, item):
+        super().copyFrom(item)
+        self.x = copy.deepcopy(item.x)
+        self.signal = copy.deepcopy(item.signal)
+        self.suffix = copy.deepcopy(item.suffix)
+
+
+class Spectrum1D(DataSpectrum):
+    """One-dimensional spectrum.
+
+    The number of points of a Quanty spectrum is equal to N + 1, where N
+    is the number of points specified in the input.
+    """
+
+    def copy(self):
+        self.x = self.raw[:, 0].copy()
+        self.signal = self.raw[:, 2].copy()
+
+    def shift(self, value=None):
+        if value is None:
+            value = self.axes.xaxis.shift.value
+        self.x = self.x + value
 
     def normalize(self, value=None):
         if value is None:
@@ -199,14 +214,8 @@ class Spectrum1D(Spectrum):
             color=DEFAULT_COLORS[i],
         )
 
-    def copyFrom(self, item):
-        super().copyFrom(item)
-        self.x = copy.deepcopy(item.x)
-        self.signal = copy.deepcopy(item.signal)
-        self.suffix = copy.deepcopy(item.suffix)
 
-
-class Spectrum2D(Spectrum1D):
+class Spectrum2D(DataSpectrum):
     """Two-dimensional spectrum."""
 
     def __init__(self, parent=None, name=None):
@@ -334,7 +343,7 @@ class SpectraToCalculate(SpectraToInteract):
         for sample, spectraNames in SPECTRA_TO_CALCULATE[experiment.value].items():
             sample = Sample(parent=self, name=sample)
             for spectrumName in spectraNames:
-                spectrum = Spectrum(parent=sample, name=spectrumName)
+                spectrum = BaseSpectrum(parent=sample, name=spectrumName)
                 spectrum.checkState = checkState
                 checkState = Qt.CheckState.Unchecked
 
