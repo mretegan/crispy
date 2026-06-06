@@ -94,8 +94,6 @@ class DataSpectrum(BaseSpectrum):
         for trigger in self.reprocessingTriggers:
             trigger.connect(self.process)
 
-
-
     def disconnectFromAxes(self):
         """Stop reprocessing on axis changes once the spectrum is discarded."""
         for trigger in self.reprocessingTriggers:
@@ -103,7 +101,7 @@ class DataSpectrum(BaseSpectrum):
                 trigger.disconnect(self.process)
             except (TypeError, RuntimeError):
                 pass
-    
+
     @property
     def reprocessingTriggers(self):
         """Signals whose emission requires the spectrum to be reprocessed."""
@@ -113,6 +111,7 @@ class DataSpectrum(BaseSpectrum):
             self.axes.xaxis.shift.dataChanged,
             self.axes.xaxis.gaussian.dataChanged,
         )
+
     @property
     def signal(self):
         return self._signal
