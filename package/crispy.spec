@@ -102,11 +102,17 @@ a = Analysis(  # noqa: F821
     hiddenimports=hiddenimports,
     hookspath=[],
     runtime_hooks=[],
-    # greenlet is pulled in on x86_64 only: SQLAlchemy (via xraydb) requires it
-    # through a platform_machine marker that lists x86_64 but not macOS arm64.
-    # crispy uses SQLAlchemy synchronously and never imports greenlet, so
-    # excluding it keeps the two architecture builds symmetric for merging.
-    excludes=["greenlet"],
+    # These produce native (.so) modules on only one architecture, which would
+    # break the universal2 merge of the two per-architecture builds:
+    #  - greenlet: SQLAlchemy (via xraydb) requires it through a platform_machine
+    #    marker that lists x86_64 but not macOS arm64, so it lands on x86_64 only.
+    #    crispy uses SQLAlchemy synchronously and never imports greenlet.
+    #  - sqlalchemy.cyextension: SQLAlchemy ships a cp312 arm64 wheel carrying
+    #    these optional C speedups but no cp312 x86_64 wheel, so x86_64 falls back
+    #    to the pure-Python wheel without them.
+    # Excluding both keeps the builds symmetric; SQLAlchemy uses its pure-Python
+    # fallbacks (negligible cost for xraydb's small queries).
+    excludes=["greenlet", "sqlalchemy.cyextension"],
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
     cipher=block_cipher,
