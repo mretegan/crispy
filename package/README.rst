@@ -54,7 +54,7 @@ architecture and fusing the two builds.
    This produces ``artifacts/Crispy.dmg``.
 
 In continuous integration this whole sequence is run automatically (see
-``.github/workflows/build.yml``): the two architectures are built on separate
+``.github/workflows/release.yml``): the two architectures are built on separate
 runners, merged on one of them, then signed, packed and notarized.
 
 Signing and notarization are only performed if the following environment
