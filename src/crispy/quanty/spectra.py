@@ -64,7 +64,7 @@ class BaseSpectrum(SelectableItem):
     The objects don't necessary have to have data.
     """
 
-    def __init__(self, parent=None, name=None):
+    def __init__(self, parent=None, *, name=None):
         super().__init__(parent=parent, name=name)
         self.suffix = None
         self.label = None
@@ -83,7 +83,7 @@ class DataSpectrum(BaseSpectrum):
     process(): copy(), shift(), normalize() and gaussian(), as well as plot().
     """
 
-    def __init__(self, parent=None, name=None):
+    def __init__(self, parent=None, *, name=None):
         super().__init__(parent=parent, name=name)
         self.raw = None
         self.x = None
@@ -217,7 +217,7 @@ class Spectrum1D(DataSpectrum):
 class Spectrum2D(DataSpectrum):
     """Two-dimensional spectrum."""
 
-    def __init__(self, parent=None, name=None):
+    def __init__(self, parent=None, *, name=None):
         super().__init__(parent=parent, name=name)
         self.y = None
 
@@ -332,8 +332,8 @@ class SpectraToInteract(BaseItem):
 
 
 class SpectraToCalculate(SpectraToInteract):
-    def __init__(self, parent=None, name="Spectra to Calculate"):
-        super().__init__(parent=parent, name=name)
+    def __init__(self, parent=None):
+        super().__init__(parent=parent, name="Spectra to Calculate")
 
         calculation = self.ancestor
         experiment = calculation.experiment
@@ -361,13 +361,13 @@ class SpectraToCalculate(SpectraToInteract):
 
 
 class SpectraToPlot(SpectraToInteract):
-    def __init__(self, parent=None, name="Spectra to Plot"):
-        super().__init__(parent=parent, name=name)
+    def __init__(self, parent=None):
+        super().__init__(parent=parent, name="Spectra to Plot")
 
 
 class Spectra(BaseItem):
-    def __init__(self, parent=None, name="Spectra"):
-        super().__init__(parent=parent, name=name)
+    def __init__(self, parent=None):
+        super().__init__(parent=parent, name="Spectra")
         self.toCalculate = SpectraToCalculate(parent=self)
         self.toPlot = SpectraToPlot(parent=self)
 
@@ -435,5 +435,5 @@ class Spectra(BaseItem):
 
 
 class Sample(BaseItem):
-    def __init__(self, parent=None, name=None):
+    def __init__(self, parent=None, *, name=None):
         super().__init__(parent=parent, name=name)

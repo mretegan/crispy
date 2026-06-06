@@ -34,13 +34,13 @@ class Broadening(DoubleItem):
 class Lorentzian(Broadening):
     MINIMUM = 0.1
 
-    def __init__(self, parent=None, name="Lorentzian", value=None):
-        super().__init__(parent=parent, name=name)
+    def __init__(self, value=None, parent=None):
+        super().__init__(parent=parent, name="Lorentzian")
         self._value = value
 
         # TODO: Implement these for variable broadening.
-        self.energies = BaseItem(self, "Energies")
-        self.fwhms = BaseItem(self, "FWHM")
+        self.energies = BaseItem(parent=self, name="Energies")
+        self.fwhms = BaseItem(parent=self, name="FWHM")
 
     @property
     def value(self):
@@ -91,8 +91,8 @@ class Lorentzian(Broadening):
 
 
 class Gaussian(Broadening):
-    def __init__(self, parent=None, name="Gaussian", value=None):
-        super().__init__(parent=parent, name=name)
+    def __init__(self, value=None, parent=None):
+        super().__init__(parent=parent, name="Gaussian")
         self._value = value
 
     @property
@@ -116,8 +116,8 @@ class LightVector(Vector3DItem):
 
 
 class WaveVector(LightVector):
-    def __init__(self, parent=None, name="Wave Vector", value=None):
-        super().__init__(parent=parent, name=name, value=value)
+    def __init__(self, value=None, parent=None):
+        super().__init__(value, parent=parent, name="Wave Vector")
 
     @property
     def value(self):
@@ -152,8 +152,8 @@ class WaveVector(LightVector):
 
 
 class Polarization(LightVector):
-    def __init__(self, parent=None, name="Polarization", value=None):
-        super().__init__(parent=parent, name=name, value=value)
+    def __init__(self, value=None, parent=None):
+        super().__init__(value, parent=parent, name="Polarization")
 
     @property
     def value(self):
@@ -172,7 +172,7 @@ class Polarization(LightVector):
 
 
 class Photon(BaseItem):
-    def __init__(self, parent=None, name="Photon"):
+    def __init__(self, parent=None, *, name="Photon"):
         super().__init__(parent=parent, name=name)
 
         self.k = WaveVector(parent=self, value=np.array([0, 0, 1]))
@@ -192,18 +192,18 @@ class Photon(BaseItem):
 
 
 class IncidentPhoton(Photon):
-    def __init__(self, parent=None, name="Incident Photon"):
-        super().__init__(parent=parent, name=name)
+    def __init__(self, parent=None):
+        super().__init__(parent=parent, name="Incident Photon")
 
 
 class ScatteredPhoton(Photon):
-    def __init__(self, parent=None, name="Scattered Photon"):
-        super().__init__(parent=parent, name=name)
+    def __init__(self, parent=None):
+        super().__init__(parent=parent, name="Scattered Photon")
 
 
 class Start(DoubleItem):
-    def __init__(self, parent=None, name="Start", value=None):
-        super().__init__(parent=parent, name=name)
+    def __init__(self, value=None, parent=None):
+        super().__init__(parent=parent, name="Start")
         self._value = value
 
     @property
@@ -221,8 +221,8 @@ class Start(DoubleItem):
 
 
 class Stop(DoubleItem):
-    def __init__(self, parent=None, name="Stop", value=None):
-        super().__init__(parent=parent, name=name)
+    def __init__(self, value=None, parent=None):
+        super().__init__(parent=parent, name="Stop")
         self._value = value
 
     @property
@@ -240,8 +240,8 @@ class Stop(DoubleItem):
 
 
 class NPoints(IntItem):
-    def __init__(self, parent=None, name="Number of Points", value=None):
-        super().__init__(parent=parent, name=name)
+    def __init__(self, value=None, parent=None):
+        super().__init__(parent=parent, name="Number of Points")
         self._value = value
 
     @property
@@ -269,12 +269,12 @@ class NPoints(IntItem):
 
 
 class Shift(DoubleItem):
-    def __init__(self, parent=None, value=None):
-        super().__init__(parent=parent, name="User Defined Shift", value=value)
+    def __init__(self, value=None, parent=None):
+        super().__init__(value, parent=parent, name="User Defined Shift")
 
 
 class Axis(BaseItem):
-    def __init__(self, parent=None, name="Axis"):
+    def __init__(self, parent=None, *, name="Axis"):
         super().__init__(parent=parent, name=name)
 
         self.idx = 0
@@ -455,8 +455,8 @@ class Axis(BaseItem):
 
 
 class XAxis(Axis):
-    def __init__(self, parent=None, name="X-axis"):
-        super().__init__(parent=parent, name=name)
+    def __init__(self, parent=None):
+        super().__init__(parent=parent, name="X-axis")
         self.photon = IncidentPhoton(parent=self)
 
         # For one-dimensional experiments (XAS, XPS) the incident polarization
@@ -479,8 +479,8 @@ class XAxis(Axis):
 
 
 class YAxis(Axis):
-    def __init__(self, parent=None, name="Y-axis"):
-        super().__init__(parent=parent, name=name)
+    def __init__(self, parent=None):
+        super().__init__(parent=parent, name="Y-axis")
         self.photon = ScatteredPhoton(parent=self)
 
     @property
@@ -489,8 +489,8 @@ class YAxis(Axis):
 
 
 class Axes(BaseItem):
-    def __init__(self, parent=None, name="Axes"):
-        super().__init__(parent=parent, name=name)
+    def __init__(self, parent=None):
+        super().__init__(parent=parent, name="Axes")
 
         self.scale = DoubleItem(parent=self, name="Scale Factor", value=1.0)
         self.normalization = ComboItem(parent=self, name="Normalization", value="None")

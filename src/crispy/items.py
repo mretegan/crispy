@@ -24,7 +24,7 @@ class BaseItem(QObject):
 
     dataChanged = pyqtSignal(int)
 
-    def __init__(self, parent=None, name=None, value=None):
+    def __init__(self, value=None, parent=None, *, name=None):
         super().__init__(parent=parent)
         self._name = name
         self._value = value
@@ -254,7 +254,7 @@ class BaseItem(QObject):
 
 
 class SelectableItem(BaseItem):
-    def __init__(self, parent=None, name=None, value=None):
+    def __init__(self, value=None, parent=None, *, name=None):
         super().__init__(parent=parent, name=name, value=value)
         self.disable()
 
@@ -389,7 +389,7 @@ class BoolItem(BaseItem):
 
 
 class ComboItem(BaseItem):
-    def __init__(self, parent=None, name=None, value=None):
+    def __init__(self, value=None, parent=None, *, name=None):
         super().__init__(parent=parent, name=name, value=value)
         self._items = None
 

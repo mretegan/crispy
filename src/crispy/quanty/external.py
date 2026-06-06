@@ -6,13 +6,13 @@ logger = logging.getLogger(__name__)
 
 
 class ExternalData(SelectableItem):
-    def __init__(self, parent=None, name="Experiment", x=None, y=None):
+    def __init__(self, data=None, parent=None, *, name="Experiment"):
         super().__init__(parent=parent, name=name)
-        self.x = x
-        self.y = y
+        self.data = data
         self.enable()
 
     def plot(self, plotWidget):
         index = self.childPosition()
         legend = f"{index + 1} · {self.name}"
-        plotWidget.addCurve(self.x, self.y, legend=legend)
+        x, y = self.data.T
+        plotWidget.addCurve(x, y, legend=legend)

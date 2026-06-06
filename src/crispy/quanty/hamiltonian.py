@@ -51,7 +51,7 @@ class ScaleFactor(DoubleItem):
 
 
 class HamiltonianParameter(DoubleItem):
-    def __init__(self, parent=None, name=None, value=None, scaleFactor=None):
+    def __init__(self, value=None, parent=None, *, name=None, scaleFactor=None):
         super().__init__(parent=parent, name=name, value=value)
         self._scaleFactor = scaleFactor
 
@@ -128,7 +128,7 @@ class HamiltonianParameter(DoubleItem):
 
 
 class HamiltonianTerm(SelectableItem):
-    def __init__(self, parent=None, name=None):
+    def __init__(self, parent=None, *, name=None):
         super().__init__(parent=parent, name=name)
 
         # Makes things easier to call.
@@ -209,8 +209,8 @@ class HamiltonianTerm(SelectableItem):
 
 
 class AtomicTerm(HamiltonianTerm):
-    def __init__(self, parent=None, name="Atomic"):
-        super().__init__(parent=parent, name=name)
+    def __init__(self, parent=None):
+        super().__init__(parent=parent, name="Atomic")
 
         path = resourceAbsolutePath(
             os.path.join("quanty", "parameters", f"{self.element.symbol}.h5")
@@ -220,12 +220,17 @@ class AtomicTerm(HamiltonianTerm):
             for configuration, (hamiltonianName, _) in zip(
                 self.configurations, self.hamiltonianNames, strict=False
             ):
-                hamiltonian = BaseItem(self, hamiltonianName)
+                hamiltonian = BaseItem(parent=self, name=hamiltonianName)
                 parameters = h5[f"{configuration}/{self.name}"]
                 for parameterName, value in parameters.items():
                     value = float(value[()])
                     scaleFactor = self.scaleFactorFromName(parameterName)
-                    HamiltonianParameter(hamiltonian, parameterName, value, scaleFactor)
+                    HamiltonianParameter(
+                        value,
+                        parent=hamiltonian,
+                        name=parameterName,
+                        scaleFactor=scaleFactor,
+                    )
 
         self.enable()
 
@@ -237,8 +242,8 @@ class AtomicTerm(HamiltonianTerm):
 
 
 class CrystalFieldTerm(HamiltonianTerm):
-    def __init__(self, parent=None, name="Crystal Field"):
-        super().__init__(parent=parent, name=name)
+    def __init__(self, parent=None):
+        super().__init__(parent=parent, name="Crystal Field")
 
         names = []
         if self.block == "d":
@@ -260,17 +265,17 @@ class CrystalFieldTerm(HamiltonianTerm):
             raise ValueError("Unknown symmetry.")
 
         for hamiltonianName, _ in self.hamiltonianNames:
-            hamiltonian = BaseItem(self, hamiltonianName)
+            hamiltonian = BaseItem(parent=self, name=hamiltonianName)
             for parameterName, value in zip(names, values, strict=False):
                 # Extend the parameterName to include the subshell.
                 parameterName = parameterName + f"({self.subshell})"
-                HamiltonianParameter(hamiltonian, parameterName, value, None)
+                HamiltonianParameter(value, parent=hamiltonian, name=parameterName)
 
         self.enable()
 
 
 class LigandHybridizationTerm(HamiltonianTerm):
-    def __init__(self, parent=None, name="Ligands Hybridization"):
+    def __init__(self, parent=None, *, name="Ligands Hybridization"):
         super().__init__(parent=parent, name=name)
 
         ligandsName = "L2" if "MLCT" in self.name else "L1"
@@ -292,7 +297,7 @@ class LigandHybridizationTerm(HamiltonianTerm):
                 raise ValueError("Unknown symmetry.")
 
         for hamiltonianName, _ in self.hamiltonianNames:
-            hamiltonian = BaseItem(self, hamiltonianName)
+            hamiltonian = BaseItem(parent=self, name=hamiltonianName)
             for parameterName in names:
                 if parameterName in ("10Dq", "Ds", "Dt", "Ea2u", "Et1u", "Et2u"):
                     suffix = f"({ligandsName})"
@@ -300,7 +305,7 @@ class LigandHybridizationTerm(HamiltonianTerm):
                     suffix = f"({self.subshell},{ligandsName})"
                 # Extend the name to include the suffix.
                 parameterName = parameterName + suffix
-                HamiltonianParameter(hamiltonian, parameterName, 0.0, None)
+                HamiltonianParameter(0.0, parent=hamiltonian, name=parameterName)
 
     def setData(self, column, value, role=Qt.EditRole):
         if role == Qt.CheckStateRole:
@@ -320,21 +325,21 @@ class LigandHybridizationTerm(HamiltonianTerm):
 
 
 class LmctLigandsHybridizationTerm(LigandHybridizationTerm):
-    def __init__(self, parent=None, name=None):
+    def __init__(self, parent=None, *, name=None):
         super().__init__(parent=parent, name=name)
 
 
 class MlctLigandsHybridizationTerm(LigandHybridizationTerm):
-    def __init__(self, parent=None, name=None):
+    def __init__(self, parent=None, *, name=None):
         super().__init__(parent=parent, name=name)
 
 
 class PdHybridizationTerm(HamiltonianTerm):
-    def __init__(self, parent=None, name=None):
+    def __init__(self, parent=None, *, name=None):
         super().__init__(parent=parent, name=name)
 
         def generateParameters(hamiltonianName, names):
-            hamiltonian = BaseItem(self, hamiltonianName)
+            hamiltonian = BaseItem(parent=self, name=hamiltonianName)
             for name in names:
                 if name in ("ζ(", "G1(1s,"):
                     name = name + "4p)"
@@ -342,7 +347,9 @@ class PdHybridizationTerm(HamiltonianTerm):
                     name = name + f"({self.subshell},4p)"
                 value = 0.0
                 scaleFactor = self.scaleFactorFromName(name)
-                HamiltonianParameter(hamiltonian, name, value, scaleFactor)
+                HamiltonianParameter(
+                    value, parent=hamiltonian, name=name, scaleFactor=scaleFactor
+                )
 
         initialAtomic = ("F2", "G1", "G3", "ζ(")
         finalAtomic = ("F2", "G1", "G3", "G1(1s,", "ζ(")
@@ -380,28 +387,28 @@ class PdHybridizationTerm(HamiltonianTerm):
 
 
 class MagneticFieldTerm(HamiltonianTerm):
-    def __init__(self, parent=None, name="Magnetic Field"):
-        super().__init__(parent=parent, name=name)
+    def __init__(self, parent=None):
+        super().__init__(parent=parent, name="Magnetic Field")
 
         for hamiltonianName, _ in self.hamiltonianNames:
-            hamiltonian = BaseItem(self, hamiltonianName)
+            hamiltonian = BaseItem(parent=self, name=hamiltonianName)
             for parameterName in ("Bx", "By", "Bz"):
-                HamiltonianParameter(hamiltonian, parameterName, 0.0, None)
+                HamiltonianParameter(0.0, parent=hamiltonian, name=parameterName)
 
 
 class ExchangeFieldTerm(HamiltonianTerm):
-    def __init__(self, parent=None, name="Exchange Field"):
-        super().__init__(parent=parent, name=name)
+    def __init__(self, parent=None):
+        super().__init__(parent=parent, name="Exchange Field")
 
         for hamiltonianName, _ in self.hamiltonianNames:
-            hamiltonian = BaseItem(self, hamiltonianName)
+            hamiltonian = BaseItem(parent=self, name=hamiltonianName)
             for parameterName in ("Hx", "Hy", "Hz"):
-                HamiltonianParameter(hamiltonian, parameterName, 0.0, None)
+                HamiltonianParameter(0.0, parent=hamiltonian, name=parameterName)
 
 
 class HamiltonianTerms(BaseItem):
-    def __init__(self, parent=None, name="Hamiltonian Terms"):
-        super().__init__(parent=parent, name=name)
+    def __init__(self, parent=None):
+        super().__init__(parent=parent, name="Hamiltonian Terms")
 
         calculation = self.ancestor
         # For all calculations it should be possible to have at lest the "Atomic" and
@@ -472,8 +479,8 @@ class HamiltonianTerms(BaseItem):
 
 
 class NumberOfStates(IntItem):
-    def __init__(self, parent, name="Number of States", value=None):
-        super().__init__(parent=parent, name=name)
+    def __init__(self, value=None, parent=None):
+        super().__init__(parent=parent, name="Number of States")
         self.value = value if value is not None else self.maximum
         self.auto = BoolItem(parent=self, name="Auto", value=True)
 
@@ -509,8 +516,8 @@ class NumberOfStates(IntItem):
 
 
 class NumberOfConfigurations(IntItem):
-    def __init__(self, parent, name="Number of Configurations", value=None):
-        super().__init__(parent=parent, name=name)
+    def __init__(self, value=None, parent=None):
+        super().__init__(parent=parent, name="Number of Configurations")
         self.value = value if value is not None else self.minimum
 
     def reset(self):
@@ -555,7 +562,7 @@ class NumberOfConfigurations(IntItem):
 
 
 class Hamiltonian(BaseItem):
-    def __init__(self, parent):
+    def __init__(self, parent=None):
         super().__init__(parent=parent, name="Hamiltonian")
 
         self.fk = ScaleFactor(parent=self, name="Fk", value=0.8)

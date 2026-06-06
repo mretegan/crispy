@@ -32,8 +32,8 @@ OCCUPANCIES = {"s": 2, "p": 6, "d": 10, "f": 14}
 
 
 class Element(BaseItem):
-    def __init__(self, parent=None, name="Element", value=None):
-        super().__init__(parent=parent, name=name)
+    def __init__(self, value=None, parent=None):
+        super().__init__(parent=parent, name="Element")
         self.symbol = None
         self.charge = None
         self.value = value
@@ -203,13 +203,13 @@ class Configuration:
 
 
 class Symmetry(BaseItem):
-    def __init__(self, parent=None, name="Symmetry", value=None):
-        super().__init__(parent=parent, name=name, value=value)
+    def __init__(self, value=None, parent=None):
+        super().__init__(value, parent=parent, name="Symmetry")
 
 
 class Edge(BaseItem):
-    def __init__(self, parent=None, name="Edge", value=None):
-        super().__init__(parent=parent, name=name, value=value)
+    def __init__(self, value=None, parent=None):
+        super().__init__(value, parent=parent, name="Edge")
 
     @property
     def coreSubshells(self):
@@ -273,8 +273,8 @@ class Edge(BaseItem):
 
 
 class Experiment(BaseItem):
-    def __init__(self, parent=None, name="Experiment", value=None):
-        super().__init__(parent=parent, name=name, value=value)
+    def __init__(self, value=None, parent=None):
+        super().__init__(value, parent=parent, name="Experiment")
 
     @property
     def isOneStep(self):
@@ -302,8 +302,8 @@ class Experiment(BaseItem):
 
 
 class Temperature(IntItem):
-    def __init__(self, parent=None, name="Temperature", value=None):
-        super().__init__(parent=parent, name=name, value=value)
+    def __init__(self, value=None, parent=None):
+        super().__init__(value, parent=parent, name="Temperature")
 
     @property
     def value(self):
@@ -317,8 +317,8 @@ class Temperature(IntItem):
 
 
 class MagneticField(DoubleItem):
-    def __init__(self, parent=None, name="Magnetic Field", value=None):
-        super().__init__(parent=parent, name=name, value=value)
+    def __init__(self, value=None, parent=None):
+        super().__init__(value, parent=parent, name="Magnetic Field")
 
     @property
     def value(self):

@@ -517,9 +517,9 @@ class DockWidget(QDockWidget):
         self.state = state
         logger.debug("Finished populating the widgets.")
 
-    def addExternalData(self, name, x, y):
+    def addExternalData(self, data, name):
         parent = self.resultsPage.model.rootItem()
-        experiment = ExternalData(parent, name, x, y)
+        experiment = ExternalData(data, parent=parent, name=name)
         index = experiment.index()
         self.resultsPage.view.setCurrentIndex(index)
 
