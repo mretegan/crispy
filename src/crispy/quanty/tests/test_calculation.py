@@ -2,6 +2,8 @@
 
 """Tests for carrying parameters over when a single selection changes."""
 
+import re
+
 import pytest
 
 from crispy.models import TreeModel
@@ -266,3 +268,75 @@ def test_charge_change_regenerates_atomic_and_preserves_the_rest():
     for parameter in find_term(new, "Atomic").parameters:
         if parameter.name.startswith("F"):
             assert parameter.scaleFactor == 0.95
+
+
+def test_d3d_crystal_field_parameters():
+    """D3d exposes the trigonal irrep-energy parameter set and adds no ligand or
+    pd-hybridization terms (crystal-field only) for both the d and the f block."""
+    model = TreeModel()
+
+    d_block = make_calculation("D3d", model.rootItem())  # Ni2+ (3d)
+    assert crystal_field_names(d_block) == {
+        "Ea1g(3d)",
+        "Eegσ(3d)",  # noqa: RUF001
+        "Eegπ(3d)",
+        "Meg(3d)",
+    }
+    assert [t.name for t in d_block.hamiltonian.terms.children()] == [
+        "Atomic",
+        "Crystal Field",
+        "Magnetic Field",
+        "Exchange Field",
+    ]
+
+    f_block = Calculation(
+        symbol="Ce",
+        charge="3+",
+        symmetry="D3d",
+        experiment="XAS",
+        edge="M4,5 (3d)",
+        parent=model.rootItem(),
+    )
+    assert crystal_field_names(f_block) == {
+        "Ea1u(4f)",
+        "Ea2uA(4f)",
+        "Ea2uB(4f)",
+        "Eeu1(4f)",
+        "Eeu2(4f)",
+        "Ma2u(4f)",
+        "Meu(4f)",
+    }
+    assert [t.name for t in f_block.hamiltonian.terms.children()] == [
+        "Atomic",
+        "Crystal Field",
+        "Magnetic Field",
+        "Exchange Field",
+    ]
+
+
+@pytest.mark.parametrize(
+    ("symbol", "charge", "edge", "template"),
+    [
+        ("Ni", "2+", "L2,3 (2p)", "3d_D3d_XAS_2p.lua"),  # d block, p core (pd)
+        ("Co", "2+", "K (1s)", "3d_D3d_XAS_1s.lua"),  # d block, s core (sd)
+        ("Ce", "3+", "M4,5 (3d)", "4f_D3d_XAS_3d.lua"),  # f block, d core (df)
+        ("Nd", "3+", "L2,3 (2p)", "4f_D3d_XAS_2p.lua"),  # f block, p core (pf)
+    ],
+)
+def test_d3d_template_renders_without_unresolved_parameters(
+    symbol, charge, edge, template
+):
+    """Every D3d crystal-field parameter placeholder in the generated template is
+    filled by the parameters defined in the Hamiltonian (names must match)."""
+    model = TreeModel()
+    calculation = Calculation(
+        symbol=symbol,
+        charge=charge,
+        symmetry="D3d",
+        experiment="XAS",
+        edge=edge,
+        parent=model.rootItem(),
+    )
+    assert calculation.templateName == template
+    # No "$Name(subshell)_i/f_value" parameter placeholder should remain.
+    assert not re.search(r"\$[A-Za-z0-9]+\([^)]*\)_[if]_value", calculation.input)

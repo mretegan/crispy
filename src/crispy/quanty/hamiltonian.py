@@ -164,6 +164,7 @@ class HamiltonianTerm(SelectableItem):
                 "ζ": "zeta",
                 "Δ": "Delta",
                 "σ": "sigma",  # noqa: RUF001
+                "π": "pi",
                 "τ": "tau",
                 "μ": "mu",
                 "ν": "nu",  # noqa: RUF001
@@ -257,10 +258,25 @@ class CrystalFieldTerm(HamiltonianTerm):
                 names, values = ("Dμ", "Dν"), (0.1, -0.1)  # noqa: RUF001
             elif self.symmetry.value == "C3v":
                 names, values = ("10Dq", "Dσ", "Dτ"), (1.0, 0.0, 0.0)  # noqa: RUF001
+            elif self.symmetry.value == "D3d":
+                # Trigonal field given as the irrep energies: a1g and the two eg
+                # sets (descended from the cubic eg and t2g), plus the eg-eg
+                # off-diagonal mixing Meg.
+                names = ("Ea1g", "Eegσ", "Eegπ", "Meg")  # noqa: RUF001
+                values = (0.0, 0.0, 0.0, 0.0)
             else:
                 raise ValueError("Unknown symmetry.")
         elif self.block == "f":
-            names, values = ("Ea2u", "Et1u", "Et2u"), (-1.8, 0.3, 0.3)
+            if self.symmetry.value == "Oh":
+                names, values = ("Ea2u", "Et1u", "Et2u"), (-1.8, 0.3, 0.3)
+            elif self.symmetry.value == "D3d":
+                # Trigonal field given as the irrep energies (a1u, the two a2u
+                # sets and the two eu sets) plus the a2u-a2u and eu-eu off-diagonal
+                # mixings Ma2u and Meu.
+                names = ("Ea1u", "Ea2uA", "Ea2uB", "Eeu1", "Eeu2", "Ma2u", "Meu")
+                values = (0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+            else:
+                raise ValueError("Unknown symmetry.")
         else:
             raise ValueError("Unknown symmetry.")
 

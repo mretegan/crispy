@@ -21,13 +21,13 @@
   experiments:
     - name: XAS
       edges: ["K (1s)", "L1 (2s)", "L2,3 (2p)", "M1 (3s)", "M2,3 (3p)"]
-      symmetries: ["Oh", "D4h", "Td", "C3v", "D3h"]
+      symmetries: ["Oh", "D4h", "Td", "C3v", "D3h", "D3d"]
     - name: XPS
       edges: ["K (1s)", "L1 (2s)", "L2,3 (2p)", "M1 (3s)", "M2,3 (3p)"]
-      symmetries: ["Oh", "D4h", "Td", "C3v", "D3h"]
+      symmetries: ["Oh", "D4h", "Td", "C3v", "D3h", "D3d"]
     - name: RIXS
       edges: ["K-L2,3 (1s2p)", "K-M2,3 (1s3p)", "L2,3-M4,5 (2p3d)"]
-      symmetries: ["Oh", "D4h", "Td", "C3v", "D3h"]
+      symmetries: ["Oh", "D4h", "Td", "C3v", "D3h", "D3d"]
 4d:
   elements:
     - symbol: "Y"
@@ -51,13 +51,13 @@
   experiments:
     - name: XAS
       edges: ["L1 (2s)", "L2,3 (2p)", "M1 (3s)", "M2,3 (3p)", "N1 (4s)", "N2,3 (4p)"]
-      symmetries: ["Oh", "D4h", "Td", "C3v", "D3h"]
+      symmetries: ["Oh", "D4h", "Td", "C3v", "D3h", "D3d"]
     - name: XPS
       edges: ["L1 (2s)", "L2,3 (2p)", "M1 (3s)", "M4,5 (3d)", "M2,3 (3p)", "N1 (4s)", "N2,3 (4p)"]
-      symmetries: ["Oh", "D4h", "Td", "C3v", "D3h"]
+      symmetries: ["Oh", "D4h", "Td", "C3v", "D3h", "D3d"]
     - name: RIXS
       edges: ["L2,3-N4,5 (2p4d)"]
-      symmetries: ["Oh", "D4h", "Td", "C3v", "D3h"]
+      symmetries: ["Oh", "D4h", "Td", "C3v", "D3h", "D3d"]
 4f:
   elements:
     - symbol: La
@@ -91,13 +91,13 @@
   experiments:
     - name: XAS
       edges: ["L2,3 (2p)", "M2,3 (3p)", "M4,5 (3d)", "N2,3 (4p)", "N4,5 (4d)"]
-      symmetries: ["Oh"]
+      symmetries: ["Oh", "D3d"]
     - name: XPS
       edges: ["L2,3 (2p)", "M2,3 (3p)", "M4,5 (3d)", "N2,3 (4p)", "N4,5 (4d)"]
-      symmetries: ["Oh"]
+      symmetries: ["Oh", "D3d"]
     - name: RIXS
       edges: ["L2,3-M4,5 (2p3d)", "L2,3-N4,5 (2p4d)", "M4,5-N6,7 (3d4f)"]
-      symmetries: ["Oh"]
+      symmetries: ["Oh", "D3d"]
 5d:
   elements:
     - symbol: Hf
@@ -119,13 +119,13 @@
   experiments:
     - name: XAS
       edges: ["L1 (2s)", "L2,3 (2p)", "M1 (3s)", "M2,3 (3p)", "N1 (4s)", "N2,3 (4p)", "O1 (5s)", "O2,3 (5p)"]
-      symmetries: ["Oh", "D4h", "Td", "C3v", "D3h"]
+      symmetries: ["Oh", "D4h", "Td", "C3v", "D3h", "D3d"]
     - name: XPS
       edges: ["L1 (2s)", "L2,3 (2p)", "M1 (3s)", "M2,3 (3p)", "M4,5 (3d)", "N1 (4s)", "N2,3 (4p)", "N4,5 (4d)", "O1 (5s)", "O2,3 (5p)"]
-      symmetries: ["Oh", "D4h", "Td", "C3v", "D3h"]
+      symmetries: ["Oh", "D4h", "Td", "C3v", "D3h", "D3d"]
     - name: RIXS
       edges: ["L2,3-O4,5 (2p5d)"]
-      symmetries: ["Oh", "D4h", "Td", "C3v", "D3h"]
+      symmetries: ["Oh", "D4h", "Td", "C3v", "D3h", "D3d"]
 5f:
   elements:
     - symbol: Ac
@@ -147,10 +147,10 @@
   experiments:
     - name: XAS
       edges: ["L2,3 (2p)", "M2,3 (3p)", "M4,5 (3d)", "N2,3 (4p)", "N4,5 (4d)"]
-      symmetries: ["Oh"]
+      symmetries: ["Oh", "D3d"]
     - name: XPS
       edges: ["L2,3 (2p)", "M2,3 (3p)", "M4,5 (3d)", "N2,3 (4p)", "N4,5 (4d)"]
-      symmetries: ["Oh"]
+      symmetries: ["Oh", "D3d"]
     - name: RIXS
       edges: ["L2,3-M4,5 (2p3d)", "L2,3-N4,5 (2p4d)"]
-      symmetries: ["Oh"]
+      symmetries: ["Oh", "D3d"]
