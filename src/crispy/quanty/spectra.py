@@ -23,7 +23,7 @@ SPECTRA_TO_CALCULATE = {
             "Linear Dichroic",
         ),
     },
-    "XES": {"Powder/Solution": ("Emission",)},
+    "XES": {"Single Crystal/Thin Film": ("Emission", "Circular Dichroic")},
     "XPS": {"Powder/Solution": ("Photoemission",)},
     "RIXS": {"Single Crystal/Thin Film": ("Resonant Inelastic",)},
 }

@@ -257,7 +257,7 @@ def generate_templates():
         base = base.replace("#edge", edge.value)
         base = base.replace("#experiment", experiment.value)
 
-        if experiment.isOneDimensional:
+        if experiment.isOneStep:
             base = base.replace("#i", edge.coreSubshells[0])
             base = base.replace("#f", element.valenceSubshell)
         else:
