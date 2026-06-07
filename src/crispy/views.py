@@ -14,7 +14,13 @@ from silx.gui.qt import (
 
 from crispy.items import ComboItem, DoubleItem, IntItem, Vector3DItem
 from crispy.utils import disconnectSignal
-from crispy.widgets import ComboBox, DoubleLineEdit, IntLineEdit, Vector3DLineEdit
+from crispy.widgets import (
+    ComboBox,
+    DoubleLineEdit,
+    IntLineEdit,
+    LineEdit,
+    Vector3DLineEdit,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -75,6 +81,11 @@ class Delegate(QStyledItemDelegate):
             if isinstance(item, itemClass):
                 editor = widget(parent)
                 editor.setAlignment(Qt.AlignRight)
+                # Square corners so the editor fills the rectangular cell instead of
+                # exposing the cell background at the rounded corners.
+                if isinstance(editor, LineEdit):
+                    editor.borderRadius = 0
+                    editor.setBackgroundColor(editor.defaulBakgroundColor)
                 return editor
         return None
 

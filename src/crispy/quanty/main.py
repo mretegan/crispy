@@ -3,6 +3,7 @@
 import contextlib
 import logging
 import os
+from itertools import pairwise
 
 import qtawesome as qta
 from silx.gui.qt import (
@@ -134,7 +135,40 @@ class GeneralSetupPage(QWidget):
         self.spectraView.hideColumn(2)
         self.spectraView.setHeaderHidden(True)
         self.spectraView.expandAll()
+        self.spectraView.setTabKeyNavigation(True)
+
+        self.updateTabOrder(twoDimensional=state.experiment.isTwoDimensional)
         logger.debug("Finished populating the general setup page.")
+
+    def updateTabOrder(self, twoDimensional=False):
+        """Chain the focusable widgets in top-to-bottom visual order."""
+        chain = [
+            self.symbolComboBox,
+            self.chargeComboBox,
+            self.symmetryComboBox,
+            self.experimentComboBox,
+            self.edgeComboBox,
+            self.temperatureLineEdit,
+            self.magneticFieldLineEdit,
+        ]
+        axes = [self.xAxis, self.yAxis] if twoDimensional else [self.xAxis]
+        for axis in axes:
+            chain.append(axis.startLineEdit)
+            chain.append(axis.stopLineEdit)
+            chain.append(axis.nPointsLineEdit)
+            chain.append(axis.lorentzianLineEdit)
+            chain.append(axis.gaussianLineEdit)
+            chain.append(axis.kLineEdit)
+            chain.append(axis.e1LineEdit)
+            chain.append(axis.e2LineEdit)
+        chain.append(self.spectraView)
+
+        # Link only widgets that can take focus, so a hidden or disabled field (such
+        # as the unused second polarization vector) does not sit between two real
+        # fields and break the chain on the native macOS style.
+        chain = [w for w in chain if w.isEnabled() and not w.isHidden()]
+        for earlier, later in pairwise(chain):
+            self.setTabOrder(earlier, later)
 
 
 class HamiltonianSetupPage(QWidget):

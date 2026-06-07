@@ -4,6 +4,7 @@ import logging
 import re
 
 from silx.gui.qt import (
+    QApplication,
     QCheckBox,
     QColor,
     QComboBox,
@@ -11,8 +12,10 @@ from silx.gui.qt import (
     QEvent,
     QIntValidator,
     QLineEdit,
+    QObject,
     QPalette,
     Qt,
+    QWidget,
 )
 
 logger = logging.getLogger(__name__)
@@ -55,6 +58,10 @@ class LineEdit(QLineEdit):
         super().__init__(*args, **kwargs)
         self.validator = None
         self.currentText = None
+        # Corner radius of the field. The item delegate sets it to 0 so an in-cell
+        # editor fills its rectangular cell instead of exposing the cell background
+        # at the rounded corners.
+        self.borderRadius = 4
 
         palette = self.palette()
         self.defaulBakgroundColor = palette.color(QPalette.ColorRole.Base)
@@ -65,6 +72,12 @@ class LineEdit(QLineEdit):
             self.modifiedBackgroundColor = QColor("#4d3a00")
         else:
             self.modifiedBackgroundColor = QColor("#fff3cd")
+
+        # Text color of a disabled field, used by the disabled stylesheet rule. The
+        # palette() stylesheet function has no disabled variant, so it is read here.
+        self.disabledTextColor = palette.color(
+            QPalette.ColorGroup.Disabled, QPalette.ColorRole.Text
+        )
 
         self.textEdited.connect(self.updateBackgroundColor)
         self.installEventFilter(self)
@@ -89,9 +102,11 @@ class LineEdit(QLineEdit):
         self.setStyleSheet(
             f"QLineEdit {{ background-color: {QColor(color).name()}; "
             "color: palette(text); "
-            "border: 1px solid palette(mid); border-radius: 4px; "
+            f"border: 1px solid palette(mid); border-radius: {self.borderRadius}px; "
             "padding: 1px 3px; } "
-            "QLineEdit:focus { border: 1px solid palette(highlight); }"
+            "QLineEdit:focus { border: 1px solid palette(highlight); } "
+            f"QLineEdit:disabled {{ background-color: palette(window); "
+            f"color: {self.disabledTextColor.name()}; }}"
         )
 
     def eventFilter(self, source, event):
@@ -149,6 +164,30 @@ class Vector3DLineEdit(LineEdit):
         if not self.regex.fullmatch(value):
             raise ValueError(f"Invalid vector format: {value}")
         super().setModelData(model, index)
+
+
+class CommitOnClickOutsideFilter(QObject):
+    """Commit the focused input field when the mouse is pressed outside it.
+
+    A line edit submits its value to the model through the QDataWidgetMapper (or the
+    item delegate for in-view editors), and both rely on a focus-out event. Clicking a
+    non-focusable area such as a label, the plot, or empty layout space leaves the line
+    edit focused, so the edited value is never submitted. Clearing focus on such a click
+    fires focusOutEvent, which performs the commit.
+
+    Installed application-wide on the QApplication instance.
+    """
+
+    def eventFilter(self, watched, event):
+        if event.type() == QEvent.MouseButtonPress and isinstance(watched, QWidget):
+            focused = QApplication.focusWidget()
+            if (
+                isinstance(focused, LineEdit)
+                and focused is not watched
+                and not focused.isAncestorOf(watched)
+            ):
+                focused.clearFocus()
+        return super().eventFilter(watched, event)
 
 
 class CheckBox(QCheckBox):

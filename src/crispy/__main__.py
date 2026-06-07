@@ -36,6 +36,7 @@ from crispy.plot import MainPlotWidget  # noqa: F401
 from crispy.quanty.main import DockWidget
 from crispy.uic import loadUi
 from crispy.utils import fixedFont
+from crispy.widgets import CommitOnClickOutsideFilter
 
 logger = logging.getLogger("crispy.main")
 warnings.filterwarnings("ignore", category=UserWarning)
@@ -266,6 +267,10 @@ class AboutDialog(QDialog):
 
 def main():
     app = QApplication([])
+
+    # Commit a focused input field when the user clicks outside it.
+    commitFilter = CommitOnClickOutsideFilter(app)
+    app.installEventFilter(commitFilter)
 
     # This must be done after the application is instantiated.
     locale = QLocale(QLocale.C)

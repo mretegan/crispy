@@ -1,6 +1,7 @@
 """Quanty calculation details dialog."""
 
 import os
+from itertools import pairwise
 
 from silx.gui.qt import (
     QDialog,
@@ -184,6 +185,25 @@ class DetailsDialog(QDialog):
         if result.value is not None:
             title = f"Details for {result.value}"
             self.setWindowTitle(title)
+
+        self.updateTabOrder(twoDimensional=result.experiment.isTwoDimensional)
+
+    def updateTabOrder(self, twoDimensional=False):
+        """Chain the focusable widgets in visual order."""
+        chain = [self.spectraView, self.scaleLineEdit, self.normalizationComboBox]
+        axes = [self.xAxis, self.yAxis] if twoDimensional else [self.xAxis]
+        for axis in axes:
+            chain.append(axis.shiftLineEdit)
+            chain.append(axis.lorentzianLineEdit)
+            chain.append(axis.gaussianLineEdit)
+        chain.append(self.closePushButton)
+
+        # Link only widgets that can take focus, so a hidden or disabled field (such
+        # as the disabled Lorentzian broadening) does not sit between two real fields
+        # and break the chain on the native macOS style.
+        chain = [w for w in chain if w.isEnabled() and not w.isHidden()]
+        for earlier, later in pairwise(chain):
+            self.setTabOrder(earlier, later)
 
     @staticmethod
     def setLineSpacing(widget, percent):
