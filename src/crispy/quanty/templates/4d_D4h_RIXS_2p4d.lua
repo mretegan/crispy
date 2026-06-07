@@ -688,6 +688,81 @@ function GetResonantSpectrum(G, dZ, NOperators, NPsis, NPoints)
     return Spectrum
 end
 
+function GetFundamentalSpectra(G, dZ, NPsis, NPoints)
+    -- Compute the two fundamental spectra A and B of the powder-averaged
+    -- (isotropic) dipole-dipole RIXS response from the full 9 x 9 polarization
+    -- grid produced by the "four-measurement" (+/-) scheme.
+    --
+    -- The transition operators passed to CreateResonantSpectra must be the
+    -- nine-element basis on each side, in the order
+    --   {Tx, Ty, Tz, (Tx+Ty)t, (Tx+Tz)t, (Ty+Tz)t, (Tx-Ty)t, (Tx-Tz)t, (Ty-Tz)t}
+    -- with t = 1/sqrt(2). The spectra object then holds one (NPoints + 1) block
+    -- for each (incident, emission) channel and wavefunction, ordered with the
+    -- wavefunction outermost, then the incident operator, then the emission
+    -- operator (the same ordering used by GetResonantSpectrum).
+    --
+    -- @param G userdata: Spectra object returned by CreateResonantSpectra.
+    -- @param dZ table: Boltzmann prefactors for each wavefunction.
+    -- @param NPsis number: Number of wavefunctions.
+    -- @param NPoints number: Number of points along the incident energy axis.
+    -- @return userdata, userdata: The fundamental spectra A and B.
+
+    local NChannels = 9
+    local NCombinations = NChannels * NChannels
+
+    -- Channel (i, j) summed over the wavefunctions, weighted by the Boltzmann
+    -- probabilities. i is the incident operator, j the emission operator.
+    local function Channel(i, j)
+        local Spectrum = 0
+        for p = 1, NPsis do
+            local Block = (p - 1) * NCombinations + (i - 1) * NChannels + (j - 1)
+            local Indexes = {}
+            for k = 1, NPoints + 1 do
+                table.insert(Indexes, Block * (NPoints + 1) + k)
+            end
+            Spectrum = Spectrum + Spectra.Element(G, Indexes) * dZ[p]
+        end
+        return Spectrum
+    end
+
+    local Gpol = {}
+    for i = 1, NChannels do
+        Gpol[i] = {}
+        for j = 1, NChannels do
+            Gpol[i][j] = Channel(i, j)
+        end
+    end
+
+    -- First rotational invariant: the 3 x 3 Cartesian block.
+    local M1 = 0
+    for i = 1, 3 do
+        for j = 1, 3 do
+            M1 = M1 + Gpol[i][j]
+        end
+    end
+
+    -- Second and third invariants, recovered from the diagonal and the +/-
+    -- combinations (the four-measurement scheme).
+    local Gtrace = Gpol[1][1] + Gpol[2][2] + Gpol[3][3]
+
+    local Gcross = 0
+    for i = 1, 3 do
+        local Plus = 3 + i
+        local Minus = 6 + i
+        Gcross = Gcross + (Gpol[Plus][Plus]
+                         - Gpol[Plus][Minus]
+                         - Gpol[Minus][Plus]
+                         + Gpol[Minus][Minus])
+    end
+
+    local M23 = 2 * Gtrace + Gcross
+
+    local A = (4 * M1 - M23) / 30
+    local B = (-2 * M1 + 3 * M23) / 30
+
+    return A, B
+end
+
 function CalculateT(Basis, Eps, WaveVector)
     -- Calculate the transition operator in the basis of tesseral harmonics for
     -- an arbitrary polarization and wave-vector (for quadrupole operators).
@@ -922,9 +997,6 @@ Tx_4d_2p = NewOperator("CF", NFermions, IndexUp_2p, IndexDn_2p, IndexUp_4d, Inde
 Ty_4d_2p = NewOperator("CF", NFermions, IndexUp_2p, IndexDn_2p, IndexUp_4d, IndexDn_4d, {{1, -1, t * I}, {1, 1,  t * I}})
 Tz_4d_2p = NewOperator("CF", NFermions, IndexUp_2p, IndexDn_2p, IndexUp_4d, IndexDn_4d, {{1,  0, 1    }                })
 
-T_2p_4d = {CalculateT({Tx_2p_4d, Ty_2p_4d, Tz_2p_4d}, EpsIn, WaveVectorIn)}
-T_4d_2p = {CalculateT({Tx_4d_2p, Ty_4d_2p, Tz_4d_2p}, EpsOut, WaveVectorOut)}
-
 if ShiftSpectra then
     Emin1 = Emin1 - (ZeroShift1 + ExperimentalShift1)
     Emax1 = Emax1 - (ZeroShift1 + ExperimentalShift1)
@@ -932,13 +1004,57 @@ if ShiftSpectra then
     Emax2 = Emax2 - (ZeroShift2 + ExperimentalShift2)
 end
 
-if CalculationRestrictions == nil then
-    G = CreateResonantSpectra(H_m, H_f, T_2p_4d, T_4d_2p, Psis_i, {{"Emin1", Emin1}, {"Emax1", Emax1}, {"NE1", NPoints1}, {"Gamma1", Gamma1}, {"Emin2", Emin2}, {"Emax2", Emax2}, {"NE2", NPoints2}, {"Gamma2", Gamma2}, {"DenseBorder", DenseBorder}})
-else
-    G = CreateResonantSpectra(H_m, H_f, T_2p_4d, T_4d_2p, Psis_i, {{"Emin1", Emin1}, {"Emax1", Emax1}, {"NE1", NPoints1}, {"Gamma1", Gamma1}, {"Emin2", Emin2}, {"Emax2", Emax2}, {"NE2", NPoints2}, {"Gamma2", Gamma2}, {"Restrictions1", CalculationRestrictions}, {"Restrictions2", CalculationRestrictions}, {"DenseBorder", DenseBorder}})
-end
-
 -- The Gaussian broadening is done using the same value for the two dimensions.
 Gaussian = math.min(Gaussian1, Gaussian2)
-G = GetResonantSpectrum(G, dZ_i, #T_2p_4d * #T_4d_2p, #Psis_i, NPoints1)
-SaveSpectrum(G, Prefix .. "_k", Gaussian, 0.0)
+
+-- Single-crystal resonant inelastic scattering for the chosen incident and
+-- scattered polarizations.
+if ValueInTable("Resonant Inelastic", SpectraToCalculate) then
+    T_2p_4d = {CalculateT({Tx_2p_4d, Ty_2p_4d, Tz_2p_4d}, EpsIn, WaveVectorIn)}
+    T_4d_2p = {CalculateT({Tx_4d_2p, Ty_4d_2p, Tz_4d_2p}, EpsOut, WaveVectorOut)}
+
+    if CalculationRestrictions == nil then
+        G = CreateResonantSpectra(H_m, H_f, T_2p_4d, T_4d_2p, Psis_i, {{"Emin1", Emin1}, {"Emax1", Emax1}, {"NE1", NPoints1}, {"Gamma1", Gamma1}, {"Emin2", Emin2}, {"Emax2", Emax2}, {"NE2", NPoints2}, {"Gamma2", Gamma2}, {"DenseBorder", DenseBorder}})
+    else
+        G = CreateResonantSpectra(H_m, H_f, T_2p_4d, T_4d_2p, Psis_i, {{"Emin1", Emin1}, {"Emax1", Emax1}, {"NE1", NPoints1}, {"Gamma1", Gamma1}, {"Emin2", Emin2}, {"Emax2", Emax2}, {"NE2", NPoints2}, {"Gamma2", Gamma2}, {"Restrictions1", CalculationRestrictions}, {"Restrictions2", CalculationRestrictions}, {"DenseBorder", DenseBorder}})
+    end
+
+    G = GetResonantSpectrum(G, dZ_i, #T_2p_4d * #T_4d_2p, #Psis_i, NPoints1)
+    SaveSpectrum(G, Prefix .. "_k", Gaussian, 0.0)
+end
+
+-- Powder-averaged (isotropic) resonant inelastic scattering. The two fundamental
+-- spectra A and B are obtained from the full 9 x 9 polarization grid (the
+-- four-measurement scheme) and combined with a geometry factor that depends only
+-- on the incident and scattered polarizations. Valid for dipole-in/dipole-out
+-- edges only.
+if ValueInTable("Isotropic Resonant Inelastic", SpectraToCalculate) then
+    T_2p_4d = {Tx_2p_4d, Ty_2p_4d, Tz_2p_4d,
+               (Tx_2p_4d + Ty_2p_4d) * t, (Tx_2p_4d + Tz_2p_4d) * t, (Ty_2p_4d + Tz_2p_4d) * t,
+               (Tx_2p_4d - Ty_2p_4d) * t, (Tx_2p_4d - Tz_2p_4d) * t, (Ty_2p_4d - Tz_2p_4d) * t}
+    T_4d_2p = {Tx_4d_2p, Ty_4d_2p, Tz_4d_2p,
+               (Tx_4d_2p + Ty_4d_2p) * t, (Tx_4d_2p + Tz_4d_2p) * t, (Ty_4d_2p + Tz_4d_2p) * t,
+               (Tx_4d_2p - Ty_4d_2p) * t, (Tx_4d_2p - Tz_4d_2p) * t, (Ty_4d_2p - Tz_4d_2p) * t}
+
+    if CalculationRestrictions == nil then
+        G = CreateResonantSpectra(H_m, H_f, T_2p_4d, T_4d_2p, Psis_i, {{"Emin1", Emin1}, {"Emax1", Emax1}, {"NE1", NPoints1}, {"Gamma1", Gamma1}, {"Emin2", Emin2}, {"Emax2", Emax2}, {"NE2", NPoints2}, {"Gamma2", Gamma2}, {"DenseBorder", DenseBorder}})
+    else
+        G = CreateResonantSpectra(H_m, H_f, T_2p_4d, T_4d_2p, Psis_i, {{"Emin1", Emin1}, {"Emax1", Emax1}, {"NE1", NPoints1}, {"Gamma1", Gamma1}, {"Emin2", Emin2}, {"Emax2", Emax2}, {"NE2", NPoints2}, {"Gamma2", Gamma2}, {"Restrictions1", CalculationRestrictions}, {"Restrictions2", CalculationRestrictions}, {"DenseBorder", DenseBorder}})
+    end
+
+    local A, B = GetFundamentalSpectra(G, dZ_i, #Psis_i, NPoints1)
+
+    -- Combine the fundamental spectra with a geometry factor. When the outgoing
+    -- polarization is analyzed it is the squared projection of the incident onto
+    -- the scattered polarization; otherwise it is averaged over the (unresolved)
+    -- outgoing polarization.
+    local GeometryFactor
+    if $YAnalyzePolarization then
+        GeometryFactor = DotProduct(EpsIn, EpsOut)^2
+    else
+        GeometryFactor = 0.5 * (1 - DotProduct(EpsIn, WaveVectorOut)^2)
+    end
+    local Giso = A + B * GeometryFactor
+
+    SaveSpectrum(Giso, Prefix .. "_iso", Gaussian, 0.0)
+end

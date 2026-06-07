@@ -45,6 +45,16 @@ class AxisWidget(QWidget):
 
         self.mappers = []
 
+        # The "Analyze polarization" checkbox is bound once and reads the photon
+        # set by the most recent populate() call.
+        self._analyzePhoton = None
+        self.analyzeCheckBox.toggled.connect(self._onAnalyzeToggled)
+
+    def _onAnalyzeToggled(self, checked):
+        photon = self._analyzePhoton
+        if photon is not None and hasattr(photon, "analyze"):
+            photon.analyze.value = checked
+
     def populate(self, axis):
         if self.mappers:
             for mapper in self.mappers:
@@ -62,6 +72,19 @@ class AxisWidget(QWidget):
         self.lorentzianToolButton.setVisible(False)
         self.e2Label.setVisible(False)
         self.e2LineEdit.setVisible(False)
+
+        # The "Analyze polarization" checkbox only applies to the scattered
+        # photon (it controls whether the outgoing polarization is resolved or
+        # averaged over). A BoolItem is not editable through the data-widget
+        # mapper, so the checkbox is driven by _onAnalyzeToggled instead.
+        photon = axis.photon
+        self._analyzePhoton = photon
+        hasAnalyze = hasattr(photon, "analyze")
+        self.analyzeCheckBox.setVisible(hasAnalyze)
+        if hasAnalyze:
+            self.analyzeCheckBox.blockSignals(True)
+            self.analyzeCheckBox.setChecked(bool(photon.analyze.value))
+            self.analyzeCheckBox.blockSignals(False)
 
 
 class GeneralSetupPage(QWidget):

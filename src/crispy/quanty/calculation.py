@@ -612,6 +612,20 @@ class Calculation(SelectableItem):
         return self._edges
 
     @property
+    def isDipoleDipole(self):
+        """True if the incident core -> valence transition is electric-dipole
+        (|Δl| == 1), i.e. both RIXS steps are dipolar (the pdd/dff families).
+        The fundamental-spectra powder average is only valid in this case.
+        """
+        ANGULAR_MOMENTA = {"s": 0, "p": 1, "d": 2, "f": 3}
+        incidentCoreBlock = self.edge.coreBlocks[0]
+        valenceBlock = self.element.valenceBlock
+        return (
+            abs(ANGULAR_MOMENTA[incidentCoreBlock] - ANGULAR_MOMENTA[valenceBlock])
+            == 1
+        )
+
+    @property
     def templateName(self):
         valenceSubshell = self.element.valenceSubshell
         symmetry = self.symmetry.value

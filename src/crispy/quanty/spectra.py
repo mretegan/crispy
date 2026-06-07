@@ -25,7 +25,10 @@ SPECTRA_TO_CALCULATE = {
     },
     "XES": {"Single Crystal/Thin Film": ("Emission", "Circular Dichroic")},
     "XPS": {"Powder/Solution": ("Photoemission",)},
-    "RIXS": {"Single Crystal/Thin Film": ("Resonant Inelastic",)},
+    "RIXS": {
+        "Single Crystal/Thin Film": ("Resonant Inelastic",),
+        "Powder/Solution": ("Isotropic Resonant Inelastic",),
+    },
 }
 
 
@@ -50,6 +53,7 @@ SPECTRA = {
     "Vertical Polarized": ("v", "(V)", "LD (V)", "--"),
     "Horizontal Polarized": ("h", "(H)", "LD (H)", ":"),
     "Resonant Inelastic": ("k", None, "Resonant Inelastic", None),
+    "Isotropic Resonant Inelastic": ("iso", None, "Isotropic Resonant Inelastic", None),  # noqa: E501
     "Photoemission": ("pho", None, "Photoemission", "-"),
     "Emission": ("emi", None, "Emission", "-"),
 }
@@ -69,6 +73,29 @@ class BaseSpectrum(SelectableItem):
         self.suffix = None
         self.label = None
         self.lineStyle = "-"
+
+    def _interactContainer(self):
+        """The enclosing SpectraToInteract (to-calculate or to-plot), if any."""
+        node = self.parent()
+        while node is not None:
+            if isinstance(node, SpectraToInteract):
+                return node
+            node = node.parent()
+        return None
+
+    def setData(self, column, value, role=Qt.EditRole):
+        # A two-dimensional experiment (RIXS) produces a 2D map per spectrum, and
+        # only one can be computed or displayed at a time. Checking one therefore
+        # unchecks the others in the same list (single selection).
+        if role == Qt.CheckStateRole and Qt.CheckState(value) == Qt.CheckState.Checked:
+            calculation = self.ancestor
+            if calculation is not None and calculation.experiment.isTwoDimensional:
+                container = self._interactContainer()
+                if container is not None:
+                    for other in container.all:
+                        if other is not self:
+                            other.disable()
+        return super().setData(column, value, role=role)
 
     def copyFrom(self, item):
         super().copyFrom(item)
@@ -340,6 +367,15 @@ class SpectraToCalculate(SpectraToInteract):
 
         checkState = Qt.CheckState.Checked
         for sample, spectraNames in SPECTRA_TO_CALCULATE[experiment.value].items():
+            # The powder-averaged RIXS spectrum is built from the rank-2
+            # fundamental spectra, which are only valid for dipole-in/dipole-out
+            # edges. Skip it for the quadrupole-in edges (e.g. 1s2p, 1s3p).
+            if (
+                experiment.value == "RIXS"
+                and sample == "Powder/Solution"
+                and not calculation.isDipoleDipole
+            ):
+                continue
             sample = Sample(parent=self, name=sample)
             for spectrumName in spectraNames:
                 spectrum = BaseSpectrum(parent=sample, name=spectrumName)

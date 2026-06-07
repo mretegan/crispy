@@ -229,7 +229,7 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="2">
+     <item row="1" column="3">
       <widget class="Vector3DLineEdit" name="e1LineEdit">
        <property name="enabled">
         <bool>true</bool>
@@ -242,6 +242,16 @@
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QCheckBox" name="analyzeCheckBox">
+       <property name="text">
+        <string>Analyze</string>
+       </property>
+       <property name="toolTip">
+        <string>Analyze (resolve) the outgoing polarization. When unchecked, the calculation averages over the outgoing polarization.</string>
        </property>
       </widget>
      </item>
@@ -271,7 +281,7 @@
        </property>
       </spacer>
      </item>
-     <item row="0" column="2">
+     <item row="0" column="3">
       <widget class="Vector3DLineEdit" name="kLineEdit">
        <property name="maximumSize">
         <size>
@@ -307,7 +317,7 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="2">
+     <item row="2" column="3">
       <widget class="Vector3DLineEdit" name="e2LineEdit">
        <property name="enabled">
         <bool>false</bool>

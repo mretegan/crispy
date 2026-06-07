@@ -10,7 +10,14 @@ import numpy as np
 
 from crispy import resourceAbsolutePath
 from crispy.config import Config
-from crispy.items import BaseItem, ComboItem, DoubleItem, IntItem, Vector3DItem
+from crispy.items import (
+    BaseItem,
+    BoolItem,
+    ComboItem,
+    DoubleItem,
+    IntItem,
+    Vector3DItem,
+)
 from crispy.quanty import XDB
 
 logger = logging.getLogger(__name__)
@@ -199,6 +206,20 @@ class IncidentPhoton(Photon):
 class ScatteredPhoton(Photon):
     def __init__(self, parent=None):
         super().__init__(parent=parent, name="Scattered Photon")
+        # Whether the experiment analyzes (resolves) the outgoing polarization.
+        # When disabled, the calculation averages over the outgoing polarization
+        # instead of using the specified scattered polarization vector.
+        self.analyze = BoolItem(parent=self, value=True, name="Analyze Polarization")
+
+    @property
+    def replacements(self):
+        replacements = super().replacements
+        replacements["AnalyzePolarization"] = self.analyze.value
+        return replacements
+
+    def copyFrom(self, item):
+        super().copyFrom(item)
+        self.analyze.copyFrom(item.analyze)
 
 
 class Start(DoubleItem):

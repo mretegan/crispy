@@ -369,6 +369,81 @@ function GetResonantSpectrum(G, dZ, NOperators, NPsis, NPoints)
     return Spectrum
 end
 
+function GetFundamentalSpectra(G, dZ, NPsis, NPoints)
+    -- Compute the two fundamental spectra A and B of the powder-averaged
+    -- (isotropic) dipole-dipole RIXS response from the full 9 x 9 polarization
+    -- grid produced by the "four-measurement" (+/-) scheme.
+    --
+    -- The transition operators passed to CreateResonantSpectra must be the
+    -- nine-element basis on each side, in the order
+    --   {Tx, Ty, Tz, (Tx+Ty)t, (Tx+Tz)t, (Ty+Tz)t, (Tx-Ty)t, (Tx-Tz)t, (Ty-Tz)t}
+    -- with t = 1/sqrt(2). The spectra object then holds one (NPoints + 1) block
+    -- for each (incident, emission) channel and wavefunction, ordered with the
+    -- wavefunction outermost, then the incident operator, then the emission
+    -- operator (the same ordering used by GetResonantSpectrum).
+    --
+    -- @param G userdata: Spectra object returned by CreateResonantSpectra.
+    -- @param dZ table: Boltzmann prefactors for each wavefunction.
+    -- @param NPsis number: Number of wavefunctions.
+    -- @param NPoints number: Number of points along the incident energy axis.
+    -- @return userdata, userdata: The fundamental spectra A and B.
+
+    local NChannels = 9
+    local NCombinations = NChannels * NChannels
+
+    -- Channel (i, j) summed over the wavefunctions, weighted by the Boltzmann
+    -- probabilities. i is the incident operator, j the emission operator.
+    local function Channel(i, j)
+        local Spectrum = 0
+        for p = 1, NPsis do
+            local Block = (p - 1) * NCombinations + (i - 1) * NChannels + (j - 1)
+            local Indexes = {}
+            for k = 1, NPoints + 1 do
+                table.insert(Indexes, Block * (NPoints + 1) + k)
+            end
+            Spectrum = Spectrum + Spectra.Element(G, Indexes) * dZ[p]
+        end
+        return Spectrum
+    end
+
+    local Gpol = {}
+    for i = 1, NChannels do
+        Gpol[i] = {}
+        for j = 1, NChannels do
+            Gpol[i][j] = Channel(i, j)
+        end
+    end
+
+    -- First rotational invariant: the 3 x 3 Cartesian block.
+    local M1 = 0
+    for i = 1, 3 do
+        for j = 1, 3 do
+            M1 = M1 + Gpol[i][j]
+        end
+    end
+
+    -- Second and third invariants, recovered from the diagonal and the +/-
+    -- combinations (the four-measurement scheme).
+    local Gtrace = Gpol[1][1] + Gpol[2][2] + Gpol[3][3]
+
+    local Gcross = 0
+    for i = 1, 3 do
+        local Plus = 3 + i
+        local Minus = 6 + i
+        Gcross = Gcross + (Gpol[Plus][Plus]
+                         - Gpol[Plus][Minus]
+                         - Gpol[Minus][Plus]
+                         + Gpol[Minus][Minus])
+    end
+
+    local M23 = 2 * Gtrace + Gcross
+
+    local A = (4 * M1 - M23) / 30
+    local B = (-2 * M1 + 3 * M23) / 30
+
+    return A, B
+end
+
 function CalculateT(Basis, Eps, WaveVector)
     -- Calculate the transition operator in the basis of tesseral harmonics for
     -- an arbitrary polarization and wave-vector (for quadrupole operators).

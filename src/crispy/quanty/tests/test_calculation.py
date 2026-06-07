@@ -5,6 +5,7 @@
 import re
 
 import pytest
+from silx.gui.qt import Qt
 
 from crispy.models import TreeModel
 from crispy.quanty.calculation import Calculation
@@ -340,3 +341,87 @@ def test_d3d_template_renders_without_unresolved_parameters(
     assert calculation.templateName == template
     # No "$Name(subshell)_i/f_value" parameter placeholder should remain.
     assert not re.search(r"\$[A-Za-z0-9]+\([^)]*\)_[if]_value", calculation.input)
+
+
+@pytest.mark.parametrize(
+    ("symbol", "charge", "edge", "dipole"),
+    [
+        ("Ni", "2+", "L2,3-M4,5 (2p3d)", True),  # pdd: 2p -> 3d, dipole
+        ("Ce", "3+", "M4,5-N6,7 (3d4f)", True),  # dff: 3d -> 4f, dipole
+        ("Ni", "2+", "K-L2,3 (1s2p)", False),  # sdp: 1s -> 3d, quadrupole
+        ("Ce", "3+", "L2,3-M4,5 (2p3d)", False),  # 2p -> 4f, quadrupole
+    ],
+)
+def test_rixs_powder_offered_only_for_dipole_dipole(symbol, charge, edge, dipole):
+    """The powder/isotropic RIXS spectrum is built from the rank-2 fundamental
+    spectra and is only valid for dipole-in/dipole-out edges. It must be offered
+    for the pdd/dff edges and withheld for the quadrupole-in (sdp/pfd) edges."""
+    model = TreeModel()
+    calculation = Calculation(
+        symbol=symbol,
+        charge=charge,
+        symmetry="Oh",
+        experiment="RIXS",
+        edge=edge,
+        parent=model.rootItem(),
+    )
+    # Guard against a silent fall-back to a different edge.
+    assert calculation.edge.value == edge
+    assert calculation.isDipoleDipole is dipole
+
+    samples = {s.name for s in calculation.spectra.toCalculate.children()}
+    spectra = {s.name for s in calculation.spectra.toCalculate.all}
+    assert ("Powder/Solution" in samples) is dipole
+    assert ("Isotropic Resonant Inelastic" in spectra) is dipole
+    # The single-crystal spectrum is always available.
+    assert "Resonant Inelastic" in spectra
+
+
+def test_rixs_spectra_are_single_select():
+    """RIXS spectra are 2D maps, so only one can be active at a time. Checking one
+    must uncheck the others."""
+    model = TreeModel()
+    calculation = Calculation(
+        symbol="Ni",
+        charge="2+",
+        symmetry="Oh",
+        experiment="RIXS",
+        edge="L2,3-M4,5 (2p3d)",
+        parent=model.rootItem(),
+    )
+    spectra = {s.name: s for s in calculation.spectra.toCalculate.all}
+    assert set(spectra) == {"Resonant Inelastic", "Isotropic Resonant Inelastic"}
+
+    # Exactly one is enabled by default.
+    assert sum(s.isEnabled() for s in spectra.values()) == 1
+
+    # Checking the powder spectrum unchecks the single-crystal one.
+    spectra["Isotropic Resonant Inelastic"].setData(
+        0, Qt.CheckState.Checked, Qt.CheckStateRole
+    )
+    assert spectra["Isotropic Resonant Inelastic"].isEnabled()
+    assert not spectra["Resonant Inelastic"].isEnabled()
+
+    # And vice versa.
+    spectra["Resonant Inelastic"].setData(0, Qt.CheckState.Checked, Qt.CheckStateRole)
+    assert spectra["Resonant Inelastic"].isEnabled()
+    assert not spectra["Isotropic Resonant Inelastic"].isEnabled()
+
+
+def test_xas_spectra_allow_multiple_selection():
+    """One-dimensional experiments (XAS) can plot several curves together, so the
+    single-selection rule must not apply to them."""
+    model = TreeModel()
+    calculation = Calculation(
+        symbol="Ni",
+        charge="2+",
+        symmetry="Oh",
+        experiment="XAS",
+        edge="L2,3 (2p)",
+        parent=model.rootItem(),
+    )
+    spectra = {s.name: s for s in calculation.spectra.toCalculate.all}
+    for name in ("Absorption", "Circular Dichroic"):
+        spectra[name].setData(0, Qt.CheckState.Checked, Qt.CheckStateRole)
+    assert spectra["Absorption"].isEnabled()
+    assert spectra["Circular Dichroic"].isEnabled()
