@@ -621,8 +621,7 @@ class Calculation(SelectableItem):
         incidentCoreBlock = self.edge.coreBlocks[0]
         valenceBlock = self.element.valenceBlock
         return (
-            abs(ANGULAR_MOMENTA[incidentCoreBlock] - ANGULAR_MOMENTA[valenceBlock])
-            == 1
+            abs(ANGULAR_MOMENTA[incidentCoreBlock] - ANGULAR_MOMENTA[valenceBlock]) == 1
         )
 
     @property
