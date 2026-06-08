@@ -22,6 +22,12 @@
     <height>350</height>
    </size>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QToolBox::tab {
+    background-color: rgb(75, 75, 75);
+    color: white;
+}</string>
+  </property>
   <property name="features">
    <set>QDockWidget::DockWidgetFeature::DockWidgetFloatable|QDockWidget::DockWidgetFeature::DockWidgetMovable</set>
   </property>
@@ -55,10 +61,43 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="QTabWidget" name="tabWidget">
+     <widget class="QToolBox" name="toolBox">
       <property name="enabled">
        <bool>true</bool>
       </property>
+      <property name="lineWidth">
+       <number>0</number>
+      </property>
+      <property name="tabSpacing">
+       <number>6</number>
+      </property>
+      <widget class="QWidget" name="debug">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>310</width>
+         <height>714</height>
+        </rect>
+       </property>
+       <attribute name="label">
+        <string>Debug</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="generalPageVerticalLayout">
+        <property name="leftMargin">
+         <number>6</number>
+        </property>
+        <property name="topMargin">
+         <number>6</number>
+        </property>
+        <property name="rightMargin">
+         <number>6</number>
+        </property>
+        <property name="bottomMargin">
+         <number>6</number>
+        </property>
+       </layout>
+      </widget>
      </widget>
     </item>
     <item>
