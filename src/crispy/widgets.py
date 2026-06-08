@@ -178,15 +178,31 @@ class CommitOnClickOutsideFilter(QObject):
     Installed application-wide on the QApplication instance.
     """
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Guard against re-entrancy. clearFocus() runs focusOutEvent synchronously,
+        # which commits the value and rebuilds widgets while the press is still being
+        # delivered. That re-enters this application-wide filter; without the guard it
+        # would call clearFocus() again and recurse until the stack overflows.
+        self._committing = False
+
     def eventFilter(self, watched, event):
-        if event.type() == QEvent.MouseButtonPress and isinstance(watched, QWidget):
+        if (
+            not self._committing
+            and event.type() == QEvent.MouseButtonPress
+            and isinstance(watched, QWidget)
+        ):
             focused = QApplication.focusWidget()
             if (
                 isinstance(focused, LineEdit)
                 and focused is not watched
                 and not focused.isAncestorOf(watched)
             ):
-                focused.clearFocus()
+                self._committing = True
+                try:
+                    focused.clearFocus()
+                finally:
+                    self._committing = False
         return super().eventFilter(watched, event)
 
 

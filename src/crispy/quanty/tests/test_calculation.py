@@ -408,6 +408,40 @@ def test_rixs_spectra_are_single_select():
     assert not spectra["Isotropic Resonant Inelastic"].isEnabled()
 
 
+def test_analyze_checkbox_enabled_only_for_isotropic_rixs():
+    """The outgoing-polarization checkbox controls only the isotropic RIXS
+    geometry factor, so it is enabled only while that spectrum is selected."""
+    from crispy.quanty.main import GeneralSetupPage
+
+    model = TreeModel()
+    calculation = Calculation(
+        symbol="Ni",
+        charge="2+",
+        symmetry="Oh",
+        experiment="RIXS",
+        edge="L2,3-M4,5 (2p3d)",
+        parent=model.rootItem(),
+    )
+    page = GeneralSetupPage()
+    page.populate(calculation)
+    checkbox = page.yAxis.analyzeCheckBox
+
+    spectra = {s.name: s for s in calculation.spectra.toCalculate.all}
+
+    # Single-crystal is the default selection, so the checkbox starts disabled.
+    assert not checkbox.isEnabled()
+
+    # Selecting the isotropic spectrum enables it; reselecting the single-crystal
+    # spectrum disables it again (RIXS spectra are single-select).
+    spectra["Isotropic Resonant Inelastic"].setData(
+        0, Qt.CheckState.Checked, Qt.CheckStateRole
+    )
+    assert checkbox.isEnabled()
+
+    spectra["Resonant Inelastic"].setData(0, Qt.CheckState.Checked, Qt.CheckStateRole)
+    assert not checkbox.isEnabled()
+
+
 def test_xas_spectra_allow_multiple_selection():
     """One-dimensional experiments (XAS) can plot several curves together, so the
     single-selection rule must not apply to them."""

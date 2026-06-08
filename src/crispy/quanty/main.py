@@ -55,6 +55,9 @@ class AxisWidget(QWidget):
         if photon is not None and hasattr(photon, "analyze"):
             photon.analyze.value = checked
 
+    def setAnalyzeEnabled(self, enabled):
+        self.analyzeCheckBox.setEnabled(enabled)
+
     def populate(self, axis):
         if self.mappers:
             for mapper in self.mappers:
@@ -70,8 +73,6 @@ class AxisWidget(QWidget):
         )
         self.mappers = setMappings(MAPPINGS)
         self.lorentzianToolButton.setVisible(False)
-        self.e2Label.setVisible(False)
-        self.e2LineEdit.setVisible(False)
 
         # The "Analyze polarization" checkbox only applies to the scattered
         # photon (it controls whether the outgoing polarization is resolved or
@@ -102,6 +103,12 @@ class GeneralSetupPage(QWidget):
 
         self.mappers = []
 
+        # The model is shared across calculations; track it so the outgoing
+        # polarization checkbox is kept in sync with the spectra selection
+        # without stacking connections.
+        self._model = None
+        self._state = None
+
         self.symbolComboBox.currentTextChanged.connect(self.comboBoxChanged)
         self.chargeComboBox.currentTextChanged.connect(self.comboBoxChanged)
         self.symmetryComboBox.currentTextChanged.connect(self.comboBoxChanged)
@@ -114,6 +121,7 @@ class GeneralSetupPage(QWidget):
     def populate(self, state):
         logger.debug("Start populating the general setup page.")
         model = state.model()
+        self._state = state
 
         logger.debug("Start populating the symbol combo box.")
         self.symbolComboBox.setItems(state.symbols, state.element.symbol)
@@ -160,8 +168,30 @@ class GeneralSetupPage(QWidget):
         self.spectraView.expandAll()
         self.spectraView.setTabKeyNavigation(True)
 
+        # Keep the outgoing-polarization checkbox in sync with the spectra
+        # selection. The model is shared across calculations, so connect once.
+        if self._model is not model:
+            if self._model is not None:
+                with contextlib.suppress(TypeError, RuntimeError):
+                    self._model.dataChanged.disconnect(self._onSpectraChanged)
+            self._model = model
+            model.dataChanged.connect(self._onSpectraChanged)
+        self._updateAnalyzeEnabled()
+
         self.updateTabOrder(twoDimensional=state.experiment.isTwoDimensional)
         logger.debug("Finished populating the general setup page.")
+
+    def _onSpectraChanged(self, *args):
+        self._updateAnalyzeEnabled()
+
+    def _updateAnalyzeEnabled(self):
+        """Enable the outgoing-polarization checkbox only when the isotropic RIXS
+        spectrum is selected. Its geometry factor is the only place the setting
+        takes effect."""
+        if self._state is None:
+            return
+        selected = self._state.spectra.toCalculate.selected
+        self.yAxis.setAnalyzeEnabled("Isotropic Resonant Inelastic" in selected)
 
     def updateTabOrder(self, twoDimensional=False):
         """Chain the focusable widgets in top-to-bottom visual order."""
@@ -183,12 +213,11 @@ class GeneralSetupPage(QWidget):
             chain.append(axis.gaussianLineEdit)
             chain.append(axis.kLineEdit)
             chain.append(axis.e1LineEdit)
-            chain.append(axis.e2LineEdit)
         chain.append(self.spectraView)
 
-        # Link only widgets that can take focus, so a hidden or disabled field (such
-        # as the unused second polarization vector) does not sit between two real
-        # fields and break the chain on the native macOS style.
+        # Link only widgets that can take focus, so a hidden or disabled field does
+        # not sit between two real fields and break the chain on the native macOS
+        # style.
         chain = [w for w in chain if w.isEnabled() and not w.isHidden()]
         for earlier, later in pairwise(chain):
             self.setTabOrder(earlier, later)
