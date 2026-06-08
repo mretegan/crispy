@@ -348,6 +348,7 @@ def test_d3d_template_renders_without_unresolved_parameters(
     [
         ("Ni", "2+", "L2,3-M4,5 (2p3d)", True),  # pdd: 2p -> 3d, dipole
         ("Ce", "3+", "M4,5-N6,7 (3d4f)", True),  # dff: 3d -> 4f, dipole
+        ("U", "3+", "M4,5-O6,7 (3d5f)", True),  # dff: 3d -> 5f, dipole
         ("Ni", "2+", "K-L2,3 (1s2p)", False),  # sdp: 1s -> 3d, quadrupole
         ("Ce", "3+", "L2,3-M4,5 (2p3d)", False),  # 2p -> 4f, quadrupole
     ],

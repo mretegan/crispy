@@ -257,6 +257,7 @@ class Edge(BaseItem):
             "O1": "O1",
             "O2,3": "O3",
             "O4,5": "O5",
+            "O6,7": "O7",
         }
 
         raw, _ = self.value.split()
