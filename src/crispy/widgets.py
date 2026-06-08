@@ -5,11 +5,13 @@ import re
 
 from silx.gui.qt import (
     QCheckBox,
+    QColor,
     QComboBox,
     QDoubleValidator,
     QEvent,
     QIntValidator,
     QLineEdit,
+    QPalette,
     Qt,
 )
 
@@ -50,6 +52,12 @@ class LineEdit(QLineEdit):
         self.validator = None
         self.currentText = None
 
+        self.defaultTextColor = self.palette().color(QPalette.Text)
+        if self.palette().color(QPalette.Base).lightness() < 128:
+            self.modifiedTextColor = QColor("goldenrod")
+        else:
+            self.modifiedTextColor = QColor("darkgoldenrod")
+
         self.textEdited.connect(self.markModified)
         self.installEventFilter(self)
 
@@ -64,15 +72,17 @@ class LineEdit(QLineEdit):
         super().focusOutEvent(event)
 
     def markModified(self):
-        self.setItalic(True)
+        self.setTextColor(self.modifiedTextColor)
 
     def markCommitted(self):
-        self.setItalic(False)
+        self.setTextColor(self.defaultTextColor)
 
-    def setItalic(self, italic):
-        font = self.font()
-        font.setItalic(italic)
-        self.setFont(font)
+    def setTextColor(self, color):
+        palette = self.palette()
+        if palette.color(QPalette.Text) == color:
+            return
+        palette.setColor(QPalette.Text, color)
+        self.setPalette(palette)
 
     def eventFilter(self, source, event):
         if event.type() == QEvent.KeyPress and event.key() in (
