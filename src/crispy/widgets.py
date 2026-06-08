@@ -52,12 +52,6 @@ class LineEdit(QLineEdit):
         self.validator = None
         self.currentText = None
 
-        self.defaultTextColor = self.palette().color(QPalette.Text)
-        if self.palette().color(QPalette.Base).lightness() < 128:
-            self.modifiedTextColor = QColor("goldenrod")
-        else:
-            self.modifiedTextColor = QColor("darkgoldenrod")
-
         self.textEdited.connect(self.markModified)
         self.installEventFilter(self)
 
@@ -72,17 +66,19 @@ class LineEdit(QLineEdit):
         super().focusOutEvent(event)
 
     def markModified(self):
-        self.setTextColor(self.modifiedTextColor)
-
-    def markCommitted(self):
-        self.setTextColor(self.defaultTextColor)
-
-    def setTextColor(self, color):
+        if self.palette().color(QPalette.Base).lightness() < 128:
+            color = QColor("goldenrod")
+        else:
+            color = QColor("darkgoldenrod")
         palette = self.palette()
         if palette.color(QPalette.Text) == color:
             return
         palette.setColor(QPalette.Text, color)
         self.setPalette(palette)
+
+    def markCommitted(self):
+        # Clear the override so the text follows the theme palette again.
+        self.setPalette(QPalette())
 
     def eventFilter(self, source, event):
         if event.type() == QEvent.KeyPress and event.key() in (
