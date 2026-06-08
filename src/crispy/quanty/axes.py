@@ -206,6 +206,16 @@ class IncidentPhoton(Photon):
 class ScatteredPhoton(Photon):
     def __init__(self, parent=None):
         super().__init__(parent=parent, name="Scattered Photon")
+
+        # Default to a typical RIXS geometry: 90 degrees between the incident
+        # and scattered wave vectors, with both polarizations sigma (perpendicular
+        # to the scattering plane). The incident photon propagates along z with
+        # sigma polarization along y, so the scattering plane is xz; placing the
+        # scattered wave vector along x gives a 90 degree scattering angle and
+        # keeps the scattered sigma polarization along y.
+        self.k._value = np.array([1, 0, 0])
+        self.e1._value = np.array([0, 1, 0])
+
         # Whether the experiment analyzes (resolves) the outgoing polarization.
         # When disabled, the calculation averages over the outgoing polarization
         # instead of using the specified scattered polarization vector.
