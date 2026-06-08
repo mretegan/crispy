@@ -18,7 +18,6 @@ from crispy.widgets import (
     ComboBox,
     DoubleLineEdit,
     IntLineEdit,
-    LineEdit,
     Vector3DLineEdit,
 )
 
@@ -81,11 +80,6 @@ class Delegate(QStyledItemDelegate):
             if isinstance(item, itemClass):
                 editor = widget(parent)
                 editor.setAlignment(Qt.AlignRight)
-                # Square corners so the editor fills the rectangular cell instead of
-                # exposing the cell background at the rounded corners.
-                if isinstance(editor, LineEdit):
-                    editor.borderRadius = 0
-                    editor.setBackgroundColor(editor.defaulBakgroundColor)
                 return editor
         return None
 
