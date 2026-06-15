@@ -93,11 +93,64 @@
     terms:
       - name: Crystal Field
         parameters: 
-          - ["Dq(3d)", 0.16] 
+          - ["Dq(3d)", 0.16]
           - ["Dsigma(3d)", 0.01]
           - ["Dtau(3d)", 0.02]
 
-# d-block elements, Td, XAS, p-type core-hole, crystal field 
+# f-block elements, Td, XAS, d-type core-hole, crystal field
+8:
+  args: ["Ce3+", "Td", "XAS", "M4,5 (3d)"]
+  hamiltonian:
+    terms:
+      - name: Crystal Field
+        parameters:
+          - ["Ea2(4f)", 0.4]
+          - ["Et1(4f)", -0.1]
+          - ["Et2(4f)", 0.05]
+
+# f-block elements, D4h, XAS, d-type core-hole, crystal field
+9:
+  args: ["Ce3+", "D4h", "XAS", "M4,5 (3d)"]
+  hamiltonian:
+    terms:
+      - name: Crystal Field
+        parameters:
+          - ["Ea2u(4f)", 0.3]
+          - ["Eb1u(4f)", 0.1]
+          - ["Eb2u(4f)", -0.1]
+          - ["Eeu1(4f)", -0.2]
+          - ["Eeu2(4f)", 0.15]
+          - ["Meu(4f)", 0.05]
+
+# f-block elements, D3h, XAS, d-type core-hole, crystal field
+10:
+  args: ["Ce3+", "D3h", "XAS", "M4,5 (3d)"]
+  hamiltonian:
+    terms:
+      - name: Crystal Field
+        parameters:
+          - ["Ea1p(4f)", 0.2]
+          - ["Ea2p(4f)", 0.1]
+          - ["Ea2pp(4f)", -0.2]
+          - ["Eep(4f)", 0.05]
+          - ["Eepp(4f)", -0.1]
+
+# f-block elements, C3v, XAS, d-type core-hole, crystal field
+11:
+  args: ["Ce3+", "C3v", "XAS", "M4,5 (3d)"]
+  hamiltonian:
+    terms:
+      - name: Crystal Field
+        parameters:
+          - ["Ea2(4f)", 0.1]
+          - ["Ea1A(4f)", 0.3]
+          - ["Ea1B(4f)", -0.2]
+          - ["Ee1(4f)", 0.05]
+          - ["Ee2(4f)", -0.1]
+          - ["Ma1(4f)", 0.08]
+          - ["Me(4f)", 0.04]
+
+# d-block elements, Td, XAS, p-type core-hole, crystal field
 
 # d-block elements, D4h, XAS, p-type core-hole, crystal field + LMCT
 # d-block elements, D4h, XAS, p-type core-hole, crystal field + MLCT
