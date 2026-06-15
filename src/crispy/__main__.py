@@ -15,7 +15,6 @@ from silx.gui.qt import (
     QApplication,
     QByteArray,
     QDialog,
-    QFileDialog,
     QIcon,
     QLocale,
     QMainWindow,
@@ -31,6 +30,7 @@ from silx.gui.qt import (
 
 from crispy import resourceAbsolutePath, version
 from crispy.config import Config
+from crispy.load import LoadDataDialog
 from crispy.loggers import StatusBarHandler, setUpLoggers
 from crispy.plot import MainPlotWidget  # noqa: F401
 from crispy.quanty.main import DockWidget
@@ -147,18 +147,24 @@ class MainWindow(QMainWindow):
         self.aboutDialog.exec()
 
     def loadExternalData(self):
-        dialog = QFileDialog()
-        path, _ = dialog.getOpenFileName(self, "Select File")
+        dialog = LoadDataDialog(parent=self)
+        if dialog.exec() != QDialog.Accepted:
+            return
 
-        if path:
-            try:
-                raw = np.loadtxt(path)
-            except ValueError:
-                logger.error(f"Failed to load data from {path}")
-                return
+        path = dialog.path
+        try:
+            raw = np.loadtxt(
+                path,
+                comments=dialog.comment,
+                delimiter=dialog.separator,
+                usecols=(dialog.xAxis, dialog.yAxis),
+            )
+        except (ValueError, IndexError):
+            logger.error(f"Failed to load data from {path}")
+            return
 
-            name = os.path.splitext(os.path.basename(path))[0]
-            self.quantyDockWidget.addExternalData(raw, name)
+        name = os.path.splitext(os.path.basename(path))[0]
+        self.quantyDockWidget.addExternalData(raw, name)
 
     def runJupyterLab(self):
         process = QProcess()
