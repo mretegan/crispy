@@ -32,8 +32,8 @@ Latest Release
 **Using the Package Installers**
 
 The easiest way to install Crispy on Windows and macOS operating systems is to
-use the installers provided on the project's `downloads page
-<https://crispy.esrf.fr/en/latest/downloads.html>`_.
+use the installers provided on the `downloads page
+<https://crispy.esrf.fr/en/latest/downloads.html>`_ of the project.
 
 **Using pip**
 
@@ -42,7 +42,7 @@ Crispy, you have to make sure that you have a working Python distribution. On
 macOS and Windows, you can install Python using the `official installers
 <https://www.python.org/downloads>`_. In particular, for Windows, you should
 install the 64-bit version of Python and make sure that you select to add
-Python to the system's PATH during the installation.
+Python to the system PATH during the installation.
 
 .. code:: sh
 
@@ -68,7 +68,7 @@ Development Version
 
 **Using pip**
 
-Assuming that you have a working Python distribution (version 3.7 or greater),
+Assuming that you have a working Python distribution (version 3.10 or greater),
 you can easily install the development version of Crispy using pip:
 
 .. code:: sh
@@ -86,7 +86,7 @@ To update the development version of Crispy, you can use the following command:
 Usage
 =====
 
-.. forth-marker
+.. fourth-marker
 
 Crispy should be easy to find and launch if you have used the installers. For
 the installation using pip follow the instructions from the **Installation**
@@ -99,12 +99,13 @@ Citation
 Crispy is a scientific software. If you use it for a scientific publication,
 please cite the following reference (change the version number if required)::
 
-    @misc{retegan_crispy,
-      author       = {Retegan, Marius},
-      title        = {Crispy: v0.8.0},
-      year         = {2024},
-      doi          = {10.5281/zenodo.1008184},
-      url          = {https://dx.doi.org/10.5281/zenodo.1008184}
+    @software{retegan_crispy,
+      author  = {Retegan, Marius},
+      title   = {Crispy},
+      version = {0.8.0},
+      year    = {2024},
+      doi     = {10.5281/zenodo.1008184},
+      url     = {https://crispy.esrf.fr},
     }
 
 .. sixth-marker

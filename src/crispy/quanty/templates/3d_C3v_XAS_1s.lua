@@ -138,6 +138,14 @@ end
 -- Define the crystal field term.
 --------------------------------------------------------------------------------
 if CrystalFieldTerm then
+    -- C3v crystal field for d electrons: the three-fold C3 axis is along z and a
+    -- vertical mirror plane sigma_v contains the y-axis (the Koenig & Kremer
+    -- convention, equivalent to the inversion-related Quanty D3d "Zy" setting). The
+    -- five 3d orbitals split into a1 + e + e, parametrized by Dq, Dsigma and Dtau.
+    -- The two e sets (descended from the cubic t2g and eg) share an irrep and mix,
+    -- so the Hamiltonian is not diagonal in the irrep basis (see Koenig & Kremer,
+    -- p. 56). The Akm expansion is taken from the Quanty point-group tables
+    -- (https://www.quanty.org/physics_chemistry/point_groups).
     Dq_3d = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, {{4, 0, -14}, {4, 3, -2 * math.sqrt(70)}, {4, -3, 2 * math.sqrt(70)}})
     Dsigma_3d = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, {{2, 0, -7}})
     Dtau_3d = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, {{4, 0, -21}})
@@ -856,8 +864,10 @@ if PdHybridizationTerm then
     end
     T_1s_4p = T2
 
-    Emin = Emin - (ZeroShift + ExperimentalShift)
-    Emax = Emax - (ZeroShift + ExperimentalShift)
+    if ShiftSpectra then
+        Emin = Emin - (ZeroShift + ExperimentalShift)
+        Emax = Emax - (ZeroShift + ExperimentalShift)
+    end
 
     -- Calculate the spectra. Note that the CalculationRestrictions are active in this case.
     G_1s_3d = CreateSpectra(H_f, T_1s_3d, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"Restrictions", CalculationRestrictions}, {"DenseBorder", DenseBorder}})
@@ -1072,8 +1082,10 @@ else
     end
     T_1s_3d = T
 
-    Emin = Emin - (ZeroShift + ExperimentalShift)
-    Emax = Emax - (ZeroShift + ExperimentalShift)
+    if ShiftSpectra then
+        Emin = Emin - (ZeroShift + ExperimentalShift)
+        Emax = Emax - (ZeroShift + ExperimentalShift)
+    end
 
     if CalculationRestrictions == nil then
         G_1s_3d = CreateSpectra(H_f, T_1s_3d, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"DenseBorder", DenseBorder}})

@@ -128,6 +128,12 @@ end
 -- Define the crystal field term.
 --------------------------------------------------------------------------------
 if CrystalFieldTerm then
+    -- D3h crystal field for d electrons, Quanty "zx" setting: the three-fold C3 axis
+    -- is along z, the horizontal mirror sigma_h is the xy-plane, and a C2' axis lies
+    -- along x. The five 3d orbitals split into a1' + e' + e'', parametrized by Dmu
+    -- and Dnu (a1' = -2Dmu - 6Dnu, e' = 2Dmu - Dnu, e'' = -Dmu + 4Dnu). The Akm
+    -- expansion (k = 2 and 4, m = 0) is taken from the Quanty point-group tables
+    -- (https://www.quanty.org/physics_chemistry/point_groups).
     Akm = {{2, 0, -7}}
     Dmu_3d = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, Akm)
 
@@ -688,8 +694,10 @@ for Operator, _ in pairs(T_1s_3d) do
 end
 T_1s_3d = T
 
-Emin = Emin - (ZeroShift + ExperimentalShift)
-Emax = Emax - (ZeroShift + ExperimentalShift)
+if ShiftSpectra then
+    Emin = Emin - (ZeroShift + ExperimentalShift)
+    Emax = Emax - (ZeroShift + ExperimentalShift)
+end
 
 if CalculationRestrictions == nil then
     G_1s_3d = CreateSpectra(H_f, T_1s_3d, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"DenseBorder", DenseBorder}})

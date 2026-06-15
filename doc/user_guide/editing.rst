@@ -113,7 +113,7 @@ broadening) and rebuilds the rest.
 A few entries deserve clarification:
 
 * **Magnetic field.** The magnitude is always kept. When the beam geometry can
-  change (element, experiment, or edge) the field is re-projected onto the new
+  change (element, experiment, or edge), the field is re-projected onto the new
   wave vector. A zero field leaves the magnetic field term disabled.
 * **Gaussian broadening.** It is kept for the incident-energy axis. For RIXS the
   energy-transfer axis broadening is kept only when the calculation stays

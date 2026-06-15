@@ -168,6 +168,14 @@ end
 -- Define the crystal field term.
 --------------------------------------------------------------------------------
 if  CrystalFieldTerm then
+    -- D4h crystal field for d electrons, Quanty "zxy" setting: the four-fold C4 axis
+    -- is along z and the C2' axes / vertical mirror planes lie along x and y (the
+    -- equatorial ligands sit on x and y, so b1g = d(x^2-y^2)). The five 4d orbitals
+    -- split into a1g + b1g + b2g + eg, parametrized by Dq, Ds and Dt
+    -- (a1g = 6Dq - 2Ds - 6Dt, b1g = 6Dq + 2Ds - Dt, b2g = -4Dq + 2Ds - Dt,
+    -- eg = -4Dq - Ds + 4Dt). The Akm operators below reproduce
+    -- PotentialExpandedOnClm("D4h", 2, ...) from the Quanty point-group tables
+    -- (https://www.quanty.org/physics_chemistry/point_groups).
     -- PotentialExpandedOnClm("D4h", 2, {Ea1g, Eb1g, Eb2g, Eeg})
     -- Dq_4d = NewOperator("CF", NFermions, IndexUp_4d, IndexDn_4d, PotentialExpandedOnClm("D4h", 2, { 6,  6, -4, -4}))
     -- Ds_4d = NewOperator("CF", NFermions, IndexUp_4d, IndexDn_4d, PotentialExpandedOnClm("D4h", 2, {-2,  2,  2, -1}))

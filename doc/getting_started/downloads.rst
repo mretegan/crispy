@@ -24,25 +24,25 @@ Downloads
   both *Intel* and *Apple Silicon* Macs. It requires **macOS 14 (Sonoma) or
   later**.
 - On **Windows**, some antivirus programs might block the installation of the
-  application and even delete the installer from the disk. I assume that this
-  is because the installer is not signed. Every release is scanned on
+  application and even delete the installer from the disk. This is likely
+  because the installer is not signed. Every release is scanned on
   `VirusTotal <https://www.virustotal.com>`_, and the report for each build is
   linked in its |release-page|_. Also please make sure that you first uninstall
   older versions of Crispy before you proceed with the new installation.
 - You can download older versions from the `releases
   <https://github.com/mretegan/crispy/releases>`_ page on GitHub.
 
-.. |Windows| image:: assets/windows.png
+.. |Windows| image:: /assets/windows.png
     :width: 100pt
     :align: middle
     :target: exe_
 
-.. |macOS| image:: assets/apple.png
-    :width: 100pt 
+.. |macOS| image:: /assets/apple.png
+    :width: 100pt
     :align: middle
     :target: dmg_
 
-.. |Linux| image:: assets/linux.png
+.. |Linux| image:: /assets/linux.png
     :width: 100pt
     :align: middle
     :target: installation.html
