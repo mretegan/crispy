@@ -128,6 +128,14 @@ end
 -- Define the crystal field term.
 --------------------------------------------------------------------------------
 if CrystalFieldTerm then
+    -- C3v crystal field for d electrons: the three-fold C3 axis is along z and a
+    -- vertical mirror plane sigma_v contains the y-axis (the Koenig & Kremer
+    -- convention, equivalent to the inversion-related Quanty D3d "Zy" setting). The
+    -- five 4d orbitals split into a1 + e + e, parametrized by Dq, Dsigma and Dtau.
+    -- The two e sets (descended from the cubic t2g and eg) share an irrep and mix,
+    -- so the Hamiltonian is not diagonal in the irrep basis (see Koenig & Kremer,
+    -- p. 56). The Akm expansion is taken from the Quanty point-group tables
+    -- (https://www.quanty.org/physics_chemistry/point_groups).
     Akm = {{4, 0, -14}, {4, 3, -2 * math.sqrt(70)}, {4, -3, 2 * math.sqrt(70)}}
     Dq_4d = NewOperator("CF", NFermions, IndexUp_4d, IndexDn_4d, Akm)
 
@@ -699,8 +707,10 @@ for Operator, _ in pairs(T_2s_4d) do
 end
 T_2s_4d = T
 
-Emin = Emin - (ZeroShift + ExperimentalShift)
-Emax = Emax - (ZeroShift + ExperimentalShift)
+if ShiftSpectra then
+    Emin = Emin - (ZeroShift + ExperimentalShift)
+    Emax = Emax - (ZeroShift + ExperimentalShift)
+end
 
 if CalculationRestrictions == nil then
     G_2s_4d = CreateSpectra(H_f, T_2s_4d, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"DenseBorder", DenseBorder}})

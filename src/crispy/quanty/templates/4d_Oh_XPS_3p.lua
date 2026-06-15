@@ -162,6 +162,13 @@ end
 -- Define the crystal field term.
 --------------------------------------------------------------------------------
 if CrystalFieldTerm then
+    -- Oh crystal field for d electrons, cube-axis (xyz) setting: the three C4 axes
+    -- lie along x, y and z (the octahedral ligands sit on the Cartesian axes) and
+    -- the C3 axes along the cube diagonals [+-1, +-1, +-1]. The five 4d orbitals
+    -- split into eg + t2g, separated by 10Dq (eg at +0.6 * 10Dq, t2g at -0.4 * 10Dq).
+    -- The Akm coefficients below reproduce PotentialExpandedOnClm("Oh", 2,
+    -- {0.6, -0.4}) from the Quanty point-group tables
+    -- (https://www.quanty.org/physics_chemistry/point_groups).
     -- PotentialExpandedOnClm("Oh", 2, {Eeg, Et2g})
     -- tenDq_4d = NewOperator("CF", NFermions, IndexUp_4d, IndexDn_4d, PotentialExpandedOnClm("Oh", 2, {0.6, -0.4}))
 

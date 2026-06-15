@@ -153,6 +153,12 @@ end
 -- Define the crystal field term.
 --------------------------------------------------------------------------------
 if CrystalFieldTerm then
+    -- Oh crystal field for f electrons, cube-axis (xyz) setting: the three C4 axes
+    -- lie along x, y and z and the C3 axes along the cube diagonals [+-1, +-1, +-1].
+    -- The seven 4f orbitals split into a2u + t1u + t2u; energies are referenced to
+    -- their (degeneracy-weighted) average so the k = 0 monopole vanishes. The Akm
+    -- expansion is taken from the Quanty point-group tables
+    -- (https://www.quanty.org/physics_chemistry/point_groups).
     Eav_4f_i = ($Ea2u(4f)_i_value + 3 * $Et1u(4f)_i_value + 3 * $Et2u(4f)_i_value) / 7
     Ea2u_4f_i = $Ea2u(4f)_i_value - Eav_4f_i
     Et1u_4f_i = $Et1u(4f)_i_value - Eav_4f_i

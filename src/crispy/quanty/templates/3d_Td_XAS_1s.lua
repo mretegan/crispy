@@ -138,6 +138,13 @@ end
 -- Define the crystal field term.
 --------------------------------------------------------------------------------
 if CrystalFieldTerm then
+    -- Td crystal field for d electrons, cube-axis (xyz) setting: the tetrahedron is
+    -- inscribed in a cube with edges along x, y and z, so the S4/C2 axes lie along
+    -- x, y, z and the C3 axes along the cube diagonals [+-1, +-1, +-1]. The five 3d
+    -- orbitals split into e + t2 (e at -0.6 * 10Dq, t2 at +0.4 * 10Dq), the negative
+    -- of the Oh cubic field. The Akm coefficients below reproduce
+    -- PotentialExpandedOnClm("Td", 2, {-0.6, 0.4}) from the Quanty point-group
+    -- tables (https://www.quanty.org/physics_chemistry/point_groups).
     -- PotentialExpandedOnClm("Td", 2, {Ee, Et2})
     -- tenDq_3d = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm("Td", 2, {-0.6, 0.4}))
 
@@ -830,8 +837,10 @@ if PdHybridizationTerm then
     end
     T_1s_4p = T2
 
-    Emin = Emin - (ZeroShift + ExperimentalShift)
-    Emax = Emax - (ZeroShift + ExperimentalShift)
+    if ShiftSpectra then
+        Emin = Emin - (ZeroShift + ExperimentalShift)
+        Emax = Emax - (ZeroShift + ExperimentalShift)
+    end
 
     -- Calculate the spectra. Note that the CalculationRestrictions are active in this case.
     G_1s_3d = CreateSpectra(H_f, T_1s_3d, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"Restrictions", CalculationRestrictions}, {"DenseBorder", DenseBorder}})
@@ -1046,8 +1055,10 @@ else
     end
     T_1s_3d = T
 
-    Emin = Emin - (ZeroShift + ExperimentalShift)
-    Emax = Emax - (ZeroShift + ExperimentalShift)
+    if ShiftSpectra then
+        Emin = Emin - (ZeroShift + ExperimentalShift)
+        Emax = Emax - (ZeroShift + ExperimentalShift)
+    end
 
     if CalculationRestrictions == nil then
         G_1s_3d = CreateSpectra(H_f, T_1s_3d, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"DenseBorder", DenseBorder}})

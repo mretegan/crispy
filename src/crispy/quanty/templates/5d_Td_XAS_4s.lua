@@ -128,6 +128,13 @@ end
 -- Define the crystal field term.
 --------------------------------------------------------------------------------
 if CrystalFieldTerm then
+    -- Td crystal field for d electrons, cube-axis (xyz) setting: the tetrahedron is
+    -- inscribed in a cube with edges along x, y and z, so the S4/C2 axes lie along
+    -- x, y, z and the C3 axes along the cube diagonals [+-1, +-1, +-1]. The five 5d
+    -- orbitals split into e + t2 (e at -0.6 * 10Dq, t2 at +0.4 * 10Dq), the negative
+    -- of the Oh cubic field. The Akm coefficients below reproduce
+    -- PotentialExpandedOnClm("Td", 2, {-0.6, 0.4}) from the Quanty point-group
+    -- tables (https://www.quanty.org/physics_chemistry/point_groups).
     -- PotentialExpandedOnClm("Td", 2, {Ee, Et2})
     -- tenDq_5d = NewOperator("CF", NFermions, IndexUp_5d, IndexDn_5d, PotentialExpandedOnClm("Td", 2, {-0.6, 0.4}))
 
@@ -683,8 +690,10 @@ for Operator, _ in pairs(T_4s_5d) do
 end
 T_4s_5d = T
 
-Emin = Emin - (ZeroShift + ExperimentalShift)
-Emax = Emax - (ZeroShift + ExperimentalShift)
+if ShiftSpectra then
+    Emin = Emin - (ZeroShift + ExperimentalShift)
+    Emax = Emax - (ZeroShift + ExperimentalShift)
+end
 
 if CalculationRestrictions == nil then
     G_4s_5d = CreateSpectra(H_f, T_4s_5d, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"DenseBorder", DenseBorder}})

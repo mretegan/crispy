@@ -168,6 +168,14 @@ end
 -- Define the crystal field term.
 --------------------------------------------------------------------------------
 if CrystalFieldTerm then
+    -- C3v crystal field for d electrons: the three-fold C3 axis is along z and a
+    -- vertical mirror plane sigma_v contains the y-axis (the Koenig & Kremer
+    -- convention, equivalent to the inversion-related Quanty D3d "Zy" setting). The
+    -- five 3d orbitals split into a1 + e + e, parametrized by Dq, Dsigma and Dtau.
+    -- The two e sets (descended from the cubic t2g and eg) share an irrep and mix,
+    -- so the Hamiltonian is not diagonal in the irrep basis (see Koenig & Kremer,
+    -- p. 56). The Akm expansion is taken from the Quanty point-group tables
+    -- (https://www.quanty.org/physics_chemistry/point_groups).
     Akm = {{4, 0, -14}, {4, 3, -2 * math.sqrt(70)}, {4, -3, 2 * math.sqrt(70)}}
     Dq_3d = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, Akm)
 
