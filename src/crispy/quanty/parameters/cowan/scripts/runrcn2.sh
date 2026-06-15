@@ -2,7 +2,10 @@
 
 # Script that runs the rcn2 program from the TTMult suite.
 
-if [ ! -x "$TTMULT/rcn2" ]; then
+# Locate the binaries relative to this script.
+BINDIR=$(cd "$(dirname "$0")/../bin" && pwd)
+
+if [ ! -x "$BINDIR/rcn2" ]; then
     echo "rcn2 command was not found."
     exit 1
 fi
@@ -16,7 +19,7 @@ fi
 # The input file for rcn2 must be added in the current folder.
 if [ -f "$NAME.rcn2" ]; then
     ln -sf $NAME.rcn2 fort.10
-    $TTMULT/rcn2
+    $BINDIR/rcn2
     if [ $? -ne 0 ]; then
         echo "rcn2 calculation has failed."
         exit 1

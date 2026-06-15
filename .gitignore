@@ -66,6 +66,15 @@ input_*.spec
 # Quanty binaries
 # crispy/quanty/bin
 
+# Cowan binaries and build artifacts
+**/cowan/bin/
+**/cowan/src/
+**/cowan/rcn31
+**/cowan/rcn2
+**/cowan/ttrcg
+**/cowan/rcg_cfp*
+**/cowan/fort.*
+
 # Artifacts
 artifacts
 

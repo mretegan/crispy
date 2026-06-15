@@ -1,0 +1,13 @@
+Comment out the line that limits how many Slater integrals rcn31 prints, so
+that every integral is written to the output (required by the parameter
+pipeline). See README.rst.
+
+--- a/rcn31.f
++++ b/rcn31.f
+@@ -2558,5 +2558,5 @@
+       IF (ND.LE.0) GO TO 959
+   840 IF (IPTVU.EQ.0) GO TO 915
+-      IF (MA.LT.NCSPVS-abs(NORBPT)+1) GO TO 915
++C      IF (MA.LT.NCSPVS-abs(NORBPT)+1) GO TO 915
+ C
+ C          OUTPUT

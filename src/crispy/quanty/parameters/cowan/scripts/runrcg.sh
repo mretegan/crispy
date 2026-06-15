@@ -2,7 +2,10 @@
 
 # Script that runs the ttrcg program from the TTMult suite.
 
-if [ ! -x "$TTMULT/ttrcg" ]; then
+# Locate the binaries relative to this script.
+BINDIR=$(cd "$(dirname "$0")/../bin" && pwd)
+
+if [ ! -x "$BINDIR/ttrcg" ]; then
     echo "ttrcg command was not found."
     exit 1
 fi
@@ -17,11 +20,11 @@ fi
 # $NAME.rcg.orig file as a starting point.
 # See this page for more details: http://www.anorg.chem.uu.nl/CTM4XAS/tutorial_rcg.html.
 if [ -f "$NAME.rcg" ]; then
-    cp $TTMULT/rcg_cfp72 fort.72
-    cp $TTMULT/rcg_cfp73 fort.73
-    cp $TTMULT/rcg_cfp74 fort.74
+    cp $BINDIR/rcg_cfp72 fort.72
+    cp $BINDIR/rcg_cfp73 fort.73
+    cp $BINDIR/rcg_cfp74 fort.74
     ln -sf $NAME.rcg fort.10
-    $TTMULT/ttrcg
+    $BINDIR/ttrcg
     if [ $? -ne 0 ]; then
         echo "ttrcg calculation has failed."
         exit 1
