@@ -173,8 +173,7 @@ class Cowan:
         path = os.path.join(self.bin, name)
         if not os.path.isfile(path):
             logger.critical(
-                "The %s binary was not found at %s; build it with the Makefile "
-                "in %s.",
+                "The %s binary was not found at %s; build it with the Makefile in %s.",
                 name,
                 path,
                 self.root,
