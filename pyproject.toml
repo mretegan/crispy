@@ -48,7 +48,7 @@ Tracker = "https://github.com/mretegan/crispy/issues"
 
 [project.optional-dependencies]
 dev = ["pre-commit", "pytest", "pytest-qt", "ruff"]
-doc = ["sphinx", "pydata-sphinx-theme"]
+doc = ["cffconvert", "sphinx", "pydata-sphinx-theme"]
 notebook = ["jupyter", "ipympl"]
 bundle = ["build", "pyinstaller", "pyinstaller-hooks-contrib", "twine"]
 

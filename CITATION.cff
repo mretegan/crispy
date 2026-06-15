@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use Crispy in your research, please cite it as below."
+title: Crispy
+abstract: >-
+  Crispy is a modern graphical user interface to calculate core-level spectra
+  using the semi-empirical multiplet approaches implemented in Quanty.
+type: software
+authors:
+  - family-names: Retegan
+    given-names: Marius
+    email: marius.retegan@esrf.fr
+    affiliation: European Synchrotron Radiation Facility
+    orcid: "https://orcid.org/0000-0002-1525-1094"
+version: 0.8.0
+date-released: 2024-09-26
+doi: 10.5281/zenodo.1008184
+license: MIT
+url: https://crispy.esrf.fr
+repository-code: https://github.com/mretegan/crispy
+keywords:
+  - gui
+  - science
+  - simulation
+  - spectroscopy
+  - synchrotron
