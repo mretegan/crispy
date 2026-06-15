@@ -249,14 +249,20 @@ class CrystalFieldTerm(HamiltonianTerm):
         names = []
         if self.block == "d":
             if self.symmetry.value == "Oh":
+                # The d orbitals split into eg + t2g, separated by 10Dq.
                 names, values = ("10Dq",), (1.0,)
             elif self.symmetry.value == "Td":
+                # The d orbitals split into e + t2 (the inverted Oh field).
                 names, values = ("10Dq",), (0.5,)
             elif self.symmetry.value == "D4h":
+                # Tetragonal field: a1g + b1g + b2g + eg, given by Dq, Ds and Dt.
                 names, values = ("10Dq", "Ds", "Dt"), (1.0, 0.0, 0.0)
             elif self.symmetry.value == "D3h":
+                # The d orbitals split into a1' + e' + e'', given by Dmu and Dnu.
                 names, values = ("Dμ", "Dν"), (0.1, -0.1)  # noqa: RUF001
             elif self.symmetry.value == "C3v":
+                # Trigonal field: a1 + e + e (the two e sets mix), given by 10Dq,
+                # Dsigma and Dtau.
                 names, values = ("10Dq", "Dσ", "Dτ"), (1.0, 0.0, 0.0)  # noqa: RUF001
             elif self.symmetry.value == "D3d":
                 # Trigonal field given as the irrep energies: a1g and the two eg
@@ -268,7 +274,28 @@ class CrystalFieldTerm(HamiltonianTerm):
                 raise ValueError("Unknown symmetry.")
         elif self.block == "f":
             if self.symmetry.value == "Oh":
+                # The f orbitals split into a2u + t1u + t2u.
                 names, values = ("Ea2u", "Et1u", "Et2u"), (-1.8, 0.3, 0.3)
+            elif self.symmetry.value == "Td":
+                # The f orbitals split into a2 + t1 + t2.
+                names = ("Ea2", "Et1", "Et2")
+                values = (0.0, 0.0, 0.0)
+            elif self.symmetry.value == "D4h":
+                # Tetragonal field given as the irrep energies (a2u, b1u, b2u and
+                # the two eu sets) plus the eu-eu off-diagonal mixing Meu.
+                names = ("Ea2u", "Eb1u", "Eb2u", "Eeu1", "Eeu2", "Meu")
+                values = (0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+            elif self.symmetry.value == "D3h":
+                # Irrep energies a1', a2', a2'', e' and e'' (no off-diagonal
+                # mixing, each irrep appears once).
+                names = ("Ea1p", "Ea2p", "Ea2pp", "Eep", "Eepp")
+                values = (0.0, 0.0, 0.0, 0.0, 0.0)
+            elif self.symmetry.value == "C3v":
+                # Trigonal field given as the irrep energies (the two a1 sets, the
+                # a2 set and the two e sets) plus the a1-a1 and e-e off-diagonal
+                # mixings Ma1 and Me.
+                names = ("Ea2", "Ea1A", "Ea1B", "Ee1", "Ee2", "Ma1", "Me")
+                values = (0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
             elif self.symmetry.value == "D3d":
                 # Trigonal field given as the irrep energies (a1u, the two a2u
                 # sets and the two eu sets) plus the a2u-a2u and eu-eu off-diagonal
