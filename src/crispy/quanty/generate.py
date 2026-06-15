@@ -114,19 +114,6 @@ def unique_configurations(element):
     return sorted(set(configurations))
 
 
-def read_hybridization_parameters(symbol, conf):
-    """Read the p-d hybridization parameters from an external file."""
-    path = resourceAbsolutePath(
-        os.path.join("quanty", "parameters", "p-d_hybridization", "parameters.dat")
-    )
-    with open(path) as fp:
-        for line in fp:
-            if symbol in line and conf in line:
-                *_, p1, p2 = line.strip().split(",")
-                return {"P1(1s,4p)": float(p1), "P2(1s,3d)": float(p2)}
-    return None
-
-
 def generate_parameters(symbols):
     """Generate the atomic parameters of the elements and store them in an
     HDF5 container.
@@ -149,7 +136,6 @@ def generate_parameters(symbols):
                 # Calculate the atomic parameters.
                 cowan = Cowan(element, conf)
                 conf.energy, conf.parameters = cowan.get_parameters()
-                cowan.remove_calculation_files()
 
                 # Write the parameters to the HDF5 file.
                 root = f"/{conf.value}"
@@ -167,13 +153,24 @@ def generate_parameters(symbols):
                 for parameter, value in conf.parameters.items():
                     logger.debug("%-s = %-.4f eV", parameter, value)
 
-                # Add the p-d hybridization parameters.
-                parameters = read_hybridization_parameters(element.symbol, conf.value)
-                if parameters is not None:
-                    subroot = root + "/3d-4p Hybridization"
-                    for parameter, value in parameters.items():
-                        path = subroot + f"/{parameter:s}"
-                        h5[path] = value
+                # Calculate and add the p-d hybridization parameters. Only the
+                # 3d transition metals are supported (no K-edge templates exist
+                # for the 4d and 5d series).
+                if conf.subshells[-1] == "3d":
+                    parameters = cowan.get_hybridization_parameters()
+                    if parameters is not None:
+                        subroot = root + "/3d-4p Hybridization"
+                        for parameter, value in parameters.items():
+                            h5[subroot + f"/{parameter:s}"] = value
+
+                        # Initial- and final-state 3d-4p Slater integrals and
+                        # spin-orbit.
+                        atomic = cowan.get_hybridization_atomic_parameters()
+                        for hamiltonian, values in atomic.items():
+                            for parameter, value in values.items():
+                                h5[f"{subroot}/{hamiltonian}/{parameter:s}"] = value
+
+                cowan.remove_calculation_files()
 
 
 def generate_templates():

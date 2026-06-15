@@ -381,14 +381,18 @@ class PdHybridizationTerm(HamiltonianTerm):
     def __init__(self, parent=None, *, name=None):
         super().__init__(parent=parent, name=name)
 
+        pSubshell = f"{int(self.subshell[0]) + 1}p"
+        atomic = self.atomicParameters()
+
         def generateParameters(hamiltonianName, names):
             hamiltonian = BaseItem(parent=self, name=hamiltonianName)
+            values = atomic.get(hamiltonianName, {})
             for name in names:
                 if name in ("ζ(", "G1(1s,"):
-                    name = name + "4p)"
+                    name = name + f"{pSubshell})"
                 else:
-                    name = name + f"({self.subshell},4p)"
-                value = 0.0
+                    name = name + f"({self.subshell},{pSubshell})"
+                value = values.get(name, 0.0)
                 scaleFactor = self.scaleFactorFromName(name)
                 HamiltonianParameter(
                     value, parent=hamiltonian, name=name, scaleFactor=scaleFactor
@@ -409,11 +413,27 @@ class PdHybridizationTerm(HamiltonianTerm):
             names = hybridization + finalAtomic
             generateParameters("Final Hamiltonian", names)
 
+    def atomicParameters(self):
+        """Read the per-Hamiltonian d-p atomic parameters stored in the h5."""
+        path = resourceAbsolutePath(
+            os.path.join("quanty", "parameters", f"{self.element.symbol}.h5")
+        )
+        initial_configuration, *_ = self.configurations
+        result = {}
+        with h5py.File(path, "r") as h5:
+            group = h5.get(f"{initial_configuration}/{self.name}")
+            if group is None:
+                return result
+            for hamiltonian, values in group.items():
+                if isinstance(values, h5py.Group):
+                    result[hamiltonian] = {k: float(values[k][()]) for k in values}
+        return result
+
     @property
     def replacements(self):
         replacements = super().replacements
 
-        # Read term specific parameters.
+        # Read the P1 and P2 prefactors (top-level scalars in the group).
         path = resourceAbsolutePath(
             os.path.join("quanty", "parameters", f"{self.element.symbol}.h5")
         )
@@ -423,8 +443,9 @@ class PdHybridizationTerm(HamiltonianTerm):
         with h5py.File(path, "r") as h5:
             parameters = h5[f"{initial_configuration}/{self.name}"]
             for parameterName, value in parameters.items():
-                value = float(value[()])
-                replacements[parameterName] = value
+                if isinstance(value, h5py.Group):
+                    continue
+                replacements[parameterName] = float(value[()])
 
         return replacements
 
@@ -506,7 +527,8 @@ class HamiltonianTerms(BaseItem):
                 and calculation.experiment.value == "XAS"
             ):
                 valenceSubshell = calculation.element.valenceSubshell
-                name = f"{valenceSubshell}-4p Hybridization"
+                pSubshell = f"{int(valenceSubshell[0]) + 1}p"
+                name = f"{valenceSubshell}-{pSubshell} Hybridization"
                 self.pdHybridization = PdHybridizationTerm(parent=self, name=name)
 
         # Add ligands hybridization term.
