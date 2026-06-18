@@ -476,6 +476,10 @@ class Calculation(SelectableItem):
         # points of a parameter scan.
         self.labelSuffix = None
 
+        # A user-defined name that overrides the automatically generated label
+        # when set (via renaming in the results view).
+        self._customLabel = None
+
         # Validate the keyword arguments. This is best done this way; using properties
         # it gets rather convoluted.
         self._symbols = []
@@ -573,6 +577,8 @@ class Calculation(SelectableItem):
     @property
     def label(self):
         """Human-readable name shown in the results view."""
+        if self._customLabel is not None:
+            return self._customLabel
         edge = self.edge.value.split(" (")[0]
         label = (
             f"{self.element.value} {self.experiment.value} "
@@ -582,6 +588,17 @@ class Calculation(SelectableItem):
             label = f"{label} [{self.labelSuffix}]"
         return label
 
+    @label.setter
+    def label(self, value):
+        # An empty name restores the automatically generated label.
+        self._customLabel = value or None
+        self.dataChanged.emit(0)
+        self.titleChanged.emit(self.label)
+
+    @property
+    def customLabel(self):
+        return self._customLabel
+
     def data(self, column, role=Qt.DisplayRole):
         if role in (Qt.EditRole, Qt.DisplayRole, Qt.UserRole):
             if column == 0:
@@ -590,12 +607,18 @@ class Calculation(SelectableItem):
         return super().data(column, role)
 
     def setData(self, column, value, role=Qt.EditRole):
+        if role == Qt.EditRole and column == 0:
+            self.label = value
+            return True
         if role in (Qt.EditRole, Qt.UserRole):
             column = 0 if column == 1 else 1
         return super().setData(column, value, role)
 
     def flags(self, column):
-        return Qt.ItemIsEnabled | Qt.ItemIsSelectable | Qt.ItemIsUserCheckable
+        flags = Qt.ItemIsEnabled | Qt.ItemIsSelectable | Qt.ItemIsUserCheckable
+        if column == 0:
+            flags |= Qt.ItemIsEditable
+        return flags
 
     @property
     def symbols(self):

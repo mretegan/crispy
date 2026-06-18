@@ -24,6 +24,7 @@ from silx.gui.qt import (
 from crispy import resourceAbsolutePath
 from crispy.config import Config
 from crispy.models import TreeModel
+from crispy.quanty import serialization
 from crispy.quanty.calculation import Calculation
 from crispy.quanty.details import DetailsDialog
 from crispy.quanty.external import ExternalData
@@ -315,29 +316,31 @@ class ResultsPage(QWidget):
             icon, "Show Details", self, triggered=self.showDetailsDialog
         )
 
-        # icon = qta.icon("fa6s.floppy-disk")
-        # self.saveSelectedResultsAsAction = QAction(
-        #     icon, "Save Highlighted Results As...",
-        #     self, triggered=self.saveHighlighted
-        # )
+        icon = qta.icon("fa6s.floppy-disk")
+        self.saveHighlightedResultsAction = QAction(
+            icon,
+            "Save Highlighted Results As...",
+            self,
+            triggered=self.saveHighlighted,
+        )
+
+        icon = qta.icon("fa6s.folder-open")
+        self.loadResultsAction = QAction(
+            icon, "Load Results...", self, triggered=self.loadResults
+        )
 
         icon = qta.icon("fa6s.trash")
         self.removeSelectedResultsAction = QAction(
             icon, "Remove Highlighted Results", self, triggered=self.removeHighlighted
         )
 
-        # icon = qta.icon("fa6s.folder-open")
-        # self.loadResultsAction = QAction(
-        #     icon, "Load Results", self, triggered=self.load
-        # )
-
         self.contextMenu = QMenu("Results Context Menu", self)
         self.contextMenu.addAction(self.showDetailsDialogAction)
-        # self.contextMenu.addSeparator()
-        # self.contextMenu.addAction(self.saveSelectedResultsAsAction)
+        self.contextMenu.addSeparator()
+        self.contextMenu.addAction(self.saveHighlightedResultsAction)
+        self.contextMenu.addAction(self.loadResultsAction)
+        self.contextMenu.addSeparator()
         self.contextMenu.addAction(self.removeSelectedResultsAction)
-        # self.contextMenu.addSeparator()
-        # self.contextMenu.addAction(self.loadResultsAction)
 
         self.view.setContextMenuPolicy(Qt.CustomContextMenu)
         self.view.customContextMenuRequested[QPoint].connect(
@@ -370,8 +373,10 @@ class ResultsPage(QWidget):
         self.currentIndexChanged.emit(value)
 
     def getHighlighted(self):
+        # selectedIndexes() returns one index per column of each selected row;
+        # keep only the first column so each item appears once.
         indexes = self.view.selectedIndexes()
-        items = [index.internalPointer() for index in indexes]
+        items = [index.internalPointer() for index in indexes if index.column() == 0]
         return items
 
     def removeHighlighted(self):
@@ -390,22 +395,69 @@ class ResultsPage(QWidget):
 
         self.plot(self.currentIndex)
 
+    def saveAll(self):
+        """Save every result in the list to an HDF5 file."""
+        self._saveResults(self.model.rootItem().children(), "Save Results As")
+
     def saveHighlighted(self):
+        """Save the highlighted results to an HDF5 file."""
         items = self.getHighlighted()
+        if items:
+            self._saveResults(items, "Save Highlighted Results As")
+
+    def _saveResults(self, items, title):
+        items = [
+            item for item in items if isinstance(item, (Calculation, ExternalData))
+        ]
         if not items:
             return
 
+        settings = Config().read()
+        directory = settings.value("CurrentPath") or os.path.expanduser("~")
         path, _ = QFileDialog.getSaveFileName(
-            self,
-            "Save Highlighted Results As",
-            filter="Python pickle files (*.pkl)",
+            self, title, directory, "HDF5 Files (*.h5)"
         )
+        if not path:
+            return
+        if not path.endswith(".h5"):
+            path = f"{path}.h5"
 
+        try:
+            serialization.save_results(items, path)
+        except OSError as e:
+            logger.error(f"Failed to save the results: {e}")
+            return
+
+        settings.setValue("CurrentPath", os.path.dirname(path))
+        settings.sync()
+
+    def loadResults(self):
+        """Load results from an HDF5 file and append them to the list."""
+        settings = Config().read()
+        directory = settings.value("CurrentPath") or os.path.expanduser("~")
+        path, _ = QFileDialog.getOpenFileName(
+            self, "Load Results", directory, "HDF5 Files (*.h5)"
+        )
         if not path:
             return
 
-    def load(self):
-        pass
+        try:
+            loaded = serialization.load_results(path, self.model.rootItem())
+        except (OSError, ValueError) as e:
+            logger.error(f"Failed to load the results: {e}")
+            return
+
+        settings.setValue("CurrentPath", os.path.dirname(path))
+        settings.sync()
+
+        if not loaded:
+            return
+
+        # Select the first loaded item and refresh the plot.
+        index = loaded[0].index()
+        if index is not None and index.isValid():
+            self.view.setCurrentIndex(index)
+            self.plot(index)
 
     def plot(self, *args):
         # Unchecking calculations below changes the model, which emits
@@ -464,7 +516,7 @@ class ResultsPage(QWidget):
     def showResultsContextMenu(self, position):
         selected = bool(self.view.selectedIndexes())
         self.removeSelectedResultsAction.setEnabled(selected)
-        # self.saveSelectedResultsAsAction.setEnabled(selected)
+        self.saveHighlightedResultsAction.setEnabled(selected)
 
         # Enable the action only if there is a valid item under the cursor.
         # TODO: Probably also check if the item is of a valid class.
@@ -533,6 +585,12 @@ class DockWidget(QDockWidget):
         self.saveInputAction = QAction("Save Input", self, triggered=self.saveInput)
         self.saveInputAsAction = QAction(
             "Save Input As...", self, triggered=self.saveInputAs
+        )
+        self.saveResultsAction = QAction(
+            "Save Results...", self, triggered=self.resultsPage.saveAll
+        )
+        self.loadResultsAction = QAction(
+            "Load Results...", self, triggered=self.resultsPage.loadResults
         )
         self.showHideAction = QAction("Show/Hide Module", self, triggered=self.showHide)
 

@@ -73,6 +73,9 @@ class MainWindow(QMainWindow):
         menu.addAction(self.quantyDockWidget.saveInputAction)
         menu.addAction(self.quantyDockWidget.saveInputAsAction)
         menu.addSeparator()
+        menu.addAction(self.quantyDockWidget.saveResultsAction)
+        menu.addAction(self.quantyDockWidget.loadResultsAction)
+        menu.addSeparator()
         menu.addAction(self.quantyDockWidget.showHideAction)
 
         menu = self.menuBar().addMenu("Tools")
