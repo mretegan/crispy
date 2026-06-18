@@ -443,6 +443,66 @@ def test_analyze_checkbox_enabled_only_for_isotropic_rixs():
     assert not checkbox.isEnabled()
 
 
+def test_save_output_writes_log_next_to_input(tmp_path, monkeypatch):
+    """The Quanty output (the log) is written to "<name>.out" so it is kept on
+    disk together with the input and spectra files."""
+    model = TreeModel()
+    calculation = make_calculation("Oh", model.rootItem())
+    calculation.runner.output = "Quanty log\nsecond line"
+
+    monkeypatch.chdir(tmp_path)
+    calculation.saveOutput()
+
+    output = tmp_path / f"{calculation.value}.out"
+    assert output.read_text(encoding="utf-8") == "Quanty log\nsecond line"
+
+
+def test_save_output_skips_empty_log(tmp_path, monkeypatch):
+    """No file is created when the calculation produced no output."""
+    model = TreeModel()
+    calculation = make_calculation("Oh", model.rootItem())
+    calculation.runner.output = ""
+
+    monkeypatch.chdir(tmp_path)
+    calculation.saveOutput()
+
+    assert not (tmp_path / f"{calculation.value}.out").exists()
+
+
+def test_clean_removes_input_spectra_and_output(tmp_path, monkeypatch):
+    """clean() removes the input, the spectra, and the output log together."""
+    model = TreeModel()
+    calculation = make_calculation("Oh", model.rootItem())
+    name = calculation.value
+
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / f"{name}.lua").write_text("-- input", encoding="utf-8")
+    (tmp_path / f"{name}_iso.spec").write_text("0 0", encoding="utf-8")
+    (tmp_path / f"{name}.out").write_text("log", encoding="utf-8")
+
+    calculation.clean()
+
+    assert not (tmp_path / f"{name}.lua").exists()
+    assert not (tmp_path / f"{name}_iso.spec").exists()
+    assert not (tmp_path / f"{name}.out").exists()
+
+
+def test_clean_without_output_file_does_not_raise(tmp_path, monkeypatch):
+    """A run with no output leaves no ".out" file; clean() must still succeed."""
+    model = TreeModel()
+    calculation = make_calculation("Oh", model.rootItem())
+    name = calculation.value
+
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / f"{name}.lua").write_text("-- input", encoding="utf-8")
+    (tmp_path / f"{name}_iso.spec").write_text("0 0", encoding="utf-8")
+
+    calculation.clean()
+
+    assert not (tmp_path / f"{name}.lua").exists()
+    assert not (tmp_path / f"{name}_iso.spec").exists()
+
+
 def test_xas_spectra_allow_multiple_selection():
     """One-dimensional experiments (XAS) can plot several curves together, so the
     single-selection rule must not apply to them."""

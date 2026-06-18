@@ -771,6 +771,19 @@ class Calculation(SelectableItem):
         with open(self.inputName, "w", encoding="utf-8") as fp:
             fp.write(self.input)
 
+    def saveOutput(self):
+        """Write the Quanty output (the log) to a file next to the input.
+
+        The output is kept on disk together with the input and spectra files;
+        clean() removes it alongside them when the remove-files preference is
+        set. Nothing is written when there is no output.
+        """
+        output = self.runner.output
+        if not output:
+            return
+        with open(f"{self.value}.out", "w", encoding="utf-8") as fp:
+            fp.write(output)
+
     def run(self):
         # Raise an error if there are no spectra to calculate.
         if list(self.spectra.toCalculate.selected) == []:
@@ -784,6 +797,9 @@ class Calculation(SelectableItem):
 
     def process(self, successful):
         settings = Config().read()
+        # Persist the Quanty output next to the input and spectra files so it is
+        # kept on disk together with them (and after a crash, for debugging).
+        self.saveOutput()
         if not successful:
             # The run did not finish successfully. If the user stopped it
             # deliberately, still honor the "Remove Files" preference; after a
@@ -808,6 +824,9 @@ class Calculation(SelectableItem):
         # Remove the spectra.
         for spectrum in glob.glob(f"{self.value}*.spec"):
             os.remove(spectrum)
+        # Remove the output (the log); it is absent when there was no output.
+        with contextlib.suppress(FileNotFoundError):
+            os.remove(f"{self.value}.out")
 
     def copyFrom(self, item):
         super().copyFrom(item)

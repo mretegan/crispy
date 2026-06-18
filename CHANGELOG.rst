@@ -10,6 +10,11 @@ and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0
 `Unreleased`_
 =============
 
+Added
+-----
+- Write the Quanty output (the log) to a ``<name>.out`` file, kept on disk
+  together with the input and spectra files.
+
 `0.8.0`_ - 2024-09-26
 =====================
 
