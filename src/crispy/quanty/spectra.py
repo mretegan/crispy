@@ -37,19 +37,19 @@ SPECTRA_TO_CALCULATE = {
 # fmt: off
 SPECTRA = {
     "Isotropic Absorption": ("iso", None, "Isotropic Absorption", "-"),
-    "Isotropic Absorption (Dipolar)": ("iso_dip", None, "Isotropic Absorption (Dipolar)", "-"),  # noqa: E501
-    "Isotropic Absorption (Quadrupolar)": ("iso_quad", None, "Isotropic Absorption (Quadrupolar)", "-"),  # noqa: E501
+    "Isotropic Absorption (Dipolar)": ("iso_dip", None, "Isotropic Absorption (Dipolar)", "--"),  # noqa: E501
+    "Isotropic Absorption (Quadrupolar)": ("iso_quad", None, "Isotropic Absorption (Quadrupolar)", ":"),  # noqa: E501
     "Absorption": ("k", None, "Absorption", "-"),
-    "Absorption (Dipolar)": ("k_dip", None, "Absorption (Dipolar)", "-"),
-    "Absorption (Quadrupolar)": ("k_quad", None, "Absorption (Quadrupolar)", "-"),
+    "Absorption (Dipolar)": ("k_dip", None, "Absorption (Dipolar)", "--"),
+    "Absorption (Quadrupolar)": ("k_quad", None, "Absorption (Quadrupolar)", ":"),
     "Circular Dichroic": ("cd", "(R-L)", "CD (R-L)", "-."),
-    "Circular Dichroic (Dipolar)": ("cd_dip", "(R-L)", "CD (R-L, Dipolar)", "-"),
-    "Circular Dichroic (Quadrupolar)": ("cd_quad", "(R-L)", "CD (R-L, Quadrupolar)", "-"),  # noqa: E501
+    "Circular Dichroic (Dipolar)": ("cd_dip", "(R-L)", "CD (R-L, Dipolar)", "--"),
+    "Circular Dichroic (Quadrupolar)": ("cd_quad", "(R-L)", "CD (R-L, Quadrupolar)", ":"),  # noqa: E501
     "Right Polarized": ("r", "(R)", "CD (R)", "--"),
     "Left Polarized": ("l", "(L)", "CD (L)", ":"),
     "Linear Dichroic": ("ld", "(V-H)", "LD (V-H)", "-."),
-    "Linear Dichroic (Dipolar)": ("ld_dip", "(V-H)", "LD (V-H, Dipolar)", "-"),
-    "Linear Dichroic (Quadrupolar)": ("ld_quad", "(V-H)", "LD (V-H, Quadrupolar)", "-"),
+    "Linear Dichroic (Dipolar)": ("ld_dip", "(V-H)", "LD (V-H, Dipolar)", "--"),
+    "Linear Dichroic (Quadrupolar)": ("ld_quad", "(V-H)", "LD (V-H, Quadrupolar)", ":"),
     "Vertical Polarized": ("v", "(V)", "LD (V)", "--"),
     "Horizontal Polarized": ("h", "(H)", "LD (H)", ":"),
     "Resonant Inelastic": ("k", None, "Resonant Inelastic", None),
