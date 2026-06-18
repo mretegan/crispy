@@ -11,6 +11,7 @@ from silx.gui.qt import (
     QEvent,
     QIntValidator,
     QLineEdit,
+    QLocale,
     QPalette,
     Qt,
 )
@@ -113,6 +114,11 @@ class DoubleLineEdit(LineEdit):
         super().__init__(*args, **kwargs)
         self.validator = QDoubleValidator()
         self.setValidator(self.validator)
+
+    def value(self):
+        """Return the field as a float, or None when it is not a valid number."""
+        value, ok = QLocale().toDouble(self.text())
+        return value if ok else None
 
 
 class Vector3DLineEdit(LineEdit):

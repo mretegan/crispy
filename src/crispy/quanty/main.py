@@ -8,12 +8,14 @@ from itertools import pairwise
 import qtawesome as qta
 from silx.gui.qt import (
     QAction,
+    QDialog,
     QDockWidget,
     QFileDialog,
     QItemSelectionModel,
     QMenu,
     QModelIndex,
     QPoint,
+    QProgressDialog,
     Qt,
     QWidget,
     pyqtSignal,
@@ -27,6 +29,7 @@ from crispy.quanty.details import DetailsDialog
 from crispy.quanty.external import ExternalData
 from crispy.quanty.preferences import PreferencesDialog
 from crispy.quanty.progress import ProgressDialog
+from crispy.quanty.scan import ScanController, ScanDialog, scannableParameters
 from crispy.uic import loadUi
 from crispy.utils import findQtObject
 from crispy.views import setMappings
@@ -489,6 +492,12 @@ class DockWidget(QDockWidget):
         self.saveInputAsPushButton.setIcon(qta.icon("fa6s.floppy-disk"))
         self.calculationPushButton.setIcon(qta.icon("fa6s.play", color="#4caf50"))
 
+        # Controller driving an in-progress scan; kept so it is not garbage
+        # collected while the asynchronous runs are pending.
+        self._scanController = None
+        self._scanProgress = None
+        self._scanTotal = 0
+
         self.model = TreeModel()
 
         self.preferencesDialog = PreferencesDialog(self)
@@ -526,6 +535,10 @@ class DockWidget(QDockWidget):
             "Save Input As...", self, triggered=self.saveInputAs
         )
         self.showHideAction = QAction("Show/Hide Module", self, triggered=self.showHide)
+
+        self.scanAction = QAction(
+            "Parameter Scan...", self, triggered=self.openScanDialog
+        )
 
     @property
     def state(self):
@@ -649,6 +662,55 @@ class DockWidget(QDockWidget):
             logger.error(e)
             return
         progress.show()
+
+    def openScanDialog(self):
+        if not list(self.state.spectra.toCalculate.selected):
+            logger.error("No spectra to calculate.")
+            return
+
+        parameters = scannableParameters(self.state)
+        dialog = ScanDialog(parameters, parent=self)
+        if dialog.exec() != QDialog.Accepted:
+            return
+        self.runScan(dialog.spec())
+
+    def runScan(self, spec):
+        total = 1
+        for *_, values in spec:
+            total *= len(values)
+        if total == 0:
+            return
+
+        controller = ScanController(self.state, self.resultsPage.model, parent=self)
+
+        progress = QProgressDialog(
+            "Running parameter scan...", "Cancel", 0, total, self
+        )
+        progress.setWindowModality(Qt.WindowModal)
+        progress.setMinimumDuration(0)
+        progress.setValue(0)
+        progress.canceled.connect(controller.cancel)
+
+        self._scanController = controller
+        self._scanProgress = progress
+        self._scanTotal = total
+
+        controller.progress.connect(self._onScanProgress)
+        controller.finished.connect(self._onScanFinished)
+        controller.run(spec)
+
+    def _onScanProgress(self, current, count):
+        self._scanProgress.setLabelText(f"Running calculation {current} of {count}...")
+        self._scanProgress.setValue(current - 1)
+
+    def _onScanFinished(self, completed):
+        self._scanProgress.setValue(self._scanTotal)
+        self.toolBox.setCurrentWidget(self.resultsPage)
+        logger.info(
+            f"Parameter scan finished: {completed} of {self._scanTotal} "
+            "calculations completed."
+        )
+        self._scanController = None
 
     def stop(self):
         self.state.stop()

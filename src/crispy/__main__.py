@@ -81,6 +81,8 @@ class MainWindow(QMainWindow):
         )
         menu.addAction(self.loadExternalDataAction)
 
+        menu.addAction(self.quantyDockWidget.scanAction)
+
         self.runJupyterLabAction = QAction(
             "Start Jupyter Lab", self, triggered=self.runJupyterLab
         )

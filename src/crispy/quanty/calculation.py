@@ -145,12 +145,10 @@ class Configuration:
             self.shells = (valenceShell,)
             self.occupancies = (valenceOccupancy,)
 
-        self.subshells = tuple(
-            [
-                f"{level}{shell}"
-                for level, shell in zip(self.levels, self.shells, strict=False)
-            ]
-        )
+        self.subshells = tuple([
+            f"{level}{shell}"
+            for level, shell in zip(self.levels, self.shells, strict=False)
+        ])
 
         self._value = value
 
@@ -474,6 +472,10 @@ class Calculation(SelectableItem):
         # Set the very special ancestor, in this case self.
         self._ancestor = self
 
+        # Optional suffix appended to the label to distinguish the individual
+        # points of a parameter scan.
+        self.labelSuffix = None
+
         # Validate the keyword arguments. This is best done this way; using properties
         # it gets rather convoluted.
         self._symbols = []
@@ -572,10 +574,13 @@ class Calculation(SelectableItem):
     def label(self):
         """Human-readable name shown in the results view."""
         edge = self.edge.value.split(" (")[0]
-        return (
+        label = (
             f"{self.element.value} {self.experiment.value} "
             f"{edge} ({self.symmetry.value})"
         )
+        if self.labelSuffix:
+            label = f"{label} [{self.labelSuffix}]"
+        return label
 
     def data(self, column, role=Qt.DisplayRole):
         if role in (Qt.EditRole, Qt.DisplayRole, Qt.UserRole):
