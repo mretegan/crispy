@@ -166,7 +166,12 @@ class Cowan:
             )
         except subprocess.CalledProcessError:
             logger.critical("The command %s did not finish successfully.", command)
-            sys.exit()
+            sys.exit(1)
+        except OSError as error:
+            # FileNotFoundError if the wrapper script is missing, PermissionError
+            # if it is not executable; neither is a CalledProcessError.
+            logger.critical("The command %s could not be run: %s.", command, error)
+            sys.exit(1)
 
     def require_binary(self, name):
         """Exit with a clear error if the Cowan "name" binary is missing."""
@@ -178,7 +183,7 @@ class Cowan:
                 path,
                 self.root,
             )
-            sys.exit()
+            sys.exit(1)
 
     def run_rcn(self):
         """Create the input and run the RCN program."""

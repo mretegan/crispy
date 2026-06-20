@@ -55,6 +55,9 @@ bundle = ["build", "pyinstaller", "pyinstaller-hooks-contrib", "twine"]
 [project.gui-scripts]
 crispy = "crispy.__main__:main"
 
+[project.scripts]
+cowan-parameters = "crispy.quanty.cowan:main"
+
 [tool.setuptools.packages.find]
 where = ["src"]
 namespaces = false
