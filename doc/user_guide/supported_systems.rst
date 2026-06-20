@@ -30,7 +30,7 @@ Calculations are organized by the **valence shell** of the absorbing ion.
       - La – Yb
       - Lanthanides.
     * - ``5f``
-      - Ac – Cm
+      - Ac – Cf
       - Actinides.
 
 The available oxidation states (charges) depend on the element and are offered

@@ -124,12 +124,16 @@ def generate_parameters(symbols):
     for symbol in symbols:
         element = Element()
         element.symbol = symbol
-        confs = unique_configurations(element)
-        logger.debug(confs)
 
         path = resourceAbsolutePath(
             os.path.join("quanty", "parameters", f"{element.symbol}.h5")
         )
+
+        if not os.path.exists(path):
+            h5py.File(path, "w").close()
+
+        confs = unique_configurations(element)
+        logger.debug(confs)
 
         with h5py.File(path, "w") as h5:
             for conf in confs:

@@ -147,6 +147,10 @@
       charges: [2+, 3+, 4+, 5+, 6+, 7+]
     - symbol: Cm
       charges: [2+, 3+, 4+, 5+, 6+]
+    - symbol: Bk
+      charges: [2+, 3+, 4+]
+    - symbol: Cf
+      charges: [2+, 3+, 4+]
   experiments:
     - name: XAS
       edges: ["L2,3 (2p)", "M2,3 (3p)", "M4,5 (3d)", "N2,3 (4p)", "N4,5 (4d)"]
