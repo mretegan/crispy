@@ -356,6 +356,19 @@ class Cowan:
     def _to_ev(self, value):
         return round(float(value) * self.RYDBERG_TO_EV, ndigits=4)
 
+    def parse_etot(self, text):
+        """Return the configuration-average energy E_av (eV) from an rcn output.
+
+        E_av is the last column of the ETOT line, the total energy with
+        correlation; the difference between two configurations gives the
+        offset that separates them in the Hamiltonian.
+        """
+        energy = None
+        for line in text.splitlines():
+            if "ETOT=" in line:
+                energy = self._to_ev(line.split()[-1])
+        return energy
+
     def run_rcn_configuration(self, label, occupancies):
         """Run rcn for a single configuration and return the output text."""
         self.require_binary("rcn")
@@ -413,19 +426,33 @@ class Cowan:
         d_upper, p_upper = d.upper(), p.upper()
         inner = "4F14 " if d == "5d" else ""
 
+        delta = f"Δ({d},{p})"
         result = {}
-        # Final state: 1s^1 n d^m (n+1)p^1.
+        # Final state: the 1s^1 n d^m (n+1)p^1 dipole channel mixes with the
+        # 1s^1 n d^(m+1) quadrupole channel; their E_av difference is the offset.
         occupancies = f"1S01 {inner}{d_upper}{m:02d} {p_upper}01"
         label = f"     {symbol} 1s1 {d}{m} {p}1"
         text = self.run_rcn_configuration(label, occupancies)
-        result["Final Hamiltonian"] = self.parse_dp_parameters(text, d, p, core=True)
-        # Initial state: n d^(m-1) (n+1)p^1 (needs at least one d electron).
+        final = self.parse_dp_parameters(text, d, p, core=True)
+        e_final_dp = self.parse_etot(text)
+        occupancies = f"1S01 {inner}{d_upper}{m + 1:02d} {p_upper}00"
+        label = f"     {symbol} 1s1 {d}{m + 1}"
+        text = self.run_rcn_configuration(label, occupancies)
+        final[delta] = round(e_final_dp - self.parse_etot(text), ndigits=4)
+        result["Final Hamiltonian"] = final
+        # Initial state: the n d^(m-1) (n+1)p^1 dipole channel mixes with the
+        # n d^m ground configuration (needs at least one d electron).
         if m >= 1:
             occupancies = f"1S02 {inner}{d_upper}{m - 1:02d} {p_upper}01"
             label = f"     {symbol} {d}{m - 1} {p}1"
             text = self.run_rcn_configuration(label, occupancies)
-            params = self.parse_dp_parameters(text, d, p, core=False)
-            result["Initial Hamiltonian"] = params
+            initial = self.parse_dp_parameters(text, d, p, core=False)
+            e_initial_dp = self.parse_etot(text)
+            occupancies = f"1S02 {inner}{d_upper}{m:02d} {p_upper}00"
+            label = f"     {symbol} {d}{m}"
+            text = self.run_rcn_configuration(label, occupancies)
+            initial[delta] = round(e_initial_dp - self.parse_etot(text), ndigits=4)
+            result["Initial Hamiltonian"] = initial
         return result
 
 
