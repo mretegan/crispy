@@ -59,13 +59,12 @@ It includes many software packages with different licenses:
             f.write(f"- {dist.name} ({dist.version}): {info}\n")
 
 
-# Application data files, relative to the crispy package.
+# Application data files, relative to the Crispy package.
 data_paths = [
     ["uis", "*.ui"],
     ["icons", "*.svg"],
     ["quanty", "calculations.yaml"],
     ["quanty", "parameters", "*.h5"],
-    ["quanty", "parameters", "p-d_hybridization", "parameters.dat"],
     ["quanty", "templates", "*.lua"],
     ["quanty", "uis", "*.ui"],
     ["quanty", "uis", "details", "*.ui"],
