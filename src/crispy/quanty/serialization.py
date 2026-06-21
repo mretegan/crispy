@@ -30,7 +30,8 @@ Layout of a file (track_order keeps the items in their original order)::
                                    numberOfStates, numberOfStatesAuto,
                                    numberOfConfigurations
           /Terms/<term>/    attr: name, checkState
-            /<hamiltonian>/ datasets: values, scaleFactors; attr: parameters
+            /<hamiltonian>/
+              /<parameter>/ datasets: value, scaleFactor; attr: name
         /Spectra/
           toCalculate       dataset: selected spectrum names
           /Results/<j>/     attrs: type, name, suffix, label, lineStyle?,
@@ -179,21 +180,20 @@ class HamiltonianSerializer(Serializer):
             # and final sub-Hamiltonians.
             for subHamiltonian in term.children():
                 subGroup = termGroup.create_group(self.escape(subHamiltonian.name))
-                names, values, scaleFactors = [], [], []
+                # Each parameter is its own group, named after the parameter, so
+                # the name is visible in the file layout rather than only as a
+                # parallel attribute array.
                 for parameter in subHamiltonian.children():
-                    names.append(parameter.name)
-                    values.append(float(parameter.value))
-                    scaleFactor = parameter.scaleFactor
-                    scaleFactors.append(
-                        np.nan if scaleFactor is None else float(scaleFactor)
+                    parameterGroup = subGroup.create_group(self.escape(parameter.name))
+                    parameterGroup.attrs["name"] = parameter.name
+                    parameterGroup.create_dataset(
+                        "value", data=np.float64(parameter.value)
                     )
-                subGroup.create_dataset(
-                    "values", data=np.asarray(values, dtype=np.float64)
-                )
-                subGroup.create_dataset(
-                    "scaleFactors", data=np.asarray(scaleFactors, dtype=np.float64)
-                )
-                subGroup.attrs["parameters"] = np.asarray(names, dtype=STRING_DTYPE)
+                    scaleFactor = parameter.scaleFactor
+                    parameterGroup.create_dataset(
+                        "scaleFactor",
+                        data=np.float64(np.nan if scaleFactor is None else scaleFactor),
+                    )
 
     def load(self, group, hamiltonian):
         hamiltonian.fk._value = float(group.attrs["fk"])
@@ -223,21 +223,15 @@ class HamiltonianSerializer(Serializer):
                 if subKey not in termGroup:
                     continue
                 subGroup = termGroup[subKey]
-                names = self.to_str_list(subGroup.attrs["parameters"])
-                values = subGroup["values"][()]
-                scaleFactors = subGroup["scaleFactors"][()]
-                # Match by name so a reordered or extended parameter set loads.
-                lookup = {
-                    name: (float(value), scaleFactor)
-                    for name, value, scaleFactor in zip(
-                        names, values, scaleFactors, strict=False
-                    )
-                }
+                # Match by group name so a reordered or extended parameter set
+                # loads; missing parameters keep their defaults.
                 for parameter in subHamiltonian.children():
-                    if parameter.name not in lookup:
+                    parameterKey = self.escape(parameter.name)
+                    if parameterKey not in subGroup:
                         continue
-                    value, scaleFactor = lookup[parameter.name]
-                    parameter._value = value
+                    parameterGroup = subGroup[parameterKey]
+                    parameter._value = float(parameterGroup["value"][()])
+                    scaleFactor = parameterGroup["scaleFactor"][()]
                     parameter._scaleFactor = (
                         None if np.isnan(scaleFactor) else float(scaleFactor)
                     )
