@@ -215,6 +215,7 @@ class MainPlotWidget(CustomPlotWidget):
     def __init__(self, parent=None, **kwargs):
         super().__init__(parent=parent, **kwargs)
         self.profileWindow = ProfileWindow()
+        self._deferLegend = False
 
         # Use the viridis color map by default.
         colormap = {
@@ -231,7 +232,18 @@ class MainPlotWidget(CustomPlotWidget):
 
     def addCurve(self, x, y, **kwargs):
         super().addCurve(x, y, **kwargs)
-        self.addLegend()
+        if not self._deferLegend:
+            self.addLegend()
+
+    def setLegendDeferred(self, deferred):
+        """Suspend per-curve legend rebuilds while adding many curves.
+
+        Rebuilding the legend on every addCurve is quadratic in the number of
+        curves. Defer it during a bulk plot and rebuild once when re-enabled.
+        """
+        self._deferLegend = deferred
+        if not deferred:
+            self.addLegend()
 
     def replot(self):
         self.addLegend()

@@ -23,6 +23,7 @@ from silx.gui.qt import (
 
 from crispy import resourceAbsolutePath
 from crispy.config import Config
+from crispy.items import SelectableItem
 from crispy.models import TreeModel
 from crispy.quanty import serialization
 from crispy.quanty.calculation import Calculation
@@ -316,12 +317,22 @@ class ResultsPage(QWidget):
             icon, "Show Details", self, triggered=self.showDetailsDialog
         )
 
+        icon = qta.icon("fa6s.square-check")
+        self.selectAllResultsAction = QAction(
+            icon, "Select All", self, triggered=self.selectAll
+        )
+
+        icon = qta.icon("fa6s.square")
+        self.selectNoneResultsAction = QAction(
+            icon, "Select None", self, triggered=self.selectNone
+        )
+
         icon = qta.icon("fa6s.floppy-disk")
-        self.saveHighlightedResultsAction = QAction(
+        self.saveSelectedResultsAction = QAction(
             icon,
-            "Save Highlighted Results As...",
+            "Save Selected Results As...",
             self,
-            triggered=self.saveHighlighted,
+            triggered=self.saveSelected,
         )
 
         icon = qta.icon("fa6s.folder-open")
@@ -337,7 +348,10 @@ class ResultsPage(QWidget):
         self.contextMenu = QMenu("Results Context Menu", self)
         self.contextMenu.addAction(self.showDetailsDialogAction)
         self.contextMenu.addSeparator()
-        self.contextMenu.addAction(self.saveHighlightedResultsAction)
+        self.contextMenu.addAction(self.selectAllResultsAction)
+        self.contextMenu.addAction(self.selectNoneResultsAction)
+        self.contextMenu.addSeparator()
+        self.contextMenu.addAction(self.saveSelectedResultsAction)
         self.contextMenu.addAction(self.loadResultsAction)
         self.contextMenu.addSeparator()
         self.contextMenu.addAction(self.removeSelectedResultsAction)
@@ -399,11 +413,46 @@ class ResultsPage(QWidget):
         """Save every result in the list to an HDF5 file."""
         self._saveResults(self.model.rootItem().children(), "Save Results As")
 
-    def saveHighlighted(self):
-        """Save the highlighted results to an HDF5 file."""
-        items = self.getHighlighted()
+    def getChecked(self):
+        """Return the result items whose checkbox is checked."""
+        return [
+            child
+            for child in self.model.rootItem().children()
+            if isinstance(child, SelectableItem) and child.isEnabled()
+        ]
+
+    def saveSelected(self):
+        """Save the checked results to an HDF5 file."""
+        items = self.getChecked()
         if items:
-            self._saveResults(items, "Save Highlighted Results As")
+            self._saveResults(items, "Save Selected Results As")
+
+    def selectAll(self):
+        """Check every result item."""
+        self.setCheckStateForAll(Qt.CheckState.Checked)
+
+    def selectNone(self):
+        """Uncheck every result item."""
+        self.setCheckStateForAll(Qt.CheckState.Unchecked)
+
+    def setCheckStateForAll(self, state):
+        # Toggle every checkbox with plotting suppressed, then refresh the plot
+        # once. Replotting after each item would be quadratic in the number of
+        # results.
+        children = [
+            child
+            for child in self.model.rootItem().children()
+            if isinstance(child, SelectableItem)
+        ]
+        if not children:
+            return
+        self.plotting = True
+        try:
+            for child in children:
+                child.checkState = state
+        finally:
+            self.plotting = False
+        self.plot(QModelIndex())
 
     def _saveResults(self, items, title):
         items = [
@@ -490,14 +539,19 @@ class ResultsPage(QWidget):
                     ):
                         child.checkState = Qt.CheckState.Unchecked
 
-            # Plot the calculations that are checked.
-            for child in children:
-                if not child.isEnabled():
-                    continue
-                if isinstance(child, Calculation):
-                    child.spectra.plot(plotWidget)
-                elif isinstance(child, ExternalData):
-                    child.plot(plotWidget)
+            # Plot the calculations that are checked. Defer the legend rebuild
+            # so it runs once instead of once per added curve.
+            plotWidget.setLegendDeferred(True)
+            try:
+                for child in children:
+                    if not child.isEnabled():
+                        continue
+                    if isinstance(child, Calculation):
+                        child.spectra.plot(plotWidget)
+                    elif isinstance(child, ExternalData):
+                        child.plot(plotWidget)
+            finally:
+                plotWidget.setLegendDeferred(False)
 
             # Reset the plot widget if nothing new was plotted.
             if plotWidget.isEmpty():
@@ -514,9 +568,13 @@ class ResultsPage(QWidget):
         self.currentIndex = index
 
     def showResultsContextMenu(self, position):
-        selected = bool(self.view.selectedIndexes())
-        self.removeSelectedResultsAction.setEnabled(selected)
-        self.saveHighlightedResultsAction.setEnabled(selected)
+        highlighted = bool(self.view.selectedIndexes())
+        self.removeSelectedResultsAction.setEnabled(highlighted)
+
+        children = self.model.rootItem().children()
+        self.selectAllResultsAction.setEnabled(bool(children))
+        self.selectNoneResultsAction.setEnabled(bool(children))
+        self.saveSelectedResultsAction.setEnabled(bool(self.getChecked()))
 
         # Enable the action only if there is a valid item under the cursor.
         # TODO: Probably also check if the item is of a valid class.
