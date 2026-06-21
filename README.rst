@@ -102,8 +102,8 @@ please cite the following reference (change the version number if required)::
     @software{retegan_crispy,
       author  = {Retegan, Marius},
       title   = {Crispy},
-      version = {0.8.0},
-      year    = {2024},
+      version = {2026.0},
+      year    = {2026},
       doi     = {10.5281/zenodo.1008184},
       url     = {https://crispy.esrf.fr},
     }

@@ -11,8 +11,8 @@ authors:
     email: marius.retegan@esrf.fr
     affiliation: European Synchrotron Radiation Facility
     orcid: "https://orcid.org/0000-0002-1525-1094"
-version: 0.8.0
-date-released: 2024-09-26
+version: "2026.0"
+date-released: 2026-06-21
 doi: 10.5281/zenodo.1008184
 license: MIT
 url: https://crispy.esrf.fr
