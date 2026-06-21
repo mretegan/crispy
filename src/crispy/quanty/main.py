@@ -549,6 +549,9 @@ class DockWidget(QDockWidget):
         self._scanController = None
         self._scanProgress = None
         self._scanTotal = 0
+        # Snapshot of the last scan dialog setup, so reopening it within the
+        # session restores the rows instead of resetting to the default.
+        self._scanState = None
 
         self.model = TreeModel()
 
@@ -727,8 +730,12 @@ class DockWidget(QDockWidget):
             return
 
         parameters = scannableParameters(self.state)
-        dialog = ScanDialog(parameters, parent=self)
-        if dialog.exec() != QDialog.Accepted:
+        dialog = ScanDialog(parameters, parent=self, initialState=self._scanState)
+        result = dialog.exec()
+        # Remember the setup whether or not the scan is run, so closing the
+        # dialog does not discard it.
+        self._scanState = dialog.snapshot()
+        if result != QDialog.Accepted:
             return
         self.runScan(dialog.spec())
 

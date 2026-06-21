@@ -261,6 +261,31 @@ class ScanRow(QWidget):
         self.stepLineEdit.setText("0.1")
         self.changed.emit()
 
+    def getState(self):
+        """Capture the row setup as a plain dict for later restoration."""
+        return {
+            "label": self.parameter.label,
+            "scope": self.scope,
+            "start": self.startLineEdit.text(),
+            "stop": self.stopLineEdit.text(),
+            "step": self.stepLineEdit.text(),
+        }
+
+    def applyState(self, state):
+        """Restore a captured setup. Return False if its parameter is gone."""
+        labels = [parameter.label for parameter in self.parameters]
+        if state["label"] not in labels:
+            return False
+        # Setting the parameter repopulates the scopes and prefills the range,
+        # so the scope and the range fields are restored afterwards.
+        self.comboBox.setCurrentIndex(labels.index(state["label"]))
+        if state["scope"] in self._scopeKeys:
+            self.scopeComboBox.setCurrentIndex(self._scopeKeys.index(state["scope"]))
+        self.startLineEdit.setText(state["start"])
+        self.stopLineEdit.setText(state["stop"])
+        self.stepLineEdit.setText(state["step"])
+        return True
+
     def values(self):
         """Return the list of values for this row, or None when it is invalid."""
         start = self.startLineEdit.value()
@@ -277,7 +302,7 @@ class ScanRow(QWidget):
 class ScanDialog(QDialog):
     """Modal dialog to set up a multi-parameter scan."""
 
-    def __init__(self, parameters, parent=None):
+    def __init__(self, parameters, parent=None, initialState=None):
         super().__init__(parent=parent)
         self.setWindowTitle("Parameter Scan")
         self.parameters = parameters
@@ -316,7 +341,7 @@ class ScanDialog(QDialog):
         self.buttonBox.rejected.connect(self.reject)
         layout.addWidget(self.buttonBox)
 
-        self.addRow()
+        self._restore(initialState)
         self.updateCount()
 
     def addRow(self):
@@ -327,6 +352,20 @@ class ScanDialog(QDialog):
         self.rowsLayout.insertWidget(self.rowsLayout.count() - 1, row)
         self.rows.append(row)
         self.updateCount()
+        return row
+
+    def _restore(self, initialState):
+        """Rebuild the rows from a saved snapshot, dropping stale parameters."""
+        for state in initialState or []:
+            row = self.addRow()
+            if not row.applyState(state):
+                self.removeRow(row)
+        if not self.rows:
+            self.addRow()
+
+    def snapshot(self):
+        """Capture the current rows for later restoration."""
+        return [row.getState() for row in self.rows]
 
     def removeRow(self, row):
         self.rows.remove(row)
