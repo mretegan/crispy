@@ -5,15 +5,58 @@ Changelog
 All notable changes to this project will be documented in this file.
 
 The format is based on `Keep a Changelog <https://keepachangelog.com/en/1.1.0/>`_,
-and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0.html>`_.
+and this project adheres to `Calendar Versioning <https://calver.org/>`_.
 
 `Unreleased`_
 =============
 
+`2026.0`_ - 2026-06-21
+======================
+
 Added
 -----
-- Write the Quanty output (the log) to a ``<name>.out`` file, kept on disk
-  together with the input and spectra files.
+- New calculations:
+
+  - XPS for the M4,5 (3d) and N4,5 (4d) edges of the 4d and 5d transition
+    metals, with the corresponding XAS edges.
+  - XES with a relaxed intermediate state for the Kα (1s2p) and Kβ (1s3p)
+    edges.
+  - 3d4f RIXS for the lanthanides and 3d5f RIXS for the actinides.
+  - Isotropic RIXS, with an ``Average Polarization`` option that resolves or averages 
+  the outgoing polarization.
+
+- New crystal-field symmetries: D3d for the transition metals, and the full
+  set (D4h, Td, C3v, D3h, D3d) for the lanthanides and actinides.
+- Support for berkelium (Bk) and californium (Cf).
+- Parameter scan widget for stepping one or more parameters over a range.
+- Save and load calculations, results and external data as HDF5 files.
+- Default scattering geometry for RIXS calculations.
+- Hamiltonian tab in the details dialog.
+- Configuration-average energy difference between the dipole and quadrupole
+  channels of the p-d hybridization.
+- ``cowan-parameters`` command-line entry point.
+
+Changed
+-------
+- Migrated the interface from PyQt to PySide6.
+- Overhauled the user interface and replaced the SVG icons with qtawesome.
+- Reworked the p-d hybridization to compute its parameters with the Cowan
+  programs, limited to the 3d transition metals.
+- Polarization is now a single vector, projected onto the plane perpendicular
+  to the wave vector.
+- Running calculations can now be stopped.
+- More parameters are preserved when changing the setup.
+- Check for new releases against the PyPI JSON API.
+- Overhauled the build and packaging pipeline; require Python 3.10 or newer.
+- Adopted CalVer for the version scheme.
+- Added a pytest suite and adopted ruff for linting and formatting.
+
+Fixed
+-----
+- Infinite recursion when plotting interdependent results.
+- Crash after an unsuccessful calculation.
+- Reading and writing of settings.
+- Placement of the calculation progress dialog.
 
 `0.8.0`_ - 2024-09-26
 =====================
@@ -190,7 +233,8 @@ Added
 - Interactive plotting of the results.
 - Abstract list model and tree model to display/modify the input parameters.
 
-.. _Unreleased: https://github.com/mretegan/crispy/compare/v0.8.0...HEAD
+.. _Unreleased: https://github.com/mretegan/crispy/compare/v2026.0...HEAD
+.. _2026.0: https://github.com/mretegan/crispy/compare/v0.8.0...v2026.0
 .. _0.8.0: https://github.com/mretegan/crispy/compare/v0.7.4...v0.8.0
 .. _0.7.4: https://github.com/mretegan/crispy/compare/v0.7.3...v0.7.4
 .. _0.7.3: https://github.com/mretegan/crispy/compare/v0.7.2...v0.7.3
