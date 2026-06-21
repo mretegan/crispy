@@ -22,7 +22,7 @@ Added
   - XES with a relaxed intermediate state for the Kα (1s2p) and Kβ (1s3p)
     edges.
   - 3d4f RIXS for the lanthanides and 3d5f RIXS for the actinides.
-  - Isotropic RIXS, with an ``Average Polarization`` option that resolves or
+  - Isotropic RIXS, with an ``Analyze Polarization`` option that resolves or
     averages the outgoing polarization.
 
 - New crystal-field symmetries: D3d for the transition metals, and the full
