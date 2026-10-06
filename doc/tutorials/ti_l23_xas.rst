@@ -1,6 +1,5 @@
 Calculating the |L2,3| XAS of |Ti4+|
 ====================================
-
 In this tutorial, we will use the |L2,3| absorption spectrum of |Ti4+| to
 illustrate some of the fundamental concepts in using multiplet calculations as
 a tool to interpret experimental data. The absorption spectrum results from the

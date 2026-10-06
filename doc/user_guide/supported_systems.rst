@@ -1,6 +1,5 @@
 Supported Systems
 ==================
-
 Crispy generates Quanty input for core-level spectroscopy calculations on a
 single absorbing ion. The element, charge, symmetry, experiment, and edge are
 chosen on the *General Setup* page; the combinations available there are listed

@@ -1,6 +1,5 @@
 About
 =====
-
 How to cite Crispy and the history of changes.
 
 .. toctree::

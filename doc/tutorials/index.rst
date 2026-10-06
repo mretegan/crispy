@@ -1,6 +1,5 @@
 Tutorials
 =========
-
 On this page you will find links to a series of tutorials to help get you
 started with Crispy. They are largely based on tutorials kindly provided by
 `Amélie Juhin <http://www-ext.impmc.upmc.fr/~juhin>`_. The tutorials are in no

@@ -1,6 +1,5 @@
 Using K Pre-Edge XAS to Follow the Spin Transition in |Fe3+|
 ============================================================
-
 The following tutorial shows how changes in the X-ray absorption spectrum at
 the K pre-edge, resulting from 1s to 3d transitions, can be used to track the
 spin state of |Fe3+| compounds.

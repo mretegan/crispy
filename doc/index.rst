@@ -1,6 +1,5 @@
 Welcome to the Crispy documentation!
 ====================================
-
 .. include:: ../README.rst
     :end-before: first-marker
 
