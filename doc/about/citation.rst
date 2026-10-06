@@ -1,6 +1,5 @@
 Citation
 ========
-
 If you use Crispy in your research, please cite it. The citation metadata is
 maintained in the machine-readable `CITATION.cff
 <https://github.com/mretegan/crispy/blob/main/CITATION.cff>`_ file. On GitHub,

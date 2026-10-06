@@ -1,6 +1,5 @@
 A Multiconfigurational Treatment of the |L2,3| XAS in |Ni2+| Compounds
 ======================================================================
-
 The following tutorial illustrates the limitations of crystal field multiplet
 theory in reproducing some of the spectral features in a series of nickel
 compounds, and introduces the more elaborate charge transfer multiplet model,

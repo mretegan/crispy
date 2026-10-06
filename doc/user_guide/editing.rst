@@ -1,6 +1,5 @@
 Editing a Calculation
 =====================
-
 The General Setup page exposes five combo boxes that define a calculation: the
 **element** (symbol), **charge**, **symmetry**, **experiment**, and **edge**.
 Changing any of them rebuilds the calculation. To avoid discarding the values

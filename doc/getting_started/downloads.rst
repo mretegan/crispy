@@ -1,6 +1,5 @@
 Downloads
 =========
-
 .. list-table::
     :widths: 1 1 1
     :align: center

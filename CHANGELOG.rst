@@ -1,7 +1,6 @@
 =========
 Changelog
 =========
-
 All notable changes to this project will be documented in this file.
 
 The format is based on `Keep a Changelog <https://keepachangelog.com/en/1.1.0/>`_,
@@ -9,6 +8,11 @@ and this project adheres to `Calendar Versioning <https://calver.org/>`_.
 
 `Unreleased`_
 =============
+
+Changed
+-------
+- Powder RIXS uses the resonant tensor of Quanty (three operators per side
+  instead of nine). This requires a Quanty version with resonant tensor support.
 
 `2026.0`_ - 2026-06-21
 ======================
@@ -219,7 +223,6 @@ Added
 
 `0.1.0`_ - 2016-08-21
 =====================
-
 The first release of Crispy.
 
 Added

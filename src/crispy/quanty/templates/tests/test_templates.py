@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 """Quanty templates tests"""
 
 import glob

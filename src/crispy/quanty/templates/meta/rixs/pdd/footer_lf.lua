@@ -80,31 +80,21 @@ if ValueInTable("Resonant Inelastic", SpectraToCalculate) then
     SaveSpectrum(G, Prefix .. "_k", Gaussian, 0.0)
 end
 
--- Powder-averaged (isotropic) resonant inelastic scattering. The two fundamental
--- spectra A and B are obtained from the full 9 x 9 polarization grid (the
--- four-measurement scheme) and combined with a geometry factor that depends only
--- on the incident and scattered polarizations. Valid for dipole-in/dipole-out
--- edges only.
+-- Powder RIXS from the Cartesian dipole-dipole tensor.
+-- Combine fundamental spectra A and B using the polarization geometry.
+-- Valid for dipole-in/dipole-out edges only.
 if ValueInTable("Isotropic Resonant Inelastic", SpectraToCalculate) then
-    T_#i_#m = {Tx_#i_#m, Ty_#i_#m, Tz_#i_#m,
-               (Tx_#i_#m + Ty_#i_#m) * t, (Tx_#i_#m + Tz_#i_#m) * t, (Ty_#i_#m + Tz_#i_#m) * t,
-               (Tx_#i_#m - Ty_#i_#m) * t, (Tx_#i_#m - Tz_#i_#m) * t, (Ty_#i_#m - Tz_#i_#m) * t}
-    T_#m_#i = {Tx_#m_#i, Ty_#m_#i, Tz_#m_#i,
-               (Tx_#m_#i + Ty_#m_#i) * t, (Tx_#m_#i + Tz_#m_#i) * t, (Ty_#m_#i + Tz_#m_#i) * t,
-               (Tx_#m_#i - Ty_#m_#i) * t, (Tx_#m_#i - Tz_#m_#i) * t, (Ty_#m_#i - Tz_#m_#i) * t}
+    T_#i_#m = {Tx_#i_#m, Ty_#i_#m, Tz_#i_#m}
+    T_#m_#i = {Tx_#m_#i, Ty_#m_#i, Tz_#m_#i}
 
-    if CalculationRestrictions == nil then
-        G = CreateResonantSpectra(H_m, H_f, T_#i_#m, T_#m_#i, Psis_i, {{"Emin1", Emin1}, {"Emax1", Emax1}, {"NE1", NPoints1}, {"Gamma1", Gamma1}, {"Emin2", Emin2}, {"Emax2", Emax2}, {"NE2", NPoints2}, {"Gamma2", Gamma2}, {"DenseBorder", DenseBorder}})
-    else
-        G = CreateResonantSpectra(H_m, H_f, T_#i_#m, T_#m_#i, Psis_i, {{"Emin1", Emin1}, {"Emax1", Emax1}, {"NE1", NPoints1}, {"Gamma1", Gamma1}, {"Emin2", Emin2}, {"Emax2", Emax2}, {"NE2", NPoints2}, {"Gamma2", Gamma2}, {"Restrictions1", CalculationRestrictions}, {"Restrictions2", CalculationRestrictions}, {"DenseBorder", DenseBorder}})
+    local Options = {{"Emin1", Emin1}, {"Emax1", Emax1}, {"NE1", NPoints1}, {"Gamma1", Gamma1}, {"Emin2", Emin2}, {"Emax2", Emax2}, {"NE2", NPoints2}, {"Gamma2", Gamma2}, {"DenseBorder", DenseBorder}}
+    if CalculationRestrictions ~= nil then
+        Options[#Options + 1] = {"Restrictions1", CalculationRestrictions}
+        Options[#Options + 1] = {"Restrictions2", CalculationRestrictions}
     end
+    local A, B = CalculatePowderSpectra(H_m, H_f, T_#i_#m, T_#m_#i, Psis_i, dZ_i, NPoints1, Options)
 
-    local A, B = GetFundamentalSpectra(G, dZ_i, #Psis_i, NPoints1)
-
-    -- Combine the fundamental spectra with a geometry factor. When the outgoing
-    -- polarization is analyzed it is the squared projection of the incident onto
-    -- the scattered polarization; otherwise it is averaged over the (unresolved)
-    -- outgoing polarization.
+    -- Average over outgoing polarizations when polarization is not analyzed.
     local GeometryFactor
     if $YAnalyzePolarization then
         GeometryFactor = DotProduct(EpsIn, EpsOut)^2

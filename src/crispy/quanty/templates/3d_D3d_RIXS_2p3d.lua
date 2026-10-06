@@ -460,78 +460,52 @@ function GetResonantSpectrum(G, dZ, NOperators, NPsis, NPoints)
     return Spectrum
 end
 
-function GetFundamentalSpectra(G, dZ, NPsis, NPoints)
-    -- Compute the two fundamental spectra A and B of the powder-averaged
-    -- (isotropic) dipole-dipole RIXS response from the full 9 x 9 polarization
-    -- grid produced by the "four-measurement" (+/-) scheme.
-    --
-    -- The transition operators passed to CreateResonantSpectra must be the
-    -- nine-element basis on each side, in the order
-    --   {Tx, Ty, Tz, (Tx+Ty)t, (Tx+Tz)t, (Ty+Tz)t, (Tx-Ty)t, (Tx-Tz)t, (Ty-Tz)t}
-    -- with t = 1/sqrt(2). The spectra object then holds one (NPoints + 1) block
-    -- for each (incident, emission) channel and wavefunction, ordered with the
-    -- wavefunction outermost, then the incident operator, then the emission
-    -- operator (the same ordering used by GetResonantSpectrum).
-    --
-    -- @param G userdata: Spectra object returned by CreateResonantSpectra.
-    -- @param dZ table: Boltzmann prefactors for each wavefunction.
-    -- @param NPsis number: Number of wavefunctions.
-    -- @param NPoints number: Number of points along the incident energy axis.
-    -- @return userdata, userdata: The fundamental spectra A and B.
-
-    local NChannels = 9
-    local NCombinations = NChannels * NChannels
-
-    -- Channel (i, j) summed over the wavefunctions, weighted by the Boltzmann
-    -- probabilities. i is the incident operator, j the emission operator.
-    local function Channel(i, j)
-        local Spectrum = 0
-        for p = 1, NPsis do
-            local Block = (p - 1) * NCombinations + (i - 1) * NChannels + (j - 1)
-            local Indexes = {}
-            for k = 1, NPoints + 1 do
-                table.insert(Indexes, Block * (NPoints + 1) + k)
-            end
-            Spectrum = Spectrum + Spectra.Element(G, Indexes) * dZ[p]
+function GetFundamentalSpectra(G, NPoints)
+    -- Extract the powder invariants from the Cartesian dipole-dipole tensor
+    -- for a SINGLE initial state (Tensor=true, TensorBasis="cartesian"). Both operator
+    -- lists must be {Tx, Ty, Tz}. Quanty stores the outgoing index
+    -- fastest: channel(a,b) = 3*a+b, with zero-based incoming a and outgoing b.
+    -- The ket channel is fastest within the 9 x 9 coherence matrix, followed by
+    -- the bra channel; each component has NPoints+1 incident-energy rows.
+    local function Component(a, b, c, d)
+        local Block = (3 * a + b) + 9 * (3 * c + d)
+        local Indexes = {}
+        for k = 1, NPoints + 1 do
+            Indexes[k] = Block * (NPoints + 1) + k
         end
-        return Spectrum
+        return Spectra.Element(G, Indexes)
     end
 
-    local Gpol = {}
-    for i = 1, NChannels do
-        Gpol[i] = {}
-        for j = 1, NChannels do
-            Gpol[i][j] = Channel(i, j)
+    local M1, TrM2, TrMM = 0, 0, 0
+    for a = 0, 2 do
+        for b = 0, 2 do
+            M1 = M1 + Component(a, b, a, b)
+            TrM2 = TrM2 + Component(a, a, b, b)
+            TrMM = TrMM + Component(a, b, b, a)
         end
     end
+    local M23 = TrM2 + TrMM
+    return (4 * M1 - M23) / 30, (-2 * M1 + 3 * M23) / 30
+end
 
-    -- First rotational invariant: the 3 x 3 Cartesian block.
-    local M1 = 0
-    for i = 1, 3 do
-        for j = 1, 3 do
-            M1 = M1 + Gpol[i][j]
-        end
+function CalculatePowderSpectra(Hm, Hf, Tin, Tout, Psis, dZ, NPoints, Options)
+    -- Sum fundamental spectra from separate normalized states with Boltzmann weights.
+    -- Each tensor has 81 components per incident energy.
+    -- Preserve energy windows, restrictions and DenseBorder.
+    local TensorOptions = {}
+    for _, Option in ipairs(Options) do
+        TensorOptions[#TensorOptions + 1] = Option
     end
+    TensorOptions[#TensorOptions + 1] = {"Tensor", true}
+    TensorOptions[#TensorOptions + 1] = {"TensorBasis", "cartesian"}
 
-    -- Second and third invariants, recovered from the diagonal and the +/-
-    -- combinations (the four-measurement scheme).
-    local Gtrace = Gpol[1][1] + Gpol[2][2] + Gpol[3][3]
-
-    local Gcross = 0
-    for i = 1, 3 do
-        local Plus = 3 + i
-        local Minus = 6 + i
-        Gcross = Gcross + (Gpol[Plus][Plus]
-                         - Gpol[Plus][Minus]
-                         - Gpol[Minus][Plus]
-                         + Gpol[Minus][Minus])
+    local A, B = 0, 0
+    for p, Psi in ipairs(Psis) do
+        local G = CreateResonantSpectra(Hm, Hf, Tin, Tout, {Psi}, TensorOptions)
+        local Ap, Bp = GetFundamentalSpectra(G, NPoints)
+        A = A + Ap * dZ[p]
+        B = B + Bp * dZ[p]
     end
-
-    local M23 = 2 * Gtrace + Gcross
-
-    local A = (4 * M1 - M23) / 30
-    local B = (-2 * M1 + 3 * M23) / 30
-
     return A, B
 end
 
@@ -777,31 +751,21 @@ if ValueInTable("Resonant Inelastic", SpectraToCalculate) then
     SaveSpectrum(G, Prefix .. "_k", Gaussian, 0.0)
 end
 
--- Powder-averaged (isotropic) resonant inelastic scattering. The two fundamental
--- spectra A and B are obtained from the full 9 x 9 polarization grid (the
--- four-measurement scheme) and combined with a geometry factor that depends only
--- on the incident and scattered polarizations. Valid for dipole-in/dipole-out
--- edges only.
+-- Powder RIXS from the Cartesian dipole-dipole tensor.
+-- Combine fundamental spectra A and B using the polarization geometry.
+-- Valid for dipole-in/dipole-out edges only.
 if ValueInTable("Isotropic Resonant Inelastic", SpectraToCalculate) then
-    T_2p_3d = {Tx_2p_3d, Ty_2p_3d, Tz_2p_3d,
-               (Tx_2p_3d + Ty_2p_3d) * t, (Tx_2p_3d + Tz_2p_3d) * t, (Ty_2p_3d + Tz_2p_3d) * t,
-               (Tx_2p_3d - Ty_2p_3d) * t, (Tx_2p_3d - Tz_2p_3d) * t, (Ty_2p_3d - Tz_2p_3d) * t}
-    T_3d_2p = {Tx_3d_2p, Ty_3d_2p, Tz_3d_2p,
-               (Tx_3d_2p + Ty_3d_2p) * t, (Tx_3d_2p + Tz_3d_2p) * t, (Ty_3d_2p + Tz_3d_2p) * t,
-               (Tx_3d_2p - Ty_3d_2p) * t, (Tx_3d_2p - Tz_3d_2p) * t, (Ty_3d_2p - Tz_3d_2p) * t}
+    T_2p_3d = {Tx_2p_3d, Ty_2p_3d, Tz_2p_3d}
+    T_3d_2p = {Tx_3d_2p, Ty_3d_2p, Tz_3d_2p}
 
-    if CalculationRestrictions == nil then
-        G = CreateResonantSpectra(H_m, H_f, T_2p_3d, T_3d_2p, Psis_i, {{"Emin1", Emin1}, {"Emax1", Emax1}, {"NE1", NPoints1}, {"Gamma1", Gamma1}, {"Emin2", Emin2}, {"Emax2", Emax2}, {"NE2", NPoints2}, {"Gamma2", Gamma2}, {"DenseBorder", DenseBorder}})
-    else
-        G = CreateResonantSpectra(H_m, H_f, T_2p_3d, T_3d_2p, Psis_i, {{"Emin1", Emin1}, {"Emax1", Emax1}, {"NE1", NPoints1}, {"Gamma1", Gamma1}, {"Emin2", Emin2}, {"Emax2", Emax2}, {"NE2", NPoints2}, {"Gamma2", Gamma2}, {"Restrictions1", CalculationRestrictions}, {"Restrictions2", CalculationRestrictions}, {"DenseBorder", DenseBorder}})
+    local Options = {{"Emin1", Emin1}, {"Emax1", Emax1}, {"NE1", NPoints1}, {"Gamma1", Gamma1}, {"Emin2", Emin2}, {"Emax2", Emax2}, {"NE2", NPoints2}, {"Gamma2", Gamma2}, {"DenseBorder", DenseBorder}}
+    if CalculationRestrictions ~= nil then
+        Options[#Options + 1] = {"Restrictions1", CalculationRestrictions}
+        Options[#Options + 1] = {"Restrictions2", CalculationRestrictions}
     end
+    local A, B = CalculatePowderSpectra(H_m, H_f, T_2p_3d, T_3d_2p, Psis_i, dZ_i, NPoints1, Options)
 
-    local A, B = GetFundamentalSpectra(G, dZ_i, #Psis_i, NPoints1)
-
-    -- Combine the fundamental spectra with a geometry factor. When the outgoing
-    -- polarization is analyzed it is the squared projection of the incident onto
-    -- the scattered polarization; otherwise it is averaged over the (unresolved)
-    -- outgoing polarization.
+    -- Average over outgoing polarizations when polarization is not analyzed.
     local GeometryFactor
     if $YAnalyzePolarization then
         GeometryFactor = DotProduct(EpsIn, EpsOut)^2
