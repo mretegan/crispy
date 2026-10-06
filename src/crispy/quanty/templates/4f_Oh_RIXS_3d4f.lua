@@ -637,10 +637,9 @@ function GetFundamentalSpectra(G, NPoints)
 end
 
 function CalculatePowderSpectra(Hm, Hf, Tin, Tout, Psis, dZ, NPoints, Options)
-    -- Calculate each normalized initial eigenstate separately and sum its
-    -- fundamental spectra with the corresponding Boltzmann weight.
-    -- Each tensor contains 81 components per incident energy. Energy windows,
-    -- restrictions and DenseBorder are retained.
+    -- Sum fundamental spectra from separate normalized states with Boltzmann weights.
+    -- Each tensor has 81 components per incident energy.
+    -- Preserve energy windows, restrictions and DenseBorder.
     local TensorOptions = {}
     for _, Option in ipairs(Options) do
         TensorOptions[#TensorOptions + 1] = Option
@@ -918,11 +917,9 @@ if ValueInTable("Resonant Inelastic", SpectraToCalculate) then
     SaveSpectrum(G, Prefix .. "_k", Gaussian, 0.0)
 end
 
--- Powder-averaged (isotropic) resonant inelastic scattering. The two fundamental
--- spectra A and B are obtained from the Cartesian coherence tensor
--- (Tensor=true, three operators per side) and combined with a factor depending only
--- on the incident and scattered polarizations. Valid for dipole-in/dipole-out
--- edges only.
+-- Powder RIXS from the Cartesian dipole-dipole tensor.
+-- Combine fundamental spectra A and B using the polarization geometry.
+-- Valid for dipole-in/dipole-out edges only.
 if ValueInTable("Isotropic Resonant Inelastic", SpectraToCalculate) then
     T_3d_4f = {Tx_3d_4f, Ty_3d_4f, Tz_3d_4f}
     T_4f_3d = {Tx_4f_3d, Ty_4f_3d, Tz_4f_3d}
@@ -934,10 +931,7 @@ if ValueInTable("Isotropic Resonant Inelastic", SpectraToCalculate) then
     end
     local A, B = CalculatePowderSpectra(H_m, H_f, T_3d_4f, T_4f_3d, Psis_i, dZ_i, NPoints1, Options)
 
-    -- Combine the fundamental spectra with a geometry factor. When the outgoing
-    -- polarization is analyzed it is the squared projection of the incident onto
-    -- the scattered polarization; otherwise it is averaged over the (unresolved)
-    -- outgoing polarization.
+    -- Average over outgoing polarizations when polarization is not analyzed.
     local GeometryFactor
     if $YAnalyzePolarization then
         GeometryFactor = DotProduct(EpsIn, EpsOut)^2

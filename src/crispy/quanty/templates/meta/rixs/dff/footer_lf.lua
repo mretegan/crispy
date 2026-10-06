@@ -80,11 +80,9 @@ if ValueInTable("Resonant Inelastic", SpectraToCalculate) then
     SaveSpectrum(G, Prefix .. "_k", Gaussian, 0.0)
 end
 
--- Powder-averaged (isotropic) resonant inelastic scattering. The two fundamental
--- spectra A and B are obtained from the Cartesian coherence tensor
--- (Tensor=true, three operators per side) and combined with a factor depending only
--- on the incident and scattered polarizations. Valid for dipole-in/dipole-out
--- edges only.
+-- Powder RIXS from the Cartesian dipole-dipole tensor.
+-- Combine fundamental spectra A and B using the polarization geometry.
+-- Valid for dipole-in/dipole-out edges only.
 if ValueInTable("Isotropic Resonant Inelastic", SpectraToCalculate) then
     T_#i_#m = {Tx_#i_#m, Ty_#i_#m, Tz_#i_#m}
     T_#m_#i = {Tx_#m_#i, Ty_#m_#i, Tz_#m_#i}
@@ -96,10 +94,7 @@ if ValueInTable("Isotropic Resonant Inelastic", SpectraToCalculate) then
     end
     local A, B = CalculatePowderSpectra(H_m, H_f, T_#i_#m, T_#m_#i, Psis_i, dZ_i, NPoints1, Options)
 
-    -- Combine the fundamental spectra with a geometry factor. When the outgoing
-    -- polarization is analyzed it is the squared projection of the incident onto
-    -- the scattered polarization; otherwise it is averaged over the (unresolved)
-    -- outgoing polarization.
+    -- Average over outgoing polarizations when polarization is not analyzed.
     local GeometryFactor
     if $YAnalyzePolarization then
         GeometryFactor = DotProduct(EpsIn, EpsOut)^2
