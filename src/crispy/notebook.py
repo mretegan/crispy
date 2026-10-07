@@ -1,5 +1,7 @@
 """The module provides an easy to use API to run calculations in Jupyter notebooks."""
 
+import numpy as np
+
 from crispy.config import Config as _Config
 from crispy.models import TreeModel
 from crispy.quanty.calculation import Calculation as _Calculation
@@ -127,18 +129,25 @@ class Axis:
     def set_parameter(self, name=None, value=None):
         if name is None or value is None:
             return
+        # A sequence of (energy, FWHM) pairs sets an energy dependent broadening.
+        if name == "Lorentzian" and not np.isscalar(value):
+            self._axis.lorentzian.points.value = value
+            return
         for parameter in self._axis.__dict__.values():
             if getattr(parameter, "name", None) == name:
                 parameter.value = value
 
     def __str__(self):
+        lorentzian = self._axis.lorentzian
         data = Tree()
         data[self._axis.name] = {
             "Start": self._axis.start.value,
             "Stop": self._axis.stop.value,
             "Number of Points": self._axis.npoints.value,
             "Gaussian": self._axis.gaussian.value,
-            "Lorentzian": self._axis.lorentzian.value,
+            "Lorentzian": lorentzian.points.value
+            if lorentzian.isVariable
+            else lorentzian.value,
         }
         return prettify(data)
 
