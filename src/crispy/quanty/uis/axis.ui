@@ -254,7 +254,7 @@
       </spacer>
      </item>
      <item row="1" column="2">
-      <widget class="QCheckBox" name="analyzeCheckBox">
+      <widget class="CheckBox" name="analyzeCheckBox">
        <property name="toolTip">
         <string>Resolve the outgoing polarization ε'. When off, it is averaged over.</string>
        </property>
@@ -314,6 +314,11 @@
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>CheckBox</class>
+   <extends>QCheckBox</extends>
+   <header>crispy.widgets</header>
+  </customwidget>
   <customwidget>
    <class>DoubleLineEdit</class>
    <extends>QLineEdit</extends>
