@@ -13,7 +13,6 @@ from silx.gui.qt import (
 )
 
 from crispy.items import ComboItem, DoubleItem, IntItem, Vector3DItem
-from crispy.utils import disconnectSignal
 from crispy.widgets import (
     ComboBox,
     DoubleLineEdit,
@@ -24,38 +23,76 @@ from crispy.widgets import (
 logger = logging.getLogger(__name__)
 
 
-def setMappings(mappings):
-    """Set the mappings between the model and widgets.
-    TODO:
-        - Should this be extended to accept other columns?
-        - Check if it has a model already.
+def setMappings(mappings, *, column=1):
+    """Connect widgets to fields of items in a tree model.
+
+    Each pair gets a mapper that reads the selected item column into the widget
+    and submits widget edits to that column. Checkbox and combo-box changes
+    submit immediately. Other signal connections on the widgets remain active.
+    Log the widget name, item name, and column at DEBUG level.
+
+    Args:
+        mappings: Iterable of (widget, item) pairs. Items must belong to a model.
+            Widgets must implement setEditorData(index) and
+            setModelData(model, index).
+        column: Zero-based item column shared by all pairs. The default is 1
+            (value). Column 0 contains names. Hamiltonian parameters use column 2
+            for scale factors.
+
+    Returns:
+        A list of QDataWidgetMapper objects, one per pair in input order.
+        Pass this list to clearMappings before mapping the widgets again.
+
+    Raises:
+        ValueError: An item has no model or the column is outside its column range.
     """
-    column = 1
     mappers = []
     for widget, obj in mappings:
+        model = obj.model()
+        if model is None:
+            raise ValueError("Cannot map an item without a model.")
+        if not 0 <= column < obj.columnCount():
+            raise ValueError(
+                f"Cannot map column {column}: the item has {obj.columnCount()} columns."
+            )
         mapper = QDataWidgetMapper(widget)
-        # logger.debug(obj.model())
-        mapper.setModel(obj.model())
+        mapper.setModel(model)
         mapper.addMapping(widget, column)
-        delegate = Delegate(widget)
+        delegate = Delegate(mapper)
         mapper.setItemDelegate(delegate)
         mapper.setRootIndex(obj.parent().index())
         mapper.setCurrentModelIndex(obj.index())
-        # QDataWidgetMapper needs a focus event to notice a change in the data.
-        # To make sure the model is informed about the change, I connected the
-        # stateChanged signal of the QCheckBox to the submit slot of the
-        # QDataWidgetMapper. The same idea goes for the QComboBox.
+        # Submit checkbox and combo-box changes without waiting for focus events.
         # https://bugreports.qt.io/browse/QTBUG-1818
         if isinstance(widget, QCheckBox):
-            signal = widget.stateChanged
-            disconnectSignal(signal)
-            signal.connect(mapper.submit)
+            widget.stateChanged.connect(mapper.submit)
         elif isinstance(widget, QComboBox):
-            signal = widget.currentTextChanged
-            disconnectSignal(signal)
-            signal.connect(mapper.submit)
+            widget.currentTextChanged.connect(mapper.submit)
         mappers.append(mapper)
+        logger.debug(
+            "Mapped widget %r to item %r in column %d.",
+            widget.objectName(),
+            obj.name,
+            column,
+        )
     return mappers
+
+
+def clearMappings(mappers):
+    """Clear mappings and schedule deletion of the mappers and their delegates.
+
+    Args:
+        mappers: The list returned by setMappings. This function empties the list.
+    """
+    for mapper in mappers:
+        widget = mapper.parent()
+        mapper.clearMapping()
+        if isinstance(widget, QCheckBox):
+            widget.stateChanged.disconnect(mapper.submit)
+        elif isinstance(widget, QComboBox):
+            widget.currentTextChanged.disconnect(mapper.submit)
+        mapper.deleteLater()
+    mappers.clear()
 
 
 class Delegate(QStyledItemDelegate):
