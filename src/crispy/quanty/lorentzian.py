@@ -3,7 +3,7 @@
 import logging
 import os
 from functools import partial
-from math import hypot, isfinite
+from math import ceil, hypot, isfinite, log10
 
 import qtawesome as qta
 from silx.gui.plot import PlotWidget
@@ -81,7 +81,6 @@ class LorentzianDialog(QDialog):
         axis = lorentzian.parent()
         self.start = axis.start.value
         self.stop = axis.stop.value
-        self.minimum = lorentzian.MINIMUM
         self.defaultValue = axis.coreholeWidth
         self.markers = []
 
@@ -122,7 +121,7 @@ class LorentzianDialog(QDialog):
         self.stepWidthLineEdit.setText(formatNumber(0.0))
         self.stepBelowLineEdit.setText(formatNumber(lorentzian.value))
         self.stepAboveLineEdit.setText(formatNumber(lorentzian.value))
-        self.writeTable(lorentzian.points)
+        self.writeTable(lorentzian.points.value)
         self.variableRadioButton.setChecked(lorentzian.isVariable)
 
         self.constantRadioButton.toggled.connect(self.updateMode)
@@ -259,7 +258,9 @@ class LorentzianDialog(QDialog):
 
         rows = self.readTable()
         energy = round(position[0], 2)
-        fwhm = round(max(position[1], self.minimum), 2)
+        if position[1] <= 0.0:
+            return None
+        fwhm = self.roundFwhm(position[1])
         menu = QMenu(self)
         add = menu.addAction("Add Point")
         add.triggered.connect(lambda: self.setPoints([*rows, (energy, fwhm)]))
@@ -290,8 +291,8 @@ class LorentzianDialog(QDialog):
         """
         if not self.isVariable():
             value = self.value()
-            if value is None or value < self.minimum:
-                return f"The FWHM must be at least {self.minimum} eV.", False
+            if value is None or value <= 0.0:
+                return "The FWHM must be finite and positive.", False
             return "", True
 
         rows = self.readTable()
@@ -303,18 +304,18 @@ class LorentzianDialog(QDialog):
         table = self.pointsTableWidget
         table.blockSignals(True)
         for row, (energy, fwhm) in enumerate(rows):
-            checks = (energy is not None, fwhm is not None and fwhm >= self.minimum)
+            checks = (energy is not None, fwhm is not None and fwhm > 0.0)
             for column, ok in enumerate(checks):
                 color = None if ok else QColor("red")
                 table.item(row, column).setData(Qt.ForegroundRole, color)
             numbers = numbers and None not in (energy, fwhm)
-            fwhms = fwhms and (fwhm is None or fwhm >= self.minimum)
+            fwhms = fwhms and (fwhm is None or fwhm > 0.0)
         table.blockSignals(False)
 
         if not numbers:
             return "Enter a number in each cell.", False
         if not fwhms:
-            return f"Each FWHM must be at least {self.minimum} eV.", False
+            return "Each FWHM must be positive.", False
         energies = [energy for energy, _ in rows]
         if min(energies) < self.start or max(energies) > self.stop:
             message = (
@@ -374,16 +375,16 @@ class LorentzianDialog(QDialog):
                 color=FWHM_COLOR,
                 symbol="o",
                 draggable=True,
-                constraint=self.pointConstraint,
+                constraint=partial(self.pointConstraint, fwhm),
             )
             marker.setSymbolSize(POINT_SIZE)
             marker.sigItemChanged.connect(partial(self.pointMoving, row, marker))
             marker.sigDragFinished.connect(partial(self.pointMoved, row, marker))
             self.markers.append(marker)
 
-    def pointConstraint(self, x, y):
-        # Keep the FWHM of a dragged point valid.
-        return x, max(y, self.minimum)
+    def pointConstraint(self, fwhm, x, y):
+        # A drag below zero keeps the original positive FWHM.
+        return x, y if y > 0.0 else fwhm
 
     def setLimits(self, points):
         if not points:
@@ -400,8 +401,19 @@ class LorentzianDialog(QDialog):
         """Return the rows of the table, with a row moved to the dragged point."""
         rows = self.readTable()
         x, y = marker.getPosition()
-        rows[row] = (round(x, 2), round(y, 2))
+        rows[row] = (round(x, 2), self.roundFwhm(y))
         return rows
+
+    def roundFwhm(self, fwhm):
+        """Round a positive FWHM from the plot to the size of one pixel.
+
+        The number of decimals follows the FWHM axis, so a narrow broadening
+        keeps more decimals. The result stays positive.
+        """
+        _, _, _, height = self.plot.getPlotBoundsInPixels()
+        ymin, ymax = self.plot.getYAxis().getLimits()
+        decimals = max(0, ceil(-log10((ymax - ymin) / max(height, 1))))
+        return max(round(fwhm, decimals), 10.0**-decimals)
 
     def pointMoving(self, row, marker, event):
         if event != ItemChangedType.POSITION:
