@@ -488,6 +488,10 @@ class Axis(BaseItem):
     @property
     def experimentalShift(self):
         """Experimental edges/lines energies."""
+        # The energy transfer to a final state without a core hole starts at
+        # zero, e.g. the elastic line in 2p3d RIXS.
+        if not self.configuration.hasCore:
+            return 0.0
         calculation = self.ancestor
         label = calculation.edge.labels[self.idx]
         if calculation.experiment.isEmission:

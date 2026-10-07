@@ -16,12 +16,12 @@ logger = logging.getLogger(__name__)
 
 SPECTRA_TO_CALCULATE = {
     "XAS": {
-        "Powder/Solution": ("Isotropic Absorption",),
         "Single Crystal/Thin Film": (
             "Absorption",
             "Circular Dichroic",
             "Linear Dichroic",
         ),
+        "Powder/Solution": ("Isotropic Absorption",),
     },
     "XES": {"Single Crystal/Thin Film": ("Emission", "Circular Dichroic")},
     "XPS": {"Powder/Solution": ("Photoemission",)},
@@ -53,7 +53,7 @@ SPECTRA = {
     "Vertical Polarized": ("v", "(V)", "LD (V)", "--"),
     "Horizontal Polarized": ("h", "(H)", "LD (H)", ":"),
     "Resonant Inelastic": ("k", None, "Resonant Inelastic", None),
-    "Isotropic Resonant Inelastic": ("iso", None, "Isotropic Resonant Inelastic", None),  # noqa: E501
+    "Isotropic Resonant Inelastic": ("iso", None, "Isotropic Resonant Inelastic", None),
     "Photoemission": ("pho", None, "Photoemission", "-"),
     "Emission": ("emi", None, "Emission", "-"),
 }

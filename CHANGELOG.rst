@@ -23,6 +23,12 @@ Changed
 - The Lorentzian broadening accepts any positive value. The minimum was 0.1 eV.
 - The number of points follows the energy range and the Lorentzian broadening.
 
+Fixed
+-----
+- The elastic line of RIXS with a final state without a core hole (e.g. 2p3d)
+  is at zero energy transfer. The energy transfer axis had the binding energy
+  of the valence level as an experimental shift.
+
 `2026.0`_ - 2026-06-21
 ======================
 
