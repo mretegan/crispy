@@ -9,10 +9,19 @@ and this project adheres to `Calendar Versioning <https://calver.org/>`_.
 `Unreleased`_
 =============
 
+Added
+-----
+- Energy dependent Lorentzian broadening for one-dimensional spectra. Set the
+  (energy, FWHM) points in the Lorentzian Broadening dialog or in the notebook
+  API.
+- Powder RIXS page in the user guide.
+
 Changed
 -------
 - Powder RIXS uses the resonant tensor of Quanty (three operators per side
   instead of nine). This requires a Quanty version with resonant tensor support.
+- The Lorentzian broadening accepts any positive value. The minimum was 0.1 eV.
+- The number of points follows the energy range and the Lorentzian broadening.
 
 `2026.0`_ - 2026-06-21
 ======================
