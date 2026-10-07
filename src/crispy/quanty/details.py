@@ -18,7 +18,7 @@ from crispy.items import SelectableItem
 from crispy.quanty.external import ExternalData
 from crispy.uic import loadUi
 from crispy.utils import fixedFont
-from crispy.views import setMappings
+from crispy.views import clearMappings, setMappings
 
 
 def nodeLabel(item):
@@ -70,9 +70,7 @@ class AxisWidget(QWidget):
         self.mappers = []
 
     def clear(self):
-        if self.mappers:
-            for mapper in self.mappers:
-                mapper.clearMapping()
+        clearMappings(self.mappers)
 
         self.shiftLineEdit.clear()
         self.gaussianLineEdit.clear()
@@ -117,9 +115,7 @@ class DetailsDialog(QDialog):
     def clear(self):
         self.setWindowTitle("Details")
 
-        if self.mappers:
-            for mapper in self.mappers:
-                mapper.clearMapping()
+        clearMappings(self.mappers)
 
         self.scaleLineEdit.clear()
         self.normalizationComboBox.clear()

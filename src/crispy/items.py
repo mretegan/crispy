@@ -14,8 +14,6 @@ from silx.gui.qt import (
     pyqtSignal,
 )
 
-from crispy.utils import disconnectSignal
-
 logger = logging.getLogger(__name__)
 
 
@@ -43,7 +41,6 @@ class BaseItem(QObject):
                 self._ancestor = None
 
         self.setParent(parent)
-        disconnectSignal(self.dataChanged)
         self.dataChanged.connect(self._modelDataChanged)
 
     @property

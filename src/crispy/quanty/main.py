@@ -35,7 +35,7 @@ from crispy.quanty.progress import ProgressDialog
 from crispy.quanty.scan import ScanController, ScanDialog, scannableParameters
 from crispy.uic import loadUi
 from crispy.utils import findQtObject
-from crispy.views import setMappings
+from crispy.views import clearMappings, setMappings
 
 logger = logging.getLogger(__name__)
 
@@ -48,16 +48,6 @@ class AxisWidget(QWidget):
         loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
 
         self.mappers = []
-
-        # The "Analyze polarization" checkbox is bound once and reads the photon
-        # set by the most recent populate() call.
-        self._analyzePhoton = None
-        self.analyzeCheckBox.toggled.connect(self._onAnalyzeToggled)
-
-    def _onAnalyzeToggled(self, checked):
-        photon = self._analyzePhoton
-        if photon is not None and hasattr(photon, "analyze"):
-            photon.analyze.value = checked
 
     def setAnalyzeEnabled(self, enabled):
         self.analyzeCheckBox.setEnabled(enabled)
@@ -79,9 +69,7 @@ class AxisWidget(QWidget):
         self.lorentzianToolButton.setIcon(qta.icon("fa6s.gear", **options))
 
     def populate(self, axis):
-        if self.mappers:
-            for mapper in self.mappers:
-                mapper.clearMapping()
+        clearMappings(self.mappers)
         MAPPINGS = (
             (self.startLineEdit, axis.start),
             (self.stopLineEdit, axis.stop),
@@ -91,6 +79,10 @@ class AxisWidget(QWidget):
             (self.kLineEdit, axis.photon.k),
             (self.e1LineEdit, axis.photon.e1),
         )
+        hasAnalyze = hasattr(axis.photon, "analyze")
+        self.analyzeCheckBox.setVisible(hasAnalyze)
+        if hasAnalyze:
+            MAPPINGS += ((self.analyzeCheckBox, axis.photon.analyze),)
         self.mappers = setMappings(MAPPINGS)
 
         # Quanty supports an energy dependent Lorentzian broadening only for
@@ -100,19 +92,6 @@ class AxisWidget(QWidget):
             not calculation.experiment.isTwoDimensional
         )
         self.updateLorentzianState(axis.lorentzian)
-
-        # The "Analyze polarization" checkbox only applies to the scattered
-        # photon (it controls whether the outgoing polarization is resolved or
-        # averaged over). A BoolItem is not editable through the data-widget
-        # mapper, so the checkbox is driven by _onAnalyzeToggled instead.
-        photon = axis.photon
-        self._analyzePhoton = photon
-        hasAnalyze = hasattr(photon, "analyze")
-        self.analyzeCheckBox.setVisible(hasAnalyze)
-        if hasAnalyze:
-            self.analyzeCheckBox.blockSignals(True)
-            self.analyzeCheckBox.setChecked(bool(photon.analyze.value))
-            self.analyzeCheckBox.blockSignals(False)
 
 
 class GeneralSetupPage(QWidget):
@@ -157,9 +136,7 @@ class GeneralSetupPage(QWidget):
         self.experimentComboBox.setItems(state.experiments, state.experiment.value)
         self.edgeComboBox.setItems(state.edges, state.edge.value)
 
-        if self.mappers:
-            for mapper in self.mappers:
-                mapper.clearMapping()
+        clearMappings(self.mappers)
 
         MAPPINGS = (
             (self.temperatureLineEdit, state.temperature),
@@ -267,9 +244,7 @@ class HamiltonianSetupPage(QWidget):
         self.hamiltonian = hamiltonian
         model = state.model()
 
-        if self.mappers:
-            for mapper in self.mappers:
-                mapper.clearMapping()
+        clearMappings(self.mappers)
         MAPPINGS = (
             (self.fkLineEdit, hamiltonian.fk),
             (self.gkLineEdit, hamiltonian.gk),

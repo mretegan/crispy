@@ -261,7 +261,7 @@ QToolButton:hover { background: rgba(0, 0, 0, 0.08); border-radius: 4px; }</stri
       </spacer>
      </item>
      <item row="1" column="2">
-      <widget class="QCheckBox" name="analyzeCheckBox">
+      <widget class="CheckBox" name="analyzeCheckBox">
        <property name="toolTip">
         <string>Resolve the outgoing polarization ε'. When off, it is averaged over.</string>
        </property>
@@ -321,6 +321,11 @@ QToolButton:hover { background: rgba(0, 0, 0, 0.08); border-radius: 4px; }</stri
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>CheckBox</class>
+   <extends>QCheckBox</extends>
+   <header>crispy.widgets</header>
+  </customwidget>
   <customwidget>
    <class>DoubleLineEdit</class>
    <extends>QLineEdit</extends>
