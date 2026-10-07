@@ -210,6 +210,29 @@ def test_gaussian_broadening_partial_when_adding_second_axis():
     assert new.axes.yaxis.gaussian.value == 0.1
 
 
+@pytest.mark.parametrize(
+    ("edge", "expected"),
+    [
+        ("L2,3-M4,5 (2p3d)", 0.0),  # Final state without a core hole.
+        ("K-L2,3 (1s2p)", 852.7),  # Final state with a 2p core hole.
+    ],
+)
+def test_rixs_energy_transfer_experimental_shift(edge, expected):
+    """The elastic line stays at zero energy transfer when the final state has no
+    core hole."""
+    model = TreeModel()
+    calculation = Calculation(
+        symbol="Ni",
+        charge="2+",
+        symmetry="Oh",
+        experiment="RIXS",
+        edge=edge,
+        parent=model.rootItem(),
+    )
+
+    assert calculation.axes.yaxis.experimentalShift == pytest.approx(expected)
+
+
 def atomic_values(calculation):
     term = find_term(calculation, "Atomic")
     return {(p.parent().name, p.name): round(p.value, 4) for p in term.parameters}
