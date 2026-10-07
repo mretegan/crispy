@@ -96,8 +96,12 @@ section.
 
 Citation
 ========
-Crispy is a scientific software. If you use it for a scientific publication,
-please cite the following reference (change the version number if required)::
+If you use Crispy in your research, please cite it. Crispy is archived on
+Zenodo under the DOI `10.5281/zenodo.1008184
+<https://doi.org/10.5281/zenodo.1008184>`_, which resolves to the most recent
+release.
+
+.. code-block:: bibtex
 
     @software{retegan_crispy,
       author  = {Retegan, Marius},
@@ -107,6 +111,10 @@ please cite the following reference (change the version number if required)::
       doi     = {10.5281/zenodo.1008184},
       url     = {https://crispy.esrf.fr},
     }
+
+The `CITATION.cff <https://github.com/mretegan/crispy/blob/main/CITATION.cff>`_
+file holds the full citation metadata. On GitHub, the **Cite this repository**
+button converts it to APA or BibTeX.
 
 .. sixth-marker
 
