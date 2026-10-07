@@ -23,7 +23,8 @@ Layout of a file (track_order keeps the items in their original order)::
                labelSuffix?, customLabel?, checkState, temperature,
                magneticField, output?
         /Axes/              attrs: scale, normalization
-          /XAxis/           attrs: shift, start, stop, npoints, gaussian, lorentzian
+          /XAxis/           attrs: shift, start, stop, npoints, gaussian, lorentzian;
+                            dataset: lorentzianPoints? (energy, FWHM) pairs
             /Photon/        datasets: k, e1; attr: analyze (scattered photon only)
           /YAxis/           (two-dimensional experiments only)
         /Hamiltonian/       attrs: fk, gk, zeta, synchronizeParameters,
@@ -107,6 +108,12 @@ class AxisSerializer(Serializer):
         group.attrs["npoints"] = int(axis.npoints.value)
         group.attrs["gaussian"] = float(axis.gaussian.value)
         group.attrs["lorentzian"] = float(axis.lorentzian.value)
+        group.create_dataset(
+            "lorentzianPoints",
+            data=np.asarray(axis.lorentzian.points.value, dtype=np.float64).reshape(
+                -1, 2
+            ),
+        )
 
         photon = group.create_group("Photon")
         photon.create_dataset(
@@ -126,12 +133,19 @@ class AxisSerializer(Serializer):
         axis.npoints._value = int(group.attrs["npoints"])
         axis.gaussian._value = float(group.attrs["gaussian"])
         axis.lorentzian._value = float(group.attrs["lorentzian"])
+        # Files without the dataset use a constant Lorentzian broadening.
+        if "lorentzianPoints" in group:
+            axis.lorentzian.points._value = [
+                (float(energy), float(fwhm))
+                for energy, fwhm in group["lorentzianPoints"][()]
+            ]
 
         photon = group["Photon"]
         axis.photon.k._value = np.asarray(photon["k"][()], dtype=np.float64)
         axis.photon.e1._value = np.asarray(photon["e1"][()], dtype=np.float64)
         if hasattr(axis.photon, "analyze") and "analyze" in photon.attrs:
             axis.photon.analyze._value = bool(photon.attrs["analyze"])
+        axis.npoints._minimum = axis.npoints.minimum
 
 
 class AxesSerializer(Serializer):
