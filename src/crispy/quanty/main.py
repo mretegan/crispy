@@ -29,6 +29,7 @@ from crispy.quanty import serialization
 from crispy.quanty.calculation import Calculation
 from crispy.quanty.details import DetailsDialog
 from crispy.quanty.external import ExternalData
+from crispy.quanty.lorentzian import LorentzianDialog, formatNumber
 from crispy.quanty.preferences import PreferencesDialog
 from crispy.quanty.progress import ProgressDialog
 from crispy.quanty.scan import ScanController, ScanDialog, scannableParameters
@@ -46,8 +47,6 @@ class AxisWidget(QWidget):
         uiPath = os.path.join("quanty", "uis", "axis.ui")
         loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
 
-        self.lorentzianToolButton.setIcon(qta.icon("fa6s.gear"))
-
         self.mappers = []
 
         # The "Analyze polarization" checkbox is bound once and reads the photon
@@ -63,6 +62,22 @@ class AxisWidget(QWidget):
     def setAnalyzeEnabled(self, enabled):
         self.analyzeCheckBox.setEnabled(enabled)
 
+    def updateLorentzianState(self, lorentzian):
+        variable = lorentzian.isVariable
+        # The Lorentzian dialog is the only editor of the energy dependent
+        # broadening.
+        self.lorentzianLineEdit.setEnabled(not variable)
+        toolTip = ""
+        if variable:
+            lines = [
+                f"{formatNumber(energy)} eV: {formatNumber(fwhm)} eV"
+                for energy, fwhm in lorentzian.points.value
+            ]
+            toolTip = "\n".join(["Energy dependent FWHM", *lines])
+        self.lorentzianLineEdit.setToolTip(toolTip)
+        options = {"color": "#2196f3"} if variable else {}
+        self.lorentzianToolButton.setIcon(qta.icon("fa6s.gear", **options))
+
     def populate(self, axis):
         if self.mappers:
             for mapper in self.mappers:
@@ -77,7 +92,14 @@ class AxisWidget(QWidget):
             (self.e1LineEdit, axis.photon.e1),
         )
         self.mappers = setMappings(MAPPINGS)
-        self.lorentzianToolButton.setVisible(False)
+
+        # Quanty supports an energy dependent Lorentzian broadening only for
+        # one-dimensional spectra.
+        calculation = axis.ancestor
+        self.lorentzianToolButton.setVisible(
+            not calculation.experiment.isTwoDimensional
+        )
+        self.updateLorentzianState(axis.lorentzian)
 
         # The "Analyze polarization" checkbox only applies to the scattered
         # photon (it controls whether the outgoing polarization is resolved or
@@ -636,6 +658,9 @@ class DockWidget(QDockWidget):
 
         self.saveInputAsPushButton.clicked.connect(self.saveInputAs)
         self.calculationPushButton.clicked.connect(self.run)
+        self.generalPage.xAxis.lorentzianToolButton.clicked.connect(
+            self.openLorentzianDialog
+        )
 
         # Set up the actions.
         self.preferencesAction = QAction(
@@ -781,6 +806,43 @@ class DockWidget(QDockWidget):
             logger.error(e)
             return
         progress.show()
+
+    def lorentzianOverlay(self):
+        """Return the first checked spectrum of the current result, as (x, y).
+
+        The method returns None if the result does not match the element, the
+        experiment, and the edge of the current setup.
+        """
+        index = self.resultsPage.currentIndex
+        result = index.internalPointer() if index.isValid() else None
+        if not isinstance(result, Calculation):
+            return None
+        state = self.state
+        if (
+            result.element.symbol != state.element.symbol
+            or result.experiment.value != state.experiment.value
+            or result.edge.value != state.edge.value
+        ):
+            return None
+        for spectrum in result.spectra.toPlot.all:
+            if spectrum.isEnabled() and spectrum.x is not None:
+                # Remove the user defined shift to use the frame of the axis.
+                return spectrum.x - result.axes.xaxis.shift.value, spectrum.signal
+        return None
+
+    def openLorentzianDialog(self):
+        axis = self.state.axes.xaxis
+        dialog = LorentzianDialog(
+            axis.lorentzian, overlay=self.lorentzianOverlay(), parent=self
+        )
+        if dialog.exec() != QDialog.Accepted:
+            return
+        # The dialog accepts only valid input.
+        if dialog.isVariable():
+            axis.lorentzian.points.value = dialog.points()
+        else:
+            axis.lorentzian.value = dialog.value()
+        self.generalPage.xAxis.updateLorentzianState(axis.lorentzian)
 
     def openScanDialog(self):
         if not list(self.state.spectra.toCalculate.selected):
