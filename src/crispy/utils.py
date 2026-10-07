@@ -2,7 +2,6 @@
 
 import logging
 import sys
-import warnings
 
 from silx.gui.qt import (
     QApplication,
@@ -10,21 +9,6 @@ from silx.gui.qt import (
 )
 
 logger = logging.getLogger(__name__)
-
-
-def disconnectSignal(signal):
-    """Disconnect all slots from a signal, ignoring the case where none are connected.
-
-    PyQt raises TypeError/RuntimeError when nothing is connected, while PySide6
-    instead emits a RuntimeWarning from libpyside. Handle both so the signal can
-    be cleared silently before reconnecting.
-    """
-    try:
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore", RuntimeWarning)
-            signal.disconnect()
-    except (TypeError, RuntimeError):
-        pass
 
 
 def fixedFont():
