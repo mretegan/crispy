@@ -16,7 +16,7 @@ def get_test_data():
     path = os.path.join(os.path.dirname(__file__), "test_data.yaml")
     with open(path, encoding="utf-8") as f:
         yaml = YAML(pure=True)
-        yield from list(yaml.load(f).items())
+        return list(yaml.load(f).items())
 
 
 def set_hamiltonian_parameters(calc, parameters):
