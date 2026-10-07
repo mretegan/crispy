@@ -3,10 +3,11 @@
 import copy
 import logging
 import os
-from math import floor
+from math import ceil, isfinite
 
 import h5py
 import numpy as np
+from silx.gui.qt import Qt
 
 from crispy import resourceAbsolutePath
 from crispy.config import Config
@@ -38,16 +39,55 @@ class Broadening(DoubleItem):
         self.dataChanged.emit(1)
 
 
-class Lorentzian(Broadening):
-    MINIMUM = 0.1
+class LorentzianPoints(BaseItem):
+    """Energy dependent Lorentzian broadening as (energy, FWHM) pairs.
 
+    An empty list means that the broadening is constant. Pairs with the same
+    energy keep their order: Quanty uses the first pair below the energy and the
+    second pair above it.
+    """
+
+    def __init__(self, parent=None):
+        super().__init__(parent=parent, name="Points", value=[])
+
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, points):
+        if self.ancestor.experiment.isTwoDimensional:
+            raise ValueError(
+                "Energy dependent Lorentzian broadening is not supported "
+                "for two-dimensional experiments."
+            )
+        points = [(float(energy), float(fwhm)) for energy, fwhm in points]
+        if not points:
+            raise ValueError("The Lorentzian broadening needs at least one point.")
+        if any(not isfinite(energy) or not isfinite(fwhm) for energy, fwhm in points):
+            raise ValueError("The Lorentzian energies and FWHM values must be finite.")
+        if any(fwhm <= 0.0 for _, fwhm in points):
+            raise ValueError("The Lorentzian broadening must be positive.")
+        # Quanty needs non-decreasing energies. The sort is stable, so pairs with
+        # the same energy keep their order.
+        self._value = sorted(points, key=lambda point: point[0])
+        self.dataChanged.emit(1)
+
+    def clear(self):
+        """Remove the points, which makes the broadening constant."""
+        self._value = []
+        self.dataChanged.emit(1)
+
+
+class Lorentzian(Broadening):
     def __init__(self, value=None, parent=None):
         super().__init__(parent=parent, name="Lorentzian")
         self._value = value
 
-        # TODO: Implement these for variable broadening.
-        self.energies = BaseItem(parent=self, name="Energies")
-        self.fwhms = BaseItem(parent=self, name="FWHM")
+        self.points = LorentzianPoints(parent=self)
+        # The Lorentzian shows Γ(E) when there are points, so a change of the
+        # points is also a change of the Lorentzian.
+        self.points.dataChanged.connect(self.dataChanged)
 
     @property
     def value(self):
@@ -57,12 +97,36 @@ class Lorentzian(Broadening):
     def value(self, value):
         if value is None:
             return
-        if value < self.MINIMUM:
-            raise ValueError(
-                f"The Lorentzian broadening cannot be smaller than {self.MINIMUM}."
-            )
+        if not isfinite(value):
+            raise ValueError("The Lorentzian broadening must be finite.")
+        if value <= 0.0:
+            raise ValueError("The Lorentzian broadening must be positive.")
         self._value = value
+        # A constant value replaces the energy dependent broadening.
+        self.points.clear()
         self.dataChanged.emit(1)
+
+    @property
+    def isVariable(self):
+        return bool(self.points.value)
+
+    @property
+    def smallestFwhm(self):
+        if self.isVariable:
+            return min(fwhm for _, fwhm in self.points.value)
+        return self.value
+
+    @property
+    def calculationFwhm(self):
+        """Return the Lorentzian FWHM used in the Quanty calculation."""
+        if self.ancestor.experiment.isTwoDimensional:
+            return self.value
+        return min(0.1, self.smallestFwhm)
+
+    def data(self, column, role=Qt.DisplayRole):
+        if self.isVariable and column == 1 and role in (Qt.EditRole, Qt.DisplayRole):
+            return "Γ(E)"
+        return super().data(column, role)
 
     @property
     def replacements(self):
@@ -78,7 +142,7 @@ class Lorentzian(Broadening):
             start = axis.start.value
             stop = axis.stop.value
 
-            points = [(start, self.value), (stop, self.value)]
+            points = self.points.value or [(start, self.value), (stop, self.value)]
             replacement = "{"
             for i, (energy, fwhm) in enumerate(points):
                 replacement += f"{{{energy}, {fwhm}}}"
@@ -87,14 +151,13 @@ class Lorentzian(Broadening):
                 else:
                     replacement += "}"
             replacements["Lorentzian"] = replacement
-            replacements["Gamma"] = self.MINIMUM
+            replacements["Gamma"] = self.calculationFwhm
 
         return replacements
 
     def copyFrom(self, item):
         super().copyFrom(item)
-        self.energies.copyFrom(item.energies)
-        self.fwhms.copyFrom(item.fwhms)
+        self.points.copyFrom(item.points)
 
 
 class Gaussian(Broadening):
@@ -249,6 +312,7 @@ class Start(DoubleItem):
                 "The lower energy limit cannot be larger than the upper limit."
             )
         self._value = value
+        self.dataChanged.emit(1)
 
 
 class Stop(DoubleItem):
@@ -268,19 +332,21 @@ class Stop(DoubleItem):
                 "The upper energy limit cannot be larger than the lower limit."
             )
         self._value = value
+        self.dataChanged.emit(1)
 
 
 class NPoints(IntItem):
     def __init__(self, value=None, parent=None):
         super().__init__(parent=parent, name="Number of Points")
         self._value = value
+        self._minimum = None
 
     @property
     def minimum(self):
         axis = self.parent()
         start, stop = axis.start, axis.stop
         lorentzian = axis.lorentzian
-        return int(floor(stop.value - start.value) / lorentzian.value)
+        return max(1, ceil(5 * (stop.value - start.value) / lorentzian.calculationFwhm))
 
     @property
     def value(self):
@@ -289,14 +355,21 @@ class NPoints(IntItem):
     @value.setter
     def value(self, value):
         if value < self.minimum:
-            raise ValueError(
-                f"The number of points must be greater than {self.minimum}."
-            )
+            raise ValueError(f"The number of points must be at least {self.minimum}.")
         self._value = value
         self.dataChanged.emit(1)
 
     def reset(self):
-        self.value = self.minimum
+        self._minimum = self.minimum
+        self.value = self._minimum
+
+    def ensureMinimum(self):
+        """Update automatic counts and preserve manually set finer grids."""
+        # A count equal to the previous minimum follows the automatic grid.
+        automatic = self.value == self._minimum
+        self._minimum = self.minimum
+        if automatic or self.value < self._minimum:
+            self.value = self._minimum
 
 
 class Shift(DoubleItem):
@@ -322,6 +395,10 @@ class Axis(BaseItem):
 
         self.gaussian = Gaussian(parent=self, value=0.1)
         self.lorentzian = Lorentzian(parent=self, value=self.coreholeWidth)
+
+        for parameter in (self.start, self.stop, self.lorentzian):
+            parameter.dataChanged.connect(self.npoints.ensureMinimum)
+        self.npoints.ensureMinimum()
 
         self.photon = None
 
@@ -483,6 +560,7 @@ class Axis(BaseItem):
         self.lorentzian.copyFrom(item.lorentzian)
         self.shift.copyFrom(item.shift)
         self.photon.copyFrom(item.photon)
+        self.npoints._minimum = self.npoints.minimum
 
 
 class XAxis(Axis):
@@ -534,7 +612,6 @@ class Axes(BaseItem):
 
         if calculation.experiment.isTwoDimensional:
             self.xaxis.npoints.reset()
-            self.xaxis.lorentzian.dataChanged.connect(self.xaxis.npoints.reset)
             self.yaxis = YAxis(parent=self)
             self.labels = [
                 f"{labels} (eV)" for labels in (self.xaxis.label, self.yaxis.label)

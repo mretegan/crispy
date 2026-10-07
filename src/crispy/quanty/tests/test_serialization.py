@@ -70,6 +70,7 @@ def axes_state(calculation):
         state[prefix + "npoints"] = axis.npoints.value
         state[prefix + "gaussian"] = axis.gaussian.value
         state[prefix + "lorentzian"] = axis.lorentzian.value
+        state[prefix + "lorentzianPoints"] = axis.lorentzian.points.value
         state[prefix + "k"] = tuple(axis.photon.k.value)
         state[prefix + "e1"] = tuple(axis.photon.e1.value)
         if hasattr(axis.photon, "analyze"):
@@ -137,6 +138,12 @@ def test_round_trip_one_dimensional(tmp_path, qapp):
     calculation.axes.normalization.value = "Area"
     calculation.axes.xaxis.start._value = -12.34
     calculation.axes.xaxis.gaussian.value = 0.3
+    calculation.axes.xaxis.lorentzian.points.value = [
+        (850.0, 0.48),
+        (860.0, 0.48),
+        (860.0, 0.78),
+        (870.0, 0.78),
+    ]
     calculation.runner.output = "Quanty log output"
 
     atomic = find_term(calculation, "Atomic")
@@ -205,6 +212,42 @@ def test_round_trip_one_dimensional(tmp_path, qapp):
     assert loaded_spectrum.isEnabled()
     assert np.allclose(loaded_spectrum.x, expected_x)
     assert np.allclose(loaded_spectrum.signal, expected_signal)
+
+
+def test_load_without_lorentzian_points(tmp_path, qapp):
+    """A file without the Lorentzian table loads a constant broadening."""
+    model = TreeModel()
+    calculation = make_calculation(model.rootItem())
+    calculation.axes.xaxis.lorentzian.value = 0.5
+
+    path = str(tmp_path / "constant.h5")
+    save_results([calculation], path)
+    with h5py.File(path, "a") as h5:
+        del h5["0/Axes/XAxis/lorentzianPoints"]
+
+    new_model = TreeModel()
+    [result] = load_results(path, new_model.rootItem())
+    assert result.axes.xaxis.lorentzian.value == 0.5
+    assert result.axes.xaxis.lorentzian.points.value == []
+
+
+@pytest.mark.parametrize("manual", [False, True])
+def test_loaded_grid_follows_broadening(tmp_path, qapp, manual):
+    model = TreeModel()
+    calculation = make_calculation(model.rootItem())
+    axis = calculation.axes.xaxis
+    axis.lorentzian.value = 0.005
+    if manual:
+        axis.npoints.value = 2 * axis.npoints.minimum
+    previous = axis.npoints.value
+
+    path = str(tmp_path / "narrow.h5")
+    save_results([calculation], path)
+    new_model = TreeModel()
+    [result] = load_results(path, new_model.rootItem())
+    axis = result.axes.xaxis
+    axis.lorentzian.value = 0.05
+    assert axis.npoints.value == (previous if manual else axis.npoints.minimum)
 
 
 def test_round_trip_two_dimensional(tmp_path, qapp):

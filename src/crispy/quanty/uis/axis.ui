@@ -190,7 +190,14 @@
         </size>
        </property>
        <property name="toolTip">
-        <string>Lorentzian settings</string>
+        <string>Lorentzian Settings</string>
+       </property>
+       <property name="autoRaise">
+        <bool>true</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QToolButton { border: none; background: transparent; }
+QToolButton:hover { background: rgba(0, 0, 0, 0.08); border-radius: 4px; }</string>
        </property>
       </widget>
      </item>
