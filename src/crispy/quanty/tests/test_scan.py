@@ -3,10 +3,11 @@
 """Tests for the parameter scan logic."""
 
 import pytest
+from silx.gui.qt import QDialogButtonBox, QLocale
 
 from crispy.models import TreeModel
 from crispy.quanty.calculation import Calculation
-from crispy.quanty.scan import scannableParameters, valueRange
+from crispy.quanty.scan import ScanDialog, scannableParameters, valueRange
 
 
 @pytest.fixture(autouse=True)
@@ -124,3 +125,51 @@ def test_apply_scale_factor_updates_individual_factors():
     fParameters = [p for p in atomic.parameters if p.name.startswith("F")]
     assert fParameters
     assert all(p.scaleFactor == 0.7 for p in fParameters)
+
+
+def test_scan_dialog_add_and_remove_buttons():
+    model = TreeModel()
+    calculation = make_calculation(model.rootItem())
+    dialog = ScanDialog(scannableParameters(calculation))
+    assert len(dialog.rows) == 1
+
+    dialog.addButton.click()
+    assert len(dialog.rows) == 2
+
+    first, second = dialog.rows
+    first.removeButton.click()
+    assert dialog.rows == [second]
+    assert dialog.table.rowCount() == 1
+
+
+def test_scan_dialog_counts_calculations():
+    model = TreeModel()
+    calculation = make_calculation(model.rootItem())
+    dialog = ScanDialog(scannableParameters(calculation))
+    start, stop, step = dialog.rows[0].items
+    start.setText(QLocale().toString(0.5))
+    stop.setText(QLocale().toString(1.0))
+    step.setText(QLocale().toString(0.25))
+    assert dialog.countLabel.text() == "This will run 3 calculations."
+
+    run = dialog.buttonBox.button(QDialogButtonBox.Ok)
+    assert run.isEnabled()
+    step.setText("inf")
+    assert dialog.countLabel.text() == "Some ranges are invalid."
+    assert not run.isEnabled()
+
+
+def test_scan_dialog_restores_snapshot():
+    model = TreeModel()
+    calculation = make_calculation(model.rootItem())
+    dialog = ScanDialog(scannableParameters(calculation))
+    dialog.addButton.click()
+    row = dialog.rows[1]
+    row.comboBox.setCurrentText("Crystal Field · 10Dq(3d)")
+    row.scopeComboBox.setCurrentText("Final")
+    row.items[1].setText(QLocale().toString(2.0))
+    state = dialog.snapshot()
+    assert state[1]["scope"] == "Final Hamiltonian"
+
+    restored = ScanDialog(dialog.parameters, initialState=state)
+    assert restored.snapshot() == state

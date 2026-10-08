@@ -10,7 +10,12 @@ from silx.gui.qt import QDialogButtonBox, QLocale, QPoint
 from crispy.models import TreeModel
 from crispy.notebook import Axis as NotebookAxis
 from crispy.quanty.calculation import Calculation
-from crispy.quanty.lorentzian import LorentzianDialog, formatNumber, stepPoints
+from crispy.quanty.lorentzian import (
+    REMOVE_COLUMN,
+    LorentzianDialog,
+    formatNumber,
+    stepPoints,
+)
 
 STEP = [(850.0, 0.48), (860.0, 0.48), (860.0, 0.78), (870.0, 0.78)]
 
@@ -437,6 +442,24 @@ def test_dialog_plot_menu(lorentzian, qtbot):
 
     dialog.constantRadioButton.setChecked(True)
     assert dialog.plotMenu(pixel(860.0, 0.6)) is None
+
+
+def test_dialog_add_and_remove_buttons(lorentzian):
+    lorentzian.points.value = [(850.0, 0.48), (860.0, 0.6), (870.0, 0.78)]
+    dialog = LorentzianDialog(lorentzian)
+    table = dialog.pointsTableWidget
+
+    # The new point copies the last point and gets a remove button.
+    dialog.addPushButton.click()
+    assert dialog.points()[-1] == (870.0, 0.78)
+    assert table.cellWidget(3, REMOVE_COLUMN) is not None
+
+    # A remove button removes its row and keeps the text of the other rows.
+    table.item(2, 1).setText("abc")
+    table.cellWidget(1, REMOVE_COLUMN).click()
+    assert table.rowCount() == 3
+    assert table.item(1, 1).text() == "abc"
+    assert dialog.points() == [(850.0, 0.48), (870.0, 0.78)]
 
 
 def test_dialog_plot_does_not_zoom(lorentzian, qtbot):

@@ -5,13 +5,13 @@ import os
 from functools import partial
 from math import ceil, hypot, isfinite, log10
 
-import qtawesome as qta
 from silx.gui.plot import PlotWidget
 from silx.gui.plot.items import ItemChangedType
 from silx.gui.qt import (
     QColor,
     QDialog,
     QDialogButtonBox,
+    QHeaderView,
     QLocale,
     QMenu,
     Qt,
@@ -21,6 +21,7 @@ from silx.gui.qt import (
 
 from crispy import resourceAbsolutePath
 from crispy.uic import loadUi
+from crispy.widgets import RemoveButton
 
 logger = logging.getLogger(__name__)
 
@@ -31,6 +32,8 @@ SPECTRUM_COLOR = "#9e9e9e"
 POINT_SIZE = 6
 # Largest distance (logical pixels) between a click and a point that selects it.
 PICK_RADIUS = 8
+# The table column after the energy and the FWHM holds the remove buttons.
+REMOVE_COLUMN = 2
 
 
 def stepPoints(energy, width, below, above):
@@ -112,8 +115,9 @@ class LorentzianDialog(QDialog):
                 selectable=False,
             )
 
-        self.addPushButton.setIcon(qta.icon("fa6s.plus"))
-        self.removePushButton.setIcon(qta.icon("fa6s.minus"))
+        header = self.pointsTableWidget.horizontalHeader()
+        header.setSectionResizeMode(QHeaderView.Stretch)
+        header.setSectionResizeMode(REMOVE_COLUMN, QHeaderView.ResizeToContents)
 
         self.valueLineEdit.setText(formatNumber(lorentzian.value))
         center = round((self.start + self.stop) / 2, 2)
@@ -128,14 +132,12 @@ class LorentzianDialog(QDialog):
         self.valueLineEdit.textChanged.connect(lambda _: self.refresh())
         self.applyStepPushButton.clicked.connect(self.applyStep)
         self.addPushButton.clicked.connect(self.addPoint)
-        self.removePushButton.clicked.connect(self.removePoints)
         self.pointsTableWidget.itemChanged.connect(
             lambda _: self.setPoints(self.readTable())
         )
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
-        reset = self.buttonBox.button(QDialogButtonBox.Reset)
-        reset.clicked.connect(self.reset)
+        self.resetPushButton.clicked.connect(self.reset)
 
         self.updateMode()
 
@@ -157,7 +159,7 @@ class LorentzianDialog(QDialog):
         rows = []
         for row in range(table.rowCount()):
             values = []
-            for column in range(table.columnCount()):
+            for column in range(REMOVE_COLUMN):
                 item = table.item(row, column)
                 values.append(parseNumber(item.text()) if item is not None else None)
             rows.append(tuple(values))
@@ -179,6 +181,10 @@ class LorentzianDialog(QDialog):
                     table.setItem(row, column, item)
                 if value is not None:
                     item.setText(formatNumber(value))
+            if table.cellWidget(row, REMOVE_COLUMN) is None:
+                button = RemoveButton()
+                button.clicked.connect(partial(self.removePoint, button))
+                table.setCellWidget(row, REMOVE_COLUMN, button)
         table.blockSignals(False)
 
     def setPoints(self, rows):
@@ -222,11 +228,14 @@ class LorentzianDialog(QDialog):
         point = valid[-1] if valid else (self.stop, self.value() or self.defaultValue)
         self.setPoints([*rows, point])
 
-    def removePoints(self):
+    def removePoint(self, button):
+        # Remove the row of the table instead of rewriting the table, because a
+        # rewrite keeps the old text in the cells that are not valid numbers.
         table = self.pointsTableWidget
-        selected = {index.row() for index in table.selectedIndexes()}
-        for row in sorted(selected, reverse=True):
-            table.removeRow(row)
+        rows = range(table.rowCount())
+        table.removeRow(
+            next(row for row in rows if table.cellWidget(row, REMOVE_COLUMN) is button)
+        )
         self.refresh()
 
     def pointAt(self, pos):

@@ -9,26 +9,27 @@ import contextlib
 import itertools
 import logging
 import math
-import os
 
-import qtawesome as qta
 from silx.gui.qt import (
+    QAbstractItemView,
     QDialog,
     QDialogButtonBox,
+    QHBoxLayout,
+    QHeaderView,
     QLabel,
     QLocale,
     QObject,
     QPushButton,
-    QScrollArea,
     Qt,
+    QTableWidget,
+    QTableWidgetItem,
     QVBoxLayout,
-    QWidget,
     pyqtSignal,
 )
 
-from crispy import resourceAbsolutePath
 from crispy.quanty.calculation import Calculation
-from crispy.uic import loadUi
+from crispy.quanty.lorentzian import parseNumber
+from crispy.widgets import ComboBox, RemoveButton
 
 logger = logging.getLogger(__name__)
 
@@ -197,28 +198,26 @@ def scannableParameters(calculation):
     return parameters
 
 
-class ScanRow(QWidget):
-    """A single row of the scan dialog: parameter, start, stop and step."""
+class ScanRow:
+    """A row of the scan table: parameter, scope, start, stop and step.
 
-    changed = pyqtSignal()
-    removeRequested = pyqtSignal(object)
+    The parameter and the scope are combo boxes. The start, stop and step are
+    table items, as the points in the table of the Lorentzian dialog.
+    """
 
-    def __init__(self, parameters, parent=None):
-        super().__init__(parent=parent)
-
-        uiPath = os.path.join("quanty", "uis", "scanrow.ui")
-        loadUi(resourceAbsolutePath(uiPath), baseinstance=self)
-
+    def __init__(self, parameters):
         self.parameters = parameters
         self._scopeKeys = []
 
+        self.comboBox = ComboBox()
         self.comboBox.addItems([parameter.label for parameter in parameters])
-        self.removeButton.setIcon(qta.icon("fa6s.trash"))
+        self.scopeComboBox = ComboBox()
+        self.items = [QTableWidgetItem() for _ in range(3)]
+        for item in self.items:
+            item.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self.removeButton = RemoveButton()
 
         self.comboBox.currentIndexChanged.connect(self._parameterChanged)
-        for lineEdit in (self.startLineEdit, self.stopLineEdit, self.stepLineEdit):
-            lineEdit.textChanged.connect(self.changed)
-        self.removeButton.clicked.connect(lambda: self.removeRequested.emit(self))
 
         self._parameterChanged()
 
@@ -256,19 +255,18 @@ class ScanRow(QWidget):
         """Seed the range with the current value of the selected parameter."""
         value = self.parameter.currentValue
         text = "" if value is None else QLocale().toString(float(value), "g", 4)
-        self.startLineEdit.setText(text)
-        self.stopLineEdit.setText(text)
-        self.stepLineEdit.setText("0.1")
-        self.changed.emit()
+        for item, itemText in zip(self.items, (text, text, "0.1"), strict=True):
+            item.setText(itemText)
 
     def getState(self):
         """Capture the row setup as a plain dict for later restoration."""
+        start, stop, step = (item.text() for item in self.items)
         return {
             "label": self.parameter.label,
             "scope": self.scope,
-            "start": self.startLineEdit.text(),
-            "stop": self.stopLineEdit.text(),
-            "step": self.stepLineEdit.text(),
+            "start": start,
+            "stop": stop,
+            "step": step,
         }
 
     def applyState(self, state):
@@ -281,16 +279,13 @@ class ScanRow(QWidget):
         self.comboBox.setCurrentIndex(labels.index(state["label"]))
         if state["scope"] in self._scopeKeys:
             self.scopeComboBox.setCurrentIndex(self._scopeKeys.index(state["scope"]))
-        self.startLineEdit.setText(state["start"])
-        self.stopLineEdit.setText(state["stop"])
-        self.stepLineEdit.setText(state["step"])
+        for item, key in zip(self.items, ("start", "stop", "step"), strict=True):
+            item.setText(state[key])
         return True
 
     def values(self):
         """Return the list of values for this row, or None when it is invalid."""
-        start = self.startLineEdit.value()
-        stop = self.stopLineEdit.value()
-        step = self.stepLineEdit.value()
+        start, stop, step = (parseNumber(item.text()) for item in self.items)
         if start is None or stop is None or step is None:
             return None
         try:
@@ -317,40 +312,59 @@ class ScanDialog(QDialog):
         header.setWordWrap(True)
         layout.addWidget(header)
 
-        # Scrollable container for the dynamically added rows.
-        self.rowsWidget = QWidget()
-        self.rowsLayout = QVBoxLayout(self.rowsWidget)
-        self.rowsLayout.setContentsMargins(0, 0, 0, 0)
-        self.rowsLayout.addStretch()
+        # The table looks like the table of points in the Lorentzian dialog.
+        self.table = QTableWidget(0, 6)
+        self.table.setHorizontalHeaderLabels(
+            ["Parameter", "Scope", "Start", "Stop", "Step", ""]
+        )
+        self.table.setAlternatingRowColors(True)
+        self.table.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.table.setShowGrid(False)
+        self.table.verticalHeader().setVisible(False)
+        columns = self.table.horizontalHeader()
+        columns.setDefaultSectionSize(80)
+        columns.setSectionResizeMode(0, QHeaderView.Stretch)
+        # Wide enough for "Intermediate".
+        columns.resizeSection(1, 140)
+        columns.setSectionResizeMode(5, QHeaderView.ResizeToContents)
+        self.table.itemChanged.connect(self.updateCount)
+        layout.addWidget(self.table)
 
-        scrollArea = QScrollArea()
-        scrollArea.setWidgetResizable(True)
-        scrollArea.setWidget(self.rowsWidget)
-        layout.addWidget(scrollArea)
-
-        self.addButton = QPushButton(qta.icon("fa6s.plus"), "Add Parameter")
+        self.addButton = QPushButton("Add Parameter")
         self.addButton.clicked.connect(self.addRow)
         layout.addWidget(self.addButton)
 
         self.countLabel = QLabel()
-        layout.addWidget(self.countLabel)
 
         self.buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         self.buttonBox.button(QDialogButtonBox.Ok).setText("Run")
         self.buttonBox.accepted.connect(self.accept)
         self.buttonBox.rejected.connect(self.reject)
-        layout.addWidget(self.buttonBox)
+
+        # Show the count on the same row as the buttons, in the free space on
+        # the left.
+        bottomLayout = QHBoxLayout()
+        bottomLayout.addWidget(self.countLabel)
+        bottomLayout.addWidget(self.buttonBox)
+        layout.addLayout(bottomLayout)
 
         self._restore(initialState)
         self.updateCount()
+        # Leave space for the long names of the Hamiltonian parameters.
+        self.resize(640, 300)
 
     def addRow(self):
         row = ScanRow(self.parameters)
-        row.changed.connect(self.updateCount)
-        row.removeRequested.connect(self.removeRow)
-        # Insert before the trailing stretch.
-        self.rowsLayout.insertWidget(self.rowsLayout.count() - 1, row)
+        row.removeButton.clicked.connect(lambda: self.removeRow(row))
+        # The rows list and the table rows have the same order.
+        index = len(self.rows)
         self.rows.append(row)
+        self.table.insertRow(index)
+        self.table.setCellWidget(index, 0, row.comboBox)
+        self.table.setCellWidget(index, 1, row.scopeComboBox)
+        for column, item in enumerate(row.items, start=2):
+            self.table.setItem(index, column, item)
+        self.table.setCellWidget(index, 5, row.removeButton)
         self.updateCount()
         return row
 
@@ -368,9 +382,9 @@ class ScanDialog(QDialog):
         return [row.getState() for row in self.rows]
 
     def removeRow(self, row):
-        self.rows.remove(row)
-        row.setParent(None)
-        row.deleteLater()
+        index = self.rows.index(row)
+        self.table.removeRow(index)
+        del self.rows[index]
         self.updateCount()
 
     def count(self):

@@ -108,7 +108,7 @@ class DataSpectrum(BaseSpectrum):
     """Base class for spectra that hold data and are processed for plotting.
 
     Subclasses implement the per-dimensionality pipeline steps used by
-    process(): copy(), shift(), normalize() and gaussian(), as well as plot().
+    process(): copy(), shift(), gaussian() and normalize(), as well as plot().
     """
 
     def __init__(self, parent=None, *, name=None):
@@ -172,8 +172,9 @@ class DataSpectrum(BaseSpectrum):
         self.copy()
         self.shift()
         self.scale()
-        self.normalize()
+        # Normalize after the broadening, which changes the maximum.
         self.gaussian()
+        self.normalize()
         self.dataChanged.emit(1)
 
     def scale(self, value=None):

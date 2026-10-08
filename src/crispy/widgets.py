@@ -3,6 +3,7 @@
 import logging
 import re
 
+import qtawesome as qta
 from silx.gui.qt import (
     QCheckBox,
     QColor,
@@ -13,7 +14,9 @@ from silx.gui.qt import (
     QLineEdit,
     QLocale,
     QPalette,
+    QSize,
     Qt,
+    QToolButton,
 )
 
 logger = logging.getLogger(__name__)
@@ -150,3 +153,18 @@ class CheckBox(QCheckBox):
     def setEditorData(self, index):
         value = index.data(Qt.UserRole)
         self.setChecked(value)
+
+
+class RemoveButton(QToolButton):
+    """A flat button with a trash icon that removes a row from a list."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.setIcon(qta.icon("fa6s.trash"))
+        self.setIconSize(QSize(14, 14))
+        self.setAutoRaise(True)
+        self.setStyleSheet(
+            "QToolButton { border: none; background: transparent; }"
+            "QToolButton:hover {"
+            " background: rgba(0, 0, 0, 0.08); border-radius: 4px; }"
+        )
