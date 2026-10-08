@@ -12,7 +12,27 @@ from crispy import resourceAbsolutePath
 from crispy.items import BaseItem, BoolItem, DoubleItem, IntItem, SelectableItem
 
 OCCUPANCIES = {"s": 2, "p": 6, "d": 10, "f": 14}
+# ASCII spelling of the Greek letters in the parameter and edge names. The Quanty
+# input and the notebook API use it.
+GREEK_TO_ASCII = {
+    "ζ": "zeta",
+    "Δ": "Delta",
+    "σ": "sigma",  # noqa: RUF001
+    "π": "pi",
+    "τ": "tau",
+    "μ": "mu",
+    "ν": "nu",  # noqa: RUF001
+    "α": "alpha",  # noqa: RUF001
+    "β": "beta",
+}
 logger = logging.getLogger(__name__)
+
+
+def asciiName(name):
+    """Replace each Greek letter in a name with its ASCII spelling."""
+    for greek, latin in GREEK_TO_ASCII.items():
+        name = name.replace(greek, latin)
+    return name
 
 
 class ScaleFactor(DoubleItem):
@@ -159,20 +179,6 @@ class HamiltonianTerm(SelectableItem):
         name = type(self).__name__
         replacements[name] = self.isEnabled()
 
-        def formatName(name):
-            CONVERTERS = {
-                "ζ": "zeta",
-                "Δ": "Delta",
-                "σ": "sigma",  # noqa: RUF001
-                "π": "pi",
-                "τ": "tau",
-                "μ": "mu",
-                "ν": "nu",  # noqa: RUF001
-            }
-            for greek, latin in CONVERTERS.items():
-                name = name.replace(greek, latin)
-            return name
-
         # Fill the replacements dictionary with the parameters names, values, and
         # scale factors.
         mappings = dict(self.hamiltonianNames)
@@ -180,7 +186,7 @@ class HamiltonianTerm(SelectableItem):
             # Each type of Hamiltonian has a certain suffix.
             suffix = mappings[hamiltonian.name]
             for parameter in hamiltonian.children():
-                name = f"{formatName(parameter.name)}_{suffix}"
+                name = f"{asciiName(parameter.name)}_{suffix}"
                 replacements[f"{name}_value"] = parameter.value
                 if parameter.scaleFactor is not None:
                     replacements[f"{name}_scaleFactor"] = parameter.scaleFactor

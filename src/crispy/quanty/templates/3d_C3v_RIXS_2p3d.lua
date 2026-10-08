@@ -471,6 +471,7 @@ end
 function CalculatePowderSpectra(Hm, Hf, Tin, Tout, Psis, dZ, NPoints, Options)
     -- Sum fundamental spectra from separate normalized states with Boltzmann weights.
     -- Each tensor has 81 components per incident energy.
+    -- Preserve energy windows, restrictions and DenseBorder.
     local TensorOptions = {}
     for _, Option in ipairs(Options) do
         TensorOptions[#TensorOptions + 1] = Option
