@@ -21,8 +21,8 @@ Changed
 -------
 - Orientation-averaged RIXS uses the resonant tensor of Quanty (three
   operators per side instead of nine).
-- The notebook API raises a ValueError for an unknown parameter name. It
-  ignored the name.
+- The notebook API raises a ValueError for an unknown parameter, term,
+  spectrum, or setting name. It ignored the name.
 - The Lorentzian broadening accepts any positive value. The minimum was 0.1 eV.
 - The number of points follows the energy range and the Lorentzian broadening.
 - The Td f-block singlet uses the Mulliken label a1. The parameter Ea2 is now
@@ -35,8 +35,8 @@ Fixed
   is at zero energy transfer. The energy transfer axis had the binding energy
   of the valence level as an experimental shift.
 - The Kα edge label uses the Greek letter α. It used the Latin letter ɑ.
-- The absorption spectrum of quadrupolar XAS used an unpolarized
-  beam along the wave vector.
+- The Absorption spectrum of quadrupolar XAS uses an unpolarized beam along the
+  wave vector.
 
 `2026.0`_ - 2026-06-21
 ======================

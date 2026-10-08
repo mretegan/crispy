@@ -74,3 +74,23 @@ def test_calculation_and_axis_reject_unknown_names(qapp):
         calc.set_parameter("Temperatur", 300)
     with pytest.raises(ValueError, match="Gausian"):
         calc.xaxis.set_parameter("Gausian", 0.2)
+
+
+def test_terms_spectra_and_settings_reject_unknown_names(qapp):
+    calc = notebook.calculation("Ni2+", "Oh", "XAS", "L2,3 (2p)")
+
+    calc.hamiltonian.terms.enable("All")
+    calc.hamiltonian.terms.disable("Crystal Field")
+    calc.spectra.enable("Isotropic Absorption")
+    calc.spectra.disable("Absorption")
+
+    with pytest.raises(ValueError, match="Crystal Feld"):
+        calc.hamiltonian.terms.enable("Crystal Feld")
+    with pytest.raises(ValueError, match="Crystal Feld"):
+        calc.hamiltonian.terms.disable("Crystal Feld")
+    with pytest.raises(ValueError, match="Isotropic"):
+        calc.spectra.enable("Isotropic")
+    with pytest.raises(ValueError, match="Isotropic"):
+        calc.spectra.disable("Isotropic")
+    with pytest.raises(ValueError, match="Shift"):
+        notebook.Config().set_setting("Shift", True)

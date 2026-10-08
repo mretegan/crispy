@@ -36,12 +36,17 @@ def resolve_edge(edge):
     return edge
 
 
+def existing(items, kind, name):
+    """Return the items. Raise a ValueError if there are no items."""
+    if not items:
+        raise ValueError(f"The {kind} {name!r} does not exist.")
+    return items
+
+
 def set_matching_items(obj, name, value):
     """Set the value of each attribute of obj whose name is name."""
     items = [i for i in obj.__dict__.values() if getattr(i, "name", None) == name]
-    if not items:
-        raise ValueError(f"The parameter {name!r} does not exist.")
-    for item in items:
+    for item in existing(items, "parameter", name):
         item.value = value
 
 
@@ -59,14 +64,14 @@ class Terms:
         self._terms = value
 
     def enable(self, name):
-        for term in self._terms:
-            if name in (term.name, "All"):
-                term.enable()
+        terms = [term for term in self._terms if name in (term.name, "All")]
+        for term in existing(terms, "term", name):
+            term.enable()
 
     def disable(self, name):
-        for term in self._terms:
-            if term.name == name:
-                term.disable()
+        terms = [term for term in self._terms if term.name == name]
+        for term in existing(terms, "term", name):
+            term.disable()
 
     def __iter__(self):
         return iter(self._terms)
@@ -200,14 +205,14 @@ class Spectra:
         self.has_data = False
 
     def enable(self, name=None):
-        for spectrum in self._spectra.toCalculate.all:
-            if spectrum.name == name:
-                spectrum.enable()
+        spectra = [s for s in self._spectra.toCalculate.all if s.name == name]
+        for spectrum in existing(spectra, "spectrum", name):
+            spectrum.enable()
 
     def disable(self, name=None):
-        for spectrum in self._spectra.toCalculate.all:
-            if spectrum.name == name:
-                spectrum.disable()
+        spectra = [s for s in self._spectra.toCalculate.all if s.name == name]
+        for spectrum in existing(spectra, "spectrum", name):
+            spectrum.disable()
 
     def get_all_calculated(self):
         if not self.has_data:
@@ -336,8 +341,7 @@ class Config:
         elif name == "Remove Files":
             name = "RemoveFiles"
         else:
-            print(f"Unknown setting: {name}")
-            return
+            raise ValueError(f"The setting {name!r} does not exist.")
 
         settings = _Config().read()
         settings.setValue(f"Quanty/{name}", value)
