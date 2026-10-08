@@ -36,6 +36,15 @@ def resolve_edge(edge):
     return edge
 
 
+def set_matching_items(obj, name, value):
+    """Set the value of each attribute of obj whose name is name."""
+    items = [i for i in obj.__dict__.values() if getattr(i, "name", None) == name]
+    if not items:
+        raise ValueError(f"The parameter {name!r} does not exist.")
+    for item in items:
+        item.value = value
+
+
 class Tree(dict):
     def __getitem__(self, item):
         try:
@@ -87,12 +96,15 @@ class Hamiltonian:
             if parameter is not None:
                 parameter.value = value
                 parameter.updateIndividualScaleFactors(value)
+            return
 
         if name == "Number of Configurations":
             self._hamiltonian.numberOfConfigurations.value = value
+            return
 
         if name == "Number of States":
             self._hamiltonian.numberOfStates.value = value
+            return
 
         # Accept the ASCII spelling of a name with Greek letters, e.g. "zeta(3d)".
         names = {
@@ -103,6 +115,7 @@ class Hamiltonian:
         }
         name = names.get(asciiName(name), name)
 
+        found = False
         parameters = list(self._hamiltonian.findChild(name))
         for parameter in parameters:
             hamiltonian = parameter.parent()
@@ -111,10 +124,17 @@ class Hamiltonian:
             elif hamiltonian_name not in hamiltonian.name:
                 continue
             if parameter.name == name:
+                found = True
                 if value is not None:
                     parameter.value = value
                 if scale_factor is not None:
                     parameter.scaleFactor = scale_factor
+
+        if not found:
+            message = f"The parameter {name!r} does not exist"
+            if hamiltonian_name is not None:
+                message += f" in {hamiltonian_name!r}"
+            raise ValueError(f"{message}.")
 
     def __str__(self):
         data = Tree()
@@ -154,9 +174,7 @@ class Axis:
         if name == "Lorentzian" and not np.isscalar(value):
             self._axis.lorentzian.points.value = value
             return
-        for parameter in self._axis.__dict__.values():
-            if getattr(parameter, "name", None) == name:
-                parameter.value = value
+        set_matching_items(self._axis, name, value)
 
     def __str__(self):
         lorentzian = self._axis.lorentzian
@@ -265,9 +283,7 @@ class Calculation:
         if name == "Basename":
             self._calculation.value = value
         else:
-            for parameter in self._calculation.__dict__.values():
-                if getattr(parameter, "name", None) == name:
-                    parameter.value = value
+            set_matching_items(self._calculation, name, value)
 
     def get_parameter(self, name=None):
         if name is None:
