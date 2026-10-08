@@ -6,4 +6,4 @@ How to cite Crispy and the history of changes.
     :maxdepth: 1
 
     citation
-    changelog
+    Release History <changelog>

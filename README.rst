@@ -1,6 +1,6 @@
 Crispy is a modern graphical user interface to calculate core-level spectra
 using the semi-empirical multiplet approaches implemented in `Quanty
-<http://quanty.org>`_. The application provides tools to generate input files,
+<https://quanty.org>`_. The application provides tools to generate input files,
 submit calculations, and plot the resulting spectra.
 
 |release| |downloads| |DOI| |license|
@@ -15,71 +15,117 @@ submit calculations, and plot the resulting spectra.
     :target: https://dx.doi.org/10.5281/zenodo.1008184
 
 .. |license| image:: https://img.shields.io/github/license/mretegan/crispy.svg
-    :target: https://github.com/mretegan/crispy/blob/master/LICENSE.txt
+    :target: https://github.com/mretegan/crispy/blob/main/LICENSE.rst
 
 .. first-marker
 
-.. image:: https://raw.githubusercontent.com/mretegan/crispy/main/doc/assets/main_window.png
+.. image::
+    https://raw.githubusercontent.com/mretegan/crispy/main/doc/assets/main_window.png
 
 .. second-marker
 
 Installation
 ============
 
-Latest Release
---------------
+Windows and macOS Applications
+------------------------------
+Download the application from the `Downloads page
+<https://crispy.esrf.fr/en/stable/getting_started/downloads.html>`_.
+These applications include Python and Quanty. You do not need to install
+Python separately.
 
-**Using the Package Installers**
+**Windows (64-bit)**
 
-The easiest way to install Crispy on Windows and macOS operating systems is to
-use the installers provided on the `downloads page
-<https://crispy.esrf.fr/en/latest/downloads.html>`_ of the project.
+1. Run the downloaded ``.exe`` installer and follow its instructions. The
+   installer removes the previous version, if present.
+2. Start Crispy from the Start menu.
 
-**Using pip**
+**macOS (14 or later)**
 
-Pip is the package manager for Python, and before you can use it to install
-Crispy, you have to make sure that you have a working Python distribution. On
-macOS and Windows, you can install Python using the `official installers
-<https://www.python.org/downloads>`_. In particular, for Windows, you should
-install the 64-bit version of Python and make sure that you select to add
-Python to the system PATH during the installation.
+The application supports both Intel and Apple Silicon Macs.
+
+1. Open the downloaded ``.dmg`` file.
+2. Drag Crispy into the Applications folder.
+3. Start Crispy from Applications.
+
+Using pip
+---------
+Use pip on Linux, or for a Python installation on Windows or macOS.
+Install a 64-bit Python distribution, version 3.10 or later, with pip and venv.
+Python installers for Windows and macOS are available from
+`python.org <https://www.python.org/downloads>`_.
+
+Create a virtual environment in a folder where you want to keep Crispy.
+This keeps its dependencies separate from other Python applications.
+
+**Linux and macOS**
+
+Open a terminal and run:
 
 .. code:: sh
 
-    python3 -m pip install crispy
+    python3 -m venv .venv
+    source .venv/bin/activate
 
-After the installation finishes, you should be able to start the program from
-the command line:
+**Windows**
+
+Open Command Prompt and run:
+
+.. code:: bat
+
+    py -3 -m venv .venv
+    .venv\Scripts\activate.bat
+
+With the environment active, install Crispy:
 
 .. code:: sh
 
-    crispy
+    python -m pip install --upgrade pip
+    python -m pip install crispy
 
-If you have problems running the previous command, it is probably due to not
-having your PATH environment variable set correctly.
+Start the application:
 
 .. code:: sh
 
-    export PATH=$HOME/.local/bin:$PATH
+    python -m crispy
 
+The ``crispy`` command also starts the application when the environment is
+active.
+Activate the same environment when you open a new terminal.
+For more information, see the `Python Packaging guide
+<https://packaging.python.org/en/latest/guides/
+installing-using-pip-and-virtual-environments/>`_.
+
+To update a pip installation, activate its environment and run:
+
+.. code:: sh
+
+    python -m pip install --upgrade crispy
 
 Development Version
 -------------------
-
-**Using pip**
-
-Assuming that you have a working Python distribution (version 3.10 or greater),
-you can easily install the development version of Crispy using pip:
+Use the development version to test changes from the ``main`` branch.
+Activate the virtual environment described above, then install or update Crispy:
 
 .. code:: sh
 
-    python3 -m pip install https://github.com/mretegan/crispy/tarball/main
+    python -m pip install --upgrade --force-reinstall https://github.com/mretegan/crispy/tarball/main
 
-To update the development version of Crispy, you can use the following command:
+The ``--force-reinstall`` option installs the current code even when its
+version number did not change.
 
-.. code:: sh
+Quanty
+------
+Crispy includes Quanty executables for Windows, macOS, and Linux.
+Register on the `Quanty website <https://www.quanty.org/start?do=register>`_
+if you do not already have an account.
 
-    python3 -m pip install --ignore-installed https://github.com/mretegan/crispy/tarball/main
+Crispy uses Quanty from ``PATH`` when available, otherwise it uses the bundled
+executable.
+To select another executable, open *Quanty → Preferences* and choose its path
+in *Quanty Executable*.
+Downloads are available from the `Quanty download area
+<https://www.quanty.org/download>`_.
 
 .. third-marker
 
@@ -88,9 +134,16 @@ Usage
 
 .. fourth-marker
 
-Crispy should be easy to find and launch if you have used the installers. For
-the installation using pip follow the instructions from the **Installation**
-section.
+Start the Windows application from the Start menu, or the macOS application
+from Applications.
+For a pip installation, activate its virtual environment, then run:
+
+.. code:: sh
+
+    python -m crispy
+
+To run Crispy on the ESRF compute cluster, see `Launching Crispy
+<https://crispy.esrf.fr/en/stable/getting_started/usage.html>`_.
 
 .. fifth-marker
 

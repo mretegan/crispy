@@ -1,11 +1,16 @@
-Usage
-=====
+Launching Crispy
+================
 
-Local Installation
-------------------
-Crispy should be easy to find and launch if you have used the installers. For
-the installation using pip or running directly from the source folder, follow
-the instructions from the :doc:`installation <installation>` page.
+Locally
+-------
+Start the Windows application from the Start menu, or the macOS application
+from Applications.
+For a pip installation, activate the virtual environment from the
+:doc:`installation <installation>` page, then run:
+
+.. code:: sh
+
+    python -m crispy
 
 At the ESRF
 -----------

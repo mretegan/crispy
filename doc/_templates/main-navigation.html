@@ -1,0 +1,9 @@
+<nav aria-label="Main navigation">
+  <ul class="bd-navbar-elements navbar-nav">
+    {% for title, page in [('Getting Started', 'getting_started/index'), ('Tutorials', 'tutorials/index'), ('Reference', 'reference/index')] %}
+      <li class="nav-item{% if pagename.split('/')[0] == page.split('/')[0] %} current active{% endif %}">
+        <a class="nav-link nav-internal" href="{{ pathto(page) }}"{% if pagename == page %} aria-current="page"{% endif %}>{{ title }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+</nav>

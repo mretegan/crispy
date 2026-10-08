@@ -14,14 +14,15 @@ Added
 - Energy dependent Lorentzian broadening for one-dimensional spectra. Set the
   (energy, FWHM) points in the Lorentzian Broadening dialog or in the notebook
   API.
-- Powder RIXS page in the user guide.
 
 Changed
 -------
-- Powder RIXS uses the resonant tensor of Quanty (three operators per side
-  instead of nine). This requires a Quanty version with resonant tensor support.
+- Isotropic RIXS uses the resonant tensor of Quanty (three operators per side
+  instead of nine).
 - The Lorentzian broadening accepts any positive value. The minimum was 0.1 eV.
 - The number of points follows the energy range and the Lorentzian broadening.
+- The Td f-block singlet uses the Mulliken label a1. The parameter Ea2 is now
+  Ea1.
 
 Fixed
 -----
@@ -41,25 +42,25 @@ Added
   - XES with a relaxed intermediate state for the Kα (1s2p) and Kβ (1s3p)
     edges.
   - 3d4f RIXS for the lanthanides and 3d5f RIXS for the actinides.
-  - Isotropic RIXS, with an ``Analyze Polarization`` option that resolves or
+  - Isotropic RIXS, with a ``Resolve`` polarization option that resolves or
     averages the outgoing polarization.
 
 - New crystal-field symmetries: D3d for the transition metals, and the full
   set (D4h, Td, C3v, D3h, D3d) for the lanthanides and actinides.
 - Support for berkelium (Bk) and californium (Cf).
 - Parameter scan widget for stepping one or more parameters over a range.
-- Save and load calculations, results and external data as HDF5 files.
+- Save and load calculations, results, and external data as HDF5 files.
 - Default scattering geometry for RIXS calculations.
 - Hamiltonian tab in the details dialog.
 - Configuration-average energy difference between the dipole and quadrupole
-  channels of the p-d hybridization.
+  channels of the 3d-4p hybridization.
 - ``cowan-parameters`` command-line entry point.
 
 Changed
 -------
 - Migrated the interface from PyQt to PySide6.
 - Overhauled the user interface and replaced the SVG icons with qtawesome.
-- Reworked the p-d hybridization to compute its parameters with the Cowan
+- Reworked the 3d-4p hybridization to compute its parameters with the Cowan
   programs, limited to the 3d transition metals.
 - Polarization is now a single vector, projected onto the plane perpendicular
   to the wave vector.
@@ -138,7 +139,7 @@ Changed
 
 Added
 -----
-- Restored the ligand-field term for Td symmetry.
+- Restored the ligand field term for Td symmetry.
 
 Changed
 -------

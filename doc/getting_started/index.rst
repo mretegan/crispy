@@ -1,7 +1,6 @@
 Getting Started
 ===============
-Download a pre-built application or install Crispy from source, and get it
-running.
+Download a pre-built application or install Crispy from source, and get it running.
 
 .. toctree::
     :maxdepth: 1
@@ -9,3 +8,4 @@ running.
     downloads
     installation
     usage
+    interface
