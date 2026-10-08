@@ -33,7 +33,12 @@ single-architecture, the universal bundle is assembled by building once per
 architecture and fusing the two builds.
 
 1. On an **Apple Silicon (arm64)** machine and on an **Intel (x86_64)** machine,
-   build the application::
+   reinstall SQLAlchemy without its compiled extensions. PyPI has them for
+   arm64 only, and the merge in step 2 needs identical builds::
+
+       DISABLE_SQLALCHEMY_CEXT=1 pip install --force-reinstall --no-deps --no-binary sqlalchemy sqlalchemy
+
+   Then build the application::
 
        pyinstaller --noconfirm crispy.spec
 

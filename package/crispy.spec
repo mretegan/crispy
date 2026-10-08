@@ -112,6 +112,10 @@ a = Analysis(  # noqa: F821
     # Excluding both keeps the builds symmetric; SQLAlchemy uses its pure-Python
     # fallbacks (negligible cost for xraydb's small queries).
     #
+    # SQLAlchemy 2.1 imports its compiled modules (e.g. engine/_row_cy) directly,
+    # so they cannot be excluded. Install it with DISABLE_SQLALCHEMY_CEXT=1 and
+    # --no-binary sqlalchemy on macOS (see package/README.rst).
+    #
     # PyQt5/PyQt6 are excluded so the frozen app always uses PySide6.
     excludes=["greenlet", "sqlalchemy.cyextension", "PyQt5", "PyQt6"],
     win_no_prefer_redirects=False,

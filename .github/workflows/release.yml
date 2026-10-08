@@ -27,9 +27,13 @@ jobs:
           python-version: "3.12"
 
       - name: Install packaging dependencies
+        # PyPI has the compiled SQLAlchemy extensions for arm64 only. Build
+        # SQLAlchemy from source without them, so both bundles are identical.
+        env:
+          DISABLE_SQLALCHEMY_CEXT: "1"
         run: |
           python -m pip install --upgrade pip
-          pip install .[bundle,notebook]
+          pip install --no-binary sqlalchemy .[bundle,notebook]
 
       - name: Run PyInstaller
         run: |
