@@ -1,0 +1,1378 @@
+--------------------------------------------------------------------------------
+-- Quanty input file generated using Crispy. If you use this file please cite
+-- the following reference: http://dx.doi.org/10.5281/zenodo.1008184.
+--
+-- elements: 3d
+-- symmetry: C3v
+-- experiment: XAS
+-- edge: K (1s)
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+-- Set the verbosity of the calculation. For increased verbosity use the values
+-- 0x00FF or 0xFFFF.
+--------------------------------------------------------------------------------
+Verbosity(0x0000)
+
+--------------------------------------------------------------------------------
+-- Define the parameters of the calculation.
+--------------------------------------------------------------------------------
+Temperature = 10 -- Temperature (Kelvin).
+
+NPsis = 45 -- Number of states to consider in the spectra calculation.
+NPsisAuto = true -- Determine the number of state automatically.
+NConfigurations = 2 -- Number of configurations.
+
+Emin = 8323.0 -- Minimum value of the energy range (eV).
+Emax = 8343.0 -- Maximum value of the energy range (eV).
+NPoints = 2000 -- Number of points of the spectra.
+ZeroShift = 0.0 -- Shift that brings the edge or line energy to approximately zero (eV).
+ExperimentalShift = 8333.0 -- Experimental edge or line energy (eV).
+Gaussian = 0.0 -- 0.1 -- Gaussian FWHM (eV).
+Lorentzian = {{8323.0, 1.44}, {8343.0, 1.44}} -- Lorentzian FWHM (eV).
+Gamma = 0.1 -- Lorentzian FWHM used in the spectra calculation (eV).
+
+WaveVector = {0, 0, 1} -- Wave vector.
+Eps = {1, 0, 0} -- Polarization.
+
+SpectraToCalculate = {"Absorption"}  -- Types of spectra to calculate.
+DenseBorder = 2000 -- Number of determinants where we switch from dense methods to sparse methods.
+ShiftSpectra = true -- If enabled, shift the spectra in the experimental energy range.
+
+Prefix = "test" -- File name prefix.
+
+--------------------------------------------------------------------------------
+-- Toggle the Hamiltonian terms.
+--------------------------------------------------------------------------------
+AtomicTerm = true
+CrystalFieldTerm = true
+LmctLigandsHybridizationTerm = true
+MlctLigandsHybridizationTerm = false
+PdHybridizationTerm = false
+MagneticFieldTerm = false
+ExchangeFieldTerm = false
+
+--------------------------------------------------------------------------------
+-- Define the number of electrons, shells, etc.
+--------------------------------------------------------------------------------
+NBosons = 0
+NFermions = 12
+
+NElectrons_1s = 2
+NElectrons_3d = 8
+
+IndexDn_1s = {0}
+IndexUp_1s = {1}
+IndexDn_3d = {2, 4, 6, 8, 10}
+IndexUp_3d = {3, 5, 7, 9, 11}
+
+if LmctLigandsHybridizationTerm then
+    NFermions = 22
+
+    NElectrons_L1 = 10
+
+    IndexDn_L1 = {12, 14, 16, 18, 20}
+    IndexUp_L1 = {13, 15, 17, 19, 21}
+end
+
+if MlctLigandsHybridizationTerm then
+    NFermions = 22
+
+    NElectrons_L2 = 10
+
+    IndexDn_L2 = {12, 14, 16, 18, 20}
+    IndexUp_L2 = {13, 15, 17, 19, 21}
+end
+
+if PdHybridizationTerm then
+    NFermions = 18
+
+    NElectrons_4p = 0
+
+    IndexDn_4p = {12, 14, 16}
+    IndexUp_4p = {13, 15, 17}
+end
+
+if LmctLigandsHybridizationTerm and MlctLigandsHybridizationTerm then
+    return
+end
+
+-- The template does not support the ligands hybridization together with the
+-- 3d-4p hybridization.
+if PdHybridizationTerm and (LmctLigandsHybridizationTerm or MlctLigandsHybridizationTerm) then
+    return
+end
+
+--------------------------------------------------------------------------------
+-- Initialize the Hamiltonians.
+--------------------------------------------------------------------------------
+H_i = 0
+H_f = 0
+
+--------------------------------------------------------------------------------
+-- Define the atomic term.
+--------------------------------------------------------------------------------
+N_1s = NewOperator("Number", NFermions, IndexUp_1s, IndexUp_1s, {1})
+     + NewOperator("Number", NFermions, IndexDn_1s, IndexDn_1s, {1})
+
+N_3d = NewOperator("Number", NFermions, IndexUp_3d, IndexUp_3d, {1, 1, 1, 1, 1})
+     + NewOperator("Number", NFermions, IndexDn_3d, IndexDn_3d, {1, 1, 1, 1, 1})
+
+if AtomicTerm then
+    F0_3d_3d = NewOperator("U", NFermions, IndexUp_3d, IndexDn_3d, {1, 0, 0})
+    F2_3d_3d = NewOperator("U", NFermions, IndexUp_3d, IndexDn_3d, {0, 1, 0})
+    F4_3d_3d = NewOperator("U", NFermions, IndexUp_3d, IndexDn_3d, {0, 0, 1})
+
+    F0_1s_3d = NewOperator("U", NFermions, IndexUp_1s, IndexDn_1s, IndexUp_3d, IndexDn_3d, {1}, {0})
+    G2_1s_3d = NewOperator("U", NFermions, IndexUp_1s, IndexDn_1s, IndexUp_3d, IndexDn_3d, {0}, {1})
+
+    U_3d_3d_i = 7.5
+    F2_3d_3d_i = 12.2338 * 0.8
+    F4_3d_3d_i = 7.5975 * 0.8
+    F0_3d_3d_i = U_3d_3d_i + 2 / 63 * F2_3d_3d_i + 2 / 63 * F4_3d_3d_i
+
+    U_3d_3d_f = 7.5
+    F2_3d_3d_f = 12.9234 * 0.8
+    F4_3d_3d_f = 8.0244 * 0.8
+    F0_3d_3d_f = U_3d_3d_f + 2 / 63 * F2_3d_3d_f + 2 / 63 * F4_3d_3d_f
+    U_1s_3d_f = 8.5
+    G2_1s_3d_f = 0.072 * 0.8
+    F0_1s_3d_f = U_1s_3d_f + 1 / 10 * G2_1s_3d_f
+
+    H_i = H_i + Chop(
+          F0_3d_3d_i * F0_3d_3d
+        + F2_3d_3d_i * F2_3d_3d
+        + F4_3d_3d_i * F4_3d_3d)
+
+    H_f = H_f + Chop(
+          F0_3d_3d_f * F0_3d_3d
+        + F2_3d_3d_f * F2_3d_3d
+        + F4_3d_3d_f * F4_3d_3d
+        + F0_1s_3d_f * F0_1s_3d
+        + G2_1s_3d_f * G2_1s_3d)
+
+    ldots_3d = NewOperator("ldots", NFermions, IndexUp_3d, IndexDn_3d)
+
+    zeta_3d_i = 0.0826 * 1.0
+
+    zeta_3d_f = 0.1037 * 1.0
+
+    H_i = H_i + Chop(
+          zeta_3d_i * ldots_3d)
+
+    H_f = H_f + Chop(
+          zeta_3d_f * ldots_3d)
+end
+
+--------------------------------------------------------------------------------
+-- Define the crystal field term.
+--------------------------------------------------------------------------------
+if CrystalFieldTerm then
+    -- C3v crystal field for d electrons: the three-fold C3 axis is along z and a
+    -- vertical mirror plane sigma_v contains the y-axis (the Koenig & Kremer
+    -- convention, equivalent to the inversion-related Quanty D3d "Zy" setting). The
+    -- five 3d orbitals split into a1 + e + e, parametrized by Dq, Dsigma and Dtau.
+    -- The two e sets (descended from the cubic t2g and eg) share an irrep and mix,
+    -- so the Hamiltonian is not diagonal in the irrep basis (see Koenig & Kremer,
+    -- p. 56). The Akm expansion is taken from the Quanty point-group tables
+    -- (https://www.quanty.org/physics_chemistry/point_groups).
+    Akm = {{4, 0, -14}, {4, 3, -2 * math.sqrt(70)}, {4, -3, 2 * math.sqrt(70)}}
+    Dq_3d = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, Akm)
+
+    Akm = {{2, 0, -7}}
+    Dsigma_3d = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, Akm)
+
+    Akm = {{4, 0, -21}}
+    Dtau_3d = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, Akm)
+
+
+    Dq_3d_i = 1.2 / 10.0
+    Dsigma_3d_i = 0.05
+    Dtau_3d_i = -0.03
+
+    io.write("Diagonal values of the initial crystal field Hamiltonian:\n")
+    io.write("================\n")
+    io.write("Irrep.         E\n")
+    io.write("================\n")
+    io.write(string.format("a1(t2g) %8.3f\n", -4 * Dq_3d_i - 2 * Dsigma_3d_i - 6 * Dtau_3d_i))
+    io.write(string.format("e(t2g)  %8.3f\n", -4 * Dq_3d_i + Dsigma_3d_i + 2 / 3 * Dtau_3d_i))
+    io.write(string.format("e(eg)   %8.3f\n", 6 * Dq_3d_i + 7 / 3 * Dtau_3d_i))
+    io.write("================\n")
+    io.write("For the C3v symmetry, the crystal field Hamiltonian is not necessarily diagonal in\n")
+    io.write("the basis of the irreducible representations. See the König and Kremer book, page 56.\n")
+    io.write(string.format("The non-diagonal element <e(t2g)|H|e(eg)> is %.3f.\n", -math.sqrt(2) / 3 * (3 * Dsigma_3d_i - 5 * Dtau_3d_i)))
+    io.write("\n")
+
+    Dq_3d_f = 1.2 / 10.0
+    Dsigma_3d_f = 0.05
+    Dtau_3d_f = -0.03
+
+    H_i = H_i + Chop(
+          Dq_3d_i * Dq_3d
+        + Dsigma_3d_i * Dsigma_3d
+        + Dtau_3d_i * Dtau_3d)
+
+    H_f = H_f + Chop(
+          Dq_3d_f * Dq_3d
+        + Dsigma_3d_f * Dsigma_3d
+        + Dtau_3d_f * Dtau_3d)
+end
+
+--------------------------------------------------------------------------------
+-- Define the 3d-ligands hybridization term (LMCT).
+--------------------------------------------------------------------------------
+if LmctLigandsHybridizationTerm then
+    N_L1 = NewOperator("Number", NFermions, IndexUp_L1, IndexUp_L1, {1, 1, 1, 1, 1})
+         + NewOperator("Number", NFermions, IndexDn_L1, IndexDn_L1, {1, 1, 1, 1, 1})
+
+    Delta_3d_L1_i = 2.0
+    E_3d_i = (10 * Delta_3d_L1_i - NElectrons_3d * (19 + NElectrons_3d) * U_3d_3d_i / 2) / (10 + NElectrons_3d)
+    E_L1_i = NElectrons_3d * ((1 + NElectrons_3d) * U_3d_3d_i / 2 - Delta_3d_L1_i) / (10 + NElectrons_3d)
+
+    Delta_3d_L1_f = 2.0
+    E_3d_f = (10 * Delta_3d_L1_f - NElectrons_3d * (23 + NElectrons_3d) * U_3d_3d_f / 2 - 22 * U_1s_3d_f) / (12 + NElectrons_3d)
+    E_1s_f = (10 * Delta_3d_L1_f + (1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_f / 2 - (10 + NElectrons_3d) * U_1s_3d_f)) / (12 + NElectrons_3d)
+    E_L1_f = (-2 * Delta_3d_L1_f * NElectrons_3d - 4 * Delta_3d_L1_f + U_3d_3d_f * NElectrons_3d^2 + U_3d_3d_f * NElectrons_3d + 4 * U_1s_3d_f * NElectrons_3d + 4 * U_1s_3d_f) / (2 * (NElectrons_3d + 12))
+
+    H_i = H_i + Chop(
+          E_3d_i * N_3d
+        + E_L1_i * N_L1)
+
+    H_f = H_f + Chop(
+          E_3d_f * N_3d
+        + E_1s_f * N_1s
+        + E_L1_f * N_L1)
+
+    -- The 3d and ligand orbitals use the same C3v basis: a1(t2g), e(eg), and
+    -- e(t2g). Each hybridization parameter couples a 3d irrep only with the ligand
+    -- irrep that has the same cubic parent (see Tables S7 and S8 in the supporting
+    -- information of Retegan et al., Inorg. Chem. 62, 18864 (2023),
+    -- https://doi.org/10.1021/acs.inorgchem.3c02158). Each Akm list is the
+    -- expansion of the projector on one irrep, and the three projectors sum to
+    -- the identity. The ligand crystal field uses the Akm of the 3d crystal field.
+    Akm = {{4, 0, -14}, {4, 3, -2 * math.sqrt(70)}, {4, -3, 2 * math.sqrt(70)}}
+    Dq_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, Akm)
+
+    Akm = {{2, 0, -7}}
+    Dsigma_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, Akm)
+
+    Akm = {{4, 0, -21}}
+    Dtau_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, Akm)
+
+    Akm = {{0, 0, 1 / 5}, {2, 0, 1}, {4, 0, 9 / 5}}
+    Va1_3d_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, IndexUp_3d, IndexDn_3d, Akm)
+              + NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_L1, IndexDn_L1, Akm)
+
+    Akm = {{0, 0, 2 / 5}, {4, 0, -7 / 5}, {4, 3, -math.sqrt(70) / 5}, {4, -3, math.sqrt(70) / 5}}
+    Ve_eg_3d_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, IndexUp_3d, IndexDn_3d, Akm)
+                + NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_L1, IndexDn_L1, Akm)
+
+    Akm = {{0, 0, 2 / 5}, {2, 0, -1}, {4, 0, -2 / 5}, {4, 3, math.sqrt(70) / 5}, {4, -3, -math.sqrt(70) / 5}}
+    Ve_t2g_3d_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, IndexUp_3d, IndexDn_3d, Akm)
+                 + NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_L1, IndexDn_L1, Akm)
+
+    Dq_L1_i = 0.6 / 10.0
+    Dsigma_L1_i = 0.02
+    Dtau_L1_i = 0.01
+    Va1_3d_L1_i = 1.1
+    Ve_eg_3d_L1_i = 2.0
+    Ve_t2g_3d_L1_i = 0.9
+
+    Dq_L1_f = 0.6 / 10.0
+    Dsigma_L1_f = 0.02
+    Dtau_L1_f = 0.01
+    Va1_3d_L1_f = 1.1
+    Ve_eg_3d_L1_f = 2.0
+    Ve_t2g_3d_L1_f = 0.9
+
+    H_i = H_i + Chop(
+          Dq_L1_i * Dq_L1
+        + Dsigma_L1_i * Dsigma_L1
+        + Dtau_L1_i * Dtau_L1
+        + Va1_3d_L1_i * Va1_3d_L1
+        + Ve_eg_3d_L1_i * Ve_eg_3d_L1
+        + Ve_t2g_3d_L1_i * Ve_t2g_3d_L1)
+
+    H_f = H_f + Chop(
+          Dq_L1_f * Dq_L1
+        + Dsigma_L1_f * Dsigma_L1
+        + Dtau_L1_f * Dtau_L1
+        + Va1_3d_L1_f * Va1_3d_L1
+        + Ve_eg_3d_L1_f * Ve_eg_3d_L1
+        + Ve_t2g_3d_L1_f * Ve_t2g_3d_L1)
+end
+
+--------------------------------------------------------------------------------
+-- Define the 3d-ligands hybridization term (MLCT).
+--------------------------------------------------------------------------------
+if MlctLigandsHybridizationTerm then
+    N_L2 = NewOperator("Number", NFermions, IndexUp_L2, IndexUp_L2, {1, 1, 1, 1, 1})
+         + NewOperator("Number", NFermions, IndexDn_L2, IndexDn_L2, {1, 1, 1, 1, 1})
+
+    Delta_3d_L2_i = 0.0
+    E_3d_i = U_3d_3d_i * (-NElectrons_3d + 1) / 2
+    E_L2_i = Delta_3d_L2_i + U_3d_3d_i * NElectrons_3d / 2 - U_3d_3d_i / 2
+
+    Delta_3d_L2_f = 0.0
+    E_3d_f = -(U_3d_3d_f * NElectrons_3d^2 + 3 * U_3d_3d_f * NElectrons_3d + 4 * U_1s_3d_f) / (2 * NElectrons_3d + 4)
+    E_1s_f = NElectrons_3d * (U_3d_3d_f * NElectrons_3d + U_3d_3d_f - 2 * U_1s_3d_f * NElectrons_3d - 2 * U_1s_3d_f) / (2 * (NElectrons_3d + 2))
+    E_L2_f = (2 * Delta_3d_L2_f * NElectrons_3d + 4 * Delta_3d_L2_f + U_3d_3d_f * NElectrons_3d^2 - U_3d_3d_f * NElectrons_3d - 4 * U_3d_3d_f + 4 * U_1s_3d_f * NElectrons_3d + 4 * U_1s_3d_f) / (2 * (NElectrons_3d + 2))
+
+    H_i = H_i + Chop(
+          E_3d_i * N_3d
+        + E_L2_i * N_L2)
+
+    H_f = H_f + Chop(
+          E_3d_f * N_3d
+        + E_1s_f * N_1s
+        + E_L2_f * N_L2)
+
+    -- The 3d and ligand orbitals use the same C3v basis: a1(t2g), e(eg), and
+    -- e(t2g). Each hybridization parameter couples a 3d irrep only with the ligand
+    -- irrep that has the same cubic parent (see Tables S7 and S8 in the supporting
+    -- information of Retegan et al., Inorg. Chem. 62, 18864 (2023),
+    -- https://doi.org/10.1021/acs.inorgchem.3c02158). Each Akm list is the
+    -- expansion of the projector on one irrep, and the three projectors sum to
+    -- the identity. The ligand crystal field uses the Akm of the 3d crystal field.
+    Akm = {{4, 0, -14}, {4, 3, -2 * math.sqrt(70)}, {4, -3, 2 * math.sqrt(70)}}
+    Dq_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, Akm)
+
+    Akm = {{2, 0, -7}}
+    Dsigma_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, Akm)
+
+    Akm = {{4, 0, -21}}
+    Dtau_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, Akm)
+
+    Akm = {{0, 0, 1 / 5}, {2, 0, 1}, {4, 0, 9 / 5}}
+    Va1_3d_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, IndexUp_3d, IndexDn_3d, Akm)
+              + NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_L2, IndexDn_L2, Akm)
+
+    Akm = {{0, 0, 2 / 5}, {4, 0, -7 / 5}, {4, 3, -math.sqrt(70) / 5}, {4, -3, math.sqrt(70) / 5}}
+    Ve_eg_3d_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, IndexUp_3d, IndexDn_3d, Akm)
+                + NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_L2, IndexDn_L2, Akm)
+
+    Akm = {{0, 0, 2 / 5}, {2, 0, -1}, {4, 0, -2 / 5}, {4, 3, math.sqrt(70) / 5}, {4, -3, -math.sqrt(70) / 5}}
+    Ve_t2g_3d_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, IndexUp_3d, IndexDn_3d, Akm)
+                 + NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_L2, IndexDn_L2, Akm)
+
+    Dq_L2_i = 0.0 / 10.0
+    Dsigma_L2_i = 0.0
+    Dtau_L2_i = 0.0
+    Va1_3d_L2_i = 0.0
+    Ve_eg_3d_L2_i = 0.0
+    Ve_t2g_3d_L2_i = 0.0
+
+    Dq_L2_f = 0.0 / 10.0
+    Dsigma_L2_f = 0.0
+    Dtau_L2_f = 0.0
+    Va1_3d_L2_f = 0.0
+    Ve_eg_3d_L2_f = 0.0
+    Ve_t2g_3d_L2_f = 0.0
+
+    H_i = H_i + Chop(
+          Dq_L2_i * Dq_L2
+        + Dsigma_L2_i * Dsigma_L2
+        + Dtau_L2_i * Dtau_L2
+        + Va1_3d_L2_i * Va1_3d_L2
+        + Ve_eg_3d_L2_i * Ve_eg_3d_L2
+        + Ve_t2g_3d_L2_i * Ve_t2g_3d_L2)
+
+    H_f = H_f + Chop(
+          Dq_L2_f * Dq_L2
+        + Dsigma_L2_f * Dsigma_L2
+        + Dtau_L2_f * Dtau_L2
+        + Va1_3d_L2_f * Va1_3d_L2
+        + Ve_eg_3d_L2_f * Ve_eg_3d_L2
+        + Ve_t2g_3d_L2_f * Ve_t2g_3d_L2)
+end
+
+--------------------------------------------------------------------------------
+-- Define the 3d-4p hybridization term.
+--------------------------------------------------------------------------------
+if PdHybridizationTerm then
+  F0_3d_4p = NewOperator("U", NFermions, IndexUp_4p, IndexDn_4p, IndexUp_3d, IndexDn_3d, {1, 0}, {0, 0})
+  F2_3d_4p = NewOperator("U", NFermions, IndexUp_4p, IndexDn_4p, IndexUp_3d, IndexDn_3d, {0, 1}, {0, 0})
+  G1_3d_4p = NewOperator("U", NFermions, IndexUp_4p, IndexDn_4p, IndexUp_3d, IndexDn_3d, {0, 0}, {1, 0})
+  G3_3d_4p = NewOperator("U", NFermions, IndexUp_4p, IndexDn_4p, IndexUp_3d, IndexDn_3d, {0, 0}, {0, 1})
+  G1_1s_4p = NewOperator("U", NFermions, IndexUp_1s, IndexDn_1s, IndexUp_4p, IndexDn_4p, {0}, {1})
+
+  F2_3d_4p_i = 2.3186 * 0.8
+  G1_3d_4p_i = 0.8488 * 0.8
+  G3_3d_4p_i = 0.73 * 0.8
+
+  F2_3d_4p_f = 2.299 * 0.8
+  G1_3d_4p_f = 0.8284 * 0.8
+  G3_3d_4p_f = 0.7129 * 0.8
+  G1_1s_4p_f = 0.1943 * 0.8
+
+  H_i = H_i + Chop(
+        F2_3d_4p_i * F2_3d_4p
+      + G1_3d_4p_i * G1_3d_4p
+      + G3_3d_4p_i * G3_3d_4p)
+
+  H_f = H_f + Chop(
+        F2_3d_4p_f * F2_3d_4p
+      + G1_3d_4p_f * G1_3d_4p
+      + G3_3d_4p_f * G3_3d_4p
+      + G1_1s_4p_f * G1_1s_4p)
+
+  ldots_4p = NewOperator("ldots", NFermions, IndexUp_4p, IndexDn_4p)
+
+  zeta_4p_i = 0.0841
+
+  zeta_4p_f = 0.0927
+
+  H_i = H_i + Chop(
+        zeta_4p_i * ldots_4p)
+
+  H_f = H_f + Chop(
+        zeta_4p_f * ldots_4p)
+
+  N_4p = NewOperator("Number", NFermions, IndexUp_4p, IndexUp_4p, {1, 1, 1})
+       + NewOperator("Number", NFermions, IndexDn_4p, IndexDn_4p, {1, 1, 1})
+
+  Delta_3d_4p_i = 14.3963
+  e_3d_i = -(NElectrons_3d - 1) * U_3d_3d_i / 2
+  e_4p_i =  (NElectrons_3d - 1) * U_3d_3d_i / 2 + Delta_3d_4p_i
+
+  Delta_3d_4p_f = 15.6025
+  e_3d_f= -(NElectrons_3d - 1) * U_3d_3d_f / 2
+  e_4p_f=  (NElectrons_3d - 1) * U_3d_3d_f / 2 + Delta_3d_4p_f
+
+  H_i = H_i + Chop(
+        e_3d_i * N_3d
+      + e_4p_i * N_4p)
+
+  H_f = H_f + Chop(
+        e_3d_f * N_3d
+      + e_4p_f * N_4p)
+
+  Akm = {{1, 0, -math.sqrt(3 / 5)}, {3, 0, -7 / math.sqrt(15)}}
+  Va1_3d_4p = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_4p, IndexDn_4p, Akm)
+            + NewOperator("CF", NFermions, IndexUp_4p, IndexDn_4p, IndexUp_3d, IndexDn_3d, Akm)
+
+  Akm = {{1, 0, math.sqrt(6 / 5)}, {3, 0, -14 / 3 * math.sqrt(2 / 15)}, {3, 3, -7 / 3 / math.sqrt(3)}, {3, -3, 7 / 3 / math.sqrt(3)}}
+  Ve_eg_3d_4p = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_4p, IndexDn_4p, Akm)
+              + NewOperator("CF", NFermions, IndexUp_4p, IndexDn_4p, IndexUp_3d, IndexDn_3d, Akm)
+
+  Akm = {{1, 0, math.sqrt(3 / 5)}, {3, 0, -14 / 3 / math.sqrt(15)}, {3, 3, 7 / 3 * math.sqrt(2 / 3)}, {3, -3, -7 / 3 * math.sqrt(2 / 3)}}
+  Ve_t2g_3d_4p = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_4p, IndexDn_4p, Akm)
+               + NewOperator("CF", NFermions, IndexUp_4p, IndexDn_4p, IndexUp_3d, IndexDn_3d, Akm)
+
+  Va1_3d_4p_i = 0.0
+  Ve_eg_3d_4p_i = 0.0
+  Ve_t2g_3d_4p_i = 0.0
+
+  Va1_3d_4p_f = 0.0
+  Ve_eg_3d_4p_f = 0.0
+  Ve_t2g_3d_4p_f = 0.0
+
+  H_i = H_i + Chop(
+        Va1_3d_4p_i * Va1_3d_4p
+      + Ve_eg_3d_4p_i * Ve_eg_3d_4p
+      + Ve_t2g_3d_4p_i * Ve_t2g_3d_4p)
+
+  H_f = H_f + Chop(
+        Va1_3d_4p_f * Va1_3d_4p
+      + Ve_eg_3d_4p_f * Ve_eg_3d_4p
+      + Ve_t2g_3d_4p_f * Ve_t2g_3d_4p)
+end
+
+--------------------------------------------------------------------------------
+-- Define the magnetic field and exchange field terms.
+--------------------------------------------------------------------------------
+Sx_3d = NewOperator("Sx", NFermions, IndexUp_3d, IndexDn_3d)
+Sy_3d = NewOperator("Sy", NFermions, IndexUp_3d, IndexDn_3d)
+Sz_3d = NewOperator("Sz", NFermions, IndexUp_3d, IndexDn_3d)
+Ssqr_3d = NewOperator("Ssqr", NFermions, IndexUp_3d, IndexDn_3d)
+Splus_3d = NewOperator("Splus", NFermions, IndexUp_3d, IndexDn_3d)
+Smin_3d = NewOperator("Smin", NFermions, IndexUp_3d, IndexDn_3d)
+
+Lx_3d = NewOperator("Lx", NFermions, IndexUp_3d, IndexDn_3d)
+Ly_3d = NewOperator("Ly", NFermions, IndexUp_3d, IndexDn_3d)
+Lz_3d = NewOperator("Lz", NFermions, IndexUp_3d, IndexDn_3d)
+Lsqr_3d = NewOperator("Lsqr", NFermions, IndexUp_3d, IndexDn_3d)
+Lplus_3d = NewOperator("Lplus", NFermions, IndexUp_3d, IndexDn_3d)
+Lmin_3d = NewOperator("Lmin", NFermions, IndexUp_3d, IndexDn_3d)
+
+Jx_3d = NewOperator("Jx", NFermions, IndexUp_3d, IndexDn_3d)
+Jy_3d = NewOperator("Jy", NFermions, IndexUp_3d, IndexDn_3d)
+Jz_3d = NewOperator("Jz", NFermions, IndexUp_3d, IndexDn_3d)
+Jsqr_3d = NewOperator("Jsqr", NFermions, IndexUp_3d, IndexDn_3d)
+Jplus_3d = NewOperator("Jplus", NFermions, IndexUp_3d, IndexDn_3d)
+Jmin_3d = NewOperator("Jmin", NFermions, IndexUp_3d, IndexDn_3d)
+
+Tx_3d = NewOperator("Tx", NFermions, IndexUp_3d, IndexDn_3d)
+Ty_3d = NewOperator("Ty", NFermions, IndexUp_3d, IndexDn_3d)
+Tz_3d = NewOperator("Tz", NFermions, IndexUp_3d, IndexDn_3d)
+
+Sx = Sx_3d
+Sy = Sy_3d
+Sz = Sz_3d
+
+Lx = Lx_3d
+Ly = Ly_3d
+Lz = Lz_3d
+
+Jx = Jx_3d
+Jy = Jy_3d
+Jz = Jz_3d
+
+Tx = Tx_3d
+Ty = Ty_3d
+Tz = Tz_3d
+
+Ssqr = Sx * Sx + Sy * Sy + Sz * Sz
+Lsqr = Lx * Lx + Ly * Ly + Lz * Lz
+Jsqr = Jx * Jx + Jy * Jy + Jz * Jz
+
+if MagneticFieldTerm then
+    -- The values are in eV, and not Tesla. To convert from Tesla to eV multiply
+    -- the value with EnergyUnits.Tesla.value.
+    Bx_i = 0.0
+    By_i = 0.0
+    Bz_i = 0.0
+
+    Bx_f = 0.0
+    By_f = 0.0
+    Bz_f = 0.0
+
+    H_i = H_i + Chop(
+          Bx_i * (2 * Sx + Lx)
+        + By_i * (2 * Sy + Ly)
+        + Bz_i * (2 * Sz + Lz))
+
+    H_f = H_f + Chop(
+          Bx_f * (2 * Sx + Lx)
+        + By_f * (2 * Sy + Ly)
+        + Bz_f * (2 * Sz + Lz))
+end
+
+if ExchangeFieldTerm then
+    Hx_i = 0.0
+    Hy_i = 0.0
+    Hz_i = 0.0
+
+    Hx_f = 0.0
+    Hy_f = 0.0
+    Hz_f = 0.0
+
+    H_i = H_i + Chop(
+          Hx_i * Sx
+        + Hy_i * Sy
+        + Hz_i * Sz)
+
+    H_f = H_f + Chop(
+          Hx_f * Sx
+        + Hy_f * Sy
+        + Hz_f * Sz)
+end
+
+--------------------------------------------------------------------------------
+-- Define the restrictions and set the number of initial states.
+--------------------------------------------------------------------------------
+InitialRestrictions = {NFermions, NBosons, {"11 0000000000", NElectrons_1s, NElectrons_1s},
+                                           {"00 1111111111", NElectrons_3d, NElectrons_3d}}
+
+FinalRestrictions = {NFermions, NBosons, {"11 0000000000", NElectrons_1s - 1, NElectrons_1s - 1},
+                                         {"00 1111111111", NElectrons_3d + 1, NElectrons_3d + 1}}
+
+CalculationRestrictions = nil
+
+if LmctLigandsHybridizationTerm then
+    InitialRestrictions = {NFermions, NBosons, {"11 0000000000 0000000000", NElectrons_1s, NElectrons_1s},
+                                               {"00 1111111111 0000000000", NElectrons_3d, NElectrons_3d},
+                                               {"00 0000000000 1111111111", NElectrons_L1, NElectrons_L1}}
+
+    FinalRestrictions = {NFermions, NBosons, {"11 0000000000 0000000000", NElectrons_1s - 1, NElectrons_1s - 1},
+                                             {"00 1111111111 0000000000", NElectrons_3d + 1, NElectrons_3d + 1},
+                                             {"00 0000000000 1111111111", NElectrons_L1, NElectrons_L1}}
+
+    CalculationRestrictions = {NFermions, NBosons, {"00 0000000000 1111111111", NElectrons_L1 - (NConfigurations - 1), NElectrons_L1}}
+end
+
+if MlctLigandsHybridizationTerm then
+    InitialRestrictions = {NFermions, NBosons, {"11 0000000000 0000000000", NElectrons_1s, NElectrons_1s},
+                                               {"00 1111111111 0000000000", NElectrons_3d, NElectrons_3d},
+                                               {"00 0000000000 1111111111", NElectrons_L2, NElectrons_L2}}
+
+    FinalRestrictions = {NFermions, NBosons, {"11 0000000000 0000000000", NElectrons_1s - 1, NElectrons_1s - 1},
+                                             {"00 1111111111 0000000000", NElectrons_3d + 1, NElectrons_3d + 1},
+                                             {"00 0000000000 1111111111", NElectrons_L2, NElectrons_L2}}
+
+    CalculationRestrictions = {NFermions, NBosons, {"00 0000000000 1111111111", NElectrons_L2, NElectrons_L2 + (NConfigurations - 1)}}
+end
+
+if PdHybridizationTerm then
+    InitialRestrictions = {NFermions, NBosons, {"11 0000000000 000000", NElectrons_1s, NElectrons_1s},
+                                               {"00 1111111111 000000", NElectrons_3d, NElectrons_3d},
+                                               {"00 0000000000 111111", NElectrons_4p, NElectrons_4p}}
+
+    FinalRestrictions = {NFermions, NBosons, {"11 0000000000 000000", NElectrons_1s - 1, NElectrons_1s - 1},
+                                             {"00 1111111111 000000", NElectrons_3d + 1, NElectrons_3d + 1},
+                                             {"00 0000000000 111111", NElectrons_4p, NElectrons_4p}}
+
+    CalculationRestrictions = {NFermions, NBosons, {"00 0000000000 111111", NElectrons_4p, NElectrons_4p + 1}}
+end
+
+--------------------------------------------------------------------------------
+-- Define some helper functions.
+--------------------------------------------------------------------------------
+function MatrixToOperator(Matrix, StartIndex)
+    -- Transform a matrix to an operator.
+    local Operator = 0
+    for i = 1, #Matrix do
+        for j = 1, #Matrix do
+            local Weight = Matrix[i][j]
+            Operator = Operator + NewOperator("Number", #Matrix + StartIndex, i + StartIndex - 1, j + StartIndex - 1) * Weight
+        end
+    end
+    Operator.Chop()
+    return Operator
+end
+
+function ValueInTable(Value, Table)
+    -- Check if a value is in a table.
+    for _, v in ipairs(Table) do
+        if Value == v then
+            return true
+        end
+    end
+    return false
+end
+
+function GetSpectrum(G, Ids, dZ, NOperators, NPsis)
+    -- Extract the spectrum corresponding to the operators identified using the
+    -- Ids argument. The returned spectrum is a weighted sum, where the weights
+    -- are the Boltzmann probabilities.
+    --
+    -- @param G userdata: Spectrum object as returned by the functions defined in Quanty, i.e. one spectrum
+    --                    for each operator and each wavefunction.
+    -- @param Ids table: Indexes of the operators that are considered in the returned spectrum.
+    -- @param dZ table: Boltzmann prefactors for each of the spectrum in the spectra object.
+    -- @param NOperators number: Number of transition operators.
+    -- @param NPsis number: Number of wavefunctions.
+
+    if not (type(Ids) == "table") then
+        Ids = {Ids}
+    end
+
+    local Id = 1
+    local dZs = {}
+
+    for i = 1, NOperators do
+        for _ = 1, NPsis do
+            if ValueInTable(i, Ids) then
+                table.insert(dZs, dZ[Id])
+            else
+                table.insert(dZs, 0)
+            end
+            Id = Id + 1
+        end
+    end
+    return Spectra.Sum(G, dZs)
+end
+
+function SaveSpectrum(G, Filename, Gaussian, Lorentzian, Pcl)
+    if Pcl == nil then
+        Pcl = 1
+    end
+    G = -1 / math.pi / Pcl * G
+    G.Broaden(Gaussian, Lorentzian)
+    G.Print({{"file", Filename .. ".spec"}})
+end
+
+function GetResonantSpectrum(G, dZ, NOperators, NPsis, NPoints)
+    -- Sum the resonant spectrum over the operator combinations and wavefunctions,
+    -- weighted by the Boltzmann probabilities. The spectra object returned by
+    -- CreateResonantSpectra contains one block of (NPoints + 1) rows for each
+    -- operator combination and wavefunction.
+    --
+    -- @param G userdata: Spectra object returned by CreateResonantSpectra.
+    -- @param dZ table: Boltzmann prefactors for each wavefunction.
+    -- @param NOperators number: Number of transition operator combinations.
+    -- @param NPsis number: Number of wavefunctions.
+    -- @param NPoints number: Number of points along the incident energy axis.
+
+    local Spectrum = 0
+    local Shift = 0
+    for i = 1, NPsis do
+        for _ = 1, NOperators do
+            local Indexes = {}
+            for k = 1, NPoints + 1 do
+                table.insert(Indexes, k + Shift)
+            end
+            Spectrum = Spectrum + Spectra.Element(G, Indexes) * dZ[i]
+            Shift = Shift + NPoints + 1
+        end
+    end
+    return Spectrum
+end
+
+function GetFundamentalSpectra(G, NPoints)
+    -- Extract the powder invariants from the Cartesian dipole-dipole tensor
+    -- for a SINGLE initial state (Tensor=true, TensorBasis="cartesian"). Both operator
+    -- lists must be {Tx, Ty, Tz}. Quanty stores the outgoing index
+    -- fastest: channel(a,b) = 3*a+b, with zero-based incoming a and outgoing b.
+    -- The ket channel is fastest within the 9 x 9 coherence matrix, followed by
+    -- the bra channel; each component has NPoints+1 incident-energy rows.
+    local function Component(a, b, c, d)
+        local Block = (3 * a + b) + 9 * (3 * c + d)
+        local Indexes = {}
+        for k = 1, NPoints + 1 do
+            Indexes[k] = Block * (NPoints + 1) + k
+        end
+        return Spectra.Element(G, Indexes)
+    end
+
+    local M1, TrM2, TrMM = 0, 0, 0
+    for a = 0, 2 do
+        for b = 0, 2 do
+            M1 = M1 + Component(a, b, a, b)
+            TrM2 = TrM2 + Component(a, a, b, b)
+            TrMM = TrMM + Component(a, b, b, a)
+        end
+    end
+    local M23 = TrM2 + TrMM
+    return (4 * M1 - M23) / 30, (-2 * M1 + 3 * M23) / 30
+end
+
+function CalculatePowderSpectra(Hm, Hf, Tin, Tout, Psis, dZ, NPoints, Options)
+    -- Sum fundamental spectra from separate normalized states with Boltzmann weights.
+    -- Each tensor has 81 components per incident energy.
+    -- Preserve energy windows, restrictions and DenseBorder.
+    local TensorOptions = {}
+    for _, Option in ipairs(Options) do
+        TensorOptions[#TensorOptions + 1] = Option
+    end
+    TensorOptions[#TensorOptions + 1] = {"Tensor", true}
+    TensorOptions[#TensorOptions + 1] = {"TensorBasis", "cartesian"}
+
+    local A, B = 0, 0
+    for p, Psi in ipairs(Psis) do
+        local G = CreateResonantSpectra(Hm, Hf, Tin, Tout, {Psi}, TensorOptions)
+        local Ap, Bp = GetFundamentalSpectra(G, NPoints)
+        A = A + Ap * dZ[p]
+        B = B + Bp * dZ[p]
+    end
+    return A, B
+end
+
+function CalculateT(Basis, Eps, WaveVector)
+    -- Calculate the transition operator in the basis of tesseral harmonics for
+    -- an arbitrary polarization and wave-vector (for quadrupole operators).
+    --
+    -- @param Basis table: Operators forming the basis.
+    -- @param Eps table: Cartesian components of the polarization vector.
+    -- @param WaveVector table: Cartesian components of the wave-vector.
+
+    if #Basis == 3 then
+        -- The basis for the dipolar operators must be in the order x, y, z.
+        T = Eps[1] * Basis[1]
+          + Eps[2] * Basis[2]
+          + Eps[3] * Basis[3]
+    elseif #Basis == 5 then
+        -- The basis for the quadrupolar operators must be in the order xy, xz, yz, x2y2, z2.
+        T = (Eps[1] * WaveVector[2] + Eps[2] * WaveVector[1]) / math.sqrt(3) * Basis[1]
+          + (Eps[1] * WaveVector[3] + Eps[3] * WaveVector[1]) / math.sqrt(3) * Basis[2]
+          + (Eps[2] * WaveVector[3] + Eps[3] * WaveVector[2]) / math.sqrt(3) * Basis[3]
+          + (Eps[1] * WaveVector[1] - Eps[2] * WaveVector[2]) / math.sqrt(3) * Basis[4]
+          + (Eps[3] * WaveVector[3]) * Basis[5]
+    end
+    return Chop(T)
+end
+
+function DotProduct(a, b)
+    return Chop(a[1] * b[1] + a[2] * b[2] + a[3] * b[3])
+end
+
+function WavefunctionsAndBoltzmannFactors(H, NPsis, NPsisAuto, Temperature, Threshold, StartRestrictions, CalculationRestrictions)
+    -- Calculate the wavefunctions and Boltzmann factors of a Hamiltonian.
+    --
+    -- @param H userdata: Hamiltonian for which to calculate the wavefunctions.
+    -- @param NPsis number: The number of wavefunctions.
+    -- @param NPsisAuto boolean: Determine automatically the number of wavefunctions that are populated at the specified
+    --                           temperature and within the threshold.
+    -- @param Temperature number: The temperature in eV.
+    -- @param Threshold number: Threshold used to determine the number of wavefunction in the automatic procedure.
+    -- @param StartRestrictions table: Occupancy restrictions at the start of the calculation.
+    -- @param CalculationRestrictions table: Occupancy restrictions used during the calculation.
+    -- @return table: The calculated wavefunctions.
+    -- @return table: The calculated Boltzmann factors.
+
+    if Threshold == nil then
+        Threshold = 1e-8
+    end
+
+    local dZ = {}
+    local Z = 0
+    local Psis
+
+    if NPsisAuto == true and NPsis ~= 1 then
+        NPsis = 4
+        local NPsisIncrement = 8
+        local NPsisIsConverged = false
+
+        while not NPsisIsConverged do
+            if CalculationRestrictions == nil then
+                Psis = Eigensystem(H, StartRestrictions, NPsis)
+            else
+                Psis = Eigensystem(H, StartRestrictions, NPsis, {{"restrictions", CalculationRestrictions}})
+            end
+
+            if not (type(Psis) == "table") then
+                Psis = {Psis}
+            end
+
+            if E_gs == nil then
+                E_gs = Psis[1] * H * Psis[1]
+            end
+
+            Z = 0
+
+            for i, Psi in ipairs(Psis) do
+                local E = Psi * H * Psi
+
+                if math.abs(E - E_gs) < Threshold ^ 2 then
+                    dZ[i] = 1
+                else
+                    dZ[i] = math.exp(-(E - E_gs) / Temperature)
+                end
+
+                Z = Z + dZ[i]
+
+                if dZ[i] / Z < Threshold then
+                    i = i - 1
+                    NPsisIsConverged = true
+                    NPsis = i
+                    Psis = {unpack(Psis, 1, i)}
+                    dZ = {unpack(dZ, 1, i)}
+                    break
+                end
+            end
+
+            if NPsisIsConverged then
+                break
+            else
+                NPsis = NPsis + NPsisIncrement
+            end
+        end
+    else
+        if CalculationRestrictions == nil then
+            Psis = Eigensystem(H, StartRestrictions, NPsis)
+        else
+            Psis = Eigensystem(H, StartRestrictions, NPsis, {{"restrictions", CalculationRestrictions}})
+        end
+
+        if not (type(Psis) == "table") then
+            Psis = {Psis}
+        end
+
+        local E_gs = Psis[1] * H * Psis[1]
+
+        Z = 0
+
+        for i, psi in ipairs(Psis) do
+            local E = psi * H * psi
+
+            if math.abs(E - E_gs) < Threshold ^ 2 then
+                dZ[i] = 1
+            else
+                dZ[i] = math.exp(-(E - E_gs) / Temperature)
+            end
+
+            Z = Z + dZ[i]
+        end
+    end
+
+    -- Normalize the Boltzmann factors to unity.
+    for i in ipairs(dZ) do
+        dZ[i] = dZ[i] / Z
+    end
+
+    return Psis, dZ
+end
+
+function PrintHamiltonianAnalysis(Psis, Operators, dZ, Header, Footer)
+    io.write(Header)
+    for i, Psi in ipairs(Psis) do
+        io.write(string.format("%5d", i))
+        for j, Operator in ipairs(Operators) do
+            if j == 1 then
+                io.write(string.format("%12.6f", Complex.Re(Psi * Operator * Psi)))
+            elseif Operator == "dZ" then
+                io.write(string.format("%12.2e", dZ[i]))
+            else
+                io.write(string.format("%10.4f", Complex.Re(Psi * Operator * Psi)))
+            end
+        end
+        io.write("\n")
+    end
+    io.write(Footer)
+end
+
+function CalculateEnergyDifference(H1, H1Restrictions, H2, H2Restrictions)
+    -- Calculate the energy difference between the lowest eigenstates of the two
+    -- Hamiltonians.
+    --
+    -- @param H1 userdata: The first Hamiltonian.
+    -- @param H1Restrictions table: Restrictions of the occupation numbers for H1.
+    -- @param H2 userdata: The second Hamiltonian.
+    -- @param H2Restrictions table: Restrictions of the occupation numbers for H2.
+
+    local E1 = 0.0
+    local E2 = 0.0
+
+    if H1 ~= nil and H1Restrictions ~= nil then
+        Psis1, _ = WavefunctionsAndBoltzmannFactors(H1, 1, false, 0, nil, H1Restrictions, nil)
+        E1 = Psis1[1] * H1 * Psis1[1]
+    end
+
+    if H2 ~= nil and H2Restrictions ~= nil then
+        Psis2, _ = WavefunctionsAndBoltzmannFactors(H2, 1, false, 0, nil, H2Restrictions, nil)
+        E2 = Psis2[1] * H2 * Psis2[1]
+    end
+
+    return E1 - E2
+end
+
+--------------------------------------------------------------------------------
+-- Analyze the initial Hamiltonian.
+--------------------------------------------------------------------------------
+Temperature = Temperature * EnergyUnits.Kelvin.value
+
+Sk = DotProduct(WaveVector, {Sx, Sy, Sz})
+Lk = DotProduct(WaveVector, {Lx, Ly, Lz})
+Jk = DotProduct(WaveVector, {Jx, Jy, Jz})
+Tk = DotProduct(WaveVector, {Tx, Ty, Tz})
+
+Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_3d, N_1s, N_3d, "dZ"}
+Header = "Analysis of the %s Hamiltonian:\n"
+Header = Header .. "=================================================================================================================================\n"
+Header = Header .. "State           E     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_1s>    <N_3d>          dZ\n"
+Header = Header .. "=================================================================================================================================\n"
+Footer = "=================================================================================================================================\n"
+
+if LmctLigandsHybridizationTerm then
+    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_3d, N_1s, N_3d, N_L1, "dZ"}
+    Header = "Analysis of the %s Hamiltonian:\n"
+    Header = Header .. "===========================================================================================================================================\n"
+    Header = Header .. "State           E     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_1s>    <N_3d>    <N_L1>          dZ\n"
+    Header = Header .. "===========================================================================================================================================\n"
+    Footer = "===========================================================================================================================================\n"
+end
+
+if MlctLigandsHybridizationTerm then
+    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_3d, N_1s, N_3d, N_L2, "dZ"}
+    Header = "Analysis of the %s Hamiltonian:\n"
+    Header = Header .. "===========================================================================================================================================\n"
+    Header = Header .. "State           E     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_1s>    <N_3d>    <N_L2>          dZ\n"
+    Header = Header .. "===========================================================================================================================================\n"
+    Footer = "===========================================================================================================================================\n"
+end
+
+if PdHybridizationTerm then
+    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_3d, N_1s, N_3d, N_4p, "dZ"}
+    Header = "Analysis of the initial Hamiltonian:\n"
+    Header = Header .. "===========================================================================================================================================\n"
+    Header = Header .. "State           E     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_1s>    <N_3d>    <N_4p>          dZ\n"
+    Header = Header .. "===========================================================================================================================================\n"
+    Footer = "===========================================================================================================================================\n"
+end
+
+local Psis_i, dZ_i = WavefunctionsAndBoltzmannFactors(H_i, NPsis, NPsisAuto, Temperature, nil, InitialRestrictions, CalculationRestrictions)
+PrintHamiltonianAnalysis(Psis_i, Operators, dZ_i, string.format(Header, "initial"), Footer)
+
+-- Stop the calculation if no spectra need to be calculated.
+if next(SpectraToCalculate) == nil then
+    return
+end
+
+--------------------------------------------------------------------------------
+-- Calculate and save the spectra.
+--------------------------------------------------------------------------------
+if PdHybridizationTerm then
+    local t = math.sqrt(1 / 2)
+
+    -- Quadrupolar operators.
+    Txy_1s_3d   = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -2, t * I}, {2, 2, -t * I}})
+    Txz_1s_3d   = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -1, t    }, {2, 1, -t    }})
+    Tyz_1s_3d   = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -1, t * I}, {2, 1,  t * I}})
+    Tx2y2_1s_3d = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -2, t    }, {2, 2,  t    }})
+    Tz2_1s_3d   = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2,  0, 1    }                })
+
+    Epsh = Eps
+
+    Epsv = {WaveVector[2] * Epsh[3] - WaveVector[3] * Epsh[2],
+            WaveVector[3] * Epsh[1] - WaveVector[1] * Epsh[3],
+            WaveVector[1] * Epsh[2] - WaveVector[2] * Epsh[1]}
+
+    Epsr = {t * (Epsh[1] - I * Epsv[1]),
+            t * (Epsh[2] - I * Epsv[2]),
+            t * (Epsh[3] - I * Epsv[3])}
+
+    Epsl = {-t * (Epsh[1] + I * Epsv[1]),
+            -t * (Epsh[2] + I * Epsv[2]),
+            -t * (Epsh[3] + I * Epsv[3])}
+
+    local T = {Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}
+    Tv_1s_3d = CalculateT(T, Epsv, WaveVector)
+    Th_1s_3d = CalculateT(T, Epsh, WaveVector)
+    Tr_1s_3d = CalculateT(T, Epsr, WaveVector)
+    Tl_1s_3d = CalculateT(T, Epsl, WaveVector)
+    Tk_1s_3d = CalculateT(T, WaveVector, WaveVector)
+
+    -- Initialize a table with the available spectra and the required operators.
+    SpectraAndOperators_1s_3d = {
+        ["Isotropic Absorption"] = {Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d},
+        ["Absorption"] = {Tk_1s_3d,},
+        ["Circular Dichroic"] = {Tr_1s_3d, Tl_1s_3d},
+        ["Linear Dichroic"] = {Tv_1s_3d, Th_1s_3d},
+    }
+
+    -- Create an unordered set with the required operators.
+    local T_1s_3d = {}
+    for Spectrum, Operators in pairs(SpectraAndOperators_1s_3d) do
+        if ValueInTable(Spectrum, SpectraToCalculate) then
+            for _, Operator in pairs(Operators) do
+                T_1s_3d[Operator] = true
+            end
+        end
+    end
+
+    -- Give the operators table the form required by Quanty's functions.
+    local T1 = {}
+    for Operator, _ in pairs(T_1s_3d) do
+        table.insert(T1, Operator)
+    end
+    T_1s_3d = T1
+
+    -- Dipolar operators.
+    Tx_1s_4p = NewOperator("CF", NFermions, IndexUp_4p, IndexDn_4p, IndexUp_1s, IndexDn_1s, {{1, -1, t    }, {1, 1, -t    }})
+    Ty_1s_4p = NewOperator("CF", NFermions, IndexUp_4p, IndexDn_4p, IndexUp_1s, IndexDn_1s, {{1, -1, t * I}, {1, 1,  t * I}})
+    Tz_1s_4p = NewOperator("CF", NFermions, IndexUp_4p, IndexDn_4p, IndexUp_1s, IndexDn_1s, {{1,  0, 1    }                })
+
+    local T = {Tx_1s_4p, Ty_1s_4p, Tz_1s_4p}
+    Tv_1s_4p = CalculateT(T, Epsv)
+    Th_1s_4p = CalculateT(T, Epsh)
+    Tr_1s_4p = CalculateT(T, Epsr)
+    Tl_1s_4p = CalculateT(T, Epsl)
+    Tk_1s_4p = CalculateT(T, WaveVector)
+
+    -- Initialize a table with the available spectra and the required operators.
+    SpectraAndOperators_1s_4p = {
+        ["Isotropic Absorption"] = {Tk_1s_4p, Tr_1s_4p, Tl_1s_4p},
+        ["Absorption"] = {Tk_1s_4p,},
+        ["Circular Dichroic"] = {Tr_1s_4p, Tl_1s_4p},
+        ["Linear Dichroic"] = {Tv_1s_4p, Th_1s_4p},
+    }
+
+    -- Create an unordered set with the required operators.
+    local T_1s_4p = {}
+    for Spectrum, Operators in pairs(SpectraAndOperators_1s_4p) do
+        if ValueInTable(Spectrum, SpectraToCalculate) then
+            for _, Operator in pairs(Operators) do
+                T_1s_4p[Operator] = true
+            end
+        end
+    end
+
+    -- Give the operators table the form required by Quanty's functions.
+    local T2 = {}
+    for Operator, _ in pairs(T_1s_4p) do
+        table.insert(T2, Operator)
+    end
+    T_1s_4p = T2
+
+    if ShiftSpectra then
+        Emin = Emin - (ZeroShift + ExperimentalShift)
+        Emax = Emax - (ZeroShift + ExperimentalShift)
+    end
+
+    -- Calculate the spectra. Note that the CalculationRestrictions are active in this case.
+    G_1s_3d = CreateSpectra(H_f, T_1s_3d, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"Restrictions", CalculationRestrictions}, {"DenseBorder", DenseBorder}})
+    G_1s_4p = CreateSpectra(H_f, T_1s_4p, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"Restrictions", CalculationRestrictions}, {"DenseBorder", DenseBorder}})
+
+    -- The prefactors are described in http://dx.doi.org/10.1103/PhysRevB.94.245115.
+    --
+    -- prefactor_1s_3d = 4 * math.pi^2 * alpha * a0^4 / (2 * hbar * c)^2 * ExperimentalShift   * P2_1s_3d^2
+    -- prefactor_1s_4p = 4 * math.pi^2 * alpha * a0^2                    * ExperimentalShift^3 * P1_1s_4p^2
+    --
+    -- Here we set the prefactor for the quadrupolar spectrum to 1, to more
+    -- easily compare the spectra with and without hybridization. Note however
+    -- that the quadrupole spectrum without hybridization can look quite
+    -- different from the quadrupolar part of the spectrum with hybridization.
+    -- They are identical only if all parameters of the 3d-4p interaction are zero.
+    --
+    -- The dipolar prefactor then becomes:
+    --
+    -- prefactor_1s_4p = (2 * hbar * c)^2 / (a0 * ExperimentalShift)^2 * (P1_1s_4p / P2_1s_3d)^2
+
+    alpha = 7.2973525664E-3
+    a0 = 5.2917721067E-1
+    hbar = 6.582119514E-16
+    c = 2.99792458E+18
+
+    P1_1s_4p = 0.00294
+    P2_1s_3d = 0.00082
+
+    prefactor_1s_3d = 1
+    prefactor_1s_4p = (2 * hbar * c)^2 / (a0 * ExperimentalShift)^2 * (P1_1s_4p / P2_1s_3d)^2
+
+    io.write("\n")
+    io.write("Spectra prefactors\n")
+    io.write("==================\n")
+    io.write(string.format("Dipolar     = %.1f\n", prefactor_1s_4p))
+    io.write("Quadrupolar =  1.0\n")
+    io.write("==================\n")
+
+    G_1s_3d = prefactor_1s_3d * G_1s_3d
+    G_1s_4p = prefactor_1s_4p * G_1s_4p
+
+    if ShiftSpectra then
+        G_1s_3d.Shift(ZeroShift + ExperimentalShift)
+        G_1s_4p.Shift(ZeroShift + ExperimentalShift)
+    end
+
+    -- Subtract the broadening used in the spectra calculations from the Lorentzian table.
+    for i, _ in ipairs(Lorentzian) do
+        -- The FWHM is the second value in each pair.
+        Lorentzian[i][2] = Lorentzian[i][2] - Gamma
+    end
+
+    -- Create a list with the Boltzmann probabilities for a given operator and wavefunction.
+    local dZ_1s_3d = {}
+    for _ in ipairs(T_1s_3d) do
+        for j in ipairs(Psis_i) do
+            table.insert(dZ_1s_3d, dZ_i[j])
+        end
+    end
+
+    local Ids_1s_3d = {}
+    for k, v in pairs(T_1s_3d) do
+        Ids_1s_3d[v] = k
+    end
+
+    for Spectrum, Operators in pairs(SpectraAndOperators_1s_3d) do
+        if ValueInTable(Spectrum, SpectraToCalculate) then
+            -- Find the indices of the spectrum's operators in the table used during the
+            -- calculation (this is unsorted).
+            SpectrumIds_1s_3d = {}
+            for _, Operator in pairs(Operators) do
+                table.insert(SpectrumIds_1s_3d, Ids_1s_3d[Operator])
+            end
+
+            if Spectrum == "Isotropic Absorption" then
+                Giso_1s_3d = GetSpectrum(G_1s_3d, SpectrumIds_1s_3d, dZ_1s_3d, #T_1s_3d, #Psis_i)
+            end
+
+            if Spectrum == "Absorption" then
+                Gk_1s_3d = GetSpectrum(G_1s_3d, SpectrumIds_1s_3d, dZ_1s_3d, #T_1s_3d, #Psis_i)
+            end
+
+            if Spectrum == "Circular Dichroic" then
+                Gr_1s_3d = GetSpectrum(G_1s_3d, SpectrumIds_1s_3d[1], dZ_1s_3d, #T_1s_3d, #Psis_i)
+                Gl_1s_3d = GetSpectrum(G_1s_3d, SpectrumIds_1s_3d[2], dZ_1s_3d, #T_1s_3d, #Psis_i)
+            end
+
+            if Spectrum == "Linear Dichroic" then
+                Gv_1s_3d = GetSpectrum(G_1s_3d, SpectrumIds_1s_3d[1], dZ_1s_3d, #T_1s_3d, #Psis_i)
+                Gh_1s_3d = GetSpectrum(G_1s_3d, SpectrumIds_1s_3d[2], dZ_1s_3d, #T_1s_3d, #Psis_i)
+            end
+        end
+    end
+
+    local dZ_1s_4p = {}
+    for _ in ipairs(T_1s_4p) do
+        for j in ipairs(Psis_i) do
+            table.insert(dZ_1s_4p, dZ_i[j])
+        end
+    end
+
+    -- Create a list with the Boltzmann probabilities for a given operator and wavefunction.
+    local Ids_1s_4p = {}
+    for k, v in pairs(T_1s_4p) do
+        Ids_1s_4p[v] = k
+    end
+
+    for Spectrum, Operators in pairs(SpectraAndOperators_1s_4p) do
+        if ValueInTable(Spectrum, SpectraToCalculate) then
+            -- Find the indices of the spectrum's operators in the table used during the
+            -- calculation (this is unsorted).
+            SpectrumIds_1s_4p = {}
+            for _, Operator in pairs(Operators) do
+                table.insert(SpectrumIds_1s_4p, Ids_1s_4p[Operator])
+            end
+
+            if Spectrum == "Isotropic Absorption" then
+                Giso_1s_4p = GetSpectrum(G_1s_4p, SpectrumIds_1s_4p, dZ_1s_4p, #T_1s_4p, #Psis_i)
+                Giso_1s_3d = Giso_1s_3d / 15
+                Giso_1s_4p = Giso_1s_4p / 3
+                Giso = Giso_1s_3d + Giso_1s_4p
+                SaveSpectrum(Giso, Prefix .. "_iso", Gaussian, Lorentzian)
+                SaveSpectrum(Giso_1s_4p, Prefix .. "_iso_dip", Gaussian, Lorentzian)
+                SaveSpectrum(Giso_1s_3d, Prefix .. "_iso_quad", Gaussian, Lorentzian)
+            end
+
+            if Spectrum == "Absorption" then
+                Gk_1s_4p = GetSpectrum(G_1s_4p, SpectrumIds_1s_4p, dZ_1s_4p, #T_1s_4p, #Psis_i)
+                Gk = Gk_1s_3d + Gk_1s_4p
+                SaveSpectrum(Gk, Prefix .. "_k", Gaussian, Lorentzian)
+                SaveSpectrum(Gk_1s_4p, Prefix .. "_k_dip", Gaussian, Lorentzian)
+                SaveSpectrum(Gk_1s_3d, Prefix .. "_k_quad", Gaussian, Lorentzian)
+            end
+
+            if Spectrum == "Circular Dichroic" then
+                Gr_1s_4p = GetSpectrum(G_1s_4p, SpectrumIds_1s_4p[1], dZ_1s_4p, #T_1s_4p, #Psis_i)
+                Gl_1s_4p = GetSpectrum(G_1s_4p, SpectrumIds_1s_4p[2], dZ_1s_4p, #T_1s_4p, #Psis_i)
+                Gr = Gr_1s_3d + Gr_1s_4p
+                Gl = Gl_1s_3d + Gl_1s_4p
+                SaveSpectrum(Gr, Prefix .. "_r", Gaussian, Lorentzian)
+                SaveSpectrum(Gl, Prefix .. "_l", Gaussian, Lorentzian)
+                SaveSpectrum(Gr - Gl, Prefix .. "_cd", Gaussian, Lorentzian)
+                SaveSpectrum(Gr_1s_4p - Gl_1s_4p, Prefix .. "_cd_dip", Gaussian, Lorentzian)
+                SaveSpectrum(Gr_1s_3d - Gl_1s_3d, Prefix .. "_cd_quad", Gaussian, Lorentzian)
+            end
+
+            if Spectrum == "Linear Dichroic" then
+                Gv_1s_4p = GetSpectrum(G_1s_4p, SpectrumIds_1s_4p[1], dZ_1s_4p, #T_1s_4p, #Psis_i)
+                Gh_1s_4p = GetSpectrum(G_1s_4p, SpectrumIds_1s_4p[2], dZ_1s_4p, #T_1s_4p, #Psis_i)
+                Gv = Gv_1s_3d + Gv_1s_4p
+                Gh = Gh_1s_3d + Gh_1s_4p
+                SaveSpectrum(Gv, Prefix .. "_v", Gaussian, Lorentzian)
+                SaveSpectrum(Gh, Prefix .. "_h", Gaussian, Lorentzian)
+                SaveSpectrum(Gv - Gh, Prefix .. "_ld", Gaussian, Lorentzian)
+                SaveSpectrum(Gv_1s_4p - Gh_1s_4p, Prefix .. "_ld_dip", Gaussian, Lorentzian)
+                SaveSpectrum(Gv_1s_3d - Gh_1s_3d, Prefix .. "_ld_quad", Gaussian, Lorentzian)
+            end
+        end
+    end
+else
+    local t = math.sqrt(1 / 2)
+
+    Txy_1s_3d   = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -2, t * I}, {2, 2, -t * I}})
+    Txz_1s_3d   = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -1, t    }, {2, 1, -t    }})
+    Tyz_1s_3d   = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -1, t * I}, {2, 1,  t * I}})
+    Tx2y2_1s_3d = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2, -2, t    }, {2, 2,  t    }})
+    Tz2_1s_3d   = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_1s, IndexDn_1s, {{2,  0, 1    }                })
+
+    Epsh = Eps
+
+    Epsv = {WaveVector[2] * Epsh[3] - WaveVector[3] * Epsh[2],
+            WaveVector[3] * Epsh[1] - WaveVector[1] * Epsh[3],
+            WaveVector[1] * Epsh[2] - WaveVector[2] * Epsh[1]}
+
+    Epsr = {t * (Epsh[1] - I * Epsv[1]),
+            t * (Epsh[2] - I * Epsv[2]),
+            t * (Epsh[3] - I * Epsv[3])}
+
+    Epsl = {-t * (Epsh[1] + I * Epsv[1]),
+            -t * (Epsh[2] + I * Epsv[2]),
+            -t * (Epsh[3] + I * Epsv[3])}
+
+    local T = {Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d}
+    Tv_1s_3d = CalculateT(T, Epsv, WaveVector)
+    Th_1s_3d = CalculateT(T, Epsh, WaveVector)
+    Tr_1s_3d = CalculateT(T, Epsr, WaveVector)
+    Tl_1s_3d = CalculateT(T, Epsl, WaveVector)
+    Tk_1s_3d = CalculateT(T, WaveVector, WaveVector)
+
+    -- Initialize a table with the available spectra and the required operators.
+    SpectraAndOperators = {
+        ["Isotropic Absorption"] = {Txy_1s_3d, Txz_1s_3d, Tyz_1s_3d, Tx2y2_1s_3d, Tz2_1s_3d},
+        ["Absorption"] = {Tk_1s_3d,},
+        ["Circular Dichroic"] = {Tr_1s_3d, Tl_1s_3d},
+        ["Linear Dichroic"] = {Tv_1s_3d, Th_1s_3d},
+    }
+
+    -- Create an unordered set with the required operators.
+    local T_1s_3d = {}
+    for Spectrum, Operators in pairs(SpectraAndOperators) do
+        if ValueInTable(Spectrum, SpectraToCalculate) then
+            for _, Operator in pairs(Operators) do
+                T_1s_3d[Operator] = true
+            end
+        end
+    end
+
+    -- Give the operators table the form required by Quanty's functions.
+    local T = {}
+    for Operator, _ in pairs(T_1s_3d) do
+        table.insert(T, Operator)
+    end
+    T_1s_3d = T
+
+    if ShiftSpectra then
+        Emin = Emin - (ZeroShift + ExperimentalShift)
+        Emax = Emax - (ZeroShift + ExperimentalShift)
+    end
+
+    if CalculationRestrictions == nil then
+        G_1s_3d = CreateSpectra(H_f, T_1s_3d, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"DenseBorder", DenseBorder}})
+    else
+        G_1s_3d = CreateSpectra(H_f, T_1s_3d, Psis_i, {{"Emin", Emin}, {"Emax", Emax}, {"NE", NPoints}, {"Gamma", Gamma}, {"Restrictions", CalculationRestrictions}, {"DenseBorder", DenseBorder}})
+    end
+
+    if ShiftSpectra then
+        G_1s_3d.Shift(ZeroShift + ExperimentalShift)
+    end
+
+    -- Create a list with the Boltzmann probabilities for a given operator and wavefunction.
+    local dZ_1s_3d = {}
+    for _ in ipairs(T_1s_3d) do
+        for j in ipairs(Psis_i) do
+            table.insert(dZ_1s_3d, dZ_i[j])
+        end
+    end
+
+    local Ids = {}
+    for k, v in pairs(T_1s_3d) do
+        Ids[v] = k
+    end
+
+    -- Subtract the broadening used in the spectra calculations from the Lorentzian table.
+    for i, _ in ipairs(Lorentzian) do
+        -- The FWHM is the second value in each pair.
+        Lorentzian[i][2] = Lorentzian[i][2] - Gamma
+    end
+
+    Pcl_1s_3d = 1
+
+    for Spectrum, Operators in pairs(SpectraAndOperators) do
+        if ValueInTable(Spectrum, SpectraToCalculate) then
+            -- Find the indices of the spectrum's operators in the table used during the
+            -- calculation (this is unsorted).
+            SpectrumIds = {}
+            for _, Operator in pairs(Operators) do
+                table.insert(SpectrumIds, Ids[Operator])
+            end
+
+            if Spectrum == "Isotropic Absorption" then
+                Giso = GetSpectrum(G_1s_3d, SpectrumIds, dZ_1s_3d, #T_1s_3d, #Psis_i)
+                Giso = Giso / 15
+                SaveSpectrum(Giso, Prefix .. "_iso", Gaussian, Lorentzian, Pcl_1s_3d)
+            end
+
+            if Spectrum == "Absorption" then
+                Gk = GetSpectrum(G_1s_3d, SpectrumIds, dZ_1s_3d, #T_1s_3d, #Psis_i)
+                SaveSpectrum(Gk, Prefix .. "_k", Gaussian, Lorentzian, Pcl_1s_3d)
+            end
+
+            if Spectrum == "Circular Dichroic" then
+                Gr = GetSpectrum(G_1s_3d, SpectrumIds[1], dZ_1s_3d, #T_1s_3d, #Psis_i)
+                Gl = GetSpectrum(G_1s_3d, SpectrumIds[2], dZ_1s_3d, #T_1s_3d, #Psis_i)
+                SaveSpectrum(Gr, Prefix .. "_r", Gaussian, Lorentzian, Pcl_1s_3d)
+                SaveSpectrum(Gl, Prefix .. "_l", Gaussian, Lorentzian, Pcl_1s_3d)
+                SaveSpectrum(Gr - Gl, Prefix .. "_cd", Gaussian, Lorentzian)
+            end
+
+            if Spectrum == "Linear Dichroic" then
+                Gv = GetSpectrum(G_1s_3d, SpectrumIds[1], dZ_1s_3d, #T_1s_3d, #Psis_i)
+                Gh = GetSpectrum(G_1s_3d, SpectrumIds[2], dZ_1s_3d, #T_1s_3d, #Psis_i)
+                SaveSpectrum(Gv, Prefix .. "_v", Gaussian, Lorentzian, Pcl_1s_3d)
+                SaveSpectrum(Gh, Prefix .. "_h", Gaussian, Lorentzian, Pcl_1s_3d)
+                SaveSpectrum(Gv - Gh, Prefix .. "_ld", Gaussian, Lorentzian)
+            end
+        end
+    end
+end

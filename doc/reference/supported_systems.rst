@@ -95,9 +95,15 @@ Depending on the ion and symmetry, the following terms can be enabled in the
 * **Atomic**: Slater integrals (F\ :sup:`k`, G\ :sup:`k`) and spin-orbit
   coupling (always available).
 * **Crystal Field**: the point-group crystal field (always available).
-* **Ligands Hybridization (LMCT / MLCT)**: charge transfer with a ligand shell;
-  LMCT and MLCT for ``Oh`` and ``D4h`` in the *d* block, LMCT only for ``Oh`` in
-  the *f* block.
+* **Ligands Hybridization (LMCT / MLCT)**: charge transfer with a ligand shell.
+  The *d* block supports LMCT and MLCT for ``Oh``, ``D4h``, and ``C3v``.
+  The *f* block supports LMCT only for ``Oh``.
 * **3d-4p Hybridization**: for the K (1s) pre-edge in the non-centrosymmetric
-  ``Td`` and ``C3v`` *d*-block cases.
+  ``Td`` and ``C3v`` *d*-block cases. In ``C3v``, a calculation supports either
+  the ligands hybridization or the 3d-4p hybridization, not both.
 * **Magnetic Field** and **Exchange Field**: always available.
+
+Ligand-to-metal charge transfer (LMCT) uses a filled ligand shell ``L1`` in the
+reference configuration. This shell contains ten electrons for the *d* block
+and fourteen for the *f* block. Metal-to-ligand charge transfer (MLCT) uses an
+empty ligand shell ``L2``. A calculation supports one of these terms at a time.

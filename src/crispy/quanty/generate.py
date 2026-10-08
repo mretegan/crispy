@@ -190,14 +190,18 @@ def generate_templates():
 
         # cf - crystal field
         # lf - crystal field and hybridization with the ligands
-        # pd - crystal field and p-d hybridization
+        # cf_pd - crystal field and p-d hybridization
+        # lf_pd - crystal field and either the hybridization with the ligands or
+        #         the p-d hybridization
         suffix = "cf"
         if valenceBlock == "d":
             if symmetry.value == "Oh" or symmetry.value == "D4h":
                 suffix = "lf"
             elif symmetry.value == "Td" or symmetry.value == "C3v":
                 if experiment.value == "XAS" and edge.value == "K (1s)":
-                    suffix = "pd"
+                    suffix = "lf_pd" if symmetry.value == "C3v" else "cf_pd"
+                elif symmetry.value == "C3v":
+                    suffix = "lf"
                 else:
                     suffix = "cf"
             elif symmetry.value == "D3h":

@@ -46,6 +46,8 @@ Prefix = "$Prefix" -- File name prefix.
 --------------------------------------------------------------------------------
 AtomicTerm = $AtomicTerm
 CrystalFieldTerm = $CrystalFieldTerm
+LmctLigandsHybridizationTerm = $LmctLigandsHybridizationTerm
+MlctLigandsHybridizationTerm = $MlctLigandsHybridizationTerm
 MagneticFieldTerm = $MagneticFieldTerm
 ExchangeFieldTerm = $ExchangeFieldTerm
 
@@ -62,6 +64,28 @@ IndexDn_5p = {0, 2, 4}
 IndexUp_5p = {1, 3, 5}
 IndexDn_5d = {6, 8, 10, 12, 14}
 IndexUp_5d = {7, 9, 11, 13, 15}
+
+if LmctLigandsHybridizationTerm then
+    NFermions = 26
+
+    NElectrons_L1 = 10
+
+    IndexDn_L1 = {16, 18, 20, 22, 24}
+    IndexUp_L1 = {17, 19, 21, 23, 25}
+end
+
+if MlctLigandsHybridizationTerm then
+    NFermions = 26
+
+    NElectrons_L2 = 0
+
+    IndexDn_L2 = {16, 18, 20, 22, 24}
+    IndexUp_L2 = {17, 19, 21, 23, 25}
+end
+
+if LmctLigandsHybridizationTerm and MlctLigandsHybridizationTerm then
+    return
+end
 
 --------------------------------------------------------------------------------
 -- Initialize the Hamiltonians.
@@ -187,6 +211,175 @@ if CrystalFieldTerm then
         + Dsigma_5d_f * Dsigma_5d
         + Dtau_5d_f * Dtau_5d)
 end
+
+--------------------------------------------------------------------------------
+-- Define the 5d-ligands hybridization term (LMCT).
+--------------------------------------------------------------------------------
+if LmctLigandsHybridizationTerm then
+    N_L1 = NewOperator("Number", NFermions, IndexUp_L1, IndexUp_L1, {1, 1, 1, 1, 1})
+         + NewOperator("Number", NFermions, IndexDn_L1, IndexDn_L1, {1, 1, 1, 1, 1})
+
+    Delta_5d_L1_i = $Delta(5d,L1)_i_value
+    E_5d_i = (10 * Delta_5d_L1_i - NElectrons_5d * (19 + NElectrons_5d) * U_5d_5d_i / 2) / (10 + NElectrons_5d)
+    E_L1_i = NElectrons_5d * ((1 + NElectrons_5d) * U_5d_5d_i / 2 - Delta_5d_L1_i) / (10 + NElectrons_5d)
+
+    Delta_5d_L1_f = $Delta(5d,L1)_f_value
+    E_5d_f = (10 * Delta_5d_L1_f - NElectrons_5d * (31 + NElectrons_5d) * U_5d_5d_f / 2 - 90 * U_5p_5d_f) / (16 + NElectrons_5d)
+    E_5p_f = (10 * Delta_5d_L1_f + (1 + NElectrons_5d) * (NElectrons_5d * U_5d_5d_f / 2 - (10 + NElectrons_5d) * U_5p_5d_f)) / (16 + NElectrons_5d)
+    E_L1_f = ((1 + NElectrons_5d) * (NElectrons_5d * U_5d_5d_f / 2 + 6 * U_5p_5d_f) - (6 + NElectrons_5d) * Delta_5d_L1_f) / (16 + NElectrons_5d)
+
+    H_i = H_i + Chop(
+          E_5d_i * N_5d
+        + E_L1_i * N_L1)
+
+    H_f = H_f + Chop(
+          E_5d_f * N_5d
+        + E_5p_f * N_5p
+        + E_L1_f * N_L1)
+
+    -- The 5d and ligand orbitals use the same C3v basis: a1(t2g), e(eg), and
+    -- e(t2g). Each hybridization parameter couples a 5d irrep only with the ligand
+    -- irrep that has the same cubic parent (see Tables S7 and S8 in the supporting
+    -- information of Retegan et al., Inorg. Chem. 62, 18864 (2023),
+    -- https://doi.org/10.1021/acs.inorgchem.3c02158). Each Akm list is the
+    -- expansion of the projector on one irrep, and the three projectors sum to
+    -- the identity. The ligand crystal field uses the Akm of the 5d crystal field.
+    Akm = {{4, 0, -14}, {4, 3, -2 * math.sqrt(70)}, {4, -3, 2 * math.sqrt(70)}}
+    Dq_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, Akm)
+
+    Akm = {{2, 0, -7}}
+    Dsigma_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, Akm)
+
+    Akm = {{4, 0, -21}}
+    Dtau_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, Akm)
+
+    Akm = {{0, 0, 1 / 5}, {2, 0, 1}, {4, 0, 9 / 5}}
+    Va1_5d_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, IndexUp_5d, IndexDn_5d, Akm)
+              + NewOperator("CF", NFermions, IndexUp_5d, IndexDn_5d, IndexUp_L1, IndexDn_L1, Akm)
+
+    Akm = {{0, 0, 2 / 5}, {4, 0, -7 / 5}, {4, 3, -math.sqrt(70) / 5}, {4, -3, math.sqrt(70) / 5}}
+    Ve_eg_5d_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, IndexUp_5d, IndexDn_5d, Akm)
+                + NewOperator("CF", NFermions, IndexUp_5d, IndexDn_5d, IndexUp_L1, IndexDn_L1, Akm)
+
+    Akm = {{0, 0, 2 / 5}, {2, 0, -1}, {4, 0, -2 / 5}, {4, 3, math.sqrt(70) / 5}, {4, -3, -math.sqrt(70) / 5}}
+    Ve_t2g_5d_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, IndexUp_5d, IndexDn_5d, Akm)
+                 + NewOperator("CF", NFermions, IndexUp_5d, IndexDn_5d, IndexUp_L1, IndexDn_L1, Akm)
+
+    Dq_L1_i = $10Dq(L1)_i_value / 10.0
+    Dsigma_L1_i = $Dsigma(L1)_i_value
+    Dtau_L1_i = $Dtau(L1)_i_value
+    Va1_5d_L1_i = $Va1(5d,L1)_i_value
+    Ve_eg_5d_L1_i = $Ve(eg)(5d,L1)_i_value
+    Ve_t2g_5d_L1_i = $Ve(t2g)(5d,L1)_i_value
+
+    Dq_L1_f = $10Dq(L1)_f_value / 10.0
+    Dsigma_L1_f = $Dsigma(L1)_f_value
+    Dtau_L1_f = $Dtau(L1)_f_value
+    Va1_5d_L1_f = $Va1(5d,L1)_f_value
+    Ve_eg_5d_L1_f = $Ve(eg)(5d,L1)_f_value
+    Ve_t2g_5d_L1_f = $Ve(t2g)(5d,L1)_f_value
+
+    H_i = H_i + Chop(
+          Dq_L1_i * Dq_L1
+        + Dsigma_L1_i * Dsigma_L1
+        + Dtau_L1_i * Dtau_L1
+        + Va1_5d_L1_i * Va1_5d_L1
+        + Ve_eg_5d_L1_i * Ve_eg_5d_L1
+        + Ve_t2g_5d_L1_i * Ve_t2g_5d_L1)
+
+    H_f = H_f + Chop(
+          Dq_L1_f * Dq_L1
+        + Dsigma_L1_f * Dsigma_L1
+        + Dtau_L1_f * Dtau_L1
+        + Va1_5d_L1_f * Va1_5d_L1
+        + Ve_eg_5d_L1_f * Ve_eg_5d_L1
+        + Ve_t2g_5d_L1_f * Ve_t2g_5d_L1)
+end
+
+--------------------------------------------------------------------------------
+-- Define the 5d-ligands hybridization term (MLCT).
+--------------------------------------------------------------------------------
+if MlctLigandsHybridizationTerm then
+    N_L2 = NewOperator("Number", NFermions, IndexUp_L2, IndexUp_L2, {1, 1, 1, 1, 1})
+         + NewOperator("Number", NFermions, IndexDn_L2, IndexDn_L2, {1, 1, 1, 1, 1})
+
+    Delta_5d_L2_i = $Delta(5d,L2)_i_value
+    E_5d_i = U_5d_5d_i * (-NElectrons_5d + 1) / 2
+    E_L2_i = Delta_5d_L2_i + U_5d_5d_i * NElectrons_5d / 2 - U_5d_5d_i / 2
+
+    Delta_5d_L2_f = $Delta(5d,L2)_f_value
+    E_5d_f = -(U_5d_5d_f * NElectrons_5d^2 + 11 * U_5d_5d_f * NElectrons_5d + 60 * U_5p_5d_f) / (2 * NElectrons_5d + 12)
+    E_5p_f = NElectrons_5d * (U_5d_5d_f * NElectrons_5d + U_5d_5d_f - 2 * U_5p_5d_f * NElectrons_5d - 2 * U_5p_5d_f) / (2 * (NElectrons_5d + 6))
+    E_L2_f = (2 * Delta_5d_L2_f * NElectrons_5d + 12 * Delta_5d_L2_f + U_5d_5d_f * NElectrons_5d^2 - U_5d_5d_f * NElectrons_5d - 12 * U_5d_5d_f + 12 * U_5p_5d_f * NElectrons_5d + 12 * U_5p_5d_f) / (2 * (NElectrons_5d + 6))
+
+    H_i = H_i + Chop(
+          E_5d_i * N_5d
+        + E_L2_i * N_L2)
+
+    H_f = H_f + Chop(
+          E_5d_f * N_5d
+        + E_5p_f * N_5p
+        + E_L2_f * N_L2)
+
+    -- The 5d and ligand orbitals use the same C3v basis: a1(t2g), e(eg), and
+    -- e(t2g). Each hybridization parameter couples a 5d irrep only with the ligand
+    -- irrep that has the same cubic parent (see Tables S7 and S8 in the supporting
+    -- information of Retegan et al., Inorg. Chem. 62, 18864 (2023),
+    -- https://doi.org/10.1021/acs.inorgchem.3c02158). Each Akm list is the
+    -- expansion of the projector on one irrep, and the three projectors sum to
+    -- the identity. The ligand crystal field uses the Akm of the 5d crystal field.
+    Akm = {{4, 0, -14}, {4, 3, -2 * math.sqrt(70)}, {4, -3, 2 * math.sqrt(70)}}
+    Dq_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, Akm)
+
+    Akm = {{2, 0, -7}}
+    Dsigma_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, Akm)
+
+    Akm = {{4, 0, -21}}
+    Dtau_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, Akm)
+
+    Akm = {{0, 0, 1 / 5}, {2, 0, 1}, {4, 0, 9 / 5}}
+    Va1_5d_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, IndexUp_5d, IndexDn_5d, Akm)
+              + NewOperator("CF", NFermions, IndexUp_5d, IndexDn_5d, IndexUp_L2, IndexDn_L2, Akm)
+
+    Akm = {{0, 0, 2 / 5}, {4, 0, -7 / 5}, {4, 3, -math.sqrt(70) / 5}, {4, -3, math.sqrt(70) / 5}}
+    Ve_eg_5d_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, IndexUp_5d, IndexDn_5d, Akm)
+                + NewOperator("CF", NFermions, IndexUp_5d, IndexDn_5d, IndexUp_L2, IndexDn_L2, Akm)
+
+    Akm = {{0, 0, 2 / 5}, {2, 0, -1}, {4, 0, -2 / 5}, {4, 3, math.sqrt(70) / 5}, {4, -3, -math.sqrt(70) / 5}}
+    Ve_t2g_5d_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, IndexUp_5d, IndexDn_5d, Akm)
+                 + NewOperator("CF", NFermions, IndexUp_5d, IndexDn_5d, IndexUp_L2, IndexDn_L2, Akm)
+
+    Dq_L2_i = $10Dq(L2)_i_value / 10.0
+    Dsigma_L2_i = $Dsigma(L2)_i_value
+    Dtau_L2_i = $Dtau(L2)_i_value
+    Va1_5d_L2_i = $Va1(5d,L2)_i_value
+    Ve_eg_5d_L2_i = $Ve(eg)(5d,L2)_i_value
+    Ve_t2g_5d_L2_i = $Ve(t2g)(5d,L2)_i_value
+
+    Dq_L2_f = $10Dq(L2)_f_value / 10.0
+    Dsigma_L2_f = $Dsigma(L2)_f_value
+    Dtau_L2_f = $Dtau(L2)_f_value
+    Va1_5d_L2_f = $Va1(5d,L2)_f_value
+    Ve_eg_5d_L2_f = $Ve(eg)(5d,L2)_f_value
+    Ve_t2g_5d_L2_f = $Ve(t2g)(5d,L2)_f_value
+
+    H_i = H_i + Chop(
+          Dq_L2_i * Dq_L2
+        + Dsigma_L2_i * Dsigma_L2
+        + Dtau_L2_i * Dtau_L2
+        + Va1_5d_L2_i * Va1_5d_L2
+        + Ve_eg_5d_L2_i * Ve_eg_5d_L2
+        + Ve_t2g_5d_L2_i * Ve_t2g_5d_L2)
+
+    H_f = H_f + Chop(
+          Dq_L2_f * Dq_L2
+        + Dsigma_L2_f * Dsigma_L2
+        + Dtau_L2_f * Dtau_L2
+        + Va1_5d_L2_f * Va1_5d_L2
+        + Ve_eg_5d_L2_f * Ve_eg_5d_L2
+        + Ve_t2g_5d_L2_f * Ve_t2g_5d_L2)
+end
+
 --------------------------------------------------------------------------------
 -- Define the magnetic field and exchange field terms.
 --------------------------------------------------------------------------------
@@ -287,6 +480,30 @@ FinalRestrictions = {NFermions, NBosons, {"111111 0000000000", NElectrons_5p - 1
                                          {"000000 1111111111", NElectrons_5d + 1, NElectrons_5d + 1}}
 
 CalculationRestrictions = nil
+
+if LmctLigandsHybridizationTerm then
+    InitialRestrictions = {NFermions, NBosons, {"111111 0000000000 0000000000", NElectrons_5p, NElectrons_5p},
+                                               {"000000 1111111111 0000000000", NElectrons_5d, NElectrons_5d},
+                                               {"000000 0000000000 1111111111", NElectrons_L1, NElectrons_L1}}
+
+    FinalRestrictions = {NFermions, NBosons, {"111111 0000000000 0000000000", NElectrons_5p - 1, NElectrons_5p - 1},
+                                             {"000000 1111111111 0000000000", NElectrons_5d + 1, NElectrons_5d + 1},
+                                             {"000000 0000000000 1111111111", NElectrons_L1, NElectrons_L1}}
+
+    CalculationRestrictions = {NFermions, NBosons, {"000000 0000000000 1111111111", NElectrons_L1 - (NConfigurations - 1), NElectrons_L1}}
+end
+
+if MlctLigandsHybridizationTerm then
+    InitialRestrictions = {NFermions, NBosons, {"111111 0000000000 0000000000", NElectrons_5p, NElectrons_5p},
+                                               {"000000 1111111111 0000000000", NElectrons_5d, NElectrons_5d},
+                                               {"000000 0000000000 1111111111", NElectrons_L2, NElectrons_L2}}
+
+    FinalRestrictions = {NFermions, NBosons, {"111111 0000000000 0000000000", NElectrons_5p - 1, NElectrons_5p - 1},
+                                             {"000000 1111111111 0000000000", NElectrons_5d + 1, NElectrons_5d + 1},
+                                             {"000000 0000000000 1111111111", NElectrons_L2, NElectrons_L2}}
+
+    CalculationRestrictions = {NFermions, NBosons, {"000000 0000000000 1111111111", NElectrons_L2, NElectrons_L2 + (NConfigurations - 1)}}
+end
 
 --------------------------------------------------------------------------------
 -- Define some helper functions.
@@ -625,6 +842,24 @@ Header = Header .. "============================================================
 Header = Header .. "State           E     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_5p>    <N_5d>          dZ\n"
 Header = Header .. "=================================================================================================================================\n"
 Footer = "=================================================================================================================================\n"
+
+if LmctLigandsHybridizationTerm then
+    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_5d, N_5p, N_5d, N_L1, "dZ"}
+    Header = "Analysis of the %s Hamiltonian:\n"
+    Header = Header .. "===========================================================================================================================================\n"
+    Header = Header .. "State           E     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_5p>    <N_5d>    <N_L1>          dZ\n"
+    Header = Header .. "===========================================================================================================================================\n"
+    Footer = "===========================================================================================================================================\n"
+end
+
+if MlctLigandsHybridizationTerm then
+    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_5d, N_5p, N_5d, N_L2, "dZ"}
+    Header = "Analysis of the %s Hamiltonian:\n"
+    Header = Header .. "===========================================================================================================================================\n"
+    Header = Header .. "State           E     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_5p>    <N_5d>    <N_L2>          dZ\n"
+    Header = Header .. "===========================================================================================================================================\n"
+    Footer = "===========================================================================================================================================\n"
+end
 
 local Psis_i, dZ_i = WavefunctionsAndBoltzmannFactors(H_i, NPsis, NPsisAuto, Temperature, nil, InitialRestrictions, CalculationRestrictions)
 PrintHamiltonianAnalysis(Psis_i, Operators, dZ_i, string.format(Header, "initial"), Footer)

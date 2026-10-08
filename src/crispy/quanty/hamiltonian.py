@@ -323,7 +323,25 @@ class CrystalFieldTerm(HamiltonianTerm):
         self.enable()
 
 
-class LigandHybridizationTerm(HamiltonianTerm):
+class HybridizationTerm(HamiltonianTerm):
+    def setData(self, column, value, role=Qt.EditRole):
+        if role == Qt.CheckStateRole:
+            siblings = []
+            for sibling in self.siblings():
+                if isinstance(sibling, HybridizationTerm):
+                    siblings.append(sibling)
+
+            # The templates support only one hybridization term at a time.
+            value = Qt.CheckState(value)
+            for sibling in siblings:
+                if value == Qt.CheckState.Checked and sibling is not self:
+                    sibling.disable()
+                    sibling.dataChanged.emit(1)
+
+        return super().setData(column, value, role)
+
+
+class LigandHybridizationTerm(HybridizationTerm):
     def __init__(self, parent=None, *, name="Ligands Hybridization"):
         super().__init__(parent=parent, name=name)
 
@@ -335,6 +353,8 @@ class LigandHybridizationTerm(HamiltonianTerm):
                 names = ("Δ", "Veg", "Vt2g", "10Dq")
             elif self.symmetry.value == "D4h":
                 names = ("Δ", "Va1g", "Vb1g", "Vb2g", "Veg", "10Dq", "Ds", "Dt")
+            elif self.symmetry.value == "C3v":
+                names = ("Δ", "Va1", "Ve(eg)", "Ve(t2g)", "10Dq", "Dσ", "Dτ")  # noqa: RUF001
             # elif self.symmetry.value == "Td":
             #     names = ("Δ", "Ve", "Vt2", "10Dq")
             else:
@@ -348,29 +368,22 @@ class LigandHybridizationTerm(HamiltonianTerm):
         for hamiltonianName, _ in self.hamiltonianNames:
             hamiltonian = BaseItem(parent=self, name=hamiltonianName)
             for parameterName in names:
-                if parameterName in ("10Dq", "Ds", "Dt", "Ea2u", "Et1u", "Et2u"):
+                if parameterName in (
+                    "10Dq",
+                    "Ds",
+                    "Dt",
+                    "Dσ",  # noqa: RUF001
+                    "Dτ",
+                    "Ea2u",
+                    "Et1u",
+                    "Et2u",
+                ):
                     suffix = f"({ligandsName})"
                 else:
                     suffix = f"({self.subshell},{ligandsName})"
                 # Extend the name to include the suffix.
                 parameterName = parameterName + suffix
                 HamiltonianParameter(0.0, parent=hamiltonian, name=parameterName)
-
-    def setData(self, column, value, role=Qt.EditRole):
-        if role == Qt.CheckStateRole:
-            siblings = []
-            for sibling in self.siblings():
-                if isinstance(sibling, LigandHybridizationTerm):
-                    siblings.append(sibling)
-
-            # At the moment only one type of ligands hybridization is possible.
-            value = Qt.CheckState(value)
-            for sibling in siblings:
-                if value == Qt.CheckState.Checked and sibling is not self:
-                    sibling.disable()
-                    sibling.dataChanged.emit(1)
-
-        return super().setData(column, value, role)
 
 
 class LmctLigandsHybridizationTerm(LigandHybridizationTerm):
@@ -383,7 +396,7 @@ class MlctLigandsHybridizationTerm(LigandHybridizationTerm):
         super().__init__(parent=parent, name=name)
 
 
-class PdHybridizationTerm(HamiltonianTerm):
+class PdHybridizationTerm(HybridizationTerm):
     def __init__(self, parent=None, *, name=None):
         super().__init__(parent=parent, name=name)
 
@@ -506,7 +519,7 @@ class HamiltonianTerms(BaseItem):
             # Add ligands hybridization term.
             # TODO: Td is still problematic due to the another set of t2 ligands
             # http://quanty.org/forum/data/2019/metal_3d_to_ligand_hybridization_in_td
-            if calculation.symmetry.value in ("Oh", "D4h"):
+            if calculation.symmetry.value in ("Oh", "D4h", "C3v"):
                 valenceSubshell = calculation.element.valenceSubshell
                 name = f"{valenceSubshell}-Ligands Hybridization (LMCT)"
                 self.lmctLigandsHybridization = LmctLigandsHybridizationTerm(
@@ -517,7 +530,8 @@ class HamiltonianTerms(BaseItem):
                     parent=self, name=name
                 )
 
-            # Add pd-hybridization term.
+            # Add pd-hybridization term. Only the K-edge XAS templates in Td and
+            # C3v have this term.
             if (
                 calculation.symmetry.value in ("Td", "C3v")
                 and calculation.edge.value == "K (1s)"
