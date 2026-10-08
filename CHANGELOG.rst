@@ -37,6 +37,8 @@ Fixed
 - The Kα edge label uses the Greek letter α. It used the Latin letter ɑ.
 - The Absorption spectrum of quadrupolar XAS uses an unpolarized beam along the
   wave vector.
+- The set_parameter function of the notebook API sets a scale factor without a
+  value. It ignored a call without a value.
 
 `2026.0`_ - 2026-06-21
 ======================

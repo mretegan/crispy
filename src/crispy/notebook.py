@@ -94,8 +94,14 @@ class Hamiltonian:
     def set_parameter(
         self, name=None, value=None, scale_factor=None, hamiltonian_name=None
     ):
-        if name is None or value is None:
-            return
+        if name is None or (value is None and scale_factor is None):
+            raise ValueError(
+                "Give the name of the parameter and a value or a scale factor."
+            )
+        general = ["Fk", "Gk", "Zeta", "Number of Configurations", "Number of States"]
+        if name in general and (value is None or scale_factor is not None):
+            raise ValueError(f"The parameter {name!r} takes only a value.")
+
         if name in ["Fk", "Gk", "Zeta"]:
             parameter = getattr(self._hamiltonian, name.lower(), None)
             if parameter is not None:
@@ -120,26 +126,28 @@ class Hamiltonian:
         }
         name = names.get(asciiName(name), name)
 
-        found = False
-        parameters = list(self._hamiltonian.findChild(name))
-        for parameter in parameters:
-            hamiltonian = parameter.parent()
-            if hamiltonian_name is None:
-                pass
-            elif hamiltonian_name not in hamiltonian.name:
-                continue
-            if parameter.name == name:
-                found = True
-                if value is not None:
-                    parameter.value = value
-                if scale_factor is not None:
-                    parameter.scaleFactor = scale_factor
-
-        if not found:
+        parameters = [
+            parameter
+            for parameter in self._hamiltonian.findChild(name)
+            if parameter.name == name
+            and (
+                hamiltonian_name is None or hamiltonian_name in parameter.parent().name
+            )
+        ]
+        if not parameters:
             message = f"The parameter {name!r} does not exist"
             if hamiltonian_name is not None:
                 message += f" in {hamiltonian_name!r}"
             raise ValueError(f"{message}.")
+        # Check all the parameters first, so that an error changes nothing.
+        if scale_factor is not None and any(p.scaleFactor is None for p in parameters):
+            raise ValueError(f"The parameter {name!r} has no scale factor.")
+
+        for parameter in parameters:
+            if value is not None:
+                parameter.value = value
+            if scale_factor is not None:
+                parameter.scaleFactor = scale_factor
 
     def __str__(self):
         data = Tree()
@@ -174,7 +182,7 @@ class Axis:
 
     def set_parameter(self, name=None, value=None):
         if name is None or value is None:
-            return
+            raise ValueError("Give the name and the value of the parameter.")
         # A sequence of (energy, FWHM) pairs sets an energy dependent broadening.
         if name == "Lorentzian" and not np.isscalar(value):
             self._axis.lorentzian.points.value = value
@@ -284,7 +292,7 @@ class Calculation:
 
     def set_parameter(self, name=None, value=None):
         if name is None or value is None:
-            return
+            raise ValueError("Give the name and the value of the parameter.")
         if name == "Basename":
             self._calculation.value = value
         else:

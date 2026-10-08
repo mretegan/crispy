@@ -64,6 +64,54 @@ def test_set_parameter_rejects_unknown_names(model):
         hamiltonian.set_parameter("ζ(3d)", 0.5, hamiltonian_name="Missing")
 
 
+def test_set_parameter_sets_only_the_scale_factor(model):
+    calculation = Calculation(
+        symbol="Ni",
+        charge="2+",
+        symmetry="Oh",
+        experiment="XAS",
+        edge="L2,3 (2p)",
+        parent=model.rootItem(),
+    )
+    hamiltonian = Hamiltonian(calculation.hamiltonian)
+    parameters = [
+        p
+        for p in calculation.hamiltonian.findChild("F2(3d,3d)")
+        if p.name == "F2(3d,3d)"
+    ]
+    values = [p.value for p in parameters]
+
+    hamiltonian.set_parameter("F2(3d,3d)", scale_factor=0.7)
+
+    assert parameters
+    assert [p.value for p in parameters] == values
+    assert all(p.scaleFactor == 0.7 for p in parameters)
+
+
+def test_set_parameter_rejects_missing_values_and_scale_factors(model):
+    calculation = Calculation(
+        symbol="Ni",
+        charge="2+",
+        symmetry="Oh",
+        experiment="XAS",
+        edge="L2,3 (2p)",
+        parent=model.rootItem(),
+    )
+    hamiltonian = Hamiltonian(calculation.hamiltonian)
+
+    with pytest.raises(ValueError, match="a value or a scale factor"):
+        hamiltonian.set_parameter("F2(3d,3d)")
+    with pytest.raises(ValueError, match="takes only a value"):
+        hamiltonian.set_parameter("Fk", scale_factor=0.7)
+    with pytest.raises(ValueError, match="no scale factor"):
+        hamiltonian.set_parameter("10Dq(3d)", 1.2, scale_factor=0.7)
+
+    # The failed call does not change the value.
+    values = [p.value for p in calculation.hamiltonian.findChild("10Dq(3d)")]
+    assert values
+    assert all(value == 1.0 for value in values)
+
+
 def test_calculation_and_axis_reject_unknown_names(qapp):
     calc = notebook.calculation("Ni2+", "Oh", "XAS", "L2,3 (2p)")
 
@@ -74,6 +122,10 @@ def test_calculation_and_axis_reject_unknown_names(qapp):
         calc.set_parameter("Temperatur", 300)
     with pytest.raises(ValueError, match="Gausian"):
         calc.xaxis.set_parameter("Gausian", 0.2)
+    with pytest.raises(ValueError, match="value"):
+        calc.set_parameter("Temperature", None)
+    with pytest.raises(ValueError, match="value"):
+        calc.xaxis.set_parameter("Gaussian", None)
 
 
 def test_terms_spectra_and_settings_reject_unknown_names(qapp):
