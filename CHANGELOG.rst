@@ -33,6 +33,8 @@ Fixed
   is at zero energy transfer. The energy transfer axis had the binding energy
   of the valence level as an experimental shift.
 - The Kα edge label uses the Greek letter α. It used the Latin letter ɑ.
+- The absorption spectrum of quadrupolar XAS used an unpolarized
+  beam along the wave vector.
 
 `2026.0`_ - 2026-06-21
 ======================

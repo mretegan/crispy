@@ -71,12 +71,11 @@ Tv_#i_#f = CalculateT(T, Epsv, WaveVector)
 Th_#i_#f = CalculateT(T, Epsh, WaveVector)
 Tr_#i_#f = CalculateT(T, Epsr, WaveVector)
 Tl_#i_#f = CalculateT(T, Epsl, WaveVector)
-Tk_#i_#f = CalculateT(T, WaveVector, WaveVector)
 
 -- Initialize a table with the available spectra and the required operators.
 SpectraAndOperators = {
     ["Isotropic Absorption"] = {Txy_#i_#f, Txz_#i_#f, Tyz_#i_#f, Tx2y2_#i_#f, Tz2_#i_#f},
-    ["Absorption"] = {Tk_#i_#f,},
+    ["Absorption"] = {Tv_#i_#f, Th_#i_#f},
     ["Circular Dichroic"] = {Tr_#i_#f, Tl_#i_#f},
     ["Linear Dichroic"] = {Tv_#i_#f, Th_#i_#f},
 }
@@ -150,7 +149,9 @@ for Spectrum, Operators in pairs(SpectraAndOperators) do
         end
 
         if Spectrum == "Absorption" then
-            Gk = GetSpectrum(G_#i_#f, SpectrumIds, dZ_#i_#f, #T_#i_#f, #Psis_i)
+            -- Use an unpolarized beam along the wave vector: average the two
+            -- polarizations perpendicular to it.
+            Gk = GetSpectrum(G_#i_#f, SpectrumIds, dZ_#i_#f, #T_#i_#f, #Psis_i) / 2
             SaveSpectrum(Gk, Prefix .. "_k", Gaussian, Lorentzian, Pcl_#i_#f)
         end
 
