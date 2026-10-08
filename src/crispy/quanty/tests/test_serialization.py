@@ -118,6 +118,32 @@ def add_spectrum_2d(calculation, name, suffix, label):
     return spectrum
 
 
+def to_format_version_1(path):
+    """Rewrite a saved file in the layout of format version 1.
+
+    Format version 1 stored the scalar datasets as attributes of their parent
+    group, except the value and the scale factor of each parameter.
+    """
+    with h5py.File(path, "a") as h5:
+        names = []
+
+        def collect(name, obj):
+            if isinstance(obj, h5py.Dataset) and obj.shape == ():
+                names.append(name)
+
+        h5.visititems(collect)
+        for name in names:
+            parent, _, key = name.rpartition("/")
+            if key in ("value", "scaleFactor"):
+                continue
+            value = h5[name][()]
+            if isinstance(value, bytes):
+                value = value.decode("utf-8")
+            del h5[name]
+            h5[parent or "/"].attrs[key] = value
+        h5.attrs["format_version"] = 1
+
+
 def test_round_trip_one_dimensional(tmp_path, qapp):
     model = TreeModel()
     calculation = make_calculation(model.rootItem())
@@ -358,6 +384,83 @@ def test_mixed_items_preserve_order(tmp_path, qapp):
     assert loaded[1].name == "reference"
 
 
+def test_saved_file_has_no_attributes(tmp_path, qapp):
+    """Every value is a dataset, so no object in the file has attributes."""
+    model = TreeModel()
+    calculation = make_calculation(
+        model.rootItem(), experiment="RIXS", edge="L2,3-M4,5 (2p3d)"
+    )
+    calculation.axes.xaxis.npoints._value = 5
+    calculation.axes.yaxis.npoints._value = 4
+    calculation.labelSuffix = "scan 1"
+    calculation.runner.output = "Quanty log output"
+    add_spectrum_2d(calculation, "Resonant Inelastic", "k", "Resonant Inelastic")
+    external = ExternalData(
+        raw=np.column_stack([np.arange(5.0), np.arange(5.0)]),
+        parent=model.rootItem(),
+        name="reference",
+    )
+
+    path = str(tmp_path / "attributes.h5")
+    save_results([calculation, external], path)
+
+    with h5py.File(path, "r") as h5:
+        with_attributes = [h5.name] if h5.attrs else []
+
+        def collect(name, obj):
+            if obj.attrs:
+                with_attributes.append(name)
+
+        h5.visititems(collect)
+    assert with_attributes == []
+
+
+def test_load_format_version_1(tmp_path, qapp):
+    """A file of format version 1 stores the scalar values as attributes."""
+    model = TreeModel()
+    calculation = make_calculation(
+        model.rootItem(), experiment="RIXS", edge="L2,3-M4,5 (2p3d)"
+    )
+    calculation.axes.xaxis.npoints._value = 5
+    calculation.axes.yaxis.npoints._value = 4
+    calculation.axes.yaxis.photon.analyze.value = False
+    calculation.labelSuffix = "scan 1"
+    calculation.temperature.value = 300
+    calculation.runner.output = "Quanty log output"
+    calculation.enable()
+    crystal_field = find_term(calculation, "Crystal Field")
+    next(p for p in crystal_field.parameters if p.name == "10Dq(3d)").value = 1.23
+    spectrum = add_spectrum_2d(
+        calculation, "Resonant Inelastic", "k", "Resonant Inelastic"
+    )
+    expected_signal = spectrum.signal.copy()
+    expected_hamiltonian = hamiltonian_state(calculation)
+    expected_axes = axes_state(calculation)
+
+    path = str(tmp_path / "version1.h5")
+    save_results([calculation], path)
+    to_format_version_1(path)
+    with h5py.File(path, "r") as h5:
+        assert "shift" in h5["0/Axes/XAxis"].attrs
+
+    new_model = TreeModel()
+    [result] = load_results(path, new_model.rootItem())
+
+    assert result.labelSuffix == "scan 1"
+    assert result.temperature.value == 300
+    assert result.runner.output == "Quanty log output"
+    assert result.isEnabled()
+    assert axes_state(result) == expected_axes
+    assert hamiltonian_state(result) == expected_hamiltonian
+
+    [loaded_spectrum] = result.spectra.toPlot.children()
+    assert isinstance(loaded_spectrum, Spectrum2D)
+    assert loaded_spectrum.name == "Resonant Inelastic"
+    assert loaded_spectrum.suffix == "k"
+    assert loaded_spectrum.isEnabled()
+    assert np.allclose(loaded_spectrum.signal, expected_signal)
+
+
 def test_load_rejects_foreign_file(tmp_path, qapp):
     path = str(tmp_path / "foreign.h5")
     with h5py.File(path, "w") as h5:
@@ -371,8 +474,8 @@ def test_load_rejects_foreign_file(tmp_path, qapp):
 def test_load_rejects_newer_version(tmp_path, qapp):
     path = str(tmp_path / "newer.h5")
     with h5py.File(path, "w") as h5:
-        h5.attrs["format"] = FORMAT
-        h5.attrs["format_version"] = FORMAT_VERSION + 1
+        h5["format"] = FORMAT
+        h5["format_version"] = FORMAT_VERSION + 1
 
     model = TreeModel()
     with pytest.raises(ValueError, match="newer version"):

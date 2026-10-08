@@ -25,6 +25,7 @@ Changed
 - The number of points follows the energy range and the Lorentzian broadening.
 - The Td f-block singlet uses the Mulliken label a1. The parameter Ea2 is now
   Ea1.
+- The HDF5 results files store all values as datasets and have no attributes.
 
 Fixed
 -----
