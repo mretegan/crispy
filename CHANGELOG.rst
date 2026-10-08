@@ -14,6 +14,8 @@ Added
 - Energy dependent Lorentzian broadening for one-dimensional spectra. Set the
   (energy, FWHM) points in the Lorentzian Broadening dialog or in the notebook
   API.
+- The notebook API accepts ASCII spellings of names with Greek letters, e.g.
+  zeta(3d) for ζ(3d) and Kalpha (1s2p) for Kα (1s2p).
 
 Changed
 -------
@@ -29,6 +31,7 @@ Fixed
 - The elastic line of RIXS with a final state without a core hole (e.g. 2p3d)
   is at zero energy transfer. The energy transfer axis had the binding energy
   of the valence level as an experimental shift.
+- The Kα edge label uses the Greek letter α. It used the Latin letter ɑ.
 
 `2026.0`_ - 2026-06-21
 ======================

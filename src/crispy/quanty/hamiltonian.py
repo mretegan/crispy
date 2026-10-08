@@ -12,7 +12,27 @@ from crispy import resourceAbsolutePath
 from crispy.items import BaseItem, BoolItem, DoubleItem, IntItem, SelectableItem
 
 OCCUPANCIES = {"s": 2, "p": 6, "d": 10, "f": 14}
+# ASCII spelling of the Greek letters in the parameter and edge names. The Quanty
+# input and the notebook API use it.
+GREEK_TO_ASCII = {
+    "ζ": "zeta",
+    "Δ": "Delta",
+    "σ": "sigma",  # noqa: RUF001
+    "π": "pi",
+    "τ": "tau",
+    "μ": "mu",
+    "ν": "nu",  # noqa: RUF001
+    "α": "alpha",  # noqa: RUF001
+    "β": "beta",
+}
 logger = logging.getLogger(__name__)
+
+
+def asciiName(name):
+    """Replace each Greek letter in a name with its ASCII spelling."""
+    for greek, latin in GREEK_TO_ASCII.items():
+        name = name.replace(greek, latin)
+    return name
 
 
 class ScaleFactor(DoubleItem):
@@ -159,20 +179,6 @@ class HamiltonianTerm(SelectableItem):
         name = type(self).__name__
         replacements[name] = self.isEnabled()
 
-        def formatName(name):
-            CONVERTERS = {
-                "ζ": "zeta",
-                "Δ": "Delta",
-                "σ": "sigma",  # noqa: RUF001
-                "π": "pi",
-                "τ": "tau",
-                "μ": "mu",
-                "ν": "nu",  # noqa: RUF001
-            }
-            for greek, latin in CONVERTERS.items():
-                name = name.replace(greek, latin)
-            return name
-
         # Fill the replacements dictionary with the parameters names, values, and
         # scale factors.
         mappings = dict(self.hamiltonianNames)
@@ -180,7 +186,7 @@ class HamiltonianTerm(SelectableItem):
             # Each type of Hamiltonian has a certain suffix.
             suffix = mappings[hamiltonian.name]
             for parameter in hamiltonian.children():
-                name = f"{formatName(parameter.name)}_{suffix}"
+                name = f"{asciiName(parameter.name)}_{suffix}"
                 replacements[f"{name}_value"] = parameter.value
                 if parameter.scaleFactor is not None:
                     replacements[f"{name}_scaleFactor"] = parameter.scaleFactor
@@ -277,8 +283,8 @@ class CrystalFieldTerm(HamiltonianTerm):
                 # The f orbitals split into a2u + t1u + t2u.
                 names, values = ("Ea2u", "Et1u", "Et2u"), (-1.8, 0.3, 0.3)
             elif self.symmetry.value == "Td":
-                # The f orbitals split into a2 + t1 + t2.
-                names = ("Ea2", "Et1", "Et2")
+                # The f orbitals split into a1 + t1 + t2
+                names = ("Ea1", "Et1", "Et2")
                 values = (0.0, 0.0, 0.0)
             elif self.symmetry.value == "D4h":
                 # Tetragonal field given as the irrep energies (a2u, b1u, b2u and
@@ -501,24 +507,15 @@ class HamiltonianTerms(BaseItem):
             # TODO: Td is still problematic due to the another set of t2 ligands
             # http://quanty.org/forum/data/2019/metal_3d_to_ligand_hybridization_in_td
             if calculation.symmetry.value in ("Oh", "D4h"):
-                # TODO: These exceptions have to be advertised somewhere as the
-                # generation of templates must also use them.
-                if (
-                    calculation.symmetry.value == "Td"
-                    and calculation.edge.value == "K (1s)"
-                    and calculation.experiment.value == "XAS"
-                ):
-                    pass
-                else:
-                    valenceSubshell = calculation.element.valenceSubshell
-                    name = f"{valenceSubshell}-Ligands Hybridization (LMCT)"
-                    self.lmctLigandsHybridization = LmctLigandsHybridizationTerm(
-                        parent=self, name=name
-                    )
-                    name = f"{valenceSubshell}-Ligands Hybridization (MLCT)"
-                    self.mlctLigandsHybridization = MlctLigandsHybridizationTerm(
-                        parent=self, name=name
-                    )
+                valenceSubshell = calculation.element.valenceSubshell
+                name = f"{valenceSubshell}-Ligands Hybridization (LMCT)"
+                self.lmctLigandsHybridization = LmctLigandsHybridizationTerm(
+                    parent=self, name=name
+                )
+                name = f"{valenceSubshell}-Ligands Hybridization (MLCT)"
+                self.mlctLigandsHybridization = MlctLigandsHybridizationTerm(
+                    parent=self, name=name
+                )
 
             # Add pd-hybridization term.
             if (

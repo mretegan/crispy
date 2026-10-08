@@ -4,8 +4,10 @@ import numpy as np
 
 from crispy.config import Config as _Config
 from crispy.models import TreeModel
+from crispy.quanty import CALCULATIONS
 from crispy.quanty.calculation import Calculation as _Calculation
 from crispy.quanty.calculation import Element
+from crispy.quanty.hamiltonian import asciiName
 
 
 def prettify(data, level=0):
@@ -22,6 +24,16 @@ def prettify(data, level=0):
         if key != list(data)[-1]:
             output += "\n"
     return output
+
+
+def resolve_edge(edge):
+    """Return the edge label for an edge given in ASCII, e.g. "Kalpha (1s2p)"."""
+    for subshell in CALCULATIONS.values():
+        for experiment in subshell["experiments"]:
+            for label in experiment["edges"]:
+                if asciiName(label) == asciiName(edge):
+                    return label
+    return edge
 
 
 class Tree(dict):
@@ -81,6 +93,15 @@ class Hamiltonian:
 
         if name == "Number of States":
             self._hamiltonian.numberOfStates.value = value
+
+        # Accept the ASCII spelling of a name with Greek letters, e.g. "zeta(3d)".
+        names = {
+            asciiName(parameter.name): parameter.name
+            for term in self._hamiltonian.terms.children()
+            for hamiltonian in term.children()
+            for parameter in hamiltonian.children()
+        }
+        name = names.get(asciiName(name), name)
 
         parameters = list(self._hamiltonian.findChild(name))
         for parameter in parameters:
@@ -212,6 +233,7 @@ class Calculation:
         config.prune()
 
         element = Element(parent=None, value=element)
+        edge = resolve_edge(edge)
         self._model = TreeModel()
         self._calculation = _Calculation(
             element.symbol,
