@@ -7,4 +7,4 @@ Reference
     supported_systems
     editing
     crystal_field
-    isotropic_rixs
+    orientation_averaged_rixs

@@ -917,10 +917,10 @@ if ValueInTable("Resonant Inelastic", SpectraToCalculate) then
     SaveSpectrum(G, Prefix .. "_k", Gaussian, 0.0)
 end
 
--- Powder RIXS from the Cartesian dipole-dipole tensor.
+-- Orientation-averaged RIXS from the Cartesian dipole-dipole tensor.
 -- Combine fundamental spectra A and B using the polarization geometry.
 -- Valid for dipole-in/dipole-out edges only.
-if ValueInTable("Isotropic Resonant Inelastic", SpectraToCalculate) then
+if ValueInTable("Orientation-Averaged Resonant Inelastic", SpectraToCalculate) then
     T_3d_5f = {Tx_3d_5f, Ty_3d_5f, Tz_3d_5f}
     T_5f_3d = {Tx_5f_3d, Ty_5f_3d, Tz_5f_3d}
 
@@ -938,7 +938,7 @@ if ValueInTable("Isotropic Resonant Inelastic", SpectraToCalculate) then
     else
         GeometryFactor = 0.5 * (1 - DotProduct(EpsIn, WaveVectorOut)^2)
     end
-    local Giso = A + B * GeometryFactor
+    local Gavg = A + B * GeometryFactor
 
-    SaveSpectrum(Giso, Prefix .. "_iso", Gaussian, 0.0)
+    SaveSpectrum(Gavg, Prefix .. "_avg", Gaussian, 0.0)
 end

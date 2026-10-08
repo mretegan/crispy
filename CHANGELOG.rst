@@ -19,8 +19,8 @@ Added
 
 Changed
 -------
-- Isotropic RIXS uses the resonant tensor of Quanty (three operators per side
-  instead of nine).
+- Orientation-averaged RIXS uses the resonant tensor of Quanty (three
+  operators per side instead of nine).
 - The Lorentzian broadening accepts any positive value. The minimum was 0.1 eV.
 - The number of points follows the energy range and the Lorentzian broadening.
 - The Td f-block singlet uses the Mulliken label a1. The parameter Ea2 is now

@@ -28,7 +28,7 @@ SPECTRA_TO_CALCULATE = {
     "XPS": {"Powder/Solution": ("Photoemission",)},
     "RIXS": {
         "Single Crystal/Thin Film": ("Resonant Inelastic",),
-        "Powder/Solution": ("Isotropic Resonant Inelastic",),
+        "Powder/Solution": ("Orientation-Averaged Resonant Inelastic",),
     },
 }
 
@@ -54,7 +54,7 @@ SPECTRA = {
     "Vertical Polarized": ("v", "(V)", "LD (V)", "--"),
     "Horizontal Polarized": ("h", "(H)", "LD (H)", ":"),
     "Resonant Inelastic": ("k", None, "Resonant Inelastic", None),
-    "Isotropic Resonant Inelastic": ("iso", None, "Isotropic Resonant Inelastic", None),
+    "Orientation-Averaged Resonant Inelastic": ("avg", None, "Orientation-Averaged Resonant Inelastic", None),  # noqa: E501
     "Photoemission": ("pho", None, "Photoemission", "-"),
     "Emission": ("emi", None, "Emission", "-"),
 }
@@ -367,9 +367,10 @@ class SpectraToCalculate(SpectraToInteract):
 
         checkState = Qt.CheckState.Checked
         for sample, spectraNames in SPECTRA_TO_CALCULATE[experiment.value].items():
-            # The powder-averaged RIXS spectrum is built from the rank-2
-            # fundamental spectra, which are only valid for dipole-in/dipole-out
-            # edges. Skip it for the quadrupole-in edges (e.g. 1s2p, 1s3p).
+            # The orientation-averaged RIXS spectrum is built from the
+            # fundamental spectra of the rank-2 (dipole-dipole) scattering
+            # tensor, which are only valid for dipole-in/dipole-out edges. Skip
+            # it for the quadrupole-in edges (e.g. 1s2p, 1s3p).
             if (
                 experiment.value == "RIXS"
                 and sample == "Powder/Solution"

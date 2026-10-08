@@ -401,9 +401,10 @@ def test_d3d_template_renders_without_unresolved_parameters(
     ],
 )
 def test_rixs_powder_offered_only_for_dipole_dipole(symbol, charge, edge, dipole):
-    """The powder/isotropic RIXS spectrum is built from the rank-2 fundamental
-    spectra and is only valid for dipole-in/dipole-out edges. It must be offered
-    for the pdd/dff edges and withheld for the quadrupole-in (sdp/pfd) edges."""
+    """The orientation-averaged RIXS spectrum is built from the fundamental
+    spectra of the rank-2 (dipole-dipole) scattering tensor and is only valid
+    for dipole-in/dipole-out edges. It must be offered for the pdd/dff edges
+    and withheld for the quadrupole-in (sdp/pfd) edges."""
     model = TreeModel()
     calculation = Calculation(
         symbol=symbol,
@@ -420,7 +421,7 @@ def test_rixs_powder_offered_only_for_dipole_dipole(symbol, charge, edge, dipole
     samples = {s.name for s in calculation.spectra.toCalculate.children()}
     spectra = {s.name for s in calculation.spectra.toCalculate.all}
     assert ("Powder/Solution" in samples) is dipole
-    assert ("Isotropic Resonant Inelastic" in spectra) is dipole
+    assert ("Orientation-Averaged Resonant Inelastic" in spectra) is dipole
     # The single-crystal spectrum is always available.
     assert "Resonant Inelastic" in spectra
 
@@ -438,26 +439,29 @@ def test_rixs_spectra_are_single_select():
         parent=model.rootItem(),
     )
     spectra = {s.name: s for s in calculation.spectra.toCalculate.all}
-    assert set(spectra) == {"Resonant Inelastic", "Isotropic Resonant Inelastic"}
+    assert set(spectra) == {
+        "Resonant Inelastic",
+        "Orientation-Averaged Resonant Inelastic",
+    }
 
     # Exactly one is enabled by default.
     assert sum(s.isEnabled() for s in spectra.values()) == 1
 
-    # Checking the powder spectrum unchecks the single-crystal one.
-    spectra["Isotropic Resonant Inelastic"].setData(
+    # Checking the orientation-averaged spectrum unchecks the single-crystal one.
+    spectra["Orientation-Averaged Resonant Inelastic"].setData(
         0, Qt.CheckState.Checked, Qt.CheckStateRole
     )
-    assert spectra["Isotropic Resonant Inelastic"].isEnabled()
+    assert spectra["Orientation-Averaged Resonant Inelastic"].isEnabled()
     assert not spectra["Resonant Inelastic"].isEnabled()
 
     # And vice versa.
     spectra["Resonant Inelastic"].setData(0, Qt.CheckState.Checked, Qt.CheckStateRole)
     assert spectra["Resonant Inelastic"].isEnabled()
-    assert not spectra["Isotropic Resonant Inelastic"].isEnabled()
+    assert not spectra["Orientation-Averaged Resonant Inelastic"].isEnabled()
 
 
-def test_analyze_checkbox_enabled_only_for_isotropic_rixs():
-    """The outgoing-polarization checkbox controls only the isotropic RIXS
+def test_analyze_checkbox_enabled_only_for_orientation_averaged_rixs():
+    """The outgoing-polarization checkbox controls only the orientation-averaged RIXS
     geometry factor, so it is enabled only while that spectrum is selected."""
     from crispy.quanty.main import GeneralSetupPage
 
@@ -479,9 +483,9 @@ def test_analyze_checkbox_enabled_only_for_isotropic_rixs():
     # Single-crystal is the default selection, so the checkbox starts disabled.
     assert not checkbox.isEnabled()
 
-    # Selecting the isotropic spectrum enables it; reselecting the single-crystal
-    # spectrum disables it again (RIXS spectra are single-select).
-    spectra["Isotropic Resonant Inelastic"].setData(
+    # Selecting the orientation-averaged spectrum enables it; reselecting the
+    # single-crystal spectrum disables it again (RIXS spectra are single-select).
+    spectra["Orientation-Averaged Resonant Inelastic"].setData(
         0, Qt.CheckState.Checked, Qt.CheckStateRole
     )
     assert checkbox.isEnabled()

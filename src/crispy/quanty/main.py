@@ -189,13 +189,15 @@ class GeneralSetupPage(QWidget):
         self._updateAnalyzeEnabled()
 
     def _updateAnalyzeEnabled(self):
-        """Enable the outgoing-polarization checkbox only when the isotropic RIXS
-        spectrum is selected. Its geometry factor is the only place the setting
-        takes effect."""
+        """Enable the outgoing-polarization checkbox only when the
+        orientation-averaged RIXS spectrum is selected. Its geometry factor is
+        the only place the setting takes effect."""
         if self._state is None:
             return
         selected = self._state.spectra.toCalculate.selected
-        self.yAxis.setAnalyzeEnabled("Isotropic Resonant Inelastic" in selected)
+        self.yAxis.setAnalyzeEnabled(
+            "Orientation-Averaged Resonant Inelastic" in selected
+        )
 
     def updateTabOrder(self, twoDimensional=False):
         """Chain the focusable widgets in top-to-bottom visual order."""
