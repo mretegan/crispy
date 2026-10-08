@@ -18,7 +18,7 @@ Downloads
   for the current version.
 - The packages include the latest version of Quanty available at the time of
   the Crispy release. Therefore, if you have not done so already, **please
-  register** on the `Quanty <http://quanty.org/start?do=register>`_ website.
+  register** on the `Quanty <https://quanty.org/start?do=register>`_ website.
 - The **macOS** application is a single *universal* binary that runs natively on
   both *Intel* and *Apple Silicon* Macs. It requires **macOS 14 (Sonoma) or
   later**.
@@ -26,8 +26,8 @@ Downloads
   application and even delete the installer from the disk. This is likely
   because the installer is not signed. Every release is scanned on
   `VirusTotal <https://www.virustotal.com>`_, and the report for each build is
-  linked in its |release-page|_. Also please make sure that you first uninstall
-  older versions of Crispy before you proceed with the new installation.
+  linked in its |release-page|_. The installer removes the previous version of
+  Crispy, if present.
 - You can download older versions from the `releases
   <https://github.com/mretegan/crispy/releases>`_ page on GitHub.
 

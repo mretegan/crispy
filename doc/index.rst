@@ -10,7 +10,7 @@ open-source software. The current development can be followed on the `GitHub
 <https://github.com/mretegan/crispy>`_ page.
 
 The project is developed at the `European Synchrotron Radiation Facility
-<http://esrf.eu>`_ by `Marius Retegan <http://marius.retegan.org>`_.
+<https://esrf.eu>`_ by Marius Retegan.
 
 .. figure:: assets/main_window.png
     :align: center
@@ -23,9 +23,13 @@ The project is developed at the `European Synchrotron Radiation Facility
 Contents
 --------
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
 
     getting_started/index
-    user_guide/index
     tutorials/index
+    reference/index
+
+.. toctree::
+    :hidden:
+
     about/index

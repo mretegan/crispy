@@ -38,7 +38,7 @@ architecture and fusing the two builds.
        pyinstaller --noconfirm crispy.spec
 
    On macOS this only produces the app bundle in ``dist/Crispy.app``; it does not
-   sign, package or notarize it.
+   sign, package, or notarize it.
 
 2. Collect the two ``dist/Crispy.app`` bundles and fuse them into one universal
    bundle with ``lipo``::
@@ -55,7 +55,7 @@ architecture and fusing the two builds.
 
 In continuous integration this whole sequence is run automatically (see
 ``.github/workflows/release.yml``): the two architectures are built on separate
-runners, merged on one of them, then signed, packed and notarized.
+runners, merged on one of them, then signed, packed, and notarized.
 
 Signing and notarization are only performed if the following environment
 variables are set; otherwise ``codesign.sh`` and ``notarize.sh`` exit without

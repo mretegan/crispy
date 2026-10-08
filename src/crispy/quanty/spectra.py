@@ -1,5 +1,6 @@
 """Spectra related components."""
 
+import contextlib
 import copy
 import logging
 
@@ -124,10 +125,8 @@ class DataSpectrum(BaseSpectrum):
     def disconnectFromAxes(self):
         """Stop reprocessing on axis changes once the spectrum is discarded."""
         for trigger in self.reprocessingTriggers:
-            try:
+            with contextlib.suppress(TypeError, RuntimeError):
                 trigger.disconnect(self.process)
-            except (TypeError, RuntimeError):
-                pass
 
     @property
     def reprocessingTriggers(self):

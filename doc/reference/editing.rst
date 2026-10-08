@@ -1,10 +1,13 @@
-Editing a Calculation
-=====================
+Parameter Changes and Resets
+============================
 The General Setup page exposes five combo boxes that define a calculation: the
 **element** (symbol), **charge**, **symmetry**, **experiment**, and **edge**.
 Changing any of them rebuilds the calculation. To avoid discarding the values
 you have entered, Crispy keeps the parameters that still apply and regenerates
 only the ones that depend on what changed.
+
+Parameters Kept or Reset
+------------------------
 
 The table below lists, for each combo box, which parameters are kept (✓) and
 which are reset to their defaults (✗) when that combo box is changed.
@@ -14,7 +17,7 @@ which are reset to their defaults (✗) when that combo box is changed.
     :stub-columns: 1
 
     * - Parameter
-      - Symbol
+      - Element
       - Charge
       - Symmetry
       - Experiment
@@ -61,7 +64,7 @@ which are reset to their defaults (✗) when that combo box is changed.
       - ✗
       - ✗
       - ✗
-    * - Ligand and pd hybridization terms
+    * - Ligand and 3d-4p hybridization terms
       - ✗
       - ✓
       - ✗
@@ -73,7 +76,7 @@ which are reset to their defaults (✗) when that combo box is changed.
       - ✓
       - ✗
       - ✗
-    * - Scale factors (Fk, Gk, Zeta)
+    * - Scale factors (Fk, Gk, ζ)
       - ✗
       - ✓
       - ✓
@@ -104,11 +107,6 @@ point group. Changing the **element**, **experiment**, or **edge** keeps only
 the experimental conditions (temperature, magnetic field, and Gaussian
 broadening) and rebuilds the rest.
 
-.. note::
-
-    Selecting a previously computed result on the Results page restores **all**
-    of its parameters, regardless of the table above.
-
 A few entries deserve clarification:
 
 * **Magnetic field.** The magnitude is always kept. When the beam geometry can
@@ -118,6 +116,11 @@ A few entries deserve clarification:
   energy-transfer axis broadening is kept only when the calculation stays
   two-dimensional; switching to or from RIXS keeps only the incident-energy
   value.
-* **Scale factors.** When the charge changes, the kept Fk, Gk, and Zeta are
+* **Scale factors.** When the charge changes, the kept Fk, Gk, and ζ are
   re-applied to the regenerated atomic parameters so that their individual scale
   factors stay consistent.
+
+Restoring a Previous Calculation
+--------------------------------
+Selecting a previously computed result on the *Results* page restores **all**
+of its parameters, regardless of the table above.
