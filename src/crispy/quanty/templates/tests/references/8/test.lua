@@ -149,49 +149,51 @@ end
 -- Define the crystal field term.
 --------------------------------------------------------------------------------
 if CrystalFieldTerm then
-    -- Td crystal field for f electrons. The seven 4f orbitals split
-    -- into the a2, t1, t2 irreps; energies are referenced to their
-    -- (degeneracy-weighted) average so the k = 0 monopole vanishes. The Akm
-    -- expansion is taken from the Quanty point-group tables
-    -- (https://www.quanty.org/physics_chemistry/point_groups).
+    -- Td crystal field for f electrons, cube-axis (xyz) setting: the tetrahedron is
+    -- inscribed in a cube with edges along x, y and z (S4/C2 axes along x, y, z;
+    -- C3 axes along the cube diagonals [+-1, +-1, +-1]). The seven 4f orbitals
+    -- split into a1 + t1 + t2; energies are referenced to their (degeneracy-weighted)
+    -- average so the k = 0 monopole vanishes. The Akm expansion is taken from the
+    -- Quanty point-group tables (https://www.quanty.org/physics_chemistry/point_groups).
+    -- The Quanty table labels the singlet a2, and a1 is the Mulliken label.
     Eav_4f_i = (0.4 + 3 * -0.1 + 3 * 0.05) / 7
-    Ea2_4f_i = 0.4 - Eav_4f_i
+    Ea1_4f_i = 0.4 - Eav_4f_i
     Et1_4f_i = -0.1 - Eav_4f_i
     Et2_4f_i = 0.05 - Eav_4f_i
 
     Akm_4f_i = {
-        {0, 0, (1 / 7) * (Ea2_4f_i + 3 * (Et1_4f_i + Et2_4f_i))},
-        {4, 0, (-3 / 4) * (2 * Ea2_4f_i + Et1_4f_i - 3 * Et2_4f_i)},
-        {4, -4, (-3 / 4) * (sqrt(5 / 14) * (2 * Ea2_4f_i + Et1_4f_i - 3 * Et2_4f_i))},
-        {4, 4, (-3 / 4) * (sqrt(5 / 14) * (2 * Ea2_4f_i + Et1_4f_i - 3 * Et2_4f_i))},
-        {6, 0, (39 / 280) * (4 * Ea2_4f_i - 9 * Et1_4f_i + 5 * Et2_4f_i)},
-        {6, -4, (-39 / 40) * ((1 / sqrt(14)) * (4 * Ea2_4f_i - 9 * Et1_4f_i + 5 * Et2_4f_i))},
-        {6, 4, (-39 / 40) * ((1 / sqrt(14)) * (4 * Ea2_4f_i - 9 * Et1_4f_i + 5 * Et2_4f_i))}
+        {0, 0, (1 / 7) * (Ea1_4f_i + 3 * (Et1_4f_i + Et2_4f_i))},
+        {4, 0, (-3 / 4) * (2 * Ea1_4f_i + Et1_4f_i - 3 * Et2_4f_i)},
+        {4, -4, (-3 / 4) * (sqrt(5 / 14) * (2 * Ea1_4f_i + Et1_4f_i - 3 * Et2_4f_i))},
+        {4, 4, (-3 / 4) * (sqrt(5 / 14) * (2 * Ea1_4f_i + Et1_4f_i - 3 * Et2_4f_i))},
+        {6, 0, (39 / 280) * (4 * Ea1_4f_i - 9 * Et1_4f_i + 5 * Et2_4f_i)},
+        {6, -4, (-39 / 40) * ((1 / sqrt(14)) * (4 * Ea1_4f_i - 9 * Et1_4f_i + 5 * Et2_4f_i))},
+        {6, 4, (-39 / 40) * ((1 / sqrt(14)) * (4 * Ea1_4f_i - 9 * Et1_4f_i + 5 * Et2_4f_i))}
     }
 
-    io.write("Initial-state Td crystal field Hamiltonian (a2, t1, t2) diagonal energies:\n")
+    io.write("Initial-state Td crystal field Hamiltonian (a1, t1, t2) diagonal energies:\n")
     io.write("================\n")
     io.write("Irrep.         E\n")
     io.write("================\n")
-    io.write(string.format("%-7s %8.3f\n", "a2", Ea2_4f_i))
+    io.write(string.format("%-7s %8.3f\n", "a1", Ea1_4f_i))
     io.write(string.format("%-7s %8.3f\n", "t1", Et1_4f_i))
     io.write(string.format("%-7s %8.3f\n", "t2", Et2_4f_i))
     io.write("================\n")
     io.write("\n")
 
     Eav_4f_f = (0.4 + 3 * -0.1 + 3 * 0.05) / 7
-    Ea2_4f_f = 0.4 - Eav_4f_f
+    Ea1_4f_f = 0.4 - Eav_4f_f
     Et1_4f_f = -0.1 - Eav_4f_f
     Et2_4f_f = 0.05 - Eav_4f_f
 
     Akm_4f_f = {
-        {0, 0, (1 / 7) * (Ea2_4f_f + 3 * (Et1_4f_f + Et2_4f_f))},
-        {4, 0, (-3 / 4) * (2 * Ea2_4f_f + Et1_4f_f - 3 * Et2_4f_f)},
-        {4, -4, (-3 / 4) * (sqrt(5 / 14) * (2 * Ea2_4f_f + Et1_4f_f - 3 * Et2_4f_f))},
-        {4, 4, (-3 / 4) * (sqrt(5 / 14) * (2 * Ea2_4f_f + Et1_4f_f - 3 * Et2_4f_f))},
-        {6, 0, (39 / 280) * (4 * Ea2_4f_f - 9 * Et1_4f_f + 5 * Et2_4f_f)},
-        {6, -4, (-39 / 40) * ((1 / sqrt(14)) * (4 * Ea2_4f_f - 9 * Et1_4f_f + 5 * Et2_4f_f))},
-        {6, 4, (-39 / 40) * ((1 / sqrt(14)) * (4 * Ea2_4f_f - 9 * Et1_4f_f + 5 * Et2_4f_f))}
+        {0, 0, (1 / 7) * (Ea1_4f_f + 3 * (Et1_4f_f + Et2_4f_f))},
+        {4, 0, (-3 / 4) * (2 * Ea1_4f_f + Et1_4f_f - 3 * Et2_4f_f)},
+        {4, -4, (-3 / 4) * (sqrt(5 / 14) * (2 * Ea1_4f_f + Et1_4f_f - 3 * Et2_4f_f))},
+        {4, 4, (-3 / 4) * (sqrt(5 / 14) * (2 * Ea1_4f_f + Et1_4f_f - 3 * Et2_4f_f))},
+        {6, 0, (39 / 280) * (4 * Ea1_4f_f - 9 * Et1_4f_f + 5 * Et2_4f_f)},
+        {6, -4, (-39 / 40) * ((1 / sqrt(14)) * (4 * Ea1_4f_f - 9 * Et1_4f_f + 5 * Et2_4f_f))},
+        {6, 4, (-39 / 40) * ((1 / sqrt(14)) * (4 * Ea1_4f_f - 9 * Et1_4f_f + 5 * Et2_4f_f))}
     }
 
     H_i = H_i + Chop(NewOperator("CF", NFermions, IndexUp_4f, IndexDn_4f, Akm_4f_i))
@@ -394,78 +396,52 @@ function GetResonantSpectrum(G, dZ, NOperators, NPsis, NPoints)
     return Spectrum
 end
 
-function GetFundamentalSpectra(G, dZ, NPsis, NPoints)
-    -- Compute the two fundamental spectra A and B of the powder-averaged
-    -- (isotropic) dipole-dipole RIXS response from the full 9 x 9 polarization
-    -- grid produced by the "four-measurement" (+/-) scheme.
-    --
-    -- The transition operators passed to CreateResonantSpectra must be the
-    -- nine-element basis on each side, in the order
-    --   {Tx, Ty, Tz, (Tx+Ty)t, (Tx+Tz)t, (Ty+Tz)t, (Tx-Ty)t, (Tx-Tz)t, (Ty-Tz)t}
-    -- with t = 1/sqrt(2). The spectra object then holds one (NPoints + 1) block
-    -- for each (incident, emission) channel and wavefunction, ordered with the
-    -- wavefunction outermost, then the incident operator, then the emission
-    -- operator (the same ordering used by GetResonantSpectrum).
-    --
-    -- @param G userdata: Spectra object returned by CreateResonantSpectra.
-    -- @param dZ table: Boltzmann prefactors for each wavefunction.
-    -- @param NPsis number: Number of wavefunctions.
-    -- @param NPoints number: Number of points along the incident energy axis.
-    -- @return userdata, userdata: The fundamental spectra A and B.
-
-    local NChannels = 9
-    local NCombinations = NChannels * NChannels
-
-    -- Channel (i, j) summed over the wavefunctions, weighted by the Boltzmann
-    -- probabilities. i is the incident operator, j the emission operator.
-    local function Channel(i, j)
-        local Spectrum = 0
-        for p = 1, NPsis do
-            local Block = (p - 1) * NCombinations + (i - 1) * NChannels + (j - 1)
-            local Indexes = {}
-            for k = 1, NPoints + 1 do
-                table.insert(Indexes, Block * (NPoints + 1) + k)
-            end
-            Spectrum = Spectrum + Spectra.Element(G, Indexes) * dZ[p]
+function GetFundamentalSpectra(G, NPoints)
+    -- Extract the powder invariants from the Cartesian dipole-dipole tensor
+    -- for a SINGLE initial state (Tensor=true, TensorBasis="cartesian"). Both operator
+    -- lists must be {Tx, Ty, Tz}. Quanty stores the outgoing index
+    -- fastest: channel(a,b) = 3*a+b, with zero-based incoming a and outgoing b.
+    -- The ket channel is fastest within the 9 x 9 coherence matrix, followed by
+    -- the bra channel; each component has NPoints+1 incident-energy rows.
+    local function Component(a, b, c, d)
+        local Block = (3 * a + b) + 9 * (3 * c + d)
+        local Indexes = {}
+        for k = 1, NPoints + 1 do
+            Indexes[k] = Block * (NPoints + 1) + k
         end
-        return Spectrum
+        return Spectra.Element(G, Indexes)
     end
 
-    local Gpol = {}
-    for i = 1, NChannels do
-        Gpol[i] = {}
-        for j = 1, NChannels do
-            Gpol[i][j] = Channel(i, j)
+    local M1, TrM2, TrMM = 0, 0, 0
+    for a = 0, 2 do
+        for b = 0, 2 do
+            M1 = M1 + Component(a, b, a, b)
+            TrM2 = TrM2 + Component(a, a, b, b)
+            TrMM = TrMM + Component(a, b, b, a)
         end
     end
+    local M23 = TrM2 + TrMM
+    return (4 * M1 - M23) / 30, (-2 * M1 + 3 * M23) / 30
+end
 
-    -- First rotational invariant: the 3 x 3 Cartesian block.
-    local M1 = 0
-    for i = 1, 3 do
-        for j = 1, 3 do
-            M1 = M1 + Gpol[i][j]
-        end
+function CalculatePowderSpectra(Hm, Hf, Tin, Tout, Psis, dZ, NPoints, Options)
+    -- Sum fundamental spectra from separate normalized states with Boltzmann weights.
+    -- Each tensor has 81 components per incident energy.
+    -- Preserve energy windows, restrictions and DenseBorder.
+    local TensorOptions = {}
+    for _, Option in ipairs(Options) do
+        TensorOptions[#TensorOptions + 1] = Option
     end
+    TensorOptions[#TensorOptions + 1] = {"Tensor", true}
+    TensorOptions[#TensorOptions + 1] = {"TensorBasis", "cartesian"}
 
-    -- Second and third invariants, recovered from the diagonal and the +/-
-    -- combinations (the four-measurement scheme).
-    local Gtrace = Gpol[1][1] + Gpol[2][2] + Gpol[3][3]
-
-    local Gcross = 0
-    for i = 1, 3 do
-        local Plus = 3 + i
-        local Minus = 6 + i
-        Gcross = Gcross + (Gpol[Plus][Plus]
-                         - Gpol[Plus][Minus]
-                         - Gpol[Minus][Plus]
-                         + Gpol[Minus][Minus])
+    local A, B = 0, 0
+    for p, Psi in ipairs(Psis) do
+        local G = CreateResonantSpectra(Hm, Hf, Tin, Tout, {Psi}, TensorOptions)
+        local Ap, Bp = GetFundamentalSpectra(G, NPoints)
+        A = A + Ap * dZ[p]
+        B = B + Bp * dZ[p]
     end
-
-    local M23 = 2 * Gtrace + Gcross
-
-    local A = (4 * M1 - M23) / 30
-    local B = (-2 * M1 + 3 * M23) / 30
-
     return A, B
 end
 

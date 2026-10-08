@@ -33,8 +33,7 @@ Lorentzian = {{843.0, 0.48}, {883.0, 0.48}} -- Lorentzian FWHM (eV).
 Gamma = 0.1 -- Lorentzian FWHM used in the spectra calculation (eV).
 
 WaveVector = {0, 0, 1} -- Wave vector.
-Ev = {0, 1, 0} -- Vertical polarization.
-Eh = {1, 0, 0} -- Horizontal polarization.
+Eps = {1, 0, 0} -- Polarization.
 
 SpectraToCalculate = {"Isotropic Absorption"}  -- Types of spectra to calculate.
 DenseBorder = 2000 -- Number of determinants where we switch from dense methods to sparse methods.
@@ -49,7 +48,7 @@ AtomicTerm = true
 CrystalFieldTerm = true
 LmctLigandsHybridizationTerm = true
 MlctLigandsHybridizationTerm = false
-MagneticFieldTerm = true
+MagneticFieldTerm = false
 ExchangeFieldTerm = false
 
 --------------------------------------------------------------------------------
@@ -163,6 +162,13 @@ end
 -- Define the crystal field term.
 --------------------------------------------------------------------------------
 if CrystalFieldTerm then
+    -- Oh crystal field for d electrons, cube-axis (xyz) setting: the three C4 axes
+    -- lie along x, y and z (the octahedral ligands sit on the Cartesian axes) and
+    -- the C3 axes along the cube diagonals [+-1, +-1, +-1]. The five 3d orbitals
+    -- split into eg + t2g, separated by 10Dq (eg at +0.6 * 10Dq, t2g at -0.4 * 10Dq).
+    -- The Akm coefficients below reproduce PotentialExpandedOnClm("Oh", 2,
+    -- {0.6, -0.4}) from the Quanty point-group tables
+    -- (https://www.quanty.org/physics_chemistry/point_groups).
     -- PotentialExpandedOnClm("Oh", 2, {Eeg, Et2g})
     -- tenDq_3d = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, PotentialExpandedOnClm("Oh", 2, {0.6, -0.4}))
 
@@ -485,13 +491,89 @@ function SaveSpectrum(G, Filename, Gaussian, Lorentzian, Pcl)
     G.Print({{"file", Filename .. ".spec"}})
 end
 
-function CalculateT(Basis, Eps, K)
+function GetResonantSpectrum(G, dZ, NOperators, NPsis, NPoints)
+    -- Sum the resonant spectrum over the operator combinations and wavefunctions,
+    -- weighted by the Boltzmann probabilities. The spectra object returned by
+    -- CreateResonantSpectra contains one block of (NPoints + 1) rows for each
+    -- operator combination and wavefunction.
+    --
+    -- @param G userdata: Spectra object returned by CreateResonantSpectra.
+    -- @param dZ table: Boltzmann prefactors for each wavefunction.
+    -- @param NOperators number: Number of transition operator combinations.
+    -- @param NPsis number: Number of wavefunctions.
+    -- @param NPoints number: Number of points along the incident energy axis.
+
+    local Spectrum = 0
+    local Shift = 0
+    for i = 1, NPsis do
+        for _ = 1, NOperators do
+            local Indexes = {}
+            for k = 1, NPoints + 1 do
+                table.insert(Indexes, k + Shift)
+            end
+            Spectrum = Spectrum + Spectra.Element(G, Indexes) * dZ[i]
+            Shift = Shift + NPoints + 1
+        end
+    end
+    return Spectrum
+end
+
+function GetFundamentalSpectra(G, NPoints)
+    -- Extract the powder invariants from the Cartesian dipole-dipole tensor
+    -- for a SINGLE initial state (Tensor=true, TensorBasis="cartesian"). Both operator
+    -- lists must be {Tx, Ty, Tz}. Quanty stores the outgoing index
+    -- fastest: channel(a,b) = 3*a+b, with zero-based incoming a and outgoing b.
+    -- The ket channel is fastest within the 9 x 9 coherence matrix, followed by
+    -- the bra channel; each component has NPoints+1 incident-energy rows.
+    local function Component(a, b, c, d)
+        local Block = (3 * a + b) + 9 * (3 * c + d)
+        local Indexes = {}
+        for k = 1, NPoints + 1 do
+            Indexes[k] = Block * (NPoints + 1) + k
+        end
+        return Spectra.Element(G, Indexes)
+    end
+
+    local M1, TrM2, TrMM = 0, 0, 0
+    for a = 0, 2 do
+        for b = 0, 2 do
+            M1 = M1 + Component(a, b, a, b)
+            TrM2 = TrM2 + Component(a, a, b, b)
+            TrMM = TrMM + Component(a, b, b, a)
+        end
+    end
+    local M23 = TrM2 + TrMM
+    return (4 * M1 - M23) / 30, (-2 * M1 + 3 * M23) / 30
+end
+
+function CalculatePowderSpectra(Hm, Hf, Tin, Tout, Psis, dZ, NPoints, Options)
+    -- Sum fundamental spectra from separate normalized states with Boltzmann weights.
+    -- Each tensor has 81 components per incident energy.
+    -- Preserve energy windows, restrictions and DenseBorder.
+    local TensorOptions = {}
+    for _, Option in ipairs(Options) do
+        TensorOptions[#TensorOptions + 1] = Option
+    end
+    TensorOptions[#TensorOptions + 1] = {"Tensor", true}
+    TensorOptions[#TensorOptions + 1] = {"TensorBasis", "cartesian"}
+
+    local A, B = 0, 0
+    for p, Psi in ipairs(Psis) do
+        local G = CreateResonantSpectra(Hm, Hf, Tin, Tout, {Psi}, TensorOptions)
+        local Ap, Bp = GetFundamentalSpectra(G, NPoints)
+        A = A + Ap * dZ[p]
+        B = B + Bp * dZ[p]
+    end
+    return A, B
+end
+
+function CalculateT(Basis, Eps, WaveVector)
     -- Calculate the transition operator in the basis of tesseral harmonics for
     -- an arbitrary polarization and wave-vector (for quadrupole operators).
     --
     -- @param Basis table: Operators forming the basis.
     -- @param Eps table: Cartesian components of the polarization vector.
-    -- @param K table: Cartesian components of the wave-vector.
+    -- @param WaveVector table: Cartesian components of the wave-vector.
 
     if #Basis == 3 then
         -- The basis for the dipolar operators must be in the order x, y, z.
@@ -500,11 +582,11 @@ function CalculateT(Basis, Eps, K)
           + Eps[3] * Basis[3]
     elseif #Basis == 5 then
         -- The basis for the quadrupolar operators must be in the order xy, xz, yz, x2y2, z2.
-        T = (Eps[1] * K[2] + Eps[2] * K[1]) / math.sqrt(3) * Basis[1]
-          + (Eps[1] * K[3] + Eps[3] * K[1]) / math.sqrt(3) * Basis[2]
-          + (Eps[2] * K[3] + Eps[3] * K[2]) / math.sqrt(3) * Basis[3]
-          + (Eps[1] * K[1] - Eps[2] * K[2]) / math.sqrt(3) * Basis[4]
-          + (Eps[3] * K[3]) * Basis[5]
+        T = (Eps[1] * WaveVector[2] + Eps[2] * WaveVector[1]) / math.sqrt(3) * Basis[1]
+          + (Eps[1] * WaveVector[3] + Eps[3] * WaveVector[1]) / math.sqrt(3) * Basis[2]
+          + (Eps[2] * WaveVector[3] + Eps[3] * WaveVector[2]) / math.sqrt(3) * Basis[3]
+          + (Eps[1] * WaveVector[1] - Eps[2] * WaveVector[2]) / math.sqrt(3) * Basis[4]
+          + (Eps[3] * WaveVector[3]) * Basis[5]
     end
     return Chop(T)
 end
@@ -715,19 +797,25 @@ Tx_2p_3d = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_2p, Inde
 Ty_2p_3d = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_2p, IndexDn_2p, {{1, -1, t * I}, {1, 1, t * I}})
 Tz_2p_3d = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_2p, IndexDn_2p, {{1, 0, 1}})
 
-Er = {t * (Eh[1] - I * Ev[1]),
-      t * (Eh[2] - I * Ev[2]),
-      t * (Eh[3] - I * Ev[3])}
+Epsh = Eps
 
-El = {-t * (Eh[1] + I * Ev[1]),
-      -t * (Eh[2] + I * Ev[2]),
-      -t * (Eh[3] + I * Ev[3])}
+Epsv = {WaveVector[2] * Epsh[3] - WaveVector[3] * Epsh[2],
+        WaveVector[3] * Epsh[1] - WaveVector[1] * Epsh[3],
+        WaveVector[1] * Epsh[2] - WaveVector[2] * Epsh[1]}
+
+Epsr = {t * (Epsh[1] - I * Epsv[1]),
+        t * (Epsh[2] - I * Epsv[2]),
+        t * (Epsh[3] - I * Epsv[3])}
+
+Epsl = {-t * (Epsh[1] + I * Epsv[1]),
+        -t * (Epsh[2] + I * Epsv[2]),
+        -t * (Epsh[3] + I * Epsv[3])}
 
 local T = {Tx_2p_3d, Ty_2p_3d, Tz_2p_3d}
-Tv_2p_3d = CalculateT(T, Ev)
-Th_2p_3d = CalculateT(T, Eh)
-Tr_2p_3d = CalculateT(T, Er)
-Tl_2p_3d = CalculateT(T, El)
+Tv_2p_3d = CalculateT(T, Epsv)
+Th_2p_3d = CalculateT(T, Epsh)
+Tr_2p_3d = CalculateT(T, Epsr)
+Tl_2p_3d = CalculateT(T, Epsl)
 Tk_2p_3d = CalculateT(T, WaveVector)
 
 -- Initialize a table with the available spectra and the required operators.

@@ -41,14 +41,19 @@ def test_calculation(test_data, tmp_path):
     #     shutil.rmtree(tmp_path)
     # os.makedirs(tmp_path, exist_ok=True)
 
-    # TODO: Save the current path before altering it.
-    settings = Config().read()
-    settings.setValue("CurrentPath", str(tmp_path))
-    settings.sync()
-
+    # Change the settings after the calculation is created, because creating
+    # the calculation can reset them to the defaults. Keep the spectra on disk
+    # to compare them with the references.
     calc = calculation(*parameters["args"])
 
+    settings = Config().read()
+    settings.setValue("CurrentPath", str(tmp_path))
+    settings.setValue("Quanty/RemoveFiles", False)
+    settings.sync()
+
     calc.set_parameter("Basename", "test")
+    # Always test the isotropic spectrum, not the default spectrum.
+    calc._calculation.spectra.toCalculate.selected = {"Isotropic Absorption"}
     for parameter in parameters:
         if parameter == "parameters":
             for args in parameters["parameters"]:
@@ -59,7 +64,11 @@ def test_calculation(test_data, tmp_path):
     calc.run()
 
     ref_path = os.path.join(os.path.dirname(__file__), "references", f"{idx}")
-    for spectrum in glob.glob("*.spec"):
+    spectra = sorted(os.path.basename(p) for p in glob.glob(f"{tmp_path}/*.spec"))
+    references = sorted(os.path.basename(p) for p in glob.glob(f"{ref_path}/*.spec"))
+    assert spectra, "The calculation did not write any spectra."
+    assert spectra == references
+    for spectrum in spectra:
         ref = np.loadtxt(os.path.join(ref_path, spectrum), skiprows=5)
         out = np.loadtxt(os.path.join(tmp_path, spectrum), skiprows=5)
         try:

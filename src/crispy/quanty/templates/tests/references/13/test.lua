@@ -35,7 +35,7 @@ Gamma = 0.1 -- Lorentzian FWHM used in the spectra calculation (eV).
 WaveVector = {0, 0, 1} -- Wave vector.
 Eps = {1, 0, 0} -- Polarization.
 
-SpectraToCalculate = {"Absorption"}  -- Types of spectra to calculate.
+SpectraToCalculate = {"Isotropic Absorption"}  -- Types of spectra to calculate.
 DenseBorder = 2000 -- Number of determinants where we switch from dense methods to sparse methods.
 ShiftSpectra = true -- If enabled, shift the spectra in the experimental energy range.
 

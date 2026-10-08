@@ -33,8 +33,7 @@ Lorentzian = {{843.0, 0.48}, {883.0, 0.48}} -- Lorentzian FWHM (eV).
 Gamma = 0.1 -- Lorentzian FWHM used in the spectra calculation (eV).
 
 WaveVector = {0, 0, 1} -- Wave vector.
-Ev = {0, 1, 0} -- Vertical polarization.
-Eh = {1, 0, 0} -- Horizontal polarization.
+Eps = {1, 0, 0} -- Polarization.
 
 SpectraToCalculate = {"Isotropic Absorption"}  -- Types of spectra to calculate.
 DenseBorder = 2000 -- Number of determinants where we switch from dense methods to sparse methods.
@@ -47,7 +46,9 @@ Prefix = "test" -- File name prefix.
 --------------------------------------------------------------------------------
 AtomicTerm = true
 CrystalFieldTerm = true
-MagneticFieldTerm = true
+LmctLigandsHybridizationTerm = false
+MlctLigandsHybridizationTerm = false
+MagneticFieldTerm = false
 ExchangeFieldTerm = false
 
 --------------------------------------------------------------------------------
@@ -63,6 +64,28 @@ IndexDn_2p = {0, 2, 4}
 IndexUp_2p = {1, 3, 5}
 IndexDn_3d = {6, 8, 10, 12, 14}
 IndexUp_3d = {7, 9, 11, 13, 15}
+
+if LmctLigandsHybridizationTerm then
+    NFermions = 26
+
+    NElectrons_L1 = 10
+
+    IndexDn_L1 = {16, 18, 20, 22, 24}
+    IndexUp_L1 = {17, 19, 21, 23, 25}
+end
+
+if MlctLigandsHybridizationTerm then
+    NFermions = 26
+
+    NElectrons_L2 = 0
+
+    IndexDn_L2 = {16, 18, 20, 22, 24}
+    IndexUp_L2 = {17, 19, 21, 23, 25}
+end
+
+if LmctLigandsHybridizationTerm and MlctLigandsHybridizationTerm then
+    return
+end
 
 --------------------------------------------------------------------------------
 -- Initialize the Hamiltonians.
@@ -139,6 +162,14 @@ end
 -- Define the crystal field term.
 --------------------------------------------------------------------------------
 if CrystalFieldTerm then
+    -- C3v crystal field for d electrons: the three-fold C3 axis is along z and a
+    -- vertical mirror plane sigma_v contains the y-axis (the Koenig & Kremer
+    -- convention, equivalent to the inversion-related Quanty D3d "Zy" setting). The
+    -- five 3d orbitals split into a1 + e + e, parametrized by Dq, Dsigma and Dtau.
+    -- The two e sets (descended from the cubic t2g and eg) share an irrep and mix,
+    -- so the Hamiltonian is not diagonal in the irrep basis (see Koenig & Kremer,
+    -- p. 56). The Akm expansion is taken from the Quanty point-group tables
+    -- (https://www.quanty.org/physics_chemistry/point_groups).
     Akm = {{4, 0, -14}, {4, 3, -2 * math.sqrt(70)}, {4, -3, 2 * math.sqrt(70)}}
     Dq_3d = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, Akm)
 
@@ -149,9 +180,9 @@ if CrystalFieldTerm then
     Dtau_3d = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, Akm)
 
 
-    Dq_3d_i = 1.0 / 10.0
-    Dsigma_3d_i = 0.0
-    Dtau_3d_i = 0.0
+    Dq_3d_i = 0.16 / 10.0
+    Dsigma_3d_i = 0.01
+    Dtau_3d_i = 0.02
 
     io.write("Diagonal values of the initial crystal field Hamiltonian:\n")
     io.write("================\n")
@@ -163,12 +194,12 @@ if CrystalFieldTerm then
     io.write("================\n")
     io.write("For the C3v symmetry, the crystal field Hamiltonian is not necessarily diagonal in\n")
     io.write("the basis of the irreducible representations. See the König and Kremer book, page 56.\n")
-    io.write(string.format("The non-digonal element <e(t2g)|H|e(eg)> is %.3f.\n", -math.sqrt(2) / 3 * (3 * Dsigma_3d_i - 5 * Dtau_3d_i)))
+    io.write(string.format("The non-diagonal element <e(t2g)|H|e(eg)> is %.3f.\n", -math.sqrt(2) / 3 * (3 * Dsigma_3d_i - 5 * Dtau_3d_i)))
     io.write("\n")
 
-    Dq_3d_f = 1.0 / 10.0
-    Dsigma_3d_f = 0.0
-    Dtau_3d_f = 0.0
+    Dq_3d_f = 0.16 / 10.0
+    Dsigma_3d_f = 0.01
+    Dtau_3d_f = 0.02
 
     H_i = H_i + Chop(
           Dq_3d_i * Dq_3d
@@ -180,6 +211,175 @@ if CrystalFieldTerm then
         + Dsigma_3d_f * Dsigma_3d
         + Dtau_3d_f * Dtau_3d)
 end
+
+--------------------------------------------------------------------------------
+-- Define the 3d-ligands hybridization term (LMCT).
+--------------------------------------------------------------------------------
+if LmctLigandsHybridizationTerm then
+    N_L1 = NewOperator("Number", NFermions, IndexUp_L1, IndexUp_L1, {1, 1, 1, 1, 1})
+         + NewOperator("Number", NFermions, IndexDn_L1, IndexDn_L1, {1, 1, 1, 1, 1})
+
+    Delta_3d_L1_i = 0.0
+    E_3d_i = (10 * Delta_3d_L1_i - NElectrons_3d * (19 + NElectrons_3d) * U_3d_3d_i / 2) / (10 + NElectrons_3d)
+    E_L1_i = NElectrons_3d * ((1 + NElectrons_3d) * U_3d_3d_i / 2 - Delta_3d_L1_i) / (10 + NElectrons_3d)
+
+    Delta_3d_L1_f = 0.0
+    E_3d_f = (10 * Delta_3d_L1_f - NElectrons_3d * (31 + NElectrons_3d) * U_3d_3d_f / 2 - 90 * U_2p_3d_f) / (16 + NElectrons_3d)
+    E_2p_f = (10 * Delta_3d_L1_f + (1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_f / 2 - (10 + NElectrons_3d) * U_2p_3d_f)) / (16 + NElectrons_3d)
+    E_L1_f = ((1 + NElectrons_3d) * (NElectrons_3d * U_3d_3d_f / 2 + 6 * U_2p_3d_f) - (6 + NElectrons_3d) * Delta_3d_L1_f) / (16 + NElectrons_3d)
+
+    H_i = H_i + Chop(
+          E_3d_i * N_3d
+        + E_L1_i * N_L1)
+
+    H_f = H_f + Chop(
+          E_3d_f * N_3d
+        + E_2p_f * N_2p
+        + E_L1_f * N_L1)
+
+    -- The 3d and ligand orbitals use the same C3v basis: a1(t2g), e(eg), and
+    -- e(t2g). Each hybridization parameter couples a 3d irrep only with the ligand
+    -- irrep that has the same cubic parent (see Tables S7 and S8 in the supporting
+    -- information of Retegan et al., Inorg. Chem. 62, 18864 (2023),
+    -- https://doi.org/10.1021/acs.inorgchem.3c02158). Each Akm list is the
+    -- expansion of the projector on one irrep, and the three projectors sum to
+    -- the identity. The ligand crystal field uses the Akm of the 3d crystal field.
+    Akm = {{4, 0, -14}, {4, 3, -2 * math.sqrt(70)}, {4, -3, 2 * math.sqrt(70)}}
+    Dq_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, Akm)
+
+    Akm = {{2, 0, -7}}
+    Dsigma_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, Akm)
+
+    Akm = {{4, 0, -21}}
+    Dtau_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, Akm)
+
+    Akm = {{0, 0, 1 / 5}, {2, 0, 1}, {4, 0, 9 / 5}}
+    Va1_3d_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, IndexUp_3d, IndexDn_3d, Akm)
+              + NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_L1, IndexDn_L1, Akm)
+
+    Akm = {{0, 0, 2 / 5}, {4, 0, -7 / 5}, {4, 3, -math.sqrt(70) / 5}, {4, -3, math.sqrt(70) / 5}}
+    Ve_eg_3d_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, IndexUp_3d, IndexDn_3d, Akm)
+                + NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_L1, IndexDn_L1, Akm)
+
+    Akm = {{0, 0, 2 / 5}, {2, 0, -1}, {4, 0, -2 / 5}, {4, 3, math.sqrt(70) / 5}, {4, -3, -math.sqrt(70) / 5}}
+    Ve_t2g_3d_L1 = NewOperator("CF", NFermions, IndexUp_L1, IndexDn_L1, IndexUp_3d, IndexDn_3d, Akm)
+                 + NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_L1, IndexDn_L1, Akm)
+
+    Dq_L1_i = 0.0 / 10.0
+    Dsigma_L1_i = 0.0
+    Dtau_L1_i = 0.0
+    Va1_3d_L1_i = 0.0
+    Ve_eg_3d_L1_i = 0.0
+    Ve_t2g_3d_L1_i = 0.0
+
+    Dq_L1_f = 0.0 / 10.0
+    Dsigma_L1_f = 0.0
+    Dtau_L1_f = 0.0
+    Va1_3d_L1_f = 0.0
+    Ve_eg_3d_L1_f = 0.0
+    Ve_t2g_3d_L1_f = 0.0
+
+    H_i = H_i + Chop(
+          Dq_L1_i * Dq_L1
+        + Dsigma_L1_i * Dsigma_L1
+        + Dtau_L1_i * Dtau_L1
+        + Va1_3d_L1_i * Va1_3d_L1
+        + Ve_eg_3d_L1_i * Ve_eg_3d_L1
+        + Ve_t2g_3d_L1_i * Ve_t2g_3d_L1)
+
+    H_f = H_f + Chop(
+          Dq_L1_f * Dq_L1
+        + Dsigma_L1_f * Dsigma_L1
+        + Dtau_L1_f * Dtau_L1
+        + Va1_3d_L1_f * Va1_3d_L1
+        + Ve_eg_3d_L1_f * Ve_eg_3d_L1
+        + Ve_t2g_3d_L1_f * Ve_t2g_3d_L1)
+end
+
+--------------------------------------------------------------------------------
+-- Define the 3d-ligands hybridization term (MLCT).
+--------------------------------------------------------------------------------
+if MlctLigandsHybridizationTerm then
+    N_L2 = NewOperator("Number", NFermions, IndexUp_L2, IndexUp_L2, {1, 1, 1, 1, 1})
+         + NewOperator("Number", NFermions, IndexDn_L2, IndexDn_L2, {1, 1, 1, 1, 1})
+
+    Delta_3d_L2_i = 0.0
+    E_3d_i = U_3d_3d_i * (-NElectrons_3d + 1) / 2
+    E_L2_i = Delta_3d_L2_i + U_3d_3d_i * NElectrons_3d / 2 - U_3d_3d_i / 2
+
+    Delta_3d_L2_f = 0.0
+    E_3d_f = -(U_3d_3d_f * NElectrons_3d^2 + 11 * U_3d_3d_f * NElectrons_3d + 60 * U_2p_3d_f) / (2 * NElectrons_3d + 12)
+    E_2p_f = NElectrons_3d * (U_3d_3d_f * NElectrons_3d + U_3d_3d_f - 2 * U_2p_3d_f * NElectrons_3d - 2 * U_2p_3d_f) / (2 * (NElectrons_3d + 6))
+    E_L2_f = (2 * Delta_3d_L2_f * NElectrons_3d + 12 * Delta_3d_L2_f + U_3d_3d_f * NElectrons_3d^2 - U_3d_3d_f * NElectrons_3d - 12 * U_3d_3d_f + 12 * U_2p_3d_f * NElectrons_3d + 12 * U_2p_3d_f) / (2 * (NElectrons_3d + 6))
+
+    H_i = H_i + Chop(
+          E_3d_i * N_3d
+        + E_L2_i * N_L2)
+
+    H_f = H_f + Chop(
+          E_3d_f * N_3d
+        + E_2p_f * N_2p
+        + E_L2_f * N_L2)
+
+    -- The 3d and ligand orbitals use the same C3v basis: a1(t2g), e(eg), and
+    -- e(t2g). Each hybridization parameter couples a 3d irrep only with the ligand
+    -- irrep that has the same cubic parent (see Tables S7 and S8 in the supporting
+    -- information of Retegan et al., Inorg. Chem. 62, 18864 (2023),
+    -- https://doi.org/10.1021/acs.inorgchem.3c02158). Each Akm list is the
+    -- expansion of the projector on one irrep, and the three projectors sum to
+    -- the identity. The ligand crystal field uses the Akm of the 3d crystal field.
+    Akm = {{4, 0, -14}, {4, 3, -2 * math.sqrt(70)}, {4, -3, 2 * math.sqrt(70)}}
+    Dq_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, Akm)
+
+    Akm = {{2, 0, -7}}
+    Dsigma_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, Akm)
+
+    Akm = {{4, 0, -21}}
+    Dtau_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, Akm)
+
+    Akm = {{0, 0, 1 / 5}, {2, 0, 1}, {4, 0, 9 / 5}}
+    Va1_3d_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, IndexUp_3d, IndexDn_3d, Akm)
+              + NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_L2, IndexDn_L2, Akm)
+
+    Akm = {{0, 0, 2 / 5}, {4, 0, -7 / 5}, {4, 3, -math.sqrt(70) / 5}, {4, -3, math.sqrt(70) / 5}}
+    Ve_eg_3d_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, IndexUp_3d, IndexDn_3d, Akm)
+                + NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_L2, IndexDn_L2, Akm)
+
+    Akm = {{0, 0, 2 / 5}, {2, 0, -1}, {4, 0, -2 / 5}, {4, 3, math.sqrt(70) / 5}, {4, -3, -math.sqrt(70) / 5}}
+    Ve_t2g_3d_L2 = NewOperator("CF", NFermions, IndexUp_L2, IndexDn_L2, IndexUp_3d, IndexDn_3d, Akm)
+                 + NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_L2, IndexDn_L2, Akm)
+
+    Dq_L2_i = 0.0 / 10.0
+    Dsigma_L2_i = 0.0
+    Dtau_L2_i = 0.0
+    Va1_3d_L2_i = 0.0
+    Ve_eg_3d_L2_i = 0.0
+    Ve_t2g_3d_L2_i = 0.0
+
+    Dq_L2_f = 0.0 / 10.0
+    Dsigma_L2_f = 0.0
+    Dtau_L2_f = 0.0
+    Va1_3d_L2_f = 0.0
+    Ve_eg_3d_L2_f = 0.0
+    Ve_t2g_3d_L2_f = 0.0
+
+    H_i = H_i + Chop(
+          Dq_L2_i * Dq_L2
+        + Dsigma_L2_i * Dsigma_L2
+        + Dtau_L2_i * Dtau_L2
+        + Va1_3d_L2_i * Va1_3d_L2
+        + Ve_eg_3d_L2_i * Ve_eg_3d_L2
+        + Ve_t2g_3d_L2_i * Ve_t2g_3d_L2)
+
+    H_f = H_f + Chop(
+          Dq_L2_f * Dq_L2
+        + Dsigma_L2_f * Dsigma_L2
+        + Dtau_L2_f * Dtau_L2
+        + Va1_3d_L2_f * Va1_3d_L2
+        + Ve_eg_3d_L2_f * Ve_eg_3d_L2
+        + Ve_t2g_3d_L2_f * Ve_t2g_3d_L2)
+end
+
 --------------------------------------------------------------------------------
 -- Define the magnetic field and exchange field terms.
 --------------------------------------------------------------------------------
@@ -281,6 +481,30 @@ FinalRestrictions = {NFermions, NBosons, {"111111 0000000000", NElectrons_2p - 1
 
 CalculationRestrictions = nil
 
+if LmctLigandsHybridizationTerm then
+    InitialRestrictions = {NFermions, NBosons, {"111111 0000000000 0000000000", NElectrons_2p, NElectrons_2p},
+                                               {"000000 1111111111 0000000000", NElectrons_3d, NElectrons_3d},
+                                               {"000000 0000000000 1111111111", NElectrons_L1, NElectrons_L1}}
+
+    FinalRestrictions = {NFermions, NBosons, {"111111 0000000000 0000000000", NElectrons_2p - 1, NElectrons_2p - 1},
+                                             {"000000 1111111111 0000000000", NElectrons_3d + 1, NElectrons_3d + 1},
+                                             {"000000 0000000000 1111111111", NElectrons_L1, NElectrons_L1}}
+
+    CalculationRestrictions = {NFermions, NBosons, {"000000 0000000000 1111111111", NElectrons_L1 - (NConfigurations - 1), NElectrons_L1}}
+end
+
+if MlctLigandsHybridizationTerm then
+    InitialRestrictions = {NFermions, NBosons, {"111111 0000000000 0000000000", NElectrons_2p, NElectrons_2p},
+                                               {"000000 1111111111 0000000000", NElectrons_3d, NElectrons_3d},
+                                               {"000000 0000000000 1111111111", NElectrons_L2, NElectrons_L2}}
+
+    FinalRestrictions = {NFermions, NBosons, {"111111 0000000000 0000000000", NElectrons_2p - 1, NElectrons_2p - 1},
+                                             {"000000 1111111111 0000000000", NElectrons_3d + 1, NElectrons_3d + 1},
+                                             {"000000 0000000000 1111111111", NElectrons_L2, NElectrons_L2}}
+
+    CalculationRestrictions = {NFermions, NBosons, {"000000 0000000000 1111111111", NElectrons_L2, NElectrons_L2 + (NConfigurations - 1)}}
+end
+
 --------------------------------------------------------------------------------
 -- Define some helper functions.
 --------------------------------------------------------------------------------
@@ -348,13 +572,89 @@ function SaveSpectrum(G, Filename, Gaussian, Lorentzian, Pcl)
     G.Print({{"file", Filename .. ".spec"}})
 end
 
-function CalculateT(Basis, Eps, K)
+function GetResonantSpectrum(G, dZ, NOperators, NPsis, NPoints)
+    -- Sum the resonant spectrum over the operator combinations and wavefunctions,
+    -- weighted by the Boltzmann probabilities. The spectra object returned by
+    -- CreateResonantSpectra contains one block of (NPoints + 1) rows for each
+    -- operator combination and wavefunction.
+    --
+    -- @param G userdata: Spectra object returned by CreateResonantSpectra.
+    -- @param dZ table: Boltzmann prefactors for each wavefunction.
+    -- @param NOperators number: Number of transition operator combinations.
+    -- @param NPsis number: Number of wavefunctions.
+    -- @param NPoints number: Number of points along the incident energy axis.
+
+    local Spectrum = 0
+    local Shift = 0
+    for i = 1, NPsis do
+        for _ = 1, NOperators do
+            local Indexes = {}
+            for k = 1, NPoints + 1 do
+                table.insert(Indexes, k + Shift)
+            end
+            Spectrum = Spectrum + Spectra.Element(G, Indexes) * dZ[i]
+            Shift = Shift + NPoints + 1
+        end
+    end
+    return Spectrum
+end
+
+function GetFundamentalSpectra(G, NPoints)
+    -- Extract the powder invariants from the Cartesian dipole-dipole tensor
+    -- for a SINGLE initial state (Tensor=true, TensorBasis="cartesian"). Both operator
+    -- lists must be {Tx, Ty, Tz}. Quanty stores the outgoing index
+    -- fastest: channel(a,b) = 3*a+b, with zero-based incoming a and outgoing b.
+    -- The ket channel is fastest within the 9 x 9 coherence matrix, followed by
+    -- the bra channel; each component has NPoints+1 incident-energy rows.
+    local function Component(a, b, c, d)
+        local Block = (3 * a + b) + 9 * (3 * c + d)
+        local Indexes = {}
+        for k = 1, NPoints + 1 do
+            Indexes[k] = Block * (NPoints + 1) + k
+        end
+        return Spectra.Element(G, Indexes)
+    end
+
+    local M1, TrM2, TrMM = 0, 0, 0
+    for a = 0, 2 do
+        for b = 0, 2 do
+            M1 = M1 + Component(a, b, a, b)
+            TrM2 = TrM2 + Component(a, a, b, b)
+            TrMM = TrMM + Component(a, b, b, a)
+        end
+    end
+    local M23 = TrM2 + TrMM
+    return (4 * M1 - M23) / 30, (-2 * M1 + 3 * M23) / 30
+end
+
+function CalculatePowderSpectra(Hm, Hf, Tin, Tout, Psis, dZ, NPoints, Options)
+    -- Sum fundamental spectra from separate normalized states with Boltzmann weights.
+    -- Each tensor has 81 components per incident energy.
+    -- Preserve energy windows, restrictions and DenseBorder.
+    local TensorOptions = {}
+    for _, Option in ipairs(Options) do
+        TensorOptions[#TensorOptions + 1] = Option
+    end
+    TensorOptions[#TensorOptions + 1] = {"Tensor", true}
+    TensorOptions[#TensorOptions + 1] = {"TensorBasis", "cartesian"}
+
+    local A, B = 0, 0
+    for p, Psi in ipairs(Psis) do
+        local G = CreateResonantSpectra(Hm, Hf, Tin, Tout, {Psi}, TensorOptions)
+        local Ap, Bp = GetFundamentalSpectra(G, NPoints)
+        A = A + Ap * dZ[p]
+        B = B + Bp * dZ[p]
+    end
+    return A, B
+end
+
+function CalculateT(Basis, Eps, WaveVector)
     -- Calculate the transition operator in the basis of tesseral harmonics for
     -- an arbitrary polarization and wave-vector (for quadrupole operators).
     --
     -- @param Basis table: Operators forming the basis.
     -- @param Eps table: Cartesian components of the polarization vector.
-    -- @param K table: Cartesian components of the wave-vector.
+    -- @param WaveVector table: Cartesian components of the wave-vector.
 
     if #Basis == 3 then
         -- The basis for the dipolar operators must be in the order x, y, z.
@@ -363,11 +663,11 @@ function CalculateT(Basis, Eps, K)
           + Eps[3] * Basis[3]
     elseif #Basis == 5 then
         -- The basis for the quadrupolar operators must be in the order xy, xz, yz, x2y2, z2.
-        T = (Eps[1] * K[2] + Eps[2] * K[1]) / math.sqrt(3) * Basis[1]
-          + (Eps[1] * K[3] + Eps[3] * K[1]) / math.sqrt(3) * Basis[2]
-          + (Eps[2] * K[3] + Eps[3] * K[2]) / math.sqrt(3) * Basis[3]
-          + (Eps[1] * K[1] - Eps[2] * K[2]) / math.sqrt(3) * Basis[4]
-          + (Eps[3] * K[3]) * Basis[5]
+        T = (Eps[1] * WaveVector[2] + Eps[2] * WaveVector[1]) / math.sqrt(3) * Basis[1]
+          + (Eps[1] * WaveVector[3] + Eps[3] * WaveVector[1]) / math.sqrt(3) * Basis[2]
+          + (Eps[2] * WaveVector[3] + Eps[3] * WaveVector[2]) / math.sqrt(3) * Basis[3]
+          + (Eps[1] * WaveVector[1] - Eps[2] * WaveVector[2]) / math.sqrt(3) * Basis[4]
+          + (Eps[3] * WaveVector[3]) * Basis[5]
     end
     return Chop(T)
 end
@@ -543,6 +843,24 @@ Header = Header .. "State           E     <S^2>     <L^2>     <J^2>      <Sk>   
 Header = Header .. "=================================================================================================================================\n"
 Footer = "=================================================================================================================================\n"
 
+if LmctLigandsHybridizationTerm then
+    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_3d, N_2p, N_3d, N_L1, "dZ"}
+    Header = "Analysis of the %s Hamiltonian:\n"
+    Header = Header .. "===========================================================================================================================================\n"
+    Header = Header .. "State           E     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_2p>    <N_3d>    <N_L1>          dZ\n"
+    Header = Header .. "===========================================================================================================================================\n"
+    Footer = "===========================================================================================================================================\n"
+end
+
+if MlctLigandsHybridizationTerm then
+    Operators = {H_i, Ssqr, Lsqr, Jsqr, Sk, Lk, Jk, Tk, ldots_3d, N_2p, N_3d, N_L2, "dZ"}
+    Header = "Analysis of the %s Hamiltonian:\n"
+    Header = Header .. "===========================================================================================================================================\n"
+    Header = Header .. "State           E     <S^2>     <L^2>     <J^2>      <Sk>      <Lk>      <Jk>      <Tk>     <l.s>    <N_2p>    <N_3d>    <N_L2>          dZ\n"
+    Header = Header .. "===========================================================================================================================================\n"
+    Footer = "===========================================================================================================================================\n"
+end
+
 local Psis_i, dZ_i = WavefunctionsAndBoltzmannFactors(H_i, NPsis, NPsisAuto, Temperature, nil, InitialRestrictions, CalculationRestrictions)
 PrintHamiltonianAnalysis(Psis_i, Operators, dZ_i, string.format(Header, "initial"), Footer)
 
@@ -560,19 +878,25 @@ Tx_2p_3d = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_2p, Inde
 Ty_2p_3d = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_2p, IndexDn_2p, {{1, -1, t * I}, {1, 1, t * I}})
 Tz_2p_3d = NewOperator("CF", NFermions, IndexUp_3d, IndexDn_3d, IndexUp_2p, IndexDn_2p, {{1, 0, 1}})
 
-Er = {t * (Eh[1] - I * Ev[1]),
-      t * (Eh[2] - I * Ev[2]),
-      t * (Eh[3] - I * Ev[3])}
+Epsh = Eps
 
-El = {-t * (Eh[1] + I * Ev[1]),
-      -t * (Eh[2] + I * Ev[2]),
-      -t * (Eh[3] + I * Ev[3])}
+Epsv = {WaveVector[2] * Epsh[3] - WaveVector[3] * Epsh[2],
+        WaveVector[3] * Epsh[1] - WaveVector[1] * Epsh[3],
+        WaveVector[1] * Epsh[2] - WaveVector[2] * Epsh[1]}
+
+Epsr = {t * (Epsh[1] - I * Epsv[1]),
+        t * (Epsh[2] - I * Epsv[2]),
+        t * (Epsh[3] - I * Epsv[3])}
+
+Epsl = {-t * (Epsh[1] + I * Epsv[1]),
+        -t * (Epsh[2] + I * Epsv[2]),
+        -t * (Epsh[3] + I * Epsv[3])}
 
 local T = {Tx_2p_3d, Ty_2p_3d, Tz_2p_3d}
-Tv_2p_3d = CalculateT(T, Ev)
-Th_2p_3d = CalculateT(T, Eh)
-Tr_2p_3d = CalculateT(T, Er)
-Tl_2p_3d = CalculateT(T, El)
+Tv_2p_3d = CalculateT(T, Epsv)
+Th_2p_3d = CalculateT(T, Epsh)
+Tr_2p_3d = CalculateT(T, Epsr)
+Tl_2p_3d = CalculateT(T, Epsl)
 Tk_2p_3d = CalculateT(T, WaveVector)
 
 -- Initialize a table with the available spectra and the required operators.
