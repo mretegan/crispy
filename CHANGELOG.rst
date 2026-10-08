@@ -9,6 +9,9 @@ and this project adheres to `Calendar Versioning <https://calver.org/>`_.
 `Unreleased`_
 =============
 
+`2026.1`_ - 2026-10-08
+======================
+
 Added
 -----
 - Energy dependent Lorentzian broadening for one-dimensional spectra. Set the
@@ -16,6 +19,9 @@ Added
   API.
 - The notebook API accepts ASCII spellings of names with Greek letters, e.g.
   zeta(3d) for ζ(3d) and Kalpha (1s2p) for Kα (1s2p).
+- Ligands hybridization (LMCT and MLCT) for the C3v symmetry of the d block.
+  A C3v calculation uses either the ligands hybridization or the 3d-4p
+  hybridization.
 
 Changed
 -------
@@ -262,7 +268,8 @@ Added
 - Interactive plotting of the results.
 - Abstract list model and tree model to display/modify the input parameters.
 
-.. _Unreleased: https://github.com/mretegan/crispy/compare/v2026.0...HEAD
+.. _Unreleased: https://github.com/mretegan/crispy/compare/v2026.1...HEAD
+.. _2026.1: https://github.com/mretegan/crispy/compare/v2026.0...v2026.1
 .. _2026.0: https://github.com/mretegan/crispy/compare/v0.8.0...v2026.0
 .. _0.8.0: https://github.com/mretegan/crispy/compare/v0.7.4...v0.8.0
 .. _0.7.4: https://github.com/mretegan/crispy/compare/v0.7.3...v0.7.4
