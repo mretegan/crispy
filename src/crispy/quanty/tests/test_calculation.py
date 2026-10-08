@@ -120,6 +120,30 @@ def test_symmetry_change_handles_differing_term_sets():
     assert crystal_field_names(new) == {"Dμ(3d)", "Dν(3d)"}  # noqa: RUF001
 
 
+def test_c3v_k_edge_hybridization_terms_are_exclusive():
+    """C3v K-edge XAS has the ligands and the 3d-4p hybridization terms. Enabling
+    one of them disables the others."""
+    model = TreeModel()
+    calculation = Calculation(
+        symbol="Ni",
+        charge="2+",
+        symmetry="C3v",
+        experiment="XAS",
+        edge="K (1s)",
+        parent=model.rootItem(),
+    )
+    lmct = find_term(calculation, "3d-Ligands Hybridization (LMCT)")
+    mlct = find_term(calculation, "3d-Ligands Hybridization (MLCT)")
+    pd = find_term(calculation, "3d-4p Hybridization")
+
+    lmct.setData(0, Qt.CheckState.Checked, Qt.CheckStateRole)
+    pd.setData(0, Qt.CheckState.Checked, Qt.CheckStateRole)
+    assert (lmct.isEnabled(), mlct.isEnabled(), pd.isEnabled()) == (False, False, True)
+
+    mlct.setData(0, Qt.CheckState.Checked, Qt.CheckStateRole)
+    assert (lmct.isEnabled(), mlct.isEnabled(), pd.isEnabled()) == (False, True, False)
+
+
 def test_experimental_conditions_transfer_across_element_change():
     """Temperature and magnetic field are carried over even when the element
     changes; the magnetic field term is recomputed for the new calculation."""

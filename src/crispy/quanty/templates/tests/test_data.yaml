@@ -72,7 +72,7 @@
     terms:
       - name: Crystal Field
         parameters: 
-          - ["Dq(3d)", 0.16]
+          - ["10Dq(3d)", 0.16]
           - ["Ds(3d)", 0.01]
           - ["Dt(3d)", 0.01]
 
@@ -93,7 +93,7 @@
     terms:
       - name: Crystal Field
         parameters: 
-          - ["Dq(3d)", 0.16]
+          - ["10Dq(3d)", 0.16]
           - ["Dsigma(3d)", 0.01]
           - ["Dtau(3d)", 0.02]
 
@@ -150,6 +150,58 @@
           - ["Ma1(4f)", 0.08]
           - ["Me(4f)", 0.04]
 
+# d-block elements, C3v, XAS, p-type core-hole, crystal field + LMCT
+12:
+  args: ["Ni2+", "C3v", "XAS", "L2,3 (2p)"]
+  hamiltonian:
+    terms:
+      - name: Atomic
+        parameters:
+          - ["U(3d,3d)", 7.5]
+          - ["U(2p,3d)", 8.5]
+      - name: Crystal Field
+        parameters:
+          - ["10Dq(3d)", 1.6]
+          - ["Dσ(3d)", 0.05]
+          - ["Dτ(3d)", -0.03]
+      - name: 3d-Ligands Hybridization (LMCT)
+        parameters:
+          - ["10Dq(L1)", 0.8]
+          - ["Dσ(L1)", 0.02]
+          - ["Dτ(L1)", 0.01]
+          - ["Δ(3d,L1)", 2.0]
+          - ["Va1(3d,L1)", 1.1]
+          - ["Ve(eg)(3d,L1)", 2.0]
+          - ["Ve(t2g)(3d,L1)", 0.9]
+
+# d-block elements, C3v, XAS, p-type core-hole, crystal field + MLCT
+13:
+  args: ["Ni2+", "C3v", "XAS", "L2,3 (2p)"]
+  hamiltonian:
+    terms:
+      - name: Atomic
+        parameters:
+          - ["U(3d,3d)", 7.5]
+          - ["U(2p,3d)", 8.5]
+      - name: Crystal Field
+        parameters:
+          - ["10Dq(3d)", 1.1]
+          - ["Dσ(3d)", 0.04]
+          - ["Dτ(3d)", 0.02]
+      - name: 3d-Ligands Hybridization (MLCT)
+        parameters:
+          - ["10Dq(L2)", 0.6]
+          - ["Dσ(L2)", -0.02]
+          - ["Dτ(L2)", 0.01]
+          - ["Δ(3d,L2)", 2.3]
+          - ["Va1(3d,L2)", 1.3]
+          - ["Ve(eg)(3d,L2)", 2.1]
+          - ["Ve(t2g)(3d,L2)", 1.1]
+  test:
+    numpy_allclose_kwargs:
+      rtol: 1.e-4
+      atol: 1.e-7
+
 # d-block elements, Td, XAS, p-type core-hole, crystal field
 
 # d-block elements, D4h, XAS, p-type core-hole, crystal field + LMCT
@@ -162,6 +214,31 @@
 # d-block elements, D4h, XAS, s-type core-hole, crystal field + MLCT
 
 # d-block elements, C3v, XAS, s-type core-hole, crystal field + 3d-4p hybridization
+
+# d-block elements, C3v, XAS, s-type core-hole, crystal field + LMCT
+14:
+  args: ["Ni2+", "C3v", "XAS", "K (1s)"]
+  hamiltonian:
+    terms:
+      - name: Atomic
+        parameters:
+          - ["U(3d,3d)", 7.5]
+          - ["U(1s,3d)", 8.5]
+      - name: Crystal Field
+        parameters:
+          - ["10Dq(3d)", 1.2]
+          - ["Dσ(3d)", 0.05]
+          - ["Dτ(3d)", -0.03]
+      - name: 3d-Ligands Hybridization (LMCT)
+        parameters:
+          - ["10Dq(L1)", 0.6]
+          - ["Dσ(L1)", 0.02]
+          - ["Dτ(L1)", 0.01]
+          - ["Δ(3d,L1)", 2.0]
+          - ["Va1(3d,L1)", 1.1]
+          - ["Ve(eg)(3d,L1)", 2.0]
+          - ["Ve(t2g)(3d,L1)", 0.9]
+
 # d-block elements, Td, XAS, s-type core-hole, crystal field + 3d-4p hybridization
 
 # XAS, magnetic and exchange fields
