@@ -277,8 +277,8 @@ class CrystalFieldTerm(HamiltonianTerm):
                 # The f orbitals split into a2u + t1u + t2u.
                 names, values = ("Ea2u", "Et1u", "Et2u"), (-1.8, 0.3, 0.3)
             elif self.symmetry.value == "Td":
-                # The f orbitals split into a2 + t1 + t2.
-                names = ("Ea2", "Et1", "Et2")
+                # The f orbitals split into a1 + t1 + t2
+                names = ("Ea1", "Et1", "Et2")
                 values = (0.0, 0.0, 0.0)
             elif self.symmetry.value == "D4h":
                 # Tetragonal field given as the irrep energies (a2u, b1u, b2u and
@@ -501,24 +501,15 @@ class HamiltonianTerms(BaseItem):
             # TODO: Td is still problematic due to the another set of t2 ligands
             # http://quanty.org/forum/data/2019/metal_3d_to_ligand_hybridization_in_td
             if calculation.symmetry.value in ("Oh", "D4h"):
-                # TODO: These exceptions have to be advertised somewhere as the
-                # generation of templates must also use them.
-                if (
-                    calculation.symmetry.value == "Td"
-                    and calculation.edge.value == "K (1s)"
-                    and calculation.experiment.value == "XAS"
-                ):
-                    pass
-                else:
-                    valenceSubshell = calculation.element.valenceSubshell
-                    name = f"{valenceSubshell}-Ligands Hybridization (LMCT)"
-                    self.lmctLigandsHybridization = LmctLigandsHybridizationTerm(
-                        parent=self, name=name
-                    )
-                    name = f"{valenceSubshell}-Ligands Hybridization (MLCT)"
-                    self.mlctLigandsHybridization = MlctLigandsHybridizationTerm(
-                        parent=self, name=name
-                    )
+                valenceSubshell = calculation.element.valenceSubshell
+                name = f"{valenceSubshell}-Ligands Hybridization (LMCT)"
+                self.lmctLigandsHybridization = LmctLigandsHybridizationTerm(
+                    parent=self, name=name
+                )
+                name = f"{valenceSubshell}-Ligands Hybridization (MLCT)"
+                self.mlctLigandsHybridization = MlctLigandsHybridizationTerm(
+                    parent=self, name=name
+                )
 
             # Add pd-hybridization term.
             if (

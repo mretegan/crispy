@@ -206,62 +206,63 @@ if CrystalFieldTerm then
     -- Td crystal field for f electrons, cube-axis (xyz) setting: the tetrahedron is
     -- inscribed in a cube with edges along x, y and z (S4/C2 axes along x, y, z;
     -- C3 axes along the cube diagonals [+-1, +-1, +-1]). The seven 5f orbitals
-    -- split into a2 + t1 + t2; energies are referenced to their (degeneracy-weighted)
+    -- split into a1 + t1 + t2; energies are referenced to their (degeneracy-weighted)
     -- average so the k = 0 monopole vanishes. The Akm expansion is taken from the
     -- Quanty point-group tables (https://www.quanty.org/physics_chemistry/point_groups).
-    Eav_5f_i = ($Ea2(5f)_i_value + 3 * $Et1(5f)_i_value + 3 * $Et2(5f)_i_value) / 7
-    Ea2_5f_i = $Ea2(5f)_i_value - Eav_5f_i
+    -- The Quanty table labels the singlet a2, and a1 is the Mulliken label.
+    Eav_5f_i = ($Ea1(5f)_i_value + 3 * $Et1(5f)_i_value + 3 * $Et2(5f)_i_value) / 7
+    Ea1_5f_i = $Ea1(5f)_i_value - Eav_5f_i
     Et1_5f_i = $Et1(5f)_i_value - Eav_5f_i
     Et2_5f_i = $Et2(5f)_i_value - Eav_5f_i
 
     Akm_5f_i = {
-        {0, 0, (1 / 7) * (Ea2_5f_i + 3 * (Et1_5f_i + Et2_5f_i))},
-        {4, 0, (-3 / 4) * (2 * Ea2_5f_i + Et1_5f_i - 3 * Et2_5f_i)},
-        {4, -4, (-3 / 4) * (sqrt(5 / 14) * (2 * Ea2_5f_i + Et1_5f_i - 3 * Et2_5f_i))},
-        {4, 4, (-3 / 4) * (sqrt(5 / 14) * (2 * Ea2_5f_i + Et1_5f_i - 3 * Et2_5f_i))},
-        {6, 0, (39 / 280) * (4 * Ea2_5f_i - 9 * Et1_5f_i + 5 * Et2_5f_i)},
-        {6, -4, (-39 / 40) * ((1 / sqrt(14)) * (4 * Ea2_5f_i - 9 * Et1_5f_i + 5 * Et2_5f_i))},
-        {6, 4, (-39 / 40) * ((1 / sqrt(14)) * (4 * Ea2_5f_i - 9 * Et1_5f_i + 5 * Et2_5f_i))}
+        {0, 0, (1 / 7) * (Ea1_5f_i + 3 * (Et1_5f_i + Et2_5f_i))},
+        {4, 0, (-3 / 4) * (2 * Ea1_5f_i + Et1_5f_i - 3 * Et2_5f_i)},
+        {4, -4, (-3 / 4) * (sqrt(5 / 14) * (2 * Ea1_5f_i + Et1_5f_i - 3 * Et2_5f_i))},
+        {4, 4, (-3 / 4) * (sqrt(5 / 14) * (2 * Ea1_5f_i + Et1_5f_i - 3 * Et2_5f_i))},
+        {6, 0, (39 / 280) * (4 * Ea1_5f_i - 9 * Et1_5f_i + 5 * Et2_5f_i)},
+        {6, -4, (-39 / 40) * ((1 / sqrt(14)) * (4 * Ea1_5f_i - 9 * Et1_5f_i + 5 * Et2_5f_i))},
+        {6, 4, (-39 / 40) * ((1 / sqrt(14)) * (4 * Ea1_5f_i - 9 * Et1_5f_i + 5 * Et2_5f_i))}
     }
 
-    io.write("Initial-state Td crystal field Hamiltonian (a2, t1, t2) diagonal energies:\n")
+    io.write("Initial-state Td crystal field Hamiltonian (a1, t1, t2) diagonal energies:\n")
     io.write("================\n")
     io.write("Irrep.         E\n")
     io.write("================\n")
-    io.write(string.format("%-7s %8.3f\n", "a2", Ea2_5f_i))
+    io.write(string.format("%-7s %8.3f\n", "a1", Ea1_5f_i))
     io.write(string.format("%-7s %8.3f\n", "t1", Et1_5f_i))
     io.write(string.format("%-7s %8.3f\n", "t2", Et2_5f_i))
     io.write("================\n")
     io.write("\n")
 
-    Eav_5f_m = ($Ea2(5f)_m_value + 3 * $Et1(5f)_m_value + 3 * $Et2(5f)_m_value) / 7
-    Ea2_5f_m = $Ea2(5f)_m_value - Eav_5f_m
+    Eav_5f_m = ($Ea1(5f)_m_value + 3 * $Et1(5f)_m_value + 3 * $Et2(5f)_m_value) / 7
+    Ea1_5f_m = $Ea1(5f)_m_value - Eav_5f_m
     Et1_5f_m = $Et1(5f)_m_value - Eav_5f_m
     Et2_5f_m = $Et2(5f)_m_value - Eav_5f_m
 
     Akm_5f_m = {
-        {0, 0, (1 / 7) * (Ea2_5f_m + 3 * (Et1_5f_m + Et2_5f_m))},
-        {4, 0, (-3 / 4) * (2 * Ea2_5f_m + Et1_5f_m - 3 * Et2_5f_m)},
-        {4, -4, (-3 / 4) * (sqrt(5 / 14) * (2 * Ea2_5f_m + Et1_5f_m - 3 * Et2_5f_m))},
-        {4, 4, (-3 / 4) * (sqrt(5 / 14) * (2 * Ea2_5f_m + Et1_5f_m - 3 * Et2_5f_m))},
-        {6, 0, (39 / 280) * (4 * Ea2_5f_m - 9 * Et1_5f_m + 5 * Et2_5f_m)},
-        {6, -4, (-39 / 40) * ((1 / sqrt(14)) * (4 * Ea2_5f_m - 9 * Et1_5f_m + 5 * Et2_5f_m))},
-        {6, 4, (-39 / 40) * ((1 / sqrt(14)) * (4 * Ea2_5f_m - 9 * Et1_5f_m + 5 * Et2_5f_m))}
+        {0, 0, (1 / 7) * (Ea1_5f_m + 3 * (Et1_5f_m + Et2_5f_m))},
+        {4, 0, (-3 / 4) * (2 * Ea1_5f_m + Et1_5f_m - 3 * Et2_5f_m)},
+        {4, -4, (-3 / 4) * (sqrt(5 / 14) * (2 * Ea1_5f_m + Et1_5f_m - 3 * Et2_5f_m))},
+        {4, 4, (-3 / 4) * (sqrt(5 / 14) * (2 * Ea1_5f_m + Et1_5f_m - 3 * Et2_5f_m))},
+        {6, 0, (39 / 280) * (4 * Ea1_5f_m - 9 * Et1_5f_m + 5 * Et2_5f_m)},
+        {6, -4, (-39 / 40) * ((1 / sqrt(14)) * (4 * Ea1_5f_m - 9 * Et1_5f_m + 5 * Et2_5f_m))},
+        {6, 4, (-39 / 40) * ((1 / sqrt(14)) * (4 * Ea1_5f_m - 9 * Et1_5f_m + 5 * Et2_5f_m))}
     }
 
-    Eav_5f_f = ($Ea2(5f)_f_value + 3 * $Et1(5f)_f_value + 3 * $Et2(5f)_f_value) / 7
-    Ea2_5f_f = $Ea2(5f)_f_value - Eav_5f_f
+    Eav_5f_f = ($Ea1(5f)_f_value + 3 * $Et1(5f)_f_value + 3 * $Et2(5f)_f_value) / 7
+    Ea1_5f_f = $Ea1(5f)_f_value - Eav_5f_f
     Et1_5f_f = $Et1(5f)_f_value - Eav_5f_f
     Et2_5f_f = $Et2(5f)_f_value - Eav_5f_f
 
     Akm_5f_f = {
-        {0, 0, (1 / 7) * (Ea2_5f_f + 3 * (Et1_5f_f + Et2_5f_f))},
-        {4, 0, (-3 / 4) * (2 * Ea2_5f_f + Et1_5f_f - 3 * Et2_5f_f)},
-        {4, -4, (-3 / 4) * (sqrt(5 / 14) * (2 * Ea2_5f_f + Et1_5f_f - 3 * Et2_5f_f))},
-        {4, 4, (-3 / 4) * (sqrt(5 / 14) * (2 * Ea2_5f_f + Et1_5f_f - 3 * Et2_5f_f))},
-        {6, 0, (39 / 280) * (4 * Ea2_5f_f - 9 * Et1_5f_f + 5 * Et2_5f_f)},
-        {6, -4, (-39 / 40) * ((1 / sqrt(14)) * (4 * Ea2_5f_f - 9 * Et1_5f_f + 5 * Et2_5f_f))},
-        {6, 4, (-39 / 40) * ((1 / sqrt(14)) * (4 * Ea2_5f_f - 9 * Et1_5f_f + 5 * Et2_5f_f))}
+        {0, 0, (1 / 7) * (Ea1_5f_f + 3 * (Et1_5f_f + Et2_5f_f))},
+        {4, 0, (-3 / 4) * (2 * Ea1_5f_f + Et1_5f_f - 3 * Et2_5f_f)},
+        {4, -4, (-3 / 4) * (sqrt(5 / 14) * (2 * Ea1_5f_f + Et1_5f_f - 3 * Et2_5f_f))},
+        {4, 4, (-3 / 4) * (sqrt(5 / 14) * (2 * Ea1_5f_f + Et1_5f_f - 3 * Et2_5f_f))},
+        {6, 0, (39 / 280) * (4 * Ea1_5f_f - 9 * Et1_5f_f + 5 * Et2_5f_f)},
+        {6, -4, (-39 / 40) * ((1 / sqrt(14)) * (4 * Ea1_5f_f - 9 * Et1_5f_f + 5 * Et2_5f_f))},
+        {6, 4, (-39 / 40) * ((1 / sqrt(14)) * (4 * Ea1_5f_f - 9 * Et1_5f_f + 5 * Et2_5f_f))}
     }
 
     H_i = H_i + Chop(NewOperator("CF", NFermions, IndexUp_5f, IndexDn_5f, Akm_5f_i))
