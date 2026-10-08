@@ -3,7 +3,7 @@
 import pytest
 
 from crispy.models import TreeModel
-from crispy.notebook import Hamiltonian, _resolve_edge
+from crispy.notebook import Hamiltonian, resolve_edge
 from crispy.quanty.calculation import Calculation
 
 
@@ -22,7 +22,7 @@ def model(qapp):
     ],
 )
 def test_resolve_edge_accepts_ascii_names(edge, expected):
-    assert _resolve_edge(edge) == expected
+    assert resolve_edge(edge) == expected
 
 
 @pytest.mark.parametrize("name", ["zeta(3d)", "ζ(3d)"])
