@@ -35,12 +35,6 @@ def set_hamiltonian_parameters(calc, parameters):
 def test_calculation(test_data, tmp_path):
     idx, parameters = test_data
 
-    # Run tests in /tmp/tests
-    # tmp_path = os.path.join("/tmp/crispy/tests", str(idx))
-    # if os.path.exists(tmp_path):
-    #     shutil.rmtree(tmp_path)
-    # os.makedirs(tmp_path, exist_ok=True)
-
     # Change the settings after the calculation is created, because creating
     # the calculation can reset them to the defaults. Keep the spectra on disk
     # to compare them with the references.

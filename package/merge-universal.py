@@ -114,9 +114,12 @@ def merge(arm_root, x86_root, out_root):
 
         # Symlinks: recreate verbatim from whichever tree has them.
         if "symlink" in (arm_kind, x86_kind):
-            if arm_kind == "symlink" and x86_kind == "symlink":
-                if os.readlink(arm_path) != os.readlink(x86_path):
-                    print(f"WARNING: symlink target differs, using arm64: {relative}")
+            if (
+                arm_kind == "symlink"
+                and x86_kind == "symlink"
+                and os.readlink(arm_path) != os.readlink(x86_path)
+            ):
+                print(f"WARNING: symlink target differs, using arm64: {relative}")
             recreate_symlink(arm_path if arm_kind == "symlink" else x86_path, out_path)
             continue
 
