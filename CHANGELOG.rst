@@ -13,6 +13,8 @@ Fixed
 -----
 - The Start Jupyter Lab menu item works in the standalone application. The
   application includes Jupyter Lab, and its kernel can import crispy.
+- The standalone application builds the matplotlib font cache only at the
+  first start, not at each start.
 
 `2026.1`_ - 2026-10-08
 ======================
