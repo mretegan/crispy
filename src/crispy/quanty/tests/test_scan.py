@@ -64,23 +64,23 @@ def test_scannable_parameters_include_expected():
     assert "Crystal Field · 10Dq(3d)" in labels
 
 
-def test_hamiltonian_parameter_scopes():
+def test_hamiltonian_parameter_choices():
     model = TreeModel()
     calculation = make_calculation(model.rootItem())
 
     parameters = {p.label: p for p in scannableParameters(calculation)}
     tenDq = parameters["Crystal Field · 10Dq(3d)"]
 
-    # The scale factors and experimental conditions have no scope selector.
-    assert parameters["Fk"].scopes is None
+    # The scale factors and experimental conditions have no Hamiltonian selector.
+    assert parameters["Fk"].hamiltonians is None
 
     # A one-step XAS calculation has an initial and a final Hamiltonian, plus the
     # leading "All" entry.
-    displays = [display for display, _ in tenDq.scopes]
+    displays = [display for display, _ in tenDq.hamiltonians]
     assert displays == ["All", "Initial", "Final"]
 
 
-def test_apply_all_scope_sets_every_hamiltonian():
+def test_apply_all_hamiltonians():
     model = TreeModel()
     calculation = make_calculation(model.rootItem())
 
@@ -92,7 +92,7 @@ def test_apply_all_scope_sets_every_hamiltonian():
     assert all(p.value == 3.5 for p in values.values())
 
 
-def test_apply_single_scope_sets_only_one_hamiltonian():
+def test_apply_single_hamiltonian():
     model = TreeModel()
     calculation = make_calculation(model.rootItem())
 
@@ -100,8 +100,10 @@ def test_apply_single_scope_sets_only_one_hamiltonian():
     tenDq = parameters["Crystal Field · 10Dq(3d)"]
 
     before = {name: p.value for name, p in crystal_field_tenDq(calculation).items()}
-    finalScope = next(key for display, key in tenDq.scopes if display == "Final")
-    tenDq.apply(calculation, 3.5, finalScope)
+    finalHamiltonianName = next(
+        key for display, key in tenDq.hamiltonians if display == "Final"
+    )
+    tenDq.apply(calculation, 3.5, finalHamiltonianName)
 
     after = crystal_field_tenDq(calculation)
     assert after["Final Hamiltonian"].value == 3.5
@@ -166,10 +168,10 @@ def test_scan_dialog_restores_snapshot():
     dialog.addButton.click()
     row = dialog.rows[1]
     row.comboBox.setCurrentText("Crystal Field · 10Dq(3d)")
-    row.scopeComboBox.setCurrentText("Final")
+    row.hamiltonianComboBox.setCurrentText("Final")
     row.items[1].setText(QLocale().toString(2.0))
     state = dialog.snapshot()
-    assert state[1]["scope"] == "Final Hamiltonian"
+    assert state[1]["hamiltonian"] == "Final Hamiltonian"
 
     restored = ScanDialog(dialog.parameters, initialState=state)
     assert restored.snapshot() == state

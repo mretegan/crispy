@@ -50,8 +50,8 @@ def valueRange(start, stop, step):
     return [start + i * step for i in range(n + 1)]
 
 
-# The scope key meaning "apply to every Hamiltonian that holds the parameter".
-ALL_SCOPE = None
+# Apply to every Hamiltonian that holds the parameter.
+ALL_HAMILTONIANS = None
 
 
 def _shortHamiltonianName(name):
@@ -66,38 +66,37 @@ class ScanParameter:
     same descriptor can be applied to freshly cloned calculations.
 
     Hamiltonian parameters exist in several Hamiltonians (initial, intermediate,
-    final). For them ``scopes`` is a list of (display, key) pairs describing
-    which Hamiltonian a value is applied to, starting with ("All", ALL_SCOPE);
-    the chosen key is passed to the setter. For parameters that have a single
-    target (scale factors, temperature, magnetic field) ``scopes`` is None and
-    the setter ignores the scope.
+    final). For them ``hamiltonians`` lists (display, key) pairs, starting with
+    ("All", ALL_HAMILTONIANS). The setter uses the selected key to choose which
+    Hamiltonian receives the value. For scale factors, temperature, and magnetic
+    field, ``hamiltonians`` is None. Their setters ignore the Hamiltonian name.
     """
 
-    def __init__(self, label, getter, setter, *, scopes=None, currentValue=None):
+    def __init__(self, label, getter, setter, *, hamiltonians=None, currentValue=None):
         self.label = label
         self._getter = getter
         self._setter = setter
-        self.scopes = scopes
+        self.hamiltonians = hamiltonians
         self.currentValue = currentValue
 
-    def apply(self, calculation, value, scope=ALL_SCOPE):
-        self._setter(calculation, value, scope)
+    def apply(self, calculation, value, hamiltonianName=ALL_HAMILTONIANS):
+        self._setter(calculation, value, hamiltonianName)
 
     def current(self, calculation):
         return self._getter(calculation)
 
-    def scopeLabel(self, scope):
-        """Human-readable suffix for a scope, empty for the all-Hamiltonians case."""
-        if self.scopes is None or scope is ALL_SCOPE:
+    def hamiltonianLabel(self, hamiltonianName):
+        """Return the Hamiltonian suffix, or an empty string for all Hamiltonians."""
+        if self.hamiltonians is None or hamiltonianName is ALL_HAMILTONIANS:
             return ""
-        return _shortHamiltonianName(scope)
+        return _shortHamiltonianName(hamiltonianName)
 
 
 def _scaleFactorParameter(attr, label):
     def getter(calculation):
         return getattr(calculation.hamiltonian, attr).value
 
-    def setter(calculation, value, scope=ALL_SCOPE):
+    def setter(calculation, value, hamiltonianName=ALL_HAMILTONIANS):
         scaleFactor = getattr(calculation.hamiltonian, attr)
         scaleFactor.value = value
         # Mirror the GUI behavior, which propagates the global scale factor to
@@ -118,33 +117,34 @@ def _hamiltonianParameter(termName, name, hamiltonianNames):
             parameter, e.g. ("Initial Hamiltonian", "Final Hamiltonian").
     """
 
-    def iterMatching(calculation, scope):
+    def iterMatching(calculation, hamiltonianName):
         for term in calculation.hamiltonian.terms.children():
             if term.name != termName:
                 continue
             for hamiltonian in term.children():
-                if scope is not ALL_SCOPE and hamiltonian.name != scope:
+                if (
+                    hamiltonianName is not ALL_HAMILTONIANS
+                    and hamiltonian.name != hamiltonianName
+                ):
                     continue
                 for parameter in hamiltonian.children():
                     if parameter.name == name:
                         yield parameter
 
     def getter(calculation):
-        for parameter in iterMatching(calculation, ALL_SCOPE):
+        for parameter in iterMatching(calculation, ALL_HAMILTONIANS):
             return parameter.value
         return None
 
-    def setter(calculation, value, scope=ALL_SCOPE):
-        # With ALL_SCOPE the value is written to every Hamiltonian holding the
-        # parameter (matching the "Synchronize Parameters" behavior); otherwise
-        # only to the selected Hamiltonian.
-        for parameter in iterMatching(calculation, scope):
+    def setter(calculation, value, hamiltonianName=ALL_HAMILTONIANS):
+        # ALL_HAMILTONIANS matches the "Synchronize Parameters" behavior.
+        for parameter in iterMatching(calculation, hamiltonianName):
             parameter.value = value
 
-    scopes = [("All", ALL_SCOPE)]
-    scopes += [(_shortHamiltonianName(h), h) for h in hamiltonianNames]
+    hamiltonians = [("All", ALL_HAMILTONIANS)]
+    hamiltonians += [(_shortHamiltonianName(h), h) for h in hamiltonianNames]
     label = f"{termName} · {name}"
-    return ScanParameter(label, getter, setter, scopes=scopes)
+    return ScanParameter(label, getter, setter, hamiltonians=hamiltonians)
 
 
 def scannableParameters(calculation):
@@ -162,14 +162,18 @@ def scannableParameters(calculation):
         ScanParameter(
             "Temperature",
             lambda c: c.temperature.value,
-            lambda c, v, scope=ALL_SCOPE: setattr(c.temperature, "value", v),
+            lambda c, v, hamiltonianName=ALL_HAMILTONIANS: setattr(
+                c.temperature, "value", v
+            ),
         )
     )
     parameters.append(
         ScanParameter(
             "Magnetic Field",
             lambda c: c.magneticField.value,
-            lambda c, v, scope=ALL_SCOPE: setattr(c.magneticField, "value", v),
+            lambda c, v, hamiltonianName=ALL_HAMILTONIANS: setattr(
+                c.magneticField, "value", v
+            ),
         )
     )
 
@@ -199,19 +203,19 @@ def scannableParameters(calculation):
 
 
 class ScanRow:
-    """A row of the scan table: parameter, scope, start, stop and step.
+    """A row of the scan table: parameter, Hamiltonian, start, stop and step.
 
-    The parameter and the scope are combo boxes. The start, stop and step are
-    table items, as the points in the table of the Lorentzian dialog.
+    The parameter and the Hamiltonian selectors are combo boxes. The start, stop
+    and step are table items, as the points in the table of the Lorentzian dialog.
     """
 
     def __init__(self, parameters):
         self.parameters = parameters
-        self._scopeKeys = []
+        self._hamiltonianKeys = []
 
         self.comboBox = ComboBox()
         self.comboBox.addItems([parameter.label for parameter in parameters])
-        self.scopeComboBox = ComboBox()
+        self.hamiltonianComboBox = ComboBox()
         self.items = [QTableWidgetItem() for _ in range(3)]
         for item in self.items:
             item.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
@@ -226,29 +230,29 @@ class ScanRow:
         return self.parameters[self.comboBox.currentIndex()]
 
     @property
-    def scope(self):
-        """The selected scope key, or ALL_SCOPE when the parameter has no scopes."""
-        if not self._scopeKeys:
-            return ALL_SCOPE
-        return self._scopeKeys[self.scopeComboBox.currentIndex()]
+    def hamiltonianName(self):
+        """Return the selected Hamiltonian name, or ALL_HAMILTONIANS."""
+        if not self._hamiltonianKeys:
+            return ALL_HAMILTONIANS
+        return self._hamiltonianKeys[self.hamiltonianComboBox.currentIndex()]
 
-    def _populateScopes(self):
-        scopes = self.parameter.scopes
-        self.scopeComboBox.blockSignals(True)
-        self.scopeComboBox.clear()
-        if scopes is None:
+    def _populateHamiltonians(self):
+        hamiltonians = self.parameter.hamiltonians
+        self.hamiltonianComboBox.blockSignals(True)
+        self.hamiltonianComboBox.clear()
+        if hamiltonians is None:
             # Keep the column aligned but inert for single-target parameters.
-            self._scopeKeys = []
-            self.scopeComboBox.addItem("—")
-            self.scopeComboBox.setEnabled(False)
+            self._hamiltonianKeys = []
+            self.hamiltonianComboBox.addItem("—")
+            self.hamiltonianComboBox.setEnabled(False)
         else:
-            self._scopeKeys = [key for _, key in scopes]
-            self.scopeComboBox.addItems([display for display, _ in scopes])
-            self.scopeComboBox.setEnabled(True)
-        self.scopeComboBox.blockSignals(False)
+            self._hamiltonianKeys = [key for _, key in hamiltonians]
+            self.hamiltonianComboBox.addItems([display for display, _ in hamiltonians])
+            self.hamiltonianComboBox.setEnabled(True)
+        self.hamiltonianComboBox.blockSignals(False)
 
     def _parameterChanged(self):
-        self._populateScopes()
+        self._populateHamiltonians()
         self._prefill()
 
     def _prefill(self):
@@ -263,7 +267,7 @@ class ScanRow:
         start, stop, step = (item.text() for item in self.items)
         return {
             "label": self.parameter.label,
-            "scope": self.scope,
+            "hamiltonian": self.hamiltonianName,
             "start": start,
             "stop": stop,
             "step": step,
@@ -274,11 +278,12 @@ class ScanRow:
         labels = [parameter.label for parameter in self.parameters]
         if state["label"] not in labels:
             return False
-        # Setting the parameter repopulates the scopes and prefills the range,
-        # so the scope and the range fields are restored afterwards.
+        # Restore the Hamiltonian and range after the parameter resets them.
         self.comboBox.setCurrentIndex(labels.index(state["label"]))
-        if state["scope"] in self._scopeKeys:
-            self.scopeComboBox.setCurrentIndex(self._scopeKeys.index(state["scope"]))
+        if state["hamiltonian"] in self._hamiltonianKeys:
+            self.hamiltonianComboBox.setCurrentIndex(
+                self._hamiltonianKeys.index(state["hamiltonian"])
+            )
         for item, key in zip(self.items, ("start", "stop", "step"), strict=True):
             item.setText(state[key])
         return True
@@ -315,7 +320,7 @@ class ScanDialog(QDialog):
         # The table looks like the table of points in the Lorentzian dialog.
         self.table = QTableWidget(0, 6)
         self.table.setHorizontalHeaderLabels(
-            ["Parameter", "Scope", "Start", "Stop", "Step", ""]
+            ["Parameter", "Hamiltonian", "Start", "Stop", "Step", ""]
         )
         self.table.setAlternatingRowColors(True)
         self.table.setSelectionBehavior(QAbstractItemView.SelectRows)
@@ -361,7 +366,7 @@ class ScanDialog(QDialog):
         self.rows.append(row)
         self.table.insertRow(index)
         self.table.setCellWidget(index, 0, row.comboBox)
-        self.table.setCellWidget(index, 1, row.scopeComboBox)
+        self.table.setCellWidget(index, 1, row.hamiltonianComboBox)
         for column, item in enumerate(row.items, start=2):
             self.table.setItem(index, column, item)
         self.table.setCellWidget(index, 5, row.removeButton)
@@ -411,8 +416,8 @@ class ScanDialog(QDialog):
             runButton.setEnabled(total > 0)
 
     def spec(self):
-        """Return the scan as a list of (parameter, scope, values) tuples."""
-        return [(row.parameter, row.scope, row.values()) for row in self.rows]
+        """Return the scan as a list of (parameter, hamiltonianName, values) tuples."""
+        return [(row.parameter, row.hamiltonianName, row.values()) for row in self.rows]
 
 
 class ScanController(QObject):
@@ -432,7 +437,7 @@ class ScanController(QObject):
         self.resultsModel = resultsModel
 
         self._params = []
-        self._scopes = []
+        self._hamiltonianNames = []
         self._combinations = []
         self._index = 0
         self._completed = 0
@@ -441,7 +446,7 @@ class ScanController(QObject):
 
     def run(self, spec):
         self._params = [parameter for parameter, _, _ in spec]
-        self._scopes = [scope for _, scope, _ in spec]
+        self._hamiltonianNames = [hamiltonianName for _, hamiltonianName, _ in spec]
         valueLists = [values for _, _, values in spec]
         self._combinations = list(itertools.product(*valueLists))
         self._index = 0
@@ -486,14 +491,14 @@ class ScanController(QObject):
         calculation.copyFrom(base)
 
         labels = []
-        for parameter, scope, value in zip(
-            self._params, self._scopes, combination, strict=False
+        for parameter, hamiltonianName, value in zip(
+            self._params, self._hamiltonianNames, combination, strict=False
         ):
-            parameter.apply(calculation, value, scope)
-            scopeLabel = parameter.scopeLabel(scope)
+            parameter.apply(calculation, value, hamiltonianName)
+            hamiltonianLabel = parameter.hamiltonianLabel(hamiltonianName)
             name = parameter.label
-            if scopeLabel:
-                name = f"{name} ({scopeLabel})"
+            if hamiltonianLabel:
+                name = f"{name} ({hamiltonianLabel})"
             labels.append(f"{name}={value:g}")
         calculation.labelSuffix = ", ".join(labels)
 
