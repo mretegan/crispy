@@ -31,6 +31,8 @@ dependencies = [
     "numpy",
     "packaging",
     "pyside6",
+    # PySide6 6.12.0 aborts during shutdown on Python 3.10 on Linux.
+    "pyside6!=6.12.0; python_version == '3.10' and sys_platform == 'linux'",
     "qtawesome",
     "ruamel.yaml",
     "silx[full_no_qt]",
