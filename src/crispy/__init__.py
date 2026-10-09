@@ -1,6 +1,6 @@
 """This is the Crispy package."""
 
-__version__ = "2026.2"
+__version__ = "2026.3.dev"
 import os
 import sys
 
