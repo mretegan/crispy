@@ -1,5 +1,6 @@
 """This module is the entry point to the application."""
 
+import importlib.util
 import json
 import logging
 import os
@@ -172,9 +173,16 @@ class MainWindow(QMainWindow):
         self.quantyDockWidget.addExternalData(raw, name)
 
     def runJupyterLab(self):
+        if importlib.util.find_spec("jupyterlab") is None:
+            logger.error("Jupyter Lab is not installed. Install crispy[notebook].")
+            return
+        # Use the Python of Crispy, so that the kernel can import crispy. In the
+        # frozen application, package/launcher.py runs the module.
         process = QProcess()
-        process.setProgram("jupyter-lab")
-        process.setArguments([f"--notebook-dir={os.path.expanduser('~')}"])
+        process.setProgram(sys.executable)
+        process.setArguments(
+            ["-m", "jupyterlab", f"--notebook-dir={os.path.expanduser('~')}"]
+        )
         process.startDetached()
 
 

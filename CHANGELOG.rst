@@ -9,6 +9,11 @@ and this project adheres to `Calendar Versioning <https://calver.org/>`_.
 `Unreleased`_
 =============
 
+Fixed
+-----
+- The Start Jupyter Lab menu item works in the standalone application. The
+  application includes Jupyter Lab, and its kernel can import crispy.
+
 `2026.1`_ - 2026-10-08
 ======================
 

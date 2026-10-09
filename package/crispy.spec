@@ -18,7 +18,12 @@ import subprocess
 import sys
 
 from crispy import version
-from PyInstaller.utils.hooks import collect_data_files, collect_submodules, logger
+from PyInstaller.utils.hooks import (
+    collect_data_files,
+    collect_submodules,
+    copy_metadata,
+    logger,
+)
 
 block_cipher = None
 
@@ -93,8 +98,35 @@ datas.append((license_file, "."))
 hiddenimports = ["hdf5plugin"]
 hiddenimports += collect_submodules("fabio")
 
+# Jupyter Lab, started from the Tools menu. The launcher runs the server and the
+# kernels with "Crispy -m <module>", so PyInstaller cannot see these imports.
+for name in ("lab", "labextensions", "kernels"):
+    datas.append(
+        (os.path.join(sys.prefix, "share", "jupyter", name), f"share/jupyter/{name}")
+    )
+for package in (
+    "jupyter_server",
+    "jupyterlab_server",
+    "jupyter_events",
+    "ipykernel",
+    "rfc3987_syntax",
+):
+    datas.extend(collect_data_files(package))
+# Jupyter finds kernel provisioners and extension managers, and matplotlib finds
+# the inline and widget backends, with entry points.
+for package in ("jupyter_client", "jupyterlab", "matplotlib_inline", "ipympl"):
+    datas += copy_metadata(package)
+hiddenimports += [
+    "crispy.notebook",
+    "ipykernel_launcher",
+    "jupyterlab.__main__",
+    "ipympl.backend_nbagg",
+]
+for package in ("jupyter_server", "jupyter_client", "jupyterlab_server", "ipykernel"):
+    hiddenimports += collect_submodules(package)
+
 a = Analysis(  # noqa: F821
-    [os.path.join(package_path, "__main__.py")],
+    [os.path.join(SPECPATH, "launcher.py")],  # noqa: F821
     pathex=[],
     binaries=[],
     datas=datas,
@@ -117,7 +149,21 @@ a = Analysis(  # noqa: F821
     # --no-binary sqlalchemy on macOS (see package/README.rst).
     #
     # PyQt5/PyQt6 are excluded so the frozen app always uses PySide6.
-    excludes=["greenlet", "sqlalchemy.cyextension", "PyQt5", "PyQt6"],
+    #
+    # Two optional Jupyter dependencies are excluded:
+    #  - notebook: nbconvert imports it if available. Its hook bundles all the
+    #    Jupyter data and configuration folders of the build machine, and these
+    #    enable server extensions that are not bundled.
+    #  - debugpy: it loads its vendored pydevd from files that PyInstaller does
+    #    not collect. Without debugpy, ipykernel disables the debugger.
+    excludes=[
+        "greenlet",
+        "sqlalchemy.cyextension",
+        "PyQt5",
+        "PyQt6",
+        "notebook",
+        "debugpy",
+    ],
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
     cipher=block_cipher,
