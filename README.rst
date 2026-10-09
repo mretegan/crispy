@@ -159,7 +159,7 @@ release.
     @software{retegan_crispy,
       author  = {Retegan, Marius},
       title   = {Crispy},
-      version = {2026.1},
+      version = {2026.2},
       year    = {2026},
       doi     = {10.5281/zenodo.1008184},
       url     = {https://crispy.esrf.fr},

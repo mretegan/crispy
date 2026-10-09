@@ -9,6 +9,9 @@ and this project adheres to `Calendar Versioning <https://calver.org/>`_.
 `Unreleased`_
 =============
 
+`2026.2`_ - 2026-10-09
+======================
+
 Fixed
 -----
 - The Start Jupyter Lab menu item works in the standalone application. The
@@ -275,7 +278,8 @@ Added
 - Interactive plotting of the results.
 - Abstract list model and tree model to display/modify the input parameters.
 
-.. _Unreleased: https://github.com/mretegan/crispy/compare/v2026.1...HEAD
+.. _Unreleased: https://github.com/mretegan/crispy/compare/v2026.2...HEAD
+.. _2026.2: https://github.com/mretegan/crispy/compare/v2026.1...v2026.2
 .. _2026.1: https://github.com/mretegan/crispy/compare/v2026.0...v2026.1
 .. _2026.0: https://github.com/mretegan/crispy/compare/v0.8.0...v2026.0
 .. _0.8.0: https://github.com/mretegan/crispy/compare/v0.7.4...v0.8.0
