@@ -2,7 +2,7 @@ name: Build Cowan binaries
 
 # Build the Cowan binaries on each supported platform. Each job uploads an
 # archive with the bin/<os>-<arch> folder. Extract the archives into
-# src/crispy/quanty/parameters/cowan/bin and commit them with git add -f.
+# src/crispy/quanty/parameters/cowan/bin and commit them.
 
 on:
   workflow_dispatch:
@@ -21,8 +21,6 @@ jobs:
             platform: darwin-x86_64
           - runner: ubuntu-latest
             platform: linux-x86_64
-          - runner: ubuntu-24.04-arm
-            platform: linux-arm64
     defaults:
       run:
         working-directory: src/crispy/quanty/parameters/cowan
@@ -61,8 +59,11 @@ jobs:
           cowan-parameters -e Fe -c 2p5,3d6
 
       - name: Archive the binaries
-        # tar keeps the executable bits, which upload-artifact drops.
-        run: tar -cpzf "cowan-${{ matrix.platform }}.tar.gz" -C bin "${{ matrix.platform }}"
+        # tar keeps the executable bits, which upload-artifact drops. Crispy uses
+        # only rcn and rcn2.
+        run: |
+          tar -cpzf "cowan-${{ matrix.platform }}.tar.gz" -C bin \
+            "${{ matrix.platform }}/rcn" "${{ matrix.platform }}/rcn2"
 
       - name: Upload the binaries
         uses: actions/upload-artifact@v6
@@ -106,7 +107,8 @@ jobs:
         shell: msys2 {0}
         run: |
           cd src/crispy/quanty/parameters/cowan
-          tar -cpzf cowan-windows-x86_64.tar.gz -C bin windows-x86_64
+          tar -cpzf cowan-windows-x86_64.tar.gz -C bin \
+            windows-x86_64/rcn.exe windows-x86_64/rcn2.exe
 
       - name: Upload the binaries
         uses: actions/upload-artifact@v6

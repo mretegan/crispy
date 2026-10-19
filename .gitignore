@@ -66,8 +66,11 @@ input_*.spec
 # Quanty binaries
 # crispy/quanty/bin
 
-# Cowan binaries and build artifacts
-**/cowan/bin/
+# Cowan build artifacts
+# Only rcn and rcn2 are committed; make install also copies the other programs.
+**/cowan/bin/*/rcn31*
+**/cowan/bin/*/ttrcg*
+**/cowan/bin/*/rcg_cfp*
 **/cowan/src/
 **/cowan/rcn31
 **/cowan/rcn2

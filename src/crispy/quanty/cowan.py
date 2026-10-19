@@ -13,6 +13,7 @@ import subprocess
 import sys
 from types import SimpleNamespace
 
+from crispy import resourceAbsolutePath
 from crispy.quanty.calculation import OCCUPANCIES, Element
 
 logger = logging.getLogger(__name__)
@@ -52,7 +53,7 @@ class Cowan:
 
     @property
     def root(self):
-        return os.path.join(os.path.dirname(__file__), "parameters", "cowan")
+        return resourceAbsolutePath(os.path.join("quanty", "parameters", "cowan"))
 
     @property
     def bin(self):
