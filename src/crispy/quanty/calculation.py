@@ -110,7 +110,7 @@ class Configuration:
         PATTERNS = (r"^(\d)(\w)(\d+),(\d)(\w)(\d+)$", r"^(\d)(\w)(\d+)$")
 
         # Test the configuration string.
-        tokens = (token for pattern in PATTERNS for token in re.findall(pattern, value))
+        tokens = [token for pattern in PATTERNS for token in re.findall(pattern, value)]
         if not tokens:
             raise ValueError("Invalid configuration string.")
         [tokens] = tokens
