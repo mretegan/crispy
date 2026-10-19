@@ -76,20 +76,17 @@ data_paths = [
     ["quanty", "bin", sys.platform, "*"],
 ]
 
-# Cowan binaries; Crispy uses only rcn and rcn2. Both macOS bundles need both
-# architectures, because merge-universal.py stops if a Mach-O file is in only one
-# of the bundles.
+# Cowan binaries; Crispy uses only rcn and rcn2. The macOS binaries are universal.
 if sys.platform == "darwin":
-    cowan_platforms = ["darwin-arm64", "darwin-x86_64"]
+    cowan_platform = "darwin"
     cowan_programs = ["rcn", "rcn2"]
 else:
-    cowan_platforms = ["windows-x86_64"]
+    cowan_platform = "windows-x86_64"
     cowan_programs = ["rcn.exe", "rcn2.exe"]
-for cowan_platform in cowan_platforms:
-    for cowan_program in cowan_programs:
-        data_paths.append(
-            ["quanty", "parameters", "cowan", "bin", cowan_platform, cowan_program]
-        )
+for cowan_program in cowan_programs:
+    data_paths.append(
+        ["quanty", "parameters", "cowan", "bin", cowan_platform, cowan_program]
+    )
 
 datas = []
 for data_path in data_paths:

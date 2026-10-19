@@ -8,12 +8,14 @@
 # bookkeeping input.
 #
 # The build is native: run it on each platform (macOS, Linux, or Windows with
-# MSYS2). The binaries go into bin/<os>-<arch>/, for example bin/darwin-arm64/.
+# MSYS2). The binaries go into bin/<os>-<arch>/, for example bin/linux-x86_64/,
+# and into bin/darwin/ on macOS. The committed macOS binaries are universal: fuse
+# the arm64 and x86_64 builds with lipo.
 #
 # Usage:
 #   make                          fetch sources, build binaries, generate cfp
 #   make pull                     only fetch (and patch) the sources
-#   make install                  copy binaries + cfp into bin/<os>-<arch>/
+#   make install                  copy binaries + cfp into bin/<platform>/
 #   make clean                    remove built binaries and cfp tables
 #   make distclean                also remove fetched sources
 #   make SRC_COMMIT=<hash>         build from a different upstream revision
@@ -42,21 +44,21 @@ ARCH := $(patsubst aarch64,arm64,$(patsubst amd64,x86_64,$(UNAME_M)))
 # macOS has no static libSystem, so only the runtime libs can be static-linked.
 # Linux and Windows can link fully static.
 ifeq ($(UNAME_S),Darwin)
-  OS := darwin
+  PLATFORM := darwin
   STATIC := -static-libgfortran -static-libgcc -static-libquadmath
   # Oldest macOS version on which the binaries run.
   MACOSX_DEPLOYMENT_TARGET ?= 13.0
   export MACOSX_DEPLOYMENT_TARGET
 else ifneq ($(filter MINGW% UCRT% CLANG% MSYS% CYGWIN%,$(UNAME_S)),)
-  OS := windows
+  PLATFORM := windows-$(ARCH)
   EXE := .exe
   STATIC := -static
 else
-  OS := linux
+  PLATFORM := linux-$(ARCH)
   STATIC := -static
 endif
 
-BINDIR ?= bin/$(OS)-$(ARCH)
+BINDIR ?= bin/$(PLATFORM)
 PROG_FILES := $(addsuffix $(EXE),$(PROGS))
 
 all: $(PROG_FILES) $(CFP)

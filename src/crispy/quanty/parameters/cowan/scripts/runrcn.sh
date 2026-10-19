@@ -4,7 +4,7 @@
 # Note that the input file $NAME.rcn has to be created.
 
 # Locate the binaries relative to this script. The folder names must match the
-# ones that the Makefile creates, for example bin/darwin-arm64.
+# ones that the Makefile creates, for example bin/linux-x86_64.
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
 case "$OS" in
     mingw* | ucrt* | clang* | msys* | cygwin*) OS=windows ;;
@@ -14,7 +14,12 @@ case "$ARCH" in
     aarch64) ARCH=arm64 ;;
     amd64) ARCH=x86_64 ;;
 esac
-BINDIR=$(cd "$(dirname "$0")/../bin/$OS-$ARCH" && pwd)
+# The macOS binaries are universal, so the folder has no architecture.
+case "$OS" in
+    darwin) PLATFORM=darwin ;;
+    *) PLATFORM="$OS-$ARCH" ;;
+esac
+BINDIR=$(cd "$(dirname "$0")/../bin/$PLATFORM" && pwd)
 
 if [ ! -x "$BINDIR/rcn" ]; then
     echo "rcn command was not found."

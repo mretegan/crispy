@@ -1,8 +1,9 @@
 name: Build Cowan binaries
 
-# Build the Cowan binaries on each supported platform. Each job uploads an
-# archive with the bin/<os>-<arch> folder. Extract the archives into
-# src/crispy/quanty/parameters/cowan/bin and commit them.
+# Build the Cowan binaries on each supported platform, and fuse the two macOS
+# builds into universal binaries. Extract the cowan-darwin, cowan-linux-x86_64,
+# and cowan-windows-x86_64 archives into src/crispy/quanty/parameters/cowan/bin
+# and commit them.
 
 on:
   workflow_dispatch:
@@ -15,12 +16,16 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          # make install uses bin/darwin for both macOS architectures.
           - runner: macos-15
             platform: darwin-arm64
+            folder: darwin
           - runner: macos-15-intel
             platform: darwin-x86_64
+            folder: darwin
           - runner: ubuntu-latest
             platform: linux-x86_64
+            folder: linux-x86_64
     defaults:
       run:
         working-directory: src/crispy/quanty/parameters/cowan
@@ -63,13 +68,45 @@ jobs:
         # only rcn and rcn2.
         run: |
           tar -cpzf "cowan-${{ matrix.platform }}.tar.gz" -C bin \
-            "${{ matrix.platform }}/rcn" "${{ matrix.platform }}/rcn2"
+            "${{ matrix.folder }}/rcn" "${{ matrix.folder }}/rcn2"
 
       - name: Upload the binaries
         uses: actions/upload-artifact@v6
         with:
           name: cowan-${{ matrix.platform }}
           path: src/crispy/quanty/parameters/cowan/cowan-${{ matrix.platform }}.tar.gz
+
+  fuse-macos:
+    name: Fuse the macOS binaries
+    needs: build-unix
+    runs-on: macos-15
+    steps:
+      - name: Download the macOS binaries
+        uses: actions/download-artifact@v6
+        with:
+          pattern: cowan-darwin-*
+
+      - name: Fuse the arm64 and x86_64 binaries
+        run: |
+          for arch in arm64 x86_64; do
+            mkdir -p "$arch"
+            tar -xpzf "cowan-darwin-$arch/cowan-darwin-$arch.tar.gz" -C "$arch"
+          done
+          mkdir -p darwin
+          for program in rcn rcn2; do
+            lipo -create "arm64/darwin/$program" "x86_64/darwin/$program" \
+              -output "darwin/$program"
+            chmod 755 "darwin/$program"
+            lipo "darwin/$program" -verify_arch arm64
+            lipo "darwin/$program" -verify_arch x86_64
+          done
+          tar -cpzf cowan-darwin.tar.gz darwin/rcn darwin/rcn2
+
+      - name: Upload the universal binaries
+        uses: actions/upload-artifact@v6
+        with:
+          name: cowan-darwin
+          path: cowan-darwin.tar.gz
 
   build-windows:
     name: Build (windows-x86_64)

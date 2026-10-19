@@ -20,11 +20,14 @@ logger = logging.getLogger(__name__)
 
 
 def platform_name():
-    """Return the name of the binary folder for this platform, e.g. darwin-arm64.
+    """Return the name of the binary folder for this platform, e.g. linux-x86_64.
 
     The names must match the folders that the Makefile creates.
     """
     system = platform.system().lower()
+    # The macOS binaries are universal (arm64 and x86_64).
+    if system == "darwin":
+        return system
     machine = platform.machine().lower()
     machine = {"amd64": "x86_64", "aarch64": "arm64"}.get(machine, machine)
     return f"{system}-{machine}"
