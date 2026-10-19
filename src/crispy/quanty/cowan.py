@@ -3,13 +3,15 @@
 import argparse
 import contextlib
 import glob
+import itertools
 import logging
 import os
 import re
 import subprocess
 import sys
+from types import SimpleNamespace
 
-from crispy.quanty.calculation import Configuration, Element
+from crispy.quanty.calculation import OCCUPANCIES, Element
 
 logger = logging.getLogger(__name__)
 
@@ -30,99 +32,7 @@ class Cowan:
 
     RYDBERG_TO_EV = 13.605693122994  # The value in Cowan's programs is 13.60580.
 
-    NAMES = {  # noqa: RUF012
-        "d": ("U({0:s},{0:s})", "F2({0:s},{0:s})", "F4({0:s},{0:s})", "ζ({0:s})"),
-        "s,d": (
-            "U({1:s},{1:s})",
-            "F2({1:s},{1:s})",
-            "F4({1:s},{1:s})",
-            "U({0:s},{1:s})",
-            "G2({0:s},{1:s})",
-            "ζ({1:s})",
-        ),
-        "p,d": (
-            "U({1:s},{1:s})",
-            "F2({1:s},{1:s})",
-            "F4({1:s},{1:s})",
-            "U({0:s},{1:s})",
-            "F2({0:s},{1:s})",
-            "G1({0:s},{1:s})",
-            "G3({0:s},{1:s})",
-            "ζ({1:s})",
-            "ζ({0:s})",
-        ),
-        "d,d": (
-            "U({1:s},{1:s})",
-            "F2({1:s},{1:s})",
-            "F4({1:s},{1:s})",
-            "U({0:s},{1:s})",
-            "F2({0:s},{1:s})",
-            "F4({0:s},{1:s})",
-            "G0({0:s},{1:s})",
-            "G2({0:s},{1:s})",
-            "G4({0:s},{1:s})",
-            "ζ({1:s})",
-            "ζ({0:s})",
-        ),
-        "f": (
-            "U({0:s},{0:s})",
-            "F2({0:s},{0:s})",
-            "F4({0:s},{0:s})",
-            "F6({0:s},{0:s})",
-            "ζ({0:s})",
-        ),
-        "s,f": (
-            "U({1:s},{1:s})",
-            "F2({1:s},{1:s})",
-            "F4({1:s},{1:s})",
-            "F6({1:s},{1:s})",
-            "U({0:s},{1:s})",
-            "G3({0:s},{1:s})",
-            "ζ({1:s})",
-        ),
-        "p,f": (
-            "U({1:s},{1:s})",
-            "F2({1:s},{1:s})",
-            "F4({1:s},{1:s})",
-            "F6({1:s},{1:s})",
-            "U({0:s},{1:s})",
-            "F2({0:s},{1:s})",
-            "G2({0:s},{1:s})",
-            "G4({0:s},{1:s})",
-            "ζ({1:s})",
-            "ζ({0:s})",
-        ),
-        "d,f": (
-            "U({1:s},{1:s})",
-            "F2({1:s},{1:s})",
-            "F4({1:s},{1:s})",
-            "F6({1:s},{1:s})",
-            "U({0:s},{1:s})",
-            "F2({0:s},{1:s})",
-            "F4({0:s},{1:s})",
-            "G1({0:s},{1:s})",
-            "G3({0:s},{1:s})",
-            "G5({0:s},{1:s})",
-            "ζ({1:s})",
-            "ζ({0:s})",
-        ),
-        "f,f": (
-            "U({1:s},{1:s})",
-            "F2({1:s},{1:s})",
-            "F4({1:s},{1:s})",
-            "F6({1:s},{1:s})",
-            "U({0:s},{1:s})",
-            "F2({0:s},{1:s})",
-            "F4({0:s},{1:s})",
-            "F6({0:s},{1:s})",
-            "G0({0:s},{1:s})",
-            "G2({0:s},{1:s})",
-            "G4({0:s},{1:s})",
-            "G6({0:s},{1:s})",
-            "ζ({1:s})",
-            "ζ({0:s})",
-        ),
-    }
+    ANGULAR_MOMENTA = {"s": 0, "p": 1, "d": 2, "f": 3}  # noqa: RUF012
 
     def __init__(self, element, configuration, basename="input"):
         self.element = element
@@ -142,30 +52,68 @@ class Cowan:
         return os.path.join(self.root, "scripts")
 
     @staticmethod
-    def normalize_configuration_name(configuration):
+    def subshell_pairs(subshells):
+        """Return the pairs of subshells that have Slater integrals.
+
+        The first subshell of a configuration with more than one subshell is the
+        core subshell, which has no Slater integrals with itself.
+        """
+        if len(subshells) == 1:
+            return [(subshells[0], subshells[0])]
+        core, *valence = subshells
+        pairs = list(itertools.combinations_with_replacement(valence, 2))
+        pairs += [(core, subshell) for subshell in valence]
+        return pairs
+
+    def parameter_names(self, subshells):
+        """Return the ordered names of the atomic parameters."""
+        names = []
+        for a, b in self.subshell_pairs(subshells):
+            la, lb = self.ANGULAR_MOMENTA[a[-1]], self.ANGULAR_MOMENTA[b[-1]]
+            names.append(f"U({a},{b})")
+            names += [f"F{k}({a},{b})" for k in range(2, 2 * min(la, lb) + 1, 2)]
+            if a != b:
+                names += [f"G{k}({a},{b})" for k in range(abs(la - lb), la + lb + 1, 2)]
+        names += [f"ζ({s})" for s in reversed(subshells) if not s.endswith("s")]
+        return names
+
+    def normalize_configuration_name(self, configuration):
         """Configuration name expected by Cowan's programs."""
         occupancies = configuration.occupancies
         subshells = configuration.subshells
 
+        # rcn does not add f subshells. From La (5d) and Ac (6d), fill the f subshell
+        # below the d subshell if the configuration does not give it.
+        full_f_subshells = {"5d": ("4f", 57), "6d": ("5f", 89)}
+
         name = ""
         for subshell, occupancy in zip(subshells, occupancies, strict=False):
-            # For 5d elements, the 4f occupied subshells must be included explicitly.
-            if "5d" in subshell and "4f" not in subshells:
-                subshell = "4f14 5d"
+            if subshell in full_f_subshells:
+                f_subshell, atomic_number = full_f_subshells[subshell]
+                if (
+                    f_subshell not in subshells
+                    and self.element.atomicNumber >= atomic_number
+                ):
+                    subshell = f"{f_subshell}14 {subshell}"
             name += f"{subshell.upper():s}{occupancy:02d} "
         return name.rstrip()
 
     def run(self, command):
-        """Run the "command"; discard stdout and stderr, but check the exit status."""
+        """Run the "command"; show its output only if the exit status is not zero."""
         try:
             subprocess.run(
                 (command, self.basename),
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
                 check=True,
             )
-        except subprocess.CalledProcessError:
-            logger.critical("The command %s did not finish successfully.", command)
+        except subprocess.CalledProcessError as error:
+            logger.critical(
+                "The command %s did not finish successfully:\n%s",
+                command,
+                error.output.rstrip(),
+            )
             sys.exit(1)
         except OSError as error:
             # FileNotFoundError if the wrapper script is missing, PermissionError
@@ -191,12 +139,10 @@ class Cowan:
 
         rcn_input = self.RCN_HEADER
         for configuration in (self.configuration,):
-            line = (
-                f"{self.element.atomicNumber:5d}           "
-                f"{configuration.value:8s}         "
-                f"{self.normalize_configuration_name(configuration):8s}\n"
+            rcn_input += self.configuration_line(
+                f"{'':11s}{configuration.value}",
+                f"{self.normalize_configuration_name(configuration):8s}",
             )
-            rcn_input += line
         rcn_input += f"{-1:5d}\n"
 
         filename = f"{self.basename:s}.rcn"
@@ -215,11 +161,7 @@ class Cowan:
         """Parse the output of the RCN program to get the values of the parameters."""
 
         subshells = self.configuration.subshells
-        if self.configuration.hasCore:
-            core, valence = subshells
-        else:
-            core = None
-            [valence] = subshells
+        pairs = self.subshell_pairs(subshells)
 
         def _format(value):
             return round(float(value) * self.RYDBERG_TO_EV, ndigits=4)
@@ -232,44 +174,27 @@ class Cowan:
                 # Parse the spin-orbit coupling parameters (zeta).
                 if "BLUME-WATSON" in line:
                     while "SLATER INTEGRALS" not in line:
-                        # Zeta for the valence subshell.
-                        token = valence.upper()
-                        if token in line:
-                            params[f"ζ({valence})"] = _format(line[9:20])
-                        # Zeta for the core subshell, but not for s-orbitals.
-                        if core is not None and "s" not in core:
-                            token = core.upper()
-                            if token in line:
-                                token = core.upper()
-                                params[f"ζ({core})"] = _format(line[9:20])
+                        for subshell in subshells:
+                            if subshell.upper() in line:
+                                params[f"ζ({subshell})"] = _format(line[9:20])
                         line = next(fp)
 
                 # Parse the Slater integrals.
-                token = f"( {valence.upper()}, {valence.upper()})"
-                if token in line:
-                    k = int(line[17:18])
-                    if k != 0:
-                        params[f"F{k}({valence},{valence})"] = _format(line[18:31])
-
-                if core is not None:
-                    token = f"( {core.upper()}, {valence.upper()})"
-                    if token in line:
+                for a, b in pairs:
+                    if f"( {a.upper()}, {b.upper()})" in line:
                         k = int(line[17:18])
                         if k != 0:
-                            params[f"F{k}({core},{valence})"] = _format(line[18:31])
-                        k = int(line[73:74])
-                        params[f"G{k}({core},{valence})"] = _format(line[75:88])
+                            params[f"F{k}({a},{b})"] = _format(line[18:31])
+                        if a != b:
+                            k = int(line[73:74])
+                            params[f"G{k}({a},{b})"] = _format(line[75:88])
 
                 if "ETOT=" in line:
                     energy = _format(line.split()[-1])
 
-        key = ",".join(self.configuration.shells)
-        ordered_params = {}
-        for name in self.NAMES[key]:
-            name = name.format(*self.configuration.subshells)
-            ordered_params[name] = 0.0
-
-        ordered_params.update(params)
+        # The names also drop the zeta of the s subshells, which is zero.
+        names = self.parameter_names(subshells)
+        ordered_params = {name: params.get(name, 0.0) for name in names}
 
         return energy, ordered_params
 
@@ -461,6 +386,24 @@ class Cowan:
         return result
 
 
+def parse_configuration(value):
+    """Parse a configuration with one or more subshells, for example "2p5,4f7,5d2".
+
+    Unlike Configuration, the parser accepts more than two subshells.
+    """
+    tokens = re.findall(r"(\d)([spdf])(\d+)", value)
+    if ",".join("".join(token) for token in tokens) != value:
+        raise ValueError(f"Invalid configuration string {value}.")
+    for level, shell, occupancy in tokens:
+        if int(occupancy) > OCCUPANCIES[shell]:
+            raise ValueError(f"Wrong number of electrons in the {level}{shell} shell.")
+    return SimpleNamespace(
+        value=value,
+        subshells=tuple(f"{level}{shell}" for level, shell, _ in tokens),
+        occupancies=tuple(int(occupancy) for _, _, occupancy in tokens),
+    )
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-e", "--element", default="Fe")
@@ -475,17 +418,17 @@ def main():
 
     element = Element()
     element.symbol = args.element
-    conf = Configuration(args.configuration)
+    conf = parse_configuration(args.configuration)
 
     cowan = Cowan(element, conf)
-    conf.energy, conf.atomic_parameters = cowan.get_parameters()
+    energy, atomic_parameters = cowan.get_parameters()
 
     if logging.root.level != logging.DEBUG:
         cowan.remove_calculation_files()
 
-    logging.info("%2s %-8s", element.symbol, conf)
-    logging.info("E = %-.4f eV", conf.energy)
-    for parameter, value in conf.atomic_parameters.items():
+    logging.info("%2s %-8s", element.symbol, conf.value)
+    logging.info("E = %-.4f eV", energy)
+    for parameter, value in atomic_parameters.items():
         logging.info("%-s = %-.4f eV", parameter, value)
 
 
