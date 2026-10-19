@@ -6,7 +6,9 @@ import glob
 import itertools
 import logging
 import os
+import platform
 import re
+import shutil
 import subprocess
 import sys
 from types import SimpleNamespace
@@ -16,6 +18,17 @@ from crispy.quanty.calculation import OCCUPANCIES, Element
 logger = logging.getLogger(__name__)
 
 
+def platform_name():
+    """Return the name of the binary folder for this platform, e.g. darwin-arm64.
+
+    The names must match the folders that the Makefile creates.
+    """
+    system = platform.system().lower()
+    machine = platform.machine().lower()
+    machine = {"amd64": "x86_64", "aarch64": "arm64"}.get(machine, machine)
+    return f"{system}-{machine}"
+
+
 class Cowan:
     """Calculate atomic parameters of an electronic configuration."""
 
@@ -23,8 +36,6 @@ class Cowan:
         "22 -9    2   10  1.0    5.E-06    1.E-09-2   130   1.0  0.65  "
         "0.0 0.50 0.0  0.7\n"
     )
-    RCN = "runrcn.sh"
-    RCN2 = "runrcn2.sh"
     RCN2_HEADER = (
         "G5INP     000                 00        00000000 39999999999 "
         ".00       1229\n        -1\n"
@@ -45,11 +56,12 @@ class Cowan:
 
     @property
     def bin(self):
-        return os.path.join(self.root, "bin")
+        return os.path.join(self.root, "bin", platform_name())
 
-    @property
-    def scripts(self):
-        return os.path.join(self.root, "scripts")
+    def executable(self, name):
+        """Return the path of the Cowan "name" binary for this platform."""
+        suffix = ".exe" if sys.platform == "win32" else ""
+        return os.path.join(self.bin, name + suffix)
 
     @staticmethod
     def subshell_pairs(subshells):
@@ -98,11 +110,18 @@ class Cowan:
             name += f"{subshell.upper():s}{occupancy:02d} "
         return name.rstrip()
 
-    def run(self, command):
-        """Run the "command"; show its output only if the exit status is not zero."""
+    def run(self, program, outputs):
+        """Run the Cowan "program" on the input file "<basename>.<program>".
+
+        The program reads its input from fort.10 and writes its results to other
+        fort.N files. "outputs" maps each of these files to the suffix of its new
+        name. The output of the program shows only if the exit status is not zero.
+        """
+        shutil.copyfile(f"{self.basename}.{program}", "fort.10")
+        command = self.executable(program)
         try:
             subprocess.run(
-                (command, self.basename),
+                (command,),
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 text=True,
@@ -116,14 +135,18 @@ class Cowan:
             )
             sys.exit(1)
         except OSError as error:
-            # FileNotFoundError if the wrapper script is missing, PermissionError
-            # if it is not executable; neither is a CalledProcessError.
+            # PermissionError if the binary is not executable, and "Exec format
+            # error" if it is for a different platform.
             logger.critical("The command %s could not be run: %s.", command, error)
             sys.exit(1)
+        finally:
+            os.remove("fort.10")
+        for name, suffix in outputs.items():
+            os.replace(name, f"{self.basename}.{suffix}")
 
     def require_binary(self, name):
         """Exit with a clear error if the Cowan "name" binary is missing."""
-        path = os.path.join(self.bin, name)
+        path = self.executable(name)
         if not os.path.isfile(path):
             logger.critical(
                 "The %s binary was not found at %s; build it with the Makefile in %s.",
@@ -148,7 +171,7 @@ class Cowan:
         filename = f"{self.basename:s}.rcn"
         with open(filename, "w", encoding="utf-8") as fp:
             fp.write(rcn_input)
-        self.run(os.path.join(self.scripts, self.RCN))
+        self.run("rcn", {"fort.9": "rcn_out"})
 
     def remove_calculation_files(self):
         filenames = sorted(glob.glob(f"{self.basename}*"))
@@ -242,11 +265,11 @@ class Cowan:
 
         with open(f"{self.basename:s}.rcn", "w", encoding="utf-8") as fp:
             fp.write(rcn_input)
-        self.run(os.path.join(self.scripts, self.RCN))
+        self.run("rcn", {"fort.9": "rcn_out"})
 
         with open(f"{self.basename:s}.rcn2", "w", encoding="utf-8") as fp:
             fp.write(self.RCN2_HEADER)
-        self.run(os.path.join(self.scripts, self.RCN2))
+        self.run("rcn2", {"fort.9": "rcn2_out", "fort.11": "rcg"})
 
     def parse_rcn2_output(self):
         """Return the dipole P1 and quadrupole P2 prefactors from the rcn2 output.
@@ -307,7 +330,7 @@ class Cowan:
         rcn_input += f"{-1:5d}\n"
         with open(f"{self.basename:s}.rcn", "w", encoding="utf-8") as fp:
             fp.write(rcn_input)
-        self.run(os.path.join(self.scripts, self.RCN))
+        self.run("rcn", {"fort.9": "rcn_out"})
         with open(f"{self.basename:s}.rcn_out", encoding="utf-8") as fp:
             return fp.read()
 

@@ -7,42 +7,59 @@
 # coefficient-of-fractional-parentage tables by running ttrcg on the ing11bk
 # bookkeeping input.
 #
+# The build is native: run it on each platform (macOS, Linux, or Windows with
+# MSYS2). The binaries go into bin/<os>-<arch>/, for example bin/darwin-arm64/.
+#
 # Usage:
 #   make                          fetch sources, build binaries, generate cfp
 #   make pull                     only fetch (and patch) the sources
-#   make install                  copy binaries + cfp into bin/
+#   make install                  copy binaries + cfp into bin/<os>-<arch>/
 #   make clean                    remove built binaries and cfp tables
 #   make distclean                also remove fetched sources
 #   make SRC_COMMIT=<hash>         build from a different upstream revision
+#   make FC=gfortran-15           build with a different Fortran compiler
 
 SRC_COMMIT  ?= 25cd694b4ddf09e21a0eadef50c19a9fddce2c6b
 SRC_BASEURL ?= https://bitbucket.org/cjtitus/ttmult/raw/$(SRC_COMMIT)/src
 SRC_SCRIPTURL ?= https://bitbucket.org/cjtitus/ttmult/raw/$(SRC_COMMIT)/scripts
 SRCDIR := src
 
-FC    := gfortran
+# Make has a built-in FC (f77), so ?= does not work here.
+ifeq ($(origin FC),default)
+  FC := gfortran
+endif
 PROGS := rcn31 rcn2 ttrcg
 CFP   := rcg_cfp72 rcg_cfp73 rcg_cfp74
 
 # Legacy-Fortran flags the Cowan sources require.
 FFLAGS := -O2 -w -fallow-argument-mismatch -fno-automatic -finit-local-zero -fno-align-commons
 
-# macOS has no static libSystem, so only the runtime libs can be static-linked.
-# Linux can link fully static.
+# The platform names must match platform_name() in crispy/quanty/cowan.py.
 UNAME_S := $(shell uname -s)
+UNAME_M := $(shell uname -m)
+ARCH := $(patsubst aarch64,arm64,$(patsubst amd64,x86_64,$(UNAME_M)))
+
+# macOS has no static libSystem, so only the runtime libs can be static-linked.
+# Linux and Windows can link fully static.
 ifeq ($(UNAME_S),Darwin)
+  OS := darwin
   STATIC := -static-libgfortran -static-libgcc -static-libquadmath
-  # Pin the deployment target to the build host so the linker does not warn
-  # about overriding the version embedded in the MacPorts gfortran runtime.
-  MACOSX_DEPLOYMENT_TARGET := $(shell sw_vers -productVersion | cut -d. -f1-2)
+  # Oldest macOS version on which the binaries run.
+  MACOSX_DEPLOYMENT_TARGET ?= 13.0
   export MACOSX_DEPLOYMENT_TARGET
+else ifneq ($(filter MINGW% UCRT% CLANG% MSYS% CYGWIN%,$(UNAME_S)),)
+  OS := windows
+  EXE := .exe
+  STATIC := -static
 else
+  OS := linux
   STATIC := -static
 endif
 
-BINDIR := bin
+BINDIR ?= bin/$(OS)-$(ARCH)
+PROG_FILES := $(addsuffix $(EXE),$(PROGS))
 
-all: $(PROGS) $(CFP)
+all: $(PROG_FILES) $(CFP)
 
 # Fetch (and patch) the sources without compiling.
 pull: $(addprefix $(SRCDIR)/,$(addsuffix .f,$(PROGS))) $(SRCDIR)/ing11bk.rcg
@@ -64,15 +81,15 @@ $(SRCDIR)/ing11bk.rcg:
 	@mkdir -p $(SRCDIR)
 	curl -fsSL -o $@ $(SRC_SCRIPTURL)/ing11bk.rcg
 
-$(PROGS): %: $(SRCDIR)/%.f
+$(PROG_FILES): %$(EXE): $(SRCDIR)/%.f
 	$(FC) $(FFLAGS) $(STATIC) -o $@ $<
 
 # ttrcg writes fort.72/73/74 in one pass; rename them to the rcg_cfp* tables.
 # rcg_cfp7{3,4} are produced alongside rcg_cfp72, so they only depend on it.
-rcg_cfp72: ttrcg $(SRCDIR)/ing11bk.rcg
+rcg_cfp72: ttrcg$(EXE) $(SRCDIR)/ing11bk.rcg
 	rm -f fort.9 fort.72 fort.73 fort.74
-	ln -sf $(SRCDIR)/ing11bk.rcg fort.10
-	./ttrcg >/dev/null
+	cp $(SRCDIR)/ing11bk.rcg fort.10
+	./ttrcg$(EXE) >/dev/null
 	mv fort.72 rcg_cfp72
 	mv fort.73 rcg_cfp73
 	mv fort.74 rcg_cfp74
@@ -81,11 +98,11 @@ rcg_cfp73 rcg_cfp74: rcg_cfp72
 
 install: all
 	mkdir -p $(BINDIR)
-	cp $(PROGS) $(CFP) $(BINDIR)/
-	cp rcn31 $(BINDIR)/rcn
+	cp $(PROG_FILES) $(CFP) $(BINDIR)/
+	cp rcn31$(EXE) $(BINDIR)/rcn$(EXE)
 
 clean:
-	rm -f $(PROGS) $(CFP)
+	rm -f $(PROG_FILES) $(CFP)
 
 distclean: clean
 	rm -rf $(SRCDIR)

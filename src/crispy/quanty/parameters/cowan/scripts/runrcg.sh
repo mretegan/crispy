@@ -2,8 +2,18 @@
 
 # Script that runs the ttrcg program from the TTMult suite.
 
-# Locate the binaries relative to this script.
-BINDIR=$(cd "$(dirname "$0")/../bin" && pwd)
+# Locate the binaries relative to this script. The folder names must match the
+# ones that the Makefile creates, for example bin/darwin-arm64.
+OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+case "$OS" in
+    mingw* | ucrt* | clang* | msys* | cygwin*) OS=windows ;;
+esac
+ARCH=$(uname -m)
+case "$ARCH" in
+    aarch64) ARCH=arm64 ;;
+    amd64) ARCH=x86_64 ;;
+esac
+BINDIR=$(cd "$(dirname "$0")/../bin/$OS-$ARCH" && pwd)
 
 if [ ! -x "$BINDIR/ttrcg" ]; then
     echo "ttrcg command was not found."

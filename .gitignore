@@ -72,6 +72,7 @@ input_*.spec
 **/cowan/rcn31
 **/cowan/rcn2
 **/cowan/ttrcg
+**/cowan/*.exe
 **/cowan/rcg_cfp*
 **/cowan/fort.*
 

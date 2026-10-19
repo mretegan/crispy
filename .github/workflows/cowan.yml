@@ -1,0 +1,115 @@
+name: Build Cowan binaries
+
+# Build the Cowan binaries on each supported platform. Each job uploads an
+# archive with the bin/<os>-<arch> folder. Extract the archives into
+# src/crispy/quanty/parameters/cowan/bin and commit them with git add -f.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-unix:
+    name: Build (${{ matrix.platform }})
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            platform: darwin-arm64
+          - runner: macos-15-intel
+            platform: darwin-x86_64
+          - runner: ubuntu-latest
+            platform: linux-x86_64
+          - runner: ubuntu-24.04-arm
+            platform: linux-arm64
+    defaults:
+      run:
+        working-directory: src/crispy/quanty/parameters/cowan
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install gfortran (Linux)
+        # cowan-parameters imports Qt, which needs libegl1.
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gfortran libegl1
+          echo "FC=gfortran" >> "$GITHUB_ENV"
+
+      - name: Install gfortran (macOS)
+        # Homebrew installs gfortran with a version suffix, for example gfortran-15.
+        if: runner.os == 'macOS'
+        run: |
+          brew install gcc
+          echo "FC=$(ls "$(brew --prefix gcc)"/bin/gfortran-[0-9]* | head -n 1)" >> "$GITHUB_ENV"
+
+      - name: Build the binaries
+        run: make install FC="$FC"
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Run cowan-parameters with the new binaries
+        working-directory: ${{ runner.temp }}
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e "${{ github.workspace }}"
+          cowan-parameters -e Fe -c 2p5,3d6
+
+      - name: Archive the binaries
+        # tar keeps the executable bits, which upload-artifact drops.
+        run: tar -cpzf "cowan-${{ matrix.platform }}.tar.gz" -C bin "${{ matrix.platform }}"
+
+      - name: Upload the binaries
+        uses: actions/upload-artifact@v6
+        with:
+          name: cowan-${{ matrix.platform }}
+          path: src/crispy/quanty/parameters/cowan/cowan-${{ matrix.platform }}.tar.gz
+
+  build-windows:
+    name: Build (windows-x86_64)
+    runs-on: windows-2022
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up MSYS2 with gfortran
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: make patch curl tar mingw-w64-ucrt-x86_64-gcc-fortran
+
+      - name: Build the binaries
+        shell: msys2 {0}
+        run: |
+          cd src/crispy/quanty/parameters/cowan
+          make install
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Run cowan-parameters with the new binaries
+        working-directory: ${{ runner.temp }}
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e "${{ github.workspace }}"
+          cowan-parameters -e Fe -c 2p5,3d6
+
+      - name: Archive the binaries
+        shell: msys2 {0}
+        run: |
+          cd src/crispy/quanty/parameters/cowan
+          tar -cpzf cowan-windows-x86_64.tar.gz -C bin windows-x86_64
+
+      - name: Upload the binaries
+        uses: actions/upload-artifact@v6
+        with:
+          name: cowan-windows-x86_64
+          path: src/crispy/quanty/parameters/cowan/cowan-windows-x86_64.tar.gz
