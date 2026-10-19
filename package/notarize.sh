@@ -30,6 +30,18 @@ xcrun notarytool submit \
   --wait "${APP_DMG}"
 
 log "Stapling the notarization ticket to the disk image."
-xcrun stapler staple "${APP_DMG}"
+# The stapler downloads the ticket from Apple and fails if the connection drops, so
+# try again before failing the job.
+for attempt in 1 2 3 4 5; do
+  if xcrun stapler staple "${APP_DMG}"; then
+    break
+  fi
+  if [[ "${attempt}" -eq 5 ]]; then
+    log "Stapling failed after ${attempt} attempts."
+    exit 1
+  fi
+  log "Stapling failed (attempt ${attempt}); trying again in 30 seconds."
+  sleep 30
+done
 
 log "Notarization completed successfully."
