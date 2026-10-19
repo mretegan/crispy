@@ -9,6 +9,24 @@ and this project adheres to `Calendar Versioning <https://calver.org/>`_.
 `Unreleased`_
 =============
 
+`2026.3`_ - 2026-10-19
+======================
+
+Added
+-----
+- Cowan binaries for macOS, Linux, and Windows.
+- ``cowan-parameters`` accepts configurations with three or more subshells.
+
+Changed
+-------
+- ``cowan-parameters`` fills the 4f subshell of 5d configurations and the 5f
+  subshell of 6d configurations, if the configuration does not give it.
+
+Fixed
+-----
+- ``cowan-parameters`` calculates configurations such as ``Ir 4f13,5d8``.
+- The CI on Python 3.10 avoids PySide6 6.12.0, which aborts at shutdown.
+
 `2026.2`_ - 2026-10-09
 ======================
 
@@ -278,7 +296,8 @@ Added
 - Interactive plotting of the results.
 - Abstract list model and tree model to display/modify the input parameters.
 
-.. _Unreleased: https://github.com/mretegan/crispy/compare/v2026.2...HEAD
+.. _Unreleased: https://github.com/mretegan/crispy/compare/v2026.3...HEAD
+.. _2026.3: https://github.com/mretegan/crispy/compare/v2026.2...v2026.3
 .. _2026.2: https://github.com/mretegan/crispy/compare/v2026.1...v2026.2
 .. _2026.1: https://github.com/mretegan/crispy/compare/v2026.0...v2026.1
 .. _2026.0: https://github.com/mretegan/crispy/compare/v0.8.0...v2026.0
